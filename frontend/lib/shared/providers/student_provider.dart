@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../core/network/api_client.dart';
@@ -38,6 +39,7 @@ class StudentState {
 
 class StudentNotifier extends StateNotifier<StudentState> {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: kIsWeb ? '1234567890-mathcityai.apps.googleusercontent.com' : null,
     scopes: ['email', 'profile'],
   );
 
