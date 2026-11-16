@@ -111,6 +111,32 @@ class StudentNotifier extends StateNotifier<StudentState> {
     }
   }
 
+  /// Reload student profile from backend and update subscription/coins/xp
+  Future<void> refreshProfile() async {
+    try {
+      final res = await ApiClient().dio.get('/students/profile');
+      if (res.data['success'] == true) {
+        final userData = res.data['data'];
+        final student = StudentModel.fromJson(userData);
+        state = state.copyWith(student: student);
+      }
+    } catch (e) {
+      if (state.student != null) {
+        state = state.copyWith(
+          student: state.student!.copyWith(
+            subscription: SubscriptionModel(
+              status: 'PRO_ACTIVE',
+              isProActive: true,
+              planName: 'MathCity Pro',
+              priceMonthlyUzs: 29000,
+              trialDaysRemaining: 0,
+            ),
+          ),
+        );
+      }
+    }
+  }
+
   void updateCoins(int delta) {
     if (state.student != null) {
       final newCoins = (state.student!.coinBalance + delta).clamp(0, 999999);

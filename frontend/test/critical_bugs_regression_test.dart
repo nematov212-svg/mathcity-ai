@@ -7,6 +7,7 @@ import 'package:mathcity_ai/features/home/kids_home_screen.dart';
 import 'package:mathcity_ai/features/home/teen_home_screen.dart';
 import 'package:mathcity_ai/features/onboarding/welcome_screen.dart';
 import 'package:mathcity_ai/features/settings/settings_screen.dart';
+import 'package:mathcity_ai/features/payment/add_payment_screen.dart';
 import 'package:mathcity_ai/shared/providers/student_provider.dart';
 
 void main() {
@@ -152,6 +153,27 @@ void main() {
       expect(result['isCorrect'], isTrue);
       expect(result['coinsAwarded'], 1);
       expect(container.read(studentProvider).student?.coinBalance, initialCoins + 1);
+    });
+  });
+
+  group('5. Apple-Style Payment Screen & Card Checkout Verification', () {
+    testWidgets('AddPaymentScreen renders title, methods, and 29 000 so‘m to‘lash button', (tester) async {
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            home: AddPaymentScreen(),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('To‘lov usulini qo‘shish'), findsOneWidget);
+      expect(find.text('MathCity Pro'), findsOneWidget);
+      expect(find.text('Uzcard / Humo'), findsOneWidget);
+      expect(find.text('Visa / Mastercard'), findsOneWidget);
+      expect(find.text('Click Business'), findsOneWidget);
+      expect(find.text('29 000 so‘m to‘lash'), findsOneWidget);
+      expect(find.text('256-bit SSL va PCI-DSS xavfsiz to‘lov shifrlanishi'), findsOneWidget);
     });
   });
 }

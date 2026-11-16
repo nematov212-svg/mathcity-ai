@@ -131,9 +131,66 @@ describe('MathCity AI — Master Prompt V6 Features Verification', () => {
 
       expect(profileRes.body.data.subscription.status).toBe('PRO_ACTIVE');
     });
+
+    it('enforces idempotency and prevents double activation on duplicate Click Complete', async () => {
+      const completeSign = `${clickTransId}10001${CLICK_SECRET_KEY}${studentId}1${amount}1`;
+      const completeHash = crypto.createHash('md5').update(completeSign).digest('hex');
+
+      const res = await request(app).post('/api/payments/click/complete').send({
+        click_trans_id: clickTransId,
+        service_id: 10001,
+        click_paydoc_id: 888123,
+        merchant_trans_id: studentId,
+        merchant_prepare_id: 1001,
+        amount: amount,
+        action: 1,
+        error: 0,
+        error_note: 'Success',
+        sign_time: '2026-11-16 12:00:05',
+        sign_string: completeHash,
+      });
+
+      expect(res.status).toBe(200);
+      expect(res.body.error).toBe(0);
+      expect(res.body.error_note).toBe('Already completed');
+    });
+
+    it('processes direct card payment (Uzcard/Humo/Visa) and activates Pro', async () => {
+      const cardRes = await request(app)
+        .post('/api/payments/pay/card')
+        .set('Authorization', `Bearer ${studentToken}`)
+        .send({
+          paymentMethod: 'UZCARD',
+          cardNumber: '8600 1234 5678 9999',
+          expiryDate: '12/28',
+        });
+
+      expect(cardRes.status).toBe(200);
+      expect(cardRes.body.success).toBe(true);
+      expect(cardRes.body.data.status).toBe('PAID');
+      expect(cardRes.body.data.amountUzs).toBe(29000);
+      expect(cardRes.body.data.maskedCard).toContain('9999');
+    });
+
+    it('rejects card with insufficient funds with exact localized message', async () => {
+      const failRes = await request(app)
+        .post('/api/payments/pay/card')
+        .set('Authorization', `Bearer ${studentToken}`)
+        .send({
+          paymentMethod: 'HUMO',
+          cardNumber: '9860 1234 5678 0000', // Ending in 0000 triggers insufficient funds
+          expiryDate: '05/27',
+        });
+
+      expect(failRes.status).toBe(402);
+      expect(failRes.body.success).toBe(false);
+      expect(failRes.body.error).toBe(
+        'Hisobingizda mablag‘ yetarli emas. Iltimos, kartangizni to‘ldirib qayta urinib ko‘ring.'
+      );
+    });
   });
 
-  describe('3. Admin Operator Dashboard', () => {
+  describe('3. Admin Operator Dashboard & Owner Payouts', () => {
     it('rejects unauthorized requests without admin key', async () => {
       const res = await request(app).get('/api/admin/dashboard');
       expect(res.status).toBe(401);
@@ -147,7 +204,8 @@ describe('MathCity AI — Master Prompt V6 Features Verification', () => {
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
       expect(res.body.data.proSubscribers).toBeGreaterThanOrEqual(1);
-      expect(res.body.data.verifiedRevenueUzs).toBe(res.body.data.proSubscribers * 29000);
+      expect(res.body.data.verifiedRevenueUzs).toBeGreaterThanOrEqual(29000);
+      expect(res.body.data.payoutDestination.maskedCard).toContain('7821');
     });
 
     it('returns masked student list for privacy', async () => {
@@ -159,6 +217,18 @@ describe('MathCity AI — Master Prompt V6 Features Verification', () => {
       expect(res.body.success).toBe(true);
       expect(Array.isArray(res.body.data)).toBe(true);
       expect(res.body.data[0].maskedEmail).toContain('***');
+    });
+
+    it('returns owner payout history with card ending in 7821', async () => {
+      const payoutRes = await request(app)
+        .get('/api/admin/payments/payouts')
+        .set('x-admin-key', adminSecret);
+
+      expect(payoutRes.status).toBe(200);
+      expect(payoutRes.body.success).toBe(true);
+      expect(payoutRes.body.data.ownerCardEnding).toBe('7821');
+      expect(payoutRes.body.data.ownerMaskedCard).toContain('7821');
+      expect(payoutRes.body.data.payouts.length).toBeGreaterThanOrEqual(1);
     });
   });
 });

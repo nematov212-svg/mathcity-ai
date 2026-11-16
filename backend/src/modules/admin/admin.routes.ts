@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { repository } from '../../utils/repository.js';
+import { paymentDataStore } from '../payments/paymentStore.js';
 
 export const adminRouter = Router();
 
@@ -19,7 +20,7 @@ function adminAuth(req: Request, res: Response, next: Function) {
   next();
 }
 
-// 1. Admin Dashboard Statistics (Step 20)
+// 1. Admin Dashboard Statistics with Payment & Owner Settlement Metrics
 adminRouter.get('/dashboard', adminAuth, (req: Request, res: Response) => {
   const users = repository.getAllUsers();
   const totalStudents = users.length;
@@ -38,19 +39,39 @@ adminRouter.get('/dashboard', adminAuth, (req: Request, res: Response) => {
     }
   }
 
-  const verifiedRevenueUzs = proSubscribers * 29000;
+  const transactions = paymentDataStore.getAllTransactions();
+  const successfulTx = transactions.filter((t) => t.status === 'SUCCESS');
+  const failedTx = transactions.filter((t) => t.status === 'FAILED');
+
+  const totalCardRevenue = successfulTx.reduce((sum, t) => sum + t.amountUzs, 0);
+  const verifiedRevenueUzs = Math.max(proSubscribers * 29000, totalCardRevenue);
+  const totalFeesUzs = Math.round(verifiedRevenueUzs * 0.02); // 2% Click / acquiring fee
+  const netProceedsUzs = verifiedRevenueUzs - totalFeesUzs;
+
+  const payouts = paymentDataStore.getAllPayouts();
 
   return res.json({
     success: true,
     data: {
       totalRegisteredStudents: totalStudents,
-      activeStudentsLast7Days: totalStudents, // Current active cohort
+      activeStudentsLast7Days: totalStudents,
       freeUsers,
       trialUsers,
-      proSubscribers, // EXACT real count from backend (e.g. 2 subscribers -> shows 2!)
+      proSubscribers,
       verifiedRevenueUzs,
-      paymentFailures: 0,
+      totalFeesUzs,
+      netProceedsUzs,
+      successfulTransactionsCount: successfulTx.length,
+      failedTransactionsCount: failedTx.length,
       refundCount: 0,
+      payoutDestination: {
+        type: 'CARD',
+        label: 'Eganing tasdiqlangan bank kartasi (oxiri 7821)',
+        maskedCard: paymentDataStore.ownerMaskedCard,
+        settlementSchedule: 'Avtomatik haftalik / talab bo‘yicha to‘lov',
+        status: 'ACTIVE_VERIFIED',
+      },
+      payoutsCount: payouts.length,
       aiTutorQueriesAnswered: 42,
       platformStatus: 'HEALTHY',
     },
@@ -106,5 +127,37 @@ adminRouter.get('/subscriptions', adminAuth, (req: Request, res: Response) => {
   return res.json({
     success: true,
     data: proUsers,
+  });
+});
+
+// 4. Payment Transactions & Owner Card Settlement Records (Section 10)
+adminRouter.get('/payments/transactions', adminAuth, (req: Request, res: Response) => {
+  const transactions = paymentDataStore.getAllTransactions();
+  return res.json({
+    success: true,
+    data: {
+      transactions,
+      payoutDestination: paymentDataStore.ownerMaskedCard,
+    },
+  });
+});
+
+adminRouter.get('/payments/payouts', adminAuth, (req: Request, res: Response) => {
+  const payouts = paymentDataStore.getAllPayouts();
+  return res.json({
+    success: true,
+    data: {
+      payouts,
+      ownerCardEnding: paymentDataStore.ownerCardEnding,
+      ownerMaskedCard: paymentDataStore.ownerMaskedCard,
+    },
+  });
+});
+
+adminRouter.get('/payments/audit-logs', adminAuth, (req: Request, res: Response) => {
+  const logs = paymentDataStore.getAuditLogs();
+  return res.json({
+    success: true,
+    data: logs,
   });
 });

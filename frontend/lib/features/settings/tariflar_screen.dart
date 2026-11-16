@@ -15,79 +15,8 @@ class TariflarScreen extends ConsumerStatefulWidget {
 class _TariflarScreenState extends ConsumerState<TariflarScreen> {
   bool _isLoading = false;
 
-  void _upgradeToPro() async {
-    setState(() => _isLoading = true);
-    final success = await ref.read(studentProvider.notifier).purchasePro();
-    setState(() => _isLoading = false);
-
-    if (!mounted) return;
-
-    if (success) {
-      showDialog(
-        context: context,
-        builder: (ctx) => Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFFFB800), Color(0xFFFF8C00)],
-                    ),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFFFB800).withOpacity(0.35),
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Icon(Icons.workspace_premium_rounded, color: Colors.white, size: 48),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'MathCity Pro faollashtirildi!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.kidsDarkText,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Endi sizda barcha 11 sinf kurslari, 3D shahar binolari va Ziyo AI cheksiz ochiq!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: AppColors.kidsSecondaryText),
-                ),
-                const SizedBox(height: 24),
-                CustomButton(
-                  text: 'Ajoyib!',
-                  backgroundColor: AppColors.kidsPrimary,
-                  borderRadius: 16,
-                  onPressed: () => Navigator.pop(ctx),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Xatolik yuz berdi yoki to‘lov bekor qilindi.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+  void _upgradeToPro() {
+    context.push('/payment/add');
   }
 
   void _restorePurchases() async {
