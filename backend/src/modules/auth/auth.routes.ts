@@ -92,14 +92,7 @@ authRouter.post('/register', authRateLimiter, (req: Request, res: Response) => {
       planName: 'MathCity Free Trial',
       priceMonthlyUzs: 29000,
     },
-    placedBuildings: [
-      {
-        buildingKey: 'house_basic',
-        gridX: 1,
-        gridY: 1,
-        constructedAt: now.toISOString(),
-      },
-    ],
+    placedBuildings: [],
     completedLessons: [],
     completedSections: [],
     solvedQuestions: [],
@@ -270,14 +263,7 @@ authRouter.post('/google', authRateLimiter, (req: Request, res: Response) => {
         planName: 'MathCity Free Trial',
         priceMonthlyUzs: 29000,
       },
-      placedBuildings: [
-        {
-          buildingKey: 'house_basic',
-          gridX: 1,
-          gridY: 1,
-          constructedAt: now.toISOString(),
-        },
-      ],
+      placedBuildings: [],
       completedLessons: [],
       completedSections: [],
       solvedQuestions: [],

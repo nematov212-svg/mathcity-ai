@@ -128,6 +128,13 @@ class AuthService {
       return await authenticateGoogleUser(googleUser);
     } catch (e) {
       debugPrint('⚠️ Google orqali kirish xatoligi: $e');
+      final errStr = e.toString().toLowerCase();
+      if (errStr.contains('popup_closed') || errStr.contains('cancel')) {
+        return const AuthResult(
+          success: false,
+          errorMessage: 'Google orqali kirish bekor qilindi.',
+        );
+      }
       return const AuthResult(
         success: false,
         errorMessage:
