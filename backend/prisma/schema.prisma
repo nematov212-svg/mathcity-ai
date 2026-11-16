@@ -1,0 +1,419 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Mode {
+  KIDS
+  TEEN
+}
+
+enum Role {
+  STUDENT
+}
+
+enum SubscriptionStatus {
+  FREE_TRIAL_ACTIVE
+  FREE_TRIAL_EXPIRED
+  PRO_ACTIVE
+  PRO_EXPIRED
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  NUMERICAL_INPUT
+  FRACTION_MATCH
+  EQUATION_SOLVE
+  PATTERN_RECOGNITION
+}
+
+enum CoinTransactionType {
+  LESSON_COMPLETE
+  EXERCISE_CORRECT
+  GAME_REWARD
+  DAILY_TASK
+  ACHIEVEMENT_REWARD
+  BUILDING_PURCHASE
+  SYSTEM_GRANT
+}
+
+enum XPTransactionType {
+  LESSON_COMPLETE
+  EXERCISE_CORRECT
+  GAME_REWARD
+  DAILY_TASK
+  ACHIEVEMENT
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String?
+  googleId     String?       @unique
+  role         Role          @default(STUDENT)
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  studentProfile     StudentProfile?
+  subscription       Subscription?
+  coinWallet         CoinWallet?
+  studentXP          StudentXP?
+  exerciseAttempts   ExerciseAttempt[]
+  rewardedQuestions  RewardedQuestion[]
+  lessonProgress     LessonProgress[]
+  gameSessions       GameSession[]
+  ownedBuildings     OwnedBuilding[]
+  dailyTasks         StudentDailyTask[]
+  achievements       StudentAchievement[]
+  aiMessages         AIMessage[]
+  sessions           AuthSession[]
+
+  @@map("users")
+}
+
+model StudentProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName String
+  dateOfBirth DateTime
+  age         Int
+  mode        Mode
+  grade       Int      // 1 to 11
+  avatarUrl   String?
+  cityLevel   Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("student_profiles")
+}
+
+model Subscription {
+  id              String             @id @default(uuid())
+  userId          String             @unique
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status          SubscriptionStatus @default(FREE_TRIAL_ACTIVE)
+  trialStartedAt  DateTime           @default(now())
+  trialExpiresAt  DateTime
+  trialUsed       Boolean            @default(false)
+  proStartedAt    DateTime?
+  proExpiresAt    DateTime?
+  storeOrderId    String?
+  purchaseToken   String?
+  platform        String?            // "google_play", "app_store", "web"
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@map("subscriptions")
+}
+
+model AuthSession {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("auth_sessions")
+}
+
+model CoinWallet {
+  id           String            @id @default(uuid())
+  userId       String            @unique
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance      Int               @default(100) // 100 starting bonus for building purchase demonstration
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  transactions CoinTransaction[]
+
+  @@map("coin_wallets")
+}
+
+model CoinTransaction {
+  id             String              @id @default(uuid())
+  walletId       String
+  wallet         CoinWallet          @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  amount         Int                 // Positive for reward, negative for purchase
+  type           CoinTransactionType
+  description    String
+  idempotencyKey String?             @unique
+  createdAt      DateTime            @default(now())
+
+  @@map("coin_transactions")
+}
+
+model StudentXP {
+  id           String          @id @default(uuid())
+  userId       String          @unique
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalXP      Int             @default(0)
+  level        Int             @default(1)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  transactions XPTransaction[]
+
+  @@map("student_xp")
+}
+
+model XPTransaction {
+  id          String            @id @default(uuid())
+  studentXPId String
+  studentXP   StudentXP         @relation(fields: [studentXPId], references: [id], onDelete: Cascade)
+  amount      Int
+  type        XPTransactionType
+  description String
+  createdAt   DateTime          @default(now())
+
+  @@map("xp_transactions")
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  gradeMin    Int
+  gradeMax    Int
+  mode        Mode
+  orderIndex  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lessons     Lesson[]
+
+  @@map("courses")
+}
+
+model Lesson {
+  id           String   @id @default(uuid())
+  courseId     String
+  course       Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title        String
+  topicKey     String
+  description  String
+  contentMd    String
+  formulaLatex String?
+  rewardXP     Int      @default(50)
+  rewardCoins  Int      @default(10)
+  orderIndex   Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sections     Section[]
+  questions    Question[]
+  progress     LessonProgress[]
+
+  @@map("lessons")
+}
+
+model Section {
+  id          String   @id @default(uuid())
+  lessonId    String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title       String   // e.g. "1-qism", "2-qism"
+  orderIndex  Int      @default(1)
+  createdAt   DateTime @default(now())
+
+  questions   Question[]
+
+  @@map("sections")
+}
+
+model Question {
+  id            String       @id @default(uuid())
+  lessonId      String
+  lesson        Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  sectionId     String?
+  section       Section?     @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  prompt        String
+  type          QuestionType @default(MULTIPLE_CHOICE)
+  optionsJson   String       // JSON array of strings
+  correctAnswer String
+  explanation   String
+  hint          String
+  formulaLatex  String?
+  orderIndex    Int          @default(0)
+  createdAt     DateTime     @default(now())
+
+  attempts          ExerciseAttempt[]
+  rewardedQuestions RewardedQuestion[]
+
+  @@map("questions")
+}
+
+model RewardedQuestion {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  awardedAt  DateTime @default(now())
+
+  @@unique([userId, questionId])
+  @@map("rewarded_questions")
+}
+
+model ExerciseAttempt {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId      String
+  question        Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  submittedAnswer String
+  isCorrect       Boolean
+  awardedCoins    Int      @default(0) // Exactly 1 for first time, 0 for repeats
+  awardedXP       Int      @default(0)
+  createdAt       DateTime @default(now())
+
+  @@map("exercise_attempts")
+}
+
+model LessonProgress {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId    String
+  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  isCompleted Boolean   @default(false)
+  score       Int       @default(0)
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([userId, lessonId])
+  @@map("lesson_progress")
+}
+
+model BuildingDefinition {
+  id            String          @id @default(uuid())
+  key           String          @unique
+  name          String
+  category      String
+  costInCoins   Int             @default(100) // Default 100 coins
+  requiredLevel Int             @default(1)
+  description   String
+  iconName      String
+  mode          Mode            @default(KIDS)
+  createdAt     DateTime        @default(now())
+
+  owned         OwnedBuilding[]
+
+  @@map("building_definitions")
+}
+
+model OwnedBuilding {
+  id           String             @id @default(uuid())
+  userId       String
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  buildingKey  String
+  building     BuildingDefinition @relation(fields: [buildingKey], references: [key], onDelete: Cascade)
+  gridX        Int
+  gridY        Int
+  isConstructed Boolean           @default(true)
+  constructedAt DateTime          @default(now())
+
+  @@unique([userId, gridX, gridY])
+  @@map("owned_buildings")
+}
+
+model GameDefinition {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  title       String
+  description String
+  category    String
+  iconName    String
+  mode        Mode     @default(KIDS)
+  createdAt   DateTime @default(now())
+
+  sessions    GameSession[]
+
+  @@map("game_definitions")
+}
+
+model GameSession {
+  id          String         @id @default(uuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameKey     String
+  game        GameDefinition @relation(fields: [gameKey], references: [key], onDelete: Cascade)
+  score       Int
+  coinsEarned Int
+  xpEarned    Int
+  playedAt    DateTime       @default(now())
+
+  @@map("game_sessions")
+}
+
+model DailyTask {
+  id          String             @id @default(uuid())
+  key         String             @unique
+  title       String
+  description String
+  targetCount Int
+  rewardCoins Int
+  rewardXP    Int
+  createdAt   DateTime           @default(now())
+
+  students    StudentDailyTask[]
+
+  @@map("daily_tasks")
+}
+
+model StudentDailyTask {
+  id           String    @id @default(uuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskId       String
+  task         DailyTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  currentCount Int       @default(0)
+  isCompleted  Boolean   @default(false)
+  claimedAt    DateTime?
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([userId, taskId])
+  @@map("student_daily_tasks")
+}
+
+model Achievement {
+  id          String               @id @default(uuid())
+  key         String               @unique
+  title       String
+  description String
+  iconName    String
+  rewardCoins Int
+  rewardXP    Int
+  createdAt   DateTime             @default(now())
+
+  students    StudentAchievement[]
+
+  @@map("achievements")
+}
+
+model StudentAchievement {
+  id             String      @id @default(uuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementKey String
+  achievement    Achievement @relation(fields: [achievementKey], references: [key], onDelete: Cascade)
+  unlockedAt     DateTime    @default(now())
+
+  @@unique([userId, achievementKey])
+  @@map("student_achievements")
+}
+
+model AIMessage {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role         String   // "user" or "assistant"
+  text         String
+  formulaLatex String?
+  step         Int?
+  createdAt    DateTime @default(now())
+
+  @@map("ai_messages")
+}

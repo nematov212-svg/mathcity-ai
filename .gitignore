@@ -1,0 +1,106 @@
+# ==============================================================================
+# MathCity AI — Comprehensive Git Ignore Rules
+# ==============================================================================
+
+# 1. Environment and Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+*.keystore
+*.jks
+id_rsa
+id_ed25519
+
+# 2. Platform Specific Credentials & Keys
+google-services.json
+GoogleService-Info.plist
+frontend/android/app/google-services.json
+frontend/ios/Runner/GoogleService-Info.plist
+frontend/macos/Runner/GoogleService-Info.plist
+
+# 3. Node.js & Backend
+node_modules/
+dist/
+backend/dist/
+backend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+coverage/
+.nyc_output/
+
+# 4. Database & Backups
+*.sql.gz
+*.sql
+backend/prisma/*.db
+backend/prisma/*.db-journal
+backend/backups/
+backups/
+
+# 5. Flutter & Dart
+.dart_tool/
+frontend/.dart_tool/
+.packages
+frontend/.packages
+.pub/
+frontend/.pub/
+build/
+frontend/build/
+.flutter-plugins
+frontend/.flutter-plugins
+.flutter-plugins-dependencies
+frontend/.flutter-plugins-dependencies
+
+# 6. iOS / macOS Ephemeral & CocoaPods
+frontend/ios/Pods/
+frontend/ios/.symlinks/
+frontend/ios/Flutter/Flutter.framework
+frontend/ios/Flutter/Flutter.podspec
+frontend/ios/Flutter/Generated.xcconfig
+frontend/ios/Flutter/app.flx
+frontend/macos/Pods/
+frontend/macos/.symlinks/
+frontend/macos/Flutter/ephemeral
+frontend/macos/Flutter/Generated.xcconfig
+
+# 7. Android Build & Gradle
+frontend/android/.gradle/
+frontend/android/captures/
+frontend/android/gradlew
+frontend/android/gradlew.bat
+frontend/android/local.properties
+frontend/android/**/GeneratedPluginRegistrant.java
+
+# 8. IDEs & Editors
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# 9. Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 10. Antigravity Agent Brain Scratch / System Logs
+.system_generated/
+*.log
