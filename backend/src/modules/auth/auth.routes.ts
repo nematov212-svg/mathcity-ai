@@ -256,8 +256,8 @@ authRouter.post('/google', authRateLimiter, (req: Request, res: Response) => {
       mode: eligibility.mode,
       grade: Math.max(1, Math.min(11, eligibility.age - 5)),
       avatarUrl: 'assets/images/avatar_kid.png',
-      coinBalance: 100,
-      totalXP: 0,
+      coinBalance: 0, // New Google accounts start with 0 coins
+      totalXP: 0, // and 0 XP
       level: 1,
       cityLevel: 1,
       subscription: {

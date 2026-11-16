@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,10 +40,40 @@ class StudentState {
 
 class StudentNotifier extends StateNotifier<StudentState> {
   final AuthService _authService = AuthService();
+  StreamSubscription? _googleAccountSub;
 
   StudentNotifier() : super(StudentState()) {
     _initDemoStudent();
     initializeSession();
+    _initGoogleAuthListener();
+  }
+
+  void _initGoogleAuthListener() {
+    if (!kIsWeb) return;
+    try {
+      _googleAccountSub = _authService.onGoogleAccountChanged.listen((account) async {
+        if (account != null) {
+          state = state.copyWith(isLoading: true);
+          final result = await _authService.authenticateGoogleUser(account);
+          if (result.success && result.student != null) {
+            state = state.copyWith(student: result.student, isLoading: false);
+          } else {
+            state = state.copyWith(
+              isLoading: false,
+              errorMessage: result.errorMessage ?? 'Google orqali kirishda xatolik yuz berdi.',
+            );
+          }
+        }
+      });
+    } catch (e) {
+      debugPrint('⚠️ Google account listener initializatsiya xatosi: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _googleAccountSub?.cancel();
+    super.dispose();
   }
 
   void _initDemoStudent() {

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/widgets/custom_button.dart';
+import '../../core/widgets/google_sign_in_button.dart';
 import '../../core/widgets/mathcity_logo.dart';
 import '../../shared/providers/student_provider.dart';
 
@@ -44,6 +45,20 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Automatically navigate when GIS button or silent login authenticates a student
+    ref.listen<StudentState>(studentProvider, (prev, next) {
+      if (next.student != null && prev?.student?.id != next.student?.id) {
+        final age = next.student?.age ?? 10;
+        if (age >= 17) {
+          context.go('/access-denied');
+        } else if (age >= 13) {
+          context.go('/teen/home');
+        } else {
+          context.go('/kids/home');
+        }
+      }
+    });
+
     return Scaffold(
       backgroundColor: AppColors.kidsBackground,
       body: SafeArea(
@@ -98,59 +113,10 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
               ),
               const SizedBox(height: 14),
 
-              // Real Google Sign-In Button (Requirement #10)
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(color: AppColors.kidsBorder, width: 1.5),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    elevation: 0,
-                  ),
-                  onPressed: _isGoogleLoading ? null : _handleGoogleSignIn,
-                  child: _isGoogleLoading
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(strokeWidth: 2.5),
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // Multi-colored G icon
-                            Container(
-                              width: 24,
-                              height: 24,
-                              decoration: const BoxDecoration(shape: BoxShape.circle),
-                              child: const Center(
-                                child: Text(
-                                  'G',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w900,
-                                    color: Color(0xFF4285F4),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            const Flexible(
-                              child: Text(
-                                'Google bilan davom etish',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.kidsDarkText,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                ),
+              // Official Google Sign-In Button (GIS Web supported + cross-platform fallback)
+              GoogleSignInButton(
+                isLoading: _isGoogleLoading,
+                onFallbackPressed: _handleGoogleSignIn,
               ),
               const SizedBox(height: 16),
             ],

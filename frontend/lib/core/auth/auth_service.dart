@@ -28,9 +28,17 @@ class AuthService {
   GoogleSignIn? _googleSignInInstance;
   bool _googleSignInInitFailed = false;
 
-  /// Web OAuth Client ID
-  static const String webClientId =
-      '1234567890-mathcityai.apps.googleusercontent.com';
+  /// Web OAuth Client ID from Google Cloud Console
+  /// Authorized JavaScript origins: http://localhost:8085
+  static String webClientId = const String.fromEnvironment(
+    'GOOGLE_CLIENT_ID',
+    defaultValue: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
+  );
+
+  /// Allows setting web client id at runtime if needed
+  static void setWebClientId(String clientId) {
+    webClientId = clientId;
+  }
 
   /// Controlled lazy initialization for GoogleSignIn
   GoogleSignIn? _getGoogleSignIn() {
@@ -47,6 +55,48 @@ class AuthService {
       debugPrint('⚠️ GoogleSignIn initsializatsiya xatosi: $e\n$stack');
       _googleSignInInitFailed = true;
       return null;
+    }
+  }
+
+  /// Stream of Google user accounts (fired by GIS button or silent login)
+  Stream<GoogleSignInAccount?> get onGoogleAccountChanged {
+    final gsi = _getGoogleSignIn();
+    if (gsi == null) return const Stream.empty();
+    return gsi.onCurrentUserChanged;
+  }
+
+  /// Authenticate Google User with Backend
+  Future<AuthResult> authenticateGoogleUser(GoogleSignInAccount googleUser) async {
+    try {
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final res = await ApiClient().dio.post('/auth/google', data: {
+        'googleId': googleUser.id,
+        'email': googleUser.email,
+        'displayName': googleUser.displayName ?? 'O‘quvchi',
+        'idToken': googleAuth.idToken,
+      });
+
+      if (res.data['success'] == true) {
+        final token = res.data['data']['token'] as String;
+        ApiClient().setAuthToken(token);
+        await StorageService.saveAuthToken(token);
+
+        final userData = res.data['data']['user'];
+        final student = StudentModel.fromJson(userData);
+        return AuthResult(success: true, student: student, token: token);
+      } else {
+        return AuthResult(
+          success: false,
+          errorMessage: res.data['error'] ?? 'Google orqali kirishda xatolik yuz berdi.',
+        );
+      }
+    } catch (e) {
+      debugPrint('⚠️ Google orqali kirish backend xatoligi: $e');
+      return const AuthResult(
+        success: false,
+        errorMessage: 'Google orqali tizimga kirishda server bilan aloqa uzildi.',
+      );
     }
   }
 
@@ -74,30 +124,7 @@ class AuthService {
         );
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final res = await ApiClient().dio.post('/auth/google', data: {
-        'googleId': googleUser.id,
-        'email': googleUser.email,
-        'displayName': googleUser.displayName ?? 'O‘quvchi',
-        'idToken': googleAuth.idToken,
-      });
-
-      if (res.data['success'] == true) {
-        final token = res.data['data']['token'] as String;
-        ApiClient().setAuthToken(token);
-        await StorageService.saveAuthToken(token);
-
-        final userData = res.data['data']['user'];
-        final student = StudentModel.fromJson(userData);
-        return AuthResult(success: true, student: student, token: token);
-      } else {
-        return AuthResult(
-          success: false,
-          errorMessage: res.data['error'] ?? 'Google orqali kirishda xatolik yuz berdi.',
-        );
-      }
+      return await authenticateGoogleUser(googleUser);
     } catch (e) {
       debugPrint('⚠️ Google orqali kirish xatoligi: $e');
       return const AuthResult(
