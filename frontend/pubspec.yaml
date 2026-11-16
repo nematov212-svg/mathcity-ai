@@ -25,7 +25,7 @@ dependencies:
   shared_preferences: ^2.3.3
 
   # Authentication & Subscriptions
-  google_sign_in: ^6.2.2
+  google_sign_in: ^7.2.0
   in_app_purchase: ^3.2.0
 
   # UI, Math & Charts
