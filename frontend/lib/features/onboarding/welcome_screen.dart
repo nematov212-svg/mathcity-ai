@@ -136,12 +136,16 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Google bilan davom etish',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.kidsDarkText,
+                            const Flexible(
+                              child: Text(
+                                'Google bilan davom etish',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.kidsDarkText,
+                                ),
                               ),
                             ),
                           ],

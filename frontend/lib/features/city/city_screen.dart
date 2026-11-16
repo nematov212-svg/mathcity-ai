@@ -205,27 +205,34 @@ class _CityScreenState extends ConsumerState<CityScreen> with SingleTickerProvid
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF7154EC).withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(12),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF7154EC).withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.storefront_rounded, color: Color(0xFF7154EC), size: 24),
                         ),
-                        child: const Icon(Icons.storefront_rounded, color: Color(0xFF7154EC), size: 24),
-                      ),
-                      const SizedBox(width: 12),
-                      const Text(
-                        'Qurilish do‘koni',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.kidsDarkText,
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Text(
+                            'Qurilish do‘koni',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.kidsDarkText,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 8),
                   CoinBadge(count: userCoins, size: 24),
                 ],
               ),

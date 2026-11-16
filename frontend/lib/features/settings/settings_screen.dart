@@ -150,36 +150,40 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: 12),
           Material(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            child: Container(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+              side: const BorderSide(color: AppColors.kidsBorder, width: 1.5),
+            ),
+            child: Padding(
               padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: AppColors.kidsBorder, width: 1.5),
-              ),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Interfeys rejimi',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.kidsDarkText,
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Interfeys rejimi',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.kidsDarkText,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            'Bolalar (6-12) yoki O‘smirlar (13-16)',
-                            style: TextStyle(fontSize: 12, color: AppColors.kidsSecondaryText),
-                          ),
-                        ],
+                            SizedBox(height: 2),
+                            Text(
+                              'Bolalar (6-12) yoki O‘smirlar (13-16)',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 12, color: AppColors.kidsSecondaryText),
+                            ),
+                          ],
+                        ),
                       ),
+                      const SizedBox(width: 8),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: currentMode == 'KIDS'
@@ -249,13 +253,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: 12),
           Material(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            child: Container(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+              side: const BorderSide(color: AppColors.kidsBorder, width: 1.5),
+            ),
+            child: Padding(
               padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: AppColors.kidsBorder, width: 1.5),
-              ),
               child: Column(
                 children: [
                   ListTile(

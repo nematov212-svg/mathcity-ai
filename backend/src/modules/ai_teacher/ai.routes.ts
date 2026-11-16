@@ -14,7 +14,7 @@ const chatSchema = z.object({
     .enum(['chat', 'next_step', 'explain_more', 'similar_example', 'check_solution'])
     .optional()
     .default('chat'),
-  step: z.number().int().min(1).optional().default(1),
+  step: z.number().int().min(0).optional().default(0),
   contextFormula: z.string().max(200).optional(),
 });
 

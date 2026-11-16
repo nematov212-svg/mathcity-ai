@@ -325,6 +325,79 @@ authRouter.post('/google', authRateLimiter, (req: Request, res: Response) => {
   });
 });
 
+authRouter.post('/demo', authRateLimiter, (req: Request, res: Response) => {
+  let demoUser = repository.getUserById('demo-student-id') || repository.getUserByEmail('ali@mathcity.ai');
+  if (!demoUser) {
+    const now = new Date();
+    const trialExpiry = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+    demoUser = {
+      id: 'demo-student-id',
+      email: 'ali@mathcity.ai',
+      displayName: 'Ali',
+      dateOfBirth: '2015-05-10',
+      age: 11,
+      mode: 'KIDS',
+      grade: 4,
+      avatarUrl: 'assets/images/avatar_kid.png',
+      coinBalance: 100,
+      totalXP: 380,
+      level: 3,
+      cityLevel: 2,
+      subscription: {
+        status: 'FREE_TRIAL_ACTIVE',
+        trialStartedAt: now.toISOString(),
+        trialExpiresAt: trialExpiry.toISOString(),
+        planName: 'MathCity Free Trial',
+        priceMonthlyUzs: 29000,
+      },
+      placedBuildings: [
+        { buildingKey: 'house_basic', gridX: 1, gridY: 1, constructedAt: now.toISOString() },
+        { buildingKey: 'school_math', gridX: 2, gridY: 1, constructedAt: now.toISOString() },
+      ],
+      completedLessons: ['lesson-g3-addsub'],
+      completedSections: ['sec-g3-01-s1'],
+      solvedQuestions: [],
+      rewardedQuestionIds: [],
+      attemptedQuestionCount: 15,
+      correctQuestionCount: 14,
+      incorrectQuestionCount: 1,
+      dailyTaskProgress: {
+        task_solve_5: { currentCount: 0, isCompleted: false, claimed: false },
+        task_complete_lesson: { currentCount: 0, isCompleted: false, claimed: false },
+        task_play_space_game: { currentCount: 0, isCompleted: false, claimed: false },
+        task_ai_consult: { currentCount: 0, isCompleted: false, claimed: false },
+      },
+      unlockedAchievements: [],
+      createdAt: now.toISOString(),
+    };
+    repository.createUser(demoUser);
+  }
+
+  const token = jwt.sign({ userId: demoUser.id }, config.jwtSecret, {
+    expiresIn: '7d',
+  });
+
+  return res.json({
+    success: true,
+    data: {
+      token,
+      user: {
+        id: demoUser.id,
+        email: demoUser.email,
+        displayName: demoUser.displayName,
+        age: demoUser.age,
+        mode: demoUser.mode,
+        grade: demoUser.grade,
+        coinBalance: demoUser.coinBalance,
+        totalXP: demoUser.totalXP,
+        level: demoUser.level,
+        cityLevel: demoUser.cityLevel,
+        subscription: repository.getSubscription(demoUser.id),
+      },
+    },
+  });
+});
+
 authRouter.get('/me', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
   return res.json({

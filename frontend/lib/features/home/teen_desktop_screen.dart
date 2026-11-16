@@ -22,12 +22,14 @@ class TeenDesktopScreen extends ConsumerWidget {
       body: Row(
         children: [
           // Left Rail Navigation (Figma 2:91 >= 1024px)
-          Container(
+          SizedBox(
             width: 260,
-            color: AppColors.teenSurface,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Material(
+              color: AppColors.teenSurface,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
@@ -71,6 +73,8 @@ class TeenDesktopScreen extends ConsumerWidget {
               ],
             ),
           ),
+        ),
+      ),
 
           // Main Teen Desktop Workspace
           Expanded(
@@ -267,19 +271,22 @@ class TeenDesktopScreen extends ConsumerWidget {
   Widget _buildNavItem(IconData icon, String title, bool active, VoidCallback onTap) {
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
-      child: ListTile(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        tileColor: active ? const Color(0xFF1E273D) : Colors.transparent,
-        leading: Icon(icon, color: active ? AppColors.teenPrimaryLime : AppColors.teenMutedText),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: active ? FontWeight.w700 : FontWeight.w500,
-            color: active ? AppColors.teenPrimaryLime : AppColors.teenMutedText,
+      child: Material(
+        color: active ? const Color(0xFF1E273D) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        child: ListTile(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          leading: Icon(icon, color: active ? AppColors.teenPrimaryLime : AppColors.teenMutedText),
+          title: Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+              color: active ? AppColors.teenPrimaryLime : AppColors.teenMutedText,
+            ),
           ),
+          onTap: onTap,
         ),
-        onTap: onTap,
       ),
     );
   }

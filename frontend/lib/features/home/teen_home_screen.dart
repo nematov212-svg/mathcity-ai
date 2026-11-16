@@ -31,49 +31,59 @@ class TeenHomeScreen extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.teenSurface,
-                          border: Border.all(color: AppColors.teenPrimaryLime, width: 2),
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.person_rounded,
-                              color: AppColors.teenPrimaryLime, size: 28),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Salom, $name',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                            ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.teenSurface,
+                            border: Border.all(color: AppColors.teenPrimaryLime, width: 2),
                           ),
-                          const Text(
-                            'O‘smirlar ilmiy portali',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.teenMutedText,
-                            ),
+                          child: const Center(
+                            child: Icon(Icons.person_rounded,
+                                color: AppColors.teenPrimaryLime, size: 28),
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Salom, $name',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Text(
+                                'O‘smirlar ilmiy portali',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.teenMutedText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 8),
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       CoinBadge(count: coins, size: 26),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 4),
                       IconButton(
                         icon: const Icon(Icons.settings_outlined, color: AppColors.teenMutedText),
                         onPressed: () => context.push('/settings'),
@@ -91,7 +101,7 @@ class TeenHomeScreen extends ConsumerWidget {
               // Hero Course Banner: Kvadrat tenglamalar (Figma 2:70)
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(22),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                 decoration: BoxDecoration(
                   color: AppColors.teenSurface,
                   borderRadius: BorderRadius.circular(22),
@@ -146,14 +156,21 @@ class TeenHomeScreen extends ConsumerWidget {
                         backgroundColor: AppColors.teenPrimaryLime,
                         foregroundColor: AppColors.teenLimeTextDark,
                         elevation: 0,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
                       onPressed: () => context.push('/kids/exercise/q-math-01?lessonId=lesson-t9-01&sectionId=section-t9-01-s1'),
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('Darsni boshlash', style: TextStyle(fontWeight: FontWeight.w800)),
+                          Flexible(
+                            child: Text(
+                              'Darsni boshlash',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontWeight: FontWeight.w800),
+                            ),
+                          ),
                           SizedBox(width: 8),
                           Icon(Icons.arrow_forward_rounded, size: 18),
                         ],

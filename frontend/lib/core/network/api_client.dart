@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../config/app_config.dart';
+import '../storage/storage_service.dart';
 
 class ApiClient {
   static final ApiClient _instance = ApiClient._internal();
@@ -23,13 +24,23 @@ class ApiClient {
 
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
-          if (_authToken != null) {
+        onRequest: (options, handler) async {
+          // If token not in memory, restore from storage
+          if (_authToken == null || _authToken!.isEmpty) {
+            _authToken = await StorageService.getAuthToken();
+          }
+
+          if (_authToken != null && _authToken!.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $_authToken';
           }
           return handler.next(options);
         },
-        onError: (DioException error, handler) {
+        onError: (DioException error, handler) async {
+          if (error.response?.statusCode == 401) {
+            // Unrecoverable or expired token: clear state to prevent loops
+            _authToken = null;
+            await StorageService.saveAuthToken('');
+          }
           return handler.next(error);
         },
       ),

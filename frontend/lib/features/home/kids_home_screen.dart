@@ -17,7 +17,7 @@ class KidsHomeScreen extends ConsumerWidget {
     final coins = student?.coinBalance ?? 250;
     final xp = student?.totalXP ?? 380;
     final level = student?.level ?? 3;
-    final name = student?.displayName ?? 'Ali';
+    final name = student?.displayName ?? 'Mirzobek';
 
     return Scaffold(
       backgroundColor: AppColors.kidsBackground,
@@ -31,51 +31,60 @@ class KidsHomeScreen extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                          border: Border.all(color: AppColors.kidsPrimary, width: 2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.kidsPrimary.withOpacity(0.15),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.face_rounded, color: AppColors.kidsPrimary, size: 30),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Salom, $name! 👋',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.kidsDarkText,
-                            ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            border: Border.all(color: AppColors.kidsPrimary, width: 2),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.kidsPrimary.withOpacity(0.15),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
-                          const Text(
-                            'Bugun nima o‘rganamiz?',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.kidsSecondaryText,
-                            ),
+                          child: const Center(
+                            child: Icon(Icons.face_rounded, color: AppColors.kidsPrimary, size: 30),
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Salom, $name! 👋',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.kidsDarkText,
+                                ),
+                              ),
+                              const Text(
+                                'Bugun nima o`rganamiz?',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.kidsSecondaryText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 10),
                   CoinBadge(count: coins, size: 28),
                 ],
               ),
@@ -160,9 +169,13 @@ class KidsHomeScreen extends ConsumerWidget {
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            'Darsni boshlash',
-                            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+                          Flexible(
+                            child: Text(
+                              'Darsni boshlash',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+                            ),
                           ),
                           SizedBox(width: 8),
                           Icon(Icons.arrow_forward_rounded, size: 18),
@@ -362,20 +375,27 @@ class KidsHomeScreen extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Row(
-                            children: [
-                              Icon(Icons.checklist_rounded, color: AppColors.kidsGreen, size: 22),
-                              SizedBox(width: 8),
-                              Text(
-                                'Bugungi vazifalar',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.kidsDarkText,
+                          const Expanded(
+                            child: Row(
+                              children: [
+                                Icon(Icons.checklist_rounded, color: AppColors.kidsGreen, size: 22),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Bugungi vazifalar',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.kidsDarkText,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
+                          const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
@@ -448,7 +468,7 @@ class KidsHomeScreen extends ConsumerWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.sports_esports_rounded),
-            label: 'O‘yinlar',
+            label: 'O`yinlar',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.location_city_rounded),

@@ -22,12 +22,14 @@ class KidsDesktopScreen extends ConsumerWidget {
       body: Row(
         children: [
           // Persistent Left Navigation Rail (Figma 2:90 >= 1024px)
-          Container(
+          SizedBox(
             width: 260,
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Material(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
@@ -72,6 +74,8 @@ class KidsDesktopScreen extends ConsumerWidget {
               ],
             ),
           ),
+        ),
+      ),
 
           // Main Responsive Content Area
           Expanded(
@@ -283,19 +287,22 @@ class KidsDesktopScreen extends ConsumerWidget {
   Widget _buildNavItem(IconData icon, String title, bool active, VoidCallback onTap) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        tileColor: active ? const Color(0xFFF3F0FF) : Colors.transparent,
-        leading: Icon(icon, color: active ? AppColors.kidsPrimary : AppColors.kidsSecondaryText),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: active ? FontWeight.w800 : FontWeight.w600,
-            color: active ? AppColors.kidsPrimary : AppColors.kidsDarkText,
+      child: Material(
+        color: active ? const Color(0xFFF3F0FF) : Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: ListTile(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          leading: Icon(icon, color: active ? AppColors.kidsPrimary : AppColors.kidsSecondaryText),
+          title: Text(
+            title,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: active ? FontWeight.w800 : FontWeight.w600,
+              color: active ? AppColors.kidsPrimary : AppColors.kidsDarkText,
+            ),
           ),
+          onTap: onTap,
         ),
-        onTap: onTap,
       ),
     );
   }
