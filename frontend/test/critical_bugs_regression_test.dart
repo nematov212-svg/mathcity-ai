@@ -6,7 +6,6 @@ import 'package:mathcity_ai/features/home/kids_home_screen.dart';
 import 'package:mathcity_ai/features/home/teen_home_screen.dart';
 import 'package:mathcity_ai/features/onboarding/welcome_screen.dart';
 import 'package:mathcity_ai/features/settings/settings_screen.dart';
-import 'package:mathcity_ai/features/city/city_screen.dart';
 import 'package:mathcity_ai/shared/providers/student_provider.dart';
 
 void main() {

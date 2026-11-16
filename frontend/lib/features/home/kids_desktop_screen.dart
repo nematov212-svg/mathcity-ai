@@ -112,7 +112,10 @@ class KidsDesktopScreen extends ConsumerWidget {
                         children: [
                           CoinBadge(count: coins, size: 28),
                           const SizedBox(width: 16),
-                          XPBar(currentXP: xp, level: level),
+                          SizedBox(
+                            width: 240,
+                            child: XPBar(currentXP: xp, level: level),
+                          ),
                         ],
                       ),
                     ],
