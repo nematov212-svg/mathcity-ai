@@ -21,6 +21,21 @@ class MathCityApp extends ConsumerWidget {
       darkTheme: TeenTheme.theme,
       themeMode: mode == 'TEEN' ? ThemeMode.dark : ThemeMode.light,
       routerConfig: appRouter,
+      builder: (context, child) {
+        final mediaQuery = MediaQuery.of(context);
+        final insets = mediaQuery.viewInsets;
+        // Fix for Flutter Web bug: Assertion failed: _viewInsets.isNonNegative
+        final safeInsets = EdgeInsets.fromLTRB(
+          insets.left < 0 ? 0 : insets.left,
+          insets.top < 0 ? 0 : insets.top,
+          insets.right < 0 ? 0 : insets.right,
+          insets.bottom < 0 ? 0 : insets.bottom,
+        );
+        return MediaQuery(
+          data: mediaQuery.copyWith(viewInsets: safeInsets),
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
     );
   }
 }

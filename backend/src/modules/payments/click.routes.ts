@@ -3,28 +3,59 @@ import crypto from 'crypto';
 import { z } from 'zod';
 import { authMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
 import { repository } from '../../utils/repository.js';
-import { paymentDataStore, PaymentMethod } from './paymentStore.js';
+import { paymentDataStore } from './paymentStore.js';
 
 export const paymentsRouter = Router();
 
-// Click Business Merchant Credentials (from environment or defaults)
-const CLICK_SERVICE_ID = process.env.CLICK_SERVICE_ID || '32840';
-const CLICK_MERCHANT_ID = process.env.CLICK_MERCHANT_ID || '24510';
-const CLICK_SECRET_KEY = process.env.CLICK_SECRET_KEY || 'mathcity_click_secret_key_demo';
+// Click Business Merchant Credentials from environment
+const CLICK_SERVICE_ID = process.env.CLICK_SERVICE_ID || '';
+const CLICK_MERCHANT_ID = process.env.CLICK_MERCHANT_ID || '';
+const CLICK_SECRET_KEY = process.env.CLICK_SECRET_KEY || '';
+
+// Helper: Check if merchant onboarding is live
+function isMerchantLive(): boolean {
+  return (
+    CLICK_SERVICE_ID.trim().length > 0 &&
+    CLICK_MERCHANT_ID.trim().length > 0 &&
+    CLICK_SECRET_KEY.trim().length > 0 &&
+    CLICK_SECRET_KEY !== 'mathcity_click_secret_key_demo'
+  );
+}
 
 // Helper: MD5 hashing for Click signature validation
 function generateClickSignature(params: (string | number)[]): string {
   return crypto.createHash('md5').update(params.join('')).digest('hex');
 }
 
-// 1. Create Payment Order & Generate Checkout URL
-paymentsRouter.post('/click/create-invoice', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const user = req.user!;
-  const amount = 29000; // 29,000 UZS / month
-  const returnUrl = 'http://localhost:8085/#/kids/profile';
-  const checkoutUrl = `https://my.click.uz/services/pay?service_id=${CLICK_SERVICE_ID}&merchant_id=${CLICK_MERCHANT_ID}&amount=${amount}&transaction_param=${user.id}&return_url=${encodeURIComponent(returnUrl)}`;
+// 1. Create Payment Order & Generate Certified Click Checkout
+const createOrderSchema = z.object({
+  paymentMethod: z.enum(['UZCARD_HUMO_CLICK', 'VISA_MASTERCARD_CLICK', 'CLICK_APP']).default('UZCARD_HUMO_CLICK'),
+});
 
-  const order = paymentDataStore.createOrder(user.id, amount, checkoutUrl);
+paymentsRouter.post('/create-order', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const parse = createOrderSchema.safeParse(req.body);
+  const user = req.user!;
+  const amountUzs = 29000; // Strict server-side price: 29,000 UZS / month
+
+  // Verify merchant configuration
+  // If merchant credentials are not yet configured in .env, respond with honest setup requirement
+  if (!isMerchantLive() && process.env.NODE_ENV === 'production') {
+    return res.status(503).json({
+      success: false,
+      code: 'MERCHANT_SETUP_REQUIRED',
+      error: 'Click Business savdogar hisobi sozlanmoqda. Haqiqiy to‘lovlar bank tekshiruvidan so‘ng yoqiladi.',
+      message: 'Savdogar hisobini yoqish uchun CLICK_SERVICE_ID va CLICK_SECRET_KEY kiritilishi zarur.',
+    });
+  }
+
+  // Active service ID or fallback for sandbox testing
+  const serviceId = CLICK_SERVICE_ID || '32840';
+  const merchantId = CLICK_MERCHANT_ID || '24510';
+
+  const returnUrl = 'http://localhost:8085/#/kids/profile';
+  const checkoutUrl = `https://my.click.uz/services/pay?service_id=${serviceId}&merchant_id=${merchantId}&amount=${amountUzs}&transaction_param=${user.id}&return_url=${encodeURIComponent(returnUrl)}`;
+
+  const order = paymentDataStore.createOrder(user.id, amountUzs, checkoutUrl);
 
   return res.json({
     success: true,
@@ -32,108 +63,42 @@ paymentsRouter.post('/click/create-invoice', authMiddleware, (req: Authenticated
       orderId: order.id,
       amountUzs: order.amountUzs,
       currency: 'UZS',
-      checkoutUrl,
+      checkoutUrl: order.checkoutUrl,
       provider: 'CLICK_BUSINESS',
       planName: 'MathCity Pro',
-      monthlyRenewalInfo: 'Oylik 29 000 so‘m. Istalgan vaqtda bekor qilish mumkin.',
+      isSandbox: !isMerchantLive(),
+      instructions: 'To‘lov Click Business rasmiy sertifikatlangan sahifasi orqali xavfsiz yakunlanadi.',
     },
   });
 });
 
-// 2. Direct Card Payment Initiation (Uzcard, Humo, Visa, Mastercard)
-const directCardSchema = z.object({
-  paymentMethod: z.enum(['UZCARD', 'HUMO', 'VISA', 'MASTERCARD', 'CLICK']),
-  cardNumber: z.string().min(16),
-  expiryDate: z.string().min(4),
-  cvv: z.string().optional(),
-  savePaymentMethod: z.boolean().optional().default(false),
-});
-
-paymentsRouter.post('/pay/card', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const parse = directCardSchema.safeParse(req.body);
-  if (!parse.success) {
-    return res.status(400).json({
-      success: false,
-      error: 'Karta ma’lumotlari to‘liq kiritilmadi.',
-      code: 'INVALID_CARD_FIELDS',
-    });
-  }
-
+// Backward compatible endpoint for create-invoice
+paymentsRouter.post('/click/create-invoice', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
-  const { paymentMethod, cardNumber, expiryDate } = parse.data;
-  const cleanCard = cardNumber.replace(/\s+/g, '');
-
-  // PCI-DSS Security Enforcement: never store full PAN or CVV
-  const maskedCard = `${cleanCard.slice(0, 4)} •••• •••• ${cleanCard.slice(-4)}`;
-
-  // Create order
   const amountUzs = 29000;
-  const order = paymentDataStore.createOrder(user.id, amountUzs, 'card_direct');
+  const serviceId = CLICK_SERVICE_ID || '32840';
+  const merchantId = CLICK_MERCHANT_ID || '24510';
+  const returnUrl = 'http://localhost:8085/#/kids/profile';
+  const checkoutUrl = `https://my.click.uz/services/pay?service_id=${serviceId}&merchant_id=${merchantId}&amount=${amountUzs}&transaction_param=${user.id}&return_url=${encodeURIComponent(returnUrl)}`;
 
-  // Simulated provider payment processing (Sandbox / Testing)
-  // In real production, this routes via Click Merchant API / Bank Payment Gateway
-  // Test failure condition: card ending in "0000" triggers insufficient funds
-  if (cleanCard.endsWith('0000')) {
-    paymentDataStore.updateOrderStatus(order.id, 'FAILED');
-    paymentDataStore.recordTransaction({
-      orderId: order.id,
-      userId: user.id,
-      amountUzs,
-      feeUzs: 0,
-      netAmountUzs: 0,
-      status: 'FAILED',
-      paymentMethod,
-      maskedCard,
-      settled: false,
-      errorMessage: 'Hisobingizda mablag‘ yetarli emas.',
-    });
-
-    return res.status(402).json({
-      success: false,
-      error: 'Hisobingizda mablag‘ yetarli emas. Iltimos, kartangizni to‘ldirib qayta urinib ko‘ring.',
-      code: 'INSUFFICIENT_FUNDS',
-    });
-  }
-
-  // Calculate 2% Click / Acquiring processing fee
-  const feeUzs = Math.round(amountUzs * 0.02); // 580 UZS
-  const netAmountUzs = amountUzs - feeUzs; // 28,420 UZS
-
-  // Record successful transaction
-  const tx = paymentDataStore.recordTransaction({
-    orderId: order.id,
-    userId: user.id,
-    clickTransId: `clk_card_${Date.now()}`,
-    amountUzs,
-    feeUzs,
-    netAmountUzs,
-    status: 'SUCCESS',
-    paymentMethod,
-    maskedCard,
-    settled: false,
-  });
-
-  paymentDataStore.updateOrderStatus(order.id, 'PAID');
-
-  // Authoritatively activate Pro subscription for 30 days
-  const activation = repository.activatePro(user.id, 'web', tx.id);
+  const order = paymentDataStore.createOrder(user.id, amountUzs, checkoutUrl);
 
   return res.json({
     success: true,
     data: {
       orderId: order.id,
-      transactionId: tx.id,
-      status: 'PAID',
-      amountUzs,
-      paymentMethod,
-      maskedCard,
-      proExpiresAt: activation.proExpiresAt,
-      message: 'To‘lov muvaffaqiyatli amalga oshirildi! MathCity Pro faollashtirildi.',
+      amountUzs: order.amountUzs,
+      currency: 'UZS',
+      checkoutUrl: order.checkoutUrl,
+      provider: 'CLICK_BUSINESS',
+      planName: 'MathCity Pro',
+      isSandbox: !isMerchantLive(),
     },
   });
 });
 
-// 3. Click Prepare Callback (Action 0)
+// 2. Click Prepare Callback (Action 0)
+// Called authoritatively by Click server
 paymentsRouter.post('/click/prepare', (req: Request, res: Response) => {
   const {
     click_trans_id,
@@ -155,7 +120,7 @@ paymentsRouter.post('/click/prepare', (req: Request, res: Response) => {
     details: { amount, action, error, error_note },
   });
 
-  // Action check
+  // Action check: must be 0 for prepare
   if (parseInt(action, 10) !== 0) {
     return res.json({ error: -4, error_note: 'Action mismatch' });
   }
@@ -172,17 +137,18 @@ paymentsRouter.post('/click/prepare', (req: Request, res: Response) => {
   }
 
   // MD5 signature check
+  const secretKey = CLICK_SECRET_KEY || 'mathcity_click_secret_key_mock';
   const expectedSign = generateClickSignature([
     click_trans_id,
     service_id,
-    CLICK_SECRET_KEY,
+    secretKey,
     merchant_trans_id,
     amount,
     action,
     sign_time,
   ]);
 
-  if (sign_string && sign_string !== expectedSign && process.env.NODE_ENV === 'production') {
+  if (sign_string && sign_string !== expectedSign) {
     paymentDataStore.logAudit({
       event: 'SIGNATURE_FAILED',
       clickTransId: click_trans_id?.toString(),
@@ -200,7 +166,8 @@ paymentsRouter.post('/click/prepare', (req: Request, res: Response) => {
   });
 });
 
-// 4. Click Complete Callback (Action 1)
+// 3. Click Complete Callback (Action 1)
+// Called authoritatively by Click server upon genuine user payment completion
 paymentsRouter.post('/click/complete', (req: Request, res: Response) => {
   const {
     click_trans_id,
@@ -223,13 +190,18 @@ paymentsRouter.post('/click/complete', (req: Request, res: Response) => {
     details: { amount, action, error, error_note },
   });
 
-  // Action check
+  // Action check: must be 1 for complete
   if (parseInt(action, 10) !== 1) {
     return res.json({ error: -4, error_note: 'Action mismatch' });
   }
 
   // Check for client-side payment error from Click
   if (parseInt(error, 10) < 0) {
+    paymentDataStore.logAudit({
+      event: 'PAYMENT_FAILED_PROVIDER',
+      clickTransId: click_trans_id?.toString(),
+      details: { error, error_note },
+    });
     return res.json({
       error: -9,
       error_note: 'To‘lov provayder tomonidan rad etildi',
@@ -255,10 +227,11 @@ paymentsRouter.post('/click/complete', (req: Request, res: Response) => {
   }
 
   // MD5 signature check
+  const secretKey = CLICK_SECRET_KEY || 'mathcity_click_secret_key_mock';
   const expectedSign = generateClickSignature([
     click_trans_id,
     service_id,
-    CLICK_SECRET_KEY,
+    secretKey,
     merchant_trans_id,
     merchant_prepare_id,
     amount,
@@ -266,14 +239,14 @@ paymentsRouter.post('/click/complete', (req: Request, res: Response) => {
     sign_time,
   ]);
 
-  if (sign_string && sign_string !== expectedSign && process.env.NODE_ENV === 'production') {
+  if (sign_string && sign_string !== expectedSign) {
     return res.json({ error: -1, error_note: 'SIGN CHECK FAILED' });
   }
 
   // Calculate fees (Click 2% standard business tariff)
   const amountUzs = parseFloat(amount);
-  const feeUzs = Math.round(amountUzs * 0.02);
-  const netAmountUzs = amountUzs - feeUzs;
+  const feeUzs = Math.round(amountUzs * 0.02); // 580 UZS
+  const netAmountUzs = amountUzs - feeUzs; // 28,420 UZS
 
   // Record authoritative transaction
   paymentDataStore.recordTransaction({
@@ -301,7 +274,7 @@ paymentsRouter.post('/click/complete', (req: Request, res: Response) => {
   });
 });
 
-// 5. Payment Status Check Endpoint
+// 4. Payment Order Status Check Endpoint
 paymentsRouter.get('/status/:orderId', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const orderId = req.params.orderId as string;
   const user = req.user!;

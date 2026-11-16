@@ -338,12 +338,16 @@ class DataRepository {
         user.solvedQuestions.push(questionId);
       }
 
-      // STRICT RULE: Award exactly 1 coin ONLY if this question has NOT previously awarded a coin
+      // Check whether user has an authoritative PAID PRO subscription
+      const isPaidPro = user.subscription.status === 'PRO_ACTIVE';
+      const eligibleCoinReward = isPaidPro ? 3 : 1; // +3 coins for Pro, +1 coin for Free / Trial
+
+      // STRICT RULE: Award coins ONLY if this question has NOT previously awarded coins
       if (!user.rewardedQuestionIds.includes(questionId)) {
         user.rewardedQuestionIds.push(questionId);
-        coinsAwarded = 1; // EXACTLY 1 COIN
+        coinsAwarded = eligibleCoinReward;
         xpAwarded = 10;
-        user.coinBalance += 1;
+        user.coinBalance += eligibleCoinReward;
         isFirstTimeCorrect = true;
       } else {
         // Repeated solve: 0 extra coins, minimal practice XP

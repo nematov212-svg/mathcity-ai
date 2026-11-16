@@ -36,6 +36,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
   int _sessionCoinsEarned = 0;
   int _sessionXpEarned = 0;
   int _correctCount = 0;
+  int _lastCoinsAwarded = 0;
   bool _isCompleted = false;
   bool _isLoading = true;
 
@@ -227,6 +228,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
     setState(() {
       _isAnswerChecked = true;
       _isCorrect = isCorrect;
+      _lastCoinsAwarded = isCorrect ? coinsAwarded : 0;
       if (isCorrect) {
         _correctCount++;
         _sessionCoinsEarned += coinsAwarded;
@@ -394,18 +396,24 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFF9E6),
+                      color: studentState.isPro ? const Color(0xFFFFF4D4) : const Color(0xFFFFF9E6),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFFFFD54F)),
+                      border: Border.all(
+                        color: studentState.isPro ? const Color(0xFFFFB800) : const Color(0xFFFFD54F),
+                      ),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.monetization_on_rounded, color: Color(0xFFFFB800), size: 14),
-                        SizedBox(width: 4),
+                        Icon(
+                          studentState.isPro ? Icons.stars_rounded : Icons.monetization_on_rounded,
+                          color: const Color(0xFFFFB800),
+                          size: 14,
+                        ),
+                        const SizedBox(width: 4),
                         Text(
-                          '+1 oltin',
-                          style: TextStyle(
+                          studentState.isPro ? '+3 oltin 🌟' : '+1 oltin',
+                          style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w800,
                             color: Color(0xFF7A4800),
@@ -552,7 +560,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Success Banner with "+1 oltin"
+                      // Success Banner with coin feedback
                       if (_isAnswerChecked && _isCorrect) ...[
                         Container(
                           width: double.infinity,
@@ -562,21 +570,29 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(color: AppColors.kidsGreen, width: 1.5),
                           ),
-                          child: const Row(
+                          child: Row(
                             children: [
-                              Icon(Icons.check_circle_rounded, color: AppColors.kidsGreen, size: 28),
-                              SizedBox(width: 12),
+                              const Icon(Icons.check_circle_rounded, color: AppColors.kidsGreen, size: 28),
+                              const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
-                                  'Ajoyib! To‘g‘ri javob! +1 oltin tanga qo‘shildi!',
-                                  style: TextStyle(
+                                  _lastCoinsAwarded == 3
+                                      ? 'Ajoyib! To‘g‘ri javob! +3 oltin tanga qo‘shildi! 🌟 (Pro bonus)'
+                                      : (_lastCoinsAwarded == 1
+                                          ? 'Ajoyib! To‘g‘ri javob! +1 oltin tanga qo‘shildi!'
+                                          : 'To‘g‘ri javob! +0 tanga (Takroriy yechilgan misollarga tanga berilmaydi)'),
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w800,
                                     color: Color(0xFF13533E),
                                   ),
                                 ),
                               ),
-                              Icon(Icons.monetization_on_rounded, color: Color(0xFFFFB800), size: 24),
+                              Icon(
+                                _lastCoinsAwarded == 3 ? Icons.stars_rounded : Icons.monetization_on_rounded,
+                                color: const Color(0xFFFFB800),
+                                size: 24,
+                              ),
                             ],
                           ),
                         ),

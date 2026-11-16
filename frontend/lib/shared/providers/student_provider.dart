@@ -21,6 +21,8 @@ class StudentState {
     this.lastCoinsAwarded = 0,
   });
 
+  bool get isPro => student?.subscription.isProActive == true;
+
   StudentState copyWith({
     StudentModel? student,
     bool? isLoading,

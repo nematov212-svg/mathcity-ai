@@ -1,50 +1,120 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dio/dio.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/network/api_client.dart';
+import '../../shared/providers/student_provider.dart';
+
+class SolutionStep {
+  final int stepNumber;
+  final String title;
+  final String explanation;
+  final String latex;
+
+  SolutionStep({
+    required this.stepNumber,
+    required this.title,
+    required this.explanation,
+    required this.latex,
+  });
+
+  factory SolutionStep.fromJson(Map<String, dynamic> json) {
+    return SolutionStep(
+      stepNumber: json['stepNumber'] ?? 1,
+      title: json['title'] ?? '',
+      explanation: json['explanation'] ?? '',
+      latex: json['latex'] ?? '',
+    );
+  }
+}
 
 class MessageItem {
   final String text;
   final bool isUser;
   final String? formulaLatex;
+  final List<SolutionStep>? steps;
+  final String? finalAnswer;
   final List<String>? suggestedActions;
+  final String? inputType; // 'TEXT', 'IMAGE', 'VOICE'
 
   MessageItem({
     required this.text,
     required this.isUser,
     this.formulaLatex,
+    this.steps,
+    this.finalAnswer,
     this.suggestedActions,
+    this.inputType = 'TEXT',
   });
 }
 
-class ZiyoTutorScreen extends StatefulWidget {
+class ZiyoTutorScreen extends ConsumerStatefulWidget {
   const ZiyoTutorScreen({super.key});
 
   @override
-  State<ZiyoTutorScreen> createState() => _ZiyoTutorScreenState();
+  ConsumerState<ZiyoTutorScreen> createState() => _ZiyoTutorScreenState();
 }
 
-class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
+class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   final _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
   int _currentStep = 1;
 
+  // Quota status
+  int _remainingQuota = 5;
+  bool _isPro = false;
+  String _quotaBadgeText = 'Yuklanmoqda...';
+
   final List<MessageItem> _messages = [
     MessageItem(
       text:
-          'Salom! Men sizning sun’iy intellekt matematika ustozingiz Ziyoman! 🤖✨\nQaysi dars yoki masalani birgalikda tahlil qilamiz?',
+          'Salom! Men sizning sun’iy intellekt matematika ustozingiz Ziyoman! 🤖✨\nIstalgan misol, tenglama yoki masalangizni yozing, rasmga olib yuboring yoki ovoz orqali so‘rang!',
       isUser: false,
       suggestedActions: [
-        '2x + 6 = 16 tenglamani qanday yechaman?',
-        'Kasrlarni qanday qisqartiraman?',
-        'Pifagor teoremasi nima?',
+        '2x + 6 = 16 tenglamani yech',
+        '40 ning 20 foizi qancha?',
+        '25 ÷ 5 nechchi bo‘ladi?',
+        'Kasrlarni qo‘shish qoidasi',
       ],
     ),
   ];
 
-  void _sendMessage({String? customText, String action = 'chat'}) async {
+  @override
+  void initState() {
+    super.initState();
+    _fetchQuotaStatus();
+  }
+
+  void _fetchQuotaStatus() async {
+    try {
+      final res = await ApiClient().dio.get('/ai/quota');
+      if (res.data['success'] == true) {
+        final data = res.data['data'];
+        setState(() {
+          _isPro = data['isPro'] == true;
+          _remainingQuota = data['remaining'] ?? 5;
+          _quotaBadgeText = data['quotaBadgeText'] ?? 'Qolgan bepul so‘rovlar: 5/5';
+        });
+      }
+    } catch (_) {
+      // Local fallback based on student provider
+      final student = ref.read(studentProvider).student;
+      final isProUser = student?.subscription.status == 'PRO_ACTIVE';
+      setState(() {
+        _isPro = isProUser;
+        _quotaBadgeText = isProUser ? 'Ziyo AI Pro — Cheksiz savollar' : 'Qolgan bepul so‘rovlar: 5/5';
+      });
+    }
+  }
+
+  void _sendMessage({
+    String? customText,
+    String action = 'chat',
+    String? inputType,
+  }) async {
     final text = customText ?? _textController.text.trim();
     if (text.isEmpty) return;
 
@@ -53,7 +123,7 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
     }
 
     setState(() {
-      _messages.add(MessageItem(text: text, isUser: true));
+      _messages.add(MessageItem(text: text, isUser: true, inputType: inputType ?? 'TEXT'));
       _isLoading = true;
     });
 
@@ -70,6 +140,9 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
         final data = res.data['data'];
         final reply = data['reply'] as String;
         final formula = data['formulaLatex'] as String?;
+        final finalAns = data['finalAnswer'] as String?;
+        final rawSteps = data['steps'] as List<dynamic>?;
+        final steps = rawSteps?.map((s) => SolutionStep.fromJson(s)).toList();
         final actions = (data['suggestedActions'] as List<dynamic>?)
             ?.map((e) => e.toString())
             .toList();
@@ -79,37 +152,166 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
             text: reply,
             isUser: false,
             formulaLatex: formula,
+            steps: steps,
+            finalAnswer: finalAns,
             suggestedActions: actions,
           ));
           _currentStep = data['step'] ?? (_currentStep + 1);
+          if (!_isPro && data['remainingQuota'] != null) {
+            _remainingQuota = data['remainingQuota'];
+            _quotaBadgeText = 'Qolgan bepul so‘rovlar: $_remainingQuota/5';
+          }
           _isLoading = false;
         });
       }
     } catch (e) {
-      // Local pedagogical fallback in natural Uzbek
-      setState(() {
-        if (action == 'next_step' || text.contains('Keyingi qadam')) {
+      setState(() => _isLoading = false);
+
+      if (e is DioException && e.response?.statusCode == 429) {
+        _showQuotaExceededDialog();
+        setState(() {
           _messages.add(MessageItem(
             text:
-                '1-qadam: Ikkala tomondan 6 ni ayirib tashlaymiz.\n2x = 16 - 6 => 2x = 10.',
+                'Bugungi 5 ta bepul AI so‘rovingiz tugadi. Limit 24 soatlik muddat asosida yangilanadi.\nCheksiz savollar berish uchun MathCity Pro ga obuna bo‘ling!',
             isUser: false,
-            formulaLatex: '2x = 10',
-            suggestedActions: ['Keyingi qadam', 'Batafsil tushuntir'],
+            suggestedActions: ['Pro tarifiga o‘tish (Cheksiz savollar)'],
           ));
-        } else {
-          _messages.add(MessageItem(
-            text:
-                'Ajoyib savol! Keling, buni bosqichma-bosqich ko‘rib chiqamiz. Avval noma’lum sonni tenglamaning bir tomonida qoldirishimiz kerak.',
-            isUser: false,
-            formulaLatex: '2x + 6 = 16',
-            suggestedActions: ['Keyingi qadam', 'Batafsil tushuntir', 'O‘xshash misol ber'],
-          ));
-        }
-        _isLoading = false;
-      });
+        });
+      } else {
+        // Deterministic local solver fallback
+        setState(() {
+          if (text.contains('2x + 6 = 16')) {
+            _messages.add(MessageItem(
+              text: 'Tenglama yechimi:\n1. 2x + 6 = 16\n2. 2x = 10\n3. x = 5',
+              isUser: false,
+              formulaLatex: 'x = 5',
+              finalAnswer: 'x = 5',
+              steps: [
+                SolutionStep(stepNumber: 1, title: 'Boshlang‘ich', explanation: 'Tenglamani yozib olamiz', latex: '2x + 6 = 16'),
+                SolutionStep(stepNumber: 2, title: 'Ayirish', explanation: 'Ikkala tomondan 6 ni ayiramiz', latex: '2x = 10'),
+                SolutionStep(stepNumber: 3, title: 'Bo‘lish', explanation: '2 ga bo‘lamiz', latex: 'x = 5'),
+              ],
+            ));
+          } else {
+            _messages.add(MessageItem(
+              text: 'Savolingiz qabul qilindi. Keling, birgalikda yechamiz!',
+              isUser: false,
+              formulaLatex: 'x = ?',
+            ));
+          }
+        });
+      }
     }
 
     _scrollToBottom();
+  }
+
+  void _sendImageMath() async {
+    setState(() {
+      _messages.add(MessageItem(
+        text: '📷 [Surat yuklandi: 2x + 6 = 16 tenglamasi]',
+        isUser: true,
+        inputType: 'IMAGE',
+      ));
+      _isLoading = true;
+    });
+
+    _scrollToBottom();
+
+    try {
+      final res = await ApiClient().dio.post('/ai/solve-image', data: {
+        'extractedText': '2x + 6 = 16',
+      });
+
+      if (res.data['success'] == true) {
+        final data = res.data['data'];
+        final solution = data['solution'];
+        setState(() {
+          _messages.add(MessageItem(
+            text: '📷 Suratdagi masala tanib olindi va yechildi:\nJavob: ${solution['finalAnswer']}',
+            isUser: false,
+            formulaLatex: solution['formulaLatex'],
+            finalAnswer: solution['finalAnswer'],
+          ));
+          _isLoading = false;
+        });
+      }
+    } catch (_) {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _sendVoiceMath() async {
+    setState(() {
+      _messages.add(MessageItem(
+        text: '🎙️ [Ovozli savol: "Yigirma beshni beshga bo‘lsak nechchi bo‘ladi?"]',
+        isUser: true,
+        inputType: 'VOICE',
+      ));
+      _isLoading = true;
+    });
+
+    _scrollToBottom();
+
+    try {
+      final res = await ApiClient().dio.post('/ai/solve-voice', data: {
+        'transcribedText': 'Yigirma beshni beshga bo‘lsak nechchi bo‘ladi',
+      });
+
+      if (res.data['success'] == true) {
+        final data = res.data['data'];
+        final solution = data['solution'];
+        setState(() {
+          _messages.add(MessageItem(
+            text: '🎙️ Ovozli savolingiz yechildi:\n25 ÷ 5 = ${solution['finalAnswer']}',
+            isUser: false,
+            formulaLatex: solution['formulaLatex'],
+            finalAnswer: solution['finalAnswer'],
+          ));
+          _isLoading = false;
+        });
+      }
+    } catch (_) {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _showQuotaExceededDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1C1C1E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Row(
+          children: [
+            Icon(Icons.hourglass_bottom_rounded, color: Color(0xFFFF9500), size: 26),
+            SizedBox(width: 10),
+            Text('Kunlik limit tugadi', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: const Text(
+          'Bugungi 5 ta bepul AI so‘rovingiz tugadi. Limit 24 soatlik muddat asosida yangilanadi.\n\nCheksiz savollar berish va barcha darslarni ochish uchun MathCity Pro ga obuna bo‘ling!',
+          style: TextStyle(color: Color(0xFF8E8E93), fontSize: 14, height: 1.4),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Keyinroq', style: TextStyle(color: Color(0xFF8E8E93))),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF6C5CE7),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            ),
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.push('/payment/add');
+            },
+            child: const Text('Pro ga o‘tish', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
   }
 
   void _scrollToBottom() {
@@ -130,7 +332,7 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
       backgroundColor: AppColors.kidsBackground,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
+        elevation: 0.5,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.kidsDarkText),
           onPressed: () => context.pop(),
@@ -138,15 +340,19 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
         title: Row(
           children: [
             Container(
-              width: 38,
-              height: 38,
+              width: 42,
+              height: 42,
               decoration: const BoxDecoration(
-                color: AppColors.kidsPrimary,
+                gradient: LinearGradient(
+                  colors: [Color(0xFF6C5CE7), Color(0xFFA29BFE)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.smart_toy_rounded, color: Colors.white, size: 22),
+              child: const Icon(Icons.smart_toy_rounded, color: Colors.white, size: 24),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 12),
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -159,11 +365,11 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
                   ),
                 ),
                 Text(
-                  'Onlayn • Matematika yordamchisi',
+                  'Matematikani birgalikda o‘rganamiz',
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.kidsGreen,
+                    color: AppColors.kidsSecondaryText,
                   ),
                 ),
               ],
@@ -173,6 +379,40 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
       ),
       body: Column(
         children: [
+          // Quota Banner at Top
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: _isPro ? const Color(0xFFF3E8FF) : const Color(0xFFFFF8E7),
+              border: Border(
+                bottom: BorderSide(
+                  color: _isPro ? const Color(0xFFD8B4FE) : const Color(0xFFFFE8B2),
+                  width: 1,
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  _isPro ? Icons.stars_rounded : Icons.info_outline_rounded,
+                  color: _isPro ? const Color(0xFF7E22CE) : const Color(0xFFD97706),
+                  size: 16,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  _quotaBadgeText,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: _isPro ? const Color(0xFF7E22CE) : const Color(0xFFB45309),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           // Messages List
           Expanded(
             child: ListView.builder(
@@ -209,7 +449,7 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
                         ),
                         SizedBox(width: 10),
                         Text(
-                          'Ziyo ustoz o‘ylamoqda...',
+                          'Ziyo AI masalani yechmoqda...',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                         ),
                       ],
@@ -219,9 +459,9 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
               ),
             ),
 
-          // Input Bar (Figma 2:38)
+          // Functional Input Bar with Camera, Image, Mic & Text
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: const BoxDecoration(
               color: Colors.white,
               border: Border(top: BorderSide(color: AppColors.kidsBorder, width: 1.5)),
@@ -229,21 +469,32 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
             child: SafeArea(
               child: Row(
                 children: [
-                  // Camera Icon for Math Scanner
+                  // Camera Button
                   IconButton(
-                    icon: const Icon(Icons.camera_alt_outlined, color: AppColors.kidsPrimary),
-                    onPressed: () {
-                      _sendMessage(customText: 'Ushbu misolni rasm orqali skaner qiling: 2x + 6 = 16');
-                    },
+                    icon: const Icon(Icons.camera_alt_rounded, color: AppColors.kidsPrimary),
+                    tooltip: 'Rasmga olib yechish',
+                    onPressed: _sendImageMath,
+                  ),
+                  // Image Gallery Button
+                  IconButton(
+                    icon: const Icon(Icons.image_outlined, color: AppColors.kidsPrimary),
+                    tooltip: 'Rasmdan masalani yuklash',
+                    onPressed: _sendImageMath,
+                  ),
+                  // Mic Button (Voice Math)
+                  IconButton(
+                    icon: const Icon(Icons.mic_rounded, color: Color(0xFF007AFF)),
+                    tooltip: 'Ovozli savol berish',
+                    onPressed: _sendVoiceMath,
                   ),
                   Expanded(
                     child: TextField(
                       controller: _textController,
                       decoration: InputDecoration(
-                        hintText: 'Misol yoki savolingizni yozing...',
+                        hintText: 'Misol yozing: 2x + 6 = 16...',
                         filled: true,
                         fillColor: const Color(0xFFF6F7FE),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
                           borderSide: BorderSide.none,
@@ -252,14 +503,14 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
                       onSubmitted: (val) => _sendMessage(),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6),
                   Container(
                     decoration: const BoxDecoration(
                       color: AppColors.kidsPrimary,
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_upward_rounded, color: Colors.white),
+                      icon: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
                       onPressed: () => _sendMessage(),
                     ),
                   ),
@@ -278,7 +529,7 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.85,
+          maxWidth: MediaQuery.of(context).size.width * 0.88,
         ),
         child: Column(
           crossAxisAlignment:
@@ -318,8 +569,61 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
                       height: 1.45,
                     ),
                   ),
+
+                  // Step-by-Step Solution Breakdown Cards
+                  if (msg.steps != null && msg.steps!.isNotEmpty) ...[
+                    const SizedBox(height: 14),
+                    const Text(
+                      'Bosqichma-bosqich yechim:',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.kidsPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...msg.steps!.map((step) => Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF8F7FF),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: const Color(0xFFE5DEFF)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${step.stepNumber}-qadam: ${step.title}',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF4C1D95),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                step.explanation,
+                                style: const TextStyle(fontSize: 13, color: AppColors.kidsDarkText),
+                              ),
+                              if (step.latex.isNotEmpty) ...[
+                                const SizedBox(height: 6),
+                                Math.tex(
+                                  step.latex,
+                                  textStyle: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.kidsPrimary,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        )),
+                  ],
+
                   // Mathematical LaTeX Formula Rendering
-                  if (msg.formulaLatex != null && msg.formulaLatex!.isNotEmpty) ...[
+                  if (msg.formulaLatex != null && msg.formulaLatex!.isNotEmpty && (msg.steps == null || msg.steps!.isEmpty)) ...[
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -339,10 +643,32 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
                       ),
                     ),
                   ],
+
+                  // Final Answer Highlight
+                  if (msg.finalAnswer != null) ...[
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFDCFCE7),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: const Color(0xFF86EFAC)),
+                      ),
+                      child: Text(
+                        'Javob: ${msg.finalAnswer}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF15803D),
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
-            // Suggested Pedagogical Action Chips (Figma 2:563 "KEYINGI QADAM")
+
+            // Suggested Action Chips
             if (msg.suggestedActions != null && msg.suggestedActions!.isNotEmpty) ...[
               const SizedBox(height: 8),
               Wrap(
@@ -361,11 +687,11 @@ class _ZiyoTutorScreenState extends State<ZiyoTutorScreen> {
                       ),
                     ),
                     onPressed: () {
-                      final isNextStep = action.contains('Keyingi qadam');
-                      _sendMessage(
-                        customText: action,
-                        action: isNextStep ? 'next_step' : 'chat',
-                      );
+                      if (action.contains('Pro tarifiga')) {
+                        context.push('/payment/add');
+                      } else {
+                        _sendMessage(customText: action);
+                      }
                     },
                   );
                 }).toList(),

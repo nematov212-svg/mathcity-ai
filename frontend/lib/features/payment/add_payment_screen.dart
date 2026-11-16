@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import '../../core/network/api_client.dart';
-import '../../shared/models/student_model.dart';
 import '../../shared/providers/student_provider.dart';
 
 class AddPaymentScreen extends ConsumerStatefulWidget {
@@ -15,83 +13,40 @@ class AddPaymentScreen extends ConsumerStatefulWidget {
 }
 
 class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  // Payment method selection
-  String _selectedMethod = 'UZCARD'; // 'UZCARD', 'HUMO', 'VISA', 'CLICK'
-
-  final TextEditingController _cardNumberController = TextEditingController();
-  final TextEditingController _expiryController = TextEditingController();
-  final TextEditingController _cvvController = TextEditingController();
-  final TextEditingController _cardHolderController = TextEditingController();
+  // Payment provider / method selection
+  String _selectedMethod = 'CLICK_UZCARD_HUMO'; // 'CLICK_UZCARD_HUMO', 'CLICK_VISA_MC', 'CLICK_APP'
 
   bool _isLoading = false;
-  bool _isSuccess = false;
   String? _errorMessage;
 
-  @override
-  void dispose() {
-    _cardNumberController.dispose();
-    _expiryController.dispose();
-    _cvvController.dispose();
-    _cardHolderController.dispose();
-    super.dispose();
-  }
-
-  void _processPayment() async {
+  void _initiatePayment() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
-    final cardNumber = _cardNumberController.text.trim();
-    final expiry = _expiryController.text.trim();
-    final cvv = _cvvController.text.trim();
-
-    // Basic client validation
-    if (_selectedMethod != 'CLICK' && cardNumber.replaceAll(' ', '').length < 16) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'Karta raqami 16 ta raqamdan iborat bo‘lishi kerak.';
-      });
-      return;
-    }
-
     try {
-      if (_selectedMethod == 'CLICK') {
-        // Create Click invoice
-        final res = await ApiClient().dio.post('/payments/click/create-invoice');
-        if (res.data['success'] == true) {
-          // In web environment or direct fallback
-          setState(() => _isLoading = false);
-          _showClickRedirectDialog(res.data['data']['checkoutUrl']);
-          return;
-        }
-      }
-
-      // Card direct authorization
-      final res = await ApiClient().dio.post('/payments/pay/card', data: {
+      // 1. Create authoritative payment order on backend
+      final res = await ApiClient().dio.post('/payments/create-order', data: {
         'paymentMethod': _selectedMethod,
-        'cardNumber': cardNumber,
-        'expiryDate': expiry.isEmpty ? '12/28' : expiry,
-        'cvv': cvv.isEmpty ? '123' : cvv,
       });
 
       if (res.data['success'] == true) {
+        final data = res.data['data'];
+        final orderId = data['orderId'] as String;
+        final checkoutUrl = data['checkoutUrl'] as String;
+        final isSandbox = data['isSandbox'] == true;
+
         setState(() {
           _isLoading = false;
-          _isSuccess = true;
         });
 
-        // Refresh student state to reflect active Pro
-        await ref.read(studentProvider.notifier).refreshProfile();
-
-        if (!mounted) return;
-        _showSuccessDialog();
+        // 2. Open certified Click checkout modal
+        _showProviderCheckoutDialog(orderId, checkoutUrl, isSandbox);
       }
     } catch (e) {
       setState(() => _isLoading = false);
-      String msg = 'To‘lovni amalga oshirishda xatolik yuz berdi.';
+      String msg = 'To‘lov tizimiga ulanishda xatolik yuz berdi.';
       if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
         msg = e.response!.data['error'];
       }
@@ -99,37 +54,60 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
     }
   }
 
-  void _showClickRedirectDialog(String checkoutUrl) {
+  void _showProviderCheckoutDialog(String orderId, String checkoutUrl, bool isSandbox) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF1C1C1E),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Row(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: Row(
           children: [
-            Icon(Icons.payment, color: Color(0xFF007AFF)),
-            SizedBox(width: 10),
-            Text('Click orqali to‘lov', style: TextStyle(color: Colors.white, fontSize: 18)),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF007AFF).withOpacity(0.15),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.payment_rounded, color: Color(0xFF007AFF), size: 24),
+            ),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Text(
+                'Click Business To‘lovi',
+                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Click Business to‘lov sahifasi orqali to‘lovni xavfsiz yakunlang. Summa: 29 000 so‘m.',
-              style: TextStyle(color: Color(0xFF8E8E93), fontSize: 14),
+            Text(
+              isSandbox
+                  ? 'To‘lov tizimi hozirda sinov rejimida. Rasmiy Click shlyuzi orqali 29 000 so‘m to‘lovni tasdiqlang.'
+                  : 'To‘lovni yakunlash uchun Click Business rasmiy sertifikatlangan to‘lov sahifasiga o‘ting. Summa: 29 000 so‘m.',
+              style: const TextStyle(color: Color(0xFF8E8E93), fontSize: 14, height: 1.4),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: const Color(0xFF2C2C2E),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(14),
               ),
-              child: SelectableText(
-                checkoutUrl,
-                style: const TextStyle(color: Color(0xFF0A84FF), fontSize: 12),
+              child: Row(
+                children: [
+                  const Icon(Icons.shield_rounded, color: Color(0xFF34C759), size: 20),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Buyurtma raqami: $orderId',
+                      style: const TextStyle(color: Color(0xFFEBEBF5), fontSize: 12, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -137,24 +115,59 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Yopish', style: TextStyle(color: Color(0xFF8E8E93))),
+            child: const Text('Bekor qilish', style: TextStyle(color: Color(0xFF8E8E93))),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF0071E3),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             ),
             onPressed: () async {
               Navigator.pop(ctx);
-              // Authoritative simulate Click complete for testing
-              await ref.read(studentProvider.notifier).purchasePro();
-              if (mounted) _showSuccessDialog();
+              _checkPaymentVerification(orderId);
             },
-            child: const Text('To‘lovni tasdiqlash', style: TextStyle(color: Colors.white)),
+            child: const Text(
+              'To‘lov holatini tekshirish',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),
     );
+  }
+
+  void _checkPaymentVerification(String orderId) async {
+    setState(() => _isLoading = true);
+
+    try {
+      final res = await ApiClient().dio.get('/payments/status/$orderId');
+      setState(() => _isLoading = false);
+
+      if (res.data['success'] == true) {
+        final status = res.data['data']['status'];
+        final isPro = res.data['data']['isProActive'] == true;
+
+        if (status == 'PAID' && isPro) {
+          // Refresh student state
+          await ref.read(studentProvider.notifier).refreshProfile();
+          if (mounted) _showSuccessDialog();
+        } else if (status == 'FAILED') {
+          setState(() {
+            _errorMessage = 'Hisobingizda mablag‘ yetarli emas. MathCity Pro tarifini sotib olish uchun kartangizni to‘ldiring.';
+          });
+        } else {
+          setState(() {
+            _errorMessage = 'To‘lov hali tasdiqlanmadi yoki bekor qilindi. Iltimos, qayta urinib ko‘ring.';
+          });
+        }
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'To‘lov holatini tekshirishda xatolik yuz berdi.';
+      });
+    }
   }
 
   void _showSuccessDialog() {
@@ -170,8 +183,8 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 72,
-                height: 72,
+                width: 76,
+                height: 76,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Color(0xFF34C759), Color(0xFF30B0C7)],
@@ -181,12 +194,12 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                   shape: BoxShape.circle,
                 ),
                 child: const Center(
-                  child: Icon(Icons.check_rounded, color: Colors.white, size: 44),
+                  child: Icon(Icons.check_rounded, color: Colors.white, size: 48),
                 ),
               ),
               const SizedBox(height: 20),
               const Text(
-                'To‘lov muvaffaqiyatli!',
+                'Tabriklaymiz!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 22,
@@ -194,13 +207,13 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               const Text(
-                'MathCity Pro obunasi 30 kunga faollashtirildi. 29 000 so‘m rasmiy to‘lov qabul qilindi.',
+                'MathCity Pro muvaffaqiyatli faollashtirildi. 29 000 so‘m to‘lov tasdiqlandi.',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 14, color: Color(0xFF8E8E93), height: 1.4),
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 26),
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -251,318 +264,231 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Section 1: Subscription Summary Card
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1C1C1E),
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: const Color(0xFF2C2C2E)),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 52,
-                        height: 52,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFFFB800), Color(0xFFFF8C00)],
-                          ),
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.workspace_premium_rounded, color: Colors.white, size: 30),
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'MathCity Pro',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            SizedBox(height: 3),
-                            Text(
-                              'Barcha 1-11 sinf testlari va 3D shahar',
-                              style: TextStyle(color: Color(0xFF8E8E93), fontSize: 13),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Text(
-                        '29 000 UZS\n/ oy',
-                        textAlign: TextAlign.right,
-                        style: TextStyle(
-                          color: Color(0xFF0A84FF),
-                          fontWeight: FontWeight.w700,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Section 1: Subscription Summary Card
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1C1C1E),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: const Color(0xFF2C2C2E)),
                 ),
-
-                const SizedBox(height: 24),
-                const Text(
-                  'TO‘LOV USULI',
-                  style: TextStyle(
-                    color: Color(0xFF8E8E93),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const SizedBox(height: 10),
-
-                // Section 2: Payment Method Selector Cards
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1C1C1E),
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: const Color(0xFF2C2C2E)),
-                  ),
-                  child: Column(
-                    children: [
-                      _buildMethodTile(
-                        method: 'UZCARD',
-                        title: 'Uzcard / Humo',
-                        subtitle: 'Milliy to‘lov tizimlari (so‘m)',
-                        icon: Icons.credit_card_rounded,
-                        badgeText: 'UZCARD/HUMO',
-                      ),
-                      const Divider(color: Color(0xFF2C2C2E), height: 1, indent: 56),
-                      _buildMethodTile(
-                        method: 'VISA',
-                        title: 'Visa / Mastercard',
-                        subtitle: 'Xalqaro bank kartalari',
-                        icon: Icons.payment_rounded,
-                        badgeText: 'VISA/MC',
-                      ),
-                      const Divider(color: Color(0xFF2C2C2E), height: 1, indent: 56),
-                      _buildMethodTile(
-                        method: 'CLICK',
-                        title: 'Click Business',
-                        subtitle: 'Click ilovasi yoki veb checkout',
-                        icon: Icons.account_balance_wallet_rounded,
-                        badgeText: 'CLICK',
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-                const Text(
-                  'KARTA MA’LUMOTLARI',
-                  style: TextStyle(
-                    color: Color(0xFF8E8E93),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const SizedBox(height: 10),
-
-                // Section 3: Apple-Style Card Input Card
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1C1C1E),
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: const Color(0xFF2C2C2E)),
-                  ),
-                  child: Column(
-                    children: [
-                      // Card Number Field
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        child: TextFormField(
-                          controller: _cardNumberController,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(16),
-                            _CardNumberFormatter(),
-                          ],
-                          style: const TextStyle(color: Colors.white, fontSize: 16),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: '8600 •••• •••• ••••',
-                            hintStyle: const TextStyle(color: Color(0xFF636366), fontSize: 16),
-                            labelText: 'Karta raqami',
-                            labelStyle: const TextStyle(color: Color(0xFF8E8E93), fontSize: 14),
-                            suffixIcon: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Text(
-                                _selectedMethod,
-                                style: const TextStyle(
-                                  color: Color(0xFF007AFF),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11,
-                                ),
-                              ),
-                            ),
-                          ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFFFB800), Color(0xFFFF8C00)],
                         ),
+                        borderRadius: BorderRadius.circular(14),
                       ),
-                      const Divider(color: Color(0xFF2C2C2E), height: 1),
-                      // Expiry and CVV Row
-                      Row(
+                      child: const Center(
+                        child: Icon(Icons.workspace_premium_rounded, color: Colors.white, size: 30),
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                              child: TextFormField(
-                                controller: _expiryController,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(4),
-                                  _ExpiryDateFormatter(),
-                                ],
-                                style: const TextStyle(color: Colors.white, fontSize: 16),
-                                decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'OO/YY',
-                                  hintStyle: TextStyle(color: Color(0xFF636366), fontSize: 16),
-                                  labelText: 'Muddati',
-                                  labelStyle: TextStyle(color: Color(0xFF8E8E93), fontSize: 14),
-                                ),
-                              ),
+                          Text(
+                            'MathCity Pro',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          Container(width: 1, height: 48, color: const Color(0xFF2C2C2E)),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                              child: TextFormField(
-                                controller: _cvvController,
-                                keyboardType: TextInputType.number,
-                                obscureText: true,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(3),
-                                ],
-                                style: const TextStyle(color: Colors.white, fontSize: 16),
-                                decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: '123',
-                                  hintStyle: TextStyle(color: Color(0xFF636366), fontSize: 16),
-                                  labelText: 'CVV / CVC',
-                                  labelStyle: TextStyle(color: Color(0xFF8E8E93), fontSize: 14),
-                                ),
-                              ),
+                          SizedBox(height: 3),
+                          Text(
+                            'Barcha 1-11 sinf darslari va +3 tanga mukofoti',
+                            style: TextStyle(color: Color(0xFF8E8E93), fontSize: 13),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Text(
+                      '29 000 UZS\n/ oy',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        color: Color(0xFF0A84FF),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 24),
+              const Text(
+                'TO‘LOV TIZIMI',
+                style: TextStyle(
+                  color: Color(0xFF8E8E93),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Section 2: Payment Provider Cards
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1C1C1E),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: const Color(0xFF2C2C2E)),
+                ),
+                child: Column(
+                  children: [
+                    _buildMethodTile(
+                      method: 'CLICK_UZCARD_HUMO',
+                      title: 'Uzcard / Humo',
+                      subtitle: 'Click Business orqali milliy kartalar (so‘m)',
+                      icon: Icons.credit_card_rounded,
+                      badgeText: 'UZCARD/HUMO',
+                    ),
+                    const Divider(color: Color(0xFF2C2C2E), height: 1, indent: 56),
+                    _buildMethodTile(
+                      method: 'CLICK_VISA_MC',
+                      title: 'Visa / Mastercard',
+                      subtitle: 'Click orqali xalqaro to‘lov kartalari',
+                      icon: Icons.payment_rounded,
+                      badgeText: 'VISA/MC',
+                    ),
+                    const Divider(color: Color(0xFF2C2C2E), height: 1, indent: 56),
+                    _buildMethodTile(
+                      method: 'CLICK_APP',
+                      title: 'Click Business',
+                      subtitle: 'Click ilovasi yoki hamyon orqali',
+                      icon: Icons.account_balance_wallet_rounded,
+                      badgeText: 'CLICK',
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Truthful security disclosure
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1C1C1E),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFF2C2C2E)),
+                ),
+                child: const Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.lock_rounded, color: Color(0xFF34C759), size: 20),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '256-bit SSL va PCI-DSS xavfsiz to‘lov shifrlanishi',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'To‘lov Click Business rasmiy sertifikatlangan shlyuzi orqali xavfsiz qabul qilinadi. Karta ma’lumotlari yoki CVV kodlari MathCity AI serverlarida saqlanmaydi.',
+                            style: TextStyle(
+                              color: Color(0xFF8E8E93),
+                              fontSize: 12,
+                              height: 1.45,
                             ),
                           ),
                         ],
                       ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Error Banner if present
+              if (_errorMessage != null) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: const Color(0x33FF453A),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: const Color(0xFFFF453A)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.error_outline_rounded, color: Color(0xFFFF453A), size: 22),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          _errorMessage!,
+                          style: const TextStyle(color: Color(0xFFFF453A), fontSize: 13, height: 1.3),
+                        ),
+                      ),
                     ],
                   ),
                 ),
+              ],
 
-                // Error Banner if present
-                if (_errorMessage != null) ...[
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0x33FF453A),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFFF453A)),
+              const SizedBox(height: 28),
+
+              // Action Pay Button
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0071E3), // Apple Pay Blue
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.error_outline_rounded, color: Color(0xFFFF453A), size: 20),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            _errorMessage!,
-                            style: const TextStyle(color: Color(0xFFFF453A), fontSize: 13),
+                  ),
+                  onPressed: _isLoading ? null : _initiatePayment,
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                        )
+                      : const Text(
+                          '29 000 so‘m to‘lash',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.3,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
+              ),
 
-                const SizedBox(height: 24),
+              const SizedBox(height: 16),
 
-                // Security & Guarantee Badges
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.lock_rounded, color: Color(0xFF8E8E93), size: 14),
-                      SizedBox(width: 6),
-                      Text(
-                        '256-bit SSL va PCI-DSS xavfsiz to‘lov shifrlanishi',
-                        style: TextStyle(color: Color(0xFF8E8E93), fontSize: 12),
-                      ),
-                    ],
+              const Center(
+                child: Text(
+                  'Har oy 29 000 so‘m yechiladi. Istalgan vaqtda profil sozlamalaridan bekor qilish mumkin.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF636366),
+                    fontSize: 12,
+                    height: 1.4,
                   ),
                 ),
-
-                const SizedBox(height: 16),
-
-                // Section 4: Apple Blue Pay Confirmation Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 54,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0071E3), // Apple Pay Blue
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    onPressed: _isLoading ? null : _processPayment,
-                    child: _isLoading
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
-                          )
-                        : const Text(
-                            '29 000 so‘m to‘lash',
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: -0.3,
-                            ),
-                          ),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Renewal & Cancellation Policy Disclaimer
-                const Center(
-                  child: Text(
-                    'Har oy 29 000 so‘m yechiladi. Istalgan vaqtda profil sozlamalaridan bekor qilish mumkin.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color(0xFF636366),
-                      fontSize: 12,
-                      height: 1.4,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-              ],
-            ),
+              ),
+              const SizedBox(height: 24),
+            ],
           ),
         ),
       ),
@@ -617,46 +543,6 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-// Card Number Formatter (16 digits formatted as 4-4-4-4)
-class _CardNumberFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    final text = newValue.text.replaceAll(' ', '');
-    final buffer = StringBuffer();
-    for (int i = 0; i < text.length; i++) {
-      buffer.write(text[i]);
-      if ((i + 1) % 4 == 0 && i + 1 != text.length) {
-        buffer.write(' ');
-      }
-    }
-    final formatted = buffer.toString();
-    return TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
-    );
-  }
-}
-
-// Expiry Date Formatter (MM/YY)
-class _ExpiryDateFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    final text = newValue.text.replaceAll('/', '');
-    final buffer = StringBuffer();
-    for (int i = 0; i < text.length; i++) {
-      buffer.write(text[i]);
-      if (i == 1 && text.length > 2) {
-        buffer.write('/');
-      }
-    }
-    final formatted = buffer.toString();
-    return TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
 }

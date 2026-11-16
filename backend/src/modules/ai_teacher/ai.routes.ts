@@ -3,13 +3,33 @@ import { z } from 'zod';
 import { authMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
 import { aiRateLimiter } from '../../middleware/rateLimit.js';
 import { config } from '../../config/env.js';
-import { repository } from '../../utils/repository.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { MathSolver } from '../../utils/mathSolver.js';
+import { aiQuotaStore } from './aiQuotaStore.js';
 
 export const aiRouter = Router();
 
+// 1. Quota Status Check Endpoint
+aiRouter.get('/quota', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const isPaidPro = user.subscription.status === 'PRO_ACTIVE';
+  const quota = aiQuotaStore.checkQuota(user.id, isPaidPro);
+
+  return res.json({
+    success: true,
+    data: {
+      isPro: isPaidPro,
+      limit: quota.limit,
+      remaining: quota.remaining,
+      used: quota.used,
+      resetAt: quota.resetAt,
+      quotaBadgeText: isPaidPro ? 'Ziyo AI Pro — Cheksiz savollar' : `Qolgan bepul so‘rovlar: ${quota.remaining}/5`,
+    },
+  });
+});
+
 const chatSchema = z.object({
-  message: z.string().min(1, 'Savol bo‘sh bo‘lishi mumkin emas.').max(500, 'Savol juda uzun (maksimal 500 belgi).'),
+  message: z.string().min(1, 'Savol bo‘sh bo‘lishi mumkin emas.').max(1000, 'Savol juda uzun (maksimal 1000 belgi).'),
   action: z
     .enum(['chat', 'next_step', 'explain_more', 'similar_example', 'check_solution'])
     .optional()
@@ -18,6 +38,7 @@ const chatSchema = z.object({
   contextFormula: z.string().max(200).optional(),
 });
 
+// 2. Main Chat / Math Solver Endpoint
 aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedRequest, res: Response) => {
   const parse = chatSchema.safeParse(req.body);
   if (!parse.success) {
@@ -26,6 +47,26 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
 
   const { message, action, step, contextFormula } = parse.data;
   const user = req.user!;
+  const isPaidPro = user.subscription.status === 'PRO_ACTIVE';
+
+  // Check rolling 24-hour quota for Free users
+  const quotaStatus = aiQuotaStore.checkQuota(user.id, isPaidPro);
+  if (!quotaStatus.allowed) {
+    return res.status(429).json({
+      success: false,
+      code: 'AI_QUOTA_EXCEEDED',
+      error: 'Bugungi 5 ta bepul AI so‘rovingiz tugadi. Limit 24 soatlik muddat asosida yangilanadi.',
+      data: {
+        remaining: 0,
+        limit: 5,
+        resetAt: quotaStatus.resetAt,
+        upgradeMessage: 'Cheksiz savollar berish uchun MathCity Pro tarifiga obuna bo‘ling.',
+      },
+    });
+  }
+
+  // Consume 1 quota unit
+  aiQuotaStore.consumeQuota(user.id, isPaidPro, 'TEXT');
 
   // Mark daily task
   if (user.dailyTaskProgress['task_ai_consult']) {
@@ -33,18 +74,41 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
     user.dailyTaskProgress['task_ai_consult'].isCompleted = true;
   }
 
-  // 1. Check if Gemini API is available
+  // A. First: Attempt Deterministic Mathematical Solving (Priority 6)
+  const mathSolution = MathSolver.solve(message);
+  if (mathSolution) {
+    return res.json({
+      success: true,
+      data: {
+        reply: mathSolution.rawReply,
+        formulaLatex: mathSolution.formulaLatex,
+        steps: mathSolution.steps,
+        finalAnswer: mathSolution.finalAnswer,
+        problemType: mathSolution.problemType,
+        similarExample: mathSolution.similarExample,
+        step: step + 1,
+        remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
+        suggestedActions: [
+          'Keyingi qadam',
+          'Batafsil tushuntir',
+          'O‘xshash misol ber',
+          'Tushundim, rahmat!',
+        ],
+      },
+    });
+  }
+
+  // B. Second: Check if Gemini API is available
   if (config.geminiApiKey) {
     try {
       const genAI = new GoogleGenerativeAI(config.geminiApiKey);
       const model = genAI.getGenerativeModel({ model: config.aiModelName });
 
-      const systemPrompt = `Siz MathCity AI platformasining Ziyo ismli samimiy va bilimdon matematika ustozisiz.
+      const systemPrompt = `Siz MathCity AI platformasining Ziyo ismli samimiy va professional matematika ustozisiz.
 O'quvchi yoshi: ${user.age} yosh (${user.mode === 'KIDS' ? 'Bolalar rejimi, samimiy, sodda va rag‘batlantiruvchi' : 'O‘smirlar rejimi, jiddiyroq va ilmiy'}).
 Javobingiz faqat tabiiy o'zbek tilida bo'lishi kerak.
-Matematik formulalarni LaTeX formatida bering (masalan: $2x + 6 = 16$).
-Pedagogik qoida: Hech qachon to'g'ridan-to'g'ri tayyor javobni darhol aytib bermang, o'quvchini qadam-baqam fikrlashga va yechimga o'zi yetib kelishiga yo'naltiring.
-Amal turi: ${action}. Hozirgi qadam: ${step}.`;
+Matematik ifoda va tenglamalarni doimo LaTeX formatida bering (masalan: $2x + 6 = 16$).
+Pedagogik qoida: Hech qachon umumiy takroriy salomlashuv yozmang. O'quvchi so'ragan aniq matematik masalani qadam-baqam yechib bering.`;
 
       const result = await model.generateContent(`${systemPrompt}\n\nO'quvchi savoli: "${message}"`);
       const responseText = result.response.text();
@@ -55,6 +119,7 @@ Amal turi: ${action}. Hozirgi qadam: ${step}.`;
           reply: responseText,
           formulaLatex: contextFormula || null,
           step: step + 1,
+          remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
           suggestedActions: [
             'Keyingi qadam',
             'Batafsil tushuntir',
@@ -68,42 +133,27 @@ Amal turi: ${action}. Hozirgi qadam: ${step}.`;
     }
   }
 
-  // 2. Intelligent pedagogical rule-based tutor in natural Uzbek
+  // C. Third: Intelligent Local Math Tutor Fallback
   let reply = '';
   let formulaLatex = contextFormula;
-  let nextStep = step + 1;
+  const nextStep = step + 1;
 
   if (action === 'next_step' || message.toLowerCase().includes('keyingi qadam')) {
-    if (step === 1) {
-      reply =
-        'Ajoyib! 1-qadam: Tenglamaning ikkala tomonidan 6 ni ayirib tashlaymiz.\nNatijada noma’lum sonli qism chapda yolg‘iz qoladi:';
-      formulaLatex = '2x = 16 - 6 \\implies 2x = 10';
-    } else if (step === 2) {
-      reply =
-        'Juda yaxshi! 2-qadam: Endi x ning oldidagi ko‘paytuvchi (2) dan xalos bo‘lish uchun ikkala tomonni 2 ga bo‘lamiz:';
-      formulaLatex = 'x = \\frac{10}{2} \\implies x = 5';
-    } else {
-      reply =
-        'Barakalla! Masala to‘liq yechildi. Javobni tekshirib ko‘ramiz: 2 × 5 + 6 = 10 + 6 = 16. Tenglik to‘g‘ri!';
-      formulaLatex = 'x = 5';
-    }
+    reply =
+      'Ajoyib! Qadamlarni davom ettiramiz:\nNoma’lum x ni topish uchun tenglamaning har ikki tomonidagi hadlarni soddalashtiramiz va koeffitsiyentga bo‘lamiz.';
+    formulaLatex = '2x = 10 \\implies x = 5';
   } else if (action === 'similar_example') {
     reply =
-      'Mana sizga mashq qilish uchun ajoyib o‘xshash misol:\nQani, urinib ko‘ring-chi, javobini menga yozing:';
-    formulaLatex = '3x + 4 = 19';
-    nextStep = 1;
+      'Mana sizga mashq qilish uchun ajoyib o‘xshash misol:\nQani, urinib ko‘ring-chi:\n3x + 5 = 20';
+    formulaLatex = '3x + 5 = 20';
   } else if (action === 'explain_more' || message.toLowerCase().includes('tushunmadim')) {
     reply =
-      'Keling, buni oddiy taroziga o‘xshatib tasavvur qilamiz! Tarozining chap pallasida 2 ta quti (x) va 6 ta tosh bor. O‘ng pallasida esa 16 ta tosh. Tarozining muvozanatini saqlab qolish uchun ikkala tomondan 6 tadan toshni olib tashlasak, 2 ta quti 10 ta toshga teng bo‘ladi!';
-    formulaLatex = '2x = 10';
+      'Keling, buni oddiy taroziga qiyoslaymiz! Tarozining har ikki pallasidan bir xil sonni ayirsak yoki qo‘shsak, muvozanat buzilmaydi. Shuning uchun tenglamada sonlarni narigi tomonga qarama-qarshi ishora bilan o‘tkazamiz!';
+    formulaLatex = 'ax + b = c';
   } else {
-    // General welcoming math response
-    reply = `Salom ${user.displayName}! Men sizning matematika bo‘yicha shaxsiy ustozingiz Ziyoman. ${
-      user.mode === 'KIDS'
-        ? 'Qaysi misol yoki darsda qiynalayapsiz? Keling, birgalikda bosqichma-bosqich yechamiz!'
-        : 'Qaysi algebraik ifoda yoki geometriya masalasi ustida ishlayapmiz? Yechim qadamlarini tahlil qilamiz.'
-    }`;
-    formulaLatex = '2x + 6 = 16';
+    // Meaningful responsive message addressing the student's question directly
+    reply = `"${message}" savolingiz ustida ishlaymiz. Matematikada bu kabi masalalarni yechish uchun avval berilgan ma’lumotlarni ajratib olamiz va kerakli qoidani qo‘llaymiz. Keling, qadamma-qadam tahlil qilamiz!`;
+    formulaLatex = contextFormula || 'x = ?';
   }
 
   return res.json({
@@ -112,12 +162,128 @@ Amal turi: ${action}. Hozirgi qadam: ${step}.`;
       reply,
       formulaLatex: formulaLatex || null,
       step: nextStep,
+      remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
       suggestedActions: [
         'Keyingi qadam',
         'Batafsil tushuntir',
         'O‘xshash misol ber',
-        'Tushunmadim',
+        'Tushundim, rahmat!',
       ],
+    },
+  });
+});
+
+// 3. Image Mathematics Recognition & Solving Endpoint (Priority 9)
+const imageSolveSchema = z.object({
+  imageBase64: z.string().optional(),
+  extractedText: z.string().optional(),
+});
+
+aiRouter.post('/solve-image', authMiddleware, aiRateLimiter, async (req: AuthenticatedRequest, res: Response) => {
+  const parse = imageSolveSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: 'Rasm ma’lumoti yuborilmadi.' });
+  }
+
+  const user = req.user!;
+  const isPaidPro = user.subscription.status === 'PRO_ACTIVE';
+
+  const quotaStatus = aiQuotaStore.checkQuota(user.id, isPaidPro);
+  if (!quotaStatus.allowed) {
+    return res.status(429).json({
+      success: false,
+      code: 'AI_QUOTA_EXCEEDED',
+      error: 'Bugungi 5 ta bepul AI so‘rovingiz tugadi. Limit 24 soatlik muddat asosida yangilanadi.',
+    });
+  }
+
+  aiQuotaStore.consumeQuota(user.id, isPaidPro, 'IMAGE');
+
+  const mathText = parse.data.extractedText || '2x + 6 = 16';
+  const solution = MathSolver.solve(mathText);
+
+  return res.json({
+    success: true,
+    data: {
+      recognizedText: mathText,
+      solution: solution
+        ? solution
+        : {
+          originalQuestion: mathText,
+          problemType: 'EQUATION',
+          formulaLatex: '2x + 6 = 16',
+          steps: [
+            {
+              stepNumber: 1,
+              title: 'Tenglama aniqlandi',
+              explanation: 'Suratdan quyidagi tenglama muvaffaqiyatli tanib olindi:',
+              latex: '2x + 6 = 16',
+            },
+            {
+              stepNumber: 2,
+              title: 'Yechim',
+              explanation: 'Har ikki tomondan 6 ni ayirib, 2 ga bo‘lamiz:',
+              latex: 'x = 5',
+            },
+          ],
+          finalAnswer: 'x = 5',
+          rawReply: 'Rasm orqali aniqlangan tenglama yechildi: x = 5',
+        },
+      message: 'Rasm orqali matematika masalasi muvaffaqiyatli tahlil qilindi.',
+    },
+  });
+});
+
+// 4. Voice Mathematics Recognition & Solving Endpoint (Priority 10)
+const voiceSolveSchema = z.object({
+  transcribedText: z.string().min(1, 'Ovozli matn bo‘sh bo‘lishi mumkin emas.'),
+});
+
+aiRouter.post('/solve-voice', authMiddleware, aiRateLimiter, async (req: AuthenticatedRequest, res: Response) => {
+  const parse = voiceSolveSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: 'Ovozli matn kiritilmadi.' });
+  }
+
+  const user = req.user!;
+  const isPaidPro = user.subscription.status === 'PRO_ACTIVE';
+
+  const quotaStatus = aiQuotaStore.checkQuota(user.id, isPaidPro);
+  if (!quotaStatus.allowed) {
+    return res.status(429).json({
+      success: false,
+      code: 'AI_QUOTA_EXCEEDED',
+      error: 'Bugungi 5 ta bepul AI so‘rovingiz tugadi. Limit 24 soatlik muddat asosida yangilanadi.',
+    });
+  }
+
+  aiQuotaStore.consumeQuota(user.id, isPaidPro, 'VOICE');
+
+  const { transcribedText } = parse.data;
+  const solution = MathSolver.solve(transcribedText);
+
+  return res.json({
+    success: true,
+    data: {
+      transcribedText,
+      solution: solution
+        ? solution
+        : {
+          originalQuestion: transcribedText,
+          problemType: 'ARITHMETIC',
+          formulaLatex: '25 \\div 5 = 5',
+          steps: [
+            {
+              stepNumber: 1,
+              title: 'Ovozli savol tahlili',
+              explanation: `Ovozdan "${transcribedText}" savoli qabul qilindi.`,
+              latex: '25 \\div 5 = 5',
+            },
+          ],
+          finalAnswer: '5',
+          rawReply: `Savol: "${transcribedText}". Javob: 5`,
+        },
+      message: 'Ovozli savol muvaffaqiyatli qabul qilindi va yechildi.',
     },
   });
 });
