@@ -352,6 +352,21 @@ class IsometricIslandPainter extends CustomPainter {
 
   void _drawBuildingByType(Canvas canvas, Offset pos, String key) {
     switch (key) {
+      case 'house_small':
+        _drawSmallHouse(canvas, pos);
+        break;
+      case 'house_basic':
+        _drawPastelHouse(canvas, pos);
+        break;
+      case 'house_modern':
+        _drawModernHouse(canvas, pos);
+        break;
+      case 'house_villa':
+        _drawVilla(canvas, pos);
+        break;
+      case 'house_premium':
+        _drawPremiumCastle(canvas, pos);
+        break;
       case 'observatory_space':
         _drawObservatoryTower(canvas, pos);
         break;
@@ -379,11 +394,131 @@ class IsometricIslandPainter extends CustomPainter {
       case 'trees_decorative':
         _drawDecorativeTrees(canvas, pos);
         break;
-      case 'house_basic':
       default:
         _drawPastelHouse(canvas, pos);
         break;
     }
+  }
+
+  // 1A. Small House (50 coins)
+  void _drawSmallHouse(Canvas canvas, Offset pos) {
+    const w = 18.0;
+    const h = 20.0;
+
+    final leftWall = Path()
+      ..moveTo(pos.dx, pos.dy)
+      ..lineTo(pos.dx - w, pos.dy - w / 2)
+      ..lineTo(pos.dx - w, pos.dy - w / 2 - h)
+      ..lineTo(pos.dx, pos.dy - h)
+      ..close();
+    canvas.drawPath(leftWall, Paint()..color = const Color(0xFFFFD54F));
+
+    final rightWall = Path()
+      ..moveTo(pos.dx, pos.dy)
+      ..lineTo(pos.dx + w, pos.dy - w / 2)
+      ..lineTo(pos.dx + w, pos.dy - w / 2 - h)
+      ..lineTo(pos.dx, pos.dy - h)
+      ..close();
+    canvas.drawPath(rightWall, Paint()..color = const Color(0xFFFFB300));
+
+    final roof = Path()
+      ..moveTo(pos.dx, pos.dy - h - 10)
+      ..lineTo(pos.dx + w + 2, pos.dy - w / 2 - h)
+      ..lineTo(pos.dx, pos.dy - h)
+      ..lineTo(pos.dx - w - 2, pos.dy - w / 2 - h)
+      ..close();
+    canvas.drawPath(roof, Paint()..color = const Color(0xFF26A69A));
+  }
+
+  // 1B. Modern House (200 coins)
+  void _drawModernHouse(Canvas canvas, Offset pos) {
+    const w = 28.0;
+    const h = 40.0;
+
+    final leftWall = Path()
+      ..moveTo(pos.dx, pos.dy)
+      ..lineTo(pos.dx - w, pos.dy - w / 2)
+      ..lineTo(pos.dx - w, pos.dy - w / 2 - h)
+      ..lineTo(pos.dx, pos.dy - h)
+      ..close();
+    canvas.drawPath(leftWall, Paint()..color = const Color(0xFF81D4FA));
+
+    final rightWall = Path()
+      ..moveTo(pos.dx, pos.dy)
+      ..lineTo(pos.dx + w, pos.dy - w / 2)
+      ..lineTo(pos.dx + w, pos.dy - w / 2 - h)
+      ..lineTo(pos.dx, pos.dy - h)
+      ..close();
+    canvas.drawPath(rightWall, Paint()..color = const Color(0xFF0288D1));
+
+    // Flat modern roof terrace
+    final roof = Path()
+      ..moveTo(pos.dx, pos.dy - h - 4)
+      ..lineTo(pos.dx + w, pos.dy - w / 2 - h - 4)
+      ..lineTo(pos.dx, pos.dy - w - h - 4)
+      ..lineTo(pos.dx - w, pos.dy - w / 2 - h - 4)
+      ..close();
+    canvas.drawPath(roof, Paint()..color = const Color(0xFF37474F));
+  }
+
+  // 1C. Large Villa (350 coins)
+  void _drawVilla(Canvas canvas, Offset pos) {
+    const w = 32.0;
+    const h = 44.0;
+
+    final leftWall = Path()
+      ..moveTo(pos.dx, pos.dy)
+      ..lineTo(pos.dx - w, pos.dy - w / 2)
+      ..lineTo(pos.dx - w, pos.dy - w / 2 - h)
+      ..lineTo(pos.dx, pos.dy - h)
+      ..close();
+    canvas.drawPath(leftWall, Paint()..color = const Color(0xFFA5D6A7));
+
+    final rightWall = Path()
+      ..moveTo(pos.dx, pos.dy)
+      ..lineTo(pos.dx + w, pos.dy - w / 2)
+      ..lineTo(pos.dx + w, pos.dy - w / 2 - h)
+      ..lineTo(pos.dx, pos.dy - h)
+      ..close();
+    canvas.drawPath(rightWall, Paint()..color = const Color(0xFF388E3C));
+
+    final roof = Path()
+      ..moveTo(pos.dx, pos.dy - h - 16)
+      ..lineTo(pos.dx + w + 3, pos.dy - w / 2 - h)
+      ..lineTo(pos.dx, pos.dy - h)
+      ..lineTo(pos.dx - w - 3, pos.dy - w / 2 - h)
+      ..close();
+    canvas.drawPath(roof, Paint()..color = const Color(0xFF1B5E20));
+  }
+
+  // 1D. Premium Castle / Palace (500 coins)
+  void _drawPremiumCastle(Canvas canvas, Offset pos) {
+    const w = 36.0;
+    const h = 52.0;
+
+    final leftWall = Path()
+      ..moveTo(pos.dx, pos.dy)
+      ..lineTo(pos.dx - w, pos.dy - w / 2)
+      ..lineTo(pos.dx - w, pos.dy - w / 2 - h)
+      ..lineTo(pos.dx, pos.dy - h)
+      ..close();
+    canvas.drawPath(leftWall, Paint()..color = const Color(0xFFCE93D8));
+
+    final rightWall = Path()
+      ..moveTo(pos.dx, pos.dy)
+      ..lineTo(pos.dx + w, pos.dy - w / 2)
+      ..lineTo(pos.dx + w, pos.dy - w / 2 - h)
+      ..lineTo(pos.dx, pos.dy - h)
+      ..close();
+    canvas.drawPath(rightWall, Paint()..color = const Color(0xFF7B1FA2));
+
+    // Golden Tower Spire
+    final spire = Path()
+      ..moveTo(pos.dx, pos.dy - h - 26)
+      ..lineTo(pos.dx + 12, pos.dy - h - 8)
+      ..lineTo(pos.dx - 12, pos.dy - h - 8)
+      ..close();
+    canvas.drawPath(spire, Paint()..color = const Color(0xFFFFD700));
   }
 
   Offset _toScreen(int gx, int gy, double ox, double oy, double tw, double th) {

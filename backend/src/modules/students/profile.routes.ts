@@ -22,6 +22,7 @@ studentsRouter.get('/profile', authMiddleware, (req: AuthenticatedRequest, res: 
       totalXP: user.totalXP,
       level: user.level,
       cityLevel: user.cityLevel,
+      subscription: user.subscription,
       placedBuildingsCount: user.placedBuildings.length,
       unlockedAchievementsCount: user.unlockedAchievements.length,
       createdAt: user.createdAt,

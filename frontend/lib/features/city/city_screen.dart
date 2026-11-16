@@ -47,46 +47,58 @@ class _CityScreenState extends ConsumerState<CityScreen> with SingleTickerProvid
 
   // 10 3D Models in Catalog (All 100 coins)
   final List<BuildingModel> _shopCatalog = [
+    // 5 Master Buildings (Master Prompt V6 Step 18)
     BuildingModel(
-      key: 'house_basic',
-      name: 'Kichik shinam uy',
+      key: 'house_small',
+      name: 'Kichik uy',
       category: 'Turar-joy',
-      costInCoins: 100,
+      costInCoins: 50,
       requiredLevel: 1,
-      description: 'Shahar aholisi uchun shinam va yorug‘ pastel uy.',
+      description: 'Boshlang‘ich shinam 3D pastel uy.',
       iconName: 'home',
       mode: 'KIDS',
     ),
     BuildingModel(
-      key: 'house_medium',
-      name: 'Katta oilaviy uy',
+      key: 'house_basic',
+      name: 'Rangli uy',
       category: 'Turar-joy',
       costInCoins: 100,
       requiredLevel: 1,
-      description: 'Ikki qavatli lavanda rangli katta xonadon.',
+      description: 'Shahar aholisi uchun shinam va yorug‘ 3D rangli uy.',
+      iconName: 'home',
+      mode: 'KIDS',
+    ),
+    BuildingModel(
+      key: 'house_modern',
+      name: 'Zamonaviy uy',
+      category: 'Turar-joy',
+      costInCoins: 200,
+      requiredLevel: 2,
+      description: 'Quyosh panellari va terassali zamonaviy arxitektura.',
       iconName: 'apartment',
       mode: 'KIDS',
     ),
     BuildingModel(
-      key: 'school_math',
-      name: 'Matematika maktabi',
-      category: 'Ta’lim',
-      costInCoins: 100,
-      requiredLevel: 1,
-      description: 'Soat minorasi va qo‘ng‘iroqli zamonaviy bilim maskani.',
-      iconName: 'school',
+      key: 'house_villa',
+      name: 'Katta villa',
+      category: 'Turar-joy',
+      costInCoins: 350,
+      requiredLevel: 3,
+      description: 'Katta bog‘li va basseynli hashamatli shahar villasi.',
+      iconName: 'villa',
       mode: 'KIDS',
     ),
     BuildingModel(
-      key: 'library_city',
-      name: 'Shahar kutubxonasi',
-      category: 'Ta’lim',
-      costInCoins: 100,
-      requiredLevel: 1,
-      description: 'Klassik ustunlar va gumbazli ulkan kitoblar xazinasi.',
-      iconName: 'menu_book',
+      key: 'house_premium',
+      name: 'Premium uy',
+      category: 'Turar-joy',
+      costInCoins: 500,
+      requiredLevel: 4,
+      description: 'Eng yuqori darajadagi futuristik aqlli saroy.',
+      iconName: 'castle',
       mode: 'KIDS',
     ),
+    // Community & Landmark Buildings
     BuildingModel(
       key: 'park_green',
       name: 'Eko bog‘ va daraxtlar',
@@ -98,11 +110,31 @@ class _CityScreenState extends ConsumerState<CityScreen> with SingleTickerProvid
       mode: 'KIDS',
     ),
     BuildingModel(
+      key: 'library_city',
+      name: 'Shahar kutubxonasi',
+      category: 'Ta’lim',
+      costInCoins: 150,
+      requiredLevel: 2,
+      description: 'Klassik ustunlar va gumbazli ulkan kitoblar xazinasi.',
+      iconName: 'menu_book',
+      mode: 'KIDS',
+    ),
+    BuildingModel(
+      key: 'school_math',
+      name: 'Matematika maktabi',
+      category: 'Ta’lim',
+      costInCoins: 250,
+      requiredLevel: 2,
+      description: 'Soat minorasi va qo‘ng‘iroqli zamonaviy bilim maskani.',
+      iconName: 'school',
+      mode: 'KIDS',
+    ),
+    BuildingModel(
       key: 'observatory_space',
       name: 'Kosmik rasadxona',
       category: 'Ilm-fan',
-      costInCoins: 100,
-      requiredLevel: 1,
+      costInCoins: 300,
+      requiredLevel: 3,
       description: 'Yulduzlar va osmon sirlarini o‘rganuvchi teleskopli rasadxona.',
       iconName: 'visibility',
       mode: 'KIDS',
@@ -498,47 +530,60 @@ class _CityScreenState extends ConsumerState<CityScreen> with SingleTickerProvid
           children: [
             // TOP HEADER (REFERENCE IMAGE 1)
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               color: Colors.white,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Title & Subtitle
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.kidsDarkText, size: 20),
-                        onPressed: () => context.pop(),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Mening shahrim',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.kidsDarkText,
-                            ),
+                  // Title & Subtitle (Expanded to prevent overflow on small screens)
+                  Expanded(
+                    child: Row(
+                      children: [
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.kidsDarkText, size: 18),
+                          onPressed: () => context.pop(),
+                        ),
+                        const SizedBox(width: 4),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Mening shahrim',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.kidsDarkText,
+                                ),
+                              ),
+                              SizedBox(height: 1),
+                              Text(
+                                'Biliming bilan qurilgan go‘zal olam.',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.kidsSecondaryText,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 2),
-                          const Text(
-                            'Biliming bilan qurilgan go‘zal olam.',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.kidsSecondaryText,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 8),
                   // Level & Coins Badges
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                         decoration: BoxDecoration(
                           color: const Color(0xFFEEEAFE),
                           borderRadius: BorderRadius.circular(12),
@@ -546,14 +591,14 @@ class _CityScreenState extends ConsumerState<CityScreen> with SingleTickerProvid
                         child: Text(
                           '$cityLevel-daraja',
                           style: const TextStyle(
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: FontWeight.w800,
                             color: Color(0xFF7154EC),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      CoinBadge(count: userCoins, size: 22),
+                      const SizedBox(width: 6),
+                      CoinBadge(count: userCoins, size: 20),
                     ],
                   ),
                 ],
@@ -638,28 +683,35 @@ class _CityScreenState extends ConsumerState<CityScreen> with SingleTickerProvid
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Har bir bino — yangi bilim',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.kidsDarkText,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Har bir bino — yangi bilim',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w900,
+                                        color: AppColors.kidsDarkText,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 3),
-                                  Text(
-                                    '$buildingsCount ta bino · $areaPercentage% hudud ochilgan',
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.kidsSecondaryText,
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      '$buildingsCount ta bino · $areaPercentage% hudud ochilgan',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.kidsSecondaryText,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
+                              const SizedBox(width: 8),
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                 decoration: BoxDecoration(

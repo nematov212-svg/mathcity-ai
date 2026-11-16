@@ -17,6 +17,8 @@ import { achievementsRouter } from './modules/achievements/achievements.routes.j
 import { analyticsRouter } from './modules/analytics/analytics.routes.js';
 import { studentsRouter } from './modules/students/profile.routes.js';
 import { subscriptionsRouter } from './modules/subscriptions/subscriptions.routes.js';
+import { adminRouter } from './modules/admin/admin.routes.js';
+import { paymentsRouter } from './modules/payments/click.routes.js';
 
 export const app = express();
 
@@ -67,6 +69,8 @@ app.use('/api/achievements', achievementsRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/students', studentsRouter);
 app.use('/api/subscriptions', subscriptionsRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/payments', paymentsRouter);
 
 // 4. Centralized Production Error Handler (Phase 3)
 app.use(errorHandler);

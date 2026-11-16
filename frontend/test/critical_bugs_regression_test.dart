@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mathcity_ai/core/auth/auth_service.dart';
+import 'package:mathcity_ai/features/city/city_screen.dart';
 import 'package:mathcity_ai/features/home/kids_home_screen.dart';
 import 'package:mathcity_ai/features/home/teen_home_screen.dart';
 import 'package:mathcity_ai/features/onboarding/welcome_screen.dart';
@@ -76,6 +77,24 @@ void main() {
         await tester.pump(const Duration(milliseconds: 300));
 
         expect(find.byType(TeenHomeScreen), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('CityScreen does NOT overflow at width: $width', (tester) async {
+        tester.view.physicalSize = Size(width, 800);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.resetPhysicalSize);
+
+        await tester.pumpWidget(
+          const ProviderScope(
+            child: MaterialApp(
+              home: CityScreen(),
+            ),
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.byType(CityScreen), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
     }

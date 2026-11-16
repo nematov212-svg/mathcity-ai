@@ -14,12 +14,14 @@ class ExerciseScreen extends ConsumerStatefulWidget {
   final String? questionId;
   final String? lessonId;
   final String? sectionId;
+  final int? testLength;
 
   const ExerciseScreen({
     super.key,
     this.questionId,
     this.lessonId,
     this.sectionId,
+    this.testLength,
   });
 
   @override
@@ -155,6 +157,28 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
     }
 
     try {
+      if (widget.testLength != null || (widget.lessonId == null && widget.sectionId == null)) {
+        final length = widget.testLength ?? 10;
+        final res = await ApiClient().dio.get('/practice/test', queryParameters: {'length': length});
+        if (res.data['success'] == true) {
+          final data = res.data['data'];
+          final questionsList = (data['questions'] as List<dynamic>?)
+              ?.map((q) => QuestionModel.fromJson(q))
+              .toList();
+
+          if (questionsList != null && questionsList.isNotEmpty) {
+            setState(() {
+              _questions = questionsList;
+              _lessonTitle = '${data['topic'] ?? 'Matematika'} testi';
+              _sectionTitle = '$length ta savol';
+              _grade = data['grade'] ?? _grade;
+              _isLoading = false;
+            });
+            return;
+          }
+        }
+      }
+
       final lessonId = widget.lessonId ?? 'lesson-k3-01';
       final sectionId = widget.sectionId ?? 'section-k3-01-s1';
       final res = await ApiClient().dio.get('/lessons/$lessonId/sections/$sectionId');

@@ -11,6 +11,7 @@ import {
   QuestionModel,
   SectionModel,
 } from './dataStore.js';
+import { mathQuestionBank, QuestionBankItem } from './questionBank.js';
 import { AgeMode } from './age.js';
 
 export type SubscriptionStatus =
@@ -149,6 +150,14 @@ class DataRepository {
     return undefined;
   }
 
+  getAllUsers(): UserAccount[] {
+    const unique = new Map<string, UserAccount>();
+    for (const user of this.users.values()) {
+      unique.set(user.id, user);
+    }
+    return Array.from(unique.values());
+  }
+
   createUser(user: UserAccount): UserAccount {
     if (user.passwordHash && !user.passwordHash.startsWith('$2')) {
       user.passwordHash = bcrypt.hashSync(user.passwordHash, 10);
@@ -219,8 +228,28 @@ class DataRepository {
     return undefined;
   }
 
-  findQuestionById(questionId: string): { lesson: LessonModel; section: SectionModel; question: QuestionModel } | undefined {
-    // 1. Exact match
+  findQuestionById(questionId: string): { lesson?: LessonModel; section?: SectionModel; question: QuestionModel } | undefined {
+    // 0. Check Question Bank first
+    const qBank = mathQuestionBank.find((q) => q.id === questionId);
+    if (qBank) {
+      return {
+        question: {
+          id: qBank.id,
+          lessonId: `grade-${qBank.grade}-bank`,
+          sectionId: `topic-${qBank.topic}`,
+          prompt: qBank.prompt,
+          type: qBank.type,
+          options: qBank.options,
+          correctAnswer: qBank.correctAnswer,
+          explanation: qBank.explanation,
+          hint: qBank.hint,
+          formulaLatex: qBank.formulaLatex,
+          orderIndex: 1,
+        },
+      };
+    }
+
+    // 1. Exact match in lessons
     for (const l of this.lessons) {
       for (const s of l.sections) {
         const q = s.questions.find((item) => item.id === questionId);
@@ -239,6 +268,25 @@ class DataRepository {
       return { lesson: l, section: s, question: { ...q, id: questionId } };
     }
     return undefined;
+  }
+
+  getQuestionsForTest(grade?: number, count = 10, topic?: string): QuestionBankItem[] {
+    let pool = mathQuestionBank.filter((q) => q.isPublished);
+    if (topic && topic.trim() !== '') {
+      const topicMatches = pool.filter((q) => q.topic.toLowerCase().includes(topic.toLowerCase()));
+      if (topicMatches.length >= count) {
+        pool = topicMatches;
+      }
+    }
+    if (grade && grade > 0) {
+      const gradeMatches = pool.filter((q) => Math.abs(q.grade - grade) <= 1);
+      if (gradeMatches.length >= count) {
+        pool = gradeMatches;
+      }
+    }
+    // Shuffle and pick requested count
+    const shuffled = [...pool].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
   }
 
   // --- Coin Wallet Transactions ---
