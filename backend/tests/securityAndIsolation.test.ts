@@ -75,6 +75,41 @@ describe('MathCity AI — Security, Authorization & Data Isolation Tests', () =>
       expect(res17.status).toBe(403);
       expect(res17.body.errorCode).toBe('ELIGIBILITY_FAILED');
     });
+
+    it('Google Sign-In initializes new account with 0 coins and 0 XP, and preserves existing data', async () => {
+      // 1. New Google user
+      const googleRes1 = await request(app).post('/api/auth/google').send({
+        googleId: 'google-sub-998877',
+        email: 'new_google_student@mathcity.ai',
+        displayName: 'Google Student',
+        dateOfBirth: '2015-05-15',
+      });
+
+      expect(googleRes1.status).toBe(200);
+      expect(googleRes1.body.success).toBe(true);
+      expect(googleRes1.body.data.user.coinBalance).toBe(0);
+      expect(googleRes1.body.data.user.totalXP).toBe(0);
+      const studentId = googleRes1.body.data.user.id;
+
+      // 2. Student earns 5 coins
+      const userInDb = repository.getUserById(studentId);
+      if (userInDb) {
+        userInDb.coinBalance = 5;
+        userInDb.totalXP = 50;
+      }
+
+      // 3. Second Google Login: preserves existing coins and XP
+      const googleRes2 = await request(app).post('/api/auth/google').send({
+        googleId: 'google-sub-998877',
+        email: 'new_google_student@mathcity.ai',
+        displayName: 'Google Student',
+      });
+
+      expect(googleRes2.status).toBe(200);
+      expect(googleRes2.body.data.user.id).toBe(studentId);
+      expect(googleRes2.body.data.user.coinBalance).toBe(5);
+      expect(googleRes2.body.data.user.totalXP).toBe(50);
+    });
   });
 
   describe('2. Strict Student Data Isolation (Phase 6)', () => {

@@ -224,6 +224,9 @@ authRouter.post('/google', authRateLimiter, (req: Request, res: Response) => {
     if (!claims && config.isProduction) {
       return res.status(401).json({ success: false, error: 'Google tokeni yaroqsiz.' });
     }
+    if (claims && claims.email && claims.email.toLowerCase() !== email.toLowerCase()) {
+      return res.status(401).json({ success: false, error: 'Google tokeni emaili mos kelmadi.' });
+    }
   }
 
   // Check if user exists by googleId or email

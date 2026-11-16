@@ -32,7 +32,8 @@ class AuthService {
   /// Authorized JavaScript origins: http://localhost:8085
   static String webClientId = const String.fromEnvironment(
     'GOOGLE_CLIENT_ID',
-    defaultValue: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
+    defaultValue:
+        '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
   );
 
   /// Allows setting web client id at runtime if needed
