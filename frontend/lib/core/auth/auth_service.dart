@@ -65,7 +65,7 @@ class AuthService {
     try {
       _googleSignInInstance = GoogleSignIn(
         clientId: kIsWeb ? webClientId : iosClientId,
-        serverClientId: webClientId,
+        serverClientId: kIsWeb ? null : webClientId,
         scopes: const ['email', 'profile'],
       );
       return _googleSignInInstance;
