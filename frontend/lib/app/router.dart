@@ -15,6 +15,8 @@ import '../features/lessons/teen_course_map_screen.dart';
 import '../features/practice/exercise_screen.dart';
 import '../features/games/games_hub_screen.dart';
 import '../features/games/space_math_game_screen.dart';
+import '../features/games/fraction_battle_game_screen.dart';
+import '../features/games/game_result_screen.dart';
 import '../features/ai_teacher/ziyo_tutor_screen.dart';
 import '../features/ai_teacher/teen_ziyo_tutor_screen.dart';
 import '../features/city/city_screen.dart';
@@ -91,6 +93,16 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/kids/games/space-math',
       builder: (context, state) => const SpaceMathGameScreen(),
+    ),
+    GoRoute(
+      path: '/kids/games/fraction-battle',
+      builder: (context, state) => const FractionBattleGameScreen(),
+    ),
+    GoRoute(
+      path: '/kids/games/result',
+      builder: (context, state) => GameResultScreen(
+        resultData: state.extra as Map<String, dynamic>?,
+      ),
     ),
     GoRoute(
       path: '/kids/ai-tutor',

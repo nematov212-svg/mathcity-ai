@@ -147,4 +147,65 @@ export class MathEngine {
       };
     }
   }
+
+  /**
+   * Procedural question generator for Kasrlar Jangi game.
+   */
+  static generateFractionBattleQuestion(level: number = 1): {
+    id: string;
+    levelTitle: string;
+    fractionA: { numerator: number; denominator: number; label: string };
+    fractionB: { numerator: number; denominator: number; label: string };
+    correctOperator: '<' | '=' | '>';
+    options: string[];
+    explanation: string;
+  } {
+    const id = `kasr-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const fractionsPool = [
+      { n: 3, d: 4, l: '3/4' },
+      { n: 1, d: 2, l: '1/2' },
+      { n: 2, d: 4, l: '2/4' },
+      { n: 1, d: 4, l: '1/4' },
+      { n: 2, d: 3, l: '2/3' },
+      { n: 1, d: 3, l: '1/3' },
+      { n: 4, d: 6, l: '4/6' },
+      { n: 3, d: 6, l: '3/6' },
+      { n: 5, d: 8, l: '5/8' },
+      { n: 3, d: 8, l: '3/8' },
+    ];
+
+    const idxA = Math.floor(Math.random() * fractionsPool.length);
+    let idxB = Math.floor(Math.random() * fractionsPool.length);
+    if (Math.random() > 0.3 && idxB === idxA) {
+      idxB = (idxA + 1) % fractionsPool.length;
+    }
+
+    const fA = fractionsPool[idxA];
+    const fB = fractionsPool[idxB];
+    const valA = fA.n / fA.d;
+    const valB = fB.n / fB.d;
+
+    let correctOperator: '<' | '=' | '>' = '=';
+    if (Math.abs(valA - valB) > 0.001) {
+      correctOperator = valA > valB ? '>' : '<';
+    }
+
+    const levelTitles = [
+      '01 • KASRLAR OROLI',
+      '02 • KASRLAR BO‘G‘OZI',
+      '03 • PIROT KASRLAR',
+      '04 • OLTIN QUTI KASRLARI',
+    ];
+    const levelTitle = levelTitles[(level - 1) % levelTitles.length];
+
+    return {
+      id,
+      levelTitle,
+      fractionA: { numerator: fA.n, denominator: fA.d, label: fA.l },
+      fractionB: { numerator: fB.n, denominator: fB.d, label: fB.l },
+      correctOperator,
+      options: ['<', '=', '>'],
+      explanation: `Bo‘laklar soniga emas, ularning umumiy kattaligiga e’tibor bering.`,
+    };
+  }
 }
