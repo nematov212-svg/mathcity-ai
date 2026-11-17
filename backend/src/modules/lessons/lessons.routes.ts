@@ -84,7 +84,6 @@ lessonsRouter.get('/:id/sections/:sectionId', authMiddleware, (req: Authenticate
         prompt: q.prompt,
         type: q.type,
         options: q.options,
-        formulaLatex: q.formulaLatex,
         orderIndex: q.orderIndex,
         isAlreadySolved: user.solvedQuestions.includes(q.id),
         isAlreadyRewarded: user.rewardedQuestionIds.includes(q.id),

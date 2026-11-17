@@ -45,7 +45,7 @@ practiceRouter.get('/test', authMiddleware, (req: AuthenticatedRequest, res: Res
 
   const rawQuestions = repository.getQuestionsForTest(gradeParam, requestedLength, topicParam);
 
-  // Strip correctAnswer for security so the client cannot inspect responses ahead of submission
+  // Strip correctAnswer and resolved formulas for security so the client cannot inspect solutions ahead of submission
   const clientQuestions = rawQuestions.map((q) => ({
     id: q.id,
     grade: q.grade,
@@ -55,7 +55,6 @@ practiceRouter.get('/test', authMiddleware, (req: AuthenticatedRequest, res: Res
     type: q.type,
     options: q.options,
     hint: q.hint,
-    formulaLatex: q.formulaLatex,
   }));
 
   return res.json({

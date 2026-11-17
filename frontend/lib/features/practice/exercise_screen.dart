@@ -469,16 +469,6 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                                 letterSpacing: 1.2,
                               ),
                             ),
-                            if (currentQuestion.formulaLatex != null) ...[
-                              const SizedBox(height: 12),
-                              Text(
-                                currentQuestion.formulaLatex!,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  color: AppColors.kidsSecondaryText,
-                                ),
-                              ),
-                            ],
                           ],
                         ),
                       ),

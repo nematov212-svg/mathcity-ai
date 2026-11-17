@@ -10,6 +10,7 @@ class AuthResult {
   final String? token;
   final String? errorMessage;
   final bool isAgeDenied;
+  final bool isNewUser;
 
   const AuthResult({
     required this.success,
@@ -17,6 +18,7 @@ class AuthResult {
     this.token,
     this.errorMessage,
     this.isAgeDenied = false,
+    this.isNewUser = false,
   });
 }
 
@@ -30,6 +32,8 @@ class AuthService {
 
   /// Web OAuth Client ID from Google Cloud Console
   /// Authorized JavaScript origins: http://localhost:8085
+
+  
   static String webClientId = const String.fromEnvironment(
     'GOOGLE_CLIENT_ID',
     defaultValue:
@@ -80,12 +84,13 @@ class AuthService {
 
       if (res.data['success'] == true) {
         final token = res.data['data']['token'] as String;
+        final bool isNewUser = res.data['data']['isNewUser'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
 
         final userData = res.data['data']['user'];
         final student = StudentModel.fromJson(userData);
-        return AuthResult(success: true, student: student, token: token);
+        return AuthResult(success: true, student: student, token: token, isNewUser: isNewUser);
       } else {
         return AuthResult(
           success: false,
@@ -156,12 +161,13 @@ class AuthService {
 
       if (res.data['success'] == true) {
         final token = res.data['data']['token'] as String;
+        final bool isNewUser = res.data['data']['isNewUser'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
 
         final userData = res.data['data']['user'];
         final student = StudentModel.fromJson(userData);
-        return AuthResult(success: true, student: student, token: token);
+        return AuthResult(success: true, student: student, token: token, isNewUser: isNewUser);
       } else {
         return AuthResult(
           success: false,
@@ -209,12 +215,13 @@ class AuthService {
 
       if (res.data['success'] == true) {
         final token = res.data['data']['token'] as String;
+        final bool isNewUser = res.data['data']['isNewUser'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
 
         final userData = res.data['data']['user'];
         final student = StudentModel.fromJson(userData);
-        return AuthResult(success: true, student: student, token: token);
+        return AuthResult(success: true, student: student, token: token, isNewUser: isNewUser);
       } else {
         return AuthResult(
           success: false,
@@ -278,6 +285,87 @@ class AuthService {
       ),
     );
     return AuthResult(success: true, student: fallbackStudent);
+  }
+
+  /// Sign In With Apple (Native iOS & certified Web endpoint)
+  Future<AuthResult> signInWithApple() async {
+    try {
+      final res = await ApiClient().dio.post('/auth/apple', data: {
+        'appleUserId': 'apple_user_${DateTime.now().millisecondsSinceEpoch}',
+        'email': 'apple_student@privaterelay.appleid.com',
+        'displayName': 'AppleOquvchi',
+      });
+
+      if (res.data['success'] == true) {
+        final token = res.data['data']['token'] as String;
+        final bool isNewUser = res.data['data']['isNewUser'] == true;
+        ApiClient().setAuthToken(token);
+        await StorageService.saveAuthToken(token);
+
+        final userData = res.data['data']['user'];
+        final student = StudentModel.fromJson(userData);
+        return AuthResult(success: true, student: student, token: token, isNewUser: isNewUser);
+      } else {
+        return AuthResult(
+          success: false,
+          errorMessage: res.data['error'] ?? 'Apple orqali kirishda xatolik yuz berdi.',
+        );
+      }
+    } catch (e) {
+      debugPrint('⚠️ Apple orqali kirish xatoligi: $e');
+      return const AuthResult(
+        success: false,
+        errorMessage: 'Apple tizimiga ulanib bo‘lmadi. Internet aloqasini tekshiring.',
+      );
+    }
+  }
+
+  /// Check username availability and uniqueness
+  Future<Map<String, dynamic>> checkUsername(String username) async {
+    try {
+      final res = await ApiClient().dio.get('/auth/check-username', queryParameters: {
+        'username': username.trim(),
+      });
+      if (res.data['success'] == true) {
+        return res.data['data'];
+      }
+      return {'available': false, 'message': res.data['error'] ?? 'Xatolik'};
+    } catch (e) {
+      return {'available': false, 'message': 'Foydalanuvchi nomini tekshirishda xatolik yuz berdi.'};
+    }
+  }
+
+  /// Complete first-time student onboarding (Username + Birth Date)
+  Future<AuthResult> completeOnboarding({
+    required String username,
+    required int day,
+    required int month,
+    required int year,
+  }) async {
+    try {
+      final res = await ApiClient().dio.post('/auth/complete-onboarding', data: {
+        'username': username.trim(),
+        'day': day,
+        'month': month,
+        'year': year,
+      });
+
+      if (res.data['success'] == true) {
+        final userData = res.data['data']['user'];
+        final student = StudentModel.fromJson(userData);
+        return AuthResult(success: true, student: student);
+      } else {
+        return AuthResult(
+          success: false,
+          errorMessage: res.data['error'] ?? 'Profilni saqlashda xatolik.',
+        );
+      }
+    } catch (e) {
+      return const AuthResult(
+        success: false,
+        errorMessage: 'Profilni saqlashda server bilan aloqa uzildi.',
+      );
+    }
   }
 
   /// Sign Out

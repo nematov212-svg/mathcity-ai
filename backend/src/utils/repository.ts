@@ -35,6 +35,7 @@ export interface UserAccount {
   email: string;
   passwordHash?: string;
   googleId?: string;
+  appleId?: string;
   displayName: string;
   dateOfBirth: string; // ISO string
   age: number;
@@ -150,6 +151,13 @@ class DataRepository {
     return undefined;
   }
 
+  getUserByAppleId(appleId: string): UserAccount | undefined {
+    for (const user of this.users.values()) {
+      if (user.appleId === appleId) return user;
+    }
+    return undefined;
+  }
+
   getAllUsers(): UserAccount[] {
     const unique = new Map<string, UserAccount>();
     for (const user of this.users.values()) {
@@ -166,6 +174,9 @@ class DataRepository {
     this.users.set(user.email.toLowerCase(), user);
     if (user.googleId) {
       this.users.set(user.googleId, user);
+    }
+    if (user.appleId) {
+      this.users.set(user.appleId, user);
     }
     return user;
   }

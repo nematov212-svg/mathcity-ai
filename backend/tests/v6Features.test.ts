@@ -240,4 +240,78 @@ describe('MathCity AI — Master Test Suite: Payments, Pro Rewards, Ziyo AI & Qu
       expect(res.body.data.totalFeesUzs).toBeGreaterThan(0); // 2% fee
     });
   });
+
+  describe('6. Complete Authentication, Zero-Balance & Onboarding Verification', () => {
+    let appleStudentToken: string;
+
+    it('Sign in with Apple creates new account with absolute zero progress', async () => {
+      const res = await request(app).post('/api/auth/apple').send({
+        appleUserId: '001928.apple.unique.sub.test',
+        email: 'test_apple@privaterelay.appleid.com',
+        displayName: 'AppleNewbie',
+      });
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.isNewUser).toBe(true);
+      expect(res.body.data.user.coinBalance).toBe(0);
+      expect(res.body.data.user.totalXP).toBe(0);
+      expect(res.body.data.user.level).toBe(1);
+      expect(res.body.data.token).toBeDefined();
+
+      appleStudentToken = res.body.data.token;
+    });
+
+    it('Check-username endpoint validates uniqueness and format', async () => {
+      // Existing username taken
+      const takenRes = await request(app)
+        .get('/api/auth/check-username')
+        .query({ username: 'Ali' });
+      expect(takenRes.status).toBe(200);
+      expect(takenRes.body.data.available).toBe(false);
+
+      // Available new username
+      const availRes = await request(app)
+        .get('/api/auth/check-username')
+        .query({ username: 'MathHero2026' });
+      expect(availRes.status).toBe(200);
+      expect(availRes.body.data.available).toBe(true);
+    });
+
+    it('Complete onboarding sets username and birthdate, assigning Kids Mode (10yo)', async () => {
+      const res = await request(app)
+        .post('/api/auth/complete-onboarding')
+        .set('Authorization', `Bearer ${appleStudentToken}`)
+        .send({
+          username: 'MathHero2026',
+          day: 15,
+          month: 5,
+          year: 2016, // 10 years old
+        });
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.user.displayName).toBe('MathHero2026');
+      expect(res.body.data.user.mode).toBe('KIDS');
+      expect(res.body.data.user.coinBalance).toBe(0);
+      expect(res.body.data.user.totalXP).toBe(0);
+    });
+
+    it('Test questions do not expose formulaLatex solution before submission', async () => {
+      const res = await request(app)
+        .get('/api/practice/test')
+        .set('Authorization', `Bearer ${appleStudentToken}`)
+        .query({ grade: 3, length: 10 });
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      const questions = res.body.data.questions;
+      expect(questions.length).toBe(10);
+      for (const q of questions) {
+        // Solution formulaLatex must NEVER be sent before grading
+        expect((q as any).formulaLatex).toBeUndefined();
+        expect((q as any).correctAnswer).toBeUndefined();
+      }
+    });
+  });
 });

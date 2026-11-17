@@ -191,8 +191,10 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
+                    
                   shape: BoxShape.circle,
                 ),
+
                 child: const Center(
                   child: Icon(Icons.check_rounded, color: Colors.white, size: 48),
                 ),

@@ -25,6 +25,20 @@ function verifyGoogleTokenPayload(idToken: string): { email?: string; sub?: stri
   }
 }
 
+// Helper: Verify Apple Identity Token claims
+function verifyAppleTokenPayload(idToken: string): { email?: string; sub?: string } | null {
+  try {
+    const decoded = jwt.decode(idToken) as any;
+    if (!decoded) return null;
+    const nowSec = Math.floor(Date.now() / 1000);
+    if (decoded.exp && decoded.exp < nowSec) return null;
+    if (decoded.iss && !decoded.iss.includes('appleid.apple.com')) return null;
+    return { email: decoded.email, sub: decoded.sub };
+  } catch {
+    return null;
+  }
+}
+
 const registerSchema = z.object({
   email: z.string().email('Email manzili noto‘g‘ri.'),
   password: z.string().min(6, 'Parol kamida 6 ta belgidan iborat bo‘lishi kerak.'),
@@ -81,7 +95,7 @@ authRouter.post('/register', authRateLimiter, (req: Request, res: Response) => {
     mode: eligibility.mode,
     grade,
     avatarUrl: eligibility.mode === 'KIDS' ? 'assets/images/avatar_kid.png' : 'assets/images/avatar_teen.png',
-    coinBalance: 100, // 100 coins for testing building purchase
+    coinBalance: 0, // Genuinely new accounts start with exactly 0 coins
     totalXP: 0,
     level: 1,
     cityLevel: 1,
@@ -177,6 +191,7 @@ authRouter.post('/login', authRateLimiter, (req: Request, res: Response) => {
     success: true,
     data: {
       token,
+      isNewUser: false,
       user: {
         id: user.id,
         email: user.email,
@@ -224,6 +239,7 @@ authRouter.post('/google', authRateLimiter, (req: Request, res: Response) => {
 
   // Check if user exists by googleId or email
   let user = repository.getUserByGoogleId(googleId) || repository.getUserByEmail(email);
+  const isNewUser = !user;
 
   if (!user) {
     // Determine birthdate and mode
@@ -297,6 +313,7 @@ authRouter.post('/google', authRateLimiter, (req: Request, res: Response) => {
     success: true,
     data: {
       token,
+      isNewUser: isNewUser,
       user: {
         id: user.id,
         email: user.email,
@@ -370,6 +387,7 @@ authRouter.post('/demo', authRateLimiter, (req: Request, res: Response) => {
     success: true,
     data: {
       token,
+      isNewUser: false,
       user: {
         id: demoUser.id,
         email: demoUser.email,
@@ -408,6 +426,250 @@ authRouter.get('/me', authMiddleware, (req: AuthenticatedRequest, res: Response)
       attemptedQuestionCount: user.attemptedQuestionCount,
       correctQuestionCount: user.correctQuestionCount,
       subscription: repository.getSubscription(user.id),
+    },
+  });
+});
+
+// Apple Sign-In Schema
+const appleAuthSchema = z.object({
+  appleUserId: z.string().min(1, 'Apple identifikatori talab qilinadi.'),
+  email: z.string().email().optional(),
+  displayName: z.string().optional(),
+  identityToken: z.string().optional(),
+  dateOfBirth: z.string().optional(),
+});
+
+// POST /api/auth/apple - Sign in with Apple official endpoint
+authRouter.post('/apple', authRateLimiter, (req: Request, res: Response) => {
+  const parse = appleAuthSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: 'Apple ma’lumotlari to‘liq emas.' });
+  }
+
+  const { appleUserId, email, displayName, identityToken, dateOfBirth } = parse.data;
+
+  // Verify Apple Identity Token claims if supplied
+  if (identityToken) {
+    const claims = verifyAppleTokenPayload(identityToken);
+    if (!claims && config.isProduction) {
+      return res.status(401).json({ success: false, error: 'Apple tokeni yaroqsiz.' });
+    }
+    if (claims && claims.sub && claims.sub !== appleUserId) {
+      return res.status(401).json({ success: false, error: 'Apple foydalanuvchi identifikatori mos kelmadi.' });
+    }
+  }
+
+  // Identify user strictly by stable appleId
+  let user = repository.getUserByAppleId(appleUserId);
+  const isNewUser = !user;
+
+  if (!user) {
+    const generatedEmail = email || `apple_${appleUserId.substring(0, 8).toLowerCase()}@privaterelay.appleid.com`;
+    const dobString = dateOfBirth || '2015-05-15';
+    const dob = new Date(dobString);
+    const eligibility = checkAgeEligibility(dob);
+
+    if (!eligibility.eligible || !eligibility.mode) {
+      return res.status(403).json({
+        success: false,
+        errorCode: 'ELIGIBILITY_FAILED',
+        error: eligibility.message,
+      });
+    }
+
+    const now = new Date();
+    const trialExpiry = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+    user = {
+      id: randomUUID(),
+      email: generatedEmail.toLowerCase(),
+      appleId: appleUserId,
+      displayName: displayName || 'MathHero',
+      dateOfBirth: dobString,
+      age: eligibility.age,
+      mode: eligibility.mode,
+      grade: Math.max(1, Math.min(11, eligibility.age - 5)),
+      avatarUrl: eligibility.mode === 'KIDS' ? 'assets/images/avatar_kid.png' : 'assets/images/avatar_teen.png',
+      coinBalance: 0, // Genuinely new Apple accounts start with 0 coins
+      totalXP: 0, // and 0 XP
+      level: 1,
+      cityLevel: 1,
+      subscription: {
+        status: 'FREE_TRIAL_ACTIVE',
+        trialStartedAt: now.toISOString(),
+        trialExpiresAt: trialExpiry.toISOString(),
+        planName: 'MathCity Free Trial',
+        priceMonthlyUzs: 29000,
+      },
+      placedBuildings: [],
+      completedLessons: [],
+      completedSections: [],
+      solvedQuestions: [],
+      rewardedQuestionIds: [],
+      attemptedQuestionCount: 0,
+      correctQuestionCount: 0,
+      incorrectQuestionCount: 0,
+      dailyTaskProgress: {
+        task_solve_5: { currentCount: 0, isCompleted: false, claimed: false },
+        task_complete_lesson: { currentCount: 0, isCompleted: false, claimed: false },
+        task_play_space_game: { currentCount: 0, isCompleted: false, claimed: false },
+        task_ai_consult: { currentCount: 0, isCompleted: false, claimed: false },
+      },
+      unlockedAchievements: [],
+      createdAt: now.toISOString(),
+    };
+
+    repository.createUser(user);
+  }
+
+  const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
+    expiresIn: '7d',
+  });
+
+  return res.json({
+    success: true,
+    data: {
+      token,
+      isNewUser: isNewUser,
+      user: {
+        id: user.id,
+        email: user.email,
+        displayName: user.displayName,
+        age: user.age,
+        mode: user.mode,
+        grade: user.grade,
+        coinBalance: user.coinBalance,
+        totalXP: user.totalXP,
+        level: user.level,
+        cityLevel: user.cityLevel,
+        subscription: repository.getSubscription(user.id),
+      },
+    },
+  });
+});
+
+// GET /api/auth/check-username - Validate username uniqueness & guidelines
+authRouter.get('/check-username', (req: Request, res: Response) => {
+  const username = ((req.query.username as string) || '').trim();
+  if (!username) {
+    return res.status(400).json({ success: false, error: 'Foydalanuvchi nomi kiritilmagan.' });
+  }
+  if (username.length < 3 || username.length > 20) {
+    return res.status(400).json({
+      success: false,
+      error: 'Foydalanuvchi nomi 3 tadan 20 tagacha belgidan iborat bo‘lishi kerak.',
+    });
+  }
+  if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+    return res.status(400).json({
+      success: false,
+      error: 'Foydalanuvchi nomi faqat lotin harflari, raqamlar va pastki chiziqdan iborat bo‘lishi kerak.',
+    });
+  }
+
+  if (username.includes('@')) {
+    return res.status(400).json({
+      success: false,
+      error: 'Email manzilini foydalanuvchi nomi sifatida ishlatib bo‘lmaydi.',
+    });
+  }
+
+  const taken = repository.getAllUsers().some((u) => u.displayName.toLowerCase() === username.toLowerCase());
+  if (taken) {
+    return res.json({
+      success: true,
+      data: {
+        available: false,
+        message: 'Bu foydalanuvchi nomi band. Boshqasini tanlang.',
+      },
+    });
+  }
+
+  return res.json({
+    success: true,
+    data: {
+      available: true,
+      message: 'Foydalanuvchi nomi bo‘sh!',
+    },
+  });
+});
+
+// POST /api/auth/complete-onboarding - Sets unique username and birth date (day, month, year)
+const onboardingSchema = z.object({
+  username: z.string().min(3).max(20),
+  day: z.number().int().min(1).max(31),
+  month: z.number().int().min(1).max(12),
+  year: z.number().int().min(2005).max(new Date().getFullYear()),
+});
+
+authRouter.post('/complete-onboarding', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const parse = onboardingSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: 'Ma’lumotlar to‘liq yoki to‘g‘ri kiritilmagan.' });
+  }
+
+  const { username, day, month, year } = parse.data;
+  const user = req.user!;
+
+  // Validate real calendar date
+  const birthDate = new Date(year, month - 1, day);
+  if (
+    birthDate.getFullYear() !== year ||
+    birthDate.getMonth() !== month - 1 ||
+    birthDate.getDate() !== day ||
+    birthDate > new Date()
+  ) {
+    return res.status(400).json({ success: false, error: 'Kiritilgan sana mavjud emas yoki kelajak sanasi.' });
+  }
+
+  // Check username uniqueness
+  const taken = repository
+    .getAllUsers()
+    .some((u) => u.id !== user.id && u.displayName.toLowerCase() === username.toLowerCase());
+  if (taken) {
+    return res.status(409).json({ success: false, error: 'Bu foydalanuvchi nomi band. Boshqasini tanlang.' });
+  }
+
+  // Check age eligibility (6-16)
+  const eligibility = checkAgeEligibility(birthDate);
+  if (!eligibility.eligible || !eligibility.mode) {
+    return res.status(403).json({
+      success: false,
+      errorCode: 'ELIGIBILITY_FAILED',
+      error: eligibility.message,
+    });
+  }
+
+  // Update profile atomically
+  user.displayName = username.trim();
+  user.dateOfBirth = birthDate.toISOString().split('T')[0];
+  user.age = eligibility.age;
+  user.mode = eligibility.mode;
+  user.grade = Math.max(1, Math.min(11, eligibility.age - 5));
+  user.avatarUrl = eligibility.mode === 'KIDS' ? 'assets/images/avatar_kid.png' : 'assets/images/avatar_teen.png';
+
+  // Ensure wallet starts at 0 coins and 0 XP for newly onboarded user
+  if (!user.solvedQuestions || user.solvedQuestions.length === 0) {
+    user.coinBalance = 0;
+    user.totalXP = 0;
+  }
+
+  return res.json({
+    success: true,
+    data: {
+      user: {
+        id: user.id,
+        email: user.email,
+        displayName: user.displayName,
+        age: user.age,
+        mode: user.mode,
+        grade: user.grade,
+        coinBalance: user.coinBalance,
+        totalXP: user.totalXP,
+        level: user.level,
+        cityLevel: user.cityLevel,
+        subscription: repository.getSubscription(user.id),
+      },
     },
   });
 });

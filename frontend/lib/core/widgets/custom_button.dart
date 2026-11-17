@@ -9,6 +9,7 @@ class CustomButton extends StatefulWidget {
   final bool isFullWidth;
   final double height;
   final double borderRadius;
+  final bool isLoading;
 
   const CustomButton({
     super.key,
@@ -20,6 +21,7 @@ class CustomButton extends StatefulWidget {
     this.isFullWidth = true,
     this.height = 54,
     this.borderRadius = 18,
+    this.isLoading = false,
   });
 
   @override
@@ -50,26 +52,35 @@ class _CustomButtonState extends State<CustomButton> {
               borderRadius: BorderRadius.circular(widget.borderRadius),
             ),
           ),
-          onPressed: widget.onPressed,
+          onPressed: widget.isLoading ? null : widget.onPressed,
           onFocusChange: (focus) {},
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (widget.icon != null) ...[
-                widget.icon!,
-                const SizedBox(width: 8),
-              ],
-              Text(
-                widget.text,
-                style: TextStyle(
-                  color: fgColor,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
+          child: widget.isLoading
+              ? SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    valueColor: AlwaysStoppedAnimation<Color>(fgColor),
+                  ),
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (widget.icon != null) ...[
+                      widget.icon!,
+                      const SizedBox(width: 8),
+                    ],
+                    Text(
+                      widget.text,
+                      style: TextStyle(
+                        color: fgColor,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );

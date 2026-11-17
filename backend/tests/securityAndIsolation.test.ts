@@ -138,10 +138,13 @@ describe('MathCity AI — Security, Authorization & Data Isolation Tests', () =>
         .set('Authorization', `Bearer ${studentBToken}`);
 
       expect(resB.status).toBe(200);
-      expect(resB.body.data.balance).toBe(100);
+      expect(resB.body.data.balance).toBe(0); // New accounts start from absolute zero
     });
 
     it('Student B cannot access Student A’s city island', async () => {
+      // Grant Student A 100 coins to purchase building
+      repository.creditCoins(studentAId, 100, 'Test building funds');
+
       // Student A places a building at (0, 0)
       await request(app)
         .post('/api/city/purchase')

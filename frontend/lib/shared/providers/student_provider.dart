@@ -430,6 +430,50 @@ class StudentNotifier extends StateNotifier<StudentState> {
       return false;
     }
   }
+
+  // --- Sign in with Apple ---
+  Future<AuthResult> signInWithApple() async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+    final result = await _authService.signInWithApple();
+
+    if (result.success && result.student != null) {
+      state = state.copyWith(student: result.student, isLoading: false);
+    } else {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: result.errorMessage ?? 'Apple orqali kirishda xatolik yuz berdi.',
+      );
+    }
+    return result;
+  }
+
+  // --- Complete Onboarding ---
+  Future<bool> completeOnboarding({
+    required String username,
+    required int day,
+    required int month,
+    required int year,
+  }) async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+    final result = await _authService.completeOnboarding(
+      username: username,
+      day: day,
+      month: month,
+      year: year,
+    );
+    if (result.success && result.student != null) {
+      state = state.copyWith(student: result.student, isLoading: false);
+      return true;
+    }
+    state = state.copyWith(isLoading: false, errorMessage: result.errorMessage);
+    return false;
+  }
+
+  // --- Multi-Account Logout & Clean State Revocation ---
+  Future<void> logout() async {
+    await _authService.signOut();
+    state = StudentState();
+  }
 }
 
 final studentProvider = StateNotifierProvider<StudentNotifier, StudentState>((ref) {

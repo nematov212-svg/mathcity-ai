@@ -15,7 +15,7 @@ class TeenDesktopScreen extends ConsumerWidget {
     final coins = student?.coinBalance ?? 450;
     final xp = student?.totalXP ?? 920;
     final level = student?.level ?? 5;
-    final name = student?.displayName ?? 'Javohir';
+    final name = student?.displayName ?? 'Mirzobek';
 
     return Scaffold(
       backgroundColor: AppColors.teenBackground,
