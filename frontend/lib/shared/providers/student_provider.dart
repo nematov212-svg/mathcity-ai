@@ -364,20 +364,19 @@ class StudentNotifier extends StateNotifier<StudentState> {
   Future<bool> restorePurchases() => restoreSubscription();
 
   // --- Google Sign-In Integration ---
-  Future<bool> signInWithGoogle() async {
+  Future<AuthResult> signInWithGoogle() async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     final result = await _authService.signInWithGoogle();
 
     if (result.success && result.student != null) {
       state = state.copyWith(student: result.student, isLoading: false);
-      return true;
     } else {
       state = state.copyWith(
         isLoading: false,
         errorMessage: result.errorMessage ?? 'Google orqali kirishda xatolik yuz berdi.',
       );
-      return false;
     }
+    return result;
   }
 
   // --- Email/Password Login ---

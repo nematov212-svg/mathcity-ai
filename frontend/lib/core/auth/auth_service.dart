@@ -40,9 +40,21 @@ class AuthService {
         '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
   );
 
+  /// iOS OAuth Client ID from Google Cloud Console
+  static String iosClientId = const String.fromEnvironment(
+    'GOOGLE_IOS_CLIENT_ID',
+    defaultValue:
+        '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
+  );
+
   /// Allows setting web client id at runtime if needed
   static void setWebClientId(String clientId) {
     webClientId = clientId;
+  }
+
+  /// Allows setting iOS client id at runtime if needed
+  static void setIosClientId(String clientId) {
+    iosClientId = clientId;
   }
 
   /// Controlled lazy initialization for GoogleSignIn
@@ -52,7 +64,8 @@ class AuthService {
 
     try {
       _googleSignInInstance = GoogleSignIn(
-        clientId: kIsWeb ? webClientId : null,
+        clientId: kIsWeb ? webClientId : iosClientId,
+        serverClientId: webClientId,
         scopes: const ['email', 'profile'],
       );
       return _googleSignInInstance;

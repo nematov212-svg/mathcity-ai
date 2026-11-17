@@ -18,7 +18,13 @@ function verifyGoogleTokenPayload(idToken: string): { email?: string; sub?: stri
     const nowSec = Math.floor(Date.now() / 1000);
     if (decoded.exp && decoded.exp < nowSec) return null;
     if (decoded.iss && !decoded.iss.includes('accounts.google.com')) return null;
-    if (config.googleClientId && decoded.aud && decoded.aud !== config.googleClientId) return null;
+    const allowedClients = [
+      config.googleClientId,
+      process.env.GOOGLE_IOS_CLIENT_ID,
+    ].filter(Boolean);
+    if (allowedClients.length > 0 && decoded.aud && !allowedClients.includes(decoded.aud)) {
+      return null;
+    }
     return { email: decoded.email, sub: decoded.sub };
   } catch {
     return null;

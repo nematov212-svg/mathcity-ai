@@ -50,25 +50,33 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
 
   void _handleGoogleSignIn() async {
     setState(() => _isGoogleLoading = true);
-    final success = await ref.read(studentProvider.notifier).signInWithGoogle();
+    final result = await ref.read(studentProvider.notifier).signInWithGoogle();
     setState(() => _isGoogleLoading = false);
 
     if (!mounted) return;
 
-    if (success) {
-      final student = ref.read(studentProvider).student;
-      final age = student?.age ?? 10;
-
-      if (age >= 17) {
-        context.go('/access-denied');
-      } else if (age >= 13) {
-        context.go('/teen/home');
+    if (result.success) {
+      if (result.isNewUser) {
+        context.push('/onboarding/intro');
       } else {
-        context.go('/kids/home');
+        final student = ref.read(studentProvider).student;
+        final age = student?.age ?? 10;
+
+        if (age >= 17) {
+          context.go('/access-denied');
+        } else if (age >= 13) {
+          context.go('/teen/home');
+        } else {
+          context.go('/kids/home');
+        }
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Google orqali kirishda xatolik yuz berdi.')),
+        SnackBar(
+          content: Text(
+            result.errorMessage ?? 'Google orqali kirishda xatolik yuz berdi.',
+          ),
+        ),
       );
     }
   }
