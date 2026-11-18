@@ -298,9 +298,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               child: const Text('Bekor qilish'),
                             ),
                             TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 Navigator.pop(ctx);
-                                context.go('/welcome');
+                                await ref.read(studentProvider.notifier).logout();
+                                if (context.mounted) {
+                                  context.go('/login');
+                                }
                               },
                               child: const Text(
                                 'O‘chirish',
@@ -327,7 +330,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
             ),
-            onPressed: () => context.go('/welcome'),
+            onPressed: () async {
+              await ref.read(studentProvider.notifier).logout();
+              if (context.mounted) {
+                context.go('/login');
+              }
+            },
             child: const Text(
               'Hisobdan chiqish',
               style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),

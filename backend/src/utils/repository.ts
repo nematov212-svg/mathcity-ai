@@ -33,6 +33,7 @@ export interface UserSubscription {
 export interface UserAccount {
   id: string;
   email: string;
+  username?: string;
   passwordHash?: string;
   googleId?: string;
   appleId?: string;
@@ -46,6 +47,8 @@ export interface UserAccount {
   totalXP: number;
   level: number;
   cityLevel: number;
+  resetToken?: string;
+  resetTokenExpiresAt?: string;
   subscription: UserSubscription;
   placedBuildings: {
     buildingKey: string;
@@ -144,6 +147,45 @@ class DataRepository {
     return this.users.get(email.toLowerCase());
   }
 
+  getUserByUsernameOrEmail(identifier: string): UserAccount | undefined {
+    const clean = identifier.trim().toLowerCase();
+    const byEmail = this.getUserByEmail(clean);
+    if (byEmail) return byEmail;
+
+    for (const user of this.users.values()) {
+      if (user.username && user.username.toLowerCase() === clean) return user;
+      if (user.displayName.toLowerCase() === clean) return user;
+    }
+    return undefined;
+  }
+
+  getUserByResetToken(token: string): UserAccount | undefined {
+    const nowIso = new Date().toISOString();
+    for (const user of this.users.values()) {
+      if (user.resetToken === token && user.resetTokenExpiresAt && user.resetTokenExpiresAt > nowIso) {
+        return user;
+      }
+    }
+    return undefined;
+  }
+
+  setResetToken(identifier: string, token: string, expiresAt: string): UserAccount | null {
+    const user = this.getUserByUsernameOrEmail(identifier);
+    if (!user) return null;
+    user.resetToken = token;
+    user.resetTokenExpiresAt = expiresAt;
+    this.updateUser(user.id, { resetToken: token, resetTokenExpiresAt: expiresAt });
+    return user;
+  }
+
+  clearResetToken(userId: string): void {
+    const user = this.getUserById(userId);
+    if (!user) return;
+    delete user.resetToken;
+    delete user.resetTokenExpiresAt;
+    this.updateUser(userId, { resetToken: undefined, resetTokenExpiresAt: undefined });
+  }
+
   getUserByGoogleId(googleId: string): UserAccount | undefined {
     for (const user of this.users.values()) {
       if (user.googleId === googleId) return user;
@@ -172,6 +214,9 @@ class DataRepository {
     }
     this.users.set(user.id, user);
     this.users.set(user.email.toLowerCase(), user);
+    if (user.username) {
+      this.users.set(user.username.toLowerCase(), user);
+    }
     if (user.googleId) {
       this.users.set(user.googleId, user);
     }
@@ -192,9 +237,15 @@ class DataRepository {
   updateUser(id: string, updates: Partial<UserAccount>): UserAccount {
     const user = this.getUserById(id);
     if (!user) throw new Error('Foydalanuvchi topilmadi');
+    if (updates.passwordHash && !updates.passwordHash.startsWith('$2')) {
+      updates.passwordHash = bcrypt.hashSync(updates.passwordHash, 10);
+    }
     const updated = { ...user, ...updates };
     this.users.set(user.id, updated);
     this.users.set(user.email.toLowerCase(), updated);
+    if (updated.username) {
+      this.users.set(updated.username.toLowerCase(), updated);
+    }
     return updated;
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/auth/auth_service.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/widgets/mathcity_logo.dart';
 
@@ -22,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       vsync: this,
       duration: const Duration(milliseconds: 1400),
     );
-
+    
     _scaleAnimation = CurvedAnimation(
       parent: _controller,
       curve: Curves.easeOutBack,
@@ -34,13 +35,29 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
 
     _controller.forward();
+    _checkAuthAndNavigate();
+  }
 
-    // Navigate to welcome screen after splash animation
-    Future.delayed(const Duration(milliseconds: 1800), () {
-      if (mounted) {
-        context.go('/welcome');
+  Future<void> _checkAuthAndNavigate() async {
+    final sessionFuture = AuthService().restoreSession(allowDemoFallback: false);
+    final delayFuture = Future.delayed(const Duration(milliseconds: 1500));
+
+    final results = await Future.wait([sessionFuture, delayFuture]);
+    if (!mounted) return;
+
+    final authResult = results[0] as AuthResult;
+    if (authResult.success && authResult.student != null) {
+      final age = authResult.student!.age;
+      if (age >= 17) {
+        context.go('/access-denied');
+      } else if (age >= 13 || authResult.student!.mode == 'TEEN') {
+        context.go('/teen/home');
+      } else {
+        context.go('/kids/home');
       }
-    });
+    } else {
+      context.go('/login');
+    }
   }
 
   @override

@@ -1,6 +1,9 @@
 import 'package:go_router/go_router.dart';
 import '../core/responsive/responsive_layout.dart';
 import '../features/splash/splash_screen.dart';
+import '../features/auth/login_screen.dart';
+import '../features/auth/register_screen.dart';
+import '../features/auth/forgot_password_screen.dart';
 import '../features/onboarding/welcome_screen.dart';
 import '../features/onboarding/intro_screen.dart';
 import '../features/age_eligibility/access_denied_screen.dart';
@@ -36,6 +39,18 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => const SplashScreen(),
+    ),
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const RegisterScreen(),
+    ),
+    GoRoute(
+      path: '/auth/forgot-password',
+      builder: (context, state) => const ForgotPasswordScreen(),
     ),
     GoRoute(
       path: '/welcome',

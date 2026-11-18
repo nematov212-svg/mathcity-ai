@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../network/api_client.dart';
@@ -161,14 +162,14 @@ class AuthService {
     }
   }
 
-  /// Login with Email and Password
-  Future<AuthResult> loginWithEmailPassword({
-    required String email,
+  /// Login with Username/Email and Password
+  Future<AuthResult> login({
+    required String identifier,
     required String password,
   }) async {
     try {
       final res = await ApiClient().dio.post('/auth/login', data: {
-        'email': email.trim().toLowerCase(),
+        'identifier': identifier.trim(),
         'password': password,
       });
 
@@ -184,27 +185,57 @@ class AuthService {
       } else {
         return AuthResult(
           success: false,
-          errorMessage: res.data['error'] ?? 'Kirishda xatolik yuz berdi.',
+          errorMessage: res.data['error'] ?? 'Login yoki parol noto‘g‘ri.',
         );
       }
     } catch (e) {
-      return AuthResult(
+      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
+        return AuthResult(
+          success: false,
+          errorMessage: e.response!.data['error'].toString(),
+        );
+      }
+      return const AuthResult(
         success: false,
-        errorMessage: 'Email yoki parol noto‘g‘ri yoki server bilan aloqa yo‘q.',
+        errorMessage: 'Login yoki parol noto‘g‘ri yoki server bilan aloqa yo‘q.',
       );
     }
   }
 
-  /// Register new student with strict age eligibility check
-  Future<AuthResult> register({
-    required String name,
-    required DateTime dob,
+  /// Legacy compatibility wrapper for loginWithEmailPassword
+  Future<AuthResult> loginWithEmailPassword({
     required String email,
     required String password,
   }) async {
+    return login(identifier: email, password: password);
+  }
+
+  /// Register new student with name, loginOrEmail, password and confirmation
+  Future<AuthResult> register({
+    required String name,
+    required String loginOrEmail,
+    required String password,
+    String? confirmPassword,
+    DateTime? dob,
+  }) async {
+    if (confirmPassword != null && password != confirmPassword) {
+      return const AuthResult(
+        success: false,
+        errorMessage: 'Parollar bir xil emas.',
+      );
+    }
+
+    if (password.length < 8) {
+      return const AuthResult(
+        success: false,
+        errorMessage: 'Parol kamida 8 ta belgidan iborat bo‘lsin.',
+      );
+    }
+
+    final birthDate = dob ?? DateTime(2015, 5, 15);
     final now = DateTime.now();
-    int age = now.year - dob.year;
-    if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) {
+    int age = now.year - birthDate.year;
+    if (now.month < birthDate.month || (now.month == birthDate.month && now.day < birthDate.day)) {
       age--;
     }
 
@@ -220,9 +251,10 @@ class AuthService {
     try {
       final res = await ApiClient().dio.post('/auth/register', data: {
         'displayName': name.trim(),
-        'dateOfBirth': dob.toIso8601String(),
-        'email': email.trim().toLowerCase(),
+        'loginOrEmail': loginOrEmail.trim(),
         'password': password,
+        'confirmPassword': confirmPassword ?? password,
+        'dateOfBirth': birthDate.toIso8601String(),
         'grade': (age - 5).clamp(1, 11),
       });
 
@@ -242,6 +274,12 @@ class AuthService {
         );
       }
     } catch (e) {
+      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
+        return AuthResult(
+          success: false,
+          errorMessage: e.response!.data['error'].toString(),
+        );
+      }
       return const AuthResult(
         success: false,
         errorMessage: 'Server bilan aloqa o‘rnatib bo‘lmadi. Qayta urinib ko‘ring.',
@@ -249,55 +287,107 @@ class AuthService {
     }
   }
 
-  /// Establish or Restore Authenticated Session
-  Future<AuthResult> restoreSession() async {
+  /// Check and restore existing session or attempt token refresh
+  Future<AuthResult> restoreSession({bool allowDemoFallback = false}) async {
     try {
       final savedToken = await StorageService.getAuthToken();
       if (savedToken != null && savedToken.isNotEmpty) {
         ApiClient().setAuthToken(savedToken);
-        final res = await ApiClient().dio.get('/auth/me');
-        if (res.data['success'] == true) {
-          final student = StudentModel.fromJson(res.data['data']);
-          return AuthResult(success: true, student: student, token: savedToken);
+        try {
+          final res = await ApiClient().dio.get('/auth/me');
+          if (res.data['success'] == true) {
+            final student = StudentModel.fromJson(res.data['data']);
+            return AuthResult(success: true, student: student, token: savedToken);
+          }
+        } catch (_) {
+          // Token may be expired - attempt refresh
+          try {
+            final refreshRes = await ApiClient().dio.post('/auth/refresh');
+            if (refreshRes.data['success'] == true) {
+              final newToken = refreshRes.data['data']['token'] as String;
+              ApiClient().setAuthToken(newToken);
+              await StorageService.saveAuthToken(newToken);
+              final student = StudentModel.fromJson(refreshRes.data['data']['user']);
+              return AuthResult(success: true, student: student, token: newToken);
+            }
+          } catch (_) {
+            // Token refresh failed - invalid/expired session
+            await StorageService.clear();
+            ApiClient().setAuthToken(null);
+          }
         }
       }
 
-      // No token or token expired: obtain a genuine signed demo token from backend
-      final demoRes = await ApiClient().dio.post('/auth/demo');
-      if (demoRes.data['success'] == true) {
-        final token = demoRes.data['data']['token'] as String;
-        ApiClient().setAuthToken(token);
-        await StorageService.saveAuthToken(token);
-        final student = StudentModel.fromJson(demoRes.data['data']['user']);
-        return AuthResult(success: true, student: student, token: token);
+      if (allowDemoFallback) {
+        final demoRes = await ApiClient().dio.post('/auth/demo');
+        if (demoRes.data['success'] == true) {
+          final token = demoRes.data['data']['token'] as String;
+          ApiClient().setAuthToken(token);
+          await StorageService.saveAuthToken(token);
+          final student = StudentModel.fromJson(demoRes.data['data']['user']);
+          return AuthResult(success: true, student: student, token: token);
+        }
       }
     } catch (e) {
       debugPrint('⚠️ Sessiyani tiklashda ogohlantirish: $e');
     }
 
-    // Default offline fallback student model
-    final fallbackStudent = StudentModel(
-      id: 'demo-student-id',
-      email: 'ali@mathcity.ai',
-      displayName: 'Ali',
-      age: 11,
-      mode: 'KIDS',
-      grade: 4,
-      coinBalance: 100,
-      totalXP: 380,
-      level: 3,
-      cityLevel: 2,
-      attemptedQuestionCount: 15,
-      correctQuestionCount: 14,
-      subscription: SubscriptionModel(
-        status: 'FREE_TRIAL_ACTIVE',
-        trialDaysRemaining: 30,
-        isProActive: false,
-        planName: 'MathCity Free Trial',
-        priceMonthlyUzs: 29000,
-      ),
-    );
-    return AuthResult(success: true, student: fallbackStudent);
+    return const AuthResult(success: false);
+  }
+
+  /// Request password reset code
+  Future<Map<String, dynamic>> requestPasswordReset(String emailOrUsername) async {
+    try {
+      final res = await ApiClient().dio.post('/auth/forgot-password', data: {
+        'email': emailOrUsername.trim(),
+      });
+      return {
+        'success': res.data['success'] == true,
+        'message': res.data['message'] ?? 'Tiklash kodi yuborildi.',
+        'debugCode': res.data['debugCode'],
+      };
+    } catch (e) {
+      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
+        return {
+          'success': false,
+          'message': e.response!.data['error'].toString(),
+        };
+      }
+      return {
+        'success': false,
+        'message': 'Server bilan aloqa uzildi. Qayta urinib ko‘ring.',
+      };
+    }
+  }
+
+  /// Reset password with verified token
+  Future<Map<String, dynamic>> resetPassword({
+    required String emailOrUsername,
+    required String resetToken,
+    required String newPassword,
+  }) async {
+    try {
+      final res = await ApiClient().dio.post('/auth/reset-password', data: {
+        'email': emailOrUsername.trim(),
+        'resetToken': resetToken.trim(),
+        'newPassword': newPassword,
+      });
+      return {
+        'success': res.data['success'] == true,
+        'message': res.data['message'] ?? 'Parol yangilandi.',
+      };
+    } catch (e) {
+      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
+        return {
+          'success': false,
+          'message': e.response!.data['error'].toString(),
+        };
+      }
+      return {
+        'success': false,
+        'message': 'Parolni yangilashda xatolik yuz berdi.',
+      };
+    }
   }
 
   /// Sign In With Apple (Native iOS & certified Web endpoint)

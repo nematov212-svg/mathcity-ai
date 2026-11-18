@@ -379,55 +379,83 @@ class StudentNotifier extends StateNotifier<StudentState> {
     return result;
   }
 
-  // --- Email/Password Login ---
+  // --- Email/Username/Password Login ---
+  Future<AuthResult> loginWithCredentials({
+    required String identifier,
+    required String password,
+  }) async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+    final result = await _authService.login(
+      identifier: identifier,
+      password: password,
+    );
+
+    if (result.success && result.student != null) {
+      state = state.copyWith(student: result.student, isLoading: false, errorMessage: null);
+    } else {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: result.errorMessage ?? 'Login yoki parol noto‘g‘ri.',
+      );
+    }
+    return result;
+  }
+
+  // --- Email/Password Login (Legacy wrapper) ---
   Future<bool> login({
     required String email,
     required String password,
   }) async {
-    state = state.copyWith(isLoading: true, errorMessage: null);
-    final result = await _authService.loginWithEmailPassword(
-      email: email,
+    final result = await loginWithCredentials(
+      identifier: email,
       password: password,
     );
-
-    if (result.success && result.student != null) {
-      state = state.copyWith(student: result.student, isLoading: false);
-      return true;
-    } else {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: result.errorMessage,
-      );
-      return false;
-    }
+    return result.success;
   }
 
-  // --- Student Registration ---
-  Future<bool> register({
+  // --- Student Registration with Username/Email ---
+  Future<AuthResult> registerStudent({
     required String name,
-    required DateTime dob,
-    required String email,
+    required String loginOrEmail,
     required String password,
+    String? confirmPassword,
+    DateTime? dob,
   }) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     final result = await _authService.register(
       name: name,
-      dob: dob,
-      email: email,
+      loginOrEmail: loginOrEmail,
       password: password,
+      confirmPassword: confirmPassword,
+      dob: dob,
     );
 
     if (result.success && result.student != null) {
-      state = state.copyWith(student: result.student, isLoading: false);
-      return true;
+      state = state.copyWith(student: result.student, isLoading: false, errorMessage: null);
     } else {
       state = state.copyWith(
         isLoading: false,
         isAgeDenied: result.isAgeDenied,
         errorMessage: result.errorMessage,
       );
-      return false;
     }
+    return result;
+  }
+
+  // --- Student Registration (Legacy wrapper) ---
+  Future<bool> register({
+    required String name,
+    required DateTime dob,
+    required String email,
+    required String password,
+  }) async {
+    final result = await registerStudent(
+      name: name,
+      loginOrEmail: email,
+      password: password,
+      dob: dob,
+    );
+    return result.success;
   }
 
   // --- Sign in with Apple ---
