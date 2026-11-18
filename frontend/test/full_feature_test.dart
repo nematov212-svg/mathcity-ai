@@ -29,7 +29,7 @@ void main() {
     expect(find.byType(MathCityLogo), findsOneWidget);
 
     // Verify Google sign-in button
-    expect(find.text('Google bilan davom etish'), findsOneWidget);
+    expect(find.textContaining('Google'), findsOneWidget);
 
     // Verify start button
     expect(find.text('Boshlash'), findsOneWidget);

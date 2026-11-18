@@ -33,31 +33,26 @@ class GoogleSignInButton extends StatelessWidget {
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 24,
-                    height: 24,
-                    decoration: const BoxDecoration(shape: BoxShape.circle),
-                    child: const Center(
-                      child: Text(
-                        'G',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xFF4285F4),
-                        ),
-                      ),
+                  Image.asset(
+                    'assets/icons/google_g_logo.png',
+                    width: 22,
+                    height: 22,
+                    errorBuilder: (_, __, ___) => const Icon(
+                      Icons.g_mobiledata,
+                      color: Color(0xFF4285F4),
+                      size: 26,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 12),
                   const Flexible(
                     child: Text(
-                      'Google bilan davom etish',
+                      'Continue with Google',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 15,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.kidsDarkText,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF1F2937),
                       ),
                     ),
                   ),

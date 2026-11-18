@@ -52,8 +52,10 @@ enum XPTransactionType {
 model User {
   id           String        @id @default(uuid())
   email        String        @unique
+  username     String?       @unique
   passwordHash String?
   googleId     String?       @unique
+  appleId      String?       @unique
   role         Role          @default(STUDENT)
   isActive     Boolean       @default(true)
   createdAt    DateTime      @default(now())
@@ -71,7 +73,12 @@ model User {
   dailyTasks         StudentDailyTask[]
   achievements       StudentAchievement[]
   aiMessages         AIMessage[]
+  aiConversations    AIConversation[]
+  aiUsage            AIUsage?
   sessions           AuthSession[]
+  purchaseEvents     PurchaseEvent[]
+  mediaAttachments   MediaAttachment[]
+  auditLogs          AdminAuditLog[]
 
   @@map("users")
 }
@@ -405,15 +412,87 @@ model StudentAchievement {
   @@map("student_achievements")
 }
 
+model AIConversation {
+  id        String      @id @default(uuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String      @default("Matematika savoli")
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  messages  AIMessage[]
+
+  @@map("ai_conversations")
+}
+
 model AIMessage {
-  id           String   @id @default(uuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role         String   // "user" or "assistant"
-  text         String
-  formulaLatex String?
-  step         Int?
-  createdAt    DateTime @default(now())
+  id             String          @id @default(uuid())
+  userId         String
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversationId String?
+  conversation   AIConversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String          // "user" or "assistant"
+  text           String
+  formulaLatex   String?
+  step           Int?
+  createdAt      DateTime        @default(now())
 
   @@map("ai_messages")
+}
+
+model AIUsage {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dailyUsedCount Int      @default(0)
+  dailyQuota     Int      @default(20)
+  totalUsedCount Int      @default(0)
+  lastResetDate  String   // "YYYY-MM-DD"
+  updatedAt      DateTime @updatedAt
+
+  @@map("ai_usage")
+}
+
+model PurchaseEvent {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider       String   // "click", "payme", "apple", "google"
+  transactionId  String   @unique
+  amountUzs      Int
+  status         String   // "PENDING", "COMPLETED", "FAILED"
+  planName       String
+  idempotencyKey String?  @unique
+  metadata       String?  // JSON string
+  createdAt      DateTime @default(now())
+
+  @@map("purchase_events")
+}
+
+model MediaAttachment {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fileKey        String   @unique
+  fileName       String
+  mimeType       String
+  sizeBytes      Int
+  storageUrl     String
+  purpose        String   // "AI_IMAGE_QUESTION", "AVATAR", "VOICE_INPUT"
+  createdAt      DateTime @default(now())
+
+  @@map("media_attachments")
+}
+
+model AdminAuditLog {
+  id         String   @id @default(uuid())
+  adminId    String
+  admin      User     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  action     String   // "CREATE_LESSON", "UPDATE_LESSON", "CHANGE_QUOTA", "BLOCK_USER"
+  targetType String   // "LESSON", "USER", "SUBSCRIPTION"
+  targetId   String?
+  details    String?  // JSON string
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  @@map("admin_audit_logs")
 }

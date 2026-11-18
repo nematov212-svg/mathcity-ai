@@ -20,6 +20,8 @@ import { studentsRouter } from './modules/students/profile.routes.js';
 import { subscriptionsRouter } from './modules/subscriptions/subscriptions.routes.js';
 import { adminRouter } from './modules/admin/admin.routes.js';
 import { paymentsRouter } from './modules/payments/click.routes.js';
+import { mediaRouter } from './modules/media/media.routes.js';
+import { isDatabaseHealthy } from './db/client.js';
 
 const adminStaticPath = path.resolve(process.cwd(), 'public/admin');
 
@@ -29,10 +31,28 @@ export const app = express();
 app.use(securityHeaders);
 app.use(corsMiddleware);
 app.use(requestTimeoutMiddleware(25000));
-app.use(express.json({ limit: '2mb' }));
+app.use(express.json({ limit: '5mb' }));
 app.use(generalRateLimiter);
 
-// 2. Health & Orchestration Probes (Phase 14)
+// 2. Health & Orchestration Probes (Render & Cloud compatible)
+// Standard Render root health check
+app.get('/health', (req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'healthy',
+    service: 'mathcity-ai-api',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get('/ready', (req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'ready',
+    database: isDatabaseHealthy() ? 'connected' : 'standby',
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Liveness probe (Kubernetes / Docker)
 app.get('/health/live', (req: Request, res: Response) => {
   res.status(200).json({ status: 'alive', uptime: process.uptime() });
@@ -42,7 +62,7 @@ app.get('/health/live', (req: Request, res: Response) => {
 app.get('/health/ready', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'ready',
-    database: 'connected',
+    database: isDatabaseHealthy() ? 'connected' : 'standby',
     timestamp: new Date().toISOString(),
   });
 });
@@ -74,6 +94,7 @@ app.use('/api/students', studentsRouter);
 app.use('/api/subscriptions', subscriptionsRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/payments', paymentsRouter);
+app.use('/api/media', mediaRouter);
 
 // 4. Standalone Admin Dashboard Static Portal
 app.use('/admin', express.static(adminStaticPath));

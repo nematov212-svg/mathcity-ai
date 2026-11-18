@@ -36,7 +36,7 @@ void main() {
 
       await tester.pump(const Duration(milliseconds: 300));
 
-      expect(find.text('Google bilan davom etish'), findsOneWidget);
+      expect(find.textContaining('Google'), findsOneWidget);
     });
   });
 
@@ -122,6 +122,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   });
+  
 
   group('4. Coin Economy and 100-Coin Building Purchase', () {
     testWidgets('Student begins with 100 coins and purchases 100-coin building down to 0', (tester) async {

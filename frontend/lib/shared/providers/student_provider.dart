@@ -59,11 +59,13 @@ class StudentNotifier extends StateNotifier<StudentState> {
           final result = await _authService.authenticateGoogleUser(account);
           if (result.success && result.student != null) {
             state = state.copyWith(student: result.student, isLoading: false);
-          } else {
+          } else if (result.errorMessage != null && !result.errorMessage!.contains('bekor')) {
             state = state.copyWith(
               isLoading: false,
-              errorMessage: result.errorMessage ?? 'Google orqali kirishda xatolik yuz berdi.',
+              errorMessage: result.errorMessage,
             );
+          } else {
+            state = state.copyWith(isLoading: false);
           }
         }
       });
@@ -373,7 +375,9 @@ class StudentNotifier extends StateNotifier<StudentState> {
     } else {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: result.errorMessage ?? 'Google orqali kirishda xatolik yuz berdi.',
+        errorMessage: (result.errorMessage != null && !result.errorMessage!.contains('bekor'))
+            ? result.errorMessage
+            : null,
       );
     }
     return result;

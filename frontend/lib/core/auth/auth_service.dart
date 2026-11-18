@@ -135,23 +135,37 @@ class AuthService {
     }
 
     try {
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      GoogleSignInAccount? googleUser;
+      // On web, try silent sign-in first to avoid unneeded popups
+      if (kIsWeb) {
+        try {
+          googleUser = await googleSignIn.signInSilently(suppressErrors: true);
+        } catch (_) {}
+      }
+
+      googleUser ??= await googleSignIn.signIn();
+
       if (googleUser == null) {
-        // Foydalanuvchi oynani bekor qildi
+        // User dismissed the popup or cancelled
         return const AuthResult(
           success: false,
-          errorMessage: 'Google orqali kirish bekor qilindi.',
+          errorMessage: null,
         );
       }
 
       return await authenticateGoogleUser(googleUser);
     } catch (e) {
-      debugPrint('⚠️ Google orqali kirish xatoligi: $e');
+      debugPrint('ℹ️ Google orqali kirish natijasi: $e');
       final errStr = e.toString().toLowerCase();
-      if (errStr.contains('popup_closed') || errStr.contains('cancel')) {
+      if (errStr.contains('popup_closed') ||
+          errStr.contains('popup_blocked') ||
+          errStr.contains('cancel') ||
+          errStr.contains('canceled') ||
+          errStr.contains('closed') ||
+          errStr.contains('access_denied')) {
         return const AuthResult(
           success: false,
-          errorMessage: 'Google orqali kirish bekor qilindi.',
+          errorMessage: null, // Graceful cancellation, no intrusive error banner
         );
       }
       return const AuthResult(
