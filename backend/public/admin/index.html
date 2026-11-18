@@ -25,7 +25,7 @@
     .gold-gradient {
       background: linear-gradient(135deg, #f59e0b, #d97706);
     }
-
+    
     .purple-gradient {
       background: linear-gradient(135deg, #6366f1, #8b5cf6);
     }
@@ -425,6 +425,14 @@
   </div>
 
   <script>
+    function getApiBaseUrl() {
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return window.location.port === '3001' ? 'http://localhost:4000' : '';
+      }
+      return 'https://mathcity-ai-api.onrender.com';
+    }
+    const API_BASE = getApiBaseUrl();
+
     let currentApiKey = localStorage.getItem('mathcity_admin_key') || '';
 
     // Check if previously logged in
@@ -442,7 +450,7 @@
       errElem.classList.add('hidden');
 
       try {
-        const res = await fetch('/api/admin/login', {
+        const res = await fetch(`${API_BASE}/api/admin/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ apiKey: input }),
@@ -467,7 +475,7 @@
 
     async function verifyAndLoadData() {
       try {
-        const res = await fetch('/api/admin/dashboard', {
+        const res = await fetch(`${API_BASE}/api/admin/dashboard`, {
           headers: { 'Authorization': `Bearer ${currentApiKey}` }
         });
         if (res.status === 200) {
@@ -509,7 +517,7 @@
 
     async function loadDashboardData() {
       try {
-        const res = await fetch('/api/admin/dashboard', {
+        const res = await fetch(`${API_BASE}/api/admin/dashboard`, {
           headers: { 'Authorization': `Bearer ${currentApiKey}` }
         });
         const json = await res.json();
@@ -532,7 +540,7 @@
 
     async function loadLessons() {
       try {
-        const res = await fetch('/api/admin/lessons', {
+        const res = await fetch(`${API_BASE}/api/admin/lessons`, {
           headers: { 'Authorization': `Bearer ${currentApiKey}` }
         });
         const json = await res.json();
@@ -563,7 +571,7 @@
     async function deleteLesson(id) {
       if (!confirm('Haqiqatdan ham ushbu darsni o‘chirmoqchimisiz?')) return;
       try {
-        const res = await fetch(`/api/admin/lessons/${id}`, {
+        const res = await fetch(`${API_BASE}/api/admin/lessons/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${currentApiKey}` }
         });
@@ -578,7 +586,7 @@
 
     async function loadQuestions() {
       try {
-        const res = await fetch('/api/admin/questions', {
+        const res = await fetch(`${API_BASE}/api/admin/questions`, {
           headers: { 'Authorization': `Bearer ${currentApiKey}` }
         });
         const json = await res.json();
@@ -605,7 +613,7 @@
 
     async function loadStudents() {
       try {
-        const res = await fetch('/api/admin/students', {
+        const res = await fetch(`${API_BASE}/api/admin/students`, {
           headers: { 'Authorization': `Bearer ${currentApiKey}` }
         });
         const json = await res.json();
@@ -637,7 +645,7 @@
 
     async function loadFinance() {
       try {
-        const res = await fetch('/api/admin/payments/transactions', {
+        const res = await fetch(`${API_BASE}/api/admin/payments/transactions`, {
           headers: { 'Authorization': `Bearer ${currentApiKey}` }
         });
         const json = await res.json();
@@ -690,7 +698,7 @@
       }
 
       try {
-        const res = await fetch('/api/admin/lessons', {
+        const res = await fetch(`${API_BASE}/api/admin/lessons`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

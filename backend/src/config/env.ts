@@ -14,7 +14,7 @@ const envSchema = z.object({
     .min(16, 'JWT_SECRET kamida 16 belgidan iborat bo‘lishi kerak.')
     .default('mathcity-ai-super-secret-jwt-key-32-chars-long'),
   JWT_EXPIRES_IN: z.string().default('7d'),
-  ALLOWED_ORIGINS: z.string().default('http://localhost:8080,http://localhost:8085,http://localhost:3000'),
+  ALLOWED_ORIGINS: z.string().default('http://localhost:8080,http://localhost:8085,http://localhost:3000,http://localhost:3001,http://localhost:7357,https://mathcity-ai-admin.onrender.com,https://mathcity-ai-web.onrender.com'),
   GEMINI_API_KEY: z.string().optional().default(''),
   AI_MODEL_NAME: z.string().default('gemini-1.5-flash'),
   GOOGLE_CLIENT_ID: z.string().optional().default(''),
