@@ -1,89 +1,85 @@
-# MathCity AI — AI Ustoz (Gemini) Sozlash va Integratsiya Qo‘llanmasi
+# MathCity AI — 100% Offline AI Ustoz (MathSolver) Tizim Qo‘llanmasi
 
-Ushbu qo‘llanma **MathCity AI** platformasining **AI Ustoz (Ziyo Tutor)** modulini Gemini API bilan xavfsiz va samarali ulash bo‘yicha to‘liq texnik ko‘rsatmalarni o‘z ichiga oladi.
-
----
-
-## 1. Arxitektura va Xavfsizlik Tamoyillari
-
-MathCity AI arxitekturasida **Zero-Trust Client** tamoyiliga amal qilinadi:
-1. **Faqat Backend Ulanishi (Backend-Only):**
-   Foydalanuvchining mobil yoki veb ilovasi (Flutter Web/iOS/Android) **hech qachon to‘g‘ridan-to‘g‘ri Google Gemini API ga murojaat qilmaydi**. Barcha so‘rovlar autentifikatsiyadan o‘tgan ichki API (`POST /api/ai/chat`, `POST /api/ai/chat/image`, `POST /api/ai/chat/voice`) orqali boradi.
-2. **Maxfiy Kalit Xavfsizligi:**
-   `GEMINI_API_KEY` faqat `backend/.env` faylida saqlanadi. U hech qachon Flutter kodiga, Git repozitoriyasiga, brauzer keshiga yoki foydalanuvchi loglariga yozilmaydi.
-3. **Resilient Fallback (To‘xtovsizlik Kafolati):**
-   Agar Gemini API `403 Forbidden` (billing/tier yoqilmagan), `429 Too Many Requests` (Google kvotasi yetarli emas) yoki tarmoq uzilishi qaytarsa, backend darhol ichki deterministik pedagogik matematika dvigateli (`MathSolver`) orqali qadamma-qadam yechimni taqdim etadi. Talaba hech qachon xatosiz javobsiz qolmaydi.
+Ushbu hujjat **MathCity AI** platformasining **AI Ustoz (Ziyo Tutor)** moduli arxitekturasi haqida to‘liq texnik ma'lumot beradi. Tizim tashqi AI/LLM API'lariga (Google Gemini, OpenAI, Claude va h.k.) mutlaqo bog‘liq emas — u 100% mahalliy (offline), qoidalarga asoslangan matematik tahlilchi va o‘zbek tili tabiiy tilini tushunish dvigateli (UzbekMathNLU & MathSolver) asosida ishlaydi.
 
 ---
 
-## 2. Muhit O‘zgaruvchilarini Sozlash (`backend/.env`)
+## 1. Nima Uchun 100% Offline MathSolver?
 
-Backend katalogidagi `.env` fayliga quyidagi qatorlarni kiriting:
+1. **Hech qanday tashqi API kalit talab etilmaydi:**
+   Serverda yoki `.env` da `GEMINI_API_KEY` yoki boshqa tashqi kalitlar bo‘lishi shart emas. Loyiha nol tashqi xarajat va nol kvota blokirovkasi bilan ishlaydi.
+2. **Qat'iy aniqlik va gallyutsinatsiyasiz javob:**
+   Katta til modellari (LLM) ba'zan matematik hisoblarda xato (gallyutsinatsiya) qilishi mumkin. MathCity MathSolver qat'iy matematik qoidalar, kasrlar qisqartmasi, algebraik tenglama algoritmlari va Vieta formulalari orqali hisoblaydi va har bir yechimni **ikkilamchi tekshiruv (dual-method verification)** orqali tasdiqlaydi.
+3. **Maksimal tezlik:**
+   Tashqi tarmoq kechikishlari (HTTP latency) yo‘q. Matematika masalasi millisoniyalarda tahlil qilinadi va javob qaytariladi.
+4. **To‘liq ma'lumotlar xavfsizligi:**
+   O‘quvchining savollari, rasmlari yoki ovozli xabarlari hech qachon tashqi serverlarga uzatilmaydi.
 
-```env
-# Google Gemini API Kaliti (Google AI Studio orqali olingan)
-GEMINI_API_KEY="SIZNING_GEMINI_API_KALITINGIZ"
+---
 
-# Tanlangan Gemini modeli (Standart: gemini-2.5-flash)
-GEMINI_MODEL="gemini-2.5-flash"
+## 2. Standart Yechim Formati
+
+Dvigatel qat'iy ravishda quyidagi 4 qismli standart o‘zbekcha formatda javob beradi:
+
+```text
+Tushunganim: <savolni o'z so'zimiz bilan qayta ifodalash>
+
+Yechish:
+1-qadam: ...
+2-qadam: ...
+
+Javob: <aniq natija>
+
+Tekshirish: <teskari amal yoki tenglamaga qo'yish orqali tekshiruv>
 ```
 
-> [!NOTE]
-> `backend/.env.example` faylida maxfiy qiymatlarsiz shablon joylashtirilgan:
-> ```env
-> GEMINI_API_KEY=""
-> GEMINI_MODEL="gemini-2.5-flash"
-> ```
+---
+
+## 3. O‘zbek Tili Tushunish Tizimi (UzbekMathNLU)
+
+- **Normalizatsiya:** Kichik harfga o‘tkazish, turli apostroflarni (`o‘`, `o'`, `o``, `oʻ`) standartlashtirish, matematik belgilarni (`×`, `·`, `:`, `÷`) umumiy standartga keltirish.
+- **Son so‘zlarini raqamga o‘girish:** Bir, ikki, uch, ..., o‘n, yigirma, ..., yuz, ming, million, shuningdek aralash sonlar ("bir yuz yigirma uch" $\to$ 123, "yarim" $\to$ 0.5, "chorak" $\to$ 0.25).
+- **Kelishik qo‘shimchalarini tahlil qilish:**
+  - `4 ga 5 ni qo'sh` $\implies 4 + 5$
+  - `10 dan 3 ni ayir` $\implies 10 - 3$
+  - `6 bilan 7 ni ko'paytir` $\implies 6 \times 7$
+  - `20 ni 4 ga bo'l` $\implies 20 / 4$
 
 ---
 
-## 3. Gemini API Kalitini Olish va Sozlash (Google AI Studio)
+## 4. Qamrab Olingan 18 ta Matematika Toifasi
 
-1. [Google AI Studio (aistudio.google.com)](https://aistudio.google.com/) platformasiga kiring.
-2. **Get API key** tugmasini bosing va yangi API kalit yarating.
-3. **Billing & Tier Holati:**
-   * Yangi ochilgan oddiy loyihalarda Google ba'zi mintaqalar uchun bepul kvotani cheklashi mumkin (`403 Forbidden: The Gemini API free tier is not available for this project`).
-   * Buni bartaraf qilish uchun [aistudio.google.com/billing](https://aistudio.google.com/billing) bo‘limiga kirib, to‘lov hisobini (Pay-as-you-go) ulang yoki to‘lov hisobi ulangan Google Cloud Project ni tanlang (birinchi 1 million token ko‘p holatlarda bepul yoki juda arzon).
-4. **Kalit Cheklovlari (Key Restrictions):**
-   * Google Cloud Console > APIs & Services > Credentials bo‘limida yaratilgan kalitni oching.
-   * **API restrictions:** Faqat `Generative Language API` ga ruxsat bering.
-   * **Application restrictions:** Backend serveringiz IP manzilini (masalan, Render server IP yoki `None`) tanlang. Hech qachon HTTP Referrer cheklovini tanlamang (chunki so‘rov server orqali yuboriladi, brauzer orqali emas).
-
----
-
-## 4. Kalitni Yangilash (Rotation)
-
-Agar kalitni almashtirish yoki xavfsizlik maqsadida yangilash zarur bo‘lsa:
-1. Google AI Studio da yangi API kalit yarating.
-2. `backend/.env` faylidagi `GEMINI_API_KEY` qiymatini yangisiga almashtiring.
-3. Render boshqaruv panelida: **Environment Variables > GEMINI_API_KEY** qiymatini yangilang.
-4. Backend serverini qayta ishga tushiring:
-   ```bash
-   cd backend && node dist/server.js
-   ```
-5. Eski kalitni Google Cloud Console orqali o‘chirib tashlang (Revoke).
+1. **Arifmetika:** Qo‘shish, ayirish, ko‘paytirish, bo‘lish (matnli va belgili).
+2. **Ifoda hisoblash:** Qavslar, amallar tartibi, murakkab algebraik ifodalar.
+3. **Chiziqli tenglamalar:** $ax + b = c$ va $ax + b = cx + d$.
+4. **Kvadrat tenglamalar:** $ax^2 + bx + c = 0$, diskriminant ($D = b^2 - 4ac$) va Vieta formulasi orqali tekshirish.
+5. **Tenglamalar sistemasi:** 2 noma'lumli chiziqli tenglamalar sistemasi.
+6. **Tengsizliklar:** Chiziqli tengsizliklar va oraliqlar ($x \in (a, b)$).
+7. **Kasrlar:** Oddiy kasrlar amallari, qisqartirish, aralash kasrga aylantirish.
+8. **Foiz masalalari:** Sonning foizi, foizga oshirish yoki kamaytirish.
+9. **Daraja va ildiz:** $a^b$, $\sqrt{x}$, $\sqrt[3]{x}$, daraja xossalari.
+10. **EKUB va EKUK:** Evklid algoritmi orqali eng katta umumiy bo‘luvchi va eng kichik umumiy karrali.
+11. **Tub sonlar va ko‘paytuvchilar:** Tublikni tekshirish, tub ko‘paytuvchilarga ajratish.
+12. **Hosila:** Darajali funksiyalar va ko‘phadlarning hosilasi ($(x^n)' = n \cdot x^{n-1}$).
+13. **Integral:** Aniqmas integral ($\int x^n dx = \frac{x^{n+1}}{n+1} + C$).
+14. **Limit:** $\lim_{x \to a} f(x)$ sodda algebraik limitlar.
+15. **Geometriya:** Uchburchak, to‘g‘ri to‘rtburchak, kvadrat, doira yuzi va perimetri.
+16. **Progressiyalar:** Arifmetik va geometrik progressiya hadlari va yig‘indisi.
+17. **Birlik o‘zgartirish:** Uzunlik (km, m, sm, mm), og‘irlik (kg, g, t), vaqt (soat, minut, sekund).
+18. **Matnli so‘zli masalalar:** Masofa, tezlik, vaqt ($S = v \cdot t$), yoshga doir masalalar.
 
 ---
 
-## 5. API Endpoints Ro‘yxati (Faqat Autentifikatsiyalangan Talabalar Uchun)
+## 5. Tushunilmagan Savollar va Xavfsizlik
 
-| Endpoint | Metod | Tavsif | Kiruvchi ma'lumotlar |
-| :--- | :---: | :--- | :--- |
-| `/api/ai/chat` | `POST` | Matnli matematika savoli | `{ message: string, conversationId?: string, action?: string }` |
-| `/api/ai/chat/image` | `POST` | Galereyadan rasm orqali savol | `{ imageBase64: string, mimeType: string, fileName?: string }` |
-| `/api/ai/chat/voice` | `POST` | Ovozli matematika savoli | `{ transcribedText: string, audioBase64?: string, mimeType?: string }` |
-| `/api/ai/conversations` | `GET` | O‘quvchining barcha suhbatlari | Bo‘sh (JWT token orqali aniqlanadi) |
-| `/api/ai/conversations/:id` | `GET` | Muayyan suhbat va uning xabarlari | `:id` (faqat o‘ziga tegishli) |
-| `/api/ai/conversations/:id` | `DELETE` | Suhbatni o‘chirish | `:id` (faqat egasi o‘chira oladi) |
-| `/api/ai/quota` | `GET` | 24 soatlik AI kvotasi holati | Bo‘sh (Free: 5/5, Pro: cheksiz) |
-
----
-
-## 6. Kvotalar va Foydalanish Limitlari
-
-* **Bepul Tarif (Free Trial / Standart):**
-  * Rolling 24-soatlik davr uchun **5 ta bepul AI so‘rovi** beriladi.
-  * 5 ta tugagach, HTTP 429 (`AI_QUOTA_EXCEEDED`) qaytariladi va MathCity Pro ga o‘tish taklif qilinadi.
-* **MathCity Pro Ta'rifi (29 000 UZS/oy):**
-  * Cheksiz savol-javoblar.
-  * Tezkor javob va barcha yechim qadamlari.
+Agar savol yuqoridagi qoidalarga to‘g‘ri kelmasa:
+- Tizim **hech qachon gallyutsinatsiya qilmaydi** yoki yolg‘on javob to‘qimaydi.
+- Quyidagi do‘stona yordam xabari qaytariladi:
+  ```text
+  Savolni to‘liq tushunmadim. Iltimos, quyidagi namunalardan biri kabi yozing:
+  • 2x + 6 = 16 (tenglamalar)
+  • 15 ning 20 foizi (foizlar)
+  • EKUB(24, 36) yoki EKUK(12, 18)
+  • 4 ga 5 ni qo‘shsa nechi chiqadi
+  ```
+- Savol matni `repository.logUnrecognizedQuery` orqali tizim loglariga kiritiladi, bu esa tizimni kelajakda yangi shablonlar bilan kengaytirish imkonini beradi.

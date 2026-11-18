@@ -96,3 +96,28 @@ Ushbu hisobot **MathCity AI** loyihasida aniqlangan muammolar, ularning tub saba
   - Backend API: `http://localhost:4000/health/live` — **ALIVE (200 OK)**
   - Admin Panel: `http://localhost:3001` — **ACTIVE (200 OK)**
   - Flutter Web: `http://localhost:8085` — **ACTIVE (200 OK)**
+
+---
+
+## 3. 100% Offline O‘zbek Matematika "Miya"si (MathSolver & UzbekMathNLU) va Oltin Tanga Dizayni
+
+### A. Tashqi AI va Gemini'dan Butunlay Tozalash:
+1. `@google/generative-ai` paketi butunlay olib tashlandi, `mathjs` (^14.0.1) o‘rnatildi.
+2. `GEMINI_API_KEY`, `GEMINI_MODEL` barcha muhit fayllari va konfiguratsiyalardan butunlay o‘chirildi.
+3. 0 ta tashqi tarmoq chaqiruvi, 0 ta LLM kaliti, 100% offline hisoblash kafolatlandi.
+
+### B. O‘zbek Tili NLU va 18 ta Matematika Toifalari:
+- **UzbekMathNLU:** O‘zbek son so‘zlari raqamlarga o‘giriladi (bir...million, yarim, chorak, o'ndan bir...), kelishik qo‘shimchalari (-ga, -ni, -dan) to‘g‘ri ajratiladi.
+- **18 Ta Yo‘nalish:** Arifmetika, ko‘p amalli ifodalar, chiziqli va kvadrat tenglamalar, tenglamalar sistemasi, tengsizliklar, kasrlar, foizlar, daraja va ildizlar, EKUB/EKUK, tub sonlar va ko‘paytuvchilarga ajratish, hosila, integral, limit, geometriya (yuz va perimetr), progressiyalar, birlik o‘tkazish, harakat va masofa so‘zli masalalari.
+- **Qat'iy 4 Qismli Format va Ikki Usulda Tekshirish:** Har bir yechim `Tushunganim`, `Yechish`, `Javob`, `Tekshirish` formatida va matematik teskari amal orqali tekshirilgan holda beriladi.
+
+### C. Oltin Tanga Yangilanishi:
+- Foydalanuvchi taqdim etgan yuqori sifatli, shaffof fonli oltin tanga dizayni (`gold_coin.png`) ilovadagi barcha tanga o‘rinlariga to‘liq joriy etildi.
+
+### D. Test Natijalari:
+- `backend/tests/offlineMathEngine200.test.ts`: **237 ta testdan 237 tasi PASS (100%)**
+- `backend/tests/aiTeacherGeminiBackend.test.ts`: **9 ta testdan 9 tasi PASS (100%)**
+- Umumiy Backend Jest testlari (`npm test`): **311 ta testdan 311 tasi PASS (100%)**
+- Flutter testlari (`flutter test`): **44 ta testdan 44 tasi PASS (100%)**
+- Flutter analizatori (`flutter analyze`): **0 ta xato**
+

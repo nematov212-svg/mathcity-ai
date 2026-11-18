@@ -801,6 +801,24 @@ class DataRepository {
 
     return msg;
   }
+
+  // --- Unrecognized AI Questions Store ---
+  private unrecognizedQueries: Array<{ id: string; userId?: string; query: string; createdAt: string }> = [];
+
+  logUnrecognizedQuery(query: string, userId?: string): void {
+    const clean = query.trim();
+    if (!clean) return;
+    this.unrecognizedQueries.push({
+      id: `unrec_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      userId,
+      query: clean,
+      createdAt: new Date().toISOString(),
+    });
+  }
+
+  getUnrecognizedQueries(): Array<{ id: string; userId?: string; query: string; createdAt: string }> {
+    return [...this.unrecognizedQueries];
+  }
 }
 
 export interface AIConversationItem {

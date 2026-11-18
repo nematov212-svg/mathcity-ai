@@ -16,9 +16,6 @@ const envSchema = z
       .default(
         'http://localhost:8080,http://localhost:8085,http://localhost:3000,http://localhost:3001,http://localhost:7357,https://mathcity-ai-admin.onrender.com,https://mathcity-ai-web.onrender.com'
       ),
-    GEMINI_API_KEY: z.string().optional().default(''),
-    GEMINI_MODEL: z.string().optional(),
-    AI_MODEL_NAME: z.string().default('gemini-2.5-flash'),
     GOOGLE_CLIENT_ID: z.string().optional().default(''),
     APP_NAME: z.string().default('MathCity AI'),
     APP_VERSION: z.string().default('1.0.0'),
@@ -73,9 +70,6 @@ export const config = {
       : 'mathcity_admin_master_secret_2026'),
   jwtExpiresIn: env.JWT_EXPIRES_IN,
   allowedOrigins: env.ALLOWED_ORIGINS.split(',').map((o) => o.trim()),
-  geminiApiKey: env.GEMINI_API_KEY,
-  geminiModel: env.GEMINI_MODEL || env.AI_MODEL_NAME || 'gemini-2.5-flash',
-  aiModelName: env.GEMINI_MODEL || env.AI_MODEL_NAME || 'gemini-2.5-flash',
   googleClientId: env.GOOGLE_CLIENT_ID,
   appName: env.APP_NAME,
   appVersion: env.APP_VERSION,
