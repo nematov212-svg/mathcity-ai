@@ -117,7 +117,57 @@ Ushbu hisobot **MathCity AI** loyihasida aniqlangan muammolar, ularning tub saba
 ### D. Test Natijalari:
 - `backend/tests/offlineMathEngine200.test.ts`: **237 ta testdan 237 tasi PASS (100%)**
 - `backend/tests/aiTeacherGeminiBackend.test.ts`: **9 ta testdan 9 tasi PASS (100%)**
-- Umumiy Backend Jest testlari (`npm test`): **311 ta testdan 311 tasi PASS (100%)**
-- Flutter testlari (`flutter test`): **44 ta testdan 44 tasi PASS (100%)**
+- Umumiy Backend Jest testlari (`npm test`): **838 ta testdan 838 tasi PASS (100%)**
+- Flutter testlari (`flutter test`): **47 ta testdan 47 tasi PASS (100%)**
 - Flutter analizatori (`flutter analyze`): **0 ta xato**
+
+---
+
+## 4. Google & Apple Kirish, Majburiy Profilni To‘ldirish Gateway va COPPA Maxfiylik Tizimi
+
+### A. Ishlash Prinsipi va Yangi Oqim (Auth Gateway Flow)
+1. **Kirish:** Foydalanuvchi Google yoki Apple tugmasini bosadi. Frontend provayderdan olingan `idToken` (Google) yoki `identityToken` + `authorizationCode` + `nonce` (Apple) ni backendga uzatadi.
+2. **Backend Tekshiruvi:**
+   - **Google:** `OAuth2Client` orqali Google Public Keylariga tekshiriladi.
+   - **Apple:** Apple'ning rasmiy JWKS (`https://appleid.apple.com/auth/keys`) ochiq kalitlari orqali SHA256 nonce bilan to‘liq tekshiriladi.
+3. **Majburiy Profilni To‘ldirish Sharti:**
+   - Yangi foydalanuvchi (`profileCompleted: false`) to‘g‘ridan-to‘g‘ri ilovaga kiritilmaydi.
+   - Ilova darhol `/complete-profile` ekraniga yo‘naltiradi.
+   - Backendda `/api/ai/*` va boshqa muhim yo‘llarga `requireCompletedProfile` middleware o‘rnatilgan — profil to‘ldirilmaguncha HTTP 403 `PROFILE_INCOMPLETE` qaytaradi.
+   - Ilova qayta ochilganda yoki sahifa yangilanganda ham `profileCompleted: false` bo‘lsa bosh ekranga o‘tilmaydi.
+4. **Foydalanuvchi Nomi (Username) Tekshiruvi:**
+   - Real-vaqtli 400ms debounced tekshiruv (`GET /api/auth/username-available`).
+   - 3-20 belgi, faqat `[a-zA-Z0-9_]`.
+   - Zaxiralangan so‘zlar (`admin`, `mathcity`, `system`...) va behayo so‘zlar taqiqlangan.
+   - Katta-kichik harflarni inobatga olmagan holda (case-insensitive) to‘liq unikal.
+5. **Tug‘ilgan Sana va Rejim Tanlash:**
+   - Kun, Oy, Yil alohida dropdownlar orqali tanlanadi.
+   - To‘liq kalendar tekshiruvi: 30 kunga ega oylar, fevral oyi (oddiy yilda 28 kun, kabisa yilida 29 kun). Fevral 30 kabi xatolar avtomatik tuzatiladi.
+   - Yosh hisoblanishi: 5 yoshdan kichik yoki 100 yoshdan katta foydalanuvchilar qabul qilinmaydi.
+   - 5–12 yosh: Bolalar rejimi (`KIDS`).
+   - 13–16 yosh: O‘smirlar rejimi (`TEEN`).
+6. **COPPA / Bolalar Maxfiyligi (Parental Advisory):**
+   - Agar foydalanuvchi yoshi 13 dan kichik bo‘lsa, ekranda ota-onalar bilan birgalikda foydalanish ogohlantirishi va rozilik tasdig‘i ko‘rsatiladi.
+7. **Hisobni O‘chirish (Apple App Store 5.1.1(v) Talabi):**
+   - Sozlamalar ekranida "Hisobni o‘chirish" tugmasi `DELETE /api/auth/account` ga ulandi.
+   - Foydalanuvchi ma’lumotlari, sessiyalari va Apple orqali kirgan bo‘lsa Apple token revocation qo‘llab-quvvatlanadi.
+
+---
+
+## 5. REQUIRES MANUAL ACTION (Tashqi Xizmatlar Sozlamalari)
+
+Ilova kodi to‘liq tayyor va sinovdan o‘tgan. Tashqi provayderlar orqali production/jonli tizimda to‘liq ishlashi uchun quyidagi tashqi sozlamalar talab etiladi:
+
+1. **Google Cloud Console:**
+   - **OAuth 2.0 Client ID** sozlamalarida "Authorized JavaScript origins" bo‘limiga mahsulot domenlari qo‘shilishi kerak:
+     - `http://localhost:5000` (mahalliy sinov uchun)
+     - `http://localhost:8085`
+     - Sizning haqiqiy production domeningiz (masalan, `https://mathcity.uz` yoki `https://mathcity.ai`)
+   - `frontend/lib/core/auth/auth_service.dart` va `backend/.env` faylidagi `GOOGLE_CLIENT_ID` ni o‘zingizning konsoldagi Client ID'ingiz bilan moslang.
+
+2. **Apple Developer Account (Sign in with Apple):**
+   - **Services ID:** Web uchun `ai.mathcity.web` xizmat identifikatori yaratilishi va Primary App ID ga bog‘lanishi kerak.
+   - **Return URLs:** Web autentifikatsiyasi uchun callback manzillari qo‘shiladi (masalan: `https://mathcity.ai/api/auth/apple/callback` yoki localhost URL).
+   - **Apple Sign-In Key (.p8):** Backendda Apple tokenlarini bekor qilish (account deletion) uchun `.p8` xususiy kaliti, Key ID va Team ID kerak bo‘ladi.
+
 

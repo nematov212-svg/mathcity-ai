@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:math' as math;
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../network/api_client.dart';
 import '../storage/storage_service.dart';
 import '../../shared/models/student_model.dart';
@@ -12,6 +16,8 @@ class AuthResult {
   final String? errorMessage;
   final bool isAgeDenied;
   final bool isNewUser;
+  final bool profileCompleted;
+  final bool requiresParentalConsent;
 
   const AuthResult({
     required this.success,
@@ -20,6 +26,8 @@ class AuthResult {
     this.errorMessage,
     this.isAgeDenied = false,
     this.isNewUser = false,
+    this.profileCompleted = true,
+    this.requiresParentalConsent = false,
   });
 }
 
@@ -78,6 +86,7 @@ class AuthService {
   }
 
   /// Stream of Google user accounts (fired by GIS button or silent login)
+  
   Stream<GoogleSignInAccount?> get onGoogleAccountChanged {
     final gsi = _getGoogleSignIn();
     if (gsi == null) return const Stream.empty();
@@ -99,12 +108,19 @@ class AuthService {
       if (res.data['success'] == true) {
         final token = res.data['data']['token'] as String;
         final bool isNewUser = res.data['data']['isNewUser'] == true;
+        final bool profileCompleted = res.data['data']['profileCompleted'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
 
         final userData = res.data['data']['user'];
         final student = StudentModel.fromJson(userData);
-        return AuthResult(success: true, student: student, token: token, isNewUser: isNewUser);
+        return AuthResult(
+          success: true,
+          student: student,
+          token: token,
+          isNewUser: isNewUser,
+          profileCompleted: profileCompleted,
+        );
       } else {
         return AuthResult(
           success: false,
@@ -199,12 +215,19 @@ class AuthService {
       if (res.data['success'] == true) {
         final token = res.data['data']['token'] as String;
         final bool isNewUser = res.data['data']['isNewUser'] == true;
+        final bool profileCompleted = res.data['data']['profileCompleted'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
 
         final userData = res.data['data']['user'];
         final student = StudentModel.fromJson(userData);
-        return AuthResult(success: true, student: student, token: token, isNewUser: isNewUser);
+        return AuthResult(
+          success: true,
+          student: student,
+          token: token,
+          isNewUser: isNewUser,
+          profileCompleted: profileCompleted,
+        );
       } else {
         return AuthResult(
           success: false,
@@ -284,12 +307,19 @@ class AuthService {
       if (res.data['success'] == true) {
         final token = res.data['data']['token'] as String;
         final bool isNewUser = res.data['data']['isNewUser'] == true;
+        final bool profileCompleted = res.data['data']['profileCompleted'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
 
         final userData = res.data['data']['user'];
         final student = StudentModel.fromJson(userData);
-        return AuthResult(success: true, student: student, token: token, isNewUser: isNewUser);
+        return AuthResult(
+          success: true,
+          student: student,
+          token: token,
+          isNewUser: isNewUser,
+          profileCompleted: profileCompleted,
+        );
       } else {
         return AuthResult(
           success: false,
@@ -425,35 +455,89 @@ class AuthService {
     }
   }
 
-  /// Sign In With Apple (Native iOS & certified Web endpoint)
+  /// Sign In With Apple (Native iOS/macOS & Web flow)
   Future<AuthResult> signInWithApple() async {
     try {
+      // 1. Generate cryptographic raw nonce and sha256 hash
+      final rawNonce = base64Url.encode(
+        List<int>.generate(32, (_) => math.Random.secure().nextInt(256)),
+      );
+      final sha256Nonce = sha256.convert(utf8.encode(rawNonce)).toString();
+
+      // 2. Request credential from Apple ID
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        nonce: sha256Nonce,
+        webAuthenticationOptions: WebAuthenticationOptions(
+          clientId: 'ai.mathcity.web',
+          redirectUri: Uri.parse('https://mathcity.ai/api/auth/apple/callback'),
+        ),
+      );
+
+      // 3. Post authoritative tokens to backend for server-side JWKS validation
       final res = await ApiClient().dio.post('/auth/apple', data: {
-        'appleUserId': 'apple_user_${DateTime.now().millisecondsSinceEpoch}',
-        'email': 'apple_student@privaterelay.appleid.com',
-        'displayName': 'AppleOquvchi',
+        'identityToken': credential.identityToken,
+        'authorizationCode': credential.authorizationCode,
+        'nonce': rawNonce,
+        'appleUserId': credential.userIdentifier,
+        'email': credential.email,
+        'fullName': credential.givenName != null || credential.familyName != null
+            ? {
+                'givenName': credential.givenName,
+                'familyName': credential.familyName,
+              }
+            : null,
       });
 
       if (res.data['success'] == true) {
         final token = res.data['data']['token'] as String;
         final bool isNewUser = res.data['data']['isNewUser'] == true;
+        final bool profileCompleted = res.data['data']['profileCompleted'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
 
         final userData = res.data['data']['user'];
         final student = StudentModel.fromJson(userData);
-        return AuthResult(success: true, student: student, token: token, isNewUser: isNewUser);
+        return AuthResult(
+          success: true,
+          student: student,
+          token: token,
+          isNewUser: isNewUser,
+          profileCompleted: profileCompleted,
+        );
       } else {
         return AuthResult(
           success: false,
           errorMessage: res.data['error'] ?? 'Apple orqali kirishda xatolik yuz berdi.',
         );
       }
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) {
+        return const AuthResult(success: false, errorMessage: null);
+      }
+      return AuthResult(
+        success: false,
+        errorMessage: 'Apple tizimiga kirish bekor qilindi yoki xato yuz berdi (${e.message}).',
+      );
     } catch (e) {
-      debugPrint('⚠️ Apple orqali kirish xatoligi: $e');
+      debugPrint('ℹ️ Apple sign in error: $e');
+      final err = e.toString().toLowerCase();
+      if (err.contains('cancel') || err.contains('closed') || err.contains('dismissed')) {
+        return const AuthResult(success: false, errorMessage: null);
+      }
+      if (err.contains('notsupported') || err.contains('not supported')) {
+        return const AuthResult(
+          success: false,
+          errorMessage:
+              'Ushbu qurilmada Apple orqali kirish qo‘llab-quvvatlanmaydi. Login va parol yoki Google orqali kiring.',
+        );
+      }
       return const AuthResult(
         success: false,
-        errorMessage: 'Apple tizimiga ulanib bo‘lmadi. Internet aloqasini tekshiring.',
+        errorMessage: 'Apple orqali ulanishda xatolik yuz berdi. Internet aloqasini tekshiring.',
       );
     }
   }
@@ -461,37 +545,46 @@ class AuthService {
   /// Check username availability and uniqueness
   Future<Map<String, dynamic>> checkUsername(String username) async {
     try {
-      final res = await ApiClient().dio.get('/auth/check-username', queryParameters: {
+      final res = await ApiClient().dio.get('/auth/username-available', queryParameters: {
         'username': username.trim(),
       });
       if (res.data['success'] == true) {
-        return res.data['data'];
+        return res.data['data'] as Map<String, dynamic>;
       }
       return {'available': false, 'message': res.data['error'] ?? 'Xatolik'};
     } catch (e) {
+      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
+        return {'available': false, 'message': e.response!.data['error'].toString()};
+      }
       return {'available': false, 'message': 'Foydalanuvchi nomini tekshirishda xatolik yuz berdi.'};
     }
   }
 
-  /// Complete first-time student onboarding (Username + Birth Date)
-  Future<AuthResult> completeOnboarding({
+  /// Complete student profile with unique username and verified birth date
+  Future<AuthResult> completeProfile({
     required String username,
     required int day,
     required int month,
     required int year,
   }) async {
     try {
-      final res = await ApiClient().dio.post('/auth/complete-onboarding', data: {
+      final res = await ApiClient().dio.post('/auth/complete-profile', data: {
         'username': username.trim(),
-        'day': day,
-        'month': month,
-        'year': year,
+        'birthDay': day,
+        'birthMonth': month,
+        'birthYear': year,
       });
 
       if (res.data['success'] == true) {
         final userData = res.data['data']['user'];
         final student = StudentModel.fromJson(userData);
-        return AuthResult(success: true, student: student);
+        final bool requiresParentalConsent = res.data['data']['requiresParentalConsent'] == true;
+        return AuthResult(
+          success: true,
+          student: student,
+          profileCompleted: true,
+          requiresParentalConsent: requiresParentalConsent,
+        );
       } else {
         return AuthResult(
           success: false,
@@ -499,10 +592,41 @@ class AuthService {
         );
       }
     } catch (e) {
+      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
+        return AuthResult(
+          success: false,
+          errorMessage: e.response!.data['error'].toString(),
+        );
+      }
       return const AuthResult(
         success: false,
         errorMessage: 'Profilni saqlashda server bilan aloqa uzildi.',
       );
+    }
+  }
+
+  /// Backwards-compatibility wrapper for completeOnboarding
+  Future<AuthResult> completeOnboarding({
+    required String username,
+    required int day,
+    required int month,
+    required int year,
+  }) async {
+    return completeProfile(username: username, day: day, month: month, year: year);
+  }
+
+  /// In-App Account Deletion (App Store Guideline compliance)
+  Future<bool> deleteAccount() async {
+    try {
+      final res = await ApiClient().dio.delete('/auth/account');
+      if (res.data['success'] == true) {
+        await signOut();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      debugPrint('⚠️ Hisobni o‘chirishda xatolik: $e');
+      return false;
     }
   }
 

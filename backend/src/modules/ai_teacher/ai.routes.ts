@@ -1,12 +1,15 @@
 import { Router, Response } from 'express';
 import { z } from 'zod';
-import { authMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
+import { authMiddleware, requireCompletedProfile, AuthenticatedRequest } from '../../middleware/auth.js';
 import { aiRateLimiter } from '../../middleware/rateLimit.js';
 import { MathSolver } from '../../utils/mathSolver.js';
 import { aiQuotaStore } from './aiQuotaStore.js';
 import { repository } from '../../utils/repository.js';
 
 export const aiRouter = Router();
+
+// Protect all AI Ustoz endpoints with JWT auth and completed profile requirement
+aiRouter.use(authMiddleware, requireCompletedProfile);
 
 // ============================================================================
 // OCR / Audio text cleanup helper (Offline character correction)
@@ -135,6 +138,9 @@ const chatSchema = z.object({
     .enum(['chat', 'next_step', 'explain_more', 'similar_example', 'check_solution'])
     .optional()
     .default('chat'),
+  mode: z
+    .enum(['full', 'only_answer', 'explain_detailed', 'hint', 'similar_example'])
+    .optional(),
   step: z.number().int().min(0).optional().default(0),
   contextFormula: z.string().max(200).optional(),
 });
@@ -299,7 +305,13 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
   }
 
   // 4. Deterministic 100% Offline Uzbek Mathematical Solver
-  const mathSolution = MathSolver.solve(cleanMsg);
+  const effectiveMode = parse.data.mode || 'full';
+  const mathSolution = MathSolver.solve(cleanMsg, {
+    userAge: user.age,
+    gradeLevel: user.grade,
+    mode: effectiveMode,
+  });
+
   if (mathSolution) {
     repository.saveAIMessage(user.id, activeConvId, 'assistant', mathSolution.rawReply, {
       formulaLatex: mathSolution.formulaLatex,
@@ -323,7 +335,11 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
         steps: mathSolution.steps,
         finalAnswer: mathSolution.finalAnswer,
         problemType: mathSolution.problemType,
+        confidence: mathSolution.confidence,
+        timing: mathSolution.timing,
+        commonMistakeWarning: mathSolution.commonMistakeWarning,
         similarExample: mathSolution.similarExample,
+        clarificationNeeded: mathSolution.clarificationNeeded,
         step: step + 1,
         remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
         suggestedActions: [
@@ -630,3 +646,22 @@ const handleVoiceSolve = async (req: AuthenticatedRequest, res: Response) => {
 
 aiRouter.post('/chat/voice', authMiddleware, aiRateLimiter, handleVoiceSolve);
 aiRouter.post('/solve-voice', authMiddleware, aiRateLimiter, handleVoiceSolve);
+
+// ============================================================================
+// 6. Voice Learning / Correction Feedback Endpoint
+// ============================================================================
+aiRouter.post('/voice/learn-correction', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const { originalTranscript, correctedText } = req.body;
+  if (!originalTranscript || !correctedText) {
+    return res.status(400).json({ success: false, error: 'Asl va to‘g‘rilangan matn kiritilishi shart.' });
+  }
+
+  // Record correction for speech vocabulary learning
+  repository.logUnrecognizedQuery(`VOICE_CORRECTION: "${originalTranscript}" -> "${correctedText}"`, req.user?.id);
+
+  return res.json({
+    success: true,
+    message: 'Nutq tahriri muvaffaqiyatli qabul qilindi va tizim lug‘atiga kiritildi.',
+  });
+});
+

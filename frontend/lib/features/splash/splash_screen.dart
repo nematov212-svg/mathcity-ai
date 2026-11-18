@@ -47,6 +47,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     final authResult = results[0] as AuthResult;
     if (authResult.success && authResult.student != null) {
+      if (!authResult.student!.profileCompleted) {
+        context.go('/complete-profile');
+        return;
+      }
       final age = authResult.student!.age;
       if (age >= 17) {
         context.go('/access-denied');

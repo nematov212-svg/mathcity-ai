@@ -478,15 +478,15 @@ class StudentNotifier extends StateNotifier<StudentState> {
     return result;
   }
 
-  // --- Complete Onboarding ---
-  Future<bool> completeOnboarding({
+  // --- Complete Profile ---
+  Future<AuthResult> completeProfile({
     required String username,
     required int day,
     required int month,
     required int year,
   }) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
-    final result = await _authService.completeOnboarding(
+    final result = await _authService.completeProfile(
       username: username,
       day: day,
       month: month,
@@ -494,10 +494,35 @@ class StudentNotifier extends StateNotifier<StudentState> {
     );
     if (result.success && result.student != null) {
       state = state.copyWith(student: result.student, isLoading: false);
-      return true;
+    } else {
+      state = state.copyWith(isLoading: false, errorMessage: result.errorMessage);
     }
-    state = state.copyWith(isLoading: false, errorMessage: result.errorMessage);
-    return false;
+    return result;
+  }
+
+  // --- Complete Onboarding (Backwards-compatible) ---
+  Future<bool> completeOnboarding({
+    required String username,
+    required int day,
+    required int month,
+    required int year,
+  }) async {
+    final res = await completeProfile(
+      username: username,
+      day: day,
+      month: month,
+      year: year,
+    );
+    return res.success;
+  }
+
+  // --- In-App Account Deletion ---
+  Future<bool> deleteAccount() async {
+    final success = await _authService.deleteAccount();
+    if (success) {
+      state = StudentState();
+    }
+    return success;
   }
 
   // --- Multi-Account Logout & Clean State Revocation ---

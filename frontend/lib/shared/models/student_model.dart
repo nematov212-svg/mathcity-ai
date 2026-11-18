@@ -51,6 +51,10 @@ class StudentModel {
   final String id;
   final String email;
   final String displayName;
+  final String? username;
+  final String? dateOfBirth;
+  final bool profileCompleted;
+  final bool parentalConsentRequired;
   final int age;
   final String mode; // 'KIDS' or 'TEEN'
   final int grade;
@@ -66,6 +70,10 @@ class StudentModel {
     required this.id,
     required this.email,
     required this.displayName,
+    this.username,
+    this.dateOfBirth,
+    this.profileCompleted = true,
+    this.parentalConsentRequired = false,
     required this.age,
     required this.mode,
     required this.grade,
@@ -84,10 +92,19 @@ class StudentModel {
   }
 
   factory StudentModel.fromJson(Map<String, dynamic> json) {
+    final rawUsername = json['username'] as String?;
+    final rawDob = json['dateOfBirth'] as String?;
+    final isComplete = json['profileCompleted'] == true ||
+        (rawUsername != null && rawUsername.trim().isNotEmpty && rawDob != null && rawDob.trim().isNotEmpty);
+
     return StudentModel(
       id: json['id'] ?? '',
       email: json['email'] ?? '',
-      displayName: json['displayName'] ?? 'O‘quvchi',
+      displayName: json['displayName'] ?? (rawUsername ?? 'O‘quvchi'),
+      username: rawUsername,
+      dateOfBirth: rawDob,
+      profileCompleted: json['profileCompleted'] != null ? json['profileCompleted'] == true : isComplete,
+      parentalConsentRequired: json['parentalConsentRequired'] ?? ((json['age'] ?? 10) < 13),
       age: json['age'] ?? 10,
       mode: json['mode'] ?? 'KIDS',
       grade: json['grade'] ?? 4,
@@ -111,6 +128,10 @@ class StudentModel {
 
   StudentModel copyWith({
     String? displayName,
+    String? username,
+    String? dateOfBirth,
+    bool? profileCompleted,
+    bool? parentalConsentRequired,
     int? coinBalance,
     int? totalXP,
     int? level,
@@ -124,6 +145,10 @@ class StudentModel {
       id: id,
       email: email,
       displayName: displayName ?? this.displayName,
+      username: username ?? this.username,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      profileCompleted: profileCompleted ?? this.profileCompleted,
+      parentalConsentRequired: parentalConsentRequired ?? this.parentalConsentRequired,
       age: age,
       mode: mode ?? this.mode,
       grade: grade,

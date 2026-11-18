@@ -817,3 +817,42 @@ adminRouter.get('/audit-logs', adminAuth, (req: Request, res: Response) => {
     data: logs,
   });
 });
+
+// ---------------------------------------------------------------------------
+// 7. UNRECOGNIZED AI QUERIES REPORT (MathSolver Analytics)
+// ---------------------------------------------------------------------------
+adminRouter.get('/unrecognized-queries', adminAuth, (req: Request, res: Response) => {
+  const rawList = repository.getUnrecognizedQueries();
+
+  // Aggregate frequency of recurring queries
+  const frequencyMap = new Map<string, { query: string; count: number; lastSeen: string; userIds: string[] }>();
+  for (const item of rawList) {
+    const q = item.query.trim();
+    if (!frequencyMap.has(q)) {
+      frequencyMap.set(q, {
+        query: q,
+        count: 1,
+        lastSeen: item.createdAt,
+        userIds: item.userId ? [item.userId] : [],
+      });
+    } else {
+      const existing = frequencyMap.get(q)!;
+      existing.count += 1;
+      existing.lastSeen = item.createdAt;
+      if (item.userId && !existing.userIds.includes(item.userId)) {
+        existing.userIds.push(item.userId);
+      }
+    }
+  }
+
+  const aggregated = Array.from(frequencyMap.values()).sort((a, b) => b.count - a.count);
+
+  return res.json({
+    success: true,
+    totalRaw: rawList.length,
+    totalUnique: aggregated.length,
+    topRecurring: aggregated.slice(0, 50),
+    data: rawList.slice(-100).reverse(), // Last 100 queries
+  });
+});
+

@@ -300,9 +300,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             TextButton(
                               onPressed: () async {
                                 Navigator.pop(ctx);
-                                await ref.read(studentProvider.notifier).logout();
+                                final success = await ref.read(studentProvider.notifier).deleteAccount();
                                 if (context.mounted) {
-                                  context.go('/login');
+                                  if (success) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Hisobingiz muvaffaqiyatli o‘chirildi.')),
+                                    );
+                                    context.go('/login');
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Hisobni o‘chirishda xatolik yuz berdi.')),
+                                    );
+                                  }
                                 }
                               },
                               child: const Text(

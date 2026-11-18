@@ -73,7 +73,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() => _isLoading = false);
 
     if (result.success && result.student != null) {
-      _navigateToDashboard(result.student);
+      if (!result.profileCompleted || !result.student!.profileCompleted) {
+        context.go('/complete-profile');
+      } else {
+        _navigateToDashboard(result.student);
+      }
     } else {
       setState(() {
         _errorMessage = result.errorMessage ?? 'Login yoki parol noto‘g‘ri.';
@@ -94,7 +98,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() => _isGoogleLoading = false);
 
     if (result.success && result.student != null) {
-      if (result.isNewUser) {
+      if (!result.profileCompleted || !result.student!.profileCompleted) {
+        context.go('/complete-profile');
+      } else if (result.isNewUser) {
         context.push('/onboarding/intro');
       } else {
         _navigateToDashboard(result.student);
@@ -118,7 +124,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() => _isAppleLoading = false);
 
     if (result.success && result.student != null) {
-      if (result.isNewUser) {
+      if (!result.profileCompleted || !result.student!.profileCompleted) {
+        context.go('/complete-profile');
+      } else if (result.isNewUser) {
         context.push('/onboarding/intro');
       } else {
         _navigateToDashboard(result.student);

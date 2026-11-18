@@ -37,12 +37,16 @@ export interface UserAccount {
   passwordHash?: string;
   googleId?: string;
   appleId?: string;
+  appleRefreshToken?: string;
   displayName: string;
   dateOfBirth: string; // ISO string
   age: number;
   mode: AgeMode;
   grade: number;
   avatarUrl: string;
+  profileCompleted?: boolean;
+  parentalConsentRequired?: boolean;
+  parentalAdvisoryAcknowledged?: boolean;
   coinBalance: number;
   totalXP: number;
   level: number;
@@ -85,6 +89,7 @@ class DataRepository {
     const demoStudent: UserAccount = {
       id: 'demo-student-id',
       email: 'ali@mathcity.ai',
+      username: 'ali',
       passwordHash: bcrypt.hashSync('securepassword123', 10),
       displayName: 'Ali',
       dateOfBirth: '2015-05-10',
@@ -92,6 +97,8 @@ class DataRepository {
       mode: 'KIDS',
       grade: 4,
       avatarUrl: 'assets/images/avatar_kid.png',
+      profileCompleted: true,
+      parentalConsentRequired: true,
       coinBalance: 100, // Starts with 100 coins for testing building purchase
       totalXP: 380,
       level: 3,
@@ -246,7 +253,30 @@ class DataRepository {
     if (updated.username) {
       this.users.set(updated.username.toLowerCase(), updated);
     }
+    if (updated.googleId) {
+      this.users.set(updated.googleId, updated);
+    }
+    if (updated.appleId) {
+      this.users.set(updated.appleId, updated);
+    }
     return updated;
+  }
+
+  deleteUser(id: string): boolean {
+    const user = this.getUserById(id);
+    if (!user) return false;
+    this.users.delete(user.id);
+    this.users.delete(user.email.toLowerCase());
+    if (user.username) {
+      this.users.delete(user.username.toLowerCase());
+    }
+    if (user.googleId) {
+      this.users.delete(user.googleId);
+    }
+    if (user.appleId) {
+      this.users.delete(user.appleId);
+    }
+    return true;
   }
 
   // --- Curriculum Hierarchy Queries ---
@@ -850,3 +880,12 @@ export interface AIMessageItem {
 }
 
 export const repository = new DataRepository();
+
+export function logUnrecognizedQuery(query: string, userId?: string): void {
+  repository.logUnrecognizedQuery(query, userId);
+}
+
+export function getUnrecognizedQueries(): Array<{ id: string; userId?: string; query: string; createdAt: string }> {
+  return repository.getUnrecognizedQueries();
+}
+
