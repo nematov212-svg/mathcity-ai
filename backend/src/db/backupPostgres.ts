@@ -55,7 +55,7 @@ export async function backupPostgresDatabase(): Promise<{
     const buildingDefinitions = await prisma.buildingDefinition.findMany();
     const dailyTasks = await prisma.dailyTask.findMany();
     const achievements = await prisma.achievement.findMany();
-    const aiConversations = await prisma.aiConversation.findMany({
+    const aiConversations = await prisma.aIConversation.findMany({
       include: { messages: true },
     });
 
