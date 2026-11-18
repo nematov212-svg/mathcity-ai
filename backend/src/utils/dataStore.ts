@@ -3,7 +3,7 @@ export interface QuestionModel {
   lessonId: string;
   sectionId: string;
   prompt: string;
-  type: 'MULTIPLE_CHOICE' | 'NUMERICAL_INPUT' | 'FRACTION_MATCH' | 'EQUATION_SOLVE';
+  type: 'MULTIPLE_CHOICE' | 'NUMERICAL_INPUT' | 'FRACTION_MATCH' | 'EQUATION_SOLVE' | 'TRUE_FALSE' | 'IMAGE_ASSISTED';
   options: string[];
   correctAnswer: string;
   explanation: string;
@@ -18,6 +18,14 @@ export interface SectionModel {
   title: string; // e.g. "1-qism", "2-qism"
   orderIndex: number;
   questions: QuestionModel[];
+}
+
+export interface LessonExample {
+  id: string;
+  title: string;
+  problem: string;
+  solution: string;
+  formulaLatex?: string;
 }
 
 export interface LessonModel {
@@ -36,6 +44,10 @@ export interface LessonModel {
   rewardCoins: number;
   orderIndex: number;
   sections: SectionModel[];
+  status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  examples?: LessonExample[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ChapterModel {

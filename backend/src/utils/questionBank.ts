@@ -1,19 +1,30 @@
 export interface QuestionBankItem {
   id: string;
+  audience?: 'KIDS' | 'TEEN';
   grade: number;
+  subject?: string;
   topic: string;
   difficulty: 'EASY' | 'MEDIUM' | 'HARD';
   prompt: string;
-  type: 'MULTIPLE_CHOICE' | 'NUMERICAL_INPUT' | 'FRACTION_MATCH' | 'EQUATION_SOLVE';
+  type: 'MULTIPLE_CHOICE' | 'NUMERICAL_INPUT' | 'FRACTION_MATCH' | 'EQUATION_SOLVE' | 'TRUE_FALSE' | 'IMAGE_ASSISTED';
   options: string[];
   correctAnswer: string;
   explanation: string;
   hint: string;
   formulaLatex?: string;
+  imageUrl?: string;
+  rewardCoins?: number;
+  rewardXP?: number;
+  status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
   isPublished: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export const mathQuestionBank: QuestionBankItem[] = [
+// ---------------------------------------------------------------------------
+// ARCHIVED DEMO QUESTIONS (Preserved for historical attempt lookups & backups)
+// ---------------------------------------------------------------------------
+export const archivedDemoQuestions: QuestionBankItem[] = [
   // =========================================================================
   // 1. QO‘SHISH VA AYIRISH (1-3 sinflar) — 15 ta savol
   // =========================================================================
@@ -1652,3 +1663,67 @@ export const mathQuestionBank: QuestionBankItem[] = [
     isPublished: true,
   },
 ];
+
+// Mark all archived demo questions with appropriate audience
+for (const item of archivedDemoQuestions) {
+  if (!item.audience) {
+    item.audience = item.grade <= 4 ? 'KIDS' : 'TEEN';
+  }
+}
+
+// =========================================================================
+// ACTIVE QUESTION BANK (Initial state: Exactly 0 questions as required)
+// The administrator manually adds real questions via the Admin Panel.
+// =========================================================================
+export const mathQuestionBank: QuestionBankItem[] = [];
+
+export function getActiveQuestions(audience?: 'KIDS' | 'TEEN', grade?: number): QuestionBankItem[] {
+  return mathQuestionBank.filter((q) => {
+    if (audience && q.audience !== audience) return false;
+    if (grade && q.grade !== grade) return false;
+    return q.isPublished;
+  });
+}
+
+export function getAllAdminQuestions(filters?: { audience?: 'KIDS' | 'TEEN'; grade?: number; status?: string }): QuestionBankItem[] {
+  return mathQuestionBank.filter((q) => {
+    if (filters?.audience && q.audience !== filters.audience) return false;
+    if (filters?.grade && q.grade !== filters.grade) return false;
+    if (filters?.status) {
+      if (filters.status === 'PUBLISHED' && !q.isPublished) return false;
+      if (filters.status === 'DRAFT' && q.isPublished) return false;
+    }
+    return true;
+  });
+}
+
+export function addQuestionToBank(question: QuestionBankItem): QuestionBankItem {
+  mathQuestionBank.unshift(question);
+  return question;
+}
+
+export function updateQuestionInBank(id: string, updates: Partial<QuestionBankItem>): QuestionBankItem | null {
+  const idx = mathQuestionBank.findIndex((q) => q.id === id);
+  if (idx === -1) return null;
+  mathQuestionBank[idx] = {
+    ...mathQuestionBank[idx],
+    ...updates,
+    updatedAt: new Date().toISOString(),
+  };
+  return mathQuestionBank[idx];
+}
+
+export function deleteQuestionFromBank(id: string): boolean {
+  const idx = mathQuestionBank.findIndex((q) => q.id === id);
+  if (idx === -1) return false;
+  mathQuestionBank.splice(idx, 1);
+  return true;
+}
+
+export function findQuestionById(id: string): QuestionBankItem | undefined {
+  // First search active questions
+  const active = mathQuestionBank.find((q) => q.id === id);
+  if (active) return active;
+  // Fall back to archived demo questions for historical student attempt grading
+  return archivedDemoQuestions.find((q) => q.id === id);
+}

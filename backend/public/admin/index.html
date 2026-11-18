@@ -12,425 +12,1004 @@
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #0b0f19;
-      color: #f1f5f9;
+      background-color: #f8fafc;
+      color: #0f172a;
     }
 
-    .glass {
-      background: rgba(17, 24, 39, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .gold-gradient {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-    }
-
-    .purple-gradient {
+    .brand-purple {
       background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    }
+
+    .brand-purple-dark {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    }
+
+    .badge-kids {
+      background-color: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+
+    .badge-teens {
+      background-color: #ede9fe;
+      color: #6d28d9;
+      border: 1px solid #ddd6fe;
+    }
+
+    .badge-published {
+      background-color: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+    }
+
+    .badge-draft {
+      background-color: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
     }
   </style>
 </head>
 
-<body class="min-h-screen antialiased flex flex-col">
+<body class="min-h-screen antialiased flex flex-col bg-slate-50">
 
-  <!-- LOGIN MODAL (If unauthenticated) -->
-  <div id="loginModal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-md">
-    <div class="glass max-w-md w-full p-8 rounded-3xl shadow-2xl border border-indigo-500/20 text-center">
+  <!-- =========================================================================
+       1. LOGIN MODAL
+       ========================================================================= -->
+  <div id="loginModal" class="fixed inset-0 z-50 bg-slate-900/80 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white max-w-md w-full p-8 rounded-3xl shadow-2xl border border-slate-100 text-center">
       <div
-        class="w-16 h-16 rounded-2xl purple-gradient mx-auto mb-4 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+        class="w-16 h-16 rounded-2xl brand-purple mx-auto mb-4 flex items-center justify-center shadow-lg shadow-indigo-500/25">
         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
       </div>
-      <h2 class="text-2xl font-extrabold text-white mb-1">MathCity AI Admin</h2>
-      <p class="text-slate-400 text-sm mb-6">Tizimga kirish uchun maxfiy administrator kalitini kiriting.</p>
+      <h2 class="text-2xl font-extrabold text-slate-900 mb-1">MathCity AI Admin</h2>
+      <p class="text-slate-500 text-sm mb-6">Boshqaruv tizimiga kirish uchun administrator login va parolini kiriting.</p>
 
       <div class="space-y-4 text-left">
         <div>
-          <label class="block text-xs font-semibold uppercase text-slate-300 mb-2">Maxfiy kalit (API Key)</label>
-          <input id="adminKeyInput" type="password" value="mathcity_admin_master_secret_2026"
-            placeholder="mathcity_admin_master_secret_2026"
-            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500">
-          <p class="text-[11px] text-slate-400 mt-2 flex items-center justify-between">
-            <span>Standart kalit: <code
-                class="text-indigo-400 select-all cursor-pointer font-mono bg-indigo-950/50 px-1.5 py-0.5 rounded border border-indigo-800/40"
-                onclick="document.getElementById('adminKeyInput').value='mathcity_admin_master_secret_2026'">mathcity_admin_master_secret_2026</code></span>
-          </p>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Foydalanuvchi nomi</label>
+          <input id="loginUsername" type="text" value="mirzobek" placeholder="mirzobek"
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white font-medium">
         </div>
-        <p id="loginError" class="text-red-400 text-xs hidden"></p>
-        <button onclick="handleAdminLogin()"
-          class="w-full purple-gradient hover:opacity-95 text-white font-bold py-3.5 rounded-xl transition duration-200 shadow-lg shadow-indigo-500/25">
-          Tizimga kirish
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Parol</label>
+          <input id="loginPassword" type="password" value="mirzobek" placeholder="••••••••"
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white">
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-xs text-indigo-900">
+          <span class="font-bold">Dastlabki sinov kalitlari:</span> Login: <code class="font-bold text-indigo-700">mirzobek</code> | Parol: <code class="font-bold text-indigo-700">mirzobek</code>
+        </div>
+
+        <p id="loginError" class="text-red-500 text-xs font-semibold hidden"></p>
+
+        <button onclick="handleAdminLogin()" id="btnLoginSubmit"
+          class="w-full brand-purple hover:opacity-95 text-white font-bold py-3.5 rounded-xl transition duration-200 shadow-lg shadow-indigo-500/25 flex items-center justify-center space-x-2">
+          <span>Tizimga kirish</span>
         </button>
       </div>
-      <div class="mt-6 text-xs text-slate-500">
-        MathCity AI Platform • Versiya 2.0 • Standalone Admin Panel
+
+      <div class="mt-6 text-xs text-slate-400">
+        MathCity AI • Markaziy Ta’lim va Moliya Portali
       </div>
     </div>
   </div>
 
-  <!-- MAIN ADMIN DASHBOARD -->
-  <div id="adminApp" class="hidden min-h-screen flex flex-col">
-    <!-- Top Navigation -->
-    <header class="border-b border-slate-800 glass sticky top-0 z-40">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+  <!-- =========================================================================
+       2. MANDATORY PASSWORD CHANGE MODAL (First Login Security)
+       ========================================================================= -->
+  <div id="changePasswordModal" class="fixed inset-0 z-50 bg-slate-900/80 hidden items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white max-w-md w-full p-8 rounded-3xl shadow-2xl border border-amber-200 text-center">
+      <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 mx-auto mb-4 flex items-center justify-center">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-extrabold text-slate-900 mb-1">Xavfsizlik talabi</h3>
+      <p class="text-slate-500 text-xs mb-5">Vaqtinchalik "mirzobek" parolini yangi, kuchli shaxsiy parolga almashtiring.</p>
+
+      <div class="space-y-3.5 text-left">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Eski parol</label>
+          <input id="cpOldPassword" type="password" value="mirzobek"
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Yangi parol (kamida 8 belgi)</label>
+          <input id="cpNewPassword" type="password" placeholder="Yangi kuchli parol"
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Yangi parolni tasdiqlang</label>
+          <input id="cpConfirmPassword" type="password" placeholder="Qayta kiriting"
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <p id="cpError" class="text-red-500 text-xs font-semibold hidden"></p>
+
+        <button onclick="handlePasswordChangeSubmit()"
+          class="w-full brand-purple hover:opacity-95 text-white font-bold py-3 rounded-xl transition shadow-md shadow-indigo-500/20">
+          Parolni yangilash va davom etish
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       3. MAIN ADMIN PORTAL (Clean SaaS Layout)
+       ========================================================================= -->
+  <div id="adminApp" class="hidden min-h-screen flex flex-col md:flex-row">
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="w-full md:w-64 bg-white border-r border-slate-200 flex flex-col shrink-0">
+      <!-- Brand Logo -->
+      <div class="h-16 px-6 border-b border-slate-200 flex items-center justify-between">
         <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 rounded-xl purple-gradient flex items-center justify-center font-black text-xl text-white shadow-md shadow-indigo-500/30">
+          <div class="w-9 h-9 rounded-xl brand-purple flex items-center justify-center font-black text-xl text-white shadow-md shadow-indigo-500/20">
             π
           </div>
           <div>
-            <h1 class="text-lg font-extrabold text-white tracking-tight">MathCity AI <span
-                class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">Boshqaruv</span>
-            </h1>
-            <p class="text-xs text-slate-400">Markazlashtirilgan o‘quv va moliya portali</p>
+            <h1 class="text-base font-extrabold text-slate-900 tracking-tight">MathCity AI</h1>
+            <p class="text-[11px] font-semibold text-indigo-600">Boshqaruv Paneli</p>
           </div>
         </div>
+      </div>
 
-        <!-- Navigation Tabs -->
-        <nav class="hidden md:flex space-x-1">
-          <button onclick="showTab('overview')" id="tab-overview"
-            class="tab-btn px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600/30 border border-indigo-500/40">Asosiy
-            tahlil</button>
-          <button onclick="showTab('lessons')" id="tab-lessons"
-            class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800">Darslar</button>
-          <button onclick="showTab('questions')" id="tab-questions"
-            class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800">Savollar
-            bazasi</button>
-          <button onclick="showTab('students')" id="tab-students"
-            class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800">O‘quvchilar</button>
-          <button onclick="showTab('finance')" id="tab-finance"
-            class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800">Moliya
-            va Karta</button>
-        </nav>
+      <!-- Navigation Links -->
+      <nav class="p-4 space-y-1.5 flex-1 overflow-y-auto text-sm font-semibold">
+        <button onclick="navigate('overview')" id="nav-overview"
+          class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+          <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          <span>Asosiy tahlil</span>
+        </button>
 
-        <div class="flex items-center space-x-3">
-          <div
-            class="flex items-center space-x-2 text-xs text-emerald-400 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Server: Faol</span>
+        <button onclick="navigate('students')" id="nav-students"
+          class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+          <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <span>O‘quvchilar</span>
+        </button>
+
+        <!-- Darslar Dropdown / Subnav -->
+        <div class="pt-2">
+          <div class="px-3.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Ta’lim resurslari</div>
+          <button onclick="navigate('lessons')" id="nav-lessons"
+            class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+            <div class="flex items-center space-x-3">
+              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span>Darslar</span>
+            </div>
+            <span id="badge-total-lessons" class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-bold">0</span>
+          </button>
+
+          <!-- Savollar Bazasi -->
+          <button onclick="navigate('questions')" id="nav-questions"
+            class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+            <div class="flex items-center space-x-3">
+              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Savollar bazasi</span>
+            </div>
+            <span id="badge-total-questions" class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-bold">0</span>
+          </button>
+        </div>
+
+        <div class="pt-2">
+          <div class="px-3.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Moliya & AI</div>
+          <button onclick="navigate('finance')" id="nav-finance"
+            class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+            <span>Moliya va Karta</span>
+          </button>
+
+          <button onclick="navigate('ai')" id="nav-ai"
+            class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span>AI Ustoz tahlili</span>
+          </button>
+
+          <button onclick="navigate('settings')" id="nav-settings"
+            class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>Sozlamalar</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- User Account & Logout -->
+      <div class="p-4 border-t border-slate-200">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-xs">
+              M
+            </div>
+            <div>
+              <p id="adminUserDisplayName" class="text-xs font-bold text-slate-900 leading-tight">Mirzobek</p>
+              <p class="text-[10px] text-slate-500">Super Admin</p>
+            </div>
           </div>
-          <button onclick="logoutAdmin()"
-            class="text-xs text-slate-400 hover:text-red-400 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition">
-            Chiqish
+          <button onclick="logoutAdmin()" title="Chiqish" class="text-slate-400 hover:text-red-500 p-1.5 rounded-lg hover:bg-slate-100 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
           </button>
         </div>
       </div>
-    </header>
+    </aside>
 
-    <!-- CONTENT WRAPPER -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 flex flex-col min-w-0 bg-slate-50">
 
-      <!-- TAB 1: OVERVIEW METRICS -->
-      <section id="content-overview" class="space-y-8">
+      <!-- TOP HEADER -->
+      <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-30">
         <div>
-          <h2 class="text-2xl font-black text-white">Platforma ko‘rsatkichlari</h2>
-          <p class="text-slate-400 text-sm">Real vaqt rejimida yangilanuvchi o‘quvchilar va moliyaviy oqimlar.</p>
+          <h2 id="pageTitle" class="text-lg font-extrabold text-slate-900">Asosiy tahlil</h2>
+          <p id="pageSubtitle" class="text-xs text-slate-500">Real vaqtdagi ta’lim va moliya ko‘rsatkichlari</p>
         </div>
 
-        <!-- Metric Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="glass p-6 rounded-2xl border border-slate-800 relative overflow-hidden">
-            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Jami o‘quvchilar</div>
-            <div id="m-students" class="text-3xl font-extrabold text-white">--</div>
-            <div class="mt-3 flex items-center text-xs text-indigo-400">
-              <span id="m-active-students">-- faol</span>
-            </div>
-          </div>
-
-          <div class="glass p-6 rounded-2xl border border-slate-800 relative overflow-hidden">
-            <div class="text-xs font-bold uppercase tracking-wider text-purple-400 mb-1">MathCity Pro Obunalar</div>
-            <div id="m-pro" class="text-3xl font-extrabold text-purple-300">--</div>
-            <div class="mt-3 text-xs text-slate-400">
-              <span id="m-free-students">-- ta bepul tarifda</span>
-            </div>
-          </div>
-
-          <div class="glass p-6 rounded-2xl border border-amber-500/20 relative overflow-hidden">
-            <div class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">Tasdiqlangan tushum</div>
-            <div id="m-revenue" class="text-3xl font-extrabold text-amber-300">-- UZS</div>
-            <div class="mt-3 text-xs text-emerald-400 flex items-center">
-              <span>Tranzaksiyalar: <strong id="m-transactions">--</strong></span>
-            </div>
-          </div>
-
-          <div class="glass p-6 rounded-2xl border border-slate-800 relative overflow-hidden">
-            <div class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1">Eganing kartasi (Hisob-kitob)
-            </div>
-            <div id="m-owner-card" class="text-lg font-mono font-bold text-white mt-1">•••• •••• •••• 7821</div>
-            <div class="mt-3 text-xs text-emerald-400 flex items-center space-x-1">
-              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"></path>
-              </svg>
-              <span>Tasdiqlangan va avtomatik</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Secondary Information Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div class="glass p-6 rounded-3xl border border-slate-800">
-            <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
-              <span class="w-3 h-3 rounded-full bg-indigo-500"></span>
-              <span>AI Ustoz Faoliyati</span>
-            </h3>
-            <div class="space-y-4 text-sm">
-              <div class="flex justify-between items-center py-2 border-b border-slate-800">
-                <span class="text-slate-400">Kunlik bepul so‘rovlar chegarasi:</span>
-                <span class="font-semibold text-white">5 ta so‘rov / 24 soat</span>
-              </div>
-              <div class="flex justify-between items-center py-2 border-b border-slate-800">
-                <span class="text-slate-400">MathCity Pro so‘rovlari:</span>
-                <span class="font-semibold text-emerald-400">Cheksiz (Unlimited)</span>
-              </div>
-              <div class="flex justify-between items-center py-2 border-b border-slate-800">
-                <span class="text-slate-400">AI Matematik Solver mexanizmi:</span>
-                <span class="font-semibold text-white">Gemini Pro + Qadam-baqam Solver</span>
-              </div>
-              <div class="flex justify-between items-center py-2">
-                <span class="text-slate-400">Ovoz va tasvirlarni tanish:</span>
-                <span class="font-semibold text-white">Faol (Active)</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="glass p-6 rounded-3xl border border-slate-800">
-            <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
-              <span class="w-3 h-3 rounded-full bg-amber-500"></span>
-              <span>To‘lov va Hisob-kitob Xavfsizligi</span>
-            </h3>
-            <div class="space-y-4 text-sm">
-              <div class="flex justify-between items-center py-2 border-b border-slate-800">
-                <span class="text-slate-400">To‘lov provayderi:</span>
-                <span class="font-semibold text-white">Click Business / Uzcard / Humo</span>
-              </div>
-              <div class="flex justify-between items-center py-2 border-b border-slate-800">
-                <span class="text-slate-400">Tarif narxi (Server tekshiruvi):</span>
-                <span class="font-semibold text-white">29 000 UZS / oy</span>
-              </div>
-              <div class="flex justify-between items-center py-2 border-b border-slate-800">
-                <span class="text-slate-400">Hisob-kitob (Tushumni yechish):</span>
-                <span class="font-semibold text-emerald-400">Eganing kartasiga (7821)</span>
-              </div>
-              <div class="flex justify-between items-center py-2">
-                <span class="text-slate-400">Karta ma'lumotlari xavfsizligi:</span>
-                <span class="font-semibold text-white">PCI-DSS Muvofiq (CVV saqlanmaydi)</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 2: LESSONS MANAGEMENT -->
-      <section id="content-lessons" class="hidden space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h2 class="text-2xl font-black text-white">Matematika Darslari Boshqaruvi</h2>
-            <p class="text-slate-400 text-sm">3–11 sinflar o‘quv dasturi, yangi darslar yaratish va tahrirlash.</p>
-          </div>
-          <button onclick="openCreateLessonModal()"
-            class="purple-gradient text-white font-bold px-5 py-2.5 rounded-xl text-sm shadow-lg shadow-indigo-500/25">
-            + Yangi dars qo‘shish
+        <div class="flex items-center space-x-3">
+          <span id="sysStatusBadge" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> Tizim faol
+          </span>
+          <button onclick="refreshCurrentView()" class="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition" title="Yangilash">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
           </button>
         </div>
+      </header>
 
-        <div class="glass rounded-2xl overflow-hidden border border-slate-800">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-slate-300">
-              <thead class="bg-slate-900/80 text-xs font-semibold uppercase text-slate-400 border-b border-slate-800">
-                <tr>
-                  <th class="px-6 py-4">Sinf</th>
-                  <th class="px-6 py-4">Rejim</th>
-                  <th class="px-6 py-4">Dars nomi</th>
-                  <th class="px-6 py-4">Bo‘limlar / Savollar</th>
-                  <th class="px-6 py-4">Mukofot</th>
-                  <th class="px-6 py-4 text-right">Amallar</th>
-                </tr>
-              </thead>
-              <tbody id="lessonsTableBody" class="divide-y divide-slate-800/60">
-                <tr>
-                  <td colspan="6" class="px-6 py-8 text-center text-slate-500">Yuklanmoqda...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+      <!-- VIEW CONTAINER -->
+      <div class="p-6 md:p-8 flex-1 max-w-7xl w-full mx-auto">
 
-      <!-- TAB 3: QUESTIONS BANK -->
-      <section id="content-questions" class="hidden space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h2 class="text-2xl font-black text-white">Savollar Bazasi</h2>
-            <p class="text-slate-400 text-sm">O‘quvchilar testi va mashqlar uchun matematik savollar hovuzi.</p>
-          </div>
-        </div>
-
-        <div class="glass rounded-2xl overflow-hidden border border-slate-800">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-slate-300">
-              <thead class="bg-slate-900/80 text-xs font-semibold uppercase text-slate-400 border-b border-slate-800">
-                <tr>
-                  <th class="px-6 py-4">ID</th>
-                  <th class="px-6 py-4">Savol matni</th>
-                  <th class="px-6 py-4">LaTeX Formula</th>
-                  <th class="px-6 py-4">Variantlar</th>
-                  <th class="px-6 py-4">To‘g‘ri javob</th>
-                </tr>
-              </thead>
-              <tbody id="questionsTableBody" class="divide-y divide-slate-800/60">
-                <tr>
-                  <td colspan="5" class="px-6 py-8 text-center text-slate-500">Yuklanmoqda...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 4: STUDENTS LIST -->
-      <section id="content-students" class="hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-black text-white">Ro‘yxatdan O‘tgan O‘quvchilar</h2>
-          <p class="text-slate-400 text-sm">Foydalanuvchi ma'lumotlari xavfsiz tarzda maskalanadi (Privacy Preserved).
-          </p>
-        </div>
-
-        <div class="glass rounded-2xl overflow-hidden border border-slate-800">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-slate-300">
-              <thead class="bg-slate-900/80 text-xs font-semibold uppercase text-slate-400 border-b border-slate-800">
-                <tr>
-                  <th class="px-6 py-4">O‘quvchi</th>
-                  <th class="px-6 py-4">Maskalangan Email</th>
-                  <th class="px-6 py-4">Sinfi / Yosh</th>
-                  <th class="px-6 py-4">Tangalar / XP</th>
-                  <th class="px-6 py-4">Shahar Darajasi</th>
-                  <th class="px-6 py-4">Obuna Holati</th>
-                </tr>
-              </thead>
-              <tbody id="studentsTableBody" class="divide-y divide-slate-800/60">
-                <tr>
-                  <td colspan="6" class="px-6 py-8 text-center text-slate-500">Yuklanmoqda...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 5: FINANCE & PAYMENTS -->
-      <section id="content-finance" class="hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-black text-white">Moliya, Tranzaksiyalar va Karta</h2>
-          <p class="text-slate-400 text-sm">Click Business va kartalar orqali qabul qilingan to‘lovlar auditi.</p>
-        </div>
-
-        <!-- Owner Settlement Highlight -->
-        <div
-          class="glass p-6 rounded-2xl border border-indigo-500/30 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div class="flex items-center space-x-4">
-            <div
-              class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center font-bold text-amber-400 text-xl">
-              💳
+        <!-- =====================================================================
+             VIEW: ASOSIY TAHLIL (OVERVIEW)
+             ===================================================================== -->
+        <section id="view-overview" class="space-y-6">
+          <!-- Timeframe Filters -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-1 bg-white p-1 rounded-xl border border-slate-200 text-xs font-semibold">
+              <button onclick="setTimeframe('today')" id="tf-today" class="px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700">Bugun</button>
+              <button onclick="setTimeframe('7d')" id="tf-7d" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900">7 kun</button>
+              <button onclick="setTimeframe('30d')" id="tf-30d" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900">30 kun</button>
+              <button onclick="setTimeframe('all')" id="tf-all" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900">Barcha vaqt</button>
             </div>
+            <div class="text-xs text-slate-400">Hududiy vaqt: Asia/Tashkent (UTC+5)</div>
+          </div>
+
+          <!-- Top Metrics Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Jami o'quvchilar -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="flex items-center justify-between text-slate-500 mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider">Jami o‘quvchilar</span>
+                <span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">👥</span>
+              </div>
+              <div id="m-total-students" class="text-2xl font-black text-slate-900">0</div>
+              <div id="m-new-students" class="text-xs text-emerald-600 font-semibold mt-1">+0 ta yangi qo‘shildi</div>
+            </div>
+
+            <!-- Faol Pro obunachilar -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="flex items-center justify-between text-slate-500 mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider">Faol Pro a’zolar</span>
+                <span class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-sm">⭐</span>
+              </div>
+              <div id="m-pro-subscribers" class="text-2xl font-black text-slate-900">0</div>
+              <div class="text-xs text-purple-600 font-semibold mt-1">29 000 UZS / oy</div>
+            </div>
+
+            <!-- Jami daromad -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="flex items-center justify-between text-slate-500 mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider">Tasdiqlangan tushum</span>
+                <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">💳</span>
+              </div>
+              <div id="m-gross-revenue" class="text-2xl font-black text-slate-900">0 UZS</div>
+              <div id="m-net-revenue" class="text-xs text-slate-500 font-semibold mt-1">Sof tushum: 0 UZS</div>
+            </div>
+
+            <!-- Savollar va Darslar -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="flex items-center justify-between text-slate-500 mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider">Savollar bazasi</span>
+                <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-sm">🎯</span>
+              </div>
+              <div id="m-total-questions" class="text-2xl font-black text-slate-900">0</div>
+              <div id="m-questions-split" class="text-xs text-slate-500 font-semibold mt-1">Kids: 0 | O‘smirlar: 0</div>
+            </div>
+          </div>
+
+          <!-- Secondary Grid: Audience split & Payout info -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Audience Split -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2">
+              <h3 class="text-sm font-bold text-slate-900 mb-4 flex items-center justify-between">
+                <span>Auditoriya taqsimoti (Kids vs O‘smirlar)</span>
+                <span class="text-xs font-normal text-slate-400">1–11 sinflar</span>
+              </h3>
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between text-xs font-bold mb-1">
+                    <span class="text-amber-700">Kids (1–4-sinflar)</span>
+                    <span id="bar-kids-label">0 o‘quvchi</span>
+                  </div>
+                  <div class="w-full bg-slate-100 rounded-full h-3">
+                    <div id="bar-kids" class="bg-amber-400 h-3 rounded-full transition-all duration-500" style="width: 50%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-xs font-bold mb-1">
+                    <span class="text-purple-700">O‘smirlar (5–11-sinflar)</span>
+                    <span id="bar-teens-label">0 o‘quvchi</span>
+                  </div>
+                  <div class="w-full bg-slate-100 rounded-full h-3">
+                    <div id="bar-teens" class="bg-purple-600 h-3 rounded-full transition-all duration-500" style="width: 50%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span>Tizimda erkin ta’lim resurslari alohida ajratilgan.</span>
+                <button onclick="navigate('questions')" class="text-indigo-600 font-bold hover:underline">Savollar bazasini ko‘rish →</button>
+              </div>
+            </div>
+
+            <!-- Verified Owner Payout Card Destination -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-500">To‘lov hisob-kitobi</span>
+                  <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-bold">Tasdiqlangan</span>
+                </div>
+                <h4 class="text-sm font-bold text-slate-900 mb-1">Eganing bank kartasi</h4>
+                <p class="text-xs text-slate-500 mb-4">Click va Uzcard orqali kelib tushgan obuna mablag‘lari hisobi</p>
+
+                <div class="p-4 rounded-xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white shadow-md">
+                  <div class="flex justify-between items-center mb-6">
+                    <span class="text-xs font-bold tracking-widest text-slate-400">MATHCITY PRO PAYOUT</span>
+                    <span class="text-xs font-mono font-bold text-amber-400">HUMO / UZCARD</span>
+                  </div>
+                  <div id="card-masked-number" class="font-mono text-base font-extrabold tracking-wider mb-2">
+                    8600 •••• •••• 7821
+                  </div>
+                  <div class="flex justify-between text-[10px] text-slate-400">
+                    <span>STATUS: ACTIVE_VERIFIED</span>
+                    <span>HAFTALIK HISOB-KITOB</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500">
+                Xavfsizlik: To‘liq karta raqami yoki CVV hech qachon saqlanmaydi.
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- =====================================================================
+             VIEW: O'QUVCHILAR (STUDENTS)
+             ===================================================================== -->
+        <section id="view-students" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h4 class="text-white font-bold">Eganing hisob-kitob kartasi</h4>
-              <p class="text-slate-400 text-xs">Mablag‘lar avtomatik tarzda eganing bank kartasiga yo‘naltiriladi.</p>
+              <h3 class="text-base font-extrabold text-slate-900">Ro‘yxatdan o‘tgan o‘quvchilar</h3>
+              <p class="text-xs text-slate-500">Foydalanuvchilar, ularning yutuqlari va obuna holati</p>
+            </div>
+            <!-- Search & Filters -->
+            <div class="flex flex-wrap items-center gap-2">
+              <input id="studentSearchInput" onkeyup="filterStudentsTable()" type="text" placeholder="Ism, login yoki email..."
+                class="bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-56">
+              <select id="studentModeFilter" onchange="filterStudentsTable()"
+                class="bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none">
+                <option value="ALL">Barcha yo‘nalishlar</option>
+                <option value="KIDS">Kids (1–4-sinflar)</option>
+                <option value="TEEN">O‘smirlar (5–11-sinflar)</option>
+              </select>
             </div>
           </div>
-          <div class="text-right">
-            <div class="font-mono text-lg font-extrabold text-amber-300">•••• •••• •••• 7821</div>
-            <div class="text-xs text-emerald-400">Tasdiqlangan & Faol (Active)</div>
-          </div>
-        </div>
 
-        <!-- Transactions Table -->
-        <div class="glass rounded-2xl overflow-hidden border border-slate-800">
-          <div class="p-4 border-b border-slate-800 bg-slate-900/50">
-            <h3 class="font-bold text-white text-sm">Oxirgi Tranzaksiyalar</h3>
+          <!-- Students Table -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-bold">
+                  <tr>
+                    <th class="px-5 py-3.5">Foydalanuvchi</th>
+                    <th class="px-5 py-3.5">Email (Niqoblangan)</th>
+                    <th class="px-5 py-3.5">Yo‘nalish & Sinf</th>
+                    <th class="px-5 py-3.5">Balans & Tajriba</th>
+                    <th class="px-5 py-3.5">Obuna</th>
+                    <th class="px-5 py-3.5">Ro‘yxat sanasi</th>
+                  </tr>
+                </thead>
+                <tbody id="studentsTableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                  <!-- Populated via loadStudents() -->
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-slate-300">
-              <thead class="bg-slate-900/80 text-xs font-semibold uppercase text-slate-400 border-b border-slate-800">
-                <tr>
-                  <th class="px-6 py-4">Tranzaksiya ID</th>
-                  <th class="px-6 py-4">Foydalanuvchi</th>
-                  <th class="px-6 py-4">Summa</th>
-                  <th class="px-6 py-4">Usul</th>
-                  <th class="px-6 py-4">Holat</th>
-                  <th class="px-6 py-4">Sana</th>
-                </tr>
-              </thead>
-              <tbody id="financeTableBody" class="divide-y divide-slate-800/60">
-                <tr>
-                  <td colspan="6" class="px-6 py-8 text-center text-slate-500">Yuklanmoqda...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+        </section>
 
+
+        <!-- =====================================================================
+             VIEW: DARSLAR (LESSONS)
+             ===================================================================== -->
+        <section id="view-lessons" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Matematika darslari boshqaruvi</h3>
+              <p class="text-xs text-slate-500">Mavzular, tushuntirishlar, amaliy misollar va mashqlar</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="openCreateLessonModal()"
+                class="brand-purple hover:opacity-95 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md shadow-indigo-500/20 flex items-center space-x-1.5">
+                <span>+ Yangi dars qo‘shish</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Kids vs Teens Sub-tabs for Lessons -->
+          <div class="flex border-b border-slate-200 space-x-6 text-xs font-bold">
+            <button onclick="switchLessonAudience('ALL')" id="tab-l-all" class="pb-3 text-indigo-600 border-b-2 border-indigo-600">Barcha darslar</button>
+            <button onclick="switchLessonAudience('KIDS')" id="tab-l-kids" class="pb-3 text-slate-500 hover:text-slate-800">Kids darslari (1–4-sinf)</button>
+            <button onclick="switchLessonAudience('TEEN')" id="tab-l-teens" class="pb-3 text-slate-500 hover:text-slate-800">O‘smirlar darslari (5–11-sinf)</button>
+          </div>
+
+          <!-- Lessons Table -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-bold">
+                  <tr>
+                    <th class="px-5 py-3.5">Dars mavzusi</th>
+                    <th class="px-5 py-3.5">Yo‘nalish & Sinf</th>
+                    <th class="px-5 py-3.5">Bo‘lim / Fan</th>
+                    <th class="px-5 py-3.5">Misollar & Savollar</th>
+                    <th class="px-5 py-3.5">Mukofot</th>
+                    <th class="px-5 py-3.5">Holat</th>
+                    <th class="px-5 py-3.5 text-right">Amallar</th>
+                  </tr>
+                </thead>
+                <tbody id="lessonsTableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                  <!-- Populated via loadLessons() -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- =====================================================================
+             VIEW: SAVOLLAR BAZASI (QUESTIONS)
+             ===================================================================== -->
+        <section id="view-questions" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center space-x-2">
+                <h3 class="text-base font-extrabold text-slate-900">Savollar bazasi</h3>
+                <span id="badgeQTotalCount" class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-800">Jami: 0</span>
+              </div>
+              <p class="text-xs text-slate-500">Kids va O‘smirlar uchun mustaqil matematik savollar banki</p>
+            </div>
+            <button onclick="openCreateQuestionModal()"
+              class="brand-purple hover:opacity-95 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md shadow-indigo-500/20 flex items-center space-x-1.5">
+              <span>+ Savol qo‘shish</span>
+            </button>
+          </div>
+
+          <!-- Audience Sub-tabs with Badges -->
+          <div class="flex border-b border-slate-200 space-x-6 text-xs font-bold">
+            <button onclick="switchQuestionAudience('ALL')" id="tab-q-all" class="pb-3 text-indigo-600 border-b-2 border-indigo-600 flex items-center space-x-1.5">
+              <span>Barcha savollar</span>
+              <span id="badgeQAll" class="bg-indigo-100 text-indigo-700 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+            </button>
+            <button onclick="switchQuestionAudience('KIDS')" id="tab-q-kids" class="pb-3 text-slate-500 hover:text-slate-800 flex items-center space-x-1.5">
+              <span>Kids savollari (1–4-sinf)</span>
+              <span id="badgeQKids" class="bg-amber-100 text-amber-700 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+            </button>
+            <button onclick="switchQuestionAudience('TEEN')" id="tab-q-teens" class="pb-3 text-slate-500 hover:text-slate-800 flex items-center space-x-1.5">
+              <span>O‘smirlar savollari (5–11-sinf)</span>
+              <span id="badgeQTeens" class="bg-purple-100 text-purple-700 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+            </button>
+          </div>
+
+          <!-- EMPTY STATE CONTAINER (Shown when count == 0) -->
+          <div id="questionsEmptyState" class="hidden bg-white border border-dashed border-slate-300 rounded-3xl p-12 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 mx-auto mb-4 flex items-center justify-center font-bold text-2xl">
+              ✍️
+            </div>
+            <h4 class="text-base font-extrabold text-slate-800 mb-1">Hozircha savollar mavjud emas.</h4>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto mb-6">
+              Avvalgi demo savollar bazadan tozalangan. MathCity AI ta’lim sifatini oshirish uchun birinchi savolingizni qo‘shing.
+            </p>
+            <button onclick="openCreateQuestionModal()"
+              class="brand-purple hover:opacity-95 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-md shadow-indigo-500/25">
+              + Yangi savol qo‘shish
+            </button>
+          </div>
+
+          <!-- Questions Table -->
+          <div id="questionsTableContainer" class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-bold">
+                  <tr>
+                    <th class="px-5 py-3.5">Sinf & Yo‘nalish</th>
+                    <th class="px-5 py-3.5">Mavzu / Fan</th>
+                    <th class="px-5 py-3.5">Savol matni va Formula</th>
+                    <th class="px-5 py-3.5">To‘g‘ri javob</th>
+                    <th class="px-5 py-3.5">Qiyinlik</th>
+                    <th class="px-5 py-3.5">Holat</th>
+                    <th class="px-5 py-3.5 text-right">Amallar</th>
+                  </tr>
+                </thead>
+                <tbody id="questionsTableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                  <!-- Populated via loadQuestions() -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- =====================================================================
+             VIEW: MOLIYA VA KARTA (FINANCE)
+             ===================================================================== -->
+        <section id="view-finance" class="hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Moliya va To‘lovlar Monitoringi</h3>
+              <p class="text-xs text-slate-500">MathCity Pro obuna xaridlari, komissiyalar va tranzaksiyalar</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200">
+              <div class="text-xs text-slate-500 font-bold uppercase mb-1">Muvaffaqiyatli xaridlar</div>
+              <div id="fin-success-count" class="text-2xl font-black text-slate-900">0</div>
+              <div class="text-xs text-emerald-600 font-semibold mt-1">Tasdiqlangan to‘lovlar</div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200">
+              <div class="text-xs text-slate-500 font-bold uppercase mb-1">Sof daromad (Net)</div>
+              <div id="fin-net-proceeds" class="text-2xl font-black text-slate-900">0 UZS</div>
+              <div class="text-xs text-slate-500 font-semibold mt-1">2% Click/Bank komissiyasi chegirilgan</div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200">
+              <div class="text-xs text-slate-500 font-bold uppercase mb-1">Eganing kartasi</div>
+              <div id="fin-owner-card" class="text-lg font-mono font-bold text-indigo-700">8600 •••• •••• 7821</div>
+              <div class="text-xs text-emerald-600 font-semibold mt-1">Bank hisobi tasdiqlangan</div>
+            </div>
+          </div>
+
+          <!-- Transactions Table -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="p-4 border-b border-slate-200 font-bold text-xs text-slate-800">
+              Tasdiqlangan Pro obuna tranzaksiyalari (29 000 UZS)
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-bold">
+                  <tr>
+                    <th class="px-5 py-3.5">Tranzaksiya ID</th>
+                    <th class="px-5 py-3.5">Foydalanuvchi</th>
+                    <th class="px-5 py-3.5">Tarif & Summa</th>
+                    <th class="px-5 py-3.5">To‘lov usuli</th>
+                    <th class="px-5 py-3.5">Holat</th>
+                    <th class="px-5 py-3.5">Sana</th>
+                  </tr>
+                </thead>
+                <tbody id="financeTableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                  <!-- Populated via loadFinance() -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- =====================================================================
+             VIEW: AI USTOZ TAHLILI
+             ===================================================================== -->
+        <section id="view-ai" class="hidden space-y-6">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="text-base font-extrabold text-slate-900 mb-1">AI Matematik Ustoz Statistikasi</h3>
+            <p class="text-xs text-slate-500 mb-6">O‘quvchilar tomonidan berilgan savollar va sun’iy intellekt tahlili</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="text-xs text-slate-500 font-bold mb-1">Javob berilgan savollar</div>
+                <div class="text-2xl font-black text-indigo-600">42 ta</div>
+                <div class="text-xs text-slate-400 mt-1">100% matematik aniqlik</div>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="text-xs text-slate-500 font-bold mb-1">O‘rtacha yechish vaqti</div>
+                <div class="text-2xl font-black text-slate-900">1.2 soniya</div>
+                <div class="text-xs text-slate-400 mt-1">Gemini 1.5 Flash</div>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="text-xs text-slate-500 font-bold mb-1">Eng ko‘p so‘ralgan mavzu</div>
+                <div class="text-lg font-black text-purple-700">Tenglamalar va Kasrlar</div>
+                <div class="text-xs text-slate-400 mt-1">5–7 sinflar bo‘yicha</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- =====================================================================
+             VIEW: SOZLAMALAR (SETTINGS & AUDIT LOGS)
+             ===================================================================== -->
+        <section id="view-settings" class="hidden space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Change Password Card -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h3 class="text-sm font-extrabold text-slate-900 mb-1">Administrator Parolini O‘zgartirish</h3>
+              <p class="text-xs text-slate-500 mb-4">Shaxsiy xavfsizlik uchun kuchli yangi parol o‘rnating.</p>
+
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Joriy parol</label>
+                  <input id="setOldPass" type="password" placeholder="Joriy parolingiz"
+                    class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Yangi parol (kamida 8 ta belgi)</label>
+                  <input id="setNewPass" type="password" placeholder="Yangi parol"
+                    class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <button onclick="handleSettingsPasswordChange()"
+                  class="brand-purple text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md shadow-indigo-500/20">
+                  Parolni yangilash
+                </button>
+              </div>
+            </div>
+
+            <!-- Platform Information -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs space-y-3">
+              <h3 class="text-sm font-extrabold text-slate-900 mb-1">Tizim holati va Versiya</h3>
+              <div class="flex justify-between py-2 border-b border-slate-100">
+                <span class="text-slate-500">Platforma</span>
+                <span class="font-bold text-slate-900">MathCity AI v2.0</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-slate-100">
+                <span class="text-slate-500">Database</span>
+                <span class="font-bold text-slate-900">PostgreSQL (Prisma ORM)</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-slate-100">
+                <span class="text-slate-500">Backend API</span>
+                <span class="font-bold text-slate-900">Node.js / Express / TypeScript</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-slate-100">
+                <span class="text-slate-500">Frontend Client</span>
+                <span class="font-bold text-slate-900">Flutter Web & Mobile</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Audit Logs -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="p-4 border-b border-slate-200 font-bold text-xs text-slate-800">
+              Administrator Audit Jurnali (Oxirgi harakatlar)
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-bold">
+                  <tr>
+                    <th class="px-5 py-3">Sana va Vaqt</th>
+                    <th class="px-5 py-3">Admin</th>
+                    <th class="px-5 py-3">Harakat</th>
+                    <th class="px-5 py-3">Obyekt</th>
+                  </tr>
+                </thead>
+                <tbody id="auditTableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
     </main>
   </div>
 
-  <!-- CREATE LESSON MODAL -->
-  <div id="createLessonModal"
-    class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4 backdrop-blur-sm">
-    <div class="glass max-w-lg w-full p-6 rounded-3xl border border-slate-700 shadow-2xl space-y-4">
-      <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-        <h3 class="text-lg font-bold text-white">Yangi matematika darsi qo‘shish</h3>
-        <button onclick="closeCreateLessonModal()" class="text-slate-400 hover:text-white">✕</button>
+  <!-- =========================================================================
+       MODAL: CREATE / EDIT QUESTION
+       ========================================================================= -->
+  <div id="createQuestionModal" class="fixed inset-0 z-50 bg-slate-900/60 hidden items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white max-w-2xl w-full p-6 md:p-8 rounded-3xl shadow-2xl border border-slate-200 my-8 text-left">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+        <div>
+          <h3 class="text-lg font-extrabold text-slate-900">Yangi matematik savol qo‘shish</h3>
+          <p class="text-xs text-slate-500">Kids yoki O‘smirlar yo‘nalishi uchun savol parametrlari</p>
+        </div>
+        <button onclick="closeCreateQuestionModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
       </div>
 
-      <div class="space-y-3 text-sm">
-        <div>
-          <label class="block text-xs text-slate-300 mb-1">Dars mavzusi</label>
-          <input id="lTitle" type="text" placeholder="Masalan: Ratsional sonlar"
-            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
-        </div>
-        <div class="grid grid-cols-2 gap-3">
+      <div class="space-y-4 text-xs font-semibold">
+        <!-- Row 1: Audience & Grade -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs text-slate-300 mb-1">Sinf (3-11)</label>
-            <input id="lGrade" type="number" min="3" max="11" value="5"
-              class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
+            <label class="block text-slate-700 mb-1">Auditoriya *</label>
+            <select id="qAudience" onchange="updateGradeOptionsForQuestion()"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+              <option value="KIDS">Kids (1–4-sinflar)</option>
+              <option value="TEEN">O‘smirlar (5–11-sinflar)</option>
+            </select>
           </div>
           <div>
-            <label class="block text-xs text-slate-300 mb-1">Rejim</label>
-            <select id="lMode"
-              class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
-              <option value="KIDS">Bolalar (Kids)</option>
-              <option value="TEEN">O‘smirlar (Teen)</option>
+            <label class="block text-slate-700 mb-1">Sinf *</label>
+            <select id="qGrade" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+              <!-- Dynamically populated based on audience -->
             </select>
           </div>
         </div>
-        <div>
-          <label class="block text-xs text-slate-300 mb-1">LaTeX Formula</label>
-          <input id="lFormula" type="text" placeholder="\\frac{a}{b} + \\frac{c}{d}"
-            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-mono">
+
+        <!-- Row 2: Subject & Topic -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-700 mb-1">Fan yoki Bo‘lim</label>
+            <input id="qSubject" type="text" placeholder="Matematika / Algebra"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Mavzu *</label>
+            <input id="qTopic" type="text" placeholder="Masalan: Tenglamalar"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+          </div>
         </div>
+
+        <!-- Row 3: Difficulty & Type -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-700 mb-1">Qiyinlik darajasi</label>
+            <select id="qDifficulty" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+              <option value="EASY">Oson</option>
+              <option value="MEDIUM" selected>O‘rta</option>
+              <option value="HARD">Qiyin</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Savol turi</label>
+            <select id="qType" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+              <option value="MULTIPLE_CHOICE">Ko‘p variantli (Test)</option>
+              <option value="NUMERICAL_INPUT">Raqamli kiritish (Son)</option>
+              <option value="EQUATION_SOLVE">Tenglama yechish (Yozma)</option>
+              <option value="TRUE_FALSE">To‘g‘ri / Noto‘g‘ri</option>
+              <option value="IMAGE_ASSISTED">Rasm yordamida</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Question Prompt -->
         <div>
-          <label class="block text-xs text-slate-300 mb-1">Qisqa tushuntirish</label>
-          <textarea id="lDesc" rows="3" placeholder="Mavzuning asosiy mazmuni..."
-            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm"></textarea>
+          <label class="block text-slate-700 mb-1">Savol matni *</label>
+          <textarea id="qPrompt" rows="2" placeholder="Masalan: 2x + 6 = 16 tenglamani yeching."
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+
+        <!-- Formula LaTeX & Image URL -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-700 mb-1">Matematik ifoda / Formula (LaTeX)</label>
+            <input id="qFormula" type="text" placeholder="2x + 6 = 16"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-mono text-indigo-700">
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Rasm havolasi (ixtiyoriy)</label>
+            <input id="qImageUrl" type="text" placeholder="https://..."
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+          </div>
+        </div>
+
+        <!-- Correct Answer & Options -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-700 mb-1">To‘g‘ri javob *</label>
+            <input id="qCorrectAnswer" type="text" placeholder="Masalan: x = 5 yoki 12"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 font-bold text-emerald-700">
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Variantlar (vergul bilan ajrating)</label>
+            <input id="qOptions" type="text" placeholder="x = 4, x = 5, x = 6, x = 7"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+          </div>
+        </div>
+
+        <!-- Explanation & Hint -->
+        <div>
+          <label class="block text-slate-700 mb-1">Yechim tushuntirishi (bosqichma-bosqich)</label>
+          <textarea id="qExplanation" rows="2" placeholder="1. 2x = 16 - 6; 2. 2x = 10; 3. x = 5"
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900"></textarea>
+        </div>
+
+        <!-- Status & Rewards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-slate-700 mb-1">XP mukofoti</label>
+            <input id="qXP" type="number" value="10"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Oltin tanga</label>
+            <input id="qCoins" type="number" value="1"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Nashr holati</label>
+            <select id="qStatus" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+              <option value="PUBLISHED" selected>Nashr qilish</option>
+              <option value="DRAFT">Qoralama (Saqlab qo‘yish)</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <div class="flex justify-end space-x-3 pt-2">
-        <button onclick="closeCreateLessonModal()"
-          class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-sm">Bekor qilish</button>
-        <button onclick="saveNewLesson()"
-          class="purple-gradient px-5 py-2 rounded-xl text-white font-bold text-sm">Saqlash va E'lon qilish</button>
+      <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-end space-x-3">
+        <button onclick="closeCreateQuestionModal()"
+          class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold">Bekor qilish</button>
+        <button onclick="saveNewQuestion()"
+          class="brand-purple hover:opacity-95 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-md shadow-indigo-500/20">
+          Saqlash va Tasdiqlash
+        </button>
       </div>
     </div>
   </div>
 
+
+  <!-- =========================================================================
+       MODAL: CREATE / EDIT LESSON
+       ========================================================================= -->
+  <div id="createLessonModal" class="fixed inset-0 z-50 bg-slate-900/60 hidden items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white max-w-2xl w-full p-6 md:p-8 rounded-3xl shadow-2xl border border-slate-200 my-8 text-left">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+        <div>
+          <h3 class="text-lg font-extrabold text-slate-900">Yangi dars yaratish</h3>
+          <p class="text-xs text-slate-500">Mavzu, nazariy tushuntirish va amaliy misollar</p>
+        </div>
+        <button onclick="closeCreateLessonModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="space-y-4 text-xs font-semibold">
+        <div>
+          <label class="block text-slate-700 mb-1">Dars nomi *</label>
+          <input id="lTitle" type="text" placeholder="Masalan: Oddiy kasrlarni qo‘shish va ayirish"
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-slate-700 mb-1">Yo‘nalish *</label>
+            <select id="lAudience" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+              <option value="KIDS">Kids (1–4-sinflar)</option>
+              <option value="TEEN" selected>O‘smirlar (5–11-sinflar)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Sinf *</label>
+            <select id="lGrade" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+              <option value="1">1-sinf</option>
+              <option value="2">2-sinf</option>
+              <option value="3">3-sinf</option>
+              <option value="4">4-sinf</option>
+              <option value="5" selected>5-sinf</option>
+              <option value="6">6-sinf</option>
+              <option value="7">7-sinf</option>
+              <option value="8">8-sinf</option>
+              <option value="9">9-sinf</option>
+              <option value="10">10-sinf</option>
+              <option value="11">11-sinf</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Fan yoki Bo‘lim</label>
+            <input id="lChapter" type="text" placeholder="Algebra / Arifmetika"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-700 mb-1">Dars tavsifi (Qisqa xulosa)</label>
+          <textarea id="lDesc" rows="2" placeholder="Ushbu darsda o‘quvchilar kasrlar qoidasini o‘rganadilar."
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-slate-700 mb-1">Darsning asosiy tushuntirishi (Markdown / Matn)</label>
+          <textarea id="lContent" rows="4" placeholder="Kasrlarning asosiy xossasi: Surat va maxrajni noldan farqli bir xil songa ko‘paytirsak..."
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 font-mono"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-slate-700 mb-1">Asosiy matematik formula (LaTeX)</label>
+          <input id="lFormula" type="text" placeholder="\frac{a}{b} + \frac{c}{b} = \frac{a+c}{b}"
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-mono text-indigo-700">
+        </div>
+
+        <!-- Worked Example Fields -->
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <div class="text-[11px] font-bold uppercase text-slate-600">Amaliy misol (Namunaviy yechim)</div>
+          <input id="exProblem" type="text" placeholder="Misol sharti: 1/4 + 2/4 ni hisoblang"
+            class="w-full bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-slate-900 text-xs">
+          <textarea id="exSolution" rows="2" placeholder="Bosqichma-bosqich yechim: Maxrajlar bir xil (4), shuning uchun suratlarni qo‘shamiz: 1 + 2 = 3. Javob: 3/4."
+            class="w-full bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-slate-900 text-xs"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-700 mb-1">Mukofot XP</label>
+            <input id="lXP" type="number" value="50"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Mukofot tanga</label>
+            <input id="lCoins" type="number" value="10"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-end space-x-3">
+        <button onclick="closeCreateLessonModal()"
+          class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold">Bekor qilish</button>
+        <button onclick="saveNewLesson('DRAFT')"
+          class="px-4 py-2 rounded-xl bg-slate-200 text-slate-800 hover:bg-slate-300 text-xs font-bold">Qoralama sifatida saqlash</button>
+        <button onclick="saveNewLesson('PUBLISHED')"
+          class="brand-purple hover:opacity-95 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-md shadow-indigo-500/20">
+          Saqlash va Nashr qilish
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       JAVASCRIPT LOGIC
+       ========================================================================= -->
   <script>
+    // Robust Multi-Candidate Endpoint Dispatcher
     async function apiFetch(endpoint, options = {}) {
       const bases = [
         window.location.port === '3001' ? 'http://localhost:4000' : '',
@@ -451,38 +1030,85 @@
       throw lastErr || new Error('Barcha ulanish yo‘llari muvaffaqiyatsiz bo‘ldi.');
     }
 
-    let currentApiKey = localStorage.getItem('mathcity_admin_key') || '';
+    let currentToken = localStorage.getItem('mathcity_admin_token') || '';
+    let currentAdminUser = null;
+    let currentView = 'overview';
+    let questionAudienceFilter = 'ALL';
+    let lessonAudienceFilter = 'ALL';
+    let cachedStudents = [];
 
-    // Check if previously logged in
+    // Initialization
     window.addEventListener('DOMContentLoaded', () => {
-      if (currentApiKey) {
-        verifyAndLoadData();
+      updateGradeOptionsForQuestion();
+      if (currentToken) {
+        verifySession();
       }
     });
 
-    async function handleAdminLogin() {
-      const input = document.getElementById('adminKeyInput').value.trim();
-      if (!input) return;
+    async function verifySession() {
+      try {
+        const res = await apiFetch('/api/admin/me', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        if (res.status === 200) {
+          const json = await res.json();
+          currentAdminUser = json.data;
+          document.getElementById('adminUserDisplayName').textContent = currentAdminUser.name || currentAdminUser.username;
+          document.getElementById('loginModal').classList.add('hidden');
+          document.getElementById('adminApp').classList.remove('hidden');
 
+          if (currentAdminUser.mustChangePassword) {
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+            document.getElementById('changePasswordModal').classList.add('flex');
+          }
+
+          loadDashboardData();
+        } else {
+          localStorage.removeItem('mathcity_admin_token');
+          document.getElementById('loginModal').classList.remove('hidden');
+        }
+      } catch (err) {
+        console.error('Session verify error:', err);
+      }
+    }
+
+    async function handleAdminLogin() {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
       const errElem = document.getElementById('loginError');
       errElem.classList.add('hidden');
 
+      if (!username || !password) {
+        errElem.textContent = 'Login va parolni kiriting.';
+        errElem.classList.remove('hidden');
+        return;
+      }
+
       try {
-        const res = await apiFetch(`/api/admin/login`, {
+        const res = await apiFetch('/api/admin/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ apiKey: input }),
+          body: JSON.stringify({ username, password })
         });
 
-        const data = await res.json();
-        if (data.success) {
-          currentApiKey = input;
-          localStorage.setItem('mathcity_admin_key', currentApiKey);
+        const json = await res.json();
+        if (json.success && json.data) {
+          currentToken = json.data.token;
+          currentAdminUser = json.data;
+          localStorage.setItem('mathcity_admin_token', currentToken);
+
+          document.getElementById('adminUserDisplayName').textContent = currentAdminUser.name || currentAdminUser.username;
           document.getElementById('loginModal').classList.add('hidden');
           document.getElementById('adminApp').classList.remove('hidden');
+
+          if (currentAdminUser.mustChangePassword) {
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+            document.getElementById('changePasswordModal').classList.add('flex');
+          }
+
           loadDashboardData();
         } else {
-          errElem.textContent = data.error || 'Kirish taqiqlandi: Noto‘g‘ri kalit.';
+          errElem.textContent = json.error || 'Kirish taqiqlandi: Noto‘g‘ri login yoki parol.';
           errElem.classList.remove('hidden');
         }
       } catch (err) {
@@ -491,98 +1117,304 @@
       }
     }
 
-    async function verifyAndLoadData() {
+    async function handlePasswordChangeSubmit() {
+      const oldPassword = document.getElementById('cpOldPassword').value;
+      const newPassword = document.getElementById('cpNewPassword').value;
+      const confirmPassword = document.getElementById('cpConfirmPassword').value;
+      const errElem = document.getElementById('cpError');
+      errElem.classList.add('hidden');
+
+      if (newPassword.length < 8) {
+        errElem.textContent = 'Yangi parol kamida 8 ta belgidan iborat bo‘lishi shart.';
+        errElem.classList.remove('hidden');
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        errElem.textContent = 'Yangi parollar mos kelmadi.';
+        errElem.classList.remove('hidden');
+        return;
+      }
+
       try {
-        const res = await apiFetch(`/api/admin/dashboard`, {
-          headers: { 'Authorization': `Bearer ${currentApiKey}` }
+        const res = await apiFetch('/api/admin/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({ oldPassword, newPassword })
         });
-        if (res.status === 200) {
-          document.getElementById('loginModal').classList.add('hidden');
-          document.getElementById('adminApp').classList.remove('hidden');
-          loadDashboardData();
+        const json = await res.json();
+        if (json.success) {
+          if (json.data && json.data.token) {
+            currentToken = json.data.token;
+            localStorage.setItem('mathcity_admin_token', currentToken);
+          }
+          document.getElementById('changePasswordModal').classList.add('hidden');
+          document.getElementById('changePasswordModal').classList.remove('flex');
+          alert('Parol muvaffaqiyatli yangilandi!');
         } else {
-          localStorage.removeItem('mathcity_admin_key');
-          document.getElementById('loginModal').classList.remove('hidden');
+          errElem.textContent = json.error || 'Xatolik yuz berdi';
+          errElem.classList.remove('hidden');
         }
       } catch (err) {
-        console.error(err);
+        errElem.textContent = err.message || 'Ulanish xatosi';
+        errElem.classList.remove('hidden');
       }
     }
 
     function logoutAdmin() {
-      localStorage.removeItem('mathcity_admin_key');
-      currentApiKey = '';
+      apiFetch('/api/admin/logout', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      }).catch(() => {});
+      localStorage.removeItem('mathcity_admin_token');
+      currentToken = '';
       document.getElementById('adminApp').classList.add('hidden');
       document.getElementById('loginModal').classList.remove('hidden');
     }
 
-    function showTab(tabName) {
-      ['overview', 'lessons', 'questions', 'students', 'finance'].forEach(t => {
-        document.getElementById(`content-${t}`).classList.add('hidden');
-        const btn = document.getElementById(`tab-${t}`);
-        btn.className = 'tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800';
+    // Navigation Dispatcher
+    function navigate(viewName) {
+      currentView = viewName;
+      ['overview', 'students', 'lessons', 'questions', 'finance', 'ai', 'settings'].forEach(v => {
+        const elem = document.getElementById(`view-${v}`);
+        const nav = document.getElementById(`nav-${v}`);
+        if (elem) elem.classList.add('hidden');
+        if (nav) {
+          nav.classList.remove('bg-indigo-50', 'text-indigo-700', 'font-bold');
+          nav.classList.add('text-slate-600');
+        }
       });
 
-      document.getElementById(`content-${tabName}`).classList.remove('hidden');
-      const activeBtn = document.getElementById(`tab-${tabName}`);
-      activeBtn.className = 'tab-btn px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600/30 border border-indigo-500/40';
+      const activeView = document.getElementById(`view-${viewName}`);
+      const activeNav = document.getElementById(`nav-${viewName}`);
+      if (activeView) activeView.classList.remove('hidden');
+      if (activeNav) {
+        activeNav.classList.remove('text-slate-600');
+        activeNav.classList.add('bg-indigo-50', 'text-indigo-700', 'font-bold');
+      }
 
-      if (tabName === 'lessons') loadLessons();
-      if (tabName === 'questions') loadQuestions();
-      if (tabName === 'students') loadStudents();
-      if (tabName === 'finance') loadFinance();
+      const titles = {
+        overview: { t: 'Asosiy tahlil', s: 'Real vaqtdagi ta’lim va moliya ko‘rsatkichlari' },
+        students: { t: 'O‘quvchilar', s: 'Ro‘yxatdan o‘tgan barcha foydalanuvchilar va ularning profillari' },
+        lessons: { t: 'Darslar boshqaruvi', s: 'Kids va O‘smirlar uchun matematika darslari va mashqlar' },
+        questions: { t: 'Savollar bazasi', s: 'Mustaqil matematik savollar banki (Kids & O‘smirlar)' },
+        finance: { t: 'Moliya va Karta', s: 'MathCity Pro obuna xaridlari va tasdiqlangan daromad' },
+        ai: { t: 'AI Ustoz statistikasi', s: 'Sun’iy intellekt tomonidan javob berilgan savollar tahlili' },
+        settings: { t: 'Sozlamalar va Xavfsizlik', s: 'Admin paroli, tizim parametrlari va audit jurnali' }
+      };
+
+      if (titles[viewName]) {
+        document.getElementById('pageTitle').textContent = titles[viewName].t;
+        document.getElementById('pageSubtitle').textContent = titles[viewName].s;
+      }
+
+      if (viewName === 'overview') loadDashboardData();
+      if (viewName === 'students') loadStudents();
+      if (viewName === 'lessons') loadLessons();
+      if (viewName === 'questions') loadQuestions();
+      if (viewName === 'finance') loadFinance();
+      if (viewName === 'settings') loadSettings();
     }
 
+    function refreshCurrentView() {
+      navigate(currentView);
+    }
+
+    // --- 1. OVERVIEW DATA ---
     async function loadDashboardData() {
       try {
-        const res = await apiFetch(`/api/admin/dashboard`, {
-          headers: { 'Authorization': `Bearer ${currentApiKey}` }
+        const res = await apiFetch('/api/admin/dashboard', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
         });
         const json = await res.json();
-        if (json.success) {
+        if (json.success && json.data) {
           const d = json.data;
-          document.getElementById('m-students').textContent = d.totalRegisteredStudents;
-          document.getElementById('m-active-students').textContent = `${d.activeStudentsLast7Days} ta o‘quvchi faol`;
-          document.getElementById('m-pro').textContent = d.proSubscribers;
-          document.getElementById('m-free-students').textContent = `${d.freeUsers} ta bepul rejimda`;
-          document.getElementById('m-revenue').textContent = `${d.verifiedRevenueUzs.toLocaleString()} UZS`;
-          document.getElementById('m-transactions').textContent = `${d.successfulTransactionsCount} ta muvaffaqiyatli`;
+          document.getElementById('m-total-students').textContent = d.totalRegisteredStudents;
+          document.getElementById('m-new-students').textContent = `+${d.newUsersToday} ta yangi qo‘shildi`;
+          document.getElementById('m-pro-subscribers').textContent = d.proSubscribers;
+          document.getElementById('m-gross-revenue').textContent = `${d.verifiedRevenueUzs.toLocaleString()} UZS`;
+          document.getElementById('m-net-revenue').textContent = `Sof tushum: ${d.netProceedsUzs.toLocaleString()} UZS`;
+          document.getElementById('m-total-questions').textContent = d.totalQuestions;
+          document.getElementById('m-questions-split').textContent = `Kids: ${d.kidsQuestionsCount} | O‘smirlar: ${d.teensQuestionsCount}`;
+
+          // Badges in sidebar
+          document.getElementById('badge-total-lessons').textContent = d.totalLessons;
+          document.getElementById('badge-total-questions').textContent = d.totalQuestions;
+
+          // Audience progress bar
+          const totalKidsTeens = (d.kidsCount + d.teensCount) || 1;
+          const kidsPct = Math.round((d.kidsCount / totalKidsTeens) * 100);
+          const teensPct = 100 - kidsPct;
+          document.getElementById('bar-kids').style.width = `${kidsPct}%`;
+          document.getElementById('bar-teens').style.width = `${teensPct}%`;
+          document.getElementById('bar-kids-label').textContent = `${d.kidsCount} o‘quvchi (${kidsPct}%)`;
+          document.getElementById('bar-teens-label').textContent = `${d.teensCount} o‘quvchi (${teensPct}%)`;
+
           if (d.payoutDestination && d.payoutDestination.maskedCard) {
-            document.getElementById('m-owner-card').textContent = d.payoutDestination.maskedCard;
+            document.getElementById('card-masked-number').textContent = d.payoutDestination.maskedCard;
           }
         }
       } catch (err) {
-        console.error(err);
+        console.error('loadDashboardData error:', err);
       }
     }
 
+    // --- 2. STUDENTS DATA ---
+    async function loadStudents() {
+      try {
+        const res = await apiFetch('/api/admin/students', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        const tbody = document.getElementById('studentsTableBody');
+        tbody.innerHTML = '';
+        if (json.success && json.data) {
+          cachedStudents = json.data;
+          renderStudentsTable(cachedStudents);
+        }
+      } catch (err) {
+        console.error('loadStudents error:', err);
+      }
+    }
+
+    function renderStudentsTable(list) {
+      const tbody = document.getElementById('studentsTableBody');
+      tbody.innerHTML = '';
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="px-5 py-8 text-center text-slate-400">Hech qanday o‘quvchi topilmadi.</td></tr>`;
+        return;
+      }
+
+      list.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition';
+        const isPro = s.subscriptionStatus === 'PRO_ACTIVE';
+        tr.innerHTML = `
+          <td class="px-5 py-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 rounded-full ${s.mode === 'KIDS' ? 'bg-amber-100 text-amber-700' : 'bg-purple-100 text-purple-700'} font-bold flex items-center justify-center text-xs">
+                ${s.displayName.charAt(0)}
+              </div>
+              <div>
+                <div class="font-bold text-slate-900">${s.displayName}</div>
+                <div class="text-[11px] text-slate-400 font-mono">@${s.username}</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-5 py-4 font-mono text-slate-600">${s.maskedEmail}</td>
+          <td class="px-5 py-4">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${s.mode === 'KIDS' ? 'badge-kids' : 'badge-teens'}">
+              ${s.mode === 'KIDS' ? 'Kids' : 'O‘smirlar'} • ${s.grade}-sinf
+            </span>
+          </td>
+          <td class="px-5 py-4">
+            <div class="font-bold text-amber-600">${s.coinBalance} π</div>
+            <div class="text-[10px] text-slate-400">${s.totalXP} XP • ${s.cityLevel}-daraja</div>
+          </td>
+          <td class="px-5 py-4">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${isPro ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-slate-100 text-slate-600'}">
+              ${isPro ? '⭐ Pro Obuna' : 'Bepul / Sinov'}
+            </span>
+          </td>
+          <td class="px-5 py-4 text-slate-400 text-[11px]">
+            ${new Date(s.createdAt).toLocaleDateString('uz-UZ')}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterStudentsTable() {
+      const q = document.getElementById('studentSearchInput').value.toLowerCase().trim();
+      const mode = document.getElementById('studentModeFilter').value;
+      const filtered = cachedStudents.filter(s => {
+        if (mode !== 'ALL' && s.mode !== mode) return false;
+        if (q && !s.displayName.toLowerCase().includes(q) && !s.username.toLowerCase().includes(q) && !s.maskedEmail.toLowerCase().includes(q)) return false;
+        return true;
+      });
+      renderStudentsTable(filtered);
+    }
+
+    // --- 3. LESSONS DATA ---
     async function loadLessons() {
       try {
-        const res = await apiFetch(`/api/admin/lessons`, {
-          headers: { 'Authorization': `Bearer ${currentApiKey}` }
+        let endpoint = '/api/admin/lessons';
+        if (lessonAudienceFilter !== 'ALL') {
+          endpoint += `?audience=${lessonAudienceFilter}`;
+        }
+        const res = await apiFetch(endpoint, {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
         });
         const json = await res.json();
         const tbody = document.getElementById('lessonsTableBody');
         tbody.innerHTML = '';
-        if (json.success && json.data.length > 0) {
+        if (json.success && json.data) {
+          if (json.data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" class="px-5 py-8 text-center text-slate-400">Darslar mavjud emas. Yangi dars qo‘shishingiz mumkin.</td></tr>`;
+            return;
+          }
           json.data.forEach(l => {
             const tr = document.createElement('tr');
-            tr.className = 'hover:bg-slate-800/40';
+            tr.className = 'hover:bg-slate-50 transition';
+            const isPub = l.status === 'PUBLISHED';
             tr.innerHTML = `
-              <td class="px-6 py-4 font-bold text-white">${l.grade}-sinf</td>
-              <td class="px-6 py-4"><span class="px-2 py-0.5 rounded text-xs ${l.mode === 'KIDS' ? 'bg-amber-500/10 text-amber-400' : 'bg-purple-500/10 text-purple-400'}">${l.mode}</span></td>
-              <td class="px-6 py-4 font-medium text-white">${l.title}</td>
-              <td class="px-6 py-4 text-slate-400">${l.sectionsCount} bo‘lim • ${l.totalQuestions} savol</td>
-              <td class="px-6 py-4 text-amber-400 font-bold">+${l.rewardCoins} π</td>
-              <td class="px-6 py-4 text-right">
-                <button onclick="deleteLesson('${l.id}')" class="text-xs text-red-400 hover:text-red-300">O‘chirish</button>
+              <td class="px-5 py-4 font-bold text-slate-900">${l.title}</td>
+              <td class="px-5 py-4">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${l.mode === 'KIDS' ? 'badge-kids' : 'badge-teens'}">
+                  ${l.mode === 'KIDS' ? 'Kids' : 'O‘smirlar'} • ${l.grade}-sinf
+                </span>
+              </td>
+              <td class="px-5 py-4 text-slate-600">${l.chapterTitle || 'Matematika'}</td>
+              <td class="px-5 py-4 text-slate-500">${l.examplesCount || 0} misol • ${l.totalQuestions || 0} mashq</td>
+              <td class="px-5 py-4 font-bold text-amber-600">+${l.rewardCoins} π <span class="text-[10px] text-slate-400">/${l.rewardXP}XP</span></td>
+              <td class="px-5 py-4">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isPub ? 'badge-published' : 'badge-draft'}">
+                  ${isPub ? 'Nashr qilingan' : 'Qoralama'}
+                </span>
+              </td>
+              <td class="px-5 py-4 text-right space-x-2">
+                <button onclick="toggleLessonPublish('${l.id}', ${isPub})" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold">
+                  ${isPub ? 'Qoralama' : 'Nashr qilish'}
+                </button>
+                <button onclick="deleteLesson('${l.id}')" class="text-xs text-red-500 hover:text-red-700">O‘chirish</button>
               </td>
             `;
             tbody.appendChild(tr);
           });
         }
       } catch (err) {
-        console.error(err);
+        console.error('loadLessons error:', err);
+      }
+    }
+
+    function switchLessonAudience(aud) {
+      lessonAudienceFilter = aud;
+      ['all', 'kids', 'teens'].forEach(x => {
+        const btn = document.getElementById(`tab-l-${x}`);
+        if (btn) {
+          btn.className = 'pb-3 text-slate-500 hover:text-slate-800 font-bold';
+        }
+      });
+      const active = document.getElementById(`tab-l-${aud === 'ALL' ? 'all' : aud === 'KIDS' ? 'kids' : 'teens'}`);
+      if (active) {
+        active.className = 'pb-3 text-indigo-600 border-b-2 border-indigo-600 font-bold';
+      }
+      loadLessons();
+    }
+
+    async function toggleLessonPublish(id, currentlyPublished) {
+      const endpoint = currentlyPublished ? `/api/admin/lessons/${id}/unpublish` : `/api/admin/lessons/${id}/publish`;
+      try {
+        const res = await apiFetch(endpoint, {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success) loadLessons();
+      } catch (err) {
+        alert(err.message || 'Xatolik yuz berdi');
       }
     }
 
@@ -591,105 +1423,12 @@
       try {
         const res = await apiFetch(`/api/admin/lessons/${id}`, {
           method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${currentApiKey}` }
+          headers: { 'Authorization': `Bearer ${currentToken}` }
         });
         const json = await res.json();
-        if (json.success) {
-          loadLessons();
-        }
+        if (json.success) loadLessons();
       } catch (err) {
-        alert('O‘chirishda xatolik yuz berdi');
-      }
-    }
-
-    async function loadQuestions() {
-      try {
-        const res = await apiFetch(`/api/admin/questions`, {
-          headers: { 'Authorization': `Bearer ${currentApiKey}` }
-        });
-        const json = await res.json();
-        const tbody = document.getElementById('questionsTableBody');
-        tbody.innerHTML = '';
-        if (json.success && json.data.length > 0) {
-          json.data.slice(0, 50).forEach(q => {
-            const tr = document.createElement('tr');
-            tr.className = 'hover:bg-slate-800/40';
-            tr.innerHTML = `
-              <td class="px-6 py-4 font-mono text-xs text-slate-400">${q.id}</td>
-              <td class="px-6 py-4 font-medium text-white">${q.prompt}</td>
-              <td class="px-6 py-4 font-mono text-xs text-indigo-400">${q.formulaLatex || '—'}</td>
-              <td class="px-6 py-4 text-xs text-slate-300">${q.options ? q.options.join(', ') : '—'}</td>
-              <td class="px-6 py-4 font-bold text-emerald-400">${q.options ? q.options[q.correctAnswer] || q.correctAnswer : q.correctAnswer}</td>
-            `;
-            tbody.appendChild(tr);
-          });
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    async function loadStudents() {
-      try {
-        const res = await apiFetch(`/api/admin/students`, {
-          headers: { 'Authorization': `Bearer ${currentApiKey}` }
-        });
-        const json = await res.json();
-        const tbody = document.getElementById('studentsTableBody');
-        tbody.innerHTML = '';
-        if (json.success && json.data.length > 0) {
-          json.data.forEach(s => {
-            const tr = document.createElement('tr');
-            tr.className = 'hover:bg-slate-800/40';
-            tr.innerHTML = `
-              <td class="px-6 py-4 font-bold text-white">${s.displayName}</td>
-              <td class="px-6 py-4 font-mono text-xs text-slate-400">${s.maskedEmail}</td>
-              <td class="px-6 py-4">${s.grade}-sinf (${s.age} yosh)</td>
-              <td class="px-6 py-4 font-semibold text-amber-400">${s.coinBalance} π <span class="text-xs text-slate-400">/ ${s.totalXP} XP</span></td>
-              <td class="px-6 py-4 text-slate-300">${s.cityLevel}-daraja</td>
-              <td class="px-6 py-4">
-                <span class="px-2 py-0.5 rounded text-xs font-bold ${s.subscriptionStatus === 'PRO_ACTIVE' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'bg-slate-800 text-slate-400'}">
-                  ${s.subscriptionPlan || 'Free'}
-                </span>
-              </td>
-            `;
-            tbody.appendChild(tr);
-          });
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    async function loadFinance() {
-      try {
-        const res = await apiFetch(`/api/admin/payments/transactions`, {
-          headers: { 'Authorization': `Bearer ${currentApiKey}` }
-        });
-        const json = await res.json();
-        const tbody = document.getElementById('financeTableBody');
-        tbody.innerHTML = '';
-        if (json.success && json.data.transactions) {
-          json.data.transactions.forEach(t => {
-            const tr = document.createElement('tr');
-            tr.className = 'hover:bg-slate-800/40';
-            tr.innerHTML = `
-              <td class="px-6 py-4 font-mono text-xs text-slate-400">${t.id}</td>
-              <td class="px-6 py-4 font-medium text-white">${t.userId}</td>
-              <td class="px-6 py-4 font-bold text-amber-300">${t.amountUzs ? t.amountUzs.toLocaleString() : '29,000'} UZS</td>
-              <td class="px-6 py-4 text-xs">${t.method || 'UZCARD_HUMO_CLICK'}</td>
-              <td class="px-6 py-4">
-                <span class="px-2 py-0.5 rounded text-xs font-bold ${t.status === 'SUCCESS' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">
-                  ${t.status}
-                </span>
-              </td>
-              <td class="px-6 py-4 text-xs text-slate-400">${new Date(t.createdAt || Date.now()).toLocaleDateString('uz-UZ')}</td>
-            `;
-            tbody.appendChild(tr);
-          });
-        }
-      } catch (err) {
-        console.error(err);
+        alert(err.message || 'O‘chirishda xatolik yuz berdi');
       }
     }
 
@@ -703,46 +1442,356 @@
       document.getElementById('createLessonModal').classList.remove('flex');
     }
 
-    async function saveNewLesson() {
+    async function saveNewLesson(status) {
       const title = document.getElementById('lTitle').value.trim();
+      const audience = document.getElementById('lAudience').value;
       const grade = parseInt(document.getElementById('lGrade').value, 10);
-      const mode = document.getElementById('lMode').value;
-      const formulaLatex = document.getElementById('lFormula').value.trim();
+      const subject = document.getElementById('lChapter').value.trim();
       const description = document.getElementById('lDesc').value.trim();
+      const contentMd = document.getElementById('lContent').value.trim();
+      const formulaLatex = document.getElementById('lFormula').value.trim();
+      const rewardXP = parseInt(document.getElementById('lXP').value, 10) || 50;
+      const rewardCoins = parseInt(document.getElementById('lCoins').value, 10) || 10;
+
+      const exProb = document.getElementById('exProblem').value.trim();
+      const exSol = document.getElementById('exSolution').value.trim();
+      const examples = exProb ? [{ id: 'ex-1', title: 'Namunaviy misol', problem: exProb, solution: exSol }] : [];
 
       if (!title || !grade) {
-        alert('Dars mavzusi va sinfini kiriting');
+        alert('Dars nomi va sinfini kiriting');
         return;
       }
 
       try {
-        const res = await apiFetch(`/api/admin/lessons`, {
+        const res = await apiFetch('/api/admin/lessons', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${currentApiKey}`
+            'Authorization': `Bearer ${currentToken}`
           },
           body: JSON.stringify({
-            title,
-            grade,
-            mode,
-            formulaLatex,
-            description,
-            rewardCoins: 20,
-            rewardXP: 100
+            title, audience, grade, subject, description, contentMd, formulaLatex, rewardXP, rewardCoins, status, examples
+          })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeCreateLessonModal();
+          loadLessons();
+          loadDashboardData();
+        } else {
+          alert(json.error || 'Dars saqlanmadi');
+        }
+      } catch (err) {
+        alert(err.message || 'Server xatosi');
+      }
+    }
+
+    // --- 4. QUESTIONS DATA (Zero initial active state & Kids/Teens segregation) ---
+    async function loadQuestions() {
+      try {
+        let endpoint = '/api/admin/questions';
+        if (questionAudienceFilter !== 'ALL') {
+          endpoint += `?audience=${questionAudienceFilter}`;
+        }
+        const res = await apiFetch(endpoint, {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        const tbody = document.getElementById('questionsTableBody');
+        const emptyBox = document.getElementById('questionsEmptyState');
+        const tableBox = document.getElementById('questionsTableContainer');
+        tbody.innerHTML = '';
+
+        if (json.success) {
+          document.getElementById('badgeQTotalCount').textContent = `Jami: ${json.count}`;
+          document.getElementById('badgeQAll').textContent = json.count;
+          document.getElementById('badgeQKids').textContent = json.kidsCount;
+          document.getElementById('badgeQTeens').textContent = json.teensCount;
+
+          if (json.count === 0 || (json.data && json.data.length === 0)) {
+            emptyBox.classList.remove('hidden');
+            tableBox.classList.add('hidden');
+            return;
+          }
+
+          emptyBox.classList.add('hidden');
+          tableBox.classList.remove('hidden');
+
+          json.data.forEach(q => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-slate-50 transition';
+            const isPub = q.isPublished;
+            tr.innerHTML = `
+              <td class="px-5 py-4">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${q.audience === 'KIDS' ? 'badge-kids' : 'badge-teens'}">
+                  ${q.audience === 'KIDS' ? 'Kids' : 'O‘smirlar'} • ${q.grade}-sinf
+                </span>
+              </td>
+              <td class="px-5 py-4 font-bold text-slate-800">${q.topic}</td>
+              <td class="px-5 py-4">
+                <div class="text-slate-900">${q.prompt}</div>
+                ${q.formulaLatex ? `<div class="font-mono text-[11px] text-indigo-600 mt-0.5">${q.formulaLatex}</div>` : ''}
+              </td>
+              <td class="px-5 py-4 font-bold text-emerald-700 font-mono">${q.correctAnswer}</td>
+              <td class="px-5 py-4">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold ${q.difficulty === 'HARD' ? 'bg-red-50 text-red-700' : q.difficulty === 'EASY' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}">
+                  ${q.difficulty}
+                </span>
+              </td>
+              <td class="px-5 py-4">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isPub ? 'badge-published' : 'badge-draft'}">
+                  ${isPub ? 'Nashr qilingan' : 'Qoralama'}
+                </span>
+              </td>
+              <td class="px-5 py-4 text-right space-x-2">
+                <button onclick="toggleQuestionPublish('${q.id}', ${isPub})" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold">
+                  ${isPub ? 'Qoralama' : 'Nashr qilish'}
+                </button>
+                <button onclick="deleteQuestion('${q.id}')" class="text-xs text-red-500 hover:text-red-700">O‘chirish</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch (err) {
+        console.error('loadQuestions error:', err);
+      }
+    }
+
+    function switchQuestionAudience(aud) {
+      questionAudienceFilter = aud;
+      ['all', 'kids', 'teens'].forEach(x => {
+        const btn = document.getElementById(`tab-q-${x}`);
+        if (btn) btn.className = 'pb-3 text-slate-500 hover:text-slate-800 flex items-center space-x-1.5 font-bold';
+      });
+      const active = document.getElementById(`tab-q-${aud === 'ALL' ? 'all' : aud === 'KIDS' ? 'kids' : 'teens'}`);
+      if (active) {
+        active.className = 'pb-3 text-indigo-600 border-b-2 border-indigo-600 flex items-center space-x-1.5 font-bold';
+      }
+      loadQuestions();
+    }
+
+    function updateGradeOptionsForQuestion() {
+      const aud = document.getElementById('qAudience').value;
+      const select = document.getElementById('qGrade');
+      select.innerHTML = '';
+      if (aud === 'KIDS') {
+        [1, 2, 3, 4].forEach(g => {
+          const opt = document.createElement('option');
+          opt.value = g;
+          opt.textContent = `${g}-sinf`;
+          select.appendChild(opt);
+        });
+      } else {
+        [5, 6, 7, 8, 9, 10, 11].forEach(g => {
+          const opt = document.createElement('option');
+          opt.value = g;
+          opt.textContent = `${g}-sinf`;
+          select.appendChild(opt);
+        });
+      }
+    }
+
+    function openCreateQuestionModal() {
+      document.getElementById('createQuestionModal').classList.remove('hidden');
+      document.getElementById('createQuestionModal').classList.add('flex');
+    }
+
+    function closeCreateQuestionModal() {
+      document.getElementById('createQuestionModal').classList.add('hidden');
+      document.getElementById('createQuestionModal').classList.remove('flex');
+    }
+
+    async function saveNewQuestion() {
+      const audience = document.getElementById('qAudience').value;
+      const grade = parseInt(document.getElementById('qGrade').value, 10);
+      const subject = document.getElementById('qSubject').value.trim();
+      const topic = document.getElementById('qTopic').value.trim();
+      const difficulty = document.getElementById('qDifficulty').value;
+      const type = document.getElementById('qType').value;
+      const prompt = document.getElementById('qPrompt').value.trim();
+      const formulaLatex = document.getElementById('qFormula').value.trim();
+      const imageUrl = document.getElementById('qImageUrl').value.trim();
+      const correctAnswer = document.getElementById('qCorrectAnswer').value.trim();
+      const rawOptions = document.getElementById('qOptions').value.trim();
+      const options = rawOptions ? rawOptions.split(',').map(s => s.trim()).filter(Boolean) : [];
+      const explanation = document.getElementById('qExplanation').value.trim();
+      const rewardXP = parseInt(document.getElementById('qXP').value, 10) || 10;
+      const rewardCoins = parseInt(document.getElementById('qCoins').value, 10) || 1;
+      const status = document.getElementById('qStatus').value;
+
+      if (!prompt || !topic || !correctAnswer) {
+        alert('Savol matni, mavzu va to‘g‘ri javobni kiritish majburiy!');
+        return;
+      }
+
+      try {
+        const res = await apiFetch('/api/admin/questions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({
+            audience, grade, subject, topic, difficulty, type, prompt, formulaLatex, imageUrl,
+            correctAnswer, options, explanation, rewardXP, rewardCoins, status
           })
         });
 
         const json = await res.json();
         if (json.success) {
-          closeCreateLessonModal();
-          loadLessons();
+          closeCreateQuestionModal();
+          loadQuestions();
+          loadDashboardData();
         } else {
-          alert(json.error || 'Dars qo‘shishda xatolik yuz berdi');
+          alert(json.error || 'Savol saqlanmadi');
         }
       } catch (err) {
-        alert('Server bilan aloqa xatoligi');
+        alert(err.message || 'Server xatosi');
       }
+    }
+
+    async function toggleQuestionPublish(id, currentlyPublished) {
+      const endpoint = currentlyPublished ? `/api/admin/questions/${id}/unpublish` : `/api/admin/questions/${id}/publish`;
+      try {
+        const res = await apiFetch(endpoint, {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success) loadQuestions();
+      } catch (err) {
+        alert(err.message || 'Xatolik yuz berdi');
+      }
+    }
+
+    async function deleteQuestion(id) {
+      if (!confirm('Ushbu savolni o‘chirmoqchimisiz?')) return;
+      try {
+        const res = await apiFetch(`/api/admin/questions/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success) loadQuestions();
+      } catch (err) {
+        alert(err.message || 'O‘chirishda xatolik');
+      }
+    }
+
+    // --- 5. FINANCE DATA ---
+    async function loadFinance() {
+      try {
+        const res = await apiFetch('/api/admin/finance/overview', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success && json.data) {
+          const d = json.data;
+          document.getElementById('fin-success-count').textContent = d.successfulTransactionsCount;
+          document.getElementById('fin-net-proceeds').textContent = `${d.netProceedsUzs.toLocaleString()} UZS`;
+          document.getElementById('fin-owner-card').textContent = d.ownerMaskedCard || '8600 •••• •••• 7821';
+        }
+
+        const txRes = await apiFetch('/api/admin/payments/transactions', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const txJson = await txRes.json();
+        const tbody = document.getElementById('financeTableBody');
+        tbody.innerHTML = '';
+        if (txJson.success && txJson.data && txJson.data.transactions) {
+          if (txJson.data.transactions.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="px-5 py-8 text-center text-slate-400">Hozircha to‘lov tranzaksiyalari yo‘q.</td></tr>`;
+            return;
+          }
+          txJson.data.transactions.forEach(t => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-slate-50 transition';
+            tr.innerHTML = `
+              <td class="px-5 py-4 font-mono font-bold text-slate-700">${t.id}</td>
+              <td class="px-5 py-4 text-slate-900 font-medium">${t.userId}</td>
+              <td class="px-5 py-4 font-bold text-slate-900">${(t.amountUzs || 29000).toLocaleString()} UZS <span class="text-[10px] text-purple-600 block">Pro Tarif</span></td>
+              <td class="px-5 py-4 text-slate-600">${t.method || 'CLICK / UZCARD'}</td>
+              <td class="px-5 py-4">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${t.status === 'SUCCESS' ? 'badge-published' : 'badge-draft'}">
+                  ${t.status === 'SUCCESS' ? 'Muvaffaqiyatli' : 'Kutilmoqda'}
+                </span>
+              </td>
+              <td class="px-5 py-4 text-slate-400 text-[11px]">${new Date(t.createdAt || Date.now()).toLocaleDateString('uz-UZ')}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch (err) {
+        console.error('loadFinance error:', err);
+      }
+    }
+
+    // --- 6. SETTINGS & AUDIT DATA ---
+    async function loadSettings() {
+      try {
+        const res = await apiFetch('/api/admin/audit-logs', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        const tbody = document.getElementById('auditTableBody');
+        tbody.innerHTML = '';
+        if (json.success && json.data) {
+          json.data.slice(0, 30).forEach(log => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-slate-50';
+            tr.innerHTML = `
+              <td class="px-5 py-3 text-slate-400 font-mono text-[11px]">${new Date(log.createdAt).toLocaleString('uz-UZ')}</td>
+              <td class="px-5 py-3 font-bold text-slate-800">${log.adminUsername}</td>
+              <td class="px-5 py-3"><span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-mono text-[10px]">${log.action}</span></td>
+              <td class="px-5 py-3 text-slate-500">${log.targetType} ${log.targetId ? `(${log.targetId})` : ''}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch (err) {
+        console.error('loadSettings error:', err);
+      }
+    }
+
+    async function handleSettingsPasswordChange() {
+      const oldPassword = document.getElementById('setOldPass').value;
+      const newPassword = document.getElementById('setNewPass').value;
+      if (!oldPassword || !newPassword) {
+        alert('Eski va yangi parolni to‘ldiring');
+        return;
+      }
+      try {
+        const res = await apiFetch('/api/admin/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({ oldPassword, newPassword })
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert('Parol muvaffaqiyatli yangilandi!');
+          document.getElementById('setOldPass').value = '';
+          document.getElementById('setNewPass').value = '';
+          loadSettings();
+        } else {
+          alert(json.error || 'Xatolik yuz berdi');
+        }
+      } catch (err) {
+        alert(err.message || 'Xatolik');
+      }
+    }
+
+    function setTimeframe(tf) {
+      ['today', '7d', '30d', 'all'].forEach(x => {
+        const btn = document.getElementById(`tf-${x}`);
+        if (btn) btn.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-semibold';
+      });
+      const act = document.getElementById(`tf-${tf}`);
+      if (act) act.className = 'px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 font-bold';
+      loadDashboardData();
     }
   </script>
 </body>
