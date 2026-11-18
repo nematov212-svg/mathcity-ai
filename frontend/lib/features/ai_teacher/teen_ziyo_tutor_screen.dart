@@ -20,7 +20,7 @@ class _TeenZiyoTutorScreenState extends State<TeenZiyoTutorScreen> {
     {
       'role': 'assistant',
       'text':
-          'Assalomu alaykum. Men Ziyoman — o‘smirlar uchun ilg‘or matematika AI maslahatchisi. Tenglamalar, geometriya isbotlari yoki oliy matematika masalalarini yechishda yordam beraman.',
+          'Assalomu alaykum. Men AI Ustozman — o‘smirlar uchun ilg‘or matematika maslahatchisi. Tenglamalar, geometriya isbotlari yoki oliy matematika masalalarini yechishda yordam beraman.',
       'formula': 'f(x) = \\int x^2 dx = \\frac{x^3}{3} + C',
       'actions': ['Kvadrat tenglamani yechish', 'Hosila qoidasi', 'Pifagor isboti'],
     },
@@ -105,7 +105,7 @@ class _TeenZiyoTutorScreenState extends State<TeenZiyoTutorScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Ziyo AI Ustoz • O‘smirlar',
+                  'AI Ustoz • O‘smirlar',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,

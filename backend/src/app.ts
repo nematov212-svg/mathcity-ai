@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import path from 'path';
 import { securityHeaders, corsMiddleware, requestTimeoutMiddleware } from './config/security.js';
 import { generalRateLimiter } from './middleware/rateLimit.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -19,6 +20,8 @@ import { studentsRouter } from './modules/students/profile.routes.js';
 import { subscriptionsRouter } from './modules/subscriptions/subscriptions.routes.js';
 import { adminRouter } from './modules/admin/admin.routes.js';
 import { paymentsRouter } from './modules/payments/click.routes.js';
+
+const adminStaticPath = path.resolve(process.cwd(), 'public/admin');
 
 export const app = express();
 
@@ -72,5 +75,11 @@ app.use('/api/subscriptions', subscriptionsRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/payments', paymentsRouter);
 
-// 4. Centralized Production Error Handler (Phase 3)
+// 4. Standalone Admin Dashboard Static Portal
+app.use('/admin', express.static(adminStaticPath));
+app.get('/admin/*', (req: Request, res: Response) => {
+  res.sendFile(path.join(adminStaticPath, 'index.html'));
+});
+
+// 5. Centralized Production Error Handler (Phase 3)
 app.use(errorHandler);

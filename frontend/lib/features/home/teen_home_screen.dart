@@ -239,7 +239,7 @@ class TeenHomeScreen extends ConsumerWidget {
                             Icon(Icons.psychology_rounded, color: AppColors.teenPrimaryLime, size: 32),
                             SizedBox(height: 12),
                             Text(
-                              'Ziyo AI Ustoz',
+                              'AI Ustoz',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,

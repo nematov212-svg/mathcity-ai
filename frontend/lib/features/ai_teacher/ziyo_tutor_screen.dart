@@ -71,7 +71,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   final List<MessageItem> _messages = [
     MessageItem(
       text:
-          'Salom! Men sizning sun’iy intellekt matematika ustozingiz Ziyoman! 🤖✨\nIstalgan misol, tenglama yoki masalangizni yozing, rasmga olib yuboring yoki ovoz orqali so‘rang!',
+          'Salom! Men sizning sun’iy intellekt matematika ustozingiz — AI Ustozman! 🤖✨\nIstalgan misol, tenglama yoki masalangizni yozing, rasmga olib yuboring yoki ovoz orqali so‘rang!',
       isUser: false,
       suggestedActions: [
         '2x + 6 = 16 tenglamani yech',
@@ -85,6 +85,22 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final student = ref.read(studentProvider).student;
+      final name = (student != null && student.displayName.trim().isNotEmpty)
+          ? student.displayName.trim()
+          : 'O‘quvchi';
+      if (_messages.isNotEmpty && !_messages.first.isUser) {
+        setState(() {
+          _messages[0] = MessageItem(
+            text:
+                'Salom, $name! 👋\nMen sizning shaxsiy AI Ustozingizman! 🤖✨\nIstalgan misol, tenglama yoki masalangizni yozing, rasmga olib yuboring yoki ovoz orqali so‘rang!',
+            isUser: false,
+            suggestedActions: _messages[0].suggestedActions,
+          );
+        });
+      }
+    });
     _fetchQuotaStatus();
   }
 
@@ -105,7 +121,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       final isProUser = student?.subscription.status == 'PRO_ACTIVE';
       setState(() {
         _isPro = isProUser;
-        _quotaBadgeText = isProUser ? 'Ziyo AI Pro — Cheksiz savollar' : 'Qolgan bepul so‘rovlar: 5/5';
+        _quotaBadgeText = isProUser ? 'AI Ustoz Pro — Cheksiz savollar' : 'Qolgan bepul so‘rovlar: 5/5';
       });
     }
   }
@@ -357,7 +373,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Ziyo AI Ustoz',
+                  'AI Ustoz',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
@@ -449,7 +465,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                         ),
                         SizedBox(width: 10),
                         Text(
-                          'Ziyo AI masalani yechmoqda...',
+                          'AI Ustoz masalani yechmoqda...',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                         ),
                       ],

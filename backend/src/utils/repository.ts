@@ -332,6 +332,46 @@ class DataRepository {
     return undefined;
   }
 
+  // --- Admin Curriculum & Question Management ---
+  addLesson(lesson: LessonModel): void {
+    this.lessons.push(lesson);
+  }
+
+  updateLesson(id: string, updates: Partial<LessonModel>): boolean {
+    const idx = this.lessons.findIndex((l) => l.id === id);
+    if (idx === -1) return false;
+    this.lessons[idx] = { ...this.lessons[idx], ...updates };
+    return true;
+  }
+
+  deleteLesson(id: string): boolean {
+    const idx = this.lessons.findIndex((l) => l.id === id);
+    if (idx === -1) return false;
+    this.lessons.splice(idx, 1);
+    return true;
+  }
+
+  getAllQuestions(): QuestionModel[] {
+    const questions: QuestionModel[] = [];
+    for (const l of this.lessons) {
+      for (const s of l.sections) {
+        questions.push(...s.questions);
+      }
+    }
+    return questions;
+  }
+
+  addQuestion(sectionId: string, question: QuestionModel): boolean {
+    for (const l of this.lessons) {
+      const s = l.sections.find((sec) => sec.id === sectionId);
+      if (s) {
+        s.questions.push(question);
+        return true;
+      }
+    }
+    return false;
+  }
+
   getQuestionsForTest(grade?: number, count = 10, topic?: string): QuestionBankItem[] {
     let pool = mathQuestionBank.filter((q) => q.isPublished);
     if (topic && topic.trim() !== '') {

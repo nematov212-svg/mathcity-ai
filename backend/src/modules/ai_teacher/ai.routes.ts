@@ -23,7 +23,7 @@ aiRouter.get('/quota', authMiddleware, (req: AuthenticatedRequest, res: Response
       remaining: quota.remaining,
       used: quota.used,
       resetAt: quota.resetAt,
-      quotaBadgeText: isPaidPro ? 'Ziyo AI Pro — Cheksiz savollar' : `Qolgan bepul so‘rovlar: ${quota.remaining}/5`,
+      quotaBadgeText: isPaidPro ? 'AI Ustoz Pro — Cheksiz savollar' : `Qolgan bepul so‘rovlar: ${quota.remaining}/5`,
     },
   });
 });
@@ -104,7 +104,7 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
       const genAI = new GoogleGenerativeAI(config.geminiApiKey);
       const model = genAI.getGenerativeModel({ model: config.aiModelName });
 
-      const systemPrompt = `Siz MathCity AI platformasining Ziyo ismli samimiy va professional matematika ustozisiz.
+      const systemPrompt = `Siz MathCity AI platformasining samimiy va professional AI Ustoz matematika ustozisiz.
 O'quvchi yoshi: ${user.age} yosh (${user.mode === 'KIDS' ? 'Bolalar rejimi, samimiy, sodda va rag‘batlantiruvchi' : 'O‘smirlar rejimi, jiddiyroq va ilmiy'}).
 Javobingiz faqat tabiiy o'zbek tilida bo'lishi kerak.
 Matematik ifoda va tenglamalarni doimo LaTeX formatida bering (masalan: $2x + 6 = 16$).

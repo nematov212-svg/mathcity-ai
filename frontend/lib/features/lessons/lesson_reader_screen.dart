@@ -208,7 +208,7 @@ class LessonReaderScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Ziyo ustozdan maslahat',
+                          'AI Ustozdan maslahat',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w800,

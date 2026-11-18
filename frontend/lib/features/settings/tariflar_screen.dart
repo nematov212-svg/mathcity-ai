@@ -236,7 +236,7 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
                     const SizedBox(height: 12),
                     _buildFeatureItem(
                       Icons.check_circle_rounded,
-                      'Ziyo AI 24/7 shaxsiy matematika repetitori',
+                      'AI Ustoz 24/7 shaxsiy matematika repetitori',
                     ),
                     const SizedBox(height: 12),
                     _buildFeatureItem(

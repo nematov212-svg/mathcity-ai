@@ -80,7 +80,7 @@ export const authRateLimiter = createRateLimiter({
 export const aiRateLimiter = createRateLimiter({
   windowMs: 60 * 60 * 1000,
   maxRequests: 25,
-  message: 'Ziyo AI ustoz uchun soatlik savollar limiti tugadi. Iltimos, birozdan keyin murojaat qiling.',
+  message: 'AI Ustoz uchun soatlik savollar limiti tugadi. Iltimos, birozdan keyin murojaat qiling.',
 });
 
 // 3. Practice Submission Rate Limiter (Anti-farming: 60 per minute)

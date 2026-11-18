@@ -464,8 +464,8 @@ export const initialDailyTasks: DailyTaskModel[] = [
   },
   {
     key: 'task_ai_consult',
-    title: 'Ziyo ustozdan yordam so‘rang',
-    description: 'Tushunmagan misolingiz bo‘yicha Ziyo bilan suhbatlashing.',
+    title: 'AI Ustozdan yordam so‘rang',
+    description: 'Tushunmagan misolingiz bo‘yicha AI Ustoz bilan suhbatlashing.',
     targetCount: 1,
     rewardCoins: 5,
     rewardXP: 25,

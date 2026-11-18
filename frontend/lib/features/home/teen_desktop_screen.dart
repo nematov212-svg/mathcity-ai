@@ -65,7 +65,7 @@ class TeenDesktopScreen extends ConsumerWidget {
                 const SizedBox(height: 36),
                 _buildNavItem(Icons.dashboard_rounded, 'Boshqaruv paneli', true, () {}),
                 _buildNavItem(Icons.menu_book_rounded, 'O‘quv kursi', false, () => context.push('/teen/courses')),
-                _buildNavItem(Icons.psychology_rounded, 'Ziyo AI Ustoz', false, () => context.push('/teen/ai-tutor')),
+                _buildNavItem(Icons.psychology_rounded, 'AI Ustoz', false, () => context.push('/teen/ai-tutor')),
                 _buildNavItem(Icons.location_city_rounded, 'Ilmiy shahar', false, () => context.push('/teen/city')),
                 _buildNavItem(Icons.insights_rounded, 'Akademik tahlil', false, () => context.push('/teen/analytics')),
                 const Spacer(),
@@ -215,7 +215,7 @@ class TeenDesktopScreen extends ConsumerWidget {
                                 Icon(Icons.psychology_rounded, color: AppColors.teenPrimaryLime, size: 36),
                                 Spacer(),
                                 Text(
-                                  'Ziyo AI Ustoz',
+                                  'AI Ustoz',
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white),
                                 ),
                                 SizedBox(height: 4),

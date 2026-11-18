@@ -20,7 +20,7 @@ class AppStrings {
   static const String navLessons = 'Darslar';
   static const String navGames = 'O‘yinlar';
   static const String navCity = 'Mening shahrim';
-  static const String navAiTutor = 'Ziyo Ustoz';
+  static const String navAiTutor = 'AI Ustoz';
   static const String navAnalytics = 'Natijalar';
   static const String navProfile = 'Profilim';
 

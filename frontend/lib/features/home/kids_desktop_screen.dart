@@ -67,7 +67,7 @@ class KidsDesktopScreen extends ConsumerWidget {
                 _buildNavItem(Icons.map_rounded, 'Darslar xaritasi', false, () => context.push('/kids/lessons')),
                 _buildNavItem(Icons.sports_esports_rounded, 'O‘yinlar', false, () => context.push('/kids/games')),
                 _buildNavItem(Icons.location_city_rounded, 'Mening shahrim', false, () => context.push('/kids/city')),
-                _buildNavItem(Icons.smart_toy_rounded, 'Ziyo AI Ustoz', false, () => context.push('/kids/ai-tutor')),
+                _buildNavItem(Icons.smart_toy_rounded, 'AI Ustoz', false, () => context.push('/kids/ai-tutor')),
                 _buildNavItem(Icons.bar_chart_rounded, 'Natijalar', false, () => context.push('/kids/analytics')),
                 const Spacer(),
                 _buildNavItem(Icons.settings_outlined, 'Sozlamalar', false, () => context.push('/settings')),
@@ -263,7 +263,7 @@ class KidsDesktopScreen extends ConsumerWidget {
                                 Icon(Icons.smart_toy_rounded, color: AppColors.kidsPrimary, size: 40),
                                 Spacer(),
                                 Text(
-                                  'Ziyo AI Ustoz',
+                                  'AI Ustoz',
                                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
                                 ),
                                 SizedBox(height: 4),

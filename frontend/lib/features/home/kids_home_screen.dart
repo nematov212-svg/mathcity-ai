@@ -211,7 +211,7 @@ class KidsHomeScreen extends ConsumerWidget {
                                 ),
                               ),
                               onPressed: () {
-                                context.push('/kids/exercise/q-math-01?lessonId=lesson-k3-01&sectionId=section-k3-01-s1');
+                                context.push('/kids/lesson/lesson-k4-01');
                               },
                               child: const FittedBox(
                                 fit: BoxFit.scaleDown,
@@ -422,7 +422,7 @@ class KidsHomeScreen extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Ziyo AI Ustoz',
+                              'AI Ustoz',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w900,

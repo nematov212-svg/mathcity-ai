@@ -21,7 +21,7 @@ void main() {
     // Advance timer past splash transition
     await tester.pump(const Duration(milliseconds: 2000));
     await tester.pumpAndSettle();
-
+    
     // Login screen frame verification (Reference Image 2)
     expect(find.text('Yana xush kelibsiz!'), findsOneWidget);
     expect(find.text('Kirish'), findsOneWidget);

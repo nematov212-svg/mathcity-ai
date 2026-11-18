@@ -46,8 +46,8 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> {
     },
     {
       'key': 'task_ai_consult',
-      'title': 'Ziyo ustozdan yordam so‘rang',
-      'desc': 'Tushunmagan misolingiz bo‘yicha Ziyo bilan suhbatlashing.',
+      'title': 'AI Ustozdan yordam so‘rang',
+      'desc': 'Tushunmagan misolingiz bo‘yicha AI Ustoz bilan suhbatlashing.',
       'current': 1,
       'target': 1,
       'coins': 20,
