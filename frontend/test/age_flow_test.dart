@@ -22,7 +22,7 @@ void main() {
     expect(find.text('Bosh sahifaga qaytish'), findsOneWidget);
   });
 
-  testWidgets('CoinBadge displays yellow gold currency with pi symbol (never stars)', (WidgetTester tester) async {
+  testWidgets('CoinBadge displays yellow gold currency with official dollar coin (never stars)', (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
@@ -32,7 +32,7 @@ void main() {
     );
 
     expect(find.text('350'), findsOneWidget);
-    expect(find.text('π'), findsOneWidget);
+    expect(find.byType(CoinIcon), findsOneWidget);
     expect(find.byIcon(Icons.star), findsNothing);
   });
 

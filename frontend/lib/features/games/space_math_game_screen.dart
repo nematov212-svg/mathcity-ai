@@ -522,13 +522,14 @@ class _SpaceMathGameScreenState extends ConsumerState<SpaceMathGameScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              '✦ Yordam olish  •  -5 tanga',
+                              '✦ Yordam olish  •  -5 ',
                               style: TextStyle(
                                 fontSize: 12.5,
                                 fontWeight: FontWeight.w800,
                                 color: Color(0xFF854D0E),
                               ),
                             ),
+                            CoinIcon(size: 14),
                           ],
                         ),
                       ),

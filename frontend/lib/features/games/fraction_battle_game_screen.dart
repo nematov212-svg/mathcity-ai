@@ -605,13 +605,19 @@ class _FractionBattleGameScreenState extends ConsumerState<FractionBattleGameScr
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: const Color(0xFFFDE047), width: 1),
                         ),
-                        child: const Text(
-                          '✦ Yordam olish  •  -5 tanga',
-                          style: TextStyle(
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w800,
-                            color: Color(0xFF854D0E),
-                          ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '✦ Yordam olish  •  -5 ',
+                              style: TextStyle(
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF854D0E),
+                              ),
+                            ),
+                            CoinIcon(size: 14),
+                          ],
                         ),
                       ),
                     ),

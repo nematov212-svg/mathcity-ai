@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/widgets/coin_icon.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../core/network/api_client.dart';
 import '../../shared/models/lesson_model.dart';
@@ -164,8 +165,8 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
             ),
             child: Row(
               children: [
-                const Text('π', style: TextStyle(color: Color(0xFFD97706), fontWeight: FontWeight.w900)),
-                const SizedBox(width: 4),
+                const CoinIcon(size: 16),
+                const SizedBox(width: 5),
                 Text('+${lesson.rewardCoins}', style: const TextStyle(color: Color(0xFF78350F), fontWeight: FontWeight.bold, fontSize: 12)),
               ],
             ),

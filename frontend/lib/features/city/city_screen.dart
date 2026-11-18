@@ -345,8 +345,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with SingleTickerProvid
                                 const SizedBox(height: 6),
                                 Row(
                                   children: [
-                                    const Icon(Icons.monetization_on_rounded, color: Color(0xFFFFB800), size: 15),
-                                    const SizedBox(width: 4),
+                                    const CoinIcon(size: 16),
+                                    const SizedBox(width: 5),
                                     Text(
                                       '${building.costInCoins} oltin',
                                       style: const TextStyle(

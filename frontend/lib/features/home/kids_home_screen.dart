@@ -361,13 +361,23 @@ class KidsHomeScreen extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(height: 4),
-                            const Text(
-                              '+30 oltin tanga',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w800,
-                                color: Color(0xFFD97706),
-                              ),
+                            const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CoinIcon(size: 13),
+                                SizedBox(width: 4),
+                                Flexible(
+                                  child: Text(
+                                    '+30 oltin tanga',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w800,
+                                      color: Color(0xFFD97706),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

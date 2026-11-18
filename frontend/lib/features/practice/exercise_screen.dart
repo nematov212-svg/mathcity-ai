@@ -405,11 +405,9 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          studentState.isPro ? Icons.stars_rounded : Icons.monetization_on_rounded,
-                          color: const Color(0xFFFFB800),
-                          size: 14,
-                        ),
+                        studentState.isPro
+                            ? const Icon(Icons.stars_rounded, color: Color(0xFFFFB800), size: 14)
+                            : const CoinIcon(size: 14),
                         const SizedBox(width: 4),
                         Text(
                           studentState.isPro ? '+3 oltin 🌟' : '+1 oltin',
@@ -578,11 +576,9 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                                   ),
                                 ),
                               ),
-                              Icon(
-                                _lastCoinsAwarded == 3 ? Icons.stars_rounded : Icons.monetization_on_rounded,
-                                color: const Color(0xFFFFB800),
-                                size: 24,
-                              ),
+                              _lastCoinsAwarded == 3
+                                  ? const Icon(Icons.stars_rounded, color: Color(0xFFFFB800), size: 24)
+                                  : const CoinIcon(size: 24, popOnAppear: true),
                             ],
                           ),
                         ),
@@ -710,7 +706,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                       ),
                       child: Column(
                         children: [
-                          const Icon(Icons.monetization_on_rounded, color: Color(0xFFFFB800), size: 30),
+                          const CoinIcon(size: 32, floating: true),
                           const SizedBox(height: 8),
                           Text(
                             '+$_sessionCoinsEarned',

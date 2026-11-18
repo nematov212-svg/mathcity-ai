@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/widgets/coin_icon.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../core/auth/auth_service.dart';
 import '../../shared/providers/student_provider.dart';
@@ -439,7 +440,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
               ),
               const Divider(height: 24),
               _buildSummaryRow(
-                icon: Icons.monetization_on_rounded,
+                customIcon: const CoinIcon(size: 22),
                 label: 'Boshlang‘ich balans',
                 value: '0 oltin tanga',
                 valueColor: const Color(0xFF7A4800),
@@ -461,14 +462,15 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   }
 
   Widget _buildSummaryRow({
-    required IconData icon,
+    IconData? icon,
+    Widget? customIcon,
     required String label,
     required String value,
     Color? valueColor,
   }) {
     return Row(
       children: [
-        Icon(icon, color: AppColors.kidsPrimary, size: 22),
+        customIcon ?? Icon(icon, color: AppColors.kidsPrimary, size: 22),
         const SizedBox(width: 12),
         Text(
           label,

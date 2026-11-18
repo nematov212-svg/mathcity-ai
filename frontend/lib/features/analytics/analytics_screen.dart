@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/widgets/coin_icon.dart';
 import '../../shared/providers/student_provider.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
@@ -83,8 +84,7 @@ class AnalyticsScreen extends ConsumerWidget {
                   child: _buildMetricCard(
                     title: 'Jami oltin tangalar',
                     value: '$totalCoins',
-                    icon: Icons.monetization_on_rounded,
-                    color: const Color(0xFFFFB800),
+                    customIcon: const CoinIcon(size: 28, floating: true),
                   ),
                 ),
               ],
@@ -274,8 +274,9 @@ class AnalyticsScreen extends ConsumerWidget {
   Widget _buildMetricCard({
     required String title,
     required String value,
-    required IconData icon,
-    required Color color,
+    IconData? icon,
+    Widget? customIcon,
+    Color? color,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -287,7 +288,7 @@ class AnalyticsScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color, size: 26),
+          customIcon ?? Icon(icon, color: color ?? AppColors.kidsPrimary, size: 26),
           const SizedBox(height: 10),
           Text(
             value,

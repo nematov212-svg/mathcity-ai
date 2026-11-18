@@ -386,18 +386,25 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> {
                   ),
                   const SizedBox(height: 6),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFEF9C3),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Text(
-                      rewardBadge,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFF854D0E),
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CoinIcon(size: 13),
+                        const SizedBox(width: 4),
+                        Text(
+                          rewardBadge,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF854D0E),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
