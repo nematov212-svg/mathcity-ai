@@ -301,8 +301,20 @@ class AuthService {
     }
   }
 
+  Future<AuthResult>? _ongoingRestore;
+
   /// Check and restore existing session or attempt token refresh
-  Future<AuthResult> restoreSession({bool allowDemoFallback = false}) async {
+  Future<AuthResult> restoreSession({bool allowDemoFallback = false}) {
+    if (_ongoingRestore != null) {
+      return _ongoingRestore!;
+    }
+    _ongoingRestore = _doRestoreSession(allowDemoFallback: allowDemoFallback).whenComplete(() {
+      _ongoingRestore = null;
+    });
+    return _ongoingRestore!;
+  }
+
+  Future<AuthResult> _doRestoreSession({bool allowDemoFallback = false}) async {
     try {
       final savedToken = await StorageService.getAuthToken();
       if (savedToken != null && savedToken.isNotEmpty) {

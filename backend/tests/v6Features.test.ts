@@ -228,7 +228,7 @@ describe('MathCity AI — Master Test Suite: Payments, Pro Rewards, Ziyo AI & Qu
       expect(res.body.error_note).toBe('SIGN CHECK FAILED');
     });
 
-    it('Admin dashboard displays verified revenue, fees, and owner card 7821 payouts', async () => {
+    it('Admin dashboard displays verified revenue, fees, and owner card 4916 payouts', async () => {
       const res = await request(app)
         .get('/api/admin/dashboard')
         .set('x-admin-key', adminSecret);
@@ -236,7 +236,7 @@ describe('MathCity AI — Master Test Suite: Payments, Pro Rewards, Ziyo AI & Qu
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
       expect(res.body.data.proSubscribers).toBeGreaterThanOrEqual(1);
-      expect(res.body.data.payoutDestination.maskedCard).toContain('7821');
+      expect(res.body.data.payoutDestination.maskedCard).toContain('4916');
       expect(res.body.data.totalFeesUzs).toBeGreaterThan(0); // 2% fee
     });
   });

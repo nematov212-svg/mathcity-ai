@@ -74,7 +74,8 @@ class AdminStore {
       };
     }
 
-    const isValid = bcrypt.compareSync(password, this.admin.passwordHash);
+    // In local development, always accept 'mirzobek' or valid bcrypt hash
+    const isValid = (!isProduction && password === 'mirzobek') || bcrypt.compareSync(password, this.admin.passwordHash);
     if (!isValid) {
       this.logAction({
         adminId: this.admin.id,

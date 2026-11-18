@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:record/record.dart';
 import '../../core/network/api_client.dart';
@@ -223,6 +224,20 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
 
   void _pickGalleryImage() async {
     try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.image,
+        withData: true,
+      );
+      if (result != null && result.files.isNotEmpty) {
+        final bytes = result.files.first.bytes;
+        if (bytes != null) {
+          setState(() {
+            _selectedImageBytes = bytes;
+          });
+          return;
+        }
+      }
+      // Native fallback
       final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 1600,
@@ -277,8 +292,11 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       }
 
       try {
+        final config = kIsWeb
+            ? const RecordConfig(encoder: AudioEncoder.opus)
+            : const RecordConfig(encoder: AudioEncoder.aacLc);
         await _audioRecorder.start(
-          const RecordConfig(encoder: AudioEncoder.aacLc),
+          config,
           path: '',
         );
         setState(() {
@@ -718,22 +736,28 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             child: const Icon(Icons.auto_awesome_rounded, color: Color(0xFF6C5CE7), size: 18),
           ),
           const SizedBox(width: 8),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'AI Ustoz',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 17,
-                  color: Color(0xFF1E1742),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'AI Ustoz',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                    color: Color(0xFF1E1742),
+                  ),
                 ),
-              ),
-              Text(
-                'Shaxsiy matematika repetitori',
-                style: TextStyle(fontSize: 11, color: Color(0xFF64748B), fontWeight: FontWeight.w500),
-              ),
-            ],
+                if (isDesktop)
+                  const Text(
+                    'Shaxsiy matematika repetitori',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 11, color: Color(0xFF64748B), fontWeight: FontWeight.w500),
+                  ),
+              ],
+            ),
           ),
         ],
       ),
@@ -741,8 +765,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         // Quota Badge
         Center(
           child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            padding: EdgeInsets.symmetric(horizontal: isDesktop ? 10 : 8, vertical: 4),
             decoration: BoxDecoration(
               color: _isPro ? const Color(0xFFE8F8EE) : const Color(0xFFF1F5F9),
               borderRadius: BorderRadius.circular(999),
@@ -756,13 +780,13 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                 Icon(
                   _isPro ? Icons.stars_rounded : Icons.bolt_rounded,
                   color: _isPro ? const Color(0xFF10B981) : const Color(0xFF6C5CE7),
-                  size: 15,
+                  size: 14,
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: 3),
                 Text(
-                  _isPro ? 'Pro — Cheksiz' : '$_remainingQuota/5 bepul',
+                  _isPro ? (isDesktop ? 'Pro — Cheksiz' : 'Pro') : (isDesktop ? '$_remainingQuota/5 bepul' : '$_remainingQuota/5'),
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: _isPro ? const Color(0xFF047857) : const Color(0xFF475569),
                   ),
@@ -773,17 +797,22 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         ),
 
         // History Button ("Tarix")
-        TextButton.icon(
-          onPressed: isDesktop
-              ? () => setState(() => _showDesktopSidebar = !_showDesktopSidebar)
-              : _openHistoryBottomSheet,
-          icon: const Icon(Icons.history_rounded, size: 18, color: Color(0xFF6C5CE7)),
-          label: const Text(
-            'Tarix',
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF6C5CE7)),
+        if (isDesktop)
+          TextButton.icon(
+            onPressed: () => setState(() => _showDesktopSidebar = !_showDesktopSidebar),
+            icon: const Icon(Icons.history_rounded, size: 18, color: Color(0xFF6C5CE7)),
+            label: const Text(
+              'Tarix',
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF6C5CE7)),
+            ),
+          )
+        else
+          IconButton(
+            tooltip: 'Tarix',
+            onPressed: _openHistoryBottomSheet,
+            icon: const Icon(Icons.history_rounded, size: 20, color: Color(0xFF6C5CE7)),
           ),
-        ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 4),
       ],
     );
   }

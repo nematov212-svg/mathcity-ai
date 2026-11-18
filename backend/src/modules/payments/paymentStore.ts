@@ -64,10 +64,10 @@ class PaymentDataStore {
   private payouts: PayoutRecord[] = [];
   private auditLogs: PaymentAuditLog[] = [];
 
-  // Payout destination: Owner's verified card ending in 7821
+  // Payout destination: Owner's verified card starting with 4916
   // Full card number is NEVER stored or hardcoded; only masked representation
-  public readonly ownerMaskedCard = '8600 •••• •••• 7821';
-  public readonly ownerCardEnding = '7821';
+  public readonly ownerMaskedCard = '4916 •••• •••• ****';
+  public readonly ownerCardEnding = '****';
 
   constructor() {
     // Seed initial audit log and sample settled payout record for owner card

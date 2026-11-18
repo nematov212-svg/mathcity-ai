@@ -36,8 +36,9 @@ class ApiClient {
           return handler.next(options);
         },
         onError: (DioException error, handler) async {
-          if (error.response?.statusCode == 401) {
-            // Unrecoverable or expired token: clear state to prevent loops
+          final path = error.requestOptions.path;
+          // Only clear stored token when the refresh endpoint itself is rejected with 401
+          if (error.response?.statusCode == 401 && path.contains('/auth/refresh')) {
             _authToken = null;
             await StorageService.saveAuthToken('');
           }

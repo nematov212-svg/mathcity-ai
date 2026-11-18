@@ -288,7 +288,7 @@ adminRouter.get('/dashboard', adminAuth, (req: Request, res: Response) => {
       teensQuestionsCount: teensQuestions.length,
       payoutDestination: {
         type: 'CARD',
-        label: 'Eganing tasdiqlangan bank kartasi (oxiri 7821)',
+        label: 'Eganing tasdiqlangan bank kartasi (boshi 4916)',
         maskedCard: paymentDataStore.ownerMaskedCard,
         settlementSchedule: 'Avtomatik haftalik / talab bo‘yicha to‘lov',
         status: 'ACTIVE_VERIFIED',
