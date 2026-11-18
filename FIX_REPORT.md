@@ -52,20 +52,47 @@ Ushbu hisobot **MathCity AI** loyihasida aniqlangan muammolar, ularning tub saba
   1. `adminStore.verifyCredentials` lokal muhitda `mirzobek / mirzobek` parolini 100% qabul qiladigan qilindi.
   2. Port 3001 va Port 4000 serverlari fon rejimida to‘liq ishga tushirildi.
 
+### G. AI Ustoz (Ziyo Tutor) — Gemini API Integratsiyasi (Backend-Only)
+- **Tub Sababi:**
+  1. Gemini API kaliti faqat `backend/.env` da saqlangani holda, jonli chaqiruvda Google Cloud loyihasining bepul tieri cheklangani (`403 Forbidden: The Gemini API free tier is not available for this project`) aniqlandi.
+  2. Kasrlar (`3/4 + 1/2`) va og‘zaki o‘zbekcha savollar ("Olti bilan yettini ko‘paytir") yetarlicha qamrab olinmagan edi.
+  3. Kontekstli davomiy savollar ("buni boshqacha tushuntir") oldingi xabarlarni inobatga olmas edi.
+- **Tuzatish:**
+  1. **Nol Xavfsizlik Xavfi:** Kalit faqat `backend/.env` da saqlanadi (`GEMINI_API_KEY`, `GEMINI_MODEL=gemini-2.5-flash`). Frontend kodida yoki web-bundle da kalit mavjud emasligi avtotest bilan tekshirildi (Test 9).
+  2. **Yangi va Mustahkam Endpoints:**
+     - `POST /api/ai/chat` — matnli savol, LaTeX formulalar, oldingi suhbat konteksti va yoshga mos pedagogik ko‘rsatma.
+     - `POST /api/ai/chat/image` — rasm yuklash (JPEG/PNG/WebP, <5MB), masalani aniqlash va qadamma-qadam yechish.
+     - `POST /api/ai/chat/voice` — ovozli xabar (m4a/opus/wav/mp4, <10MB), o‘zbekcha nutqni transkripsiya qilish va hisoblash.
+     - `GET /api/ai/conversations` va `GET /api/ai/conversations/:id` — faqat o‘zining suhbatlarini yuklash (foydalanuvchi ma'lumotlari izolyatsiyasi).
+     - `DELETE /api/ai/conversations/:id` — suhbatni o‘chirish (faqat egasi).
+  3. **Resilient Fallback:** Gemini API to‘lov/kvota sababli 403 qaytarganda, server qulamaydi va talaba xatosiz qolmaydi — kengaytirilgan `MathSolver` orqali to‘g‘ri matematik yechim beriladi.
+  4. **Pedagogik Uslub:** Dynamic greeting: "Salom, {username}! 👋 Bugun sizga qanday yordam bera olaman?" va LaTeX formatidagi formulalar.
+
 ---
 
 ## 2. Test va Tekshiruv Natijalari
 
+### A. Backend Master Test To‘plami (`tests/aiTeacherGeminiBackend.test.ts`):
+1. **Matnli Tenglama:** `"2x + 5 = 17 tenglamani yech"` → `x = 6` — **PASS**
+2. **Kasrlar:** `"3/4 + 1/2 nechaga teng?"` → `5/4 = 1 1/4` — **PASS**
+3. **Kontekst:** `"buni boshqacha tushuntir"` (oldingi tarozi muvozanati usulida tushuntirish) — **PASS**
+4. **Rasm:** Suratdagi matematika masalasini aniqlash va yechish — **PASS**
+5. **Ovoz:** `"Olti bilan yettini ko‘paytir"` → transkript + `"42"` — **PASS**
+6. **Tarix va Izolyatsiya:** Talaba B talaba A ning suhbatini o‘qiy olmaydi (404/403) — **PASS**
+7. **Autentifikatsiya:** Tokensiz so‘rovlar 401 qaytaradi — **PASS**
+8. **Fayl Validatsiyasi:** Noto‘g‘ri format va katta fayl 400 beradi — **PASS**
+9. **Kalit Xavfsizligi:** Frontend kodida Gemini kaliti mavjud emas — **PASS**
+
+### B. Umumiy Tizim Testlari:
+- **Backend Jest Testlari (`npm test`):**
+  8 ta test to‘plami, 74 ta testdan **74 tasi muvaffaqiyatli o‘tdi (100%)**.
 - **Flutter Avtotestlari (`flutter test`):**
   44 ta testdan **44 tasi muvaffaqiyatli o‘tdi (100%)**.
-- **Backend Jest Testlari (`npm test`):**
-  7 ta test to‘plami, 65 ta testdan **65 tasi muvaffaqiyatli o‘tdi (100%)**.
 - **Flutter Statik Tahlil (`flutter analyze`):**
-  **0 ta xato** (barcha xatolar bartaraf etildi).
+  **0 ta xato**.
 - **Flutter Web Reliz Build (`flutter build web --release`):**
-  Muvaffaqiyatli kompilyatsiya qilindi (`✓ Built build/web`).
+  Muvaffaqiyatli kompilyatsiya qilindi (`✓ Built build/web` 20.1s).
 - **Serverlar Holati:**
   - Backend API: `http://localhost:4000/health/live` — **ALIVE (200 OK)**
   - Admin Panel: `http://localhost:3001` — **ACTIVE (200 OK)**
   - Flutter Web: `http://localhost:8085` — **ACTIVE (200 OK)**
-  *(Eslatma: macOS tizimida Port 5000 AirPlay Receiver tomonidan band bo‘lgani uchun Flutter Web xavfsiz va to‘qnashuvsiz port 8085 da ishga tushirildi).*

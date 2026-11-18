@@ -384,8 +384,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     _scrollToBottom();
 
     try {
-      final res = await ApiClient().dio.post('/ai/solve-voice', data: {
+      final res = await ApiClient().dio.post('/ai/chat/voice', data: {
         'transcribedText': text,
+        'mimeType': 'audio/m4a',
         'conversationId': _activeConversationId,
       });
 
@@ -448,8 +449,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       if (hasImage) {
         // Send image analysis request
         final base64Img = base64Encode(imageBytesToSend!);
-        final res = await ApiClient().dio.post('/ai/solve-image', data: {
+        final res = await ApiClient().dio.post('/ai/chat/image', data: {
           'imageBase64': base64Img,
+          'mimeType': 'image/jpeg',
+          'fileName': 'matematika_surati.jpg',
           'prompt': text.isNotEmpty ? text : null,
           'conversationId': _activeConversationId,
         });

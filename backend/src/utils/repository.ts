@@ -754,6 +754,10 @@ class DataRepository {
       finalAnswer?: string;
       suggestedActions?: string[];
       inputType?: 'TEXT' | 'IMAGE' | 'VOICE';
+      fileName?: string;
+      mimeType?: string;
+      sizeBytes?: number;
+      transcribedText?: string;
     }
   ): AIMessageItem {
     let conv = this.conversations.get(conversationId);
@@ -775,6 +779,10 @@ class DataRepository {
       finalAnswer: options?.finalAnswer,
       suggestedActions: options?.suggestedActions,
       inputType: options?.inputType || 'TEXT',
+      fileName: options?.fileName,
+      mimeType: options?.mimeType,
+      sizeBytes: options?.sizeBytes,
+      transcribedText: options?.transcribedText,
       createdAt: now,
     };
 
@@ -816,6 +824,10 @@ export interface AIMessageItem {
   finalAnswer?: string;
   suggestedActions?: string[];
   inputType?: 'TEXT' | 'IMAGE' | 'VOICE';
+  fileName?: string;
+  mimeType?: string;
+  sizeBytes?: number;
+  transcribedText?: string;
   createdAt: string;
 }
 

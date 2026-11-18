@@ -8,6 +8,21 @@ export interface MathSolution {
   rawReply: string;
 }
 
+function gcd(a: number, b: number): number {
+  a = Math.abs(a);
+  b = Math.abs(b);
+  while (b) {
+    const t = b;
+    b = a % b;
+    a = t;
+  }
+  return a;
+}
+
+function lcm(a: number, b: number): number {
+  return Math.abs(a * b) / (gcd(a, b) || 1);
+}
+
 export class MathSolver {
   /**
    * Translates common Uzbek spoken or written math phrases to canonical mathematical symbols
@@ -23,11 +38,27 @@ export class MathSolver {
       .replace(/nechchi\s+bo‘ladi/gi, '')
       .replace(/necha\s+bo‘ladi/gi, '')
       .replace(/nechiga\s+teng/gi, '')
+      .replace(/nechaga\s+teng/gi, '')
+      .replace(/qanchaga\s+teng/gi, '')
       .replace(/\?/g, '')
       .trim();
 
-    // Convert Uzbek number words if present (for voice queries)
+    // Spoken number words with suffixes (for speech & voice input)
     clean = clean
+      .replace(/yigirma\s+beshni/gi, '25')
+      .replace(/yigirma\s+beshga/gi, '25')
+      .replace(/yigirma\s+besh/gi, '25')
+      .replace(/nolni/gi, '0')
+      .replace(/birni/gi, '1')
+      .replace(/ikkini/gi, '2')
+      .replace(/uchni/gi, '3')
+      .replace(/to‘rtni|tortni/gi, '4')
+      .replace(/beshni|beshga/gi, '5')
+      .replace(/oltini/gi, '6')
+      .replace(/yettini|yettiga/gi, '7')
+      .replace(/sakkizni/gi, '8')
+      .replace(/to‘qqizni|toqqizni/gi, '9')
+      .replace(/o‘nni|onni/gi, '10')
       .replace(/nol/gi, '0')
       .replace(/bir/gi, '1')
       .replace(/ikki/gi, '2')
@@ -49,11 +80,23 @@ export class MathSolver {
       .replace(/to‘qson|toqson/gi, '90')
       .replace(/yuz/gi, '100');
 
-    // Convert spoken operators
+    // Convert spoken verbal math operations
+    clean = clean.replace(/(\d+)\s+bilan\s+(\d+)(?:ni|ning)?\s*(?:ko‘paytir\w*|kopaytir\w*|ko'paytir\w*|karra)/gi, '$1 * $2');
+    clean = clean.replace(/(\d+)\s+bilan\s+(\d+)(?:ni|ning)?\s*(?:qo‘sh\w*|qosh\w*|plus)/gi, '$1 + $2');
+    clean = clean.replace(/(\d+)\s+dan\s+(\d+)(?:ni|ning)?\s*(?:ayir\w*|minus)/gi, '$1 - $2');
+    clean = clean.replace(/(\d+)\s+ni\s+(\d+)(?:ga)?\s*(?:bo‘l\w*|bol\w*)/gi, '$1 / $2');
+    clean = clean.replace(/(\d+)\s+karra\s+(\d+)/gi, '$1 * $2');
+    // Postfix verbal operations: e.g. "25 5 bo'lsak" -> "25 / 5"
+    clean = clean.replace(/(\d+)\s+(\d+)\s*(?:bo‘l\w*|bol\w*|\/|÷)/gi, '$1 / $2');
+    clean = clean.replace(/(\d+)\s+(\d+)\s*(?:ko‘paytir\w*|kopaytir\w*|ko'paytir\w*|karra|\*|×)/gi, '$1 * $2');
+    clean = clean.replace(/(\d+)\s+(\d+)\s*(?:qo‘sh\w*|qosh\w*|\+)/gi, '$1 + $2');
+    clean = clean.replace(/(\d+)\s+(\d+)\s*(?:ayir\w*|\-)/gi, '$1 - $2');
+
+    // Convert remaining spoken operators
     clean = clean
       .replace(/qo‘shsak|qo‘shish|plus|\+/gi, '+')
       .replace(/ayirsak|ayirish|minus|\-/gi, '-')
-      .replace(/ko‘paytirsak|kopaytirsak|karra|ko‘paytirish|\*|×/gi, '*')
+      .replace(/ko‘paytirsak|kopaytirsak|ko‘paytir|kopaytir|ko'paytir|karra|ko‘paytirish|\*|×/gi, '*')
       .replace(/bo‘lsak|bolsak|bo‘lish|bolish|\/|÷|:/gi, '/');
 
     return clean.replace(/\s+/g, ' ').trim();
@@ -155,7 +198,101 @@ export class MathSolver {
       };
     }
 
-    // 3. Basic Arithmetic: A + B, A - B, A * B, A / B (e.g. "25 / 5" or "12 * 8")
+    // 3. Fraction Arithmetic: A/B + C/D, A/B - C/D, A/B * C/D, A/B / C/D (e.g. "3/4 + 1/2")
+    const fracMatch = norm.match(/^(\d+)\s*\/\s*(\d+)\s*([\+\-\*\/])\s*(\d+)\s*\/\s*(\d+)$/);
+    if (fracMatch) {
+      const n1 = parseInt(fracMatch[1], 10);
+      const d1 = parseInt(fracMatch[2], 10);
+      const op = fracMatch[3];
+      const n2 = parseInt(fracMatch[4], 10);
+      const d2 = parseInt(fracMatch[5], 10);
+
+      if (d1 !== 0 && d2 !== 0) {
+        let resNum = 0;
+        let resDen = 1;
+        let opName = 'qo‘shish';
+        let latexOp = op;
+
+        if (op === '+') {
+          resDen = lcm(d1, d2);
+          resNum = n1 * (resDen / d1) + n2 * (resDen / d2);
+          opName = 'qo‘shish';
+          latexOp = '+';
+        } else if (op === '-') {
+          resDen = lcm(d1, d2);
+          resNum = n1 * (resDen / d1) - n2 * (resDen / d2);
+          opName = 'ayirish';
+          latexOp = '-';
+        } else if (op === '*') {
+          resNum = n1 * n2;
+          resDen = d1 * d2;
+          opName = 'ko‘paytirish';
+          latexOp = '\\times';
+        } else if (op === '/') {
+          if (n2 !== 0) {
+            resNum = n1 * d2;
+            resDen = d1 * n2;
+            opName = 'bo‘lish';
+            latexOp = '\\div';
+          }
+        }
+
+        const commonDiv = gcd(resNum, resDen);
+        const simpNum = resNum / commonDiv;
+        const simpDen = resDen / commonDiv;
+
+        let finalAnsStr = '';
+        if (simpDen === 1) {
+          finalAnsStr = `${simpNum}`;
+        } else if (simpNum > simpDen) {
+          const whole = Math.floor(simpNum / simpDen);
+          const rem = simpNum % simpDen;
+          finalAnsStr = rem > 0 ? `${simpNum}/${simpDen} = ${whole} ${rem}/${simpDen}` : `${whole}`;
+        } else {
+          finalAnsStr = `${simpNum}/${simpDen}`;
+        }
+
+        const steps = [
+          {
+            stepNumber: 1,
+            title: "Kasrlarni yozib olish",
+            explanation: `Berilgan amallar: $\\frac{${n1}}{${d1}} ${latexOp} \\frac{${n2}}{${d2}}$`,
+            latex: `\\frac{${n1}}{${d1}} ${latexOp} \\frac{${n2}}{${d2}}`,
+          },
+          {
+            stepNumber: 2,
+            title: op === '+' || op === '-' ? "Umumiy maxrajga keltirish" : "Amalni bajarish",
+            explanation: op === '+' || op === '-'
+              ? `${d1} va ${d2} sonlari uchun eng kichik umumiy maxraj ${resDen}. Kasrlarning suratlarini kengaytiramiz:`
+              : `Kasrlarning suratlarini o‘zaro, maxrajlarini o‘zaro hisoblaymiz:`,
+            latex: op === '+' || op === '-'
+              ? `\\frac{${n1 * (resDen / d1)}}{${resDen}} ${latexOp} \\frac{${n2 * (resDen / d2)}}{${resDen}} = \\frac{${resNum}}{${resDen}}`
+              : `\\frac{${resNum}}{${resDen}}`,
+          },
+          {
+            stepNumber: 3,
+            title: "Soddalashtirish va yakuniy natija",
+            explanation: `Kasrni qisqartirib, aralash songa aylantiramiz:`,
+            latex: `\\frac{${simpNum}}{${simpDen}}${simpNum > simpDen && simpDen > 1 ? ` = ${Math.floor(simpNum / simpDen)}\\frac{${simpNum % simpDen}}{${simpDen}}` : ''}`,
+          },
+        ];
+
+        return {
+          originalQuestion: question,
+          problemType: 'FRACTION',
+          formulaLatex: `\\frac{${n1}}{${d1}} ${latexOp} \\frac{${n2}}{${d2}} = ${finalAnsStr}`,
+          steps,
+          finalAnswer: finalAnsStr,
+          similarExample: {
+            prompt: `1/3 + 1/4 nechaga teng?`,
+            formulaLatex: `\\frac{1}{3} + \\frac{1}{4} = \\frac{7}{12}`,
+          },
+          rawReply: `Kasrlar ustida ${opName} amali bosqichma-bosqich bajarildi:\n\n1. Umumiy maxraj: ${resDen}\n2. Natija: ${simpNum}/${simpDen}${simpNum > simpDen && simpDen > 1 ? ` = ${Math.floor(simpNum / simpDen)} ${simpNum % simpDen}/${simpDen}` : ''}\n\nJavob: ${finalAnsStr}`,
+        };
+      }
+    }
+
+    // 4. Basic Arithmetic: A + B, A - B, A * B, A / B (e.g. "25 / 5" or "12 * 8")
     const arithMatch = norm.match(/^(\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(\d+(?:\.\d+)?)$/);
     if (arithMatch) {
       const num1 = parseFloat(arithMatch[1]);

@@ -31,7 +31,8 @@ export const app = express();
 app.use(securityHeaders);
 app.use(corsMiddleware);
 app.use(requestTimeoutMiddleware(25000));
-app.use(express.json({ limit: '5mb' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(generalRateLimiter);
 
 // 2. Health & Orchestration Probes (Render & Cloud compatible)
