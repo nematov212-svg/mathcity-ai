@@ -50,6 +50,7 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const AccessDeniedScreen(),
     ),
     // Kids Mode Routes
+    
     GoRoute(
       path: '/kids/home',
       builder: (context, state) => const ResponsiveLayout(

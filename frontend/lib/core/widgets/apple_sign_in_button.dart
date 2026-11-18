@@ -33,17 +33,22 @@ class AppleSignInButton extends StatelessWidget {
                 ),
               )
             : const Row(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.apple, color: Colors.white, size: 24),
+                  Icon(Icons.apple, color: Colors.white, size: 22),
                   SizedBox(width: 8),
-                  Text(
-                    'Apple orqali davom etish',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                      letterSpacing: -0.2,
+                  Flexible(
+                    child: Text(
+                      'Apple orqali davom etish',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                        letterSpacing: -0.2,
+                      ),
                     ),
                   ),
                 ],
