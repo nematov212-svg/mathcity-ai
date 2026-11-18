@@ -33,13 +33,12 @@
 
   <title>MathCity AI</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="google-signin-client_id" content="608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com">
 
   <!-- Safe DOM guard for Flutter Web element removal (Flutter issue #192226 / fix #192233) -->
   <script>
-    (function() {
+    (function () {
       var origRemoveChild = Node.prototype.removeChild;
-      Node.prototype.removeChild = function(child) {
+      Node.prototype.removeChild = function (child) {
         if (!child || !child.parentNode) {
           return child;
         }
@@ -50,7 +49,7 @@
 </head>
 
 <body>
-  
+
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader

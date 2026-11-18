@@ -25,13 +25,26 @@ class ApiClient {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // If token not in memory, restore from storage
-          if (_authToken == null || _authToken!.isEmpty) {
-            _authToken = await StorageService.getAuthToken();
-          }
+          // Do not send Authorization header for public authentication routes
+          final publicAuthPaths = [
+            '/auth/login',
+            '/auth/register',
+            '/auth/google',
+            '/auth/forgot-password',
+            '/auth/reset-password',
+            '/auth/demo',
+          ];
+          final isPublicAuth = publicAuthPaths.any((p) => options.path.contains(p));
 
-          if (_authToken != null && _authToken!.isNotEmpty) {
-            options.headers['Authorization'] = 'Bearer $_authToken';
+          if (!isPublicAuth) {
+            // If token not in memory, restore from storage
+            if (_authToken == null || _authToken!.isEmpty) {
+              _authToken = await StorageService.getAuthToken();
+            }
+
+            if (_authToken != null && _authToken!.isNotEmpty) {
+              options.headers['Authorization'] = 'Bearer $_authToken';
+            }
           }
           return handler.next(options);
         },

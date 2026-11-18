@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mathcity_ai/core/widgets/coin_badge.dart';
-import 'package:mathcity_ai/core/widgets/coin_icon.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

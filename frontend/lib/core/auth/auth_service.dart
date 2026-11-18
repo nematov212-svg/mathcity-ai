@@ -168,6 +168,15 @@ class AuthService {
           errorMessage: null, // Graceful cancellation, no intrusive error banner
         );
       }
+      if (errStr.contains('unregistered_origin') ||
+          errStr.contains('origin_mismatch') ||
+          errStr.contains('403')) {
+        return const AuthResult(
+          success: false,
+          errorMessage:
+              'Ushbu veb-manzil (origin) Google Cloud Console da ro‘yxatdan o‘tkazilmagan. Iltimos, login va parol orqali kiring.',
+        );
+      }
       return const AuthResult(
         success: false,
         errorMessage:

@@ -44,6 +44,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _handleLogin() async {
+    if (_isLoading) return;
+
     final identifier = _identifierController.text.trim();
     final password = _passwordController.text;
 
@@ -80,6 +82,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _handleGoogleSignIn() async {
+    if (_isGoogleLoading || _isLoading) return;
     setState(() {
       _isGoogleLoading = true;
       _errorMessage = null;

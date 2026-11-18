@@ -97,7 +97,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   final _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final ImagePicker _picker = ImagePicker();
-  final AudioRecorder _audioRecorder = AudioRecorder();
+  AudioRecorder? _audioRecorder;
 
   bool _isLoading = false;
   int _currentStep = 1;
@@ -140,8 +140,20 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     _textController.dispose();
     _scrollController.dispose();
     _recordingTimer?.cancel();
-    _audioRecorder.dispose();
+    _disposeRecorder();
     super.dispose();
+  }
+
+  AudioRecorder _getOrCreateRecorder() {
+    _audioRecorder ??= AudioRecorder();
+    return _audioRecorder!;
+  }
+
+  void _disposeRecorder() {
+    try {
+      _audioRecorder?.dispose();
+    } catch (_) {}
+    _audioRecorder = null;
   }
 
   void _fetchQuotaStatus() async {
@@ -228,30 +240,42 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         type: FileType.image,
         withData: true,
       );
-      if (result != null && result.files.isNotEmpty) {
-        final bytes = result.files.first.bytes;
-        if (bytes != null) {
-          setState(() {
-            _selectedImageBytes = bytes;
-          });
-          return;
-        }
+      if (result == null || result.files.isEmpty) {
+        // User cancelled picker dialog
+        return;
       }
-      // Native fallback
-      final XFile? image = await _picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 1600,
-        maxHeight: 1600,
-        imageQuality: 85,
-      );
-      if (image != null) {
-        final bytes = await image.readAsBytes();
+      final bytes = result.files.first.bytes;
+      if (bytes != null) {
         setState(() {
           _selectedImageBytes = bytes;
         });
+        return;
+      }
+      // Native fallback (iOS / Android only)
+      if (!kIsWeb) {
+        final XFile? image = await _picker.pickImage(
+          source: ImageSource.gallery,
+          maxWidth: 1600,
+          maxHeight: 1600,
+          imageQuality: 85,
+        );
+        if (image != null) {
+          final fileBytes = await image.readAsBytes();
+          setState(() {
+            _selectedImageBytes = fileBytes;
+          });
+        }
       }
     } catch (e) {
-      debugPrint('Galereyadan rasm tanlash xatosi: $e');
+      debugPrint('⚠️ Rasm tanlashda ogohlantirish: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Rasm tanlashda xatolik yuz berdi. Boshqa fayl tanlab ko‘ring.'),
+            backgroundColor: Color(0xFFDC2626),
+          ),
+        );
+      }
     }
   }
 
@@ -266,11 +290,13 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       // Stop recording
       _recordingTimer?.cancel();
       try {
-        final path = await _audioRecorder.stop();
+        final recorder = _audioRecorder;
+        final path = await recorder?.stop();
         setState(() {
           _isRecording = false;
           _recordingSeconds = 0;
         });
+        _disposeRecorder();
         if (path != null) {
           _sendVoiceMessage(path);
         }
@@ -279,35 +305,56 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
           _isRecording = false;
           _recordingSeconds = 0;
         });
+        _disposeRecorder();
       }
     } else {
-      // Start recording
-      final hasPermission = await _audioRecorder.hasPermission();
-      if (!mounted) return;
-      if (!hasPermission) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Mikrofon ruxsati berilmadi.')),
-        );
-        return;
-      }
-
+      // Start recording lazily
       try {
+        final recorder = _getOrCreateRecorder();
+        final hasPermission = await recorder.hasPermission();
+        if (!mounted) return;
+        if (!hasPermission) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Mikrofon ruxsati berilmadi. Iltimos, brauzer sozlamalarida mikrofonga ruxsat bering.'),
+              backgroundColor: Color(0xFFDC2626),
+            ),
+          );
+          _disposeRecorder();
+          return;
+        }
+
         final config = kIsWeb
             ? const RecordConfig(encoder: AudioEncoder.opus)
             : const RecordConfig(encoder: AudioEncoder.aacLc);
-        await _audioRecorder.start(
-          config,
-          path: '',
-        );
+
+        await recorder.start(config, path: '');
         setState(() {
           _isRecording = true;
           _recordingSeconds = 0;
         });
         _recordingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          if (!mounted) {
+            timer.cancel();
+            return;
+          }
           setState(() => _recordingSeconds++);
         });
       } catch (e) {
-        debugPrint('Ovoz yozish xatosi: $e');
+        debugPrint('⚠️ Ovoz yozish xatosi: $e');
+        setState(() {
+          _isRecording = false;
+          _recordingSeconds = 0;
+        });
+        _disposeRecorder();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Ovoz yozishda xatolik yuz berdi. Mikrofon ulanganligini tekshiring.'),
+              backgroundColor: Color(0xFFDC2626),
+            ),
+          );
+        }
       }
     }
   }
@@ -315,8 +362,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   void _cancelRecording() async {
     _recordingTimer?.cancel();
     try {
-      await _audioRecorder.stop();
+      await _audioRecorder?.stop();
     } catch (_) {}
+    _disposeRecorder();
     setState(() {
       _isRecording = false;
       _recordingSeconds = 0;
