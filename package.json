@@ -1,0 +1,16 @@
+{
+  "name": "mathcity-ai-workspace",
+  "version": "1.0.0",
+  "description": "MathCity AI Full Stack Monorepo (Flutter + Express + Prisma + PostgreSQL)",
+  "private": true,
+  "scripts": {
+    "start": "npm --prefix backend start",
+    "dev": "npm --prefix backend run dev",
+    "admin": "npm --prefix backend run admin",
+    "build": "npm --prefix backend run build",
+    "test": "npm --prefix backend test",
+    "db:migrate": "npm --prefix backend run prisma:migrate",
+    "db:seed": "npm --prefix backend run prisma:seed",
+    "postinstall": "cd backend && npm install"
+  }
+}

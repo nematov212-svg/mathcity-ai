@@ -16,7 +16,7 @@
     "db:backup": "tsx src/db/backupPostgres.ts",
     "render:build": "npm install --include=dev && npx prisma generate && npm run build",
     "render:start": "node dist/server.js",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand --forceExit"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",

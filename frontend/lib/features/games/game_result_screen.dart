@@ -15,8 +15,6 @@ class GameResultScreen extends ConsumerWidget {
     final totalBalance = student?.coinBalance ?? 320;
 
     final correct = resultData?['correctAnswersCount'] ?? 9;
-    final total = resultData?['totalQuestions'] ?? 10;
-    final earned = resultData?['coinsEarned'] ?? 35;
     final isFraction = resultData?['isFractionBattle'] == true;
 
     final totalQuestionsPlayed = 20;
