@@ -13,6 +13,7 @@
     "prisma:deploy": "prisma db push --accept-data-loss",
     "prisma:seed": "tsx prisma/seed.ts",
     "prisma:migrate-local": "tsx src/db/migrateLocalData.ts",
+    "db:backup": "tsx src/db/backupPostgres.ts",
     "render:build": "npm ci && npx prisma generate && npm run build",
     "render:start": "node dist/server.js",
     "test": "jest --runInBand"

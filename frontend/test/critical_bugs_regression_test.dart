@@ -22,6 +22,7 @@ void main() {
 
 
       await tester.pumpWidget(
+        
         const ProviderScope(
           child: MaterialApp(
             
@@ -122,7 +123,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   });
-  
+
 
   group('4. Coin Economy and 100-Coin Building Purchase', () {
     testWidgets('Student begins with 100 coins and purchases 100-coin building down to 0', (tester) async {

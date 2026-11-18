@@ -2,7 +2,7 @@ databases:
   - name: mathcity-ai-db
     databaseName: mathcity_ai
     user: mathcity_admin
-    plan: standard
+    plan: free
     region: frankfurt
 
 services:
@@ -13,7 +13,7 @@ services:
     name: mathcity-ai-api
     runtime: node
     rootDir: backend
-    plan: starter
+    plan: free
     region: frankfurt
     buildCommand: npm run render:build
     startCommand: npm run render:start
