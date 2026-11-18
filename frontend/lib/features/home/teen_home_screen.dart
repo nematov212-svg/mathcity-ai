@@ -17,7 +17,7 @@ class TeenHomeScreen extends ConsumerWidget {
     final coins = student?.coinBalance ?? 450;
     final xp = student?.totalXP ?? 920;
     final level = student?.level ?? 5;
-    final name = student?.displayName ?? 'Javohir';
+    final name = (student != null && student.displayName.trim().isNotEmpty) ? student.displayName.trim() : 'O‘quvchi';
 
     return Scaffold(
       backgroundColor: AppColors.teenBackground, // Deep space navy #101526 (Figma 2:70)
@@ -159,7 +159,7 @@ class TeenHomeScreen extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
-                      onPressed: () => context.push('/kids/exercise/q-math-01?lessonId=lesson-t9-01&sectionId=section-t9-01-s1'),
+                      onPressed: () => context.push('/kids/lesson/lesson-g7-01'),
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [

@@ -16,7 +16,7 @@ class KidsHomeScreen extends ConsumerWidget {
     final coins = student?.coinBalance ?? 100;
     final xp = student?.totalXP ?? 0;
     final level = student?.level ?? 1;
-    final name = student?.displayName ?? 'Ali';
+    final name = (student != null && student.displayName.trim().isNotEmpty) ? student.displayName.trim() : 'O‘quvchi';
     final cityLevel = student?.cityLevel ?? 1;
 
     // Soft Lavender background (Exact reference design: #F7F7FD)
@@ -211,7 +211,7 @@ class KidsHomeScreen extends ConsumerWidget {
                                 ),
                               ),
                               onPressed: () {
-                                context.push('/kids/lesson/lesson-k4-01');
+                                context.push('/kids/lesson/lesson-g5-01');
                               },
                               child: const FittedBox(
                                 fit: BoxFit.scaleDown,

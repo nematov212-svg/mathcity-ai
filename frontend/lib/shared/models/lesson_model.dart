@@ -7,6 +7,8 @@ class LessonModel {
   final String topicKey;
   final String description;
   final String? formulaLatex;
+  final String? chapterTitle;
+  final String? contentMd;
   final int rewardXP;
   final int rewardCoins;
   final int orderIndex;
@@ -22,6 +24,8 @@ class LessonModel {
     required this.topicKey,
     required this.description,
     this.formulaLatex,
+    this.chapterTitle,
+    this.contentMd,
     required this.rewardXP,
     required this.rewardCoins,
     required this.orderIndex,
@@ -39,6 +43,8 @@ class LessonModel {
       topicKey: json['topicKey'] ?? '',
       description: json['description'] ?? '',
       formulaLatex: json['formulaLatex'],
+      chapterTitle: json['chapterTitle'],
+      contentMd: json['contentMd'],
       rewardXP: json['rewardXP'] ?? 50,
       rewardCoins: json['rewardCoins'] ?? 50,
       orderIndex: json['orderIndex'] ?? 0,
