@@ -71,12 +71,16 @@ class _CustomButtonState extends State<CustomButton> {
                       widget.icon!,
                       const SizedBox(width: 8),
                     ],
-                    Text(
-                      widget.text,
-                      style: TextStyle(
-                        color: fgColor,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
+                    Flexible(
+                      child: Text(
+                        widget.text,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: fgColor,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ],

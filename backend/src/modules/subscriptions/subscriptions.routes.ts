@@ -69,3 +69,24 @@ subscriptionsRouter.post('/restore', authMiddleware, (req: AuthenticatedRequest,
     },
   });
 });
+
+// 4. Cancel Subscription
+subscriptionsRouter.post('/cancel', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  try {
+    const result = repository.cancelSubscription(user.id);
+    return res.json({
+      success: true,
+      data: {
+        status: result.status,
+        message: result.message,
+        isProActive: false,
+      },
+    });
+  } catch (err: any) {
+    return res.status(400).json({
+      success: false,
+      error: err.message || 'Obunani bekor qilishda xatolik yuz berdi.',
+    });
+  }
+});

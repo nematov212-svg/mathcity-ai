@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
+import 'google_logo.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final VoidCallback? onFallbackPressed;
@@ -37,11 +38,7 @@ class GoogleSignInButton extends StatelessWidget {
                     'assets/icons/google_g_logo.png',
                     width: 22,
                     height: 22,
-                    errorBuilder: (_, __, ___) => const Icon(
-                      Icons.g_mobiledata,
-                      color: Color(0xFF4285F4),
-                      size: 26,
-                    ),
+                    errorBuilder: (_, __, ___) => const GoogleLogo(size: 22),
                   ),
                   const SizedBox(width: 12),
                   const Flexible(

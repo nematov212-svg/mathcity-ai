@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/auth/auth_service.dart';
 import '../../core/widgets/mathcity_logo.dart';
+import '../../core/widgets/responsive_layout.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -136,8 +137,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        child: ResponsiveAuthCard(
+          maxCardWidth: 480,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

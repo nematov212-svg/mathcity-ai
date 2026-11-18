@@ -662,6 +662,148 @@ class DataRepository {
   getAchievements(): AchievementModel[] {
     return this.achievements;
   }
+
+  // --- Subscriptions ---
+  cancelSubscription(userId: string): { status: SubscriptionStatus; message: string } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    user.subscription.status = 'PRO_EXPIRED';
+    return {
+      status: user.subscription.status,
+      message: 'Obuna bekor qilindi. To‘langan muddat yakuniga qadar imkoniyatlar saqlanadi.',
+    };
+  }
+
+  // --- AI Conversations & Messages (Persistent History) ---
+  private conversations: Map<string, AIConversationItem> = new Map();
+  private conversationMessages: Map<string, AIMessageItem[]> = new Map();
+
+  listConversations(userId: string): AIConversationItem[] {
+    const list: AIConversationItem[] = [];
+    for (const conv of this.conversations.values()) {
+      if (conv.userId === userId) {
+        list.push(conv);
+      }
+    }
+    // Sort by most recently updated
+    return list.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+  }
+
+  getConversation(userId: string, conversationId: string): { conversation: AIConversationItem; messages: AIMessageItem[] } | null {
+    const conv = this.conversations.get(conversationId);
+    if (!conv || conv.userId !== userId) return null;
+    const msgs = this.conversationMessages.get(conversationId) || [];
+    return { conversation: conv, messages: msgs };
+  }
+
+  createConversation(userId: string, title?: string): AIConversationItem {
+    const id = `conv_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const now = new Date().toISOString();
+    const item: AIConversationItem = {
+      id,
+      userId,
+      title: title || 'Yangi suhbat',
+      createdAt: now,
+      updatedAt: now,
+      messageCount: 0,
+      preview: 'Suhbat hali boshlanmagan',
+    };
+    this.conversations.set(id, item);
+    this.conversationMessages.set(id, []);
+    return item;
+  }
+
+  renameConversation(userId: string, conversationId: string, newTitle: string): AIConversationItem | null {
+    const conv = this.conversations.get(conversationId);
+    if (!conv || conv.userId !== userId) return null;
+    conv.title = newTitle.trim();
+    conv.updatedAt = new Date().toISOString();
+    return conv;
+  }
+
+  deleteConversation(userId: string, conversationId: string): boolean {
+    const conv = this.conversations.get(conversationId);
+    if (!conv || conv.userId !== userId) return false;
+    this.conversations.delete(conversationId);
+    this.conversationMessages.delete(conversationId);
+    return true;
+  }
+
+  saveAIMessage(
+    userId: string,
+    conversationId: string,
+    role: 'user' | 'assistant',
+    text: string,
+    options?: {
+      formulaLatex?: string | null;
+      step?: number;
+      finalAnswer?: string;
+      suggestedActions?: string[];
+      inputType?: 'TEXT' | 'IMAGE' | 'VOICE';
+    }
+  ): AIMessageItem {
+    let conv = this.conversations.get(conversationId);
+    if (!conv || conv.userId !== userId) {
+      conv = this.createConversation(userId, text.length > 30 ? `${text.substring(0, 30)}...` : text);
+      conversationId = conv.id;
+    }
+
+    const id = `msg_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const now = new Date().toISOString();
+    const msg: AIMessageItem = {
+      id,
+      userId,
+      conversationId,
+      role,
+      text,
+      formulaLatex: options?.formulaLatex,
+      step: options?.step,
+      finalAnswer: options?.finalAnswer,
+      suggestedActions: options?.suggestedActions,
+      inputType: options?.inputType || 'TEXT',
+      createdAt: now,
+    };
+
+    const list = this.conversationMessages.get(conversationId) || [];
+    list.push(msg);
+    this.conversationMessages.set(conversationId, list);
+
+    conv.updatedAt = now;
+    conv.messageCount = list.length;
+    conv.preview = text.length > 60 ? `${text.substring(0, 60)}...` : text;
+
+    // Automatically update title if it was default
+    if (conv.title === 'Yangi suhbat' && role === 'user') {
+      conv.title = text.length > 30 ? `${text.substring(0, 30)}...` : text;
+    }
+
+    return msg;
+  }
+}
+
+export interface AIConversationItem {
+  id: string;
+  userId: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  preview?: string;
+  messageCount: number;
+}
+
+export interface AIMessageItem {
+  id: string;
+  userId: string;
+  conversationId: string;
+  role: 'user' | 'assistant';
+  text: string;
+  formulaLatex?: string | null;
+  step?: number;
+  finalAnswer?: string;
+  suggestedActions?: string[];
+  inputType?: 'TEXT' | 'IMAGE' | 'VOICE';
+  createdAt: string;
 }
 
 export const repository = new DataRepository();

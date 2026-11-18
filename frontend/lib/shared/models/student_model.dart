@@ -5,6 +5,7 @@ class SubscriptionModel {
   final String planName;
   final int priceMonthlyUzs;
   final String? proExpiresAt;
+  final String? trialExpiresAt;
 
   SubscriptionModel({
     required this.status,
@@ -13,6 +14,7 @@ class SubscriptionModel {
     required this.planName,
     required this.priceMonthlyUzs,
     this.proExpiresAt,
+    this.trialExpiresAt,
   });
 
   factory SubscriptionModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class SubscriptionModel {
       planName: json['planName'] ?? 'MathCity Free Trial',
       priceMonthlyUzs: json['priceMonthlyUzs'] ?? 29000,
       proExpiresAt: json['proExpiresAt'],
+      trialExpiresAt: json['trialExpiresAt'],
     );
   }
 

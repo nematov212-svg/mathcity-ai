@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/widgets/mathcity_logo.dart';
+import '../../core/widgets/responsive_layout.dart';
 import '../../shared/providers/student_provider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -97,8 +98,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F6FC),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: ResponsiveAuthCard(
+          maxCardWidth: 480,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

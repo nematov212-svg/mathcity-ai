@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/widgets/mathcity_logo.dart';
+import '../../core/widgets/google_logo.dart';
+import '../../core/widgets/responsive_layout.dart';
 import '../../shared/providers/student_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -130,8 +132,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F6FC),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: ResponsiveAuthCard(
+          maxCardWidth: 460,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -471,13 +473,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   children: [
                                     Image.asset(
                                       'assets/icons/google_g_logo.png',
-                                      width: 20,
-                                      height: 20,
-                                      errorBuilder: (_, __, ___) => const Icon(
-                                        Icons.g_mobiledata,
-                                        color: Color(0xFF4285F4),
-                                        size: 24,
-                                      ),
+                                      width: 22,
+                                      height: 22,
+                                      errorBuilder: (_, __, ___) => const GoogleLogo(size: 22),
                                     ),
                                     const SizedBox(width: 12),
                                     const Flexible(
