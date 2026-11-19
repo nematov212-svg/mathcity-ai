@@ -89,6 +89,8 @@ class AuthService {
   
   Stream<GoogleSignInAccount?> get onGoogleAccountChanged {
     final gsi = _getGoogleSignIn();
+
+    
     if (gsi == null) return const Stream.empty();
     return gsi.onCurrentUserChanged;
   }
@@ -135,8 +137,9 @@ class AuthService {
       );
     }
   }
-
+  
   /// Check whether Google Sign-In is safely available
+
   bool get isGoogleSignInAvailable => !_googleSignInInitFailed;
 
   /// Sign In With Google with graceful fallback and no startup crash
@@ -184,13 +187,23 @@ class AuthService {
           errorMessage: null, // Graceful cancellation, no intrusive error banner
         );
       }
+      if (errStr.contains('people.googleapis.com') ||
+          errStr.contains('people api') ||
+          errStr.contains('service_disabled')) {
+        return const AuthResult(
+          success: false,
+          errorMessage:
+              'Google Cloud Console loyihangizda "People API" yoqilmagan. Iltimos, Google konsolidan People API ni faollashtiring yoki to‘g‘ridan-to‘g‘ri login orqali kiring.',
+        );
+      }
       if (errStr.contains('unregistered_origin') ||
           errStr.contains('origin_mismatch') ||
+          errStr.contains('not allowed for the given client') ||
           errStr.contains('403')) {
         return const AuthResult(
           success: false,
           errorMessage:
-              'Ushbu veb-manzil (origin) Google Cloud Console da ro‘yxatdan o‘tkazilmagan. Iltimos, login va parol orqali kiring.',
+              'Ushbu veb-manzil (http://localhost:8085) Google Cloud Console da ruxsat etilmagan. Iltimos, konsoldan Authorized origins ga qo‘shing yoki login orqali kiring.',
         );
       }
       return const AuthResult(

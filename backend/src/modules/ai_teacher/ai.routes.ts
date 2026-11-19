@@ -133,16 +133,17 @@ aiRouter.get('/unrecognized', authMiddleware, (_req: AuthenticatedRequest, res: 
 // ============================================================================
 const chatSchema = z.object({
   message: z.string().min(1, 'Savol bo‘sh bo‘lishi mumkin emas.').max(1000, 'Savol juda uzun (maksimal 1000 belgi).'),
-  conversationId: z.string().optional(),
+  conversationId: z.string().nullable().optional(),
   action: z
     .enum(['chat', 'next_step', 'explain_more', 'similar_example', 'check_solution'])
     .optional()
     .default('chat'),
   mode: z
     .enum(['full', 'only_answer', 'explain_detailed', 'hint', 'similar_example'])
+    .nullable()
     .optional(),
   step: z.number().int().min(0).optional().default(0),
-  contextFormula: z.string().max(200).optional(),
+  contextFormula: z.string().max(200).nullable().optional(),
 });
 
 aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedRequest, res: Response) => {
@@ -394,12 +395,12 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
 // 4. Image Mathematics Solving Endpoint (POST /api/ai/chat/image & /api/ai/solve-image)
 // ============================================================================
 const imageSolveSchema = z.object({
-  extractedText: z.string().optional(),
-  imageBase64: z.string().optional(),
-  mimeType: z.string().optional().default('image/jpeg'),
-  fileName: z.string().optional().default('masala_rasmi.jpg'),
-  conversationId: z.string().optional(),
-  prompt: z.string().optional(),
+  extractedText: z.string().nullable().optional(),
+  imageBase64: z.string().nullable().optional(),
+  mimeType: z.string().nullable().optional().default('image/jpeg'),
+  fileName: z.string().nullable().optional().default('masala_rasmi.jpg'),
+  conversationId: z.string().nullable().optional(),
+  prompt: z.string().nullable().optional(),
 });
 
 const handleImageSolve = async (req: AuthenticatedRequest, res: Response) => {
@@ -518,11 +519,11 @@ aiRouter.post('/solve-image', authMiddleware, aiRateLimiter, handleImageSolve);
 // 5. Voice Mathematics Solving Endpoint (POST /api/ai/chat/voice & /api/ai/solve-voice)
 // ============================================================================
 const voiceSolveSchema = z.object({
-  transcribedText: z.string().optional(),
-  audioBase64: z.string().optional(),
-  mimeType: z.string().optional().default('audio/m4a'),
-  fileName: z.string().optional().default('ovozli_savol.m4a'),
-  conversationId: z.string().optional(),
+  transcribedText: z.string().nullable().optional(),
+  audioBase64: z.string().nullable().optional(),
+  mimeType: z.string().nullable().optional().default('audio/m4a'),
+  fileName: z.string().nullable().optional().default('ovozli_savol.m4a'),
+  conversationId: z.string().nullable().optional(),
 });
 
 const handleVoiceSolve = async (req: AuthenticatedRequest, res: Response) => {
