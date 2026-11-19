@@ -3,11 +3,11 @@ class AppConfig {
   static const String appVersion = '1.0.0';
 
   /// Environment-specific API Base URL (passed via --dart-define=API_BASE_URL=...)
-  /// In production on Render: https://mathcity-ai-api.onrender.com
+  /// In production on Render: https://mathcity-backend-api.onrender.com
   /// In development: http://localhost:4000
   static const String _envApiBase = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://localhost:4000',
+    defaultValue: 'https://mathcity-backend-api.onrender.com',
   );
 
   static String? _overrideBaseUrl;

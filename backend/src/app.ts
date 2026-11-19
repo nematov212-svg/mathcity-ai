@@ -41,6 +41,7 @@ app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'healthy',
     service: 'mathcity-ai-api',
+    db: isDatabaseHealthy() ? 'postgres' : 'in-memory',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
   });
@@ -74,6 +75,7 @@ app.get('/api/health', (req: Request, res: Response) => {
     status: 'healthy',
     name: 'MathCity AI Backend API',
     version: '1.0.0',
+    db: isDatabaseHealthy() ? 'postgres' : 'in-memory',
     timestamp: new Date().toISOString(),
   });
 });

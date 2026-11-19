@@ -13,8 +13,9 @@ class ApiClient {
     dio = Dio(
       BaseOptions(
         baseUrl: AppConfig.baseUrl,
-        connectTimeout: const Duration(seconds: 10),
-        receiveTimeout: const Duration(seconds: 10),
+        connectTimeout: const Duration(seconds: 60),
+        receiveTimeout: const Duration(seconds: 60),
+        sendTimeout: const Duration(seconds: 60),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -50,6 +51,22 @@ class ApiClient {
         },
         onError: (DioException error, handler) async {
           final path = error.requestOptions.path;
+          // Retry once on Render cold-start timeout (connection timeout or 503/502)
+          if ((error.type == DioExceptionType.connectionTimeout ||
+               error.type == DioExceptionType.receiveTimeout ||
+               error.response?.statusCode == 502 ||
+               error.response?.statusCode == 503) &&
+              error.requestOptions.extra['retried'] != true) {
+            try {
+              error.requestOptions.extra['retried'] = true;
+              await Future.delayed(const Duration(seconds: 2));
+              final retryResponse = await dio.fetch(error.requestOptions);
+              return handler.resolve(retryResponse);
+            } catch (_) {
+              // fallback to normal error handler
+            }
+          }
+
           // Only clear stored token when the refresh endpoint itself is rejected with 401
           if (error.response?.statusCode == 401 && path.contains('/auth/refresh')) {
             _authToken = null;
