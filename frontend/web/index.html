@@ -37,32 +37,24 @@
   <!-- Safe DOM guard, GSI duplicate suppressor & Clean Console logger -->
   <script>
     (function () {
-      // 0. Console Logger Filter for GSI internal telemetry & preloads
-      var _origWarn = console.warn;
-      console.warn = function () {
-        var firstArg = arguments[0];
-        if (typeof firstArg === 'string' && (
-          firstArg.indexOf('[GSI_LOGGER]') !== -1 ||
-          firstArg.indexOf('google.accounts.id.initialize() is called multiple times') !== -1 ||
-          firstArg.indexOf('was preloaded using link preload but not used') !== -1
-        )) {
-          return;
-        }
-        return _origWarn.apply(console, arguments);
-      };
-
-      var _origInfo = console.info;
-      console.info = function () {
-        var firstArg = arguments[0];
-        if (typeof firstArg === 'string' && (
-          firstArg.indexOf('[GSI_LOGGER]') !== -1 ||
-          firstArg.indexOf('FedCM mode supported') !== -1 ||
-          firstArg.indexOf('Setting new experiment values') !== -1
-        )) {
-          return;
-        }
-        return _origInfo.apply(console, arguments);
-      };
+      // 0. Console Logger Filter for GSI internal telemetry, preloads & noisy third-party notices
+      ['log', 'info', 'warn', 'debug'].forEach(function (level) {
+        var orig = console[level];
+        if (!orig) return;
+        console[level] = function () {
+          var firstArg = arguments[0];
+          if (typeof firstArg === 'string' && (
+            firstArg.indexOf('[GSI_LOGGER') !== -1 ||
+            firstArg.indexOf('google.accounts.id.initialize') !== -1 ||
+            firstArg.indexOf('was preloaded using link preload') !== -1 ||
+            firstArg.indexOf('FedCM mode') !== -1 ||
+            firstArg.indexOf('Experiment enable_itp_optimization') !== -1
+          )) {
+            return;
+          }
+          return orig.apply(console, arguments);
+        };
+      });
 
       // 1. Guard Node.prototype.removeChild against null/detached/mismatched parents
       var origRemoveChild = Node.prototype.removeChild;

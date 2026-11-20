@@ -14,8 +14,6 @@ class AppConfig {
   static const String _envApiUrl = String.fromEnvironment('API_URL');
   static const String _envApiBase = String.fromEnvironment('API_BASE_URL');
 
-  /// Optional flag to use local backend in debug web (passed via --dart-define=USE_LOCAL_BACKEND=true)
-  static const bool _useLocalBackend = bool.fromEnvironment('USE_LOCAL_BACKEND', defaultValue: false);
 
   static String? _overrideBaseUrl;
 
@@ -35,8 +33,9 @@ class AppConfig {
       return _formatApiUrl(_envApiBase);
     }
 
-    // 2. Local fallback ONLY allowed in Debug mode on Web (never in release or on mobile)
-    if (kDebugMode && kIsWeb && _useLocalBackend) {
+    // 2. Local backend in Debug mode on Web when running locally (localhost)
+    // Never in Release mode, and never on Mobile (Android / iOS)
+    if (kDebugMode && kIsWeb) {
       return _formatApiUrl(localApiUrl);
     }
 

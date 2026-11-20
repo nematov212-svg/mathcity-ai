@@ -449,14 +449,9 @@ class AuthService {
     }
   }
 
-  /// Non-blocking background warm-up ping to /health (wakes sleeping Render server)
+  /// Non-blocking background warm-up ping (delegates to centralized ApiClient.warmUp)
   static void warmUpBackend() {
-    try {
-      ApiClient().dio.get('/health', options: Options(
-        sendTimeout: const Duration(seconds: 3),
-        receiveTimeout: const Duration(seconds: 3),
-      )).ignore();
-    } catch (_) {}
+    ApiClient().warmUp().ignore();
   }
 
   Future<AuthResult>? _ongoingRestore;

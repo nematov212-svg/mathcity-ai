@@ -64,8 +64,8 @@ class ApiClient {
           final statusCode = error.response?.statusCode;
           final reqOptions = error.requestOptions;
 
-          // Safe diagnostic logging for Auth endpoints (no sensitive token values logged)
-          if (reqOptions.path.contains('/auth/')) {
+          // Safe diagnostic logging for Auth endpoints (only log unexpected server 5xx errors)
+          if (reqOptions.path.contains('/auth/') && (statusCode == null || statusCode >= 500)) {
             final responseBody = error.response?.data;
             final reqData = reqOptions.data;
             Map<String, dynamic>? sanitizedFields;
@@ -79,7 +79,7 @@ class ApiClient {
                 }
               });
             }
-            debugPrint('⚠️ [API Client] ${reqOptions.path} xatoligi (HTTP $statusCode): $responseBody | Yuborilgan maydonlar: $sanitizedFields');
+            debugPrint('⚠️ [API Client] ${reqOptions.path} server xatoligi (HTTP $statusCode): $responseBody | Yuborilgan maydonlar: $sanitizedFields');
           }
 
           // If 401 Unauthorized occurs on token refresh, clear stored session
