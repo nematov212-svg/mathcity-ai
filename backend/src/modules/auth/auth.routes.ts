@@ -53,16 +53,34 @@ async function getAppleSigningKeyPem(kid: string): Promise<string | null> {
   }
 }
 
+interface VerifiedGoogleUser {
+  success: boolean;
+  sub?: string;
+  email?: string;
+  name?: string;
+  picture?: string;
+  error?: string;
+  status?: number;
+}
+
 /**
  * Verify Google ID Token with google-auth-library and fallback for test suites
  */
-async function verifyGoogleTokenPayload(idToken: string): Promise<{ email?: string; sub: string; name?: string } | null> {
-  if (!idToken || typeof idToken !== 'string') return null;
+async function verifyGoogleTokenPayload(idToken: string): Promise<VerifiedGoogleUser> {
+  if (!idToken || typeof idToken !== 'string') {
+    return { success: false, error: 'Google idToken taqdim etilmadi.', status: 400 };
+  }
 
   // Mock token support for isolated unit tests
   if (idToken.startsWith('mock-google-')) {
     const sub = idToken.replace('mock-google-', '');
-    return { sub, email: `${sub}@gmail.com`, name: 'Google Test User' };
+    return {
+      success: true,
+      sub,
+      email: `${sub}@gmail.com`,
+      name: 'Google Test User',
+      picture: 'assets/images/avatar_kid.png',
+    };
   }
 
   const allowedClients = [
@@ -77,35 +95,49 @@ async function verifyGoogleTokenPayload(idToken: string): Promise<{ email?: stri
       audience: allowedClients.length > 0 ? allowedClients : undefined,
     });
     const payload = ticket.getPayload();
-    if (!payload || !payload.sub) return null;
+    if (!payload || !payload.sub) {
+      return { success: false, error: 'Google tokeni sub identifikatorini o‘z ichiga olmagan.', status: 401 };
+    }
+    if (payload.email_verified === false) {
+      return { success: false, error: 'Google email manzili tasdiqlanmagan (email_verified: false).', status: 401 };
+    }
     return {
+      success: true,
       sub: payload.sub,
       email: payload.email,
       name: payload.name,
+      picture: payload.picture,
     };
-  } catch {
+  } catch (err: any) {
     // If running offline or in development environment without internet, decode and verify claims
     if (!config.isProduction) {
       try {
         const decoded = jwt.decode(idToken) as any;
         if (decoded && decoded.sub) {
           const nowSec = Math.floor(Date.now() / 1000);
-          if (decoded.exp && decoded.exp < nowSec) return null;
+          if (decoded.exp && decoded.exp < nowSec) {
+            return { success: false, error: 'Google tokenining muddati o‘tgan.', status: 401 };
+          }
           if (decoded.iss && !decoded.iss.includes('accounts.google.com') && !decoded.iss.includes('google')) {
-            return null;
+            return { success: false, error: 'Google tokenining issuer manzili noto‘g‘ri.', status: 401 };
           }
           if (allowedClients.length > 0 && decoded.aud && !allowedClients.includes(decoded.aud)) {
-            return null;
+            return { success: false, error: 'Google tokeni boshqa mijozga (Client ID) tegishli.', status: 401 };
+          }
+          if (decoded.email_verified === false) {
+            return { success: false, error: 'Google email manzili tasdiqlanmagan.', status: 401 };
           }
           return {
+            success: true,
             sub: decoded.sub,
             email: decoded.email,
             name: decoded.name,
+            picture: decoded.picture,
           };
         }
       } catch (_) { }
     }
-    return null;
+    return { success: false, error: 'Google tokeni yaroqsiz yoki muddati o‘tgan.', status: 401 };
   }
 }
 
@@ -664,40 +696,68 @@ authRouter.post('/reset-password', authRateLimiter, (req: Request, res: Response
 
 // Google Sign-In Endpoint
 const googleAuthSchema = z.object({
-  idToken: z.string().optional(),
-  accessToken: z.string().optional(),
-  googleId: z.string().optional(),
-  email: z.string().optional(),
-  displayName: z.string().optional(),
-  dateOfBirth: z.string().optional(),
+  idToken: z.string().nullable().optional(),
+  credential: z.string().nullable().optional(),
+  accessToken: z.string().nullable().optional(),
+  googleId: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  displayName: z.string().nullable().optional(),
+  dateOfBirth: z.string().nullable().optional(),
+  platform: z.string().nullable().optional(),
 });
 
 authRouter.post('/google', authRateLimiter, async (req: Request, res: Response) => {
   const parse = googleAuthSchema.safeParse(req.body);
   if (!parse.success) {
-    return res.status(400).json({ success: false, error: 'Google ma’lumotlari to‘liq emas.' });
+    const errorDetails = parse.error.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ');
+    console.warn(`⚠️ [Auth/Google] 400 Validatsiya xatosi: ${errorDetails}`);
+    return res.status(400).json({
+      success: false,
+      error: 'Google autentifikatsiya ma’lumotlari noto‘g‘ri formatda.',
+      details: errorDetails,
+    });
   }
 
-  const { idToken, accessToken, googleId, email, displayName, dateOfBirth } = parse.data;
+  const { idToken, credential, accessToken, googleId, email, displayName, dateOfBirth } = parse.data;
+  const tokenToVerify = (idToken || credential || '').trim();
+  const rawAccessToken = (accessToken || '').trim();
 
-  let verifiedSub = googleId;
-  let verifiedEmail = email;
-  let verifiedName = displayName;
+  if (!tokenToVerify && !rawAccessToken) {
+    console.warn('⚠️ [Auth/Google] 400: idToken yoki accessToken taqdim etilmadi.');
+    return res.status(400).json({
+      success: false,
+      error: 'Google idToken yoki accessToken taqdim etilmadi.',
+    });
+  }
 
-  // Authoritative server-side ID token verification (Mobile apps / GIS one-tap)
-  if (idToken) {
-    const verified = await verifyGoogleTokenPayload(idToken);
-    if (!verified) {
-      return res.status(401).json({ success: false, error: 'Google tokeni yaroqsiz yoki muddati o‘tgan.' });
+  let verifiedSub: string | undefined = googleId || undefined;
+  let verifiedEmail: string | undefined = email || undefined;
+  let verifiedName: string | undefined = displayName || undefined;
+  let verifiedPicture: string | undefined;
+
+  // 1. Authoritative server-side ID token verification (Preferred)
+  if (tokenToVerify) {
+    const verified = await verifyGoogleTokenPayload(tokenToVerify);
+    if (!verified.success || !verified.sub) {
+      console.warn(`⚠️ [Auth/Google] 401 Token rad etildi: ${verified.error || 'Noma’lum xato'}`);
+      return res.status(verified.status || 401).json({
+        success: false,
+        error: verified.error || 'Google tokeni yaroqsiz yoki muddati o‘tgan.',
+      });
     }
     verifiedSub = verified.sub;
     if (verified.email) verifiedEmail = verified.email;
     if (verified.name) verifiedName = verified.name;
-  } else if (accessToken) {
-    // Authoritative server-side Access Token verification (Web signIn())
-    const verified = await verifyGoogleAccessToken(accessToken);
-    if (!verified.success) {
-      return res.status(verified.status || 401).json({ success: false, error: verified.error });
+    if (verified.picture) verifiedPicture = verified.picture;
+  } else if (rawAccessToken) {
+    // 2. Authoritative server-side Access Token verification (Web fallback)
+    const verified = await verifyGoogleAccessToken(rawAccessToken);
+    if (!verified.success || !verified.sub) {
+      console.warn(`⚠️ [Auth/Google] ${verified.status || 401} Access token rad etildi: ${verified.error}`);
+      return res.status(verified.status || 401).json({
+        success: false,
+        error: verified.error || 'Google accessToken yaroqsiz yoki muddati o‘tgan.',
+      });
     }
     verifiedSub = verified.sub;
     if (verified.email) verifiedEmail = verified.email;
@@ -705,7 +765,11 @@ authRouter.post('/google', authRateLimiter, async (req: Request, res: Response) 
   }
 
   if (!verifiedSub && !verifiedEmail) {
-    return res.status(400).json({ success: false, error: 'Google autentifikatsiya ma’lumotlari topilmadi.' });
+    console.warn('⚠️ [Auth/Google] 400: sub va email aniqlanmadi.');
+    return res.status(400).json({
+      success: false,
+      error: 'Google autentifikatsiya ma’lumotlari topilmadi (sub yoki email yo‘q).',
+    });
   }
 
   // Look up user by googleId or verified email
@@ -732,7 +796,7 @@ authRouter.post('/google', authRateLimiter, async (req: Request, res: Response) 
       age: 0,
       mode: 'KIDS',
       grade: 4,
-      avatarUrl: 'assets/images/avatar_kid.png',
+      avatarUrl: verifiedPicture || 'assets/images/avatar_kid.png',
       profileCompleted: false, // New Google accounts MUST complete profile (username + birthdate)
       coinBalance: 0,
       totalXP: 0,
@@ -766,21 +830,34 @@ authRouter.post('/google', authRateLimiter, async (req: Request, res: Response) 
     repository.createUser(user);
   } else {
     // If existing user didn't have googleId linked, link it securely
+    const updates: Partial<UserAccount> = {};
     if (verifiedSub && !user.googleId) {
-      user.googleId = verifiedSub;
+      updates.googleId = verifiedSub;
+    }
+    if (verifiedPicture && (!user.avatarUrl || user.avatarUrl.includes('avatar_kid'))) {
+      updates.avatarUrl = verifiedPicture;
+    }
+    if (Object.keys(updates).length > 0) {
+      repository.updateUser(user.id, updates);
+      user = { ...user, ...updates };
     }
     // Verify profile completed status for existing user
     user.profileCompleted = Boolean(user.profileCompleted && user.username && user.dateOfBirth);
   }
 
-  const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
+  const accessTokenJwt = jwt.sign({ userId: user.id }, config.jwtSecret, {
     expiresIn: '7d',
+  });
+  const refreshTokenJwt = jwt.sign({ userId: user.id, type: 'refresh' }, config.jwtSecret, {
+    expiresIn: '30d',
   });
 
   return res.json({
     success: true,
     data: {
-      token,
+      token: accessTokenJwt,
+      accessToken: accessTokenJwt,
+      refreshToken: refreshTokenJwt,
       isNewUser,
       profileCompleted: Boolean(user.profileCompleted),
       user: {
@@ -788,6 +865,7 @@ authRouter.post('/google', authRateLimiter, async (req: Request, res: Response) 
         email: user.email,
         username: user.username,
         displayName: user.displayName,
+        avatarUrl: user.avatarUrl,
         age: user.age,
         mode: user.mode,
         grade: user.grade,
