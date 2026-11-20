@@ -4,11 +4,13 @@ import 'google_logo.dart';
 class GoogleSignInButton extends StatelessWidget {
   final VoidCallback? onFallbackPressed;
   final bool isLoading;
+  final String text;
 
   const GoogleSignInButton({
     super.key,
     this.onFallbackPressed,
     this.isLoading = false,
+    this.text = 'Continue with Google',
   });
 
   @override
@@ -43,14 +45,14 @@ class GoogleSignInButton extends StatelessWidget {
                     errorBuilder: (_, __, ___) => const GoogleLogo(size: 22),
                   ),
                   const SizedBox(width: 10),
-                  const Flexible(
+                  Flexible(
                     child: Text(
-                      'Continue with Google',
+                      text,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                         color: Color(0xFF1F2937),
                       ),
                     ),
