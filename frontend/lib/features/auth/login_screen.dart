@@ -561,7 +561,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     const SizedBox(width: 10),
                                     const Flexible(
                                       child: Text(
-                                        'Google orqali davom etish',
+                                        'Continue with Google',
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
