@@ -1,9 +1,6 @@
-import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/auth/auth_service.dart';
 import '../../core/widgets/mathcity_logo.dart';
 import '../../core/widgets/google_sign_in_button.dart';
 import '../../core/widgets/responsive_layout.dart';
@@ -25,54 +22,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isPasswordVisible = false;
   bool _isLoading = false;
   bool _isGoogleLoading = false;
-  bool _isAppleLoading = false;
   String? _errorMessage;
-  StreamSubscription? _googleAccountSub;
-
-  @override
-  void initState() {
-    super.initState();
-    _initGoogleAuthListener();
-  }
-
-  void _initGoogleAuthListener() {
-    if (!kIsWeb) return;
-    try {
-      _googleAccountSub = AuthService().onGoogleAccountChanged.listen((account) async {
-        if (account != null && mounted) {
-          setState(() {
-            _isGoogleLoading = true;
-            _errorMessage = null;
-          });
-          try {
-            final result = await AuthService().authenticateGoogleUser(account);
-            if (!mounted) return;
-            if (result.success && result.student != null) {
-              if (!result.profileCompleted || !result.student!.profileCompleted) {
-                context.go('/complete-profile');
-              } else if (result.isNewUser) {
-                context.push('/onboarding/intro');
-              } else {
-                _navigateToDashboard(result.student);
-              }
-            } else if (result.errorMessage != null && !result.errorMessage!.contains('bekor')) {
-              setState(() {
-                _errorMessage = result.errorMessage;
-              });
-            }
-          } finally {
-            if (mounted) setState(() => _isGoogleLoading = false);
-          }
-        }
-      });
-    } catch (e) {
-      debugPrint('⚠️ Google account listener xatosi: $e');
-    }
-  }
 
   @override
   void dispose() {
-    _googleAccountSub?.cancel();
     _identifierController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -172,40 +125,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       });
     } finally {
       if (mounted) setState(() => _isGoogleLoading = false);
-    }
-  }
-
-  Future<void> _handleAppleSignIn() async {
-    setState(() {
-      _isAppleLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final result = await ref.read(studentProvider.notifier).signInWithApple();
-
-      if (!mounted) return;
-
-      if (result.success && result.student != null) {
-        if (!result.profileCompleted || !result.student!.profileCompleted) {
-          context.go('/complete-profile');
-        } else if (result.isNewUser) {
-          context.push('/onboarding/intro');
-        } else {
-          _navigateToDashboard(result.student);
-        }
-      } else if (result.errorMessage != null && !result.errorMessage!.contains('bekor')) {
-        setState(() {
-          _errorMessage = result.errorMessage;
-        });
-      }
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _errorMessage = 'Apple tizimiga ulanib bo‘lmadi.';
-      });
-    } finally {
-      if (mounted) setState(() => _isAppleLoading = false);
     }
   }
 
@@ -530,56 +449,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                       const SizedBox(height: 18),
 
-                      // Google Sign-In Button (matches Apple Sign-In button geometry & style)
+                      // Google Sign-In Button
                       GoogleSignInButton(
                         isLoading: _isGoogleLoading,
                         onFallbackPressed: _handleGoogleSignIn,
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      // Apple Sign-In Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 52,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF232332),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            elevation: 0,
-                          ),
-                          onPressed: _isAppleLoading ? null : _handleAppleSignIn,
-                          child: _isAppleLoading
-                              ? const SizedBox(
-                                  width: 22,
-                                  height: 22,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Icon(Icons.apple, color: Colors.white, size: 22),
-                                    SizedBox(width: 10),
-                                    Flexible(
-                                      child: Text(
-                                        'Apple orqali davom etish',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                        ),
                       ),
                     ],
                   ),

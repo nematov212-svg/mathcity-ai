@@ -40,7 +40,7 @@ void main() {
       // Divider & Social logins
       expect(find.text('yoki davom eting'), findsOneWidget);
       expect(find.text('Continue with Google'), findsOneWidget);
-      expect(find.text('Apple orqali davom etish'), findsOneWidget);
+      expect(find.text('Apple orqali davom etish'), findsNothing);
 
       // Bottom link
       expect(find.text('Hisobingiz yo‘qmi? '), findsOneWidget);

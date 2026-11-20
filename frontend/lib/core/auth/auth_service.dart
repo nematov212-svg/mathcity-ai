@@ -160,6 +160,15 @@ class AuthService {
         requestBody['accessToken'] = accessToken;
       }
 
+      // Guard: Do not send doomed request to backend if both tokens are missing
+      if ((idToken == null || idToken.isEmpty) && (accessToken == null || accessToken.isEmpty)) {
+        debugPrint('⚠️ [AuthService] Google autentifikatsiya tokenlari (idToken/accessToken) bo‘sh keldi.');
+        return const AuthResult(
+          success: false,
+          errorMessage: 'Google orqali kirib bo‘lmadi, qayta urinib ko‘ring.',
+        );
+      }
+
       final res = await ApiClient().dio.post('/auth/google', data: requestBody);
 
       if (res.data['success'] == true) {

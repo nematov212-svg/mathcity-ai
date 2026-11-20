@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
-import '../../core/widgets/apple_sign_in_button.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../core/widgets/google_sign_in_button.dart';
 import '../../core/widgets/mathcity_logo.dart';
@@ -18,35 +17,6 @@ class WelcomeScreen extends ConsumerStatefulWidget {
 
 class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   bool _isGoogleLoading = false;
-  bool _isAppleLoading = false;
-
-  void _handleAppleSignIn() async {
-    setState(() => _isAppleLoading = true);
-    final result = await ref.read(studentProvider.notifier).signInWithApple();
-    setState(() => _isAppleLoading = false);
-
-    if (!mounted) return;
-
-    if (result.success) {
-      if (result.isNewUser) {
-        context.push('/onboarding/intro');
-      } else {
-        final student = ref.read(studentProvider).student;
-        final age = student?.age ?? 10;
-        if (age >= 17) {
-          context.go('/access-denied');
-        } else if (age >= 13) {
-          context.go('/teen/home');
-        } else {
-          context.go('/kids/home');
-        }
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.errorMessage ?? 'Apple orqali kirishda xatolik yuz berdi.')),
-      );
-    }
-  }
 
   void _handleGoogleSignIn() async {
     setState(() => _isGoogleLoading = true);
@@ -155,13 +125,6 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
               GoogleSignInButton(
                 isLoading: _isGoogleLoading,
                 onFallbackPressed: _handleGoogleSignIn,
-              ),
-              const SizedBox(height: 12),
-
-              // Official Apple Sign-In Button (Screenshot 3)
-              AppleSignInButton(
-                isLoading: _isAppleLoading,
-                onPressed: _handleAppleSignIn,
               ),
               const SizedBox(height: 16),
             ],

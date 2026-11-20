@@ -463,22 +463,6 @@ class StudentNotifier extends StateNotifier<StudentState> {
     return result.success;
   }
 
-  // --- Sign in with Apple ---
-  Future<AuthResult> signInWithApple() async {
-    state = state.copyWith(isLoading: true, errorMessage: null);
-    final result = await _authService.signInWithApple();
-
-    if (result.success && result.student != null) {
-      state = state.copyWith(student: result.student, isLoading: false);
-    } else {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: result.errorMessage ?? 'Apple orqali kirishda xatolik yuz berdi.',
-      );
-    }
-    return result;
-  }
-
   // --- Complete Profile ---
   Future<AuthResult> completeProfile({
     required String username,
