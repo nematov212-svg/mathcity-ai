@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/theme/app_theme.dart';
 import '../../shared/providers/student_provider.dart';
 import 'tariflar_screen.dart';
 
@@ -207,6 +208,43 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         child: Text(
                           currentMode == 'KIDS' ? 'Bolalar rejimi' : 'O‘smirlar rejimi',
                           style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(height: 24, color: AppColors.kidsBorder),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Mavzu rejimi',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        child: SegmentedButton<ThemeMode>(
+                          segments: const [
+                            ButtonSegment(
+                              value: ThemeMode.light,
+                              icon: Icon(Icons.wb_sunny_outlined, size: 14),
+                              label: Text('Yorug‘', style: TextStyle(fontSize: 11)),
+                            ),
+                            ButtonSegment(
+                              value: ThemeMode.dark,
+                              icon: Icon(Icons.dark_mode_outlined, size: 14),
+                              label: Text('Tungi', style: TextStyle(fontSize: 11)),
+                            ),
+                            ButtonSegment(
+                              value: ThemeMode.system,
+                              icon: Icon(Icons.settings_suggest_outlined, size: 14),
+                              label: Text('Tizim', style: TextStyle(fontSize: 11)),
+                            ),
+                          ],
+                          selected: {ref.watch(themeModeProvider)},
+                          onSelectionChanged: (newSelection) {
+                            ref.read(themeModeProvider.notifier).setThemeMode(newSelection.first);
+                          },
                         ),
                       ),
                     ],

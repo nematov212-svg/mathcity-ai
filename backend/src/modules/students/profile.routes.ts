@@ -53,6 +53,22 @@ studentsRouter.put('/profile', authMiddleware, (req: AuthenticatedRequest, res: 
   });
 });
 
+const avatarSchema = z.object({
+  avatarUrl: z.string().min(1, 'Avatar ma’lumoti kiritilishi shart.'),
+});
+
+studentsRouter.patch('/avatar', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const parse = avatarSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: parse.error.errors[0].message });
+  }
+  const updated = repository.updateUser(req.user!.id, { avatarUrl: parse.data.avatarUrl });
+  return res.json({
+    success: true,
+    data: { avatarUrl: updated.avatarUrl },
+  });
+});
+
 // Student Data Export (Privacy compliance)
 studentsRouter.get('/export-data', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;

@@ -31,7 +31,7 @@ import '../features/analytics/analytics_screen.dart';
 import '../features/analytics/teen_analytics_screen.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/settings/settings_screen.dart';
-import '../features/settings/tariflar_screen.dart';
+import '../features/settings/mathcity_pro_screen.dart';
 import '../features/payment/add_payment_screen.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -184,7 +184,11 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/tariflar',
-      builder: (context, state) => const TariflarScreen(),
+      builder: (context, state) => const MathCityProScreen(),
+    ),
+    GoRoute(
+      path: '/pro',
+      builder: (context, state) => const MathCityProScreen(),
     ),
     GoRoute(
       path: '/payment/add',

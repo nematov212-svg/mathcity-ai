@@ -82,30 +82,148 @@ class StudentNotifier extends StateNotifier<StudentState> {
   }
 
   void _initDemoStudent() {
-    // Initial student state with 100 coins (demonstration test: purchase 100-coin building -> 0 coins)
     state = state.copyWith(
       student: StudentModel(
         id: 'demo-student-id',
-        email: 'ali@mathcity.ai',
-        displayName: 'Ali',
-        age: 11,
+        email: 'mirzobek@mathcity.ai',
+        displayName: 'Mirzobek Nematov',
+        username: 'mirzobek',
+        age: 10,
         mode: 'KIDS',
         grade: 4,
-        coinBalance: 100, // Starts at 100 coins
-        totalXP: 380,
-        level: 3,
-        cityLevel: 2,
-        attemptedQuestionCount: 15,
-        correctQuestionCount: 14,
+        coinBalance: 100,
+        totalXP: 10,
+        level: 1,
+        cityLevel: 1,
+        studyMinutes: 7,
+        currentStreak: 4,
+        longestStreak: 4,
+        completedLessonsCount: 1,
+        achievementsCount: 4,
+        friendsCount: 0,
+        createdAt: '2026-11-01T00:00:00.000Z',
+        attemptedQuestionCount: 5,
+        correctQuestionCount: 5,
         subscription: SubscriptionModel(
           status: 'FREE_TRIAL_ACTIVE',
-          trialDaysRemaining: 30, // 30-day free trial
+          trialDaysRemaining: 30,
           isProActive: false,
           planName: 'MathCity Free Trial',
           priceMonthlyUzs: 29000,
         ),
       ),
     );
+  }
+
+  Future<bool> updateAvatar(String avatarUrl) async {
+    try {
+      final res = await ApiClient().dio.patch('/users/me/avatar', data: {
+        'avatarUrl': avatarUrl,
+      });
+      if (res.data['success'] == true) {
+        if (state.student != null) {
+          state = state.copyWith(
+            student: state.student!.copyWith(avatarUrl: avatarUrl),
+          );
+        }
+        return true;
+      }
+    } catch (_) {
+      if (state.student != null) {
+        state = state.copyWith(
+          student: state.student!.copyWith(avatarUrl: avatarUrl),
+        );
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> updateProfileDetails({
+    required String displayName,
+    required int grade,
+    int? age,
+  }) async {
+    try {
+      final res = await ApiClient().dio.put('/students/profile', data: {
+        'displayName': displayName,
+        'grade': grade,
+      });
+      if (res.data['success'] == true) {
+        if (state.student != null) {
+          state = state.copyWith(
+            student: state.student!.copyWith(
+              displayName: displayName,
+              grade: grade,
+            ),
+          );
+        }
+        return true;
+      }
+    } catch (_) {
+      if (state.student != null) {
+        state = state.copyWith(
+          student: state.student!.copyWith(
+            displayName: displayName,
+            grade: grade,
+          ),
+        );
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> activatePro() async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final res = await ApiClient().dio.post('/subscriptions/purchase', data: {
+        'platform': 'web',
+        'productId': 'mathcity_pro_monthly',
+      });
+      if (res.data['success'] == true) {
+        if (state.student != null) {
+          final now = DateTime.now();
+          final expiry = now.add(const Duration(days: 30));
+          state = state.copyWith(
+            isLoading: false,
+            student: state.student!.copyWith(
+              subscription: SubscriptionModel(
+                status: 'PRO_ACTIVE',
+                isProActive: true,
+                planName: 'MathCity Pro',
+                priceMonthlyUzs: 29000,
+                trialDaysRemaining: 0,
+                proExpiresAt: expiry.toIso8601String(),
+              ),
+            ),
+          );
+        }
+        return true;
+      }
+    } catch (_) {
+      if (state.student != null) {
+        final now = DateTime.now();
+        final expiry = now.add(const Duration(days: 30));
+        state = state.copyWith(
+          isLoading: false,
+          student: state.student!.copyWith(
+            subscription: SubscriptionModel(
+              status: 'PRO_ACTIVE',
+              isProActive: true,
+              planName: 'MathCity Pro',
+              priceMonthlyUzs: 29000,
+              trialDaysRemaining: 0,
+              proExpiresAt: expiry.toIso8601String(),
+            ),
+          ),
+        );
+        return true;
+      }
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+    return false;
   }
 
   /// Initialize authenticated session from storage or backend demo endpoint

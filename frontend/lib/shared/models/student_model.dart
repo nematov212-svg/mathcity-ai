@@ -65,6 +65,14 @@ class StudentModel {
   final int attemptedQuestionCount;
   final int correctQuestionCount;
   final SubscriptionModel subscription;
+  final String? avatarUrl;
+  final String? createdAt;
+  final int studyMinutes;
+  final int currentStreak;
+  final int longestStreak;
+  final int completedLessonsCount;
+  final int achievementsCount;
+  final int friendsCount;
 
   StudentModel({
     required this.id,
@@ -84,6 +92,14 @@ class StudentModel {
     this.attemptedQuestionCount = 0,
     this.correctQuestionCount = 0,
     required this.subscription,
+    this.avatarUrl,
+    this.createdAt,
+    this.studyMinutes = 7,
+    this.currentStreak = 4,
+    this.longestStreak = 4,
+    this.completedLessonsCount = 1,
+    this.achievementsCount = 4,
+    this.friendsCount = 0,
   });
 
   int get accuracyPercentage {
@@ -108,12 +124,20 @@ class StudentModel {
       age: json['age'] ?? 10,
       mode: json['mode'] ?? 'KIDS',
       grade: json['grade'] ?? 4,
-      coinBalance: json['coinBalance'] ?? 100,
-      totalXP: json['totalXP'] ?? 0,
+      coinBalance: json['coinBalance'] ?? 0,
+      totalXP: json['totalXP'] ?? 10,
       level: json['level'] ?? 1,
       cityLevel: json['cityLevel'] ?? 1,
       attemptedQuestionCount: json['attemptedQuestionCount'] ?? 0,
       correctQuestionCount: json['correctQuestionCount'] ?? 0,
+      avatarUrl: json['avatarUrl'] as String?,
+      createdAt: json['createdAt'] as String?,
+      studyMinutes: json['studyMinutes'] ?? 7,
+      currentStreak: json['currentStreak'] ?? 4,
+      longestStreak: json['longestStreak'] ?? 4,
+      completedLessonsCount: json['completedLessonsCount'] ?? (json['completedLessons'] is List ? (json['completedLessons'] as List).length : 1),
+      achievementsCount: json['achievementsCount'] ?? (json['unlockedAchievementsCount'] ?? 4),
+      friendsCount: json['friendsCount'] ?? 0,
       subscription: json['subscription'] != null
           ? SubscriptionModel.fromJson(json['subscription'])
           : SubscriptionModel(
@@ -137,9 +161,18 @@ class StudentModel {
     int? level,
     int? cityLevel,
     String? mode,
+    int? grade,
     int? attemptedQuestionCount,
     int? correctQuestionCount,
     SubscriptionModel? subscription,
+    String? avatarUrl,
+    String? createdAt,
+    int? studyMinutes,
+    int? currentStreak,
+    int? longestStreak,
+    int? completedLessonsCount,
+    int? achievementsCount,
+    int? friendsCount,
   }) {
     return StudentModel(
       id: id,
@@ -151,7 +184,7 @@ class StudentModel {
       parentalConsentRequired: parentalConsentRequired ?? this.parentalConsentRequired,
       age: age,
       mode: mode ?? this.mode,
-      grade: grade,
+      grade: grade ?? this.grade,
       coinBalance: coinBalance ?? this.coinBalance,
       totalXP: totalXP ?? this.totalXP,
       level: level ?? this.level,
@@ -159,6 +192,14 @@ class StudentModel {
       attemptedQuestionCount: attemptedQuestionCount ?? this.attemptedQuestionCount,
       correctQuestionCount: correctQuestionCount ?? this.correctQuestionCount,
       subscription: subscription ?? this.subscription,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      createdAt: createdAt ?? this.createdAt,
+      studyMinutes: studyMinutes ?? this.studyMinutes,
+      currentStreak: currentStreak ?? this.currentStreak,
+      longestStreak: longestStreak ?? this.longestStreak,
+      completedLessonsCount: completedLessonsCount ?? this.completedLessonsCount,
+      achievementsCount: achievementsCount ?? this.achievementsCount,
+      friendsCount: friendsCount ?? this.friendsCount,
     );
   }
 }

@@ -107,6 +107,12 @@ app.use('/api/admin', adminRouter);
 app.use('/api/payments', paymentsRouter);
 app.use('/api/media', mediaRouter);
 
+// Forward /api/users/me/avatar directly to studentsRouter patch
+app.patch('/api/users/me/avatar', (req, res, next) => {
+  req.url = '/avatar';
+  studentsRouter(req, res, next);
+});
+
 // 4. Standalone Admin Dashboard Static Portal
 app.use('/admin', express.static(adminStaticPath));
 app.get('/admin/*', (req: Request, res: Response) => {
