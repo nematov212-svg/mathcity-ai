@@ -90,9 +90,11 @@ class ApiClient {
                error.type == DioExceptionType.unknown ||
                error.response?.statusCode == 503)) {
             try {
-              final localFallbackUrl = 'http://localhost:4000/api';
+              final isAndroid = !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+              final localHost = isAndroid ? 'http://10.0.2.2:4000' : 'http://localhost:4000';
+              final localFallbackUrl = '$localHost/api';
               final pingDio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 2)));
-              final pingRes = await pingDio.get('http://localhost:4000/health');
+              final pingRes = await pingDio.get('$localHost/health');
               if (pingRes.statusCode == 200) {
                 debugPrint('ℹ️ Render servisi to‘xtatilgan (503/CORS). Mahalliy backendga ($localFallbackUrl) ulandi.');
                 AppConfig.setBaseUrl(localFallbackUrl);
