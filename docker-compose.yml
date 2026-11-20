@@ -33,7 +33,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-mathcity_db}?schema=public
       JWT_SECRET: ${JWT_SECRET:-change-this-ultra-secure-key-32-chars-long}
       JWT_EXPIRES_IN: 7d
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:8080,http://localhost:8085}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:8085,https://mathcity-ai-web.onrender.com}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
     ports:
       - "4000:4000"

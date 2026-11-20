@@ -6,13 +6,9 @@ databases:
     region: frankfurt
 
 services:
-  # ----------------------------------------------------------------------------
-  # 1. MathCity AI Backend API (Node.js + Express + Prisma + PostgreSQL)
-  # ----------------------------------------------------------------------------
   - type: web
     name: mathcity-ai-api
     runtime: node
-    rootDir: backend
     plan: free
     region: frankfurt
     buildCommand: npm run render:build
@@ -34,39 +30,10 @@ services:
       - key: ADMIN_API_KEY
         value: mathcity_admin_master_secret_2026
       - key: ALLOWED_ORIGINS
-        value: https://mathcity-ai-web.onrender.com,https://mathcity-ai-admin.onrender.com,http://localhost:7357,http://localhost:3000,http://localhost:3001,http://localhost:8085
+        value: https://mathcity-ai-web.onrender.com,https://mathcity-ai-admin.onrender.com,http://localhost:8085
+      - key: ALLOW_LOCALHOST_ORIGINS
+        value: "true"
       - key: GOOGLE_CLIENT_ID
-        sync: false
+        value: 608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com
       - key: OBJECT_STORAGE_ENDPOINT
         value: https://storage.mathcity.ai
-
-  # ----------------------------------------------------------------------------
-  # 2. MathCity AI Student Web Application (Flutter Web Static Site)
-  # ----------------------------------------------------------------------------
-  - type: web
-    name: mathcity-ai-web
-    runtime: static
-    rootDir: frontend
-    buildCommand: ./build_web.sh
-    staticPublishPath: build/web
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    envVars:
-      - key: API_BASE_URL
-        value: https://mathcity-ai-api.onrender.com
-
-  # ----------------------------------------------------------------------------
-  # 3. MathCity AI Administrator Dashboard (Static Site)
-  # ----------------------------------------------------------------------------
-  - type: web
-    name: mathcity-ai-admin
-    runtime: static
-    rootDir: backend/public/admin
-    buildCommand: echo "Admin panel assets ready"
-    staticPublishPath: .
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html

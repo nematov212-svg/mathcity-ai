@@ -34,62 +34,47 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   Future<void> _handleRegister() async {
+    if (_isLoading) return; // Prevent double click
+    if (_formKey.currentState == null || !_formKey.currentState!.validate()) {
+      return;
+    }
+
     final name = _nameController.text.trim();
     final loginOrEmail = _loginController.text.trim();
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
-
-    if (name.isEmpty) {
-      setState(() => _errorMessage = 'Ismingizni kiriting.');
-      return;
-    }
-    if (name.length < 2) {
-      setState(() => _errorMessage = 'Ism kamida 2 ta harfdan iborat bo‘lishi kerak.');
-      return;
-    }
-    if (loginOrEmail.isEmpty) {
-      setState(() => _errorMessage = 'Login yoki emailingizni kiriting.');
-      return;
-    }
-    if (loginOrEmail.length < 3) {
-      setState(() => _errorMessage = 'Login kamida 3 ta belgidan iborat bo‘lishi kerak.');
-      return;
-    }
-    if (password.isEmpty) {
-      setState(() => _errorMessage = 'Parolingizni kiriting.');
-      return;
-    }
-    if (password.length < 8) {
-      setState(() => _errorMessage = 'Parol kamida 8 ta belgidan iborat bo‘lsin.');
-      return;
-    }
-    if (password != confirmPassword) {
-      setState(() => _errorMessage = 'Parollar bir xil emas.');
-      return;
-    }
 
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
-    final result = await ref.read(studentProvider.notifier).registerStudent(
-      name: name,
-      loginOrEmail: loginOrEmail,
-      password: password,
-      confirmPassword: confirmPassword,
-    );
+    try {
+      final result = await ref.read(studentProvider.notifier).registerStudent(
+        name: name,
+        loginOrEmail: loginOrEmail,
+        password: password,
+        confirmPassword: confirmPassword,
+      );
 
-    if (!mounted) return;
-    setState(() => _isLoading = false);
+      if (!mounted) return;
 
-    if (result.success && result.student != null) {
-      // Navigate to onboarding to pick age & avatar or directly to dashboard
-      context.go('/onboarding/intro');
-    } else {
+      if (result.success && result.student != null) {
+        context.go('/onboarding/intro');
+      } else {
+        setState(() {
+          _errorMessage = result.errorMessage ?? 'Ro‘yxatdan o‘tishda xatolik yuz berdi.';
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
       setState(() {
-        _errorMessage = result.errorMessage ?? 'Ro‘yxatdan o‘tishda xatolik yuz berdi.';
+        _errorMessage = 'Server bilan aloqa o‘rnatib bo‘lmadi. Qayta urinib ko‘ring.';
       });
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -213,6 +198,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         controller: _nameController,
                         textCapitalization: TextCapitalization.words,
                         textInputAction: TextInputAction.next,
+                        validator: (val) {
+                          final clean = val?.trim() ?? '';
+                          if (clean.isEmpty) return 'Ismingizni kiriting.';
+                          if (clean.length < 2) return 'Ism kamida 2 ta harfdan iborat bo‘lsin.';
+                          return null;
+                        },
                         style: const TextStyle(
                           fontSize: 15,
                           color: Color(0xFF1E1742),
@@ -262,6 +253,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       TextFormField(
                         controller: _loginController,
                         textInputAction: TextInputAction.next,
+                        validator: (val) {
+                          final clean = val?.trim() ?? '';
+                          if (clean.isEmpty) return 'Login yoki emailingizni kiriting.';
+                          if (clean.length < 3) return 'Login kamida 3 ta belgidan iborat bo‘lsin.';
+                          if (clean.contains('@')) {
+                            final emailRegex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+                            if (!emailRegex.hasMatch(clean)) return 'Email manzili noto‘g‘ri.';
+                          } else {
+                            final usernameRegex = RegExp(r'^[a-zA-Z0-9_]{3,30}$');
+                            if (!usernameRegex.hasMatch(clean)) {
+                              return 'Login faqat lotin harflari va raqamlardan iborat bo‘lsin.';
+                            }
+                          }
+                          return null;
+                        },
                         style: const TextStyle(
                           fontSize: 15,
                           color: Color(0xFF1E1742),
@@ -312,6 +318,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         controller: _passwordController,
                         obscureText: !_isPasswordVisible,
                         textInputAction: TextInputAction.next,
+                        validator: (val) {
+                          if (val == null || val.isEmpty) return 'Parolingizni kiriting.';
+                          if (val.length < 8) return 'Parol kamida 8 ta belgidan iborat bo‘lsin.';
+                          return null;
+                        },
                         style: const TextStyle(
                           fontSize: 15,
                           color: Color(0xFF1E1742),
@@ -371,6 +382,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         obscureText: !_isConfirmPasswordVisible,
                         textInputAction: TextInputAction.done,
                         onFieldSubmitted: (_) => _handleRegister(),
+                        validator: (val) {
+                          if (val == null || val.isEmpty) return 'Parolni tasdiqlang.';
+                          if (val != _passwordController.text) return 'Parollar bir xil emas.';
+                          return null;
+                        },
                         style: const TextStyle(
                           fontSize: 15,
                           color: Color(0xFF1E1742),
@@ -428,6 +444,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       const SizedBox(height: 24),
 
                       // Primary Button: Hisob yaratish ->
+                      
                       SizedBox(
                         width: double.infinity,
                         height: 54,
@@ -487,6 +504,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           ),
                         ),
                       ),
+                      if (_isLoading) ...[
+                        const SizedBox(height: 14),
+                        const Center(
+                          child: Text(
+                            'Serverga ulanilmoqda, biroz kuting...',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF6C47FF),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

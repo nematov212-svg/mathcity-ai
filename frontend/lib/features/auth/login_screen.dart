@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/auth/auth_service.dart';
 import '../../core/widgets/mathcity_logo.dart';
 import '../../core/widgets/google_logo.dart';
+import '../../core/widgets/google_sign_in_button.dart';
 import '../../core/widgets/responsive_layout.dart';
 import '../../shared/providers/student_provider.dart';
 
@@ -23,9 +27,52 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isGoogleLoading = false;
   bool _isAppleLoading = false;
   String? _errorMessage;
+  StreamSubscription? _googleAccountSub;
+
+  @override
+  void initState() {
+    super.initState();
+    _initGoogleAuthListener();
+  }
+
+  void _initGoogleAuthListener() {
+    if (!kIsWeb) return;
+    try {
+      _googleAccountSub = AuthService().onGoogleAccountChanged.listen((account) async {
+        if (account != null && mounted) {
+          setState(() {
+            _isGoogleLoading = true;
+            _errorMessage = null;
+          });
+          try {
+            final result = await AuthService().authenticateGoogleUser(account);
+            if (!mounted) return;
+            if (result.success && result.student != null) {
+              if (!result.profileCompleted || !result.student!.profileCompleted) {
+                context.go('/complete-profile');
+              } else if (result.isNewUser) {
+                context.push('/onboarding/intro');
+              } else {
+                _navigateToDashboard(result.student);
+              }
+            } else if (result.errorMessage != null && !result.errorMessage!.contains('bekor')) {
+              setState(() {
+                _errorMessage = result.errorMessage;
+              });
+            }
+          } finally {
+            if (mounted) setState(() => _isGoogleLoading = false);
+          }
+        }
+      });
+    } catch (e) {
+      debugPrint('⚠️ Google account listener xatosi: $e');
+    }
+  }
 
   @override
   void dispose() {
+    _googleAccountSub?.cancel();
     _identifierController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -64,24 +111,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _errorMessage = null;
     });
 
-    final result = await ref.read(studentProvider.notifier).loginWithCredentials(
-      identifier: identifier,
-      password: password,
-    );
+    try {
+      final result = await ref.read(studentProvider.notifier).loginWithCredentials(
+        identifier: identifier,
+        password: password,
+      );
 
-    if (!mounted) return;
-    setState(() => _isLoading = false);
+      if (!mounted) return;
 
-    if (result.success && result.student != null) {
-      if (!result.profileCompleted || !result.student!.profileCompleted) {
-        context.go('/complete-profile');
+      if (result.success && result.student != null) {
+        if (!result.profileCompleted || !result.student!.profileCompleted) {
+          context.go('/complete-profile');
+        } else {
+          _navigateToDashboard(result.student);
+        }
       } else {
-        _navigateToDashboard(result.student);
+        setState(() {
+          _errorMessage = result.errorMessage ?? 'Login yoki parol noto‘g‘ri.';
+        });
       }
-    } else {
+    } catch (e) {
+      if (!mounted) return;
       setState(() {
-        _errorMessage = result.errorMessage ?? 'Login yoki parol noto‘g‘ri.';
+        _errorMessage = 'Server bilan aloqa o‘rnatib bo‘lmadi. Qayta urinib ko‘ring.';
       });
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -92,23 +147,31 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _errorMessage = null;
     });
 
-    final result = await ref.read(studentProvider.notifier).signInWithGoogle();
+    try {
+      final result = await ref.read(studentProvider.notifier).signInWithGoogle();
 
-    if (!mounted) return;
-    setState(() => _isGoogleLoading = false);
+      if (!mounted) return;
 
-    if (result.success && result.student != null) {
-      if (!result.profileCompleted || !result.student!.profileCompleted) {
-        context.go('/complete-profile');
-      } else if (result.isNewUser) {
-        context.push('/onboarding/intro');
-      } else {
-        _navigateToDashboard(result.student);
+      if (result.success && result.student != null) {
+        if (!result.profileCompleted || !result.student!.profileCompleted) {
+          context.go('/complete-profile');
+        } else if (result.isNewUser) {
+          context.push('/onboarding/intro');
+        } else {
+          _navigateToDashboard(result.student);
+        }
+      } else if (result.errorMessage != null && !result.errorMessage!.contains('bekor')) {
+        setState(() {
+          _errorMessage = result.errorMessage;
+        });
       }
-    } else if (result.errorMessage != null && !result.errorMessage!.contains('bekor')) {
+    } catch (e) {
+      if (!mounted) return;
       setState(() {
-        _errorMessage = result.errorMessage;
+        _errorMessage = 'Google tizimiga ulanib bo‘lmadi.';
       });
+    } finally {
+      if (mounted) setState(() => _isGoogleLoading = false);
     }
   }
 
@@ -118,23 +181,31 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _errorMessage = null;
     });
 
-    final result = await ref.read(studentProvider.notifier).signInWithApple();
+    try {
+      final result = await ref.read(studentProvider.notifier).signInWithApple();
 
-    if (!mounted) return;
-    setState(() => _isAppleLoading = false);
+      if (!mounted) return;
 
-    if (result.success && result.student != null) {
-      if (!result.profileCompleted || !result.student!.profileCompleted) {
-        context.go('/complete-profile');
-      } else if (result.isNewUser) {
-        context.push('/onboarding/intro');
-      } else {
-        _navigateToDashboard(result.student);
+      if (result.success && result.student != null) {
+        if (!result.profileCompleted || !result.student!.profileCompleted) {
+          context.go('/complete-profile');
+        } else if (result.isNewUser) {
+          context.push('/onboarding/intro');
+        } else {
+          _navigateToDashboard(result.student);
+        }
+      } else if (result.errorMessage != null && !result.errorMessage!.contains('bekor')) {
+        setState(() {
+          _errorMessage = result.errorMessage;
+        });
       }
-    } else if (result.errorMessage != null && !result.errorMessage!.contains('bekor')) {
+    } catch (e) {
+      if (!mounted) return;
       setState(() {
-        _errorMessage = result.errorMessage;
+        _errorMessage = 'Apple tizimiga ulanib bo‘lmadi.';
       });
+    } finally {
+      if (mounted) setState(() => _isAppleLoading = false);
     }
   }
 
@@ -460,51 +531,57 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const SizedBox(height: 18),
 
                       // Google Sign-In Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 52,
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(color: Color(0xFFE5E7EB), width: 1.2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
+                      if (kIsWeb)
+                        GoogleSignInButton(
+                          isLoading: _isGoogleLoading,
+                          onFallbackPressed: _handleGoogleSignIn,
+                        )
+                      else
+                        SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              side: const BorderSide(color: Color(0xFFE5E7EB), width: 1.2),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              elevation: 0,
                             ),
-                            elevation: 0,
-                          ),
-                          onPressed: _isGoogleLoading ? null : _handleGoogleSignIn,
-                          child: _isGoogleLoading
-                              ? const SizedBox(
-                                  width: 22,
-                                  height: 22,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      'assets/icons/google_g_logo.png',
-                                      width: 22,
-                                      height: 22,
-                                      errorBuilder: (_, __, ___) => const GoogleLogo(size: 22),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    const Flexible(
-                                      child: Text(
-                                        'Continue with Google',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: Color(0xFF1F2937),
+                            onPressed: _isGoogleLoading ? null : _handleGoogleSignIn,
+                            child: _isGoogleLoading
+                                ? const SizedBox(
+                                    width: 22,
+                                    height: 22,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/icons/google_g_logo.png',
+                                        width: 22,
+                                        height: 22,
+                                        errorBuilder: (_, __, ___) => const GoogleLogo(size: 22),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      const Flexible(
+                                        child: Text(
+                                          'Continue with Google',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(0xFF1F2937),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
+                          ),
                         ),
-                      ),
 
                       const SizedBox(height: 12),
 

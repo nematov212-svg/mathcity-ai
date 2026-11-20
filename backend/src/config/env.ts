@@ -14,8 +14,13 @@ const envSchema = z
     ALLOWED_ORIGINS: z
       .string()
       .default(
-        'http://localhost:8080,http://localhost:8085,http://localhost:3000,http://localhost:3001,http://localhost:7357,https://mathcity-ai-admin.onrender.com,https://mathcity-ai-web.onrender.com'
+        'http://localhost:8085,https://mathcity-ai-admin.onrender.com,https://mathcity-ai-web.onrender.com'
       ),
+    ALLOW_LOCALHOST_ORIGINS: z
+      .string()
+      .optional()
+      .default('false')
+      .transform((val) => val === 'true' || val === '1'),
     GOOGLE_CLIENT_ID: z.string().optional().default(''),
     APP_NAME: z.string().default('MathCity AI'),
     APP_VERSION: z.string().default('1.0.0'),
@@ -66,6 +71,7 @@ export const config = {
       : 'mathcity_admin_master_secret_2026'),
   jwtExpiresIn: env.JWT_EXPIRES_IN,
   allowedOrigins: env.ALLOWED_ORIGINS.split(',').map((o) => o.trim()),
+  allowLocalhostOrigins: env.ALLOW_LOCALHOST_ORIGINS,
   googleClientId: env.GOOGLE_CLIENT_ID,
   appName: env.APP_NAME,
   appVersion: env.APP_VERSION,

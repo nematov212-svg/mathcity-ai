@@ -199,4 +199,48 @@ describe('Google, Apple & Complete Profile Comprehensive Test Suite', () => {
 
     expect(checkRes.status).toBe(401);
   });
+
+  describe('Google Access Token (Web GIS) Verification Suite', () => {
+    it('13. POST /api/auth/google rejects invalid/expired accessToken', async () => {
+      const res = await request(app)
+        .post('/api/auth/google')
+        .send({ accessToken: 'mock-access-token-invalid_key' });
+
+      expect(res.status).toBe(401);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error).toContain('yaroqsiz');
+    });
+
+    it('14. POST /api/auth/google rejects accessToken with wrong audience/client_id', async () => {
+      const res = await request(app)
+        .post('/api/auth/google')
+        .send({ accessToken: 'mock-access-token-wrong-aud_sub' });
+
+      expect(res.status).toBe(401);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error).toContain('boshqa mijozga');
+    });
+
+    it('15. POST /api/auth/google rejects accessToken when email is unverified', async () => {
+      const res = await request(app)
+        .post('/api/auth/google')
+        .send({ accessToken: 'mock-access-token-unverified_sub' });
+
+      expect(res.status).toBe(401);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error).toContain('tasdiqlanmagan');
+    });
+
+    it('16. POST /api/auth/google succeeds with valid accessToken and creates session', async () => {
+      const res = await request(app)
+        .post('/api/auth/google')
+        .send({ accessToken: 'mock-access-token-web_user_7788' });
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.token).toBeDefined();
+      expect(res.body.data.user.email).toBe('web_user_7788@gmail.com');
+      expect(res.body.data.profileCompleted).toBe(false);
+    });
+  });
 });

@@ -13,9 +13,9 @@ class ApiClient {
     dio = Dio(
       BaseOptions(
         baseUrl: AppConfig.baseUrl,
-        connectTimeout: const Duration(seconds: 60),
-        receiveTimeout: const Duration(seconds: 60),
-        sendTimeout: const Duration(seconds: 60),
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 20),
+        sendTimeout: const Duration(seconds: 10),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -26,6 +26,9 @@ class ApiClient {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          // Dynamically ensure options.baseUrl matches AppConfig.baseUrl
+          options.baseUrl = AppConfig.baseUrl;
+
           // Do not send Authorization header for public authentication routes
           final publicAuthPaths = [
             '/auth/login',
@@ -34,6 +37,7 @@ class ApiClient {
             '/auth/forgot-password',
             '/auth/reset-password',
             '/auth/demo',
+            '/health',
           ];
           final isPublicAuth = publicAuthPaths.any((p) => options.path.contains(p));
 
@@ -50,27 +54,10 @@ class ApiClient {
           return handler.next(options);
         },
         onError: (DioException error, handler) async {
-          final path = error.requestOptions.path;
-          // Retry once on Render cold-start timeout (connection timeout or 503/502)
-          if ((error.type == DioExceptionType.connectionTimeout ||
-               error.type == DioExceptionType.receiveTimeout ||
-               error.response?.statusCode == 502 ||
-               error.response?.statusCode == 503) &&
-              error.requestOptions.extra['retried'] != true) {
-            try {
-              error.requestOptions.extra['retried'] = true;
-              await Future.delayed(const Duration(seconds: 2));
-              final retryResponse = await dio.fetch(error.requestOptions);
-              return handler.resolve(retryResponse);
-            } catch (_) {
-              // fallback to normal error handler
-            }
-          }
-
-          // Only clear stored token when the refresh endpoint itself is rejected with 401
-          if (error.response?.statusCode == 401 && path.contains('/auth/refresh')) {
+          // If 401 Unauthorized occurs on token refresh, clear stored session
+          if (error.response?.statusCode == 401 && error.requestOptions.path.contains('/auth/refresh')) {
             _authToken = null;
-            await StorageService.saveAuthToken('');
+            await StorageService.clearAuthToken();
           }
           return handler.next(error);
         },
@@ -78,8 +65,12 @@ class ApiClient {
     );
   }
 
-  void setAuthToken(String? token) {
+  void setAuthToken(String token) {
     _authToken = token;
+  }
+
+  void clearAuthToken() {
+    _authToken = null;
   }
 
   String? get authToken => _authToken;

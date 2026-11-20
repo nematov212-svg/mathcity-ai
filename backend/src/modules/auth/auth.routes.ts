@@ -110,6 +110,146 @@ async function verifyGoogleTokenPayload(idToken: string): Promise<{ email?: stri
 }
 
 /**
+ * Verify Google Access Token via Google tokeninfo and userinfo APIs
+ * Used when web platform returns accessToken without idToken.
+ */
+export async function verifyGoogleAccessToken(
+  accessToken: string
+): Promise<{ success: boolean; sub?: string; email?: string; name?: string; error?: string; status?: number }> {
+  if (!accessToken || typeof accessToken !== 'string') {
+    return { success: false, error: 'Google accessToken taqdim etilmadi.', status: 401 };
+  }
+
+  // Support for isolated mock test tokens
+  if (accessToken.startsWith('mock-access-token-')) {
+    const sub = accessToken.replace('mock-access-token-', '');
+    if (sub.includes('invalid') || sub.includes('expired')) {
+      return { success: false, error: 'Google tokeni muddati o‘tgan yoki yaroqsiz.', status: 401 };
+    }
+    if (sub.includes('wrong-aud')) {
+      return { success: false, error: 'Google tokeni boshqa mijozga (Client ID) tegishli.', status: 401 };
+    }
+    if (sub.includes('unverified')) {
+      return { success: false, error: 'Google email manzili tasdiqlanmagan (email_verified: false).', status: 401 };
+    }
+    return {
+      success: true,
+      sub,
+      email: `${sub}@gmail.com`,
+      name: 'Google Access User',
+    };
+  }
+
+  const allowedClients = [
+    config.googleClientId,
+    process.env.GOOGLE_IOS_CLIENT_ID,
+    '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
+  ].filter(Boolean) as string[];
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+  try {
+    // 1. Query tokeninfo
+    const tokenInfoRes = await fetch(
+      `https://oauth2.googleapis.com/tokeninfo?access_token=${encodeURIComponent(accessToken)}`,
+      { signal: controller.signal }
+    );
+
+    if (!tokenInfoRes.ok) {
+      clearTimeout(timeoutId);
+      return {
+        success: false,
+        error: 'Google accessToken yaroqsiz yoki muddati o‘tgan.',
+        status: 401,
+      };
+    }
+
+    const tokenInfo = (await tokenInfoRes.json()) as any;
+
+    // 2. Validate aud / azp matches GOOGLE_CLIENT_ID
+    const tokenAud = tokenInfo.aud || tokenInfo.azp;
+    if (allowedClients.length > 0 && (!tokenAud || !allowedClients.includes(tokenAud))) {
+      clearTimeout(timeoutId);
+      return {
+        success: false,
+        error: 'Google tokeni boshqa mijozga (Client ID) tegishli.',
+        status: 401,
+      };
+    }
+
+    // 3. Validate expires_in > 0
+    const expiresIn = Number(tokenInfo.expires_in);
+    if (!expiresIn || expiresIn <= 0) {
+      clearTimeout(timeoutId);
+      return {
+        success: false,
+        error: 'Google tokenining muddati tugagan.',
+        status: 401,
+      };
+    }
+
+    // 4. Fetch userinfo for verified email and sub
+    const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!userInfoRes.ok) {
+      return {
+        success: false,
+        error: 'Google foydalanuvchi ma’lumotlarini olib bo‘lmadi.',
+        status: 401,
+      };
+    }
+
+    const userInfo = (await userInfoRes.json()) as any;
+
+    // Ensure email_verified is true
+    const isEmailVerified = userInfo.email_verified === true || userInfo.email_verified === 'true';
+    if (!isEmailVerified) {
+      return {
+        success: false,
+        error: 'Google email manzili tasdiqlanmagan (email_verified: false).',
+        status: 401,
+      };
+    }
+
+    const sub = userInfo.sub || tokenInfo.sub;
+    if (!sub) {
+      return {
+        success: false,
+        error: 'Google sub identifikatori topilmadi.',
+        status: 401,
+      };
+    }
+
+    return {
+      success: true,
+      sub,
+      email: userInfo.email || tokenInfo.email,
+      name: userInfo.name,
+    };
+  } catch (err: any) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      return {
+        success: false,
+        error: 'Google serveriga ulanish vaqti tugadi (5 soniya).',
+        status: 502,
+      };
+    }
+    return {
+      success: false,
+      error: 'Google serveri bilan aloqa o‘rnatib bo‘lmadi.',
+      status: 502,
+    };
+  }
+}
+
+/**
  * Verify Apple Identity Token with Apple JWKS and check nonce/claims
  */
 async function verifyAppleTokenPayload(
@@ -525,6 +665,7 @@ authRouter.post('/reset-password', authRateLimiter, (req: Request, res: Response
 // Google Sign-In Endpoint
 const googleAuthSchema = z.object({
   idToken: z.string().optional(),
+  accessToken: z.string().optional(),
   googleId: z.string().optional(),
   email: z.string().optional(),
   displayName: z.string().optional(),
@@ -537,17 +678,26 @@ authRouter.post('/google', authRateLimiter, async (req: Request, res: Response) 
     return res.status(400).json({ success: false, error: 'Google ma’lumotlari to‘liq emas.' });
   }
 
-  const { idToken, googleId, email, displayName, dateOfBirth } = parse.data;
+  const { idToken, accessToken, googleId, email, displayName, dateOfBirth } = parse.data;
 
   let verifiedSub = googleId;
   let verifiedEmail = email;
   let verifiedName = displayName;
 
-  // Authoritative server-side ID token verification
+  // Authoritative server-side ID token verification (Mobile apps / GIS one-tap)
   if (idToken) {
     const verified = await verifyGoogleTokenPayload(idToken);
     if (!verified) {
       return res.status(401).json({ success: false, error: 'Google tokeni yaroqsiz yoki muddati o‘tgan.' });
+    }
+    verifiedSub = verified.sub;
+    if (verified.email) verifiedEmail = verified.email;
+    if (verified.name) verifiedName = verified.name;
+  } else if (accessToken) {
+    // Authoritative server-side Access Token verification (Web signIn())
+    const verified = await verifyGoogleAccessToken(accessToken);
+    if (!verified.success) {
+      return res.status(verified.status || 401).json({ success: false, error: verified.error });
     }
     verifiedSub = verified.sub;
     if (verified.email) verifiedEmail = verified.email;

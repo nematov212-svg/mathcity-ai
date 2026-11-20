@@ -29,15 +29,18 @@ export const corsMiddleware = cors({
       return callback(null, true);
     }
 
-    // In development allow localhost variations
-    if (!config.isProduction && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
+    // In development or when explicitly enabled via ALLOW_LOCALHOST_ORIGINS
+    if (
+      (!config.isProduction || config.allowLocalhostOrigins) &&
+      /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)
+    ) {
       return callback(null, true);
     }
 
-    return callback(new Error(`CORS taqiqlangan: Ushbu kelib chiqish (${origin}) ruxsat etilmagan.`));
+    return callback(null, false);
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Idempotency-Key', 'x-admin-key', 'X-Admin-Key'],
 });
 

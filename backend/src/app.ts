@@ -21,7 +21,7 @@ import { subscriptionsRouter } from './modules/subscriptions/subscriptions.route
 import { adminRouter } from './modules/admin/admin.routes.js';
 import { paymentsRouter } from './modules/payments/click.routes.js';
 import { mediaRouter } from './modules/media/media.routes.js';
-import { isDatabaseHealthy } from './db/client.js';
+import { isDatabaseHealthy, checkDatabaseConnection } from './db/client.js';
 
 const adminStaticPath = path.resolve(process.cwd(), 'public/admin');
 
@@ -37,7 +37,15 @@ app.use(generalRateLimiter);
 
 // 2. Health & Orchestration Probes (Render & Cloud compatible)
 // Standard Render root health check
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', async (req: Request, res: Response) => {
+  if (!isDatabaseHealthy() && process.env.DATABASE_URL) {
+    try {
+      await Promise.race([
+        checkDatabaseConnection(),
+        new Promise((resolve) => setTimeout(resolve, 2000)),
+      ]);
+    } catch (_) {}
+  }
   res.status(200).json({
     status: 'healthy',
     service: 'mathcity-ai-api',

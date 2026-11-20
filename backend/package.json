@@ -18,7 +18,7 @@
     "prisma:migrate-local": "tsx src/db/migrateLocalData.ts",
     "db:backup": "tsx src/db/backupPostgres.ts",
     "render:build": "npm install --include=dev && npx prisma generate && npm run build",
-    "render:start": "node -e 'if(process.env.DATABASE_URL){require(\"child_process\").execSync(\"npx prisma migrate deploy\",{stdio:\"inherit\"})}' && node dist/server.js",
+    "render:start": "node scripts/render-start.js",
     "test": "jest --runInBand --forceExit"
   },
   "dependencies": {
