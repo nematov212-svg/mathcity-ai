@@ -22,7 +22,7 @@ void main() {
         ),
       ),
     );
-
+    
     await tester.pumpAndSettle();
 
     // Verify mascot logo presence

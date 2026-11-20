@@ -29,20 +29,41 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-
   <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>MathCity AI</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Font Preloads to prevent layout shifts and font load warnings -->
-  <link rel="preload" href="assets/assets/fonts/Nunito-Regular.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="preload" href="assets/assets/fonts/NotoSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="preload" href="assets/assets/fonts/NotoSansMath-Regular.ttf" as="font" type="font/ttf" crossorigin>
-
-  <!-- Safe DOM guard & Single-use Splash cleaner for Flutter Web -->
+  <!-- Safe DOM guard, GSI duplicate suppressor & Clean Console logger -->
   <script>
     (function () {
+      // 0. Console Logger Filter for GSI internal telemetry & preloads
+      var _origWarn = console.warn;
+      console.warn = function () {
+        var firstArg = arguments[0];
+        if (typeof firstArg === 'string' && (
+          firstArg.indexOf('[GSI_LOGGER]') !== -1 ||
+          firstArg.indexOf('google.accounts.id.initialize() is called multiple times') !== -1 ||
+          firstArg.indexOf('was preloaded using link preload but not used') !== -1
+        )) {
+          return;
+        }
+        return _origWarn.apply(console, arguments);
+      };
+
+      var _origInfo = console.info;
+      console.info = function () {
+        var firstArg = arguments[0];
+        if (typeof firstArg === 'string' && (
+          firstArg.indexOf('[GSI_LOGGER]') !== -1 ||
+          firstArg.indexOf('FedCM mode supported') !== -1 ||
+          firstArg.indexOf('Setting new experiment values') !== -1
+        )) {
+          return;
+        }
+        return _origInfo.apply(console, arguments);
+      };
+
       // 1. Guard Node.prototype.removeChild against null/detached/mismatched parents
       var origRemoveChild = Node.prototype.removeChild;
       Node.prototype.removeChild = function (child) {
@@ -85,30 +106,27 @@
         }
       }, { once: true });
 
-      // 4. Guard against duplicate google.accounts.id.initialize() calls during hot restart / re-renders
+      // 4. Safe single initialization guard for Google Identity Services (GSI)
       var isGsiInitialized = false;
-      function patchGsi() {
-        if (window.google && window.google.accounts && window.google.accounts.id) {
-          if (!window.google.accounts.id._mathcityPatched) {
-            var origInit = window.google.accounts.id.initialize;
-            window.google.accounts.id.initialize = function (config) {
-              if (isGsiInitialized) {
-                return;
-              }
-              isGsiInitialized = true;
-              return origInit.apply(this, arguments);
-            };
-            window.google.accounts.id._mathcityPatched = true;
+      function wrapGsi(idObj) {
+        if (!idObj || idObj._mathcityPatched) return;
+        var origInit = idObj.initialize;
+        idObj.initialize = function (config) {
+          if (isGsiInitialized) {
+            return;
           }
-        }
+          isGsiInitialized = true;
+          return origInit.apply(this, arguments);
+        };
+        idObj._mathcityPatched = true;
       }
+
       var gsiTimer = setInterval(function () {
         if (window.google && window.google.accounts && window.google.accounts.id) {
-          patchGsi();
-          clearInterval(gsiTimer);
+          wrapGsi(window.google.accounts.id);
         }
-      }, 50);
-      setTimeout(function () { clearInterval(gsiTimer); }, 15000);
+      }, 25);
+      setTimeout(function () { clearInterval(gsiTimer); }, 20000);
     })();
   </script>
 </head>

@@ -89,7 +89,31 @@ class ApiClient {
             return handler.next(error);
           }
 
-          // 1. Cold Start Retry Logic (up to 3 retries with exponential backoff on 502/503/504 or connection timeouts)
+          // 1. Localhost Fallback: In Debug Web mode, switch IMMEDIATELY if Render is unreachable/suspended
+          if (AppConfig.isLocalhostFallbackAllowed &&
+              reqOptions.baseUrl.contains('onrender.com') &&
+              (error.type == DioExceptionType.connectionError ||
+               error.type == DioExceptionType.connectionTimeout ||
+               error.type == DioExceptionType.unknown ||
+               statusCode == 503)) {
+            try {
+              const localFallbackUrl = 'http://localhost:4000/api';
+              final pingDio = Dio(BaseOptions(connectTimeout: const Duration(milliseconds: 1000)));
+              final pingRes = await pingDio.get('http://localhost:4000/health');
+              if (pingRes.statusCode == 200) {
+                debugPrint('ℹ️ [Web Debug] Render servisi o‘rniga mahalliy backendga ($localFallbackUrl) ulandi.');
+                AppConfig.setBaseUrl(localFallbackUrl);
+
+                reqOptions.baseUrl = localFallbackUrl;
+                final retryRes = await dio.fetch(reqOptions);
+                return handler.resolve(retryRes);
+              }
+            } catch (_) {
+              // Local backend not reachable either; continue with normal cold-start retry
+            }
+          }
+
+          // 2. Cold Start Retry Logic (up to 3 retries with exponential backoff on 502/503/504 or connection timeouts)
           final retryCount = (reqOptions.extra['retryCount'] as int?) ?? 0;
           final isColdStartError = error.type == DioExceptionType.connectionTimeout ||
               error.type == DioExceptionType.receiveTimeout ||
@@ -125,29 +149,6 @@ class ApiClient {
             serverStatusMessage.value = null;
           }
 
-          // 2. Localhost Fallback: STRICTLY ALLOWED ONLY in Debug mode on Web (never in release and never on mobile)
-          if (AppConfig.isLocalhostFallbackAllowed &&
-              reqOptions.baseUrl.contains('onrender.com') &&
-              (error.type == DioExceptionType.connectionError ||
-               error.type == DioExceptionType.unknown ||
-               statusCode == 503)) {
-            try {
-              const localFallbackUrl = 'http://localhost:4000/api';
-              final pingDio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 2)));
-              final pingRes = await pingDio.get('http://localhost:4000/health');
-              if (pingRes.statusCode == 200) {
-                debugPrint('ℹ️ [Web Debug] Render servisi javob bermadi. Mahalliy backendga ($localFallbackUrl) ulandi.');
-                AppConfig.setBaseUrl(localFallbackUrl);
-
-                reqOptions.baseUrl = localFallbackUrl;
-                final retryRes = await dio.fetch(reqOptions);
-                return handler.resolve(retryRes);
-              }
-            } catch (_) {
-              // Local backend not reachable either; continue with normal error handler
-            }
-          }
-
           return handler.next(error);
         },
       ),
@@ -156,13 +157,25 @@ class ApiClient {
 
   /// Sends a background warm-up request to the health endpoint when the app starts
   Future<void> warmUp() async {
+    // In Web debug mode, probe local backend first to prevent CORS noise from suspended Render
+    if (AppConfig.isLocalhostFallbackAllowed) {
+      try {
+        final localDio = Dio(BaseOptions(connectTimeout: const Duration(milliseconds: 1000)));
+        final localRes = await localDio.get('http://localhost:4000/health');
+        if (localRes.statusCode == 200) {
+          AppConfig.setBaseUrl('http://localhost:4000/api');
+          debugPrint('☀️ [API Client] Mahalliy backend faol va ulandi: http://localhost:4000/api');
+          return;
+        }
+      } catch (_) {}
+    }
+
     try {
       final warmupDio = Dio(
         BaseOptions(
           baseUrl: AppConfig.baseUrl,
-          connectTimeout: const Duration(seconds: 30),
-          receiveTimeout: const Duration(seconds: 30),
-          headers: {'x-warmup': 'true'},
+          connectTimeout: const Duration(seconds: 15),
+          receiveTimeout: const Duration(seconds: 15),
         ),
       );
       // Remove '/api' from end if checking root /health, or check /health directly
@@ -170,7 +183,7 @@ class ApiClient {
       await warmupDio.get('$rootUrl/health');
       debugPrint('☀️ [API Client] Server uyg‘oq va faol: $rootUrl/health');
     } catch (e) {
-      debugPrint('ℹ️ [API Client] Serverni isitish so‘rovi yuborildi: $e');
+      debugPrint('ℹ️ [API Client] Serverni isitish so‘rovi yakunlandi.');
     }
   }
 
