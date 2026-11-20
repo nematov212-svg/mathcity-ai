@@ -16,6 +16,11 @@ class StorageService {
     return prefs.getString(_keyToken);
   }
 
+  static Future<void> clearAuthToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_keyToken);
+  }
+
   static Future<void> saveUserData({
     required String mode,
     required int age,
