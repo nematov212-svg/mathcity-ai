@@ -25,32 +25,48 @@ export const corsMiddleware = cors({
     // Allow non-browser requests (e.g. mobile apps, curl, tests) where origin is undefined
     if (!origin) return callback(null, true);
 
+    // Allow all localhost/127.0.0.1 ports (e.g. :8085, :4000, :3000)
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow Render and cloud domains (*.onrender.com, *.mathcity.ai)
+    if (/^https?:\/\/([a-zA-Z0-9-]+\.)*(onrender\.com|mathcity\.ai)$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow explicit allowedOrigins from config or wildcard
     if (config.allowedOrigins.includes('*') || config.allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
 
-    // In development or when explicitly enabled via ALLOW_LOCALHOST_ORIGINS
-    if (
-      (!config.isProduction || config.allowLocalhostOrigins) &&
-      /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)
-    ) {
-      return callback(null, true);
-    }
-
-    return callback(null, false);
+    // Fallback: in production or development, allow browser clients with credentials
+    return callback(null, true);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Idempotency-Key', 'x-admin-key', 'X-Admin-Key'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'Idempotency-Key',
+    'x-admin-key',
+    'X-Admin-Key',
+    'Accept',
+    'Origin',
+    'x-warmup',
+  ],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  maxAge: 86400, // 24 hours preflight cache
 });
 
-export function requestTimeoutMiddleware(timeoutMs: number = 25000) {
+export function requestTimeoutMiddleware(timeoutMs: number = 60000) {
   return (req: Request, res: Response, next: NextFunction) => {
     const timer = setTimeout(() => {
       if (!res.headersSent) {
         res.status(504).json({
           success: false,
-          error: 'So‘rov vaqti tugadi (Gateway Timeout).',
+          error: 'So‘rov vaqti tugadi (Gateway Timeout). Server uyg‘onmoqda yoki yuklama ostida.',
         });
       }
     }, timeoutMs);

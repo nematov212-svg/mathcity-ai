@@ -22,7 +22,7 @@ class _TeenCityScreenState extends ConsumerState<TeenCityScreen> {
   @override
   Widget build(BuildContext context) {
     final studentState = ref.watch(studentProvider);
-    final coins = studentState.student?.coinBalance ?? 450;
+    final coins = studentState.student?.coinBalance ?? 0;
 
     return Scaffold(
       backgroundColor: AppColors.teenBackground,

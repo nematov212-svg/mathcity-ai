@@ -12,7 +12,7 @@ class GameResultScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final student = ref.watch(studentProvider).student;
-    final totalBalance = student?.coinBalance ?? 320;
+    final totalBalance = student?.coinBalance ?? 0;
 
     final correct = resultData?['correctAnswersCount'] ?? 9;
     final isFraction = resultData?['isFractionBattle'] == true;

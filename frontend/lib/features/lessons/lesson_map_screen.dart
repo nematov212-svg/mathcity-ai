@@ -1,13 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
+import '../../shared/providers/student_provider.dart';
 
-class LessonMapScreen extends StatelessWidget {
+class LessonMapScreen extends ConsumerWidget {
   const LessonMapScreen({super.key});
 
   @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = AppThemeColors.of(context);
+    final coinBalance = ref.watch(studentProvider).student?.coinBalance ?? 0;
+
+    return Scaffold(
+      backgroundColor: colors.bg,
+      appBar: AppBar(
+        backgroundColor: colors.card,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: colors.ink),
+          onPressed: () => context.canPop() ? context.pop() : context.go('/kids/home'),
+        ),
+        title: Text(
+          'Darslar xaritasi',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 18,
+            color: colors.ink,
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Center(child: CoinBadge(count: coinBalance, size: 24)),
+          ),
+        ],
+      ),
+      body: const LessonMapContent(),
+    );
+  }
+}
+
+class LessonMapContent extends StatelessWidget {
+  const LessonMapContent({super.key});
+
+  @override
   Widget build(BuildContext context) {
+    final colors = AppThemeColors.of(context);
+
     final nodes = [
       {
         'id': 'lesson-k1-01',
@@ -53,44 +95,26 @@ class LessonMapScreen extends StatelessWidget {
       },
     ];
 
-    return Scaffold(
-      backgroundColor: AppColors.kidsBackground,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          'Darslar xaritasi',
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-            fontSize: 18,
-            color: AppColors.kidsDarkText,
-          ),
-        ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: Center(child: CoinBadge(count: 250, size: 24)),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 24),
-        child: Column(
-          children: [
-            // Chapter banner
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.kidsBorder, width: 1.5),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.flag_rounded, color: AppColors.kidsPrimary, size: 28),
-                  SizedBox(width: 12),
-                  Column(
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(0, 24, 0, 100),
+      child: Column(
+        children: [
+          // Chapter banner
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colors.card,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: colors.border, width: 1.5),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.flag_rounded, color: colors.primary, size: 28),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -98,7 +122,7 @@ class LessonMapScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.kidsDarkText,
+                          color: colors.ink,
                         ),
                       ),
                       Text(
@@ -106,121 +130,117 @@ class LessonMapScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.kidsSecondaryText,
+                          color: colors.muted,
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(height: 32),
+          ),
+          const SizedBox(height: 32),
 
-            // Roadmap Path Nodes (Figma 2:14)
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: nodes.length,
-              itemBuilder: (context, index) {
-                final node = nodes[index];
-                final status = node['status'] as String;
-                final isCurrent = status == 'current';
-                final isCompleted = status == 'completed';
-                final isLocked = status == 'locked';
-                final xOffset = (node['x'] as double);
+          // Roadmap Path Nodes
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: nodes.length,
+            itemBuilder: (context, index) {
+              final node = nodes[index];
+              final status = node['status'] as String;
+              final isCurrent = status == 'current';
+              final isCompleted = status == 'completed';
+              final isLocked = status == 'locked';
+              final xOffset = (node['x'] as double);
 
-                return Column(
-                  children: [
-                    Align(
-                      alignment: FractionalOffset(xOffset, 0.5),
-                      child: InkWell(
-                        onTap: isLocked
-                            ? null
-                            : () {
-                                context.push('/kids/lesson/${node['id']}');
-                              },
-                        borderRadius: BorderRadius.circular(40),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: isCurrent ? 74 : 64,
-                              height: isCurrent ? 74 : 64,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isCompleted
-                                    ? AppColors.kidsGreen
-                                    : isCurrent
-                                        ? AppColors.kidsPrimary
-                                        : const Color(0xFFD4D7E5),
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: isCurrent ? 4 : 3,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: (isCurrent
-                                            ? AppColors.kidsPrimary
-                                            : isCompleted
-                                                ? AppColors.kidsGreen
-                                                : Colors.black)
-                                        .withOpacity(isLocked ? 0.05 : 0.25),
-                                    blurRadius: 14,
-                                    offset: const Offset(0, 6),
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: isCompleted
-                                    ? const Icon(Icons.check_rounded, color: Colors.white, size: 34)
-                                    : isCurrent
-                                        ? const Icon(Icons.play_arrow_rounded,
-                                            color: Colors.white, size: 40)
-                                        : const Icon(Icons.lock_rounded,
-                                            color: Color(0xFF8B8EA0), size: 26),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
+              return Column(
+                children: [
+                  Align(
+                    alignment: FractionalOffset(xOffset, 0.5),
+                    child: InkWell(
+                      onTap: isLocked
+                          ? null
+                          : () {
+                              context.push('/kids/lesson/${node['id']}');
+                            },
+                      borderRadius: BorderRadius.circular(40),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: isCurrent ? 74 : 64,
+                            height: isCurrent ? 74 : 64,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: isCompleted
+                                  ? AppColors.kidsGreen
+                                  : isCurrent
+                                      ? colors.primary
+                                      : colors.border,
+                              border: Border.all(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: isCurrent
-                                      ? AppColors.kidsPrimary
-                                      : AppColors.kidsBorder,
-                                ),
+                                width: isCurrent ? 4 : 3,
                               ),
-                              child: Text(
-                                node['title'] as String,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                  color: isCurrent
-                                      ? AppColors.kidsPrimary
-                                      : isLocked
-                                          ? AppColors.kidsSecondaryText
-                                          : AppColors.kidsDarkText,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: (isCurrent
+                                          ? colors.primary
+                                          : isCompleted
+                                              ? AppColors.kidsGreen
+                                              : Colors.black)
+                                      .withOpacity(isLocked ? 0.05 : 0.25),
+                                  blurRadius: 14,
+                                  offset: const Offset(0, 6),
                                 ),
+                              ],
+                            ),
+                            child: Center(
+                              child: isCompleted
+                                  ? const Icon(Icons.check_rounded, color: Colors.white, size: 34)
+                                  : isCurrent
+                                      ? const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 40)
+                                      : const Icon(Icons.lock_rounded, color: Color(0xFF8B8EA0), size: 26),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: colors.card,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: isCurrent ? colors.primary : colors.border,
                               ),
                             ),
-                          ],
-                        ),
+                            child: Text(
+                              node['title'] as String,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: isCurrent
+                                    ? colors.primary
+                                    : isLocked
+                                        ? colors.muted
+                                        : colors.ink,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    if (index < nodes.length - 1)
-                      Container(
-                        width: 4,
-                        height: 36,
-                        color: const Color(0xFFD4D7E5),
-                      ),
-                  ],
-                );
-              },
-            ),
-          ],
-        ),
+                  ),
+                  if (index < nodes.length - 1)
+                    Container(
+                      width: 4,
+                      height: 36,
+                      color: colors.border,
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }

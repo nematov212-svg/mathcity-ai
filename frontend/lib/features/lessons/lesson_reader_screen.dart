@@ -1,8 +1,10 @@
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_icon.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../core/network/api_client.dart';
@@ -23,10 +25,60 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
   String? _firstQuestionId;
   bool _isLoading = true;
 
+  AudioPlayer? _audioPlayer;
+  bool _isPlayingAudio = false;
+  Duration _audioPos = Duration.zero;
+  Duration _audioDur = Duration.zero;
+  double _playbackSpeed = 1.0;
+
   @override
   void initState() {
     super.initState();
     _fetchLesson();
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer?.dispose();
+    super.dispose();
+  }
+
+  void _initAudioPlayer(String url) {
+    if (_audioPlayer != null) return;
+    _audioPlayer = AudioPlayer();
+    _audioPlayer!.onDurationChanged.listen((d) {
+      if (mounted) setState(() => _audioDur = d);
+    });
+    _audioPlayer!.onPositionChanged.listen((p) {
+      if (mounted) setState(() => _audioPos = p);
+    });
+    _audioPlayer!.onPlayerComplete.listen((_) {
+      if (mounted) {
+        setState(() {
+          _isPlayingAudio = false;
+          _audioPos = Duration.zero;
+        });
+      }
+    });
+  }
+
+  void _toggleAudio(String url) async {
+    _initAudioPlayer(url);
+    if (_isPlayingAudio) {
+      await _audioPlayer?.pause();
+      setState(() => _isPlayingAudio = false);
+    } else {
+      await _audioPlayer?.play(UrlSource(url));
+      setState(() => _isPlayingAudio = true);
+    }
+  }
+
+  void _cycleSpeed() async {
+    final speeds = [1.0, 1.25, 1.5, 2.0];
+    final nextIdx = (speeds.indexOf(_playbackSpeed) + 1) % speeds.length;
+    _playbackSpeed = speeds[nextIdx];
+    await _audioPlayer?.setPlaybackRate(_playbackSpeed);
+    setState(() {});
   }
 
   void _fetchLesson() async {
@@ -125,10 +177,13 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppThemeColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     if (_isLoading || _lesson == null) {
-      return const Scaffold(
-        backgroundColor: AppColors.kidsBackground,
-        body: Center(child: CircularProgressIndicator(color: AppColors.kidsPrimary)),
+      return Scaffold(
+        backgroundColor: colors.bg,
+        body: Center(child: CircularProgressIndicator(color: colors.primary)),
       );
     }
 
@@ -138,20 +193,26 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
     final isEquation = lesson.topicKey.contains('equation') || lesson.title.toLowerCase().contains('tenglama');
 
     return Scaffold(
-      backgroundColor: AppColors.kidsBackground,
+      backgroundColor: colors.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: colors.card,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.kidsDarkText),
-          onPressed: () => context.pop(),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: colors.ink),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/kids/lessons');
+            }
+          },
         ),
         title: Text(
           '${lesson.grade}-sinf darsi',
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w800,
             fontSize: 18,
-            color: AppColors.kidsDarkText,
+            color: colors.ink,
           ),
         ),
         actions: [
@@ -178,17 +239,35 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Media Gallery if available
+            if (lesson.coverImage != null || lesson.gallery.isNotEmpty) ...[
+              _buildMediaGallery(lesson, colors),
+              const SizedBox(height: 16),
+            ],
+
+            // Video Lesson Card if available
+            if (lesson.videoUrl != null && lesson.videoUrl!.isNotEmpty) ...[
+              _buildVideoPlayerCard(lesson, colors),
+              const SizedBox(height: 16),
+            ],
+
+            // Audio Player Card if available
+            if (lesson.audioUrl != null && lesson.audioUrl!.isNotEmpty) ...[
+              _buildAudioPlayerCard(lesson, colors),
+              const SizedBox(height: 16),
+            ],
+
             // Lesson Header Tag & Title
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppColors.kidsPrimary.withOpacity(0.12),
+                color: colors.primary.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
                 '${lesson.grade}-SINF • ${(lesson.chapterTitle ?? 'MATEMATIKA').toUpperCase()}',
-                style: const TextStyle(
-                  color: AppColors.kidsPrimary,
+                style: TextStyle(
+                  color: colors.primary,
                   fontWeight: FontWeight.w800,
                   fontSize: 12,
                   letterSpacing: 1.1,
@@ -198,19 +277,19 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
             const SizedBox(height: 12),
             Text(
               lesson.title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w900,
-                color: AppColors.kidsDarkText,
+                color: colors.ink,
                 height: 1.3,
               ),
             ),
             const SizedBox(height: 10),
             Text(
               lesson.description,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
-                color: AppColors.kidsSecondaryText,
+                color: colors.muted,
                 height: 1.4,
               ),
             ),
@@ -242,9 +321,9 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: const Color(0xFFF2FBF6),
+                color: isDark ? const Color(0xFF1B2824) : const Color(0xFFF2FBF6),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0xFFD3F4E4)),
+                border: Border.all(color: const Color(0xFFD3F4E4).withOpacity(0.3)),
               ),
               child: const Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -284,7 +363,7 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
             // Start Exercises CTA
             CustomButton(
               text: 'Mashqlarga o‘tish',
-              backgroundColor: AppColors.kidsPrimary,
+              backgroundColor: colors.primary,
               borderRadius: 20,
               icon: const Icon(Icons.arrow_forward_rounded, color: Colors.white),
               onPressed: () {
@@ -298,6 +377,231 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildMediaGallery(LessonModel lesson, AppThemeColors colors) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (lesson.coverImage != null && lesson.coverImage!.isNotEmpty)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(22),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Image.network(
+                lesson.coverImage!,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  color: colors.card,
+                  child: Center(
+                    child: Icon(Icons.image_not_supported_rounded, color: colors.muted, size: 40),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        if (lesson.gallery.isNotEmpty) ...[
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 72,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: lesson.gallery.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              itemBuilder: (context, idx) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
+                  child: AspectRatio(
+                    aspectRatio: 4 / 3,
+                    child: Image.network(
+                      lesson.gallery[idx],
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(color: colors.card),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildVideoPlayerCard(LessonModel lesson, AppThemeColors colors) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E1B4B),
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF6C47FF).withOpacity(0.2),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF7C3AED), Color(0xFF6366F1)],
+              ),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Center(
+              child: Icon(Icons.play_arrow_rounded, color: Colors.white, size: 32),
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Video darslik',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Interaktiv video tushuntirishni tomosha qiling',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white.withOpacity(0.8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAudioPlayerCard(LessonModel lesson, AppThemeColors colors) {
+    final posStr = _formatDuration(_audioPos);
+    final durStr = _formatDuration(_audioDur);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: colors.primary.withOpacity(0.3), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: colors.primary.withOpacity(0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              InkWell(
+                onTap: () => _toggleAudio(lesson.audioUrl!),
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: colors.primary,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      _isPlayingAudio ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                      color: Colors.white,
+                      size: 26,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Ovozli tushuntirish',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        color: colors.ink,
+                      ),
+                    ),
+                    Text(
+                      '$posStr / $durStr',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: colors.muted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: _cycleSpeed,
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: colors.primary.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    '${_playbackSpeed}x',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: colors.primary,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (_audioDur.inSeconds > 0)
+            SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                trackHeight: 3,
+                thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
+                activeTrackColor: colors.primary,
+                inactiveTrackColor: colors.border,
+                thumbColor: colors.primary,
+              ),
+              child: Slider(
+                value: _audioPos.inSeconds.toDouble().clamp(0.0, _audioDur.inSeconds.toDouble()),
+                max: _audioDur.inSeconds.toDouble(),
+                onChanged: (val) {
+                  _audioPlayer?.seek(Duration(seconds: val.toInt()));
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDuration(Duration d) {
+    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$m:$s';
   }
 
   Widget _buildVisualDiagram(bool isFraction, bool isPercentage, bool isEquation) {

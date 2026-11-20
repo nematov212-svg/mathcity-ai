@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { repository } from '../../utils/repository.js';
 import { paymentDataStore } from '../payments/paymentStore.js';
 import { LessonModel } from '../../utils/dataStore.js';
+import { broadcastLessonEvent } from '../lessons/lessons.routes.js';
 import {
   mathQuestionBank,
   addQuestionToBank,
@@ -624,6 +625,121 @@ adminRouter.delete('/questions/:id', adminAuth, (req: AuthenticatedAdminRequest,
 });
 
 // ---------------------------------------------------------------------------
+// 4.5. BULK QUESTION IMPORT (CSV / Excel text import)
+// Format: prompt, optionA, optionB, optionC, optionD, correctAnswer, difficulty, explanation, topic, grade
+// ---------------------------------------------------------------------------
+adminRouter.post('/questions/import', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const { csvData, questions: rawList } = req.body;
+  const importedQuestions: QuestionBankItem[] = [];
+
+  // 1. Process structured JSON array if provided
+  if (Array.isArray(rawList)) {
+    for (const q of rawList) {
+      if (!q.prompt || !Array.isArray(q.options) || q.options.length < 2 || !q.correctAnswer) continue;
+      const created = addQuestionToBank({
+        id: q.id || `q-imp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        audience: q.audience || (Number(q.grade) <= 4 ? 'KIDS' : 'TEEN'),
+        grade: Number(q.grade) || 4,
+        topic: q.topic || 'Misollar',
+        difficulty: q.difficulty || 'MEDIUM',
+        prompt: String(q.prompt).trim(),
+        type: 'MULTIPLE_CHOICE',
+        options: q.options.map((o: any) => String(o).trim()),
+        correctAnswer: String(q.correctAnswer).trim(),
+        explanation: q.explanation || '',
+        hint: q.hint || '',
+        imageUrl: q.imageUrl || undefined,
+        rewardCoins: 1,
+        rewardXP: 10,
+        isPublished: true,
+      });
+      importedQuestions.push(created);
+    }
+  }
+
+  // 2. Parse CSV / Excel Delimited text if provided
+  if (typeof csvData === 'string' && csvData.trim().length > 0) {
+    const lines = csvData.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 0);
+    // Detect delimiter: comma, semicolon or tab
+    for (const line of lines) {
+      // Skip header lines
+      if (line.toLowerCase().startsWith('prompt') || line.toLowerCase().startsWith('savol')) continue;
+
+      let delimiter = ',';
+      if (line.includes(';') && (line.match(/;/g) || []).length >= 5) delimiter = ';';
+      else if (line.includes('\t') && (line.match(/\t/g) || []).length >= 5) delimiter = '\t';
+
+      // Parse with simple regex supporting quotes
+      const parts: string[] = [];
+      let cur = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const c = line[i];
+        if (c === '"') {
+          inQuotes = !inQuotes;
+        } else if (c === delimiter && !inQuotes) {
+          parts.push(cur.trim());
+          cur = '';
+        } else {
+          cur += c;
+        }
+      }
+      parts.push(cur.trim());
+
+      if (parts.length >= 6) {
+        const prompt = parts[0];
+        const optA = parts[1];
+        const optB = parts[2];
+        const optC = parts[3];
+        const optD = parts[4];
+        const correctAnswer = parts[5];
+        const difficulty = (parts[6]?.toUpperCase() as 'EASY' | 'MEDIUM' | 'HARD') || 'MEDIUM';
+        const explanation = parts[7] || '';
+        const topic = parts[8] || 'Misollar';
+        const grade = Number(parts[9]) || 4;
+
+        if (prompt && optA && optB && correctAnswer) {
+          const options = [optA, optB, optC || '', optD || ''].filter(Boolean);
+          const created = addQuestionToBank({
+            id: `q-csv-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            audience: grade <= 4 ? 'KIDS' : 'TEEN',
+            grade,
+            topic,
+            difficulty: ['EASY', 'MEDIUM', 'HARD'].includes(difficulty) ? difficulty : 'MEDIUM',
+            prompt,
+            type: 'MULTIPLE_CHOICE',
+            options,
+            correctAnswer,
+            explanation,
+            hint: '',
+            rewardCoins: 1,
+            rewardXP: 10,
+            isPublished: true,
+          });
+          importedQuestions.push(created);
+        }
+      }
+    }
+  }
+
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'CREATE_QUESTION',
+    targetType: 'QUESTION',
+    targetId: `bulk-import-${Date.now()}`,
+    details: { importedCount: importedQuestions.length },
+  });
+
+  return res.status(201).json({
+    success: true,
+    message: `${importedQuestions.length} ta savol muvaffaqiyatli import qilindi va saqlandi.`,
+    count: importedQuestions.length,
+    data: importedQuestions,
+  });
+});
+
+// ---------------------------------------------------------------------------
 // 5. FULL LESSON MANAGEMENT (Section 5)
 // Create, edit, save draft, publish, worked examples, exercise questions
 // ---------------------------------------------------------------------------
@@ -687,6 +803,12 @@ adminRouter.post('/lessons', adminAuth, (req: AuthenticatedAdminRequest, res: Re
     description,
     contentMd,
     formulaLatex,
+    coverImage,
+    gallery,
+    videoUrl,
+    audioUrl,
+    textExplanation,
+    orderIndex,
     examples,
     rewardCoins,
     rewardXP,
@@ -715,9 +837,14 @@ adminRouter.post('/lessons', adminAuth, (req: AuthenticatedAdminRequest, res: Re
     description: description || '',
     formulaLatex: formulaLatex || '',
     contentMd: contentMd || `## ${title}\n\n${description || ''}`,
+    coverImage: coverImage || undefined,
+    gallery: Array.isArray(gallery) ? gallery : [],
+    videoUrl: videoUrl || undefined,
+    audioUrl: audioUrl || undefined,
+    textExplanation: textExplanation || description || '',
     rewardXP: rewardXP ? Number(rewardXP) : 50,
     rewardCoins: rewardCoins ? Number(rewardCoins) : 10,
-    orderIndex: 99,
+    orderIndex: orderIndex ? Number(orderIndex) : 99,
     status: status === 'DRAFT' ? 'DRAFT' : 'PUBLISHED',
     examples: Array.isArray(examples) ? examples : [],
     createdAt: now,
@@ -734,6 +861,9 @@ adminRouter.post('/lessons', adminAuth, (req: AuthenticatedAdminRequest, res: Re
   };
 
   repository.addLesson(newLesson);
+
+  // Broadcast real-time event to connected apps
+  broadcastLessonEvent('LESSON_CREATED', newLesson);
 
   adminStore.logAction({
     adminId: req.adminUser?.id || 'admin',
@@ -759,6 +889,8 @@ adminRouter.put('/lessons/:id', adminAuth, (req: AuthenticatedAdminRequest, res:
     return res.status(404).json({ success: false, error: 'Dars topilmadi.' });
   }
 
+  broadcastLessonEvent('LESSON_UPDATED', { id, ...updates });
+
   adminStore.logAction({
     adminId: req.adminUser?.id || 'admin',
     adminUsername: req.adminUser?.username || 'mirzobek',
@@ -776,6 +908,9 @@ adminRouter.patch('/lessons/:id/publish', adminAuth, (req: AuthenticatedAdminReq
   if (!updated) {
     return res.status(404).json({ success: false, error: 'Dars topilmadi.' });
   }
+
+  broadcastLessonEvent('LESSON_PUBLISHED', { id });
+
   return res.json({ success: true, message: 'Dars muvaffaqiyatli nashr qilindi.' });
 });
 
@@ -785,6 +920,9 @@ adminRouter.patch('/lessons/:id/unpublish', adminAuth, (req: AuthenticatedAdminR
   if (!updated) {
     return res.status(404).json({ success: false, error: 'Dars topilmadi.' });
   }
+
+  broadcastLessonEvent('LESSON_UNPUBLISHED', { id });
+
   return res.json({ success: true, message: 'Dars qoralamaga olindi.' });
 });
 
@@ -794,6 +932,8 @@ adminRouter.delete('/lessons/:id', adminAuth, (req: AuthenticatedAdminRequest, r
   if (!deleted) {
     return res.status(404).json({ success: false, error: 'Dars topilmadi.' });
   }
+
+  broadcastLessonEvent('LESSON_DELETED', { id });
 
   adminStore.logAction({
     adminId: req.adminUser?.id || 'admin',

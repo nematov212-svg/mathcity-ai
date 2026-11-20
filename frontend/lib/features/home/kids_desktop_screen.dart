@@ -12,10 +12,10 @@ class KidsDesktopScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final student = ref.watch(studentProvider).student;
-    final coins = student?.coinBalance ?? 250;
-    final xp = student?.totalXP ?? 380;
-    final level = student?.level ?? 3;
-    final name = student?.displayName ?? 'Mirzobek';
+    final coins = student?.coinBalance ?? 0;
+    final xp = student?.totalXP ?? 0;
+    final level = student?.level ?? 1;
+    final name = student?.displayName ?? 'O‘quvchi';
 
     return Scaffold(
       backgroundColor: AppColors.kidsBackground,

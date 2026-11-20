@@ -35,7 +35,7 @@ void main() {
     expect(find.text('Boshlash'), findsOneWidget);
   });
 
-  testWidgets('ExerciseScreen renders 10-question sequence with 1 / 10 misol and +1 oltin', (WidgetTester tester) async {
+  testWidgets('ExerciseScreen renders 20-question session with instant choice evaluation', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 1920);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -48,31 +48,28 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 200));
 
     // Step counter
-    expect(find.text('1 / 10 misol'), findsOneWidget);
-
-    // Exactly +1 gold coin indicator
-    expect(find.text('+1 oltin'), findsOneWidget);
+    expect(find.text('Misol 1 / 20'), findsOneWidget);
 
     // Prompt statement
-    expect(find.text('12 + 8 = ?'), findsOneWidget);
+    expect(find.text('6 + 2 = ?'), findsOneWidget);
 
-    // Choices
-    expect(find.text('20'), findsOneWidget);
-    expect(find.text('Javobni tekshirish'), findsOneWidget);
+    // Coin badge exists
+    expect(find.byType(CoinBadge), findsOneWidget);
 
-    // Tap answer 20 and submit
-    await tester.tap(find.text('20'));
-    await tester.pumpAndSettle();
+    // Choices exist
+    expect(find.text('8'), findsOneWidget);
 
-    await tester.tap(find.text('Javobni tekshirish'));
-    await tester.pumpAndSettle();
+    // Tap correct answer 8 to submit directly
+    await tester.tap(find.text('8'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
-    // Verify green success banner and "+1 oltin tanga qo‘shildi!"
-    expect(find.textContaining('To‘g‘ri javob! +1 oltin tanga qo‘shildi!'), findsOneWidget);
-    expect(find.text('Keyingi misol'), findsOneWidget);
+    // Verify green checkmark icon appears on correct option
+    expect(find.byIcon(Icons.check_circle_rounded), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 1500));
   });
 
   testWidgets('CityScreen renders 3D isometric city with Yangi bino qurish CTA', (WidgetTester tester) async {
@@ -118,7 +115,7 @@ void main() {
     expect(find.textContaining('Xaridlarni tiklash'), findsOneWidget);
   });
 
-  testWidgets('SettingsScreen includes TARIFLAR VA OBUNA tile', (WidgetTester tester) async {
+  testWidgets('SettingsScreen includes ILOVA KO‘RINISHI VA REJIMI', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 1920);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -133,7 +130,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.text('TARIFLAR VA OBUNA'), findsOneWidget);
-    expect(find.textContaining('Tariflar (30 kunlik bepul sinov)'), findsOneWidget);
+    expect(find.text('ILOVA KO‘RINISHI VA REJIMI'), findsOneWidget);
+    expect(find.textContaining('Hisobdan chiqish'), findsOneWidget);
   });
 }

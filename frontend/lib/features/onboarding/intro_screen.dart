@@ -149,7 +149,11 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             if (_currentStep > 0) {
               setState(() => _currentStep--);
             } else {
-              context.pop();
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go('/kids/home');
+              }
             }
           },
         ),
@@ -165,7 +169,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
           child: _buildStepContent(),
         ),
       ),
@@ -472,17 +477,22 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       children: [
         customIcon ?? Icon(icon, color: AppColors.kidsPrimary, size: 22),
         const SizedBox(width: 12),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 14, color: AppColors.kidsSecondaryText, fontWeight: FontWeight.w600),
+        Expanded(
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 14, color: AppColors.kidsSecondaryText, fontWeight: FontWeight.w600),
+          ),
         ),
-        const Spacer(),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w800,
-            color: valueColor ?? AppColors.kidsDarkText,
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w800,
+              color: valueColor ?? AppColors.kidsDarkText,
+            ),
           ),
         ),
       ],

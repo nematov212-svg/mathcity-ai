@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/constants/app_strings.dart';
+import '../core/network/api_client.dart';
 import '../core/theme/app_theme.dart';
 import 'router.dart';
 
@@ -30,7 +31,57 @@ class MathCityApp extends ConsumerWidget {
         );
         return MediaQuery(
           data: mediaQuery.copyWith(viewInsets: safeInsets),
-          child: child ?? const SizedBox.shrink(),
+          child: Stack(
+            children: [
+              child ?? const SizedBox.shrink(),
+              ValueListenableBuilder<bool>(
+                valueListenable: ApiClient().isServerWakingUp,
+                builder: (context, wakingUp, _) {
+                  if (!wakingUp) return const SizedBox.shrink();
+                  return Positioned(
+                    top: mediaQuery.padding.top + 8,
+                    left: 20,
+                    right: 20,
+                    child: Material(
+                      elevation: 8,
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color(0xFF6C47FF),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Color(0xFFFFD66B),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: ValueListenableBuilder<String?>(
+                                valueListenable: ApiClient().serverStatusMessage,
+                                builder: (context, msg, _) => Text(
+                                  msg ?? 'Server uyg‘onmoqda, biroz kuting...',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         );
       },
     );

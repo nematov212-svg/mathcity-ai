@@ -40,6 +40,11 @@ export interface LessonModel {
   description: string;
   contentMd: string;
   formulaLatex?: string;
+  coverImage?: string;
+  gallery?: string[];
+  videoUrl?: string;
+  audioUrl?: string;
+  textExplanation?: string;
   rewardXP: number;
   rewardCoins: number;
   orderIndex: number;
@@ -223,6 +228,8 @@ function createTenQuestions(
   sectionId: string,
   generatorType:
     | 'add_sub_3rd'
+    | 'multiplication_table'
+    | 'geometry_shapes'
     | 'fractions_4th'
     | 'equations_8th'
     | 'mult_div_3rd'
@@ -268,6 +275,45 @@ function createTenQuestions(
         explanation: `${prompt.replace(' = ?', '')} amali natijasi ${correct} ga teng.`,
         hint: `Birliklar va o‘nliklarni alohida hisoblang.`,
         formulaLatex: `${a} ${isAdd ? '+' : '-'} ${b} = ${correct}`,
+        orderIndex: i,
+      });
+    } else if (generatorType === 'multiplication_table') {
+      const a = (i % 8) + 2;
+      const b = ((i * 3) % 9) + 2;
+      const prompt = `${a} × ${b} = ?`;
+      const correct = (a * b).toString();
+      const options = [correct, (a * b + a).toString(), (a * b - 2).toString(), (a * b + 4).toString()];
+      list.push({
+        id: qId,
+        lessonId,
+        sectionId,
+        prompt,
+        type: 'MULTIPLE_CHOICE',
+        options: Array.from(new Set(options)).slice(0, 4),
+        correctAnswer: correct,
+        explanation: `${a} × ${b} = ${a * b}.`,
+        hint: `Karra jadvali: ${a} ni ${b} marta o‘zaro qo‘shish.`,
+        formulaLatex: `${a} \\times ${b} = ${a * b}`,
+        orderIndex: i,
+      });
+    } else if (generatorType === 'geometry_shapes') {
+      const a = i + 3;
+      const b = i + 5;
+      const p = 2 * (a + b);
+      const prompt = `Tomonlari ${a} sm va ${b} sm bo‘lgan to‘g‘ri to‘rtburchakning perimetrini (P) toping:`;
+      const correct = `${p} sm`;
+      const options = [correct, `${p + 4} sm`, `${p - 2} sm`, `${a * b} sm`];
+      list.push({
+        id: qId,
+        lessonId,
+        sectionId,
+        prompt,
+        type: 'MULTIPLE_CHOICE',
+        options: Array.from(new Set(options)).slice(0, 4),
+        correctAnswer: correct,
+        explanation: `P = 2 * (a + b) = 2 * (${a} + ${b}) = ${p} sm.`,
+        hint: 'Perimetr barcha tomonlar uzunliklari yig‘indisidir: P = 2*(a+b).',
+        formulaLatex: `P = 2(${a} + ${b}) = ${p}`,
         orderIndex: i,
       });
     } else if (generatorType === 'fractions_4th') {
@@ -635,6 +681,41 @@ Misol: 12 + 8 = 20.`,
     ],
   },
 
+  // --- GRADE 3: Ko'paytirish jadvali ---
+  {
+    id: 'lesson-k3-01',
+    courseId: 'course-g3-math',
+    chapterId: 'chap-g3-02',
+    chapterTitle: 'Ko‘paytirish va Bo‘lish',
+    grade: 3,
+    mode: 'KIDS',
+    title: 'Ko‘paytirish jadvali: Karra jadvali sirlari',
+    topicKey: 'multiplication_table',
+    description: '1 dan 10 gacha bo‘lgan karra jadvalining oson va tez hisoblash usullari.',
+    formulaLatex: 'a \\times b = c',
+    contentMd: `## Dars maqsadi
+Ko‘paytirish jadvalini to‘liq o‘zlashtirish va amaliy misollarda qo‘llash.`,
+    rewardXP: 120,
+    rewardCoins: 15,
+    orderIndex: 1,
+    sections: [
+      {
+        id: 'sec-k3-01-s1',
+        lessonId: 'lesson-k3-01',
+        title: '1-qism: 2, 3 va 4 ga ko‘paytirish',
+        orderIndex: 1,
+        questions: createTenQuestions('k3-s1', 'lesson-k3-01', 'sec-k3-01-s1', 'multiplication_table'),
+      },
+      {
+        id: 'sec-k3-01-s2',
+        lessonId: 'lesson-k3-01',
+        title: '2-qism: 5, 6, 7 va 8 ga ko‘paytirish',
+        orderIndex: 2,
+        questions: createTenQuestions('k3-s2', 'lesson-k3-01', 'sec-k3-01-s2', 'multiplication_table'),
+      },
+    ],
+  },
+
   // --- GRADE 4: Oddiy kasrlar ---
   {
     id: 'lesson-k4-01',
@@ -666,6 +747,34 @@ Kasr tushunchasi, uning surati va maxraji o‘rtasidagi bog‘lanishni o‘zlash
         title: '2-qism: Bir xil maxrajli kasrlarni taqqoslash',
         orderIndex: 2,
         questions: createTenQuestions('k4-s2', 'lesson-k4-01', 'sec-k4-01-s2', 'fractions_4th'),
+      },
+    ],
+  },
+
+  // --- GRADE 4: Geometrik shakllar ---
+  {
+    id: 'lesson-k4-02',
+    courseId: 'course-g4-math',
+    chapterId: 'chap-g4-02',
+    chapterTitle: 'Geometriya va Shakllar',
+    grade: 4,
+    mode: 'KIDS',
+    title: 'Geometrik shakllar: Perimetr va Yuza',
+    topicKey: 'geometry_shapes',
+    description: 'Kvadrat, to‘g‘ri to‘rtburchak va uchburchaklarning perimetri va yuzasini topish.',
+    formulaLatex: 'P = 2 \\times (a + b), \\quad S = a \\times b',
+    contentMd: `## Dars maqsadi
+Geometrik shakllarni farqlash, perimetr va yuza formulalarini hisoblash.`,
+    rewardXP: 110,
+    rewardCoins: 12,
+    orderIndex: 3,
+    sections: [
+      {
+        id: 'sec-k4-02-s1',
+        lessonId: 'lesson-k4-02',
+        title: '1-qism: Shakllar va ularning perimetri',
+        orderIndex: 1,
+        questions: createTenQuestions('k4-02-s1', 'lesson-k4-02', 'sec-k4-02-s1', 'geometry_shapes'),
       },
     ],
   },

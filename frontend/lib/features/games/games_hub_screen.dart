@@ -17,7 +17,7 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> {
   @override
   Widget build(BuildContext context) {
     final studentState = ref.watch(studentProvider);
-    final coinBalance = studentState.student?.coinBalance ?? 250;
+    final coinBalance = studentState.student?.coinBalance ?? 0;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F8FE),

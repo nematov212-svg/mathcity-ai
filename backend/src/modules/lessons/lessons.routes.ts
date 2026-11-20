@@ -4,6 +4,43 @@ import { repository } from '../../utils/repository.js';
 
 export const lessonsRouter = Router();
 
+// Set of connected Server-Sent Event (SSE) clients for real-time lesson sync
+const sseClients = new Set<Response>();
+
+export function broadcastLessonEvent(event: string, payload: any) {
+  const data = JSON.stringify({ event, payload, timestamp: new Date().toISOString() });
+  for (const client of sseClients) {
+    try {
+      client.write(`event: ${event}\ndata: ${data}\n\n`);
+    } catch (_) {
+      sseClients.delete(client);
+    }
+  }
+}
+
+/**
+ * GET /api/lessons/stream (SSE real-time stream)
+ */
+lessonsRouter.get('/stream', (req, res: Response) => {
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache, no-transform',
+    Connection: 'keep-alive',
+    'Access-Control-Allow-Origin': '*',
+  });
+
+  res.write(`data: ${JSON.stringify({ status: 'connected', time: new Date().toISOString() })}\n\n`);
+
+  sseClients.add(res);
+
+  req.on('close', () => {
+    sseClients.delete(res);
+  });
+});
+
+/**
+ * GET /api/lessons
+ */
 lessonsRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
   const modeParam = (req.query.mode as 'KIDS' | 'TEEN') || user.mode;
@@ -22,16 +59,25 @@ lessonsRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response
     topicKey: l.topicKey,
     description: l.description,
     formulaLatex: l.formulaLatex,
+    coverImage: l.coverImage || null,
+    gallery: l.gallery || [],
+    videoUrl: l.videoUrl || null,
+    audioUrl: l.audioUrl || null,
+    textExplanation: l.textExplanation || l.contentMd || '',
     rewardXP: l.rewardXP,
     rewardCoins: l.rewardCoins,
     orderIndex: l.orderIndex,
-    sectionCount: l.sections.length,
+    status: l.status || 'PUBLISHED',
+    sectionCount: l.sections ? l.sections.length : 0,
     isCompleted: user.completedLessons.includes(l.id),
   }));
 
   return res.json({ success: true, data: mapped });
 });
 
+/**
+ * GET /api/lessons/:id
+ */
 lessonsRouter.get('/:id', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
   const lessonId = String(req.params.id);
@@ -45,12 +91,17 @@ lessonsRouter.get('/:id', authMiddleware, (req: AuthenticatedRequest, res: Respo
     success: true,
     data: {
       ...lesson,
+      coverImage: lesson.coverImage || null,
+      gallery: lesson.gallery || [],
+      videoUrl: lesson.videoUrl || null,
+      audioUrl: lesson.audioUrl || null,
+      textExplanation: lesson.textExplanation || lesson.contentMd || '',
       isCompleted: user.completedLessons.includes(lesson.id),
-      sections: lesson.sections.map((s) => ({
+      sections: (lesson.sections || []).map((s) => ({
         id: s.id,
         title: s.title,
         orderIndex: s.orderIndex,
-        questionCount: s.questions.length, // Exactly 10 questions
+        questionCount: s.questions ? s.questions.length : 0,
         isCompleted: user.completedSections.includes(s.id),
       })),
     },
@@ -79,7 +130,7 @@ lessonsRouter.get('/:id/sections/:sectionId', authMiddleware, (req: Authenticate
       sectionTitle: section.title,
       orderIndex: section.orderIndex,
       isCompleted: user.completedSections.includes(section.id),
-      questions: section.questions.map((q) => ({
+      questions: (section.questions || []).map((q) => ({
         id: q.id,
         prompt: q.prompt,
         type: q.type,
@@ -106,13 +157,11 @@ lessonsRouter.post('/:id/sections/:sectionId/complete', authMiddleware, (req: Au
     user.completedSections.push(sectionId);
   }
 
-  // Check if all sections in lesson are completed
   const allCompleted = found.lesson.sections.every((s) => user.completedSections.includes(s.id));
   if (allCompleted && !user.completedLessons.includes(lessonId)) {
     user.completedLessons.push(lessonId);
   }
 
-  // Find next section if exists
   const nextSection = found.lesson.sections.find((s) => s.orderIndex === found.section.orderIndex + 1);
 
   return res.json({

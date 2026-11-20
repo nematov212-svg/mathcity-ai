@@ -129,82 +129,85 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
           ),
           child: SafeArea(
             top: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: colors.muted.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(height: 18),
-                Text(
-                  'Profil rasmini o‘zgartirish',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    color: colors.ink,
-                  ),
-                ),
-                const SizedBox(height: 18),
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(10),
+            child: Material(
+              color: Colors.transparent,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 4,
                     decoration: BoxDecoration(
-                      color: colors.primary.withOpacity(0.12),
-                      shape: BoxShape.circle,
+                      color: colors.muted.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(2),
                     ),
-                    child: Icon(Icons.photo_library_rounded, color: colors.primary),
                   ),
-                  title: Text(
-                    'Galereyadan tanlash',
-                    style: TextStyle(fontWeight: FontWeight.w700, color: colors.ink),
-                  ),
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    _pickImage(ImageSource.gallery);
-                  },
-                ),
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: colors.primary.withOpacity(0.12),
-                      shape: BoxShape.circle,
+                  const SizedBox(height: 18),
+                  Text(
+                    'Profil rasmini o‘zgartirish',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: colors.ink,
                     ),
-                    child: Icon(Icons.camera_alt_rounded, color: colors.primary),
                   ),
-                  title: Text(
-                    'Kameradan olish',
-                    style: TextStyle(fontWeight: FontWeight.w700, color: colors.ink),
-                  ),
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    _pickImage(ImageSource.camera);
-                  },
-                ),
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEF4444).withOpacity(0.12),
-                      shape: BoxShape.circle,
+                  const SizedBox(height: 18),
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: colors.primary.withOpacity(0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.photo_library_rounded, color: colors.primary),
                     ),
-                    child: const Icon(Icons.delete_outline_rounded, color: Color(0xFFEF4444)),
+                    title: Text(
+                      'Galereyadan tanlash',
+                      style: TextStyle(fontWeight: FontWeight.w700, color: colors.ink),
+                    ),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _pickImage(ImageSource.gallery);
+                    },
                   ),
-                  title: const Text(
-                    'Rasmni o‘chirish',
-                    style: TextStyle(fontWeight: FontWeight.w700, color: Color(0xFFEF4444)),
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: colors.primary.withOpacity(0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.camera_alt_rounded, color: colors.primary),
+                    ),
+                    title: Text(
+                      'Kameradan olish',
+                      style: TextStyle(fontWeight: FontWeight.w700, color: colors.ink),
+                    ),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _pickImage(ImageSource.camera);
+                    },
                   ),
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    _removeAvatar();
-                  },
-                ),
-              ],
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEF4444).withOpacity(0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.delete_outline_rounded, color: Color(0xFFEF4444)),
+                    ),
+                    title: const Text(
+                      'Rasmni o‘chirish',
+                      style: TextStyle(fontWeight: FontWeight.w700, color: Color(0xFFEF4444)),
+                    ),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _removeAvatar();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -1055,7 +1058,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
               left: 0,
               right: 0,
               bottom: 0,
-              child: MathCityBottomNav(currentIndex: 4),
+              child: MathCityBottomNav(currentIndex: 5),
             ),
           ],
         ),
@@ -1127,6 +1130,24 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
   }
 
   Widget _buildProCard(AppThemeColors colors, bool isPro, bool disableAnim) {
+    final student = ref.watch(studentProvider).student;
+    int remainingDays = 30;
+    String expireDateStr = '30 kun';
+    if (student?.subscription.proExpiresAt != null) {
+      try {
+        final exp = DateTime.parse(student!.subscription.proExpiresAt!);
+        remainingDays = exp.difference(DateTime.now()).inDays.clamp(0, 365);
+        expireDateStr = '${exp.day.toString().padLeft(2, '0')}.${exp.month.toString().padLeft(2, '0')}.${exp.year}';
+      } catch (_) {}
+    } else if (student?.subscription.trialExpiresAt != null) {
+      try {
+        final exp = DateTime.parse(student!.subscription.trialExpiresAt!);
+        remainingDays = exp.difference(DateTime.now()).inDays.clamp(0, 365);
+        expireDateStr = '${exp.day.toString().padLeft(2, '0')}.${exp.month.toString().padLeft(2, '0')}.${exp.year}';
+      } catch (_) {}
+    }
+    final progressFraction = (remainingDays / 30.0).clamp(0.05, 1.0);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -1183,10 +1204,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                       ),
                     ],
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Icon(
-                      Icons.star_rounded,
-                      color: Color(0xFF2A1B7A),
+                      isPro ? Icons.workspace_premium_rounded : Icons.star_rounded,
+                      color: const Color(0xFF2A1B7A),
                       size: 38,
                     ),
                   ),
@@ -1205,13 +1226,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2.5),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFD66B),
+                            color: isPro ? const Color(0xFF10B981) : const Color(0xFFFFD66B),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text(
-                            'PRO',
+                          child: Text(
+                            isPro ? 'PRO FAOL' : 'PRO',
                             style: TextStyle(
-                              color: Color(0xFF2A1B7A),
+                              color: isPro ? Colors.white : const Color(0xFF2A1B7A),
                               fontSize: 11,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 0.1,
@@ -1227,18 +1248,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                       ],
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'MathCity Pro',
-                      style: TextStyle(
+                    Text(
+                      isPro ? 'MathCity Pro faol' : 'MathCity Pro',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
                     const SizedBox(height: 2),
-                    const Text(
-                      'Oyiga 29 000 so‘m',
-                      style: TextStyle(
+                    Text(
+                      isPro ? 'Pro faol · $remainingDays kun qoldi' : 'Oyiga 29 000 so‘m',
+                      style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -1252,16 +1273,42 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
 
           const SizedBox(height: 14),
 
-          // 3 Benefit Chips
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _buildProChip('AI Ustoz cheksiz'),
-              _buildProChip('Reklamasiz'),
-              _buildProChip('Barcha darslar'),
-            ],
-          ),
+          if (isPro) ...[
+            // Progress Bar showing remaining Pro days
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: LinearProgressIndicator(
+                value: progressFraction,
+                minHeight: 8,
+                backgroundColor: Colors.white.withOpacity(0.2),
+                valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFFFD66B)),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Tugash sanasi: $expireDateStr',
+                  style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  '$remainingDays kun qoldi',
+                  style: const TextStyle(color: Color(0xFFFFD66B), fontSize: 12, fontWeight: FontWeight.w800),
+                ),
+              ],
+            ),
+          ] else
+            // 3 Benefit Chips
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _buildProChip('AI Ustoz cheksiz'),
+                _buildProChip('Reklamasiz'),
+                _buildProChip('Barcha darslar'),
+              ],
+            ),
 
           const SizedBox(height: 16),
 

@@ -305,7 +305,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
       return {
         'isCorrect': true,
         'coinsAwarded': 1,
-        'newCoinBalance': (state.student?.coinBalance ?? 100),
+        'newCoinBalance': (state.student?.coinBalance ?? 0),
         'explanation': 'To‘g‘ri javob!',
       };
     }
@@ -421,6 +421,18 @@ class StudentNotifier extends StateNotifier<StudentState> {
       return true;
     }
     return false;
+  }
+
+  void updateStudentLocally(StudentModel updatedStudent) {
+    state = state.copyWith(student: updatedStudent);
+  }
+
+  void updateCoinBalance(int newBalance) {
+    if (state.student != null) {
+      state = state.copyWith(
+        student: state.student!.copyWith(coinBalance: newBalance),
+      );
+    }
   }
 
   // --- Subscription: Activate Pro & Restore ---

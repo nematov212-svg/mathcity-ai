@@ -17,8 +17,8 @@ class AnalyticsScreen extends ConsumerWidget {
     final attempted = student?.attemptedQuestionCount ?? 15;
     final correct = student?.correctQuestionCount ?? 14;
     final lessons = 3 + (student?.level ?? 1);
-    final totalXp = student?.totalXP ?? 380;
-    final totalCoins = student?.coinBalance ?? 100;
+    final totalXp = student?.totalXP ?? 0;
+    final totalCoins = student?.coinBalance ?? 0;
     final accuracy = attempted > 0 ? ((correct / attempted) * 100).round() : 95;
 
     return Scaffold(

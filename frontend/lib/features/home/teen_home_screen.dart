@@ -14,9 +14,9 @@ class TeenHomeScreen extends ConsumerWidget {
     final studentState = ref.watch(studentProvider);
     final student = studentState.student;
 
-    final coins = student?.coinBalance ?? 450;
-    final xp = student?.totalXP ?? 920;
-    final level = student?.level ?? 5;
+    final coins = student?.coinBalance ?? 0;
+    final xp = student?.totalXP ?? 0;
+    final level = student?.level ?? 1;
     final name = (student != null && student.displayName.trim().isNotEmpty) ? student.displayName.trim() : 'O‘quvchi';
 
     return Scaffold(

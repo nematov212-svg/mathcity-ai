@@ -45,10 +45,11 @@ void main() {
       ),
     );
 
-    expect(find.text('Oddiy kasrlar'), findsOneWidget);
-    expect(find.text('Mening shahrim'), findsOneWidget);
+    expect(find.text('Misollar ishlash'), findsOneWidget);
+    expect(find.text('Reyting'), findsOneWidget);
+    expect(find.text('3D uy qurish'), findsOneWidget);
     expect(find.text('Kosmik hisob'), findsOneWidget);
-    expect(find.text('AI Ustoz'), findsOneWidget);
+    expect(find.text('AI Ustoz'), findsAtLeastNWidgets(1));
   });
 
   testWidgets('Teen Home Screen displays mature dark theme and high school math', (WidgetTester tester) async {

@@ -215,7 +215,7 @@ class _FractionBattleGameScreenState extends ConsumerState<FractionBattleGameScr
 
   @override
   Widget build(BuildContext context) {
-    final coinBalance = ref.watch(studentProvider).student?.coinBalance ?? 250;
+    final coinBalance = ref.watch(studentProvider).student?.coinBalance ?? 0;
     final currentQ = _questions[_currentQuestionIndex];
     final progress = (_currentQuestionIndex + 1) / _totalQuestions;
 

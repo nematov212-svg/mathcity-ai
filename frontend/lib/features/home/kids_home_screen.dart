@@ -1,33 +1,58 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
+import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/xp_bar.dart';
 import '../../shared/providers/student_provider.dart';
 
-class KidsHomeScreen extends ConsumerWidget {
+class KidsHomeScreen extends ConsumerStatefulWidget {
   const KidsHomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<KidsHomeScreen> createState() => _KidsHomeScreenState();
+}
+
+class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _mathAnimController;
+
+  @override
+  void initState() {
+    super.initState();
+    _mathAnimController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 6),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _mathAnimController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppThemeColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final disableAnim = MediaQuery.of(context).disableAnimations;
+
     final studentState = ref.watch(studentProvider);
     final student = studentState.student;
 
-    final coins = student?.coinBalance ?? 100;
+    final coins = student?.coinBalance ?? 0;
     final xp = student?.totalXP ?? 0;
     final level = student?.level ?? 1;
     final name = (student != null && student.displayName.trim().isNotEmpty) ? student.displayName.trim() : 'O‘quvchi';
-    final cityLevel = student?.cityLevel ?? 1;
-
-    // Soft Lavender background (Exact reference design: #F7F7FD)
-    const backgroundColor = Color(0xFFF7F7FD);
 
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: colors.bg,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -46,20 +71,20 @@ class KidsHomeScreen extends ConsumerWidget {
                           height: 48,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white,
-                            border: Border.all(color: const Color(0xFF6C5CE7), width: 2.2),
+                            color: colors.card,
+                            border: Border.all(color: colors.primary, width: 2.2),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF6C5CE7).withOpacity(0.12),
+                                color: colors.primary.withOpacity(0.15),
                                 blurRadius: 10,
                                 offset: const Offset(0, 3),
                               ),
                             ],
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Icon(
                               Icons.face_rounded,
-                              color: Color(0xFF6C5CE7),
+                              color: colors.primary,
                               size: 30,
                             ),
                           ),
@@ -73,22 +98,22 @@ class KidsHomeScreen extends ConsumerWidget {
                                 'Salom, $name! 👋',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w900,
-                                  color: Color(0xFF1E1B4B),
+                                  color: colors.ink,
                                   letterSpacing: -0.2,
                                 ),
                               ),
                               const SizedBox(height: 2),
-                              const Text(
+                              Text(
                                 'Bugun nima o‘rganamiz?',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
-                                  color: Color(0xFF8B8BA7),
+                                  color: colors.muted,
                                 ),
                               ),
                             ],
@@ -105,22 +130,22 @@ class KidsHomeScreen extends ConsumerWidget {
               const SizedBox(height: 16),
 
               // ==============================================================
-              // 2. XP PROGRESS CARD (Full width, rounded white container)
+              // 2. XP PROGRESS CARD (Full width, rounded container)
               // ==============================================================
               XPBar(currentXP: xp, level: level),
               const SizedBox(height: 18),
 
               // ==============================================================
-              // 3. MAIN HERO PURPLE LESSON CARD ("DAVOM ETISH")
+              // 3. MAIN HERO CARD: "MISOLLAR ISHLASH" with floating math symbols
               // ==============================================================
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(38),
+                  borderRadius: BorderRadius.circular(36),
                   gradient: const LinearGradient(
                     colors: [
-                      Color(0xFF6D52F7),
-                      Color(0xFF8672FF),
+                      Color(0xFF5B3BE8),
+                      Color(0xFF7A58F8),
                       Color(0xFF9886FE),
                     ],
                     begin: Alignment.topLeft,
@@ -128,20 +153,26 @@ class KidsHomeScreen extends ConsumerWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF7154EC).withOpacity(0.38),
-                      blurRadius: 26,
-                      offset: const Offset(0, 12),
+                      color: const Color(0xFF6C47FF).withOpacity(0.35),
+                      blurRadius: 24,
+                      offset: const Offset(0, 10),
                     ),
                   ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(38),
+                  borderRadius: BorderRadius.circular(36),
                   child: Stack(
                     children: [
-                      // Decorative abstract fluid curves
+                      // Floating Animated Math Expressions
                       Positioned.fill(
-                        child: CustomPaint(
-                          painter: _LessonCardCurvesPainter(),
+                        child: AnimatedBuilder(
+                          animation: _mathAnimController,
+                          builder: (context, _) {
+                            final progress = disableAnim ? 0.0 : _mathAnimController.value;
+                            return CustomPaint(
+                              painter: _FloatingMathSymbolsPainter(progress: progress),
+                            );
+                          },
                         ),
                       ),
                       Padding(
@@ -149,38 +180,54 @@ class KidsHomeScreen extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Top Row: "DAVOM ETISH" pill badge and graduation cap
+                            // Top Row: "MISOLLAR ISHLASH" pill badge and calculation icon
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.24),
-                                    borderRadius: BorderRadius.circular(999),
-                                  ),
-                                  child: const Text(
-                                    'DAVOM ETISH',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 11,
-                                      letterSpacing: 1.1,
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.24),
+                                          borderRadius: BorderRadius.circular(999),
+                                        ),
+                                        child: const Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.auto_awesome, color: Color(0xFFFFD66B), size: 14),
+                                            SizedBox(width: 6),
+                                            Text(
+                                              'MISOLLAR ISHLASH',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 11,
+                                                letterSpacing: 1.1,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
+                                const SizedBox(width: 8),
                                 const Icon(
-                                  Icons.school_rounded,
+                                  Icons.calculate_rounded,
                                   color: Colors.white,
-                                  size: 26,
+                                  size: 28,
                                 ),
                               ],
                             ),
                             const SizedBox(height: 18),
 
-                            // Lesson Title & Subtitle
+                            // Title & Subtitle
                             const Text(
-                              'Oddiy kasrlar',
+                              'Misollar ishlash',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 24,
@@ -190,7 +237,7 @@ class KidsHomeScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              'Butunning bo‘laklari va doirali diagrammalar',
+                              'Kundalik mashqlar, misollar va darajangizni oshiring',
                               style: TextStyle(
                                 color: Colors.white.withOpacity(0.9),
                                 fontSize: 13,
@@ -199,19 +246,19 @@ class KidsHomeScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 22),
 
-                            // White Pill Button: "Darsni boshlash →"
+                            // White Pill Button: "Misollarni yechish →"
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
-                                foregroundColor: const Color(0xFF6C5CE7),
+                                foregroundColor: const Color(0xFF5B3BE8),
                                 elevation: 0,
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(999),
                                 ),
                               ),
                               onPressed: () {
-                                context.push('/kids/lesson/lesson-g5-01');
+                                context.push('/kids/exercise');
                               },
                               child: const FittedBox(
                                 fit: BoxFit.scaleDown,
@@ -219,18 +266,18 @@ class KidsHomeScreen extends ConsumerWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      'Darsni boshlash',
+                                      'Misollarni yechish',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w800,
                                         fontSize: 14,
-                                        color: Color(0xFF6C5CE7),
+                                        color: Color(0xFF5B3BE8),
                                       ),
                                     ),
                                     SizedBox(width: 8),
                                     Icon(
                                       Icons.arrow_forward_rounded,
                                       size: 18,
-                                      color: Color(0xFF6C5CE7),
+                                      color: Color(0xFF5B3BE8),
                                     ),
                                   ],
                                 ),
@@ -250,21 +297,24 @@ class KidsHomeScreen extends ConsumerWidget {
               // ==============================================================
               Row(
                 children: [
-                  // Card 1: Mening shahrim
+                  // Card 1: Reyting
                   Expanded(
                     child: InkWell(
-                      onTap: () => context.push('/kids/city'),
-                      borderRadius: BorderRadius.circular(32),
+                      onTap: () => context.push('/kids/leaderboard'),
+                      borderRadius: BorderRadius.circular(28),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(32),
-                          border: Border.all(color: const Color(0xFFEFF0FA), width: 1.2),
+                          color: colors.card,
+                          borderRadius: BorderRadius.circular(28),
+                          border: Border.all(
+                            color: const Color(0xFFFFD66B).withOpacity(0.5),
+                            width: 1.4,
+                          ),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF7154EC).withOpacity(0.04),
-                              blurRadius: 18,
+                              color: const Color(0xFFF59E0B).withOpacity(0.08),
+                              blurRadius: 16,
                               offset: const Offset(0, 6),
                             ),
                           ],
@@ -272,38 +322,48 @@ class KidsHomeScreen extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Mint container with green building icon
                             Container(
-                              width: 48,
-                              height: 48,
+                              width: 46,
+                              height: 46,
                               decoration: BoxDecoration(
-                                color: const Color(0xFFE2FBE8),
-                                borderRadius: BorderRadius.circular(18),
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFFFFE082), Color(0xFFFFB300)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFFFFB300).withOpacity(0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
                               ),
                               child: const Center(
                                 child: Icon(
-                                  Icons.domain_rounded,
-                                  color: Color(0xFF0F9D58),
+                                  Icons.emoji_events_rounded,
+                                  color: Colors.white,
                                   size: 26,
                                 ),
                               ),
                             ),
                             const SizedBox(height: 14),
-                            const Text(
-                              'Mening shahrim',
+                            Text(
+                              'Reyting',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w900,
-                                color: Color(0xFF1E1B4B),
+                                color: colors.ink,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '$cityLevel-daraja shahar',
+                              'Siz ${studentState.student?.rank ?? 1}-o‘rindasiz',
                               style: const TextStyle(
                                 fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF8B8BA7),
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFFD97706),
                               ),
                             ),
                           ],
@@ -313,21 +373,21 @@ class KidsHomeScreen extends ConsumerWidget {
                   ),
                   const SizedBox(width: 14),
 
-                  // Card 2: Kosmik hisob
+                  // Card 2: Kosmik hisob (O‘yinlar)
                   Expanded(
                     child: InkWell(
                       onTap: () => context.push('/kids/games/space-math'),
-                      borderRadius: BorderRadius.circular(32),
+                      borderRadius: BorderRadius.circular(28),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(32),
-                          border: Border.all(color: const Color(0xFFEFF0FA), width: 1.2),
+                          color: colors.card,
+                          borderRadius: BorderRadius.circular(28),
+                          border: Border.all(color: colors.border, width: 1.2),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF7154EC).withOpacity(0.04),
-                              blurRadius: 18,
+                              color: isDark ? Colors.black26 : const Color(0xFF7154EC).withOpacity(0.04),
+                              blurRadius: 16,
                               offset: const Offset(0, 6),
                             ),
                           ],
@@ -335,13 +395,12 @@ class KidsHomeScreen extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Peach container with rocket icon
                             Container(
-                              width: 48,
-                              height: 48,
+                              width: 46,
+                              height: 46,
                               decoration: BoxDecoration(
                                 color: const Color(0xFFFEE8DC),
-                                borderRadius: BorderRadius.circular(18),
+                                borderRadius: BorderRadius.circular(16),
                               ),
                               child: const Center(
                                 child: Icon(
@@ -352,12 +411,12 @@ class KidsHomeScreen extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(height: 14),
-                            const Text(
+                            Text(
                               'Kosmik hisob',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w900,
-                                color: Color(0xFF1E1B4B),
+                                color: colors.ink,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -389,20 +448,20 @@ class KidsHomeScreen extends ConsumerWidget {
               const SizedBox(height: 16),
 
               // ==============================================================
-              // 5. ZIYO AI USTOZ CARD (Soft Lavender background & purple robot)
+              // 5. ZIYO AI USTOZ CARD
               // ==============================================================
               InkWell(
                 onTap: () => context.push('/kids/ai-tutor'),
-                borderRadius: BorderRadius.circular(32),
+                borderRadius: BorderRadius.circular(28),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF2F0FF),
-                    borderRadius: BorderRadius.circular(32),
-                    border: Border.all(color: const Color(0xFFE6E2FF), width: 1.2),
+                    color: isDark ? const Color(0xFF1E1748) : const Color(0xFFF2F0FF),
+                    borderRadius: BorderRadius.circular(28),
+                    border: Border.all(color: colors.primary.withOpacity(0.2), width: 1.2),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF7154EC).withOpacity(0.04),
+                        color: colors.primary.withOpacity(0.06),
                         blurRadius: 16,
                         offset: const Offset(0, 4),
                       ),
@@ -410,13 +469,12 @@ class KidsHomeScreen extends ConsumerWidget {
                   ),
                   child: Row(
                     children: [
-                      // Solid purple circle with white robot icon
                       Container(
                         width: 46,
                         height: 46,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(0xFF6C5CE7),
+                          color: colors.primary,
                         ),
                         child: const Center(
                           child: Icon(
@@ -427,7 +485,7 @@ class KidsHomeScreen extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: 14),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -436,10 +494,10 @@ class KidsHomeScreen extends ConsumerWidget {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w900,
-                                color: Color(0xFF1E1B4B),
+                                color: colors.ink,
                               ),
                             ),
-                            SizedBox(height: 2),
+                            const SizedBox(height: 2),
                             Text(
                               'Tushunmagan misolingiz bormi? So‘rang!',
                               maxLines: 1,
@@ -447,15 +505,15 @@ class KidsHomeScreen extends ConsumerWidget {
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
-                                color: Color(0xFF8B8BA7),
+                                color: colors.muted,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.chat_bubble_outline_rounded,
-                        color: Color(0xFF6C5CE7),
+                        color: colors.primary,
                         size: 22,
                       ),
                     ],
@@ -465,21 +523,94 @@ class KidsHomeScreen extends ConsumerWidget {
               const SizedBox(height: 16),
 
               // ==============================================================
-              // 6. BUGUNGI VAZIFALAR (Large white rounded card with mint badge)
+              // 6. DARSLAR XARITASI (Preserved below AI Ustoz as requested)
+              // ==============================================================
+              InkWell(
+                onTap: () => context.push('/kids/lessons'),
+                borderRadius: BorderRadius.circular(28),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                  decoration: BoxDecoration(
+                    color: colors.card,
+                    borderRadius: BorderRadius.circular(28),
+                    border: Border.all(color: colors.border, width: 1.2),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isDark ? Colors.black26 : const Color(0xFF7154EC).withOpacity(0.04),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: colors.primary.withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Icon(
+                          Icons.map_rounded,
+                          color: colors.primary,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Darslar xaritasi',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w900,
+                                color: colors.ink,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Sinflar bo‘yicha bosqichma-bosqich o‘rganish',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: colors.muted,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: colors.muted,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // ==============================================================
+              // 7. BUGUNGI VAZIFALAR
               // ==============================================================
               InkWell(
                 onTap: () => context.push('/kids/daily-tasks'),
-                borderRadius: BorderRadius.circular(32),
+                borderRadius: BorderRadius.circular(28),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(32),
-                    border: Border.all(color: const Color(0xFFEFF0FA), width: 1.2),
+                    color: colors.card,
+                    borderRadius: BorderRadius.circular(28),
+                    border: Border.all(color: colors.border, width: 1.2),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF7154EC).withOpacity(0.04),
-                        blurRadius: 18,
+                        color: isDark ? Colors.black26 : const Color(0xFF7154EC).withOpacity(0.04),
+                        blurRadius: 16,
                         offset: const Offset(0, 6),
                       ),
                     ],
@@ -490,15 +621,15 @@ class KidsHomeScreen extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.checklist_rounded,
                                   color: Color(0xFF0F9D58),
                                   size: 22,
                                 ),
-                                SizedBox(width: 8),
+                                const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
                                     'Bugungi vazifalar',
@@ -507,7 +638,7 @@ class KidsHomeScreen extends ConsumerWidget {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w900,
-                                      color: Color(0xFF1E1B4B),
+                                      color: colors.ink,
                                     ),
                                   ),
                                 ),
@@ -534,171 +665,197 @@ class KidsHomeScreen extends ConsumerWidget {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      const Text(
+                      Text(
                         '5 ta matematika masalasini to‘g‘ri yeching',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFF4B5563),
+                          color: colors.muted,
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+
+              // ==============================================================
+              // 7.5. "3D UY QURISH" CARD (Navigates to /kids/city)
+              // ==============================================================
+              const SizedBox(height: 16),
+              InkWell(
+                onTap: () => context.push('/kids/city'),
+                borderRadius: BorderRadius.circular(28),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF1E1742) : Colors.white,
+                    borderRadius: BorderRadius.circular(28),
+                    border: Border.all(
+                      color: const Color(0xFF10B981).withOpacity(0.35),
+                      width: 1.4,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF10B981).withOpacity(0.08),
+                        blurRadius: 18,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      // Floating animated 3D House container with subtle bobbing
+                      AnimatedBuilder(
+                        animation: _mathAnimController,
+                        builder: (context, child) {
+                          final floatOffset = disableAnim ? 0.0 : math.sin(_mathAnimController.value * 2 * math.pi) * 3.0;
+                          return Transform.translate(
+                            offset: Offset(0, floatOffset),
+                            child: Container(
+                              width: 52,
+                              height: 52,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFF34D399), Color(0xFF059669)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(18),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF10B981).withOpacity(0.35),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.location_city_rounded,
+                                  color: Colors.white,
+                                  size: 28,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 4,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                Text(
+                                  '3D uy qurish',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w900,
+                                    color: colors.ink,
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFD1FAE5),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Text(
+                                    '3D orol',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w800,
+                                      color: Color(0xFF059669),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Shahringni qur va kengaytir',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: colors.muted,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: colors.muted,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
       // ==============================================================
-      // 7. FLOATING BOTTOM NAVIGATION BAR (Exact reference design)
+      // 8. UNIFIED 6-TAB FLOATING BOTTOM NAVIGATION BAR
       // ==============================================================
-      bottomNavigationBar: _buildFloatingBottomNav(context, 0),
-    );
-  }
-
-  Widget _buildFloatingBottomNav(BuildContext context, int activeIndex) {
-    return Container(
-      margin: const EdgeInsets.only(left: 16, right: 16, bottom: 14),
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(38),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF7154EC).withValues(alpha: 0.08),
-            blurRadius: 24,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Expanded(
-            child: _navItem(
-              icon: Icons.home_rounded,
-              label: 'Bosh sahifa',
-              isSelected: activeIndex == 0,
-              onTap: () => context.go('/kids/home'),
-            ),
-          ),
-          Expanded(
-            child: _navItem(
-              icon: Icons.menu_book_rounded,
-              label: 'Xarita',
-              isSelected: activeIndex == 1,
-              onTap: () => context.push('/kids/lessons'),
-            ),
-          ),
-          Expanded(
-            child: _navItem(
-              icon: Icons.sports_esports_rounded,
-              label: 'O‘yinlar',
-              isSelected: activeIndex == 2,
-              onTap: () => context.push('/kids/games'),
-            ),
-          ),
-          Expanded(
-            child: _navItem(
-              icon: Icons.domain_rounded,
-              label: 'Shahrim',
-              isSelected: activeIndex == 3,
-              onTap: () => context.push('/kids/city'),
-            ),
-          ),
-          Expanded(
-            child: _navItem(
-              icon: Icons.person_rounded,
-              label: 'Profil',
-              isSelected: activeIndex == 4,
-              onTap: () => context.push('/kids/profile'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _navItem({
-    required IconData icon,
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    final color = isSelected ? const Color(0xFF6C5CE7) : const Color(0xFF9CA3AF);
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              color: color,
-              size: 24,
-            ),
-            const SizedBox(height: 3),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                label,
-                maxLines: 1,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                  color: color,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: const MathCityBottomNav(currentIndex: 0),
     );
   }
 }
 
-/// Abstract curves painter to replicate the fluid purple waves on the lesson card
-class _LessonCardCurvesPainter extends CustomPainter {
+/// Custom painter for floating mathematical symbols and light beams
+class _FloatingMathSymbolsPainter extends CustomPainter {
+  final double progress; // 0.0 to 1.0
+
+  const _FloatingMathSymbolsPainter({required this.progress});
+
+  static const List<({String symbol, double x, double y, double size})> _symbols = [
+    (symbol: '+', x: 0.12, y: 0.22, size: 24),
+    (symbol: '−', x: 0.82, y: 0.18, size: 22),
+    (symbol: '×', x: 0.65, y: 0.68, size: 20),
+    (symbol: '÷', x: 0.28, y: 0.78, size: 22),
+    (symbol: 'π', x: 0.88, y: 0.58, size: 20),
+    (symbol: '√', x: 0.44, y: 0.16, size: 24),
+    (symbol: 'x²', x: 0.72, y: 0.38, size: 18),
+    (symbol: '25+17=?', x: 0.15, y: 0.52, size: 14),
+  ];
+
   @override
   void paint(Canvas canvas, Size size) {
-    // Upper right subtle curve
-    final p1 = Paint()
-      ..color = Colors.white.withOpacity(0.08)
-      ..style = PaintingStyle.fill;
-    final path1 = Path();
-    path1.moveTo(size.width * 0.45, 0);
-    path1.quadraticBezierTo(
-      size.width * 0.72,
-      size.height * 0.42,
-      size.width,
-      size.height * 0.28,
-    );
-    path1.lineTo(size.width, 0);
-    path1.close();
-    canvas.drawPath(path1, p1);
+    for (int i = 0; i < _symbols.length; i++) {
+      final s = _symbols[i];
+      final offset = (progress + (i * 0.125)) % 1.0;
+      final waveY = math.sin(offset * math.pi * 2) * 8.0;
+      final opacity = 0.12 + (math.sin(offset * math.pi * 2) + 1.0) * 0.08;
 
-    // Bottom right subtle curve
-    final p2 = Paint()
-      ..color = Colors.white.withOpacity(0.06)
-      ..style = PaintingStyle.fill;
-    final path2 = Path();
-    path2.moveTo(size.width * 0.52, size.height);
-    path2.quadraticBezierTo(
-      size.width * 0.76,
-      size.height * 0.62,
-      size.width,
-      size.height * 0.76,
-    );
-    path2.lineTo(size.width, size.height);
-    path2.close();
-    canvas.drawPath(path2, p2);
+      final textSpan = TextSpan(
+        text: s.symbol,
+        style: TextStyle(
+          color: Colors.white.withOpacity(opacity.clamp(0.06, 0.35)),
+          fontSize: s.size,
+          fontWeight: FontWeight.w900,
+          fontFamily: 'Nunito',
+        ),
+      );
+      final textPainter = TextPainter(
+        text: textSpan,
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      final posX = (s.x * size.width);
+      final posY = (s.y * size.height) + waveY;
+      textPainter.paint(canvas, Offset(posX, posY));
+    }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _FloatingMathSymbolsPainter oldDelegate) =>
+      oldDelegate.progress != progress;
 }

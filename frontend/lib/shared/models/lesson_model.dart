@@ -9,6 +9,12 @@ class LessonModel {
   final String? formulaLatex;
   final String? chapterTitle;
   final String? contentMd;
+  final String? coverImage;
+  final List<String> gallery;
+  final String? videoUrl;
+  final String? audioUrl;
+  final String? textExplanation;
+  final String status;
   final int rewardXP;
   final int rewardCoins;
   final int orderIndex;
@@ -26,6 +32,12 @@ class LessonModel {
     this.formulaLatex,
     this.chapterTitle,
     this.contentMd,
+    this.coverImage,
+    this.gallery = const [],
+    this.videoUrl,
+    this.audioUrl,
+    this.textExplanation,
+    this.status = 'PUBLISHED',
     required this.rewardXP,
     required this.rewardCoins,
     required this.orderIndex,
@@ -45,6 +57,12 @@ class LessonModel {
       formulaLatex: json['formulaLatex'],
       chapterTitle: json['chapterTitle'],
       contentMd: json['contentMd'],
+      coverImage: json['coverImage'],
+      gallery: (json['gallery'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      videoUrl: json['videoUrl'],
+      audioUrl: json['audioUrl'],
+      textExplanation: json['textExplanation'],
+      status: json['status'] ?? 'PUBLISHED',
       rewardXP: json['rewardXP'] ?? 50,
       rewardCoins: json['rewardCoins'] ?? 50,
       orderIndex: json['orderIndex'] ?? 0,

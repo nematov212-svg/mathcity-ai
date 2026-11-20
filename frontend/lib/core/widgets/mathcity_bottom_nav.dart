@@ -22,7 +22,8 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> with SingleTicker
 
   final List<({String label, IconData icon, String route})> _items = const [
     (label: 'Bosh sahifa', icon: Icons.home_rounded, route: '/kids/home'),
-    (label: 'Xarita', icon: Icons.map_rounded, route: '/kids/lessons'),
+    (label: 'Darslar', icon: Icons.menu_book_rounded, route: '/kids/lessons'),
+    (label: 'AI Ustoz', icon: Icons.smart_toy_rounded, route: '/kids/ai-tutor'),
     (label: 'O‘yinlar', icon: Icons.sports_esports_rounded, route: '/kids/games'),
     (label: 'Shahrim', icon: Icons.location_city_rounded, route: '/kids/city'),
     (label: 'Profil', icon: Icons.person_rounded, route: '/kids/profile'),
@@ -69,10 +70,12 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> with SingleTicker
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final screenW = MediaQuery.of(context).size.width;
+    final horizMargin = screenW < 360 ? 8.0 : 16.0;
 
     return Container(
-      height: 72,
-      margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+      height: 68,
+      margin: EdgeInsets.only(left: horizMargin, right: horizMargin, bottom: 12),
       decoration: BoxDecoration(
         color: colors.card,
         borderRadius: BorderRadius.circular(36),
@@ -106,27 +109,32 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> with SingleTicker
                       : 0.0;
                   return Transform.translate(
                     offset: Offset(0, offset),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          item.icon,
-                          size: 24,
-                          color: color,
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          item.label,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            item.icon,
+                            size: 22,
                             color: color,
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 2),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              item.label,
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                                color: color,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

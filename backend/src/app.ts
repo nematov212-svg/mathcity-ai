@@ -30,7 +30,8 @@ export const app = express();
 // 1. Core Security & Transport Middleware
 app.use(securityHeaders);
 app.use(corsMiddleware);
-app.use(requestTimeoutMiddleware(25000));
+app.options('*', corsMiddleware);
+app.use(requestTimeoutMiddleware(60000));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(generalRateLimiter);

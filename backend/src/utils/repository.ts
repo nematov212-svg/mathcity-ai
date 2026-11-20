@@ -53,6 +53,13 @@ export interface UserAccount {
   totalXP: number;
   level: number;
   cityLevel: number;
+  citizenCount?: number;
+  carConfig?: {
+    model: string;
+    color: string;
+    speed: number;
+    level: number;
+  };
   resetToken?: string;
   resetTokenExpiresAt?: string;
   subscription: UserSubscription;
@@ -785,6 +792,66 @@ class DataRepository {
       newCoinBalance: user.coinBalance,
       newCityLevel: user.cityLevel,
       placedBuildings: user.placedBuildings,
+    };
+  }
+
+  recruitCitizens(userId: string, count = 5, cost = 25): { newCitizenCount: number; newCoinBalance: number } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi.');
+    if (user.coinBalance < cost) {
+      throw new Error(`Fuqarolarni taklif qilish uchun ${cost} tanga talab qilinadi. Balansingiz: ${user.coinBalance}`);
+    }
+    user.coinBalance -= cost;
+    user.citizenCount = (user.citizenCount || 15) + count;
+    return { newCitizenCount: user.citizenCount, newCoinBalance: user.coinBalance };
+  }
+
+  upgradeCar(userId: string, cost = 50): { newCarConfig: any; newCoinBalance: number } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi.');
+    if (user.coinBalance < cost) {
+      throw new Error(`Mashinani yangilash uchun ${cost} tanga talab qilinadi. Balansingiz: ${user.coinBalance}`);
+    }
+    user.coinBalance -= cost;
+    const currentLvl = user.carConfig?.level || 1;
+    const newLvl = currentLvl + 1;
+    const models = ['Sedan', 'Sportkar', 'Cyber-avto', 'Superkar', 'Uchuvchi avto'];
+    const colors = ['#E53E3E', '#3182CE', '#38A169', '#D69E2E', '#805AD5'];
+    const modelName = models[(newLvl - 1) % models.length];
+    const colorHex = colors[(newLvl - 1) % colors.length];
+    const newSpeed = 1.0 + (newLvl * 0.25);
+
+    user.carConfig = {
+      level: newLvl,
+      model: modelName,
+      color: colorHex,
+      speed: newSpeed,
+    };
+
+    return { newCarConfig: user.carConfig, newCoinBalance: user.coinBalance };
+  }
+
+  syncCityState(userId: string, data: { placedBuildings?: any[]; citizenCount?: number; carConfig?: any }): any {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi.');
+
+    if (Array.isArray(data.placedBuildings)) {
+      user.placedBuildings = data.placedBuildings;
+      user.cityLevel = Math.max(1, Math.floor(user.placedBuildings.length / 2) + 1);
+    }
+    if (typeof data.citizenCount === 'number') {
+      user.citizenCount = data.citizenCount;
+    }
+    if (data.carConfig) {
+      user.carConfig = data.carConfig;
+    }
+
+    return {
+      cityLevel: user.cityLevel,
+      coinBalance: user.coinBalance,
+      placedBuildings: user.placedBuildings,
+      citizenCount: user.citizenCount || 15,
+      carConfig: user.carConfig,
     };
   }
 

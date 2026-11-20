@@ -73,6 +73,7 @@ class StudentModel {
   final int completedLessonsCount;
   final int achievementsCount;
   final int friendsCount;
+  final int rank;
 
   StudentModel({
     required this.id,
@@ -100,6 +101,7 @@ class StudentModel {
     this.completedLessonsCount = 1,
     this.achievementsCount = 4,
     this.friendsCount = 0,
+    this.rank = 7,
   });
 
   int get accuracyPercentage {
@@ -138,6 +140,7 @@ class StudentModel {
       completedLessonsCount: json['completedLessonsCount'] ?? (json['completedLessons'] is List ? (json['completedLessons'] as List).length : 1),
       achievementsCount: json['achievementsCount'] ?? (json['unlockedAchievementsCount'] ?? 4),
       friendsCount: json['friendsCount'] ?? 0,
+      rank: json['rank'] ?? 7,
       subscription: json['subscription'] != null
           ? SubscriptionModel.fromJson(json['subscription'])
           : SubscriptionModel(
@@ -173,6 +176,7 @@ class StudentModel {
     int? completedLessonsCount,
     int? achievementsCount,
     int? friendsCount,
+    int? rank,
   }) {
     return StudentModel(
       id: id,
@@ -200,6 +204,7 @@ class StudentModel {
       completedLessonsCount: completedLessonsCount ?? this.completedLessonsCount,
       achievementsCount: achievementsCount ?? this.achievementsCount,
       friendsCount: friendsCount ?? this.friendsCount,
+      rank: rank ?? this.rank,
     );
   }
 }

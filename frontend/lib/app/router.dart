@@ -12,6 +12,7 @@ import '../features/home/kids_home_screen.dart';
 import '../features/home/kids_desktop_screen.dart';
 import '../features/home/teen_home_screen.dart';
 import '../features/home/teen_desktop_screen.dart';
+import '../features/lessons/lessons_screen.dart';
 import '../features/lessons/lesson_map_screen.dart';
 import '../features/lessons/lesson_reader_screen.dart';
 import '../features/lessons/lesson_complete_screen.dart';
@@ -33,6 +34,7 @@ import '../features/profile/profile_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/settings/mathcity_pro_screen.dart';
 import '../features/payment/add_payment_screen.dart';
+import '../features/leaderboard/leaderboard_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -84,6 +86,10 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/kids/lessons',
+      builder: (context, state) => const LessonsScreen(),
+    ),
+    GoRoute(
+      path: '/kids/lesson-map',
       builder: (context, state) => const LessonMapScreen(),
     ),
     GoRoute(
@@ -110,6 +116,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/kids/lesson-complete',
       builder: (context, state) => const LessonCompleteScreen(),
+    ),
+    GoRoute(
+      path: '/kids/leaderboard',
+      builder: (context, state) => const LeaderboardScreen(),
     ),
     GoRoute(
       path: '/kids/games',

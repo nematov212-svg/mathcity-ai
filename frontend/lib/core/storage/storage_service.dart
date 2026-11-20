@@ -1,6 +1,8 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageService {
+  static const _secureStorage = FlutterSecureStorage();
   static const String _keyToken = 'auth_token';
   static const String _keyRefreshToken = 'refresh_token';
   static const String _keyUserMode = 'user_mode';
@@ -10,9 +12,16 @@ class StorageService {
   static Future<void> saveAuthToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyToken, token);
+    try {
+      await _secureStorage.write(key: _keyToken, value: token);
+    } catch (_) {}
   }
 
   static Future<String?> getAuthToken() async {
+    try {
+      final secureVal = await _secureStorage.read(key: _keyToken);
+      if (secureVal != null && secureVal.isNotEmpty) return secureVal;
+    } catch (_) {}
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_keyToken);
   }
@@ -21,14 +30,25 @@ class StorageService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_keyToken);
     await prefs.remove(_keyRefreshToken);
+    try {
+      await _secureStorage.delete(key: _keyToken);
+      await _secureStorage.delete(key: _keyRefreshToken);
+    } catch (_) {}
   }
 
   static Future<void> saveRefreshToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyRefreshToken, token);
+    try {
+      await _secureStorage.write(key: _keyRefreshToken, value: token);
+    } catch (_) {}
   }
 
   static Future<String?> getRefreshToken() async {
+    try {
+      final secureVal = await _secureStorage.read(key: _keyRefreshToken);
+      if (secureVal != null && secureVal.isNotEmpty) return secureVal;
+    } catch (_) {}
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_keyRefreshToken);
   }
@@ -56,5 +76,8 @@ class StorageService {
   static Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
+    try {
+      await _secureStorage.deleteAll();
+    } catch (_) {}
   }
 }

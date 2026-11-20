@@ -13,6 +13,7 @@ studentsRouter.get('/profile', authMiddleware, (req: AuthenticatedRequest, res: 
       id: user.id,
       email: user.email,
       displayName: user.displayName,
+      username: user.username,
       dateOfBirth: user.dateOfBirth,
       age: user.age,
       mode: user.mode,
@@ -26,6 +27,67 @@ studentsRouter.get('/profile', authMiddleware, (req: AuthenticatedRequest, res: 
       placedBuildingsCount: user.placedBuildings.length,
       unlockedAchievementsCount: user.unlockedAchievements.length,
       createdAt: user.createdAt,
+    },
+  });
+});
+
+/**
+ * GET /api/students/leaderboard
+ * Global leaderboard sorted by: totalXP DESC -> coinBalance DESC -> createdAt ASC
+ * Privacy: ONLY exposes rank, username, public first name, avatar, XP, and coin balance.
+ * NEVER returns emails, passwords, phones, or sensitive details.
+ */
+studentsRouter.get('/leaderboard', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const allUsers = repository.getAllUsers();
+
+  // Sort: XP DESC, then Coins DESC, then older registration first
+  const sorted = [...allUsers].sort((a, b) => {
+    if (b.totalXP !== a.totalXP) return b.totalXP - a.totalXP;
+    if (b.coinBalance !== a.coinBalance) return b.coinBalance - a.coinBalance;
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+  });
+
+  const fullLeaderboard = sorted.map((u, index) => ({
+    rank: index + 1,
+    id: u.id,
+    username: u.username || `user_${u.id.slice(0, 6)}`,
+    displayName: u.displayName ? u.displayName.split(' ')[0] : 'O‘quvchi',
+    avatarUrl: u.avatarUrl || null,
+    totalXP: u.totalXP || 0,
+    coinBalance: u.coinBalance || 0,
+    level: u.level || 1,
+  }));
+
+  const myUserId = req.user?.id;
+  const myEntry = fullLeaderboard.find((entry) => entry.id === myUserId);
+  const myRank = myEntry
+    ? myEntry.rank
+    : fullLeaderboard.length > 0
+    ? fullLeaderboard.length
+    : 1;
+
+  const page = Math.max(1, parseInt(req.query.page as string, 10) || 1);
+  const limit = Math.max(5, Math.min(100, parseInt(req.query.limit as string, 10) || 50));
+  const startIndex = (page - 1) * limit;
+  const paginatedList = fullLeaderboard.slice(startIndex, startIndex + limit);
+
+  return res.json({
+    success: true,
+    data: {
+      leaderboard: paginatedList,
+      totalCount: fullLeaderboard.length,
+      page,
+      limit,
+      myRank: {
+        rank: myRank,
+        id: myUserId,
+        username: req.user?.username || (req.user?.displayName ? req.user.displayName.split(' ')[0] : 'Siz'),
+        displayName: req.user?.displayName || 'Siz',
+        totalXP: req.user?.totalXP || 0,
+        coinBalance: req.user?.coinBalance || 0,
+        avatarUrl: req.user?.avatarUrl || null,
+        level: req.user?.level || 1,
+      },
     },
   });
 });

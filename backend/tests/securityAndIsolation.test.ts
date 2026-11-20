@@ -247,4 +247,43 @@ describe('MathCity AI — Security, Authorization & Data Isolation Tests', () =>
       expect(res.body.status).toBe('ready');
     });
   });
+
+  describe('6. Leaderboard Privacy & Sensitive Data Leak Prevention', () => {
+    it('GET /api/students/leaderboard strictly excludes emails, passwords, phones, and private data', async () => {
+      const res = await request(app)
+        .get('/api/students/leaderboard')
+        .set('Authorization', `Bearer ${studentAToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.leaderboard).toBeDefined();
+      expect(Array.isArray(res.body.data.leaderboard)).toBe(true);
+
+      const list = res.body.data.leaderboard;
+      expect(list.length).toBeGreaterThan(0);
+
+      // Verify each entry contains only public ranking fields
+      for (const entry of list) {
+        expect(entry.rank).toBeDefined();
+        expect(entry.username).toBeDefined();
+        expect(entry.totalXP).toBeDefined();
+        expect(entry.coinBalance).toBeDefined();
+
+        // STRICT PRIVACY ASSERTIONS: Sensitive data must NEVER be present
+        expect(entry).not.toHaveProperty('email');
+        expect(entry).not.toHaveProperty('password');
+        expect(entry).not.toHaveProperty('passwordHash');
+        expect(entry).not.toHaveProperty('phone');
+        expect(entry).not.toHaveProperty('dateOfBirth');
+        expect(entry).not.toHaveProperty('subscription');
+        expect(entry).not.toHaveProperty('token');
+      }
+
+      // Check current user's personal rank metadata
+      expect(res.body.data.myRank).toBeDefined();
+      expect(res.body.data.myRank.rank).toBeGreaterThanOrEqual(1);
+      expect(res.body.data.myRank).not.toHaveProperty('email');
+      expect(res.body.data.myRank).not.toHaveProperty('password');
+    });
+  });
 });
