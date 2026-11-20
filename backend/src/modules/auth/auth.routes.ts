@@ -1054,6 +1054,99 @@ authRouter.post('/apple', authRateLimiter, async (req: Request, res: Response) =
   });
 });
 
+// POST /api/auth/apple/callback - Official Apple Web & Android OAuth Form Post Callback
+authRouter.post('/apple/callback', async (req: Request, res: Response) => {
+  const { id_token, code, user: rawUser } = req.body;
+  const baseUrl = config.isProduction ? 'https://mathcity-ai-web.onrender.com' : 'http://localhost:8085';
+
+  if (!id_token) {
+    return res.redirect(`${baseUrl}/#/auth/login?error=apple_token_missing`);
+  }
+
+  try {
+    let parsedUser: any = null;
+    if (rawUser && typeof rawUser === 'string') {
+      try {
+        parsedUser = JSON.parse(rawUser);
+      } catch (_) { }
+    }
+
+    const verified = await verifyAppleTokenPayload(id_token);
+    if (!verified) {
+      return res.redirect(`${baseUrl}/#/auth/login?error=apple_token_invalid`);
+    }
+
+    const sub = verified.sub;
+    const email = verified.email;
+
+    let resolvedDisplayName = 'Apple Foydalanuvchi';
+    if (parsedUser?.name) {
+      const full = `${parsedUser.name.firstName || ''} ${parsedUser.name.lastName || ''}`.trim();
+      if (full.length > 0) resolvedDisplayName = full;
+    }
+
+    let user: UserAccount | undefined = repository.getUserByAppleId(sub);
+    if (!user && email) {
+      user = repository.getUserByEmail(email);
+    }
+
+    if (!user) {
+      const generatedEmail = email || `apple_${sub.substring(0, 8).toLowerCase()}@privaterelay.appleid.com`;
+      const now = new Date();
+      const trialExpiry = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+      user = {
+        id: randomUUID(),
+        email: generatedEmail.toLowerCase(),
+        appleId: sub,
+        appleRefreshToken: code,
+        displayName: resolvedDisplayName,
+        dateOfBirth: '',
+        age: 0,
+        mode: 'KIDS',
+        grade: 4,
+        avatarUrl: 'assets/images/avatar_kid.png',
+        profileCompleted: false,
+        coinBalance: 0,
+        totalXP: 0,
+        level: 1,
+        cityLevel: 1,
+        subscription: {
+          status: 'FREE_TRIAL_ACTIVE',
+          trialStartedAt: now.toISOString(),
+          trialExpiresAt: trialExpiry.toISOString(),
+          planName: 'MathCity Free Trial',
+          priceMonthlyUzs: 29000,
+        },
+        placedBuildings: [],
+        completedLessons: [],
+        completedSections: [],
+        solvedQuestions: [],
+        rewardedQuestionIds: [],
+        attemptedQuestionCount: 0,
+        correctQuestionCount: 0,
+        incorrectQuestionCount: 0,
+        dailyTaskProgress: {
+          task_solve_5: { currentCount: 0, isCompleted: false, claimed: false },
+          task_complete_lesson: { currentCount: 0, isCompleted: false, claimed: false },
+          task_play_space_game: { currentCount: 0, isCompleted: false, claimed: false },
+          task_ai_consult: { currentCount: 0, isCompleted: false, claimed: false },
+        },
+        unlockedAchievements: [],
+        createdAt: now.toISOString(),
+      };
+      repository.createUser(user);
+    }
+
+    const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
+      expiresIn: config.jwtExpiresIn as any,
+    });
+    return res.redirect(`${baseUrl}/#/auth/callback?token=${encodeURIComponent(token)}`);
+  } catch {
+    return res.redirect(`${baseUrl}/#/auth/login?error=apple_callback_error`);
+  }
+});
+
 const RESERVED_USERNAMES = new Set([
   'admin',
   'administrator',
@@ -1298,3 +1391,7 @@ authRouter.delete('/account', authMiddleware, async (req: AuthenticatedRequest, 
     message: 'Hisobingiz va barcha ma’lumotlaringiz butunlay o‘chirildi.',
   });
 });
+function signToken(id: string) {
+  throw new Error('Function not implemented.');
+}
+

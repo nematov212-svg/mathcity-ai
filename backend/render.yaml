@@ -1,5 +1,5 @@
 databases:
-  - name: mathcity-backend-db
+  - name: mathcity-ai-db
     databaseName: mathcity_ai
     user: mathcity_admin
     plan: free
@@ -7,7 +7,7 @@ databases:
 
 services:
   - type: web
-    name: mathcity-backend-api
+    name: mathcity-ai-api
     runtime: node
     plan: free
     region: frankfurt
@@ -21,7 +21,7 @@ services:
         value: 10000
       - key: DATABASE_URL
         fromDatabase:
-          name: mathcity-backend-db
+          name: mathcity-ai-db
           property: connectionString
       - key: JWT_SECRET
         generateValue: true

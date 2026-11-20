@@ -1,4 +1,6 @@
 import bcrypt from 'bcryptjs';
+import { prisma, isDatabaseHealthy } from '../db/client.js';
+
 import {
   initialLessons,
   initialBuildings,
@@ -230,6 +232,11 @@ class DataRepository {
     if (user.appleId) {
       this.users.set(user.appleId, user);
     }
+
+    if (isDatabaseHealthy()) {
+      this.persistUserToDatabase(user).catch(() => {});
+    }
+
     return user;
   }
 
@@ -259,6 +266,11 @@ class DataRepository {
     if (updated.appleId) {
       this.users.set(updated.appleId, updated);
     }
+
+    if (isDatabaseHealthy()) {
+      this.persistUserToDatabase(updated).catch(() => {});
+    }
+
     return updated;
   }
 
@@ -276,7 +288,170 @@ class DataRepository {
     if (user.appleId) {
       this.users.delete(user.appleId);
     }
+
+    if (isDatabaseHealthy()) {
+      prisma.user.delete({ where: { id } }).catch(() => {});
+    }
+
     return true;
+  }
+
+  async persistUserToDatabase(user: UserAccount): Promise<void> {
+    try {
+      await prisma.user.upsert({
+        where: { id: user.id },
+        update: {
+          email: user.email.toLowerCase(),
+          username: user.username?.toLowerCase() || null,
+          passwordHash: user.passwordHash || null,
+          googleId: user.googleId || null,
+          appleId: user.appleId || null,
+        },
+        create: {
+          id: user.id,
+          email: user.email.toLowerCase(),
+          username: user.username?.toLowerCase() || null,
+          passwordHash: user.passwordHash || null,
+          googleId: user.googleId || null,
+          appleId: user.appleId || null,
+        },
+      });
+
+      const dob = user.dateOfBirth ? new Date(user.dateOfBirth) : new Date('2015-05-15');
+      await prisma.studentProfile.upsert({
+        where: { userId: user.id },
+        update: {
+          displayName: user.displayName,
+          grade: user.grade || 4,
+          age: user.age || 10,
+          mode: (user.mode || 'KIDS') as any,
+          avatarUrl: user.avatarUrl || null,
+          cityLevel: user.cityLevel || 1,
+        },
+        create: {
+          userId: user.id,
+          displayName: user.displayName,
+          dateOfBirth: isNaN(dob.getTime()) ? new Date('2015-05-15') : dob,
+          age: user.age || 10,
+          mode: (user.mode || 'KIDS') as any,
+          grade: user.grade || 4,
+          avatarUrl: user.avatarUrl || null,
+          cityLevel: user.cityLevel || 1,
+        },
+      });
+
+      await prisma.coinWallet.upsert({
+        where: { userId: user.id },
+        update: { balance: user.coinBalance },
+        create: {
+          userId: user.id,
+          balance: user.coinBalance,
+        },
+      });
+
+      await prisma.studentXP.upsert({
+        where: { userId: user.id },
+        update: { totalXP: user.totalXP, level: user.level },
+        create: {
+          userId: user.id,
+          totalXP: user.totalXP,
+          level: user.level,
+        },
+      });
+
+      if (user.subscription) {
+        const trialStart = user.subscription.trialStartedAt ? new Date(user.subscription.trialStartedAt) : new Date();
+        const trialExpiry = user.subscription.trialExpiresAt ? new Date(user.subscription.trialExpiresAt) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        await prisma.subscription.upsert({
+          where: { userId: user.id },
+          update: {
+            status: user.subscription.status as any,
+            trialStartedAt: isNaN(trialStart.getTime()) ? new Date() : trialStart,
+            trialExpiresAt: isNaN(trialExpiry.getTime()) ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) : trialExpiry,
+          },
+          create: {
+            userId: user.id,
+            status: user.subscription.status as any,
+            trialStartedAt: isNaN(trialStart.getTime()) ? new Date() : trialStart,
+            trialExpiresAt: isNaN(trialExpiry.getTime()) ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) : trialExpiry,
+          },
+        });
+      }
+    } catch (_) {}
+  }
+
+  async initFromDatabase(): Promise<void> {
+    try {
+      if (!isDatabaseHealthy()) return;
+      const dbUsers = await prisma.user.findMany({
+        include: {
+          studentProfile: true,
+          subscription: true,
+          coinWallet: true,
+          studentXP: true,
+        },
+      });
+
+      for (const u of dbUsers) {
+        const prof = u.studentProfile;
+        const sub = u.subscription;
+        const wallet = u.coinWallet;
+        const xp = u.studentXP;
+
+        const userAccount: UserAccount = {
+          id: u.id,
+          email: u.email,
+          username: u.username || undefined,
+          passwordHash: u.passwordHash || undefined,
+          googleId: u.googleId || undefined,
+          appleId: u.appleId || undefined,
+          displayName: prof?.displayName || 'O‘quvchi',
+          dateOfBirth: prof?.dateOfBirth ? prof.dateOfBirth.toISOString().split('T')[0] : '2015-05-15',
+          age: prof?.age || 10,
+          mode: (prof?.mode as any) || 'KIDS',
+          grade: prof?.grade || 4,
+          avatarUrl: prof?.avatarUrl || 'assets/images/avatar_kid.png',
+          profileCompleted: true,
+          coinBalance: wallet?.balance ?? 100,
+          totalXP: xp?.totalXP ?? 0,
+          level: xp?.level ?? 1,
+          cityLevel: prof?.cityLevel ?? 1,
+          subscription: {
+            status: (sub?.status as any) || 'FREE_TRIAL_ACTIVE',
+            trialStartedAt: sub?.trialStartedAt ? sub.trialStartedAt.toISOString() : new Date().toISOString(),
+            trialExpiresAt: sub?.trialExpiresAt ? sub.trialExpiresAt.toISOString() : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+            planName: 'MathCity Free Trial',
+            priceMonthlyUzs: 29000,
+          },
+          placedBuildings: [],
+          completedLessons: [],
+          completedSections: [],
+          solvedQuestions: [],
+          rewardedQuestionIds: [],
+          attemptedQuestionCount: 0,
+          correctQuestionCount: 0,
+          incorrectQuestionCount: 0,
+          dailyTaskProgress: {},
+          unlockedAchievements: [],
+          createdAt: u.createdAt.toISOString(),
+        };
+
+        this.users.set(userAccount.id, userAccount);
+        this.users.set(userAccount.email.toLowerCase(), userAccount);
+        if (userAccount.username) {
+          this.users.set(userAccount.username.toLowerCase(), userAccount);
+        }
+        if (userAccount.googleId) {
+          this.users.set(userAccount.googleId, userAccount);
+        }
+        if (userAccount.appleId) {
+          this.users.set(userAccount.appleId, userAccount);
+        }
+      }
+      if (dbUsers.length > 0) {
+        console.log(`✅ [Database Sync] PostgreSQL bazasidan ${dbUsers.length} ta foydalanuvchi xotiraga yuklandi.`);
+      }
+    } catch (_) {}
   }
 
   // --- Curriculum Hierarchy Queries ---

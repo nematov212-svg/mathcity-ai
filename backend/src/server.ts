@@ -1,8 +1,13 @@
 import { app } from './app.js';
 import { config } from './config/env.js';
 import { checkDatabaseConnection, disconnectDatabase } from './db/client.js';
+import { repository } from './utils/repository.js';
+import { exec } from 'child_process';
+import util from 'util';
 
-const port = Number(process.env.PORT || config.port || 4000);
+const execAsync = util.promisify(exec);
+
+const port = Number(process.env.PORT || config.port || (config.isProduction ? 10000 : 4000));
 const host = '0.0.0.0';
 
 const server = app.listen(port, host, async () => {
@@ -12,11 +17,33 @@ const server = app.listen(port, host, async () => {
   console.log(`📡 Production mode: ${config.isProduction ? 'YES' : 'NO'}`);
   console.log(`=================================================`);
 
+  // Asynchronously run migrations and verify PostgreSQL without blocking HTTP server
+  if (process.env.DATABASE_URL) {
+    try {
+      console.log('⏳ Running Prisma migrations in background...');
+      await execAsync('npx prisma migrate deploy', { timeout: 25000 });
+      console.log('✅ Prisma migrations applied successfully.');
+    } catch (err: any) {
+      console.warn('⚠️ `prisma migrate deploy` notice:', err.message);
+      if (err.message?.includes('P3005') || err.message?.includes('20261119000000_init')) {
+        try {
+          console.log('🔄 Resolving baseline migration 20261119000000_init...');
+          await execAsync('npx prisma migrate resolve --applied 20261119000000_init', { timeout: 15000 });
+          await execAsync('npx prisma migrate deploy', { timeout: 25000 });
+          console.log('✅ Baseline resolved and migrations deployed.');
+        } catch (resolveErr: any) {
+          console.warn('⚠️ Baseline resolution notice:', resolveErr.message);
+        }
+      }
+    }
+  }
+
   // Verify PostgreSQL connection
   try {
     const dbStatus = await checkDatabaseConnection();
     if (dbStatus.connected) {
       console.log(`✅ PostgreSQL Connected successfully (latency: ${dbStatus.latencyMs}ms)`);
+      await repository.initFromDatabase();
     } else {
       console.warn(`⚠️ PostgreSQL connection notice: ${dbStatus.error}`);
       console.log(`ℹ️ Dual-mode active: In-memory/local repository available for offline testing.`);

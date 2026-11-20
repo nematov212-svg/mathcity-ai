@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../network/api_client.dart';
 import '../storage/storage_service.dart';
+import '../config/app_config.dart';
 import '../../shared/models/student_model.dart';
 
 class AuthResult {
@@ -498,6 +499,18 @@ class AuthService {
 
   /// Sign In With Apple (Native iOS/macOS & Web flow)
   Future<AuthResult> signInWithApple() async {
+    // Apple Sign-In requires secure HTTPS origin on web
+    if (kIsWeb) {
+      final originScheme = Uri.base.scheme;
+      if (originScheme != 'https') {
+        return const AuthResult(
+          success: false,
+          errorMessage:
+              'Apple orqali kirish faqat xavfsiz HTTPS muhitida (Render ishlab chiqarish serverida) ishlaydi. Mahalliy rejimda Google yoki login/parol orqali kiring.',
+        );
+      }
+    }
+
     try {
       // 1. Generate cryptographic raw nonce and sha256 hash
       final rawNonce = base64Url.encode(
@@ -514,7 +527,7 @@ class AuthService {
         nonce: sha256Nonce,
         webAuthenticationOptions: WebAuthenticationOptions(
           clientId: 'ai.mathcity.web',
-          redirectUri: Uri.parse('https://mathcity.ai/api/auth/apple/callback'),
+          redirectUri: Uri.parse('${AppConfig.productionApiUrl}/api/auth/apple/callback'),
         ),
       );
 
