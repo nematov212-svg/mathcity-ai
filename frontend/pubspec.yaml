@@ -25,7 +25,7 @@ dependencies:
   shared_preferences: ^2.3.3
 
 
-  # Authentication & Subscriptions
+  # Authentication & Subscriptions 
   
 
   google_sign_in: ^6.2.2
@@ -81,3 +81,4 @@ flutter:
     - family: Noto Color Emoji
       fonts:
         - asset: assets/fonts/NotoColorEmoji.ttf
+

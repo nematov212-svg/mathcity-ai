@@ -7,9 +7,6 @@ import 'core/auth/auth_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Prevent dynamic web font network lookups; use bundled asset fonts & fallbacks
-  GoogleFonts.config.allowRuntimeFetching = false;
-
   // Single global initialization of Google Sign-In singleton
   await AuthService.init();
 
