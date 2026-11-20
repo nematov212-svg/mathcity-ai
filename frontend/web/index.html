@@ -35,16 +35,80 @@
   <title>MathCity AI</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Safe DOM guard for Flutter Web element removal (Flutter issue #192226 / fix #192233) -->
+  <!-- Font Preloads to prevent layout shifts and font load warnings -->
+  <link rel="preload" href="assets/assets/fonts/Nunito-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="assets/assets/fonts/NotoSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="assets/assets/fonts/NotoSansMath-Regular.ttf" as="font" type="font/ttf" crossorigin>
+
+  <!-- Safe DOM guard & Single-use Splash cleaner for Flutter Web -->
   <script>
     (function () {
+      // 1. Guard Node.prototype.removeChild against null/detached/mismatched parents
       var origRemoveChild = Node.prototype.removeChild;
       Node.prototype.removeChild = function (child) {
-        if (!child || !child.parentNode) {
+        if (!child) return null;
+        if (!child.parentNode || child.parentNode !== this) {
+          if (child.parentNode && typeof child.remove === 'function') {
+            try { child.remove(); } catch (_) {}
+          }
           return child;
         }
-        return origRemoveChild.apply(this, arguments);
+        try {
+          return origRemoveChild.apply(this, arguments);
+        } catch (_) {
+          return child;
+        }
       };
+
+      // 2. Guard Element.prototype.remove
+      if (Element.prototype.remove) {
+        var origRemove = Element.prototype.remove;
+        Element.prototype.remove = function () {
+          if (!this || !this.parentNode) return;
+          try {
+            origRemove.apply(this, arguments);
+          } catch (_) {}
+        };
+      }
+
+      // 3. Single-use { once: true } listener for Flutter first frame splash removal
+      window.addEventListener('flutter-first-frame', function () {
+        var splash = document.querySelector('.loading') || document.querySelector('#loading') || document.querySelector('#splash');
+        if (splash && splash.parentNode) {
+          try {
+            if (typeof splash.remove === 'function') {
+              splash.remove();
+            } else {
+              splash.parentNode.removeChild(splash);
+            }
+          } catch (_) {}
+        }
+      }, { once: true });
+
+      // 4. Guard against duplicate google.accounts.id.initialize() calls during hot restart / re-renders
+      var isGsiInitialized = false;
+      function patchGsi() {
+        if (window.google && window.google.accounts && window.google.accounts.id) {
+          if (!window.google.accounts.id._mathcityPatched) {
+            var origInit = window.google.accounts.id.initialize;
+            window.google.accounts.id.initialize = function (config) {
+              if (isGsiInitialized) {
+                return;
+              }
+              isGsiInitialized = true;
+              return origInit.apply(this, arguments);
+            };
+            window.google.accounts.id._mathcityPatched = true;
+          }
+        }
+      }
+      var gsiTimer = setInterval(function () {
+        if (window.google && window.google.accounts && window.google.accounts.id) {
+          patchGsi();
+          clearInterval(gsiTimer);
+        }
+      }, 50);
+      setTimeout(function () { clearInterval(gsiTimer); }, 15000);
     })();
   </script>
 </head>

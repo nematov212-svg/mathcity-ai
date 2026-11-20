@@ -38,8 +38,40 @@ class AuthService {
   factory AuthService() => _instance;
   AuthService._internal();
 
-  GoogleSignIn? _googleSignInInstance;
-  bool _googleSignInInitFailed = false;
+  static GoogleSignIn? _sharedGoogleSignIn;
+  static bool _isGoogleSignInInitialized = false;
+  static bool _googleSignInInitFailed = false;
+
+  /// Check whether the current web origin is allowed for Google Identity Services
+  static bool isOriginAllowedForGoogle() {
+    if (!kIsWeb) return true;
+    try {
+      final host = Uri.base.host;
+      final port = Uri.base.port;
+      if (host == 'localhost' || host == '127.0.0.1') {
+        return host == 'localhost' && port == 8085;
+      }
+      return true;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  /// Global singleton initialization for GoogleSignIn
+  static Future<void> init() async {
+    if (_isGoogleSignInInitialized && _sharedGoogleSignIn != null) return;
+    try {
+      _sharedGoogleSignIn = GoogleSignIn(
+        clientId: kIsWeb ? webClientId : iosClientId,
+        serverClientId: kIsWeb ? null : webClientId,
+        scopes: kIsWeb ? const [] : const ['email', 'profile'],
+      );
+      _isGoogleSignInInitialized = true;
+    } catch (e, stack) {
+      debugPrint('⚠️ GoogleSignIn initsializatsiya xatosi: $e\n$stack');
+      _googleSignInInitFailed = true;
+    }
+  }
 
   /// Web OAuth Client ID from Google Cloud Console
   /// Authorized JavaScript origins: http://localhost:8085
@@ -74,20 +106,10 @@ class AuthService {
   /// Controlled lazy initialization for GoogleSignIn
   GoogleSignIn? _getGoogleSignIn() {
     if (_googleSignInInitFailed) return null;
-    if (_googleSignInInstance != null) return _googleSignInInstance;
-
-    try {
-      _googleSignInInstance = GoogleSignIn(
-        clientId: kIsWeb ? webClientId : iosClientId,
-        serverClientId: kIsWeb ? null : webClientId,
-        scopes: kIsWeb ? const [] : const ['email', 'profile'],
-      );
-      return _googleSignInInstance;
-    } catch (e, stack) {
-      debugPrint('⚠️ GoogleSignIn initsializatsiya xatosi: $e\n$stack');
-      _googleSignInInitFailed = true;
-      return null;
+    if (!_isGoogleSignInInitialized || _sharedGoogleSignIn == null) {
+      init();
     }
+    return _sharedGoogleSignIn;
   }
 
   /// Stream of Google user accounts (fired by GIS button or silent login)
@@ -150,6 +172,13 @@ class AuthService {
 
   /// Sign In With Google with graceful fallback and no startup crash
   Future<AuthResult> signInWithGoogle() async {
+    if (kIsWeb && !isOriginAllowedForGoogle()) {
+      return const AuthResult(
+        success: false,
+        errorMessage: 'Google kirishi faqat http://localhost:8085 da ishlaydi.',
+      );
+    }
+
     final googleSignIn = _getGoogleSignIn();
     if (googleSignIn == null) {
       return const AuthResult(
@@ -161,10 +190,12 @@ class AuthService {
 
     try {
       GoogleSignInAccount? googleUser;
-      // On web, try silent sign-in first to avoid unneeded popups
+      // On web, try non-blocking silent sign-in first (max 2s timeout)
       if (kIsWeb) {
         try {
-          googleUser = await googleSignIn.signInSilently(suppressErrors: true);
+          googleUser = await googleSignIn
+              .signInSilently(suppressErrors: true)
+              .timeout(const Duration(seconds: 2));
         } catch (_) {}
       }
 

@@ -24,7 +24,10 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   shared_preferences: ^2.3.3
 
+
   # Authentication & Subscriptions
+  
+
   google_sign_in: ^6.2.2
   google_sign_in_web: ^0.12.4+4
   in_app_purchase: ^3.2.0
@@ -59,3 +62,22 @@ flutter:
     - assets/games/
     - assets/city/
     - assets/animations/
+    - assets/fonts/
+
+  fonts:
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/Nunito-Regular.ttf
+        - asset: assets/fonts/Nunito-Bold.ttf
+          weight: 700
+    - family: Noto Sans
+      fonts:
+        - asset: assets/fonts/NotoSans-Regular.ttf
+        - asset: assets/fonts/NotoSans-Bold.ttf
+          weight: 700
+    - family: Noto Sans Math
+      fonts:
+        - asset: assets/fonts/NotoSansMath-Regular.ttf
+    - family: Noto Color Emoji
+      fonts:
+        - asset: assets/fonts/NotoColorEmoji.ttf
