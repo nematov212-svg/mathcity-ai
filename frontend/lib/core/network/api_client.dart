@@ -23,7 +23,7 @@ class ApiClient {
         },
       ),
     );
-    
+  
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -55,6 +55,25 @@ class ApiClient {
           return handler.next(options);
         },
         onError: (DioException error, handler) async {
+          // Safe diagnostic logging for Auth endpoints (no sensitive token values logged)
+          if (error.requestOptions.path.contains('/auth/')) {
+            final statusCode = error.response?.statusCode;
+            final responseBody = error.response?.data;
+            final reqData = error.requestOptions.data;
+            Map<String, dynamic>? sanitizedFields;
+            if (reqData is Map) {
+              sanitizedFields = {};
+              reqData.forEach((key, val) {
+                if (val is String) {
+                  sanitizedFields![key.toString()] = '<string len=${val.length}>';
+                } else {
+                  sanitizedFields![key.toString()] = val?.runtimeType.toString() ?? 'null';
+                }
+              });
+            }
+            debugPrint('⚠️ [API Client] ${error.requestOptions.path} xatoligi (HTTP $statusCode): $responseBody | Yuborilgan maydonlar: $sanitizedFields');
+          }
+
           // If 401 Unauthorized occurs on token refresh, clear stored session
           if (error.response?.statusCode == 401 && error.requestOptions.path.contains('/auth/refresh')) {
             _authToken = null;

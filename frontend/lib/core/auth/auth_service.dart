@@ -113,36 +113,68 @@ class AuthService {
   }
 
   /// Stream of Google user accounts (fired by GIS button or silent login)
-  
   Stream<GoogleSignInAccount?> get onGoogleAccountChanged {
     final gsi = _getGoogleSignIn();
-
-    
     if (gsi == null) return const Stream.empty();
     return gsi.onCurrentUserChanged;
   }
 
-  /// Authenticate Google User with Backend
+  Future<AuthResult>? _ongoingGoogleAuth;
+  bool _isAuthenticating = false;
+
+  /// Check whether an authentication request is currently in-flight
+  bool get isAuthenticating => _isAuthenticating;
+
+  /// Authenticate Google User with Backend (Single-flight in-flight guard)
   Future<AuthResult> authenticateGoogleUser(GoogleSignInAccount googleUser) async {
+    if (_ongoingGoogleAuth != null) {
+      return _ongoingGoogleAuth!;
+    }
+    _ongoingGoogleAuth = _doAuthenticateGoogleUser(googleUser).whenComplete(() {
+      _ongoingGoogleAuth = null;
+    });
+    return _ongoingGoogleAuth!;
+  }
+
+  Future<AuthResult> _doAuthenticateGoogleUser(GoogleSignInAccount googleUser) async {
+    _isAuthenticating = true;
     try {
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-      final res = await ApiClient().dio.post('/auth/google', data: {
-        'googleId': googleUser.id,
+      final Map<String, dynamic> requestBody = {
         'email': googleUser.email,
         'displayName': googleUser.displayName ?? 'O‘quvchi',
-        'idToken': googleAuth.idToken,
-        'accessToken': googleAuth.accessToken,
-      });
+        'platform': kIsWeb ? 'web' : 'mobile',
+      };
+
+      if (googleUser.id.isNotEmpty) {
+        requestBody['googleId'] = googleUser.id;
+      }
+      final idToken = googleAuth.idToken?.trim();
+      if (idToken != null && idToken.isNotEmpty) {
+        requestBody['idToken'] = idToken;
+        requestBody['credential'] = idToken;
+      }
+      final accessToken = googleAuth.accessToken?.trim();
+      if (accessToken != null && accessToken.isNotEmpty) {
+        requestBody['accessToken'] = accessToken;
+      }
+
+      final res = await ApiClient().dio.post('/auth/google', data: requestBody);
 
       if (res.data['success'] == true) {
-        final token = res.data['data']['token'] as String;
-        final bool isNewUser = res.data['data']['isNewUser'] == true;
-        final bool profileCompleted = res.data['data']['profileCompleted'] == true;
+        final data = res.data['data'];
+        final token = (data['token'] ?? data['accessToken']) as String;
+        final bool isNewUser = data['isNewUser'] == true;
+        final bool profileCompleted = data['profileCompleted'] == true;
+
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
+        if (data['refreshToken'] != null && (data['refreshToken'] as String).isNotEmpty) {
+          await StorageService.saveRefreshToken(data['refreshToken'] as String);
+        }
 
-        final userData = res.data['data']['user'];
+        final userData = data['user'];
         final student = StudentModel.fromJson(userData);
         return AuthResult(
           success: true,
@@ -158,16 +190,31 @@ class AuthService {
         );
       }
     } catch (e) {
-      debugPrint('⚠️ Google orqali kirish backend xatoligi: $e');
+      debugPrint('ℹ️ Google orqali kirish backend natijasi: $e');
+      if (e is DioException) {
+        if (e.response?.data != null && e.response?.data is Map && e.response?.data['error'] != null) {
+          return AuthResult(
+            success: false,
+            errorMessage: e.response!.data['error'].toString(),
+          );
+        }
+        if (e.response?.statusCode == 400 || e.response?.statusCode == 401) {
+          return const AuthResult(
+            success: false,
+            errorMessage: 'Google orqali kirib bo‘lmadi, qayta urinib ko‘ring.',
+          );
+        }
+      }
       return const AuthResult(
         success: false,
         errorMessage: 'Google orqali tizimga kirishda server bilan aloqa uzildi.',
       );
+    } finally {
+      _isAuthenticating = false;
     }
   }
   
   /// Check whether Google Sign-In is safely available
-
   bool get isGoogleSignInAvailable => !_googleSignInInitFailed;
 
   /// Sign In With Google with graceful fallback and no startup crash
@@ -189,17 +236,7 @@ class AuthService {
     }
 
     try {
-      GoogleSignInAccount? googleUser;
-      // On web, try non-blocking silent sign-in first (max 2s timeout)
-      if (kIsWeb) {
-        try {
-          googleUser = await googleSignIn
-              .signInSilently(suppressErrors: true)
-              .timeout(const Duration(seconds: 2));
-        } catch (_) {}
-      }
-
-      googleUser ??= await googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
         // User dismissed the popup or cancelled

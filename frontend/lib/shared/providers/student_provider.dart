@@ -54,11 +54,12 @@ class StudentNotifier extends StateNotifier<StudentState> {
     if (!kIsWeb) return;
     try {
       _googleAccountSub = _authService.onGoogleAccountChanged.listen((account) async {
-        if (account != null) {
-          state = state.copyWith(isLoading: true);
+        // Guard: Skip if already processing an authentication request to avoid duplicate network calls
+        if (account != null && !_authService.isAuthenticating) {
+          state = state.copyWith(isLoading: true, errorMessage: null);
           final result = await _authService.authenticateGoogleUser(account);
           if (result.success && result.student != null) {
-            state = state.copyWith(student: result.student, isLoading: false);
+            state = state.copyWith(student: result.student, isLoading: false, errorMessage: null);
           } else if (result.errorMessage != null && !result.errorMessage!.contains('bekor')) {
             state = state.copyWith(
               isLoading: false,
