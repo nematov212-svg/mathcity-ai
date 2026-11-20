@@ -39,7 +39,7 @@ class GoogleSignInButton extends StatelessWidget {
                     height: 22,
                     errorBuilder: (_, __, ___) => const GoogleLogo(size: 22),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 10),
                   const Flexible(
                     child: Text(
                       'Continue with Google',
@@ -47,7 +47,7 @@ class GoogleSignInButton extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 15,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                         color: Color(0xFF1F2937),
                       ),
                     ),

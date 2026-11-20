@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import '../config/app_config.dart';
 import '../storage/storage_service.dart';
 
@@ -22,7 +23,7 @@ class ApiClient {
         },
       ),
     );
-
+    
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -58,7 +59,36 @@ class ApiClient {
           if (error.response?.statusCode == 401 && error.requestOptions.path.contains('/auth/refresh')) {
             _authToken = null;
             await StorageService.clearAuthToken();
+            return handler.next(error);
           }
+
+          // Intelligent Development Failover:
+          // If running locally in debug mode and Render backend is suspended (503, connection error, or CORS blocked),
+          // check if local backend (http://localhost:4000/api) is active and retry seamlessly.
+          if (kDebugMode &&
+              error.requestOptions.baseUrl.contains('onrender.com') &&
+              (error.type == DioExceptionType.connectionError ||
+               error.type == DioExceptionType.unknown ||
+               error.response?.statusCode == 503)) {
+            try {
+              final localFallbackUrl = 'http://localhost:4000/api';
+              final pingDio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 2)));
+              final pingRes = await pingDio.get('http://localhost:4000/health');
+              if (pingRes.statusCode == 200) {
+                debugPrint('ℹ️ Render servisi to‘xtatilgan (503/CORS). Mahalliy backendga ($localFallbackUrl) ulandi.');
+                AppConfig.setBaseUrl(localFallbackUrl);
+
+                final reqOptions = error.requestOptions;
+                reqOptions.baseUrl = localFallbackUrl;
+
+                final retryRes = await dio.fetch(reqOptions);
+                return handler.resolve(retryRes);
+              }
+            } catch (_) {
+              // Local backend not reachable either; continue with normal error handler
+            }
+          }
+
           return handler.next(error);
         },
       ),

@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/auth/auth_service.dart';
 import '../../core/widgets/mathcity_logo.dart';
-import '../../core/widgets/google_logo.dart';
 import '../../core/widgets/google_sign_in_button.dart';
 import '../../core/widgets/responsive_layout.dart';
 import '../../shared/providers/student_provider.dart';
@@ -18,6 +17,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+  
   final _formKey = GlobalKey<FormState>();
   final _identifierController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -531,57 +531,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const SizedBox(height: 18),
 
                       // Google Sign-In Button (matches Apple Sign-In button geometry & style)
-                      if (kIsWeb)
-                        GoogleSignInButton(
-                          isLoading: _isGoogleLoading,
-                          onFallbackPressed: _handleGoogleSignIn,
-                        )
-                      else
-                        SizedBox(
-                          width: double.infinity,
-                          height: 52,
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: const BorderSide(color: Color(0xFFE5E7EB), width: 1.2),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18),
-                              ),
-                              elevation: 0,
-                            ),
-                            onPressed: _isGoogleLoading ? null : _handleGoogleSignIn,
-                            child: _isGoogleLoading
-                                ? const SizedBox(
-                                    width: 22,
-                                    height: 22,
-                                    child: CircularProgressIndicator(strokeWidth: 2),
-                                  )
-                                : Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        'assets/icons/google_g_logo.png',
-                                        width: 22,
-                                        height: 22,
-                                        errorBuilder: (_, __, ___) => const GoogleLogo(size: 22),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      const Flexible(
-                                        child: Text(
-                                          'Continue with Google',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(0xFF1F2937),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                          ),
-                        ),
+                      GoogleSignInButton(
+                        isLoading: _isGoogleLoading,
+                        onFallbackPressed: _handleGoogleSignIn,
+                      ),
 
                       const SizedBox(height: 12),
 

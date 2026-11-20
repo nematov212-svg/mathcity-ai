@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in_web/web_only.dart' as gsi_web;
-import '../auth/auth_service.dart';
+import 'google_logo.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final VoidCallback? onFallbackPressed;
@@ -14,70 +13,52 @@ class GoogleSignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return Container(
-        width: double.infinity,
-        height: 52,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFFE5E7EB), width: 1.2),
-        ),
-        child: const Center(
-          child: SizedBox(
-            width: 22,
-            height: 22,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
-        ),
-      );
-    }
-
-    // Guard: Check if the current origin is allowed for Google OAuth
-    if (!AuthService.isOriginAllowedForGoogle()) {
-      return SizedBox(
-        width: double.infinity,
-        height: 52,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF3F4F6),
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: const Color(0xFFE5E7EB), width: 1.2),
-          ),
-          child: const Center(
-            child: Text(
-              'Google kirishi faqat http://localhost:8085 da ishlaydi',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF6B7280),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    // Render official Google Identity Services button with rectangular full-width geometry matching Apple button
     return SizedBox(
       width: double.infinity,
       height: 52,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-        child: gsi_web.renderButton(
-          configuration: gsi_web.GSIButtonConfiguration(
-            type: gsi_web.GSIButtonType.standard,
-            theme: gsi_web.GSIButtonTheme.outline,
-            size: gsi_web.GSIButtonSize.large,
-            text: gsi_web.GSIButtonText.continueWith,
-            shape: gsi_web.GSIButtonShape.rectangular,
-            logoAlignment: gsi_web.GSIButtonLogoAlignment.left,
-            minimumWidth: 400,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          backgroundColor: Colors.white,
+          side: const BorderSide(color: Color(0xFFE5E7EB), width: 1.2),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
           ),
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
         ),
+        onPressed: isLoading ? null : onFallbackPressed,
+        child: isLoading
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/icons/google_g_logo.png',
+                    width: 22,
+                    height: 22,
+                    errorBuilder: (_, __, ___) => const GoogleLogo(size: 22),
+                  ),
+                  const SizedBox(width: 10),
+                  const Flexible(
+                    child: Text(
+                      'Continue with Google',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF1F2937),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }
 }
+
