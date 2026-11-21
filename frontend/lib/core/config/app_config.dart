@@ -33,13 +33,8 @@ class AppConfig {
       return _formatApiUrl(_envApiBase);
     }
 
-    // 2. Local backend in Debug mode on Web when running locally (localhost)
-    // Never in Release mode, and never on Mobile (Android / iOS)
-    if (kDebugMode && kIsWeb) {
-      return _formatApiUrl(localApiUrl);
-    }
-
-    // 3. DEFAULT FOR ALL PLATFORMS (Web, Android, iOS) & ALL MODES (Release, Debug):
+    // 2. DEFAULT FOR ALL PLATFORMS (Web, Android, iOS) & ALL MODES (Release, Debug):
+    // Authoritative 24/7 Cloud Backend on Render
     return _formatApiUrl(productionApiUrl);
   }
 

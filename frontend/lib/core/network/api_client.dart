@@ -113,14 +113,15 @@ class ApiClient {
             }
           }
 
-          // 2. Cold Start Retry Logic (up to 3 retries with exponential backoff on 502/503/504 or connection timeouts)
+          // 2. Cold Start Retry Logic (up to 3 retries with exponential backoff on Render cold starts)
           final retryCount = (reqOptions.extra['retryCount'] as int?) ?? 0;
-          final isColdStartError = error.type == DioExceptionType.connectionTimeout ||
-              error.type == DioExceptionType.receiveTimeout ||
-              error.type == DioExceptionType.connectionError ||
-              statusCode == 503 ||
-              statusCode == 502 ||
-              statusCode == 504;
+          final isColdStartError = reqOptions.baseUrl.contains('onrender.com') &&
+              (error.type == DioExceptionType.connectionTimeout ||
+               error.type == DioExceptionType.receiveTimeout ||
+               error.type == DioExceptionType.connectionError ||
+               statusCode == 503 ||
+               statusCode == 502 ||
+               statusCode == 504);
 
           if (isColdStartError && retryCount < 3) {
             final nextRetry = retryCount + 1;

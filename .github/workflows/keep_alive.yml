@@ -1,0 +1,24 @@
+name: 24/7 Render Keep-Alive Ping
+
+on:
+  schedule:
+    # Runs every 10 minutes to prevent Render free-tier spin down
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    name: Ping Render Backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping MathCity AI Health Endpoint
+        run: |
+          echo "Sending keep-alive ping to Render backend..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -m 30 "https://mathcity-ai-api.onrender.com/health" || echo "000")
+          echo "Response HTTP Status: $STATUS"
+          if [ "$STATUS" = "200" ]; then
+            echo "✅ Render backend is live and healthy."
+          else
+            echo "ℹ️ Backend ping returned $STATUS (waking up or suspended)."
+          fi
