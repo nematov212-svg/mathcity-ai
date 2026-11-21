@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/auth_design_tokens.dart';
 import 'google_logo.dart';
 
 class GoogleSignInButton extends StatelessWidget {
@@ -15,25 +16,33 @@ class GoogleSignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = AuthTokens.isDark(context);
+
     return SizedBox(
       width: double.infinity,
-      height: 52,
+      height: 56,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
-          backgroundColor: Colors.white,
-          side: const BorderSide(color: Color(0xFFE5E7EB), width: 1.2),
+          backgroundColor: AuthTokens.card(context),
+          side: BorderSide(
+            color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+            width: 2.0,
+          ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(20),
           ),
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 16),
         ),
         onPressed: isLoading ? null : onFallbackPressed,
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 width: 22,
                 height: 22,
-                child: CircularProgressIndicator(strokeWidth: 2),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(AuthTokens.brand(context)),
+                ),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -44,16 +53,17 @@ class GoogleSignInButton extends StatelessWidget {
                     height: 22,
                     errorBuilder: (_, __, ___) => const GoogleLogo(size: 22),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 12),
                   Flexible(
                     child: Text(
                       text,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
+                        fontFamily: 'Nunito',
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1F2937),
+                        color: AuthTokens.ink(context),
                       ),
                     ),
                   ),
@@ -63,4 +73,3 @@ class GoogleSignInButton extends StatelessWidget {
     );
   }
 }
-

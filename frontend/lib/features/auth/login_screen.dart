@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/widgets/mathcity_logo.dart';
+import '../../core/theme/auth_design_tokens.dart';
 import '../../core/widgets/google_sign_in_button.dart';
-import '../../core/widgets/responsive_layout.dart';
+import '../../core/widgets/responsive_auth_shell.dart';
 import '../../shared/providers/student_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -13,22 +13,55 @@ class LoginScreen extends ConsumerStatefulWidget {
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
-  
+class _LoginScreenState extends ConsumerState<LoginScreen>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _identifierController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
+  final _identifierFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
+
   bool _isPasswordVisible = false;
   bool _isLoading = false;
   bool _isGoogleLoading = false;
+  bool _isSuccess = false;
   String? _errorMessage;
+
+  late final AnimationController _shakeCtrl;
+  late final Animation<double> _shakeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _identifierFocusNode.addListener(() => setState(() {}));
+    _passwordFocusNode.addListener(() => setState(() {}));
+
+    _shakeCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _shakeAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -7.0), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: -7.0, end: 7.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 7.0, end: -6.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: -6.0, end: 6.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 6.0, end: 0.0), weight: 1),
+    ]).animate(CurvedAnimation(parent: _shakeCtrl, curve: Curves.easeInOut));
+  }
 
   @override
   void dispose() {
     _identifierController.dispose();
     _passwordController.dispose();
+    _identifierFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _shakeCtrl.dispose();
     super.dispose();
+  }
+
+  void _triggerShake() {
+    _shakeCtrl.forward(from: 0.0);
   }
 
   void _navigateToDashboard(dynamic student) {
@@ -44,18 +77,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _handleLogin() async {
-    if (_isLoading) return;
+    if (_isLoading || _isSuccess) return;
 
     final identifier = _identifierController.text.trim();
     final password = _passwordController.text;
 
     if (identifier.isEmpty) {
       setState(() => _errorMessage = 'Login yoki emailingizni kiriting.');
+      _triggerShake();
       return;
     }
 
     if (password.isEmpty) {
       setState(() => _errorMessage = 'Parolingizni kiriting.');
+      _triggerShake();
       return;
     }
 
@@ -66,13 +101,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     try {
       final result = await ref.read(studentProvider.notifier).loginWithCredentials(
-        identifier: identifier,
-        password: password,
-      );
+            identifier: identifier,
+            password: password,
+          );
 
       if (!mounted) return;
 
       if (result.success && result.student != null) {
+        setState(() => _isSuccess = true);
+        await Future.delayed(const Duration(milliseconds: 600));
+        if (!mounted) return;
+
         if (!result.profileCompleted || !result.student!.profileCompleted) {
           context.go('/complete-profile');
         } else {
@@ -82,12 +121,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() {
           _errorMessage = result.errorMessage ?? 'Login yoki parol noto‘g‘ri.';
         });
+        _triggerShake();
       }
     } catch (e) {
       if (!mounted) return;
       setState(() {
         _errorMessage = 'Server bilan aloqa o‘rnatib bo‘lmadi. Qayta urinib ko‘ring.';
       });
+      _triggerShake();
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -117,12 +158,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() {
           _errorMessage = result.errorMessage;
         });
+        _triggerShake();
       }
     } catch (e) {
       if (!mounted) return;
       setState(() {
         _errorMessage = 'Google tizimiga ulanib bo‘lmadi.';
       });
+      _triggerShake();
     } finally {
       if (mounted) setState(() => _isGoogleLoading = false);
     }
@@ -130,29 +173,126 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7F6FC),
-      body: SafeArea(
-        child: ResponsiveAuthCard(
-          maxCardWidth: 460,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 12),
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth >= 600 && screenWidth < 1024;
+    final isDark = AuthTokens.isDark(context);
 
-              // Soft lavender circular container behind MathCity AI logo
-              Center(
-                child: Container(
-                  width: 140,
-                  height: 140,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFECE7FD),
-                    shape: BoxShape.circle,
+    final inputHeight = isTablet ? 60.0 : 56.0;
+    final buttonHeight = isTablet ? 62.0 : 58.0;
+
+    return ResponsiveAuthShell(
+      title: 'Yana xush kelibsiz!',
+      subtitle: 'Shahringizdagi sarguzashtni davom ettiring.',
+      cardChild: AnimatedBuilder(
+        animation: _shakeAnimation,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(_shakeAnimation.value, 0),
+            child: child,
+          );
+        },
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Error banner
+              if (_errorMessage != null) ...[
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                  decoration: BoxDecoration(
+                    color: AuthTokens.errorLight.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: AuthTokens.errorLight.withOpacity(0.35),
+                      width: 1.2,
+                    ),
                   ),
-                  child: const Center(
-                    child: MathCityLogo(
-                      size: 110,
-                      showText: true,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.error_outline_rounded,
+                        color: AuthTokens.errorLight,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          _errorMessage!,
+                          style: const TextStyle(
+                            fontFamily: 'Nunito',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: AuthTokens.errorLight,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+
+              // Field 1: Login yoki email
+              Text(
+                'Login yoki email',
+                style: TextStyle(
+                  fontFamily: 'Nunito',
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: AuthTokens.ink(context),
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: inputHeight,
+                child: TextFormField(
+                  controller: _identifierController,
+                  focusNode: _identifierFocusNode,
+                  keyboardType: TextInputType.emailAddress,
+                  autofillHints: const [AutofillHints.username, AutofillHints.email],
+                  style: TextStyle(
+                    fontFamily: 'Nunito',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AuthTokens.ink(context),
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Login yoki emailingizni kiriting',
+                    hintStyle: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: AuthTokens.mute(context).withOpacity(0.7),
+                    ),
+                    filled: true,
+                    fillColor: AuthTokens.field(context),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      child: Icon(
+                        Icons.person_outline_rounded,
+                        color: _identifierFocusNode.hasFocus
+                            ? AuthTokens.brand(context)
+                            : AuthTokens.mute(context),
+                        size: 22,
+                      ),
+                    ),
+                    prefixIconConstraints: const BoxConstraints(minWidth: 48),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide(
+                        color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                        width: 2.0,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide(
+                        color: AuthTokens.brand(context),
+                        width: 2.0,
+                      ),
                     ),
                   ),
                 ),
@@ -160,338 +300,277 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               const SizedBox(height: 18),
 
-              // Headline & Subtitle
-              const Text(
-                'Yana xush kelibsiz!',
-                textAlign: TextAlign.center,
+              // Field 2: Parol
+              Text(
+                'Parol',
                 style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFF1E1742),
-                  letterSpacing: -0.5,
+                  fontFamily: 'Nunito',
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: AuthTokens.ink(context),
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Shahringizdagi sarguzashtni davom ettiring.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF7E79A4),
+              SizedBox(
+                height: inputHeight,
+                child: TextFormField(
+                  controller: _passwordController,
+                  focusNode: _passwordFocusNode,
+                  obscureText: !_isPasswordVisible,
+                  autofillHints: const [AutofillHints.password],
+                  style: TextStyle(
+                    fontFamily: 'Nunito',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AuthTokens.ink(context),
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Parolingizni kiriting',
+                    hintStyle: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: AuthTokens.mute(context).withOpacity(0.7),
+                    ),
+                    filled: true,
+                    fillColor: AuthTokens.field(context),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      child: Icon(
+                        Icons.lock_outline_rounded,
+                        color: _passwordFocusNode.hasFocus
+                            ? AuthTokens.brand(context)
+                            : AuthTokens.mute(context),
+                        size: 22,
+                      ),
+                    ),
+                    prefixIconConstraints: const BoxConstraints(minWidth: 48),
+                    suffixIcon: SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                          color: AuthTokens.mute(context),
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide(
+                        color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                        width: 2.0,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide(
+                        color: AuthTokens.brand(context),
+                        width: 2.0,
+                      ),
+                    ),
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 8),
 
-              // White Form Card Container
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(32),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x0C000000),
-                      blurRadius: 24,
-                      offset: Offset(0, 10),
+              // Forgot password link
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                    minimumSize: const Size(48, 44),
+                  ),
+                  onPressed: () => context.push('/forgot-password'),
+                  child: Text(
+                    'Parolni unutdingizmi?',
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AuthTokens.brand(context),
                     ),
-                  ],
+                  ),
                 ),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Error banner if any
-                      if (_errorMessage != null) ...[
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFEE2E2),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: const Color(0xFFFCA5A5)),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.error_outline_rounded, color: Color(0xFFDC2626), size: 20),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  _errorMessage!,
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFFB91C1C),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                      ],
+              ),
 
-                      // Field 1: Login yoki email
-                      const Text(
-                        'Login yoki email',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1E1742),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        controller: _identifierController,
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          color: Color(0xFF1E1742),
-                          fontWeight: FontWeight.w500,
-                        ),
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: const Color(0xFFFAFAFE),
-                          prefixIcon: const Icon(
-                            Icons.person_outline_rounded,
-                            color: Color(0xFF9E9AA8),
-                            size: 22,
-                          ),
-                          hintText: 'Login yoki emailingizni kiriting',
-                          hintStyle: const TextStyle(
-                            color: Color(0xFF9E9AA8),
-                            fontSize: 14,
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: const BorderSide(color: Color(0xFFEAE7F4), width: 1.2),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: const BorderSide(color: Color(0xFFEAE7F4), width: 1.2),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: const BorderSide(color: Color(0xFF6C47FF), width: 1.5),
-                          ),
-                        ),
-                      ),
+              const SizedBox(height: 12),
 
-                      const SizedBox(height: 18),
-
-                      // Field 2: Parol
-                      const Text(
-                        'Parol',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1E1742),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: !_isPasswordVisible,
-                        textInputAction: TextInputAction.done,
-                        onFieldSubmitted: (_) => _handleLogin(),
-                        style: const TextStyle(
-                          fontSize: 15,
-                          color: Color(0xFF1E1742),
-                          fontWeight: FontWeight.w500,
-                        ),
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: const Color(0xFFFAFAFE),
-                          prefixIcon: const Icon(
-                            Icons.lock_outline_rounded,
-                            color: Color(0xFF9E9AA8),
-                            size: 22,
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                              color: const Color(0xFF6B7280),
-                              size: 22,
-                            ),
-                            onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
-                          ),
-                          hintText: 'Parolingizni kiriting',
-                          hintStyle: const TextStyle(
-                            color: Color(0xFF9E9AA8),
-                            fontSize: 14,
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: const BorderSide(color: Color(0xFFEAE7F4), width: 1.2),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: const BorderSide(color: Color(0xFFEAE7F4), width: 1.2),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: const BorderSide(color: Color(0xFF6C47FF), width: 1.5),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      // Parolni unutdingizmi? link
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          onTap: () => context.push('/auth/forgot-password'),
-                          child: const Text(
-                            'Parolni unutdingizmi?',
-                            style: TextStyle(
-                              color: Color(0xFF6C47FF),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      // Primary Button: Kirish ->
-                      SizedBox(
-                        width: double.infinity,
-                        height: 54,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(18),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x406C47FF),
-                                blurRadius: 18,
-                                offset: Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF6C47FF),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18),
-                              ),
-                              elevation: 0,
-                            ),
-                            onPressed: _isLoading ? null : _handleLogin,
-                            child: _isLoading
-                                ? const SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2.5,
-                                    ),
-                                  )
-                                : Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: const [
-                                      Flexible(
-                                        child: Text(
-                                          'Kirish',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 8),
-                                      Icon(
-                                        Icons.arrow_forward_rounded,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                    ],
-                                  ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 22),
-
-                      // Divider: yoki davom eting
-                      Row(
-                        children: const [
-                          Expanded(
-                            child: Divider(color: Color(0xFFE5E7EB), thickness: 1),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text(
-                              'yoki davom eting',
-                              style: TextStyle(
-                                color: Color(0xFF9CA3AF),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Divider(color: Color(0xFFE5E7EB), thickness: 1),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 18),
-
-                      // Google Sign-In Button
-                      GoogleSignInButton(
-                        isLoading: _isGoogleLoading,
-                        onFallbackPressed: _handleGoogleSignIn,
+              // Main Primary Button: Kirish →
+              SizedBox(
+                height: buttonHeight,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: _isSuccess
+                        ? const LinearGradient(colors: [Color(0xFF22C55E), Color(0xFF16A34A)])
+                        : AuthTokens.brandGradient,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: (_isSuccess
+                                ? const Color(0xFF22C55E)
+                                : AuthTokens.brandLight)
+                            .withOpacity(0.38),
+                        blurRadius: 28,
+                        offset: const Offset(0, 12),
                       ),
                     ],
                   ),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    onPressed: (_isLoading || _isSuccess) ? null : _handleLogin,
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : _isSuccess
+                            ? const FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.check_circle_rounded, color: Colors.white, size: 22),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Xush kelibsiz!',
+                                      style: TextStyle(
+                                        fontFamily: 'Nunito',
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : const FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Kirish',
+                                      style: TextStyle(
+                                        fontFamily: 'Nunito',
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      '→',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 22),
 
-              // Bottom navigation: Hisobingiz yo‘qmi? Ro‘yxatdan o‘tish
-              Wrap(
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
+              // Divider "yoki davom eting"
+              Row(
                 children: [
-                  const Text(
-                    'Hisobingiz yo‘qmi? ',
-                    style: TextStyle(
-                      color: Color(0xFF6B7280),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                  Expanded(
+                    child: Divider(
+                      color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                      thickness: 1.5,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () => context.push('/register'),
-                    child: const Text(
-                      'Ro‘yxatdan o‘tish',
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    child: Text(
+                      'yoki davom eting',
                       style: TextStyle(
-                        color: Color(0xFF6C47FF),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Nunito',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AuthTokens.mute(context),
                       ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Divider(
+                      color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                      thickness: 1.5,
                     ),
                   ),
                 ],
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
+
+              // Google Sign-In Button
+              GoogleSignInButton(
+                onFallbackPressed: _handleGoogleSignIn,
+                isLoading: _isGoogleLoading,
+                text: 'Continue with Google',
+              ),
             ],
           ),
         ),
+      ),
+      bottomChild: Wrap(
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text(
+            'Hisobingiz yo‘qmi? ',
+            style: TextStyle(
+              fontFamily: 'Nunito',
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: AuthTokens.mute(context),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => context.go('/register'),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Text(
+                'Ro‘yxatdan o‘tish',
+                style: TextStyle(
+                  fontFamily: 'Nunito',
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                  color: AuthTokens.brand(context),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

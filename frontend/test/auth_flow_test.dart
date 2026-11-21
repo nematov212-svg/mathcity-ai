@@ -162,7 +162,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(tester.takeException(), isNull);
+      final err = tester.takeException();
+      expect(err, isNull);
     });
   });
 }
