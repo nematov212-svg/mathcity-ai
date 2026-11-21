@@ -42,19 +42,9 @@ class AuthService {
   static bool _isGoogleSignInInitialized = false;
   static bool _googleSignInInitFailed = false;
 
-  /// Check whether the current web origin is allowed for Google Identity Services
+  /// Check whether the current platform origin is allowed for Google Identity Services
   static bool isOriginAllowedForGoogle() {
-    if (!kIsWeb) return true;
-    try {
-      final host = Uri.base.host;
-      final port = Uri.base.port;
-      if (host == 'localhost' || host == '127.0.0.1') {
-        return host == 'localhost' && port == 8085;
-      }
-      return true;
-    } catch (_) {
-      return true;
-    }
+    return true;
   }
 
   /// Global singleton initialization for GoogleSignIn
@@ -73,16 +63,8 @@ class AuthService {
     }
   }
 
-  /// Web OAuth Client ID from Google Cloud Console
-  /// Authorized JavaScript origins: http://localhost:8085
-
-
-  
-  static String webClientId = const String.fromEnvironment(
-    'GOOGLE_CLIENT_ID',
-    defaultValue:
-        '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
-  );
+  /// Web OAuth Client ID from Google Cloud Console / AppConfig
+  static String webClientId = AppConfig.googleWebClientId;
 
   /// iOS OAuth Client ID from Google Cloud Console
   static String iosClientId = const String.fromEnvironment(
@@ -174,8 +156,14 @@ class AuthService {
       if (res.data['success'] == true) {
         final data = res.data['data'];
         final token = (data['token'] ?? data['accessToken']) as String;
+        final userData = (data['user'] as Map<String, dynamic>?) ?? {};
         final bool isNewUser = data['isNewUser'] == true;
-        final bool profileCompleted = data['profileCompleted'] == true;
+        final bool needsProfile = data['needsProfile'] == true ||
+            userData['username'] == null ||
+            (userData['username'] as String).isEmpty ||
+            userData['dateOfBirth'] == null ||
+            (userData['dateOfBirth'] as String).isEmpty;
+        final bool profileCompleted = data['profileCompleted'] == true && !needsProfile;
 
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
@@ -183,7 +171,6 @@ class AuthService {
           await StorageService.saveRefreshToken(data['refreshToken'] as String);
         }
 
-        final userData = data['user'];
         final student = StudentModel.fromJson(userData);
         return AuthResult(
           success: true,
@@ -228,13 +215,6 @@ class AuthService {
 
   /// Sign In With Google with graceful fallback and no startup crash
   Future<AuthResult> signInWithGoogle() async {
-    if (kIsWeb && !isOriginAllowedForGoogle()) {
-      return const AuthResult(
-        success: false,
-        errorMessage: 'Google kirishi faqat http://localhost:8085 da ishlaydi.',
-      );
-    }
-
     final googleSignIn = _getGoogleSignIn();
     if (googleSignIn == null) {
       return const AuthResult(
@@ -248,7 +228,7 @@ class AuthService {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
-        // User dismissed the popup or cancelled
+        // Foydalanuvchi oynani yopdi yoki bekor qildi
         return const AuthResult(
           success: false,
           errorMessage: null,
@@ -257,7 +237,7 @@ class AuthService {
 
       return await authenticateGoogleUser(googleUser);
     } catch (e) {
-      debugPrint('ℹ️ Google orqali kirish natijasi: $e');
+      debugPrint('ℹ️ [AuthService/Google] Kirish xatoligi: $e');
       final errStr = e.toString().toLowerCase();
       if (errStr.contains('popup_closed') ||
           errStr.contains('popup_blocked') ||
@@ -267,7 +247,7 @@ class AuthService {
           errStr.contains('access_denied')) {
         return const AuthResult(
           success: false,
-          errorMessage: null, // Graceful cancellation, no intrusive error banner
+          errorMessage: null, // Bekor qilindi, qizil xatolik xabari ko'rsatilmaydi
         );
       }
       if (errStr.contains('people.googleapis.com') ||
@@ -286,7 +266,14 @@ class AuthService {
         return const AuthResult(
           success: false,
           errorMessage:
-              'Ushbu veb-manzil (http://localhost:8085) Google Cloud Console da ruxsat etilmagan. Iltimos, konsoldan Authorized origins ga qo‘shing yoki login orqali kiring.',
+              'Ushbu veb-manzil Google Cloud Console da ruxsat etilmagan. Iltimos, konsoldan Authorized JavaScript origins ga qo‘shing yoki login orqali kiring.',
+        );
+      }
+      if (errStr.contains('network') || errStr.contains('socket') || errStr.contains('timeout')) {
+        return const AuthResult(
+          success: false,
+          errorMessage:
+              'Internet aloqasi mavjud emas yoki server uyg‘onmoqda. Iltimos, birozdan so‘ng qayta urinib ko‘ring.',
         );
       }
       return const AuthResult(

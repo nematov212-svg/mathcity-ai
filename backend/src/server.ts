@@ -71,3 +71,12 @@ const gracefulShutdown = async (signal: string) => {
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+// Global error handlers: prevent unexpected server crashes and log full stack traces
+process.on('unhandledRejection', (reason: any, promise: Promise<any>) => {
+  console.error('💥 [Server Crash Guard] Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err: Error) => {
+  console.error('💥 [Server Crash Guard] Uncaught Exception thrown:', err.message, err.stack);
+});

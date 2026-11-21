@@ -11,6 +11,7 @@ const envSchema = z
     JWT_SECRET: z.string().optional(),
     ADMIN_API_KEY: z.string().optional(),
     JWT_EXPIRES_IN: z.string().default('7d'),
+    CORS_ORIGINS: z.string().optional(),
     ALLOWED_ORIGINS: z
       .string()
       .default(
@@ -22,6 +23,10 @@ const envSchema = z
       .default('false')
       .transform((val) => val === 'true' || val === '1'),
     GOOGLE_CLIENT_ID: z.string().optional().default(''),
+    GOOGLE_WEB_CLIENT_ID: z.string().optional(),
+    GOOGLE_ANDROID_CLIENT_ID: z.string().optional(),
+    GOOGLE_IOS_CLIENT_ID: z.string().optional(),
+    APP_BASE_URL: z.string().optional().default('https://mathcity-ai-web.onrender.com'),
     APP_NAME: z.string().default('MathCity AI'),
     APP_VERSION: z.string().default('1.0.0'),
   })
@@ -70,9 +75,17 @@ export const config = {
       ? 'mathcity_admin_master_secret_2026'
       : 'mathcity_admin_master_secret_2026'),
   jwtExpiresIn: env.JWT_EXPIRES_IN,
+  corsOrigins: (process.env.CORS_ORIGINS || env.CORS_ORIGINS || env.ALLOWED_ORIGINS)
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean),
   allowedOrigins: env.ALLOWED_ORIGINS.split(',').map((o) => o.trim()),
   allowLocalhostOrigins: env.ALLOW_LOCALHOST_ORIGINS,
   googleClientId: env.GOOGLE_CLIENT_ID,
+  googleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID || env.GOOGLE_WEB_CLIENT_ID || env.GOOGLE_CLIENT_ID || '',
+  googleAndroidClientId: process.env.GOOGLE_ANDROID_CLIENT_ID || env.GOOGLE_ANDROID_CLIENT_ID || '',
+  googleIosClientId: process.env.GOOGLE_IOS_CLIENT_ID || env.GOOGLE_IOS_CLIENT_ID || '',
+  appBaseUrl: process.env.APP_BASE_URL || env.APP_BASE_URL || 'https://mathcity-ai-web.onrender.com',
   appName: env.APP_NAME,
   appVersion: env.APP_VERSION,
   isProduction: env.NODE_ENV === 'production',

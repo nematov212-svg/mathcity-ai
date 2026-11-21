@@ -19,10 +19,10 @@ class ApiClient {
     dio = Dio(
       BaseOptions(
         baseUrl: AppConfig.baseUrl,
-        // Increased timeouts to accommodate Render free-tier cold starts (up to 45-60s)
-        connectTimeout: const Duration(seconds: 45),
-        receiveTimeout: const Duration(seconds: 60),
-        sendTimeout: const Duration(seconds: 30),
+        // Increased timeouts to accommodate Render free-tier cold starts (up to 65-70s)
+        connectTimeout: const Duration(seconds: 65),
+        receiveTimeout: const Duration(seconds: 65),
+        sendTimeout: const Duration(seconds: 40),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -89,12 +89,12 @@ class ApiClient {
             return handler.next(error);
           }
 
-          // 1. Localhost Fallback: In Debug Web mode, switch IMMEDIATELY if Render is unreachable/suspended
-          if (AppConfig.isLocalhostFallbackAllowed &&
+          // 1. Localhost Fallback: Strictly permitted ONLY in Debug mode on Web (kDebugMode && kIsWeb)
+          // Release va mobil (Android/iOS) da butunlay o'chirilgan
+          if (kDebugMode && kIsWeb && AppConfig.isLocalhostFallbackAllowed &&
               reqOptions.baseUrl.contains('onrender.com') &&
               (error.type == DioExceptionType.connectionError ||
                error.type == DioExceptionType.connectionTimeout ||
-               error.type == DioExceptionType.unknown ||
                statusCode == 503)) {
             try {
               const localFallbackUrl = 'http://localhost:4000/api';
@@ -113,22 +113,24 @@ class ApiClient {
             }
           }
 
-          // 2. Cold Start Retry Logic (up to 3 retries with exponential backoff on Render cold starts)
+          // 2. Cold Start Retry Logic:
+          // Faqat timeout yoki 5xx server xatolarida qayta uriniladi.
+          // CORS yoki 4xx xatolarida (400, 401, 403, 404, 422) QAYTA URILMAYDI!
+          final is4xxClientError = statusCode != null && statusCode >= 400 && statusCode < 500;
+          final is5xxServerError = statusCode != null && statusCode >= 500 && statusCode < 600;
+          final isTimeout = error.type == DioExceptionType.connectionTimeout ||
+              error.type == DioExceptionType.receiveTimeout ||
+              error.type == DioExceptionType.sendTimeout;
+
+          final isColdStartError = !is4xxClientError && (is5xxServerError || isTimeout);
           final retryCount = (reqOptions.extra['retryCount'] as int?) ?? 0;
-          final isColdStartError = reqOptions.baseUrl.contains('onrender.com') &&
-              (error.type == DioExceptionType.connectionTimeout ||
-               error.type == DioExceptionType.receiveTimeout ||
-               error.type == DioExceptionType.connectionError ||
-               statusCode == 503 ||
-               statusCode == 502 ||
-               statusCode == 504);
 
           if (isColdStartError && retryCount < 3) {
             final nextRetry = retryCount + 1;
             reqOptions.extra['retryCount'] = nextRetry;
 
             isServerWakingUp.value = true;
-            serverStatusMessage.value = 'Server uyg‘onmoqda, biroz kuting... ($nextRetry/3)';
+            serverStatusMessage.value = 'Server uyg‘onmoqda, iltimos kuting... ($nextRetry/3)';
             debugPrint('⏳ [API Client] Server uyg‘onmoqda... Qayta urinish: $nextRetry/3');
 
             // Exponential backoff: 2s, 4s, 8s
@@ -158,8 +160,8 @@ class ApiClient {
 
   /// Sends a background warm-up request to the health endpoint when the app starts
   Future<void> warmUp() async {
-    // In Web debug mode, probe local backend first to prevent CORS noise from suspended Render
-    if (AppConfig.isLocalhostFallbackAllowed) {
+    // In Web debug mode only, probe local backend first to prevent noise
+    if (kDebugMode && kIsWeb && AppConfig.isLocalhostFallbackAllowed) {
       try {
         final localDio = Dio(BaseOptions(connectTimeout: const Duration(milliseconds: 1000)));
         final localRes = await localDio.get('http://localhost:4000/health');

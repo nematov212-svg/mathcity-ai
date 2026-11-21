@@ -84,8 +84,13 @@ async function verifyGoogleTokenPayload(idToken: string): Promise<VerifiedGoogle
   }
 
   const allowedClients = [
-    config.googleClientId,
+    process.env.GOOGLE_WEB_CLIENT_ID,
+    process.env.GOOGLE_ANDROID_CLIENT_ID,
     process.env.GOOGLE_IOS_CLIENT_ID,
+    config.googleWebClientId,
+    config.googleAndroidClientId,
+    config.googleIosClientId,
+    config.googleClientId,
     '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
   ].filter(Boolean) as string[];
 
@@ -173,8 +178,13 @@ export async function verifyGoogleAccessToken(
   }
 
   const allowedClients = [
-    config.googleClientId,
+    process.env.GOOGLE_WEB_CLIENT_ID,
+    process.env.GOOGLE_ANDROID_CLIENT_ID,
     process.env.GOOGLE_IOS_CLIENT_ID,
+    config.googleWebClientId,
+    config.googleAndroidClientId,
+    config.googleIosClientId,
+    config.googleClientId,
     '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
   ].filter(Boolean) as string[];
 
@@ -858,6 +868,8 @@ authRouter.post('/google', authRateLimiter, async (req: Request, res: Response) 
     expiresIn: '30d',
   });
 
+  const needsProfile = isNewUser || !user.profileCompleted || !user.username || !user.dateOfBirth;
+
   return res.json({
     success: true,
     data: {
@@ -865,6 +877,7 @@ authRouter.post('/google', authRateLimiter, async (req: Request, res: Response) 
       accessToken: accessTokenJwt,
       refreshToken: refreshTokenJwt,
       isNewUser,
+      needsProfile,
       profileCompleted: Boolean(user.profileCompleted),
       user: {
         id: user.id,
@@ -1141,7 +1154,7 @@ authRouter.post('/apple', authRateLimiter, async (req: Request, res: Response) =
 // POST /api/auth/apple/callback - Official Apple Web & Android OAuth Form Post Callback
 authRouter.post('/apple/callback', async (req: Request, res: Response) => {
   const { id_token, code, user: rawUser } = req.body;
-  const baseUrl = config.isProduction ? 'https://mathcity-ai-web.onrender.com' : 'http://localhost:8085';
+  const baseUrl = process.env.APP_BASE_URL || (config.isProduction ? 'https://mathcity-ai-web.onrender.com' : 'http://localhost:8085');
 
   if (!id_token) {
     return res.redirect(`${baseUrl}/#/auth/login?error=apple_token_missing`);

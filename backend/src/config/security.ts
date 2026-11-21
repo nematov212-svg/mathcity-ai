@@ -20,23 +20,28 @@ export const securityHeaders = helmet({
   crossOriginEmbedderPolicy: false,
 });
 
-export const corsMiddleware = cors({
+export const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
-    // Allow non-browser requests (e.g. mobile apps, curl, tests) where origin is undefined
+    // 1. Allow non-browser requests (e.g. mobile apps, curl, tests) where origin is undefined
     if (!origin) return callback(null, true);
       
-    // Allow all localhost/127.0.0.1 ports (e.g. :8085, :4000, :3000)
+    // 2. Allow all localhost/127.0.0.1 ports (Flutter web dev)
     if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
       return callback(null, true);
     }
 
-    // Allow Render and cloud domains (*.onrender.com, *.mathcity.ai)
-    if (/^https?:\/\/([a-zA-Z0-9-]+\.)*(onrender\.com|mathcity\.ai)$/.test(origin)) {
+    // 3. Allow origins from CORS_ORIGINS or ALLOWED_ORIGINS (comma-separated env)
+    const allowed = [
+      ...config.corsOrigins,
+      ...config.allowedOrigins,
+      ...(process.env.CORS_ORIGINS || '').split(',').map((o) => o.trim()).filter(Boolean),
+    ];
+    if (allowed.includes('*') || allowed.includes(origin)) {
       return callback(null, true);
     }
 
-    // Allow explicit allowedOrigins from config or wildcard
-    if (config.allowedOrigins.includes('*') || config.allowedOrigins.includes(origin)) {
+    // 4. Allow Render and cloud domains (*.onrender.com, *.mathcity.ai)
+    if (/^https?:\/\/([a-zA-Z0-9-]+\.)*(onrender\.com|mathcity\.ai)$/.test(origin)) {
       return callback(null, true);
     }
 
@@ -44,7 +49,7 @@ export const corsMiddleware = cors({
     return callback(null, true);
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
     'Content-Type',
     'Authorization',
@@ -58,7 +63,9 @@ export const corsMiddleware = cors({
   ],
   exposedHeaders: ['Content-Range', 'X-Content-Range'],
   maxAge: 86400, // 24 hours preflight cache
-});
+};
+
+export const corsMiddleware = cors(corsOptions);
 
 export function requestTimeoutMiddleware(timeoutMs: number = 60000) {
   return (req: Request, res: Response, next: NextFunction) => {

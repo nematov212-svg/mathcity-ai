@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { randomUUID } from 'crypto';
 import { authMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
 import { adminAuth, AuthenticatedAdminRequest } from '../admin/admin.routes.js';
+import { config } from '../../config/env.js';
 import {
   validateFileTypeAndSize,
   uploadToStorage,
@@ -60,7 +61,7 @@ mediaRouter.post(
 
       // Base URL from request or environment
       const protocol = req.protocol;
-      const host = req.get('host') || 'localhost:4000';
+      const host = req.get('host') || (config.isProduction ? 'mathcity-ai-api.onrender.com' : 'localhost:4000');
       const baseUrl = `${protocol}://${host}`;
 
       const uploaded = await uploadToStorage(file.buffer, originalName, mimeType, baseUrl);

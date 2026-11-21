@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { authMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
 import { repository } from '../../utils/repository.js';
 import { paymentDataStore } from './paymentStore.js';
+import { config } from '../../config/env.js';
 
 export const paymentsRouter = Router();
 
@@ -52,7 +53,8 @@ paymentsRouter.post('/create-order', authMiddleware, (req: AuthenticatedRequest,
   const serviceId = CLICK_SERVICE_ID || '32840';
   const merchantId = CLICK_MERCHANT_ID || '24510';
 
-  const returnUrl = 'http://localhost:8085/#/kids/profile';
+  const appBase = process.env.APP_BASE_URL || (config.isProduction ? 'https://mathcity-ai-web.onrender.com' : 'http://localhost:8085');
+  const returnUrl = `${appBase}/#/kids/profile`;
   const checkoutUrl = `https://my.click.uz/services/pay?service_id=${serviceId}&merchant_id=${merchantId}&amount=${amountUzs}&transaction_param=${user.id}&return_url=${encodeURIComponent(returnUrl)}`;
 
   const order = paymentDataStore.createOrder(user.id, amountUzs, checkoutUrl);
@@ -78,7 +80,8 @@ paymentsRouter.post('/click/create-invoice', authMiddleware, (req: Authenticated
   const amountUzs = 29000;
   const serviceId = CLICK_SERVICE_ID || '32840';
   const merchantId = CLICK_MERCHANT_ID || '24510';
-  const returnUrl = 'http://localhost:8085/#/kids/profile';
+  const appBase = process.env.APP_BASE_URL || (config.isProduction ? 'https://mathcity-ai-web.onrender.com' : 'http://localhost:8085');
+  const returnUrl = `${appBase}/#/kids/profile`;
   const checkoutUrl = `https://my.click.uz/services/pay?service_id=${serviceId}&merchant_id=${merchantId}&amount=${amountUzs}&transaction_param=${user.id}&return_url=${encodeURIComponent(returnUrl)}`;
 
   const order = paymentDataStore.createOrder(user.id, amountUzs, checkoutUrl);

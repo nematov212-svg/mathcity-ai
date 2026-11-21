@@ -31,7 +31,15 @@ services:
         value: mathcity_admin_master_secret_2026
       - key: ALLOWED_ORIGINS
         value: https://mathcity-ai-web.onrender.com,https://mathcity-ai-admin.onrender.com,http://localhost:8085
+      - key: CORS_ORIGINS
+        value: https://mathcity-ai-web.onrender.com,https://mathcity-ai-admin.onrender.com,http://localhost:8085
       - key: GOOGLE_CLIENT_ID
+        value: 608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com
+      - key: GOOGLE_WEB_CLIENT_ID
+        value: 608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com
+      - key: GOOGLE_ANDROID_CLIENT_ID
+        value: 608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com
+      - key: GOOGLE_IOS_CLIENT_ID
         value: 608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com
       - key: OBJECT_STORAGE_ENDPOINT
         value: https://storage.mathcity.ai

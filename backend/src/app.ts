@@ -29,11 +29,11 @@ const adminStaticPath = path.resolve(process.cwd(), 'public/admin');
 
 export const app = express();
 
-// 1. Core Security & Transport Middleware
-app.use(securityHeaders);
+// 1. CORS Preflight & Transport Middleware (MUST be before helmet, rate-limit, and all routes)
 app.use(corsMiddleware);
 app.options('*', corsMiddleware);
-app.use(requestTimeoutMiddleware(60000));
+app.use(securityHeaders);
+app.use(requestTimeoutMiddleware(65000));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(generalRateLimiter);
@@ -50,6 +50,8 @@ app.get('/health', async (req: Request, res: Response) => {
     } catch (_) {}
   }
   res.status(200).json({
+    ok: true,
+    time: Date.now(),
     status: 'healthy',
     service: 'mathcity-ai-api',
     db: isDatabaseHealthy() ? 'postgres' : 'in-memory',
@@ -83,6 +85,8 @@ app.get('/health/ready', (req: Request, res: Response) => {
 // Legacy / Backward-compatible health
 app.get('/api/health', (req: Request, res: Response) => {
   res.status(200).json({
+    ok: true,
+    time: Date.now(),
     status: 'healthy',
     name: 'MathCity AI Backend API',
     version: '1.0.0',
