@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 export interface AdminAccount {
   id: string;
   username: string;
+  email: string;
   passwordHash: string;
   role: 'SUPER_ADMIN' | 'ADMIN';
   name: string;
@@ -30,17 +31,20 @@ class AdminStore {
 
   constructor() {
     const isProduction = process.env.NODE_ENV === 'production';
-    // For local development testing: mirzobek / mirzobek
-    // For production: requires strong ADMIN_PASSWORD or initial setup
+    const envEmail = (process.env.ADMIN_EMAIL || 'admin@mathcity.ai').trim().toLowerCase();
+    const envUsername = (process.env.ADMIN_USERNAME || (envEmail.includes('@') ? envEmail.split('@')[0] : 'admin')).trim();
+    // In production, requires ADMIN_PASSWORD or initial setup.
+    // In local dev/testing, default to 'mirzobek' if ADMIN_PASSWORD is not provided.
     const initialPassword = process.env.ADMIN_PASSWORD || 'mirzobek';
     const isDefaultTemp = initialPassword === 'mirzobek';
 
     this.admin = {
-      id: 'admin-mirzobek-01',
-      username: 'mirzobek',
+      id: 'admin-01',
+      username: envUsername,
+      email: envEmail,
       passwordHash: bcrypt.hashSync(initialPassword, 10),
       role: 'SUPER_ADMIN',
-      name: 'Mirzobek',
+      name: process.env.ADMIN_NAME || 'MathCity Bosh Administrator',
       mustChangePassword: isDefaultTemp,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -51,7 +55,12 @@ class AdminStore {
       adminUsername: 'system',
       action: 'SYSTEM_INIT',
       targetType: 'ADMIN_STORE',
-      details: { message: 'Administrator xotirasi xavfsiz ishga tushirildi' },
+      details: {
+        message: 'Administrator xotirasi xavfsiz ishga tushirildi',
+        username: this.admin.username,
+        email: this.admin.email,
+        role: this.admin.role,
+      },
     });
   }
 
@@ -59,27 +68,32 @@ class AdminStore {
     return this.admin;
   }
 
-  verifyCredentials(username: string, password: string): { success: boolean; admin?: AdminAccount; error?: string } {
+  verifyCredentials(identifier: string, password: string): { success: boolean; admin?: AdminAccount; error?: string } {
     const isProduction = process.env.NODE_ENV === 'production';
+    const cleanId = (identifier || '').trim().toLowerCase();
 
-    if (username.trim() !== this.admin.username) {
-      return { success: false, error: 'Administrator foydalanuvchi nomi noto‘g‘ri.' };
+    const isUsernameMatch = cleanId === this.admin.username.toLowerCase();
+    const isEmailMatch = this.admin.email ? cleanId === this.admin.email.toLowerCase() : false;
+    const isLegacyDevMatch = !isProduction && (cleanId === 'mirzobek' || cleanId === 'admin');
+
+    if (!isUsernameMatch && !isEmailMatch && !isLegacyDevMatch) {
+      return { success: false, error: 'Administrator login yoki emailingiz noto‘g‘ri.' };
     }
 
     // In production, prevent login with the temporary default password 'mirzobek'
     if (isProduction && password === 'mirzobek' && this.admin.mustChangePassword) {
       return {
         success: false,
-        error: 'Production muhitida vaqtinchalik "mirzobek" parolidan foydalanish taqiqlangan. Kuchli parol o‘rnating.',
+        error: 'Production muhitida vaqtinchalik "mirzobek" parolidan foydalanish taqiqlangan. Kuchli ADMIN_PASSWORD o‘rnating.',
       };
     }
 
-    // In local development, always accept 'mirzobek' or valid bcrypt hash
+    // In local development, accept 'mirzobek' or valid bcrypt hash
     const isValid = (!isProduction && password === 'mirzobek') || bcrypt.compareSync(password, this.admin.passwordHash);
     if (!isValid) {
       this.logAction({
         adminId: this.admin.id,
-        adminUsername: username,
+        adminUsername: identifier,
         action: 'FAILED_LOGIN_ATTEMPT',
         targetType: 'AUTH',
         details: { reason: 'Noto‘g‘ri parol kiritildi' },
@@ -90,7 +104,7 @@ class AdminStore {
     this.admin.lastLoginAt = new Date().toISOString();
     this.logAction({
       adminId: this.admin.id,
-      adminUsername: username,
+      adminUsername: this.admin.username,
       action: 'ADMIN_LOGIN_SUCCESS',
       targetType: 'AUTH',
       details: { timestamp: this.admin.lastLoginAt },
@@ -100,7 +114,8 @@ class AdminStore {
   }
 
   changePassword(oldPassword: string, newPassword: string): { success: boolean; error?: string } {
-    const isValid = bcrypt.compareSync(oldPassword, this.admin.passwordHash);
+    const isProduction = process.env.NODE_ENV === 'production';
+    const isValid = bcrypt.compareSync(oldPassword, this.admin.passwordHash) || (!isProduction && oldPassword === 'mirzobek');
     if (!isValid) {
       return { success: false, error: 'Eski parol noto‘g‘ri kiritildi.' };
     }

@@ -88,13 +88,14 @@ export function adminAuth(req: AuthenticatedAdminRequest, res: Response, next: F
 // Default development login: mirzobek / mirzobek
 // ---------------------------------------------------------------------------
 adminRouter.post('/login', (req: Request, res: Response) => {
-  const { username, password, apiKey } = req.body;
+  const { username, login, email, password, apiKey } = req.body;
+  const identifier = username || login || email;
 
   // Legacy API Key direct login
   if (apiKey && apiKey.trim() === ADMIN_API_KEY) {
     const admin = adminStore.getAdmin();
     const token = jwt.sign(
-      { id: admin.id, username: admin.username, role: admin.role, mustChangePassword: admin.mustChangePassword },
+      { id: admin.id, username: admin.username, email: admin.email, role: admin.role, mustChangePassword: admin.mustChangePassword },
       config.jwtSecret,
       { expiresIn: '24h' }
     );
@@ -104,6 +105,7 @@ adminRouter.post('/login', (req: Request, res: Response) => {
         token,
         role: admin.role,
         username: admin.username,
+        email: admin.email,
         name: admin.name,
         mustChangePassword: admin.mustChangePassword,
         expiresIn: '24h',
@@ -111,15 +113,15 @@ adminRouter.post('/login', (req: Request, res: Response) => {
     });
   }
 
-  // Username and password login (Default local dev: mirzobek / mirzobek)
-  if (!username || !password) {
+  // Username/email and password login
+  if (!identifier || !password) {
     return res.status(400).json({
       success: false,
-      error: 'Administrator foydalanuvchi nomi va parolini kiriting.',
+      error: 'Administrator foydalanuvchi nomi (yoki email) va parolini kiriting.',
     });
   }
 
-  const result = adminStore.verifyCredentials(username.trim(), password.trim());
+  const result = adminStore.verifyCredentials(identifier.toString().trim(), password.toString().trim());
   if (!result.success || !result.admin) {
     return res.status(401).json({
       success: false,
@@ -129,7 +131,7 @@ adminRouter.post('/login', (req: Request, res: Response) => {
 
   const admin = result.admin;
   const token = jwt.sign(
-    { id: admin.id, username: admin.username, role: admin.role, mustChangePassword: admin.mustChangePassword },
+    { id: admin.id, username: admin.username, email: admin.email, role: admin.role, mustChangePassword: admin.mustChangePassword },
     config.jwtSecret,
     { expiresIn: '24h' }
   );
@@ -140,6 +142,7 @@ adminRouter.post('/login', (req: Request, res: Response) => {
       token,
       role: admin.role,
       username: admin.username,
+      email: admin.email,
       name: admin.name,
       mustChangePassword: admin.mustChangePassword,
       expiresIn: '24h',
@@ -198,6 +201,7 @@ adminRouter.get('/me', adminAuth, (req: AuthenticatedAdminRequest, res: Response
     data: {
       id: admin.id,
       username: admin.username,
+      email: admin.email,
       name: admin.name,
       role: admin.role,
       mustChangePassword: admin.mustChangePassword,
