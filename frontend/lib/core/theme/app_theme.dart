@@ -11,6 +11,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   final Color inactive;
   final Color bg;
   final Color card;
+  final Color field;
   final Color border;
   final Color gold;
   final Color proDark;
@@ -27,6 +28,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     required this.inactive,
     required this.bg,
     required this.card,
+    required this.field,
     required this.border,
     required this.gold,
     required this.proDark,
@@ -44,6 +46,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     inactive: Color(0xFF9A97B0),
     bg: Color(0xFFF5F4FC),
     card: Color(0xFFFFFFFF),
+    field: Color(0xFFF8F7FF),
     border: Color(0xFFE7E4F5),
     gold: Color(0xFFFFD66B),
     proDark: Color(0xFF2A1B7A),
@@ -69,6 +72,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     inactive: Color(0xFF6E69A0),
     bg: Color(0xFF0F0C24),
     card: Color(0xFF1A1638),
+    field: Color(0xFF241F48),
     border: Color(0xFF2A2452),
     gold: Color(0xFFFFD66B),
     proDark: Color(0xFF2A1B7A),
@@ -100,6 +104,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     Color? inactive,
     Color? bg,
     Color? card,
+    Color? field,
     Color? border,
     Color? gold,
     Color? proDark,
@@ -116,6 +121,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
       inactive: inactive ?? this.inactive,
       bg: bg ?? this.bg,
       card: card ?? this.card,
+      field: field ?? this.field,
       border: border ?? this.border,
       gold: gold ?? this.gold,
       proDark: proDark ?? this.proDark,
@@ -137,6 +143,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
       inactive: Color.lerp(inactive, other.inactive, t) ?? inactive,
       bg: Color.lerp(bg, other.bg, t) ?? bg,
       card: Color.lerp(card, other.card, t) ?? card,
+      field: Color.lerp(field, other.field, t) ?? field,
       border: Color.lerp(border, other.border, t) ?? border,
       gold: Color.lerp(gold, other.gold, t) ?? gold,
       proDark: Color.lerp(proDark, other.proDark, t) ?? proDark,

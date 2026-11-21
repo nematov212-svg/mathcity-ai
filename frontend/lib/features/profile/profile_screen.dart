@@ -30,21 +30,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
 
   final ImagePicker _picker = ImagePicker();
   bool _isUploadingAvatar = false;
-  int _selectedDayIndex = 4; // 0 = Du, 1 = Se, 2 = Ch, 3 = Pa, 4 = Ju (Default Today), 5 = Sh, 6 = Yak
-
-  final List<({String day, int minutes, bool isToday})> _weeklyDays = const [
-    (day: 'Du', minutes: 0, isToday: false),
-    (day: 'Se', minutes: 5, isToday: false),
-    (day: 'Ch', minutes: 6, isToday: false),
-    (day: 'Pa', minutes: 4, isToday: false),
-    (day: 'Ju', minutes: 7, isToday: true),
-    (day: 'Sh', minutes: 0, isToday: false),
-    (day: 'Yak', minutes: 0, isToday: false),
-  ];
+  int _selectedDayIndex = -1;
+  List<Map<String, dynamic>> _weeklyActivity = [];
+  bool _isLoadingWeekly = true;
 
   @override
   void initState() {
     super.initState();
+    _loadWeeklyActivity();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(studentProvider.notifier).startHeartbeat();
+    });
 
     _entranceController = AnimationController(
       vsync: this,
@@ -95,6 +91,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
 
   @override
   void dispose() {
+    ref.read(studentProvider.notifier).stopHeartbeat();
     _entranceController.dispose();
     _crownController.dispose();
     _starController.dispose();
@@ -106,9 +103,179 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
     super.dispose();
   }
 
+  Future<void> _loadWeeklyActivity() async {
+    final data = await ref.read(studentProvider.notifier).fetchWeeklyActivity();
+    if (mounted && data != null && data['week'] != null) {
+      setState(() {
+        _weeklyActivity = List<Map<String, dynamic>>.from(data['week']);
+        _isLoadingWeekly = false;
+        final todayIdx = _weeklyActivity.indexWhere((w) => w['isToday'] == true);
+        _selectedDayIndex = todayIdx != -1 ? todayIdx : (data['currentDayIndex'] ?? 0);
+      });
+    } else if (mounted) {
+      setState(() {
+        _isLoadingWeekly = false;
+        if (_weeklyActivity.isEmpty) {
+          _weeklyActivity = [
+            {'dayKey': 'Du', 'dayName': 'Dushanba', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': false},
+            {'dayKey': 'Se', 'dayName': 'Seshanba', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': false},
+            {'dayKey': 'Ch', 'dayName': 'Chorshanba', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': false},
+            {'dayKey': 'Pa', 'dayName': 'Payshanba', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': false},
+            {'dayKey': 'Ju', 'dayName': 'Juma', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': false},
+            {'dayKey': 'Sh', 'dayName': 'Shanba', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': true},
+            {'dayKey': 'Ya', 'dayName': 'Yakshanba', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': false},
+          ];
+          _selectedDayIndex = 5;
+        }
+      });
+    }
+  }
+
+  void _showStudyHistorySheet() async {
+    HapticFeedback.lightImpact();
+    final colors = AppThemeColors.of(context);
+    final history = await ref.read(studentProvider.notifier).fetchStudyHistory();
+    if (!mounted) return;
+
+    final days = history != null && history['history'] != null
+        ? List<Map<String, dynamic>>.from(history['history'])
+        : <Map<String, dynamic>>[];
+    final totalMin = history != null ? (history['totalMinutes'] ?? 0) : (ref.read(studentProvider).student?.studyMinutes ?? 0);
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+          decoration: BoxDecoration(
+            color: colors.card,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: colors.muted.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'O‘qish vaqti tarixi',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: colors.ink,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: colors.primary.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      'Jami: $totalMin min',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: colors.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              if (days.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: Center(
+                    child: Text(
+                      'So‘nggi 7 kunda o‘rganish qayd etilmagan.',
+                      style: TextStyle(color: colors.muted, fontSize: 13),
+                    ),
+                  ),
+                )
+              else
+                ...days.map((d) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: colors.field,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: colors.border),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${d['dayName']} (${d['date']})',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: colors.ink,
+                          ),
+                        ),
+                        Text(
+                          '${d['minutes']} daqiqa',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: colors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDayActivityDetail(Map<String, dynamic> day) {
+    HapticFeedback.selectionClick();
+    final dayName = day['dayName'] ?? day['dayKey'] ?? 'Kun';
+    final minutes = day['minutes'] ?? 0;
+    final lessons = day['lessonsDone'] ?? 0;
+    final problems = day['problemsSolved'] ?? 0;
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: const Color(0xFF1C1450),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        duration: const Duration(seconds: 3),
+        content: Text(
+          '$dayName · $minutes min · $lessons dars · $problems ta misol',
+          style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.white, fontSize: 13),
+        ),
+      ),
+    );
+  }
+
   Future<void> _handleRefresh() async {
     HapticFeedback.lightImpact();
-    await ref.read(studentProvider.notifier).refreshProfile();
+    await Future.wait([
+      ref.read(studentProvider.notifier).refreshProfile(),
+      _loadWeeklyActivity(),
+    ]);
     _xpController.reset();
     _xpController.forward();
     _columnGrowthController.reset();
@@ -767,13 +934,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                             Row(
                               children: [
                                 Expanded(
-                                  child: _buildDetailStatTile(
-                                    icon: Icons.access_time_rounded,
-                                    iconBg: const Color(0xFFE5EEFF),
-                                    iconColor: const Color(0xFF3B82F6),
-                                    value: _formatStudyMinutes(student?.studyMinutes ?? 7),
-                                    label: 'O‘qish vaqti',
-                                    colors: colors,
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: _showStudyHistorySheet,
+                                    child: _buildDetailStatTile(
+                                      icon: Icons.access_time_rounded,
+                                      iconBg: const Color(0xFFE5EEFF),
+                                      iconColor: const Color(0xFF3B82F6),
+                                      value: _formatStudyMinutes(student?.studyMinutes ?? 0),
+                                      label: 'Bugun · Tarix >',
+                                      colors: colors,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 12),
@@ -782,7 +953,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                                     icon: Icons.menu_book_rounded,
                                     iconBg: const Color(0xFFFFF1D6),
                                     iconColor: const Color(0xFFF59E0B),
-                                    value: '${student?.completedLessonsCount ?? 1}',
+                                    value: '${student?.completedLessonsCount ?? 0} dars · ${student?.completedTopicsCount ?? 0} mavzu',
                                     label: 'Darslar',
                                     colors: colors,
                                   ),
@@ -797,7 +968,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                                     icon: Icons.local_fire_department_rounded,
                                     iconBg: const Color(0xFFFFE9DB),
                                     iconColor: const Color(0xFFE5611B),
-                                    value: '${student?.currentStreak ?? 4} kun',
+                                    value: '${student?.currentStreak ?? 1} kun',
                                     label: 'Joriy seriya',
                                     colors: colors,
                                     isPulsing: true,
@@ -809,7 +980,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                                     icon: Icons.emoji_events_rounded,
                                     iconBg: const Color(0xFFEDE8FF),
                                     iconColor: const Color(0xFF6C47FF),
-                                    value: '${student?.longestStreak ?? 4} kun',
+                                    value: '${student?.longestStreak ?? 1} kun',
                                     label: 'Eng uzun seriya',
                                     colors: colors,
                                   ),
@@ -867,7 +1038,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                                         ),
                                         const SizedBox(width: 4),
                                         Text(
-                                          '${student?.currentStreak ?? 4} kunlik seriya',
+                                          '${student?.currentStreak ?? 1} kunlik seriya',
                                           style: const TextStyle(
                                             color: Color(0xFFC2500F),
                                             fontSize: 12,
@@ -885,103 +1056,107 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                               // 7 Column Chart
                               SizedBox(
                                 height: 130,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: List.generate(_weeklyDays.length, (i) {
-                                    final dayData = _weeklyDays[i];
-                                    final isSelected = _selectedDayIndex == i;
-                                    final hasActivity = dayData.minutes > 0;
-                                    final isToday = dayData.isToday;
+                                child: _isLoadingWeekly
+                                    ? const Center(child: CircularProgressIndicator())
+                                    : Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: List.generate(_weeklyActivity.length, (i) {
+                                          final dayData = _weeklyActivity[i];
+                                          final isSelected = _selectedDayIndex == i;
+                                          final minutes = (dayData['minutes'] ?? 0) as int;
+                                          final hasActivity = minutes > 0;
+                                          final isToday = dayData['isToday'] == true;
+                                          final dayLabel = (dayData['dayKey'] ?? dayData['day'] ?? '') as String;
 
-                                    return Expanded(
-                                      child: GestureDetector(
-                                        behavior: HitTestBehavior.opaque,
-                                        onTap: () {
-                                          setState(() => _selectedDayIndex = i);
-                                          HapticFeedback.selectionClick();
-                                        },
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            // Tooltip bubble
-                                            if (isSelected && dayData.minutes > 0)
-                                              Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                                margin: const EdgeInsets.only(bottom: 6),
-                                                decoration: BoxDecoration(
-                                                  color: const Color(0xFF1C1450),
-                                                  borderRadius: BorderRadius.circular(8),
-                                                  boxShadow: const [
-                                                    BoxShadow(
-                                                      color: Color(0x33000000),
-                                                      blurRadius: 4,
-                                                      offset: Offset(0, 2),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Text(
-                                                  '${dayData.minutes} min',
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.w800,
-                                                  ),
-                                                ),
-                                              )
-                                            else
-                                              const SizedBox(height: 23),
-
-                                            // Bar capsule
-                                            AnimatedBuilder(
-                                              animation: _columnGrowthController,
-                                              builder: (context, child) {
-                                                final animVal = disableAnim ? 1.0 : _columnGrowthController.value;
-                                                final maxMinutes = 10;
-                                                final calculatedHeight = dayData.minutes == 0
-                                                    ? 10.0
-                                                    : (dayData.minutes / maxMinutes * 84.0).clamp(10.0, 84.0);
-                                                final barHeight = calculatedHeight * animVal;
-
-                                                return Container(
-                                                  width: 24,
-                                                  height: barHeight,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(12),
-                                                    gradient: isToday
-                                                        ? const LinearGradient(
-                                                            colors: [Color(0xFF8B6BFF), Color(0xFF5232D9)],
-                                                            begin: Alignment.topCenter,
-                                                            end: Alignment.bottomCenter,
-                                                          )
-                                                        : null,
-                                                    color: isToday
-                                                        ? null
-                                                        : (hasActivity
-                                                            ? (isDark ? const Color(0xFF4A3B8C) : const Color(0xFFC9BBFF))
-                                                            : (isDark ? const Color(0xFF2A2352) : const Color(0xFFEDEBF7))),
-                                                  ),
-                                                );
+                                          return Expanded(
+                                            child: GestureDetector(
+                                              behavior: HitTestBehavior.opaque,
+                                              onTap: () {
+                                                setState(() => _selectedDayIndex = i);
+                                                _showDayActivityDetail(dayData);
                                               },
-                                            ),
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                children: [
+                                                  // Tooltip bubble
+                                                  if (isSelected && minutes > 0)
+                                                    Container(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                                      margin: const EdgeInsets.only(bottom: 6),
+                                                      decoration: BoxDecoration(
+                                                        color: const Color(0xFF1C1450),
+                                                        borderRadius: BorderRadius.circular(8),
+                                                        boxShadow: const [
+                                                          BoxShadow(
+                                                            color: Color(0x33000000),
+                                                            blurRadius: 4,
+                                                            offset: Offset(0, 2),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: Text(
+                                                        '$minutes min',
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 11,
+                                                          fontWeight: FontWeight.w800,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  else
+                                                    const SizedBox(height: 23),
 
-                                            const SizedBox(height: 8),
+                                                  // Bar capsule
+                                                  AnimatedBuilder(
+                                                    animation: _columnGrowthController,
+                                                    builder: (context, child) {
+                                                      final animVal = disableAnim ? 1.0 : _columnGrowthController.value;
+                                                      const maxMinutes = 15;
+                                                      final calculatedHeight = minutes == 0
+                                                          ? 10.0
+                                                          : (minutes / maxMinutes * 84.0).clamp(10.0, 84.0);
+                                                      final barHeight = calculatedHeight * animVal;
 
-                                            // Day label
-                                            Text(
-                                              dayData.day,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
-                                                color: isToday ? colors.primaryDark : colors.muted,
+                                                      return Container(
+                                                        width: 24,
+                                                        height: barHeight,
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(12),
+                                                          gradient: isToday
+                                                              ? const LinearGradient(
+                                                                  colors: [Color(0xFF8B6BFF), Color(0xFF5232D9)],
+                                                                  begin: Alignment.topCenter,
+                                                                  end: Alignment.bottomCenter,
+                                                                )
+                                                              : null,
+                                                          color: isToday
+                                                              ? null
+                                                              : (hasActivity
+                                                                  ? (isDark ? const Color(0xFF4A3B8C) : const Color(0xFFC9BBFF))
+                                                                  : (isDark ? const Color(0xFF2A2352) : const Color(0xFFEDEBF7))),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+
+                                                  const SizedBox(height: 8),
+
+                                                  // Day label
+                                                  Text(
+                                                    dayLabel,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
+                                                      color: isToday ? colors.primaryDark : colors.muted,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          );
+                                        }),
                                       ),
-                                    );
-                                  }),
-                                ),
                               ),
                             ],
                           ),
@@ -1007,7 +1182,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                                 tileColor: const Color(0xFFFFF1D6),
                                 iconColor: const Color(0xFFF59E0B),
                                 title: 'Yutuqlarim',
-                                subtitle: '${student?.achievementsCount ?? 4} ta medal qo‘lga kiritilgan',
+                                subtitle: isPro
+                                    ? '${student?.achievementsCount ?? 0} ta yutuq ochilgan'
+                                    : 'Pro tarifda ochiladi',
+                                isLocked: !isPro,
+                                trailingBadge: isPro ? null : 'PRO',
                                 colors: colors,
                                 onTap: () => context.push('/kids/achievements'),
                               ),
@@ -1017,17 +1196,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                                 tileColor: const Color(0xFFE1F6EC),
                                 iconColor: const Color(0xFF10B981),
                                 title: 'Kunlik vazifalar',
-                                subtitle: 'Mukofotlarni tekshiring',
+                                subtitle: '3 ta vazifa · Tangalar yuting',
                                 colors: colors,
                                 onTap: () => context.push('/kids/daily-tasks'),
                               ),
                               _buildDivider(colors),
                               _buildMenuItem(
                                 icon: Icons.bar_chart_rounded,
-                                tileColor: const Color(0xFFEDE8FF),
-                                iconColor: const Color(0xFF6C47FF),
+                                tileColor: const Color(0xFFE5EEFF),
+                                iconColor: const Color(0xFF3B82F6),
                                 title: 'O‘quv statistikasi',
-                                subtitle: 'Aniqllik va mavzular',
+                                subtitle: 'O‘zlashtirish va aniqlik',
                                 colors: colors,
                                 onTap: () => context.push('/kids/analytics'),
                               ),
@@ -1037,7 +1216,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                                 tileColor: isDark ? const Color(0xFF2A2452) : const Color(0xFFECEBF3),
                                 iconColor: isDark ? const Color(0xFFA9A4CF) : const Color(0xFF6B6785),
                                 title: 'Sozlamalar',
-                                subtitle: 'Ilova va hisob sozlamalari',
+                                subtitle: 'Mavzu, tovush va xavfsizlik',
                                 colors: colors,
                                 onTap: () => context.push('/settings'),
                               ),
@@ -1525,6 +1704,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
     required String subtitle,
     required AppThemeColors colors,
     required VoidCallback onTap,
+    bool isLocked = false,
+    String? trailingBadge,
   }) {
     return InkWell(
       onTap: onTap,
@@ -1534,14 +1715,32 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
           children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: tileColor,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Icon(icon, color: iconColor, size: 22),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: tileColor,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Icon(icon, color: iconColor, size: 22),
+                ),
+                if (isLocked)
+                  Positioned(
+                    right: -2,
+                    bottom: -2,
+                    child: Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF1C1450),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.lock_rounded, color: Colors.white, size: 10),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -1549,13 +1748,35 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: colors.ink,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: colors.ink,
+                        ),
+                      ),
+                      if (trailingBadge != null) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFD66B),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            trailingBadge,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xFF2A1B7A),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   const SizedBox(height: 2),
                   Text(
@@ -1565,7 +1786,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: colors.muted,
+                      color: isLocked ? colors.primary : colors.muted,
                     ),
                   ),
                 ],

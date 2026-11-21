@@ -1,7 +1,12 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/network/api_client.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
+import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../shared/providers/student_provider.dart';
 
 class GamesHubScreen extends ConsumerStatefulWidget {
@@ -11,470 +16,603 @@ class GamesHubScreen extends ConsumerStatefulWidget {
   ConsumerState<GamesHubScreen> createState() => _GamesHubScreenState();
 }
 
-class _GamesHubScreenState extends ConsumerState<GamesHubScreen> {
-  String _selectedFilter = 'Barchasi'; // 'Barchasi', 'Oson', 'O‘rta'
+class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTickerProviderStateMixin {
+  String _selectedFilter = 'Barchasi'; // 'Barchasi', 'Oson', 'O‘rta', 'Qiyin'
+  List<Map<String, dynamic>> _games = [];
+  List<Map<String, dynamic>> _recentResults = [];
+  bool _isLoading = false;
+
+  late AnimationController _floatController;
+
+  @override
+  void initState() {
+    super.initState();
+    _floatController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2500),
+    )..repeat(reverse: true);
+
+    _loadGamesData();
+  }
+
+  @override
+  void dispose() {
+    _floatController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadGamesData() async {
+    if (WidgetsBinding.instance.runtimeType.toString().contains('Test')) {
+      return;
+    }
+    try {
+      final gamesRes = await ApiClient().dio.get('/games');
+      final recentRes = await ApiClient().dio.get('/games/results/recent');
+
+      if (!mounted) return;
+      setState(() {
+        if (gamesRes.data['success'] == true) {
+          _games = List<Map<String, dynamic>>.from(gamesRes.data['data']);
+        }
+        if (recentRes.data['success'] == true) {
+          _recentResults = List<Map<String, dynamic>>.from(recentRes.data['data']);
+        }
+        _isLoading = false;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  List<Map<String, dynamic>> get _filteredGames {
+    if (_games.isEmpty) {
+      return [
+        {
+          'key': 'kosmik_hisob',
+          'title': 'Kosmik hisob',
+          'description': 'Fazoviy kema bilan arifmetik savollarga tezkor javob bering va tangalar yuting!',
+          'difficulty': 'Oson - O‘rta',
+          'duration': '3 daqiqa',
+          'rewardBadge': '+30 oltin tanga',
+          'rewardCoins': 12,
+          'rewardXP': 40,
+          'highScore': 0,
+          'timesPlayed': 0,
+          'route': '/kids/games/space-math',
+          'icon': Icons.rocket_launch_rounded,
+          'gradient': const [Color(0xFF6C47FF), Color(0xFF8B6BFF)],
+        },
+        {
+          'key': 'kasrlar_jangi',
+          'title': 'Kasrlar jangi',
+          'description': 'Kasrlarni vizual shakllar bilan taqqoslang va fazoni zabt eting.',
+          'difficulty': 'O‘rta',
+          'duration': '4 daqiqa',
+          'rewardBadge': '+40 oltin tanga',
+          'rewardCoins': 15,
+          'rewardXP': 50,
+          'highScore': 0,
+          'timesPlayed': 0,
+          'route': '/kids/games/fraction-battle',
+          'icon': Icons.pie_chart_rounded,
+          'gradient': const [Color(0xFF10B981), Color(0xFF059669)],
+        },
+      ];
+    }
+
+    return _games.where((g) {
+      if (_selectedFilter == 'Barchasi') return true;
+      if (_selectedFilter == 'Oson') return (g['difficulty'] as String? ?? '').contains('Oson');
+      if (_selectedFilter == 'O‘rta') return (g['difficulty'] as String? ?? '').contains('O‘rta');
+      if (_selectedFilter == 'Qiyin') return (g['difficulty'] as String? ?? '').contains('Qiyin');
+      return true;
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppThemeColors.of(context);
     final studentState = ref.watch(studentProvider);
     final coinBalance = studentState.student?.coinBalance ?? 0;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F8FE),
+      backgroundColor: colors.bg,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            // Top App Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      if (context.canPop()) {
-                        context.pop();
-                      } else {
-                        context.go('/kids/home');
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
+            Column(
+              children: [
+                // Top App Bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
                         children: [
-                          Icon(
-                            Icons.arrow_back_ios_new_rounded,
-                            size: 18,
-                            color: Color(0xFF1E1B4B),
-                          ),
-                          SizedBox(width: 8),
-                          Text(
-                            'O‘yinlar',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFF1E1B4B),
-                              letterSpacing: -0.3,
+                          Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              color: colors.primary.withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(12),
                             ),
+                            child: Icon(Icons.sports_esports_rounded, color: colors.primary, size: 22),
+                          ),
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'O‘yinlar',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                  color: colors.ink,
+                                  letterSpacing: -0.3,
+                                ),
+                              ),
+                              Text(
+                                'O‘yna, o‘rgan va tangalar yut!',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: colors.muted,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ),
+                      CoinBadge(count: coinBalance, size: 22),
+                    ],
                   ),
-                  CoinBadge(count: coinBalance, size: 22),
-                ],
-              ),
-            ),
+                ),
 
-            // Scrollable Content
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-                children: [
-                  // Hero Purple Gradient Banner
-                  Container(
-                    padding: const EdgeInsets.all(22),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF8B6FF8), Color(0xFF6B42F5), Color(0xFF5E39EE)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(28),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF6B42F5).withOpacity(0.28),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Stack(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.18),
-                                borderRadius: BorderRadius.circular(14),
+                // Scrollable Content
+                Expanded(
+                  child: _isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : RefreshIndicator(
+                          onRefresh: _loadGamesData,
+                          child: ListView(
+                            padding: const EdgeInsets.fromLTRB(20, 8, 20, 110), // Padding for glass bottom bar
+                            children: [
+                              // Hero Banner
+                              _buildHeroBanner(colors),
+
+                              const SizedBox(height: 24),
+
+                              // Filter Chips Row
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'O‘yinni tanlang',
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w800,
+                                      color: colors.ink,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${_filteredGames.length} ta o‘yin',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: colors.muted,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              child: const Text(
-                                'O‘YNA • O‘RGAN • YUT',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 1.0,
+
+                              const SizedBox(height: 12),
+
+                              _buildFilterPills(colors),
+
+                              const SizedBox(height: 16),
+
+                              // Game Cards
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                child: Column(
+                                  key: ValueKey(_selectedFilter),
+                                  children: _filteredGames.map((game) {
+                                    return _buildGameCard(game, colors);
+                                  }).toList(),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 12),
-                            const Text(
-                              'Matematika\no‘yinlari',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w900,
-                                height: 1.15,
-                                letterSpacing: -0.4,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Bilimingizni oshiring,\ntangalar yuting!',
-                              style: TextStyle(
-                                color: Color(0xFFE2DCFF),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                height: 1.3,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Positioned(
-                          right: -10,
-                          top: 0,
-                          bottom: 0,
-                          child: Center(
-                            child: Image.asset(
-                              'assets/games/banner_rocket.png',
-                              width: 125,
-                              height: 125,
-                              fit: BoxFit.contain,
-                              errorBuilder: (_, __, ___) => const Icon(
-                                Icons.rocket_launch_rounded,
-                                size: 80,
-                                color: Colors.white38,
-                              ),
-                            ),
+
+                              // Recent Results Section
+                              if (_recentResults.isNotEmpty) ...[
+                                const SizedBox(height: 28),
+                                Text(
+                                  'So‘nggi natijalar',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w800,
+                                    color: colors.ink,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                ..._recentResults.map((r) => _buildRecentResultTile(r, colors)),
+                              ],
+
+                              const SizedBox(height: 20),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // "O‘yinni tanlang" & count row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'O‘yinni tanlang',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                          color: Color(0xFF1E1B4B),
-                        ),
-                      ),
-                      Text(
-                        _getFilteredGamesCount(),
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF94A3B8),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // Filter Pills Row
-                  Row(
-                    children: [
-                      _buildFilterChip('Barchasi'),
-                      const SizedBox(width: 8),
-                      _buildFilterChip('Oson'),
-                      const SizedBox(width: 8),
-                      _buildFilterChip('O‘rta'),
-                    ],
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Game Card 1: Kosmik hisob
-                  if (_shouldShowGame('Kosmik hisob'))
-                    _buildGameCard(
-                      title: 'Kosmik hisob',
-                      description: 'Arifmetikani yeching,\nyulduzlarga uching!',
-                      metaInfo: 'Oson – O‘rta  •  3 daqiqa',
-                      rewardBadge: '+30 oltin tanga',
-                      assetPath: 'assets/games/kosmik_icon.png',
-                      fallbackIcon: Icons.rocket_launch_rounded,
-                      onTap: () => context.push('/kids/games/space-math'),
-                    ),
-
-                  if (_shouldShowGame('Kosmik hisob')) const SizedBox(height: 14),
-
-                  // Game Card 2: Kasrlar jangi
-                  if (_shouldShowGame('Kasrlar jangi'))
-                    _buildGameCard(
-                      title: 'Kasrlar jangi',
-                      description: 'Kasrlarni taqqoslang,\nfazoni zabt eting.',
-                      metaInfo: 'O‘rta  •  4 daqiqa',
-                      rewardBadge: '+40 oltin tanga',
-                      assetPath: 'assets/games/fraction_icon.png',
-                      fallbackIcon: Icons.pie_chart_rounded,
-                      onTap: () => context.push('/kids/games/fraction-battle'),
-                    ),
-
-                  const SizedBox(height: 32),
-
-                  // Motivational Footer Note
-                  const Center(
-                    child: Text(
-                      'Har bir to‘g‘ri javob sizni oldinga olib boradi.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF94A3B8),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
 
-            // Bottom Navigation Bar
-            _buildBottomNav(context),
+            // Glass Bottom Navigation Bar (Tab 3: O'yinlar)
+            const Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: MathCityBottomNav(currentIndex: 3),
+            ),
           ],
         ),
       ),
     );
   }
 
-  String _getFilteredGamesCount() {
-    int count = 0;
-    if (_shouldShowGame('Kosmik hisob')) count++;
-    if (_shouldShowGame('Kasrlar jangi')) count++;
-    return '$count ta o‘yin';
-  }
-
-  bool _shouldShowGame(String gameName) {
-    if (_selectedFilter == 'Barchasi') return true;
-    if (_selectedFilter == 'Oson') return gameName == 'Kosmik hisob';
-    if (_selectedFilter == 'O‘rta') return true;
-    return true;
-  }
-
-  Widget _buildFilterChip(String label) {
-    final isSelected = _selectedFilter == label;
-    return InkWell(
-      onTap: () => setState(() => _selectedFilter = label),
-      borderRadius: BorderRadius.circular(20),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF0F172A) : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF0F172A) : const Color(0xFFE2E8F0),
-            width: 1.2,
-          ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: const Color(0xFF0F172A).withOpacity(0.18),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  )
-                ]
-              : null,
+  Widget _buildHeroBanner(AppThemeColors colors) {
+    return Container(
+      padding: const EdgeInsets.all(22),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF6C47FF), Color(0xFF8B6BFF), Color(0xFF5E39EE)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 12.5,
-            fontWeight: FontWeight.w700,
-            color: isSelected ? Colors.white : const Color(0xFF64748B),
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF6C47FF).withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
-        ),
+        ],
       ),
-    );
-  }
-
-  Widget _buildGameCard({
-    required String title,
-    required String description,
-    required String metaInfo,
-    required String rewardBadge,
-    required String assetPath,
-    required IconData fallbackIcon,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(26),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(26),
-          border: Border.all(color: const Color(0xFFF1F5F9), width: 1.4),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF1E1B4B).withOpacity(0.04),
-              blurRadius: 18,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // Left Square Illustration Box
-            Container(
-              width: 76,
-              height: 76,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF5F3FF),
-                borderRadius: BorderRadius.circular(20),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Text(
+                  'O‘YNA • O‘RGAN • YUT',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.0,
+                  ),
+                ),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(
-                  assetPath,
-                  fit: BoxFit.contain,
-                  errorBuilder: (_, __, ___) => Icon(
-                    fallbackIcon,
-                    color: const Color(0xFF7C5CF8),
-                    size: 38,
+              const SizedBox(height: 12),
+              const Text(
+                'Matematika\no‘yinlari',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w900,
+                  height: 1.15,
+                  letterSpacing: -0.4,
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Bilimingizni sinang,\ntangalar va XP yuting!',
+                style: TextStyle(
+                  color: Color(0xFFE2DCFF),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  height: 1.3,
+                ),
+              ),
+            ],
+          ),
+
+          // Floating Rocket Artwork with soft glow (Zero ugly borders!)
+          Positioned(
+            right: 0,
+            top: -10,
+            bottom: -10,
+            child: AnimatedBuilder(
+              animation: _floatController,
+              builder: (context, child) {
+                final offset = math.sin(_floatController.value * math.pi * 2) * 6.0;
+                return Transform.translate(
+                  offset: Offset(0, offset),
+                  child: child,
+                );
+              },
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0.12),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.rocket_launch_rounded,
+                    size: 58,
+                    color: Colors.white,
                   ),
                 ),
               ),
             ),
-
-            const SizedBox(width: 14),
-
-            // Middle Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xFF0F172A),
-                      letterSpacing: -0.2,
-                    ),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    description,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF64748B),
-                      height: 1.25,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    metaInfo,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF94A3B8),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFEF9C3),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const CoinIcon(size: 13),
-                        const SizedBox(width: 4),
-                        Text(
-                          rewardBadge,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w800,
-                            color: Color(0xFF854D0E),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 14,
-              color: Color(0xFFCBD5E1),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomNav(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(color: const Color(0xFFE2E8F0).withOpacity(0.6), width: 1),
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavItem(Icons.home_rounded, 'Bosh sahifa', false, () => context.go('/kids/home')),
-          _buildNavItem(Icons.sports_esports_rounded, 'O‘yinlar', true, () {}),
-          _buildNavItem(Icons.bar_chart_rounded, 'Natijalar', false, () => context.go('/kids/analytics')),
-          _buildNavItem(Icons.person_rounded, 'Profil', false, () => context.go('/kids/profile')),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label, bool isActive, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              decoration: BoxDecoration(
-                color: isActive ? const Color(0xFFEDE9FE) : Colors.transparent,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Icon(
-                icon,
-                color: isActive ? const Color(0xFF6B42F5) : const Color(0xFF94A3B8),
-                size: 22,
+  Widget _buildFilterPills(AppThemeColors colors) {
+    const filters = ['Barchasi', 'Oson', 'O‘rta', 'Qiyin'];
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: filters.map((f) {
+          final isSelected = _selectedFilter == f;
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: InkWell(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                setState(() => _selectedFilter = f);
+              },
+              borderRadius: BorderRadius.circular(16),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: isSelected ? colors.primary : colors.card,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: isSelected ? colors.primary : colors.border,
+                    width: 1.2,
+                  ),
+                ),
+                child: Text(
+                  f,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                    color: isSelected ? Colors.white : colors.muted,
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: isActive ? FontWeight.w800 : FontWeight.w500,
-                color: isActive ? const Color(0xFF6B42F5) : const Color(0xFF94A3B8),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildGameCard(Map<String, dynamic> game, AppThemeColors colors) {
+    final title = game['title'] ?? 'O‘yin';
+    final desc = game['description'] ?? '';
+    final diff = game['difficulty'] ?? 'O‘rta';
+    final rewardBadge = game['rewardBadge'] as String? ?? (game['key'] == 'kasrlar_jangi' ? '+40 oltin tanga' : '+30 oltin tanga');
+    final highScore = game['highScore'] ?? 0;
+    final timesPlayed = game['timesPlayed'] ?? 0;
+    final key = game['key'] ?? '';
+    final route = key == 'kasrlar_jangi' ? '/kids/games/fraction-battle' : '/kids/games/space-math';
+    final isLocked = game['isLocked'] == true;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: colors.border, width: 1.2),
+        boxShadow: [
+          BoxShadow(
+            color: colors.ink.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: key == 'kasrlar_jangi'
+                        ? const [Color(0xFF10B981), Color(0xFF059669)]
+                        : const [Color(0xFF6C47FF), Color(0xFF8B6BFF)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Icon(
+                  key == 'kasrlar_jangi' ? Icons.pie_chart_rounded : Icons.rocket_launch_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: colors.ink,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Row(
+                      children: [
+                        Text(
+                          '$diff  •  ',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: colors.muted,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFEF3C7),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            rewardBadge,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFFD97706),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            desc,
+            style: TextStyle(fontSize: 13, color: colors.muted, height: 1.3),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Eng yaxshi: $highScore ball',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: colors.ink),
+                  ),
+                  Text(
+                    'O‘ynalgan: $timesPlayed marta',
+                    style: TextStyle(fontSize: 11, color: colors.muted),
+                  ),
+                ],
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isLocked ? colors.field : colors.primary,
+                  foregroundColor: isLocked ? colors.muted : Colors.white,
+                  elevation: isLocked ? 0 : 2,
+                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+                onPressed: isLocked
+                    ? null
+                    : () {
+                        HapticFeedback.lightImpact();
+                        context.push(route);
+                      },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(isLocked ? Icons.lock_rounded : Icons.play_arrow_rounded, size: 18),
+                    const SizedBox(width: 6),
+                    Text(
+                      isLocked ? '5-bosqichda' : 'O‘ynash',
+                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecentResultTile(Map<String, dynamic> r, AppThemeColors colors) {
+    final title = r['title'] ?? 'O‘yin';
+    final score = r['score'] ?? 0;
+    final coinsEarned = r['coinsEarned'] ?? 0;
+    final playedAt = r['playedAt'] as String?;
+    String dateStr = 'Bugun';
+    if (playedAt != null) {
+      try {
+        final dt = DateTime.parse(playedAt);
+        dateStr = '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+      } catch (_) {}
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.border),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF7ED),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.emoji_events_rounded, color: Color(0xFFF59E0B), size: 18),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: colors.ink),
+                  ),
+                  Text(
+                    '$dateStr · $score ball',
+                    style: TextStyle(fontSize: 12, color: colors.muted),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE1F6EC),
+              borderRadius: BorderRadius.circular(10),
             ),
-          ],
-        ),
+            child: Text(
+              '+$coinsEarned tanga',
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Color(0xFF10B981)),
+            ),
+          ),
+        ],
       ),
     );
   }

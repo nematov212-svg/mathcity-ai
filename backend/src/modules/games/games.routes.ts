@@ -6,17 +6,32 @@ import { MathEngine } from '../../utils/mathEngine.js';
 
 export const gamesRouter = Router();
 
+/**
+ * GET /api/games
+ * Returns list of games with real user stats (highScore, timesPlayed).
+ */
 gamesRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const userGames = user.gameResults || [];
+
+  const getHighScore = (key: string) =>
+    userGames.filter((g) => g.gameKey === key).reduce((max, g) => Math.max(max, g.score), 0);
+  const getTimesPlayed = (key: string) =>
+    userGames.filter((g) => g.gameKey === key).length;
+
   const games = [
     {
       key: 'kosmik_hisob',
       title: 'Kosmik hisob',
-      description: 'Figma 2:34: Fazoviy kema bilan arifmetik savollarga tezkor javob bering va tangalar yuting!',
+      description: 'Fazoviy kema bilan arifmetik savollarga tezkor javob bering va tangalar yuting!',
       category: 'speed_math',
       iconName: 'rocket_launch',
       difficulty: 'Oson - O‘rta',
       rewardCoins: 12,
       rewardXP: 40,
+      highScore: getHighScore('kosmik_hisob'),
+      timesPlayed: getTimesPlayed('kosmik_hisob'),
+      isLocked: false,
     },
     {
       key: 'kasrlar_jangi',
@@ -27,10 +42,48 @@ gamesRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response) 
       difficulty: 'O‘rta',
       rewardCoins: 15,
       rewardXP: 50,
+      highScore: getHighScore('kasrlar_jangi'),
+      timesPlayed: getTimesPlayed('kasrlar_jangi'),
+      isLocked: false,
     },
   ];
 
   return res.json({ success: true, data: games });
+});
+
+/**
+ * GET /api/games/results/recent
+ * Returns last 3 game results.
+ */
+gamesRouter.get('/results/recent', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const recent = repository.getRecentGameResults(user.id);
+  return res.json({ success: true, data: recent });
+});
+
+const finishGameSchema = z.object({
+  gameKey: z.string().optional(),
+  score: z.number().int().min(0),
+  durationSeconds: z.number().int().min(0).default(30),
+});
+
+/**
+ * POST /api/games/:key/finish & POST /api/games/finish
+ * Server-authoritative game reward calculation, anti-farming cap,
+ * mission and achievement triggers.
+ */
+gamesRouter.post(['/finish', '/:key/finish', '/:key/result'], authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const parse = finishGameSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: 'O‘yin natijasi ma’lumotlari noto‘g‘ri.' });
+  }
+
+  const gameKey = String(req.params.key || parse.data.gameKey || 'kosmik_hisob');
+  const { score, durationSeconds } = parse.data;
+
+  const result = repository.finishGame(user.id, gameKey, score, durationSeconds);
+  return res.json({ success: true, data: result });
 });
 
 gamesRouter.get('/kosmik-hisob/question', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
@@ -39,155 +92,10 @@ gamesRouter.get('/kosmik-hisob/question', authMiddleware, (req: AuthenticatedReq
   return res.json({ success: true, data: question });
 });
 
-const submitGameSchema = z.object({
-  score: z.number().int().min(0),
-  correctAnswersCount: z.number().int().min(0),
-  level: z.number().int().min(1).default(1),
-});
-
-gamesRouter.post('/kosmik-hisob/result', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const parse = submitGameSchema.safeParse(req.body);
-  if (!parse.success) {
-    return res.status(400).json({ success: false, error: 'O‘yin natijasi noto‘g‘ri.' });
-  }
-
-  const { score, correctAnswersCount } = parse.data;
-  const user = req.user!;
-
-  const coinsEarned = Math.min(100, Math.floor(score / 10) * 5);
-  const xpEarned = Math.min(150, correctAnswersCount * 15);
-
-  if (coinsEarned > 0) {
-    repository.creditCoins(user.id, coinsEarned, 'Kosmik hisob o‘yini yutug‘i');
-  }
-  if (xpEarned > 0) {
-    repository.addXP(user.id, xpEarned);
-  }
-
-  // Update daily task
-  if (user.dailyTaskProgress['task_play_space_game']) {
-    user.dailyTaskProgress['task_play_space_game'].currentCount = 1;
-    user.dailyTaskProgress['task_play_space_game'].isCompleted = true;
-  }
-
-  // Check achievement
-  if (correctAnswersCount >= 3 && !user.unlockedAchievements.includes('ach_space_explorer')) {
-    user.unlockedAchievements.push('ach_space_explorer');
-  }
-
-  return res.json({
-    success: true,
-    data: {
-      score,
-      correctAnswersCount,
-      coinsEarned,
-      xpEarned,
-      newCoinBalance: user.coinBalance,
-      newTotalXP: user.totalXP,
-    },
-  });
-});
-
 gamesRouter.get('/kasrlar-jangi/question', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const level = req.query.level ? parseInt(req.query.level as string, 10) : 1;
   const question = MathEngine.generateFractionBattleQuestion(level);
   return res.json({ success: true, data: question });
-});
-
-gamesRouter.post('/kasrlar-jangi/result', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const parse = submitGameSchema.safeParse(req.body);
-  if (!parse.success) {
-    return res.status(400).json({ success: false, error: 'O‘yin natijasi noto‘g‘ri.' });
-  }
-
-  const { score, correctAnswersCount } = parse.data;
-  const user = req.user!;
-
-  const coinsEarned = Math.min(100, Math.floor(score / 10) * 5);
-  const xpEarned = Math.min(150, correctAnswersCount * 15);
-
-  if (coinsEarned > 0) {
-    repository.creditCoins(user.id, coinsEarned, 'Kasrlar jangi o‘yini yutug‘i');
-  }
-  if (xpEarned > 0) {
-    repository.addXP(user.id, xpEarned);
-  }
-
-  return res.json({
-    success: true,
-    data: {
-      score,
-      correctAnswersCount,
-      coinsEarned,
-      xpEarned,
-      newCoinBalance: user.coinBalance,
-      newTotalXP: user.totalXP,
-    },
-  });
-});
-
-gamesRouter.post('/hint', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const user = req.user!;
-  if (user.coinBalance < 5) {
-    return res.status(400).json({
-      success: false,
-      error: 'Yordam olish uchun tangalar yetarli emas (kamida 5 tanga kerak).',
-    });
-  }
-
-  const success = repository.debitCoins(user.id, 5, 'O‘yinda yordam olish');
-  if (!success) {
-    return res.status(400).json({
-      success: false,
-      error: 'Tangalarni yechishda xatolik yuz berdi.',
-    });
-  }
-
-  return res.json({
-    success: true,
-    data: {
-      coinsDeducted: 5,
-      newCoinBalance: user.coinBalance,
-    },
-  });
-});
-
-gamesRouter.get('/kasrlar-jangi/question', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const level = req.query.level ? parseInt(req.query.level as string, 10) : 1;
-  const question = MathEngine.generateFractionBattleQuestion(level);
-  return res.json({ success: true, data: question });
-});
-
-gamesRouter.post('/kasrlar-jangi/result', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const parse = submitGameSchema.safeParse(req.body);
-  if (!parse.success) {
-    return res.status(400).json({ success: false, error: 'O‘yin natijasi noto‘g‘ri.' });
-  }
-
-  const { score, correctAnswersCount } = parse.data;
-  const user = req.user!;
-
-  const coinsEarned = Math.min(100, Math.floor(score / 10) * 5);
-  const xpEarned = Math.min(150, correctAnswersCount * 15);
-
-  if (coinsEarned > 0) {
-    repository.creditCoins(user.id, coinsEarned, 'Kasrlar jangi o‘yini yutug‘i');
-  }
-  if (xpEarned > 0) {
-    repository.addXP(user.id, xpEarned);
-  }
-
-  return res.json({
-    success: true,
-    data: {
-      score,
-      correctAnswersCount,
-      coinsEarned,
-      xpEarned,
-      newCoinBalance: user.coinBalance,
-      newTotalXP: user.totalXP,
-    },
-  });
 });
 
 gamesRouter.post('/hint', authMiddleware, (req: AuthenticatedRequest, res: Response) => {

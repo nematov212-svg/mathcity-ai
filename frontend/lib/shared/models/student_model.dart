@@ -71,6 +71,7 @@ class StudentModel {
   final int currentStreak;
   final int longestStreak;
   final int completedLessonsCount;
+  final int completedTopicsCount;
   final int achievementsCount;
   final int friendsCount;
   final int rank;
@@ -95,13 +96,14 @@ class StudentModel {
     required this.subscription,
     this.avatarUrl,
     this.createdAt,
-    this.studyMinutes = 7,
-    this.currentStreak = 4,
-    this.longestStreak = 4,
-    this.completedLessonsCount = 1,
-    this.achievementsCount = 4,
+    this.studyMinutes = 0,
+    this.currentStreak = 1,
+    this.longestStreak = 1,
+    this.completedLessonsCount = 0,
+    this.completedTopicsCount = 0,
+    this.achievementsCount = 0,
     this.friendsCount = 0,
-    this.rank = 7,
+    this.rank = 1,
   });
 
   int get accuracyPercentage {
@@ -134,13 +136,14 @@ class StudentModel {
       correctQuestionCount: json['correctQuestionCount'] ?? 0,
       avatarUrl: json['avatarUrl'] as String?,
       createdAt: json['createdAt'] as String?,
-      studyMinutes: json['studyMinutes'] ?? 7,
-      currentStreak: json['currentStreak'] ?? 4,
-      longestStreak: json['longestStreak'] ?? 4,
-      completedLessonsCount: json['completedLessonsCount'] ?? (json['completedLessons'] is List ? (json['completedLessons'] as List).length : 1),
-      achievementsCount: json['achievementsCount'] ?? (json['unlockedAchievementsCount'] ?? 4),
+      studyMinutes: json['studyMinutes'] ?? json['studyMinutesToday'] ?? 0,
+      currentStreak: json['currentStreak'] ?? 1,
+      longestStreak: json['longestStreak'] ?? 1,
+      completedLessonsCount: json['completedLessonsCount'] ?? (json['completedLessons'] is List ? (json['completedLessons'] as List).length : 0),
+      completedTopicsCount: json['completedTopicsCount'] ?? 0,
+      achievementsCount: json['achievementsCount'] ?? (json['unlockedAchievementsCount'] ?? 0),
       friendsCount: json['friendsCount'] ?? 0,
-      rank: json['rank'] ?? 7,
+      rank: json['rank'] ?? 1,
       subscription: json['subscription'] != null
           ? SubscriptionModel.fromJson(json['subscription'])
           : SubscriptionModel(
@@ -174,6 +177,7 @@ class StudentModel {
     int? currentStreak,
     int? longestStreak,
     int? completedLessonsCount,
+    int? completedTopicsCount,
     int? achievementsCount,
     int? friendsCount,
     int? rank,
@@ -202,6 +206,7 @@ class StudentModel {
       currentStreak: currentStreak ?? this.currentStreak,
       longestStreak: longestStreak ?? this.longestStreak,
       completedLessonsCount: completedLessonsCount ?? this.completedLessonsCount,
+      completedTopicsCount: completedTopicsCount ?? this.completedTopicsCount,
       achievementsCount: achievementsCount ?? this.achievementsCount,
       friendsCount: friendsCount ?? this.friendsCount,
       rank: rank ?? this.rank,

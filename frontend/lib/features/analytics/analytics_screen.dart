@@ -2,344 +2,519 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/widgets/coin_icon.dart';
+import '../../core/theme/app_theme.dart';
 import '../../shared/providers/student_provider.dart';
 
-class AnalyticsScreen extends ConsumerWidget {
+class AnalyticsScreen extends ConsumerStatefulWidget {
   const AnalyticsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final studentState = ref.watch(studentProvider);
-    final student = studentState.student;
+  ConsumerState<AnalyticsScreen> createState() => _AnalyticsScreenState();
+}
 
-    final attempted = student?.attemptedQuestionCount ?? 15;
-    final correct = student?.correctQuestionCount ?? 14;
-    final lessons = 3 + (student?.level ?? 1);
-    final totalXp = student?.totalXP ?? 0;
-    final totalCoins = student?.coinBalance ?? 0;
-    final accuracy = attempted > 0 ? ((correct / attempted) * 100).round() : 95;
+class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
+  bool _isLoading = true;
+  Map<String, dynamic>? _statsData;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStats();
+  }
+
+  Future<void> _loadStats() async {
+    final data = await ref.read(studentProvider.notifier).fetchLearningStats();
+    if (!mounted) return;
+    setState(() {
+      _statsData = data;
+      _isLoading = false;
+    });
+  }
+
+  Color _parseColor(String? hexString, Color fallback) {
+    if (hexString == null || hexString.isEmpty) return fallback;
+    try {
+      final hex = hexString.replaceAll('#', '');
+      return Color(int.parse('FF$hex', radix: 16));
+    } catch (_) {
+      return fallback;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppThemeColors.of(context);
+    final student = ref.watch(studentProvider).student;
+
+    final attempted = _statsData?['attemptedQuestions'] ?? student?.attemptedQuestionCount ?? 0;
+    final accuracy = _statsData?['accuracyPercentage'] ?? student?.accuracyPercentage ?? 100;
+    final studyMinutes = _statsData?['studyMinutesTotal'] ?? student?.studyMinutes ?? 0;
+    final longestStreak = _statsData?['longestStreak'] ?? student?.longestStreak ?? 1;
+    final totalCoins = _statsData?['totalCoins'] ?? student?.coinBalance ?? 0;
+    final level = _statsData?['level'] ?? student?.level ?? 1;
+
+    final weeklyList = _statsData?['weeklyActivity'] is List
+        ? List<Map<String, dynamic>>.from(_statsData!['weeklyActivity'])
+        : <Map<String, dynamic>>[];
+
+    final topicMastery = _statsData?['topicMastery'] is List
+        ? List<Map<String, dynamic>>.from(_statsData!['topicMastery'])
+        : <Map<String, dynamic>>[];
+
+    final nextLesson = _statsData?['nextLesson'] as Map<String, dynamic>?;
 
     return Scaffold(
-      backgroundColor: AppColors.kidsBackground,
+      backgroundColor: colors.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: colors.card,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.kidsDarkText),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: colors.ink),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
+        title: Text(
           'Mening natijalarim',
           style: TextStyle(
             fontWeight: FontWeight.w800,
             fontSize: 18,
-            color: AppColors.kidsDarkText,
+            color: colors.ink,
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Row 1: Attempted & Correct
-            Row(
-              children: [
-                Expanded(
-                  child: _buildMetricCard(
-                    title: 'Yechilgan misollar',
-                    value: '$attempted ta',
-                    icon: Icons.assignment_turned_in_rounded,
-                    color: AppColors.kidsPrimary,
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: _buildMetricCard(
-                    title: 'To‘g‘ri javoblar',
-                    value: '$correct ta',
-                    icon: Icons.check_circle_rounded,
-                    color: AppColors.kidsGreen,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-
-            // Row 2: Accuracy & Total Coins
-            Row(
-              children: [
-                Expanded(
-                  child: _buildMetricCard(
-                    title: 'Aniqlik foizi',
-                    value: '$accuracy%',
-                    icon: Icons.pie_chart_rounded,
-                    color: const Color(0xFF6C5CE7),
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: _buildMetricCard(
-                    title: 'Jami oltin tangalar',
-                    value: '$totalCoins',
-                    customIcon: const CoinIcon(size: 28, floating: true),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-
-            // Row 3: Total XP & Completed Lessons
-            Row(
-              children: [
-                Expanded(
-                  child: _buildMetricCard(
-                    title: 'Jami to‘plangan XP',
-                    value: '$totalXp XP',
-                    icon: Icons.bolt_rounded,
-                    color: AppColors.kidsOrange,
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: _buildMetricCard(
-                    title: 'Tugatilgan darslar',
-                    value: '$lessons ta',
-                    icon: Icons.school_rounded,
-                    color: const Color(0xFF00CEC9),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 22),
-
-            // Weekly Learning Activity Chart
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: AppColors.kidsBorder, width: 1.5),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Haftalik faollik',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.kidsDarkText,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : RefreshIndicator(
+              onRefresh: _loadStats,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Section Title
+                    Text(
+                      'Asosiy ko‘rsatkichlar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: colors.ink,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'Kunlar bo‘yicha yechilgan masalalar soni',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.kidsSecondaryText,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    height: 160,
-                    child: BarChart(
-                      BarChartData(
-                        barGroups: [
-                          _buildBar(0, 8),
-                          _buildBar(1, 14),
-                          _buildBar(2, (attempted / 3).clamp(4, 25).toDouble()),
-                          _buildBar(3, 18),
-                          _buildBar(4, 12),
-                          _buildBar(5, 22),
-                          _buildBar(6, 16),
-                        ],
-                        titlesData: FlTitlesData(
-                          leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              getTitlesWidget: (val, meta) {
-                                const days = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'];
-                                if (val.toInt() >= 0 && val.toInt() < days.length) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(top: 8),
-                                    child: Text(
-                                      days[val.toInt()],
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColors.kidsSecondaryText,
-                                      ),
-                                    ),
-                                  );
-                                }
-                                return const SizedBox();
-                              },
-                            ),
+                    const SizedBox(height: 12),
+
+                    // 6 KPI Cards (2x3 Grid)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildKpiCard(
+                            title: 'Jami misollar',
+                            value: '$attempted',
+                            icon: Icons.calculate_rounded,
+                            iconColor: const Color(0xFF6C47FF),
+                            iconBg: const Color(0xFFEDE8FF),
+                            colors: colors,
                           ),
                         ),
-                        gridData: const FlGridData(show: false),
-                        borderData: FlBorderData(show: false),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildKpiCard(
+                            title: 'Aniqlik foizi',
+                            value: '$accuracy%',
+                            icon: Icons.check_circle_rounded,
+                            iconColor: const Color(0xFF10B981),
+                            iconBg: const Color(0xFFE1F6EC),
+                            colors: colors,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildKpiCard(
+                            title: 'O‘rganish vaqti',
+                            value: '$studyMinutes min',
+                            icon: Icons.access_time_rounded,
+                            iconColor: const Color(0xFF3B82F6),
+                            iconBg: const Color(0xFFE5EEFF),
+                            colors: colors,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildKpiCard(
+                            title: 'Eng uzun seriya',
+                            value: '$longestStreak kun',
+                            icon: Icons.local_fire_department_rounded,
+                            iconColor: const Color(0xFFE5611B),
+                            iconBg: const Color(0xFFFFE9DB),
+                            colors: colors,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildKpiCard(
+                            title: 'Olingan tangalar',
+                            value: '$totalCoins',
+                            icon: Icons.monetization_on_rounded,
+                            iconColor: const Color(0xFFF59E0B),
+                            iconBg: const Color(0xFFFFF1D6),
+                            colors: colors,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildKpiCard(
+                            title: 'Joriy daraja',
+                            value: '$level-bosqich',
+                            icon: Icons.military_tech_rounded,
+                            iconColor: const Color(0xFF8B5CF6),
+                            iconBg: const Color(0xFFF3E8FF),
+                            colors: colors,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Weekly Activity Chart Card
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: colors.card,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: colors.border, width: 1.2),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Haftalik yechilgan misollar',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                  color: colors.ink,
+                                ),
+                              ),
+                              const Icon(Icons.bar_chart_rounded, color: Color(0xFF6C47FF)),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            height: 160,
+                            child: BarChart(
+                              BarChartData(
+                                alignment: BarChartAlignment.spaceAround,
+                                maxY: _calculateMaxBar(weeklyList),
+                                barTouchData: BarTouchData(
+                                  touchTooltipData: BarTouchTooltipData(
+                                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                                      final day = groupIndex < weeklyList.length ? weeklyList[groupIndex]['dayKey'] : '';
+                                      return BarTooltipItem(
+                                        '$day: ${rod.toY.toInt()} ta',
+                                        const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                barGroups: List.generate(weeklyList.length, (i) {
+                                  final count = (weeklyList[i]['count'] ?? 0) as int;
+                                  final isToday = weeklyList[i]['isToday'] == true;
+                                  return BarChartGroupData(
+                                    x: i,
+                                    barRods: [
+                                      BarChartRodData(
+                                        toY: count.toDouble(),
+                                        color: isToday ? const Color(0xFF6C47FF) : const Color(0xFFC4B5FD),
+                                        width: 20,
+                                        borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                                      ),
+                                    ],
+                                  );
+                                }),
+                                titlesData: FlTitlesData(
+                                  leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      getTitlesWidget: (val, meta) {
+                                        final idx = val.toInt();
+                                        if (idx >= 0 && idx < weeklyList.length) {
+                                          final isToday = weeklyList[idx]['isToday'] == true;
+                                          return Padding(
+                                            padding: const EdgeInsets.only(top: 8),
+                                            child: Text(
+                                              weeklyList[idx]['dayKey'] ?? '',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
+                                                color: isToday ? colors.primary : colors.muted,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return const SizedBox();
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                gridData: const FlGridData(show: false),
+                                borderData: FlBorderData(show: false),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
 
-            // Subject Mastery Progress
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: AppColors.kidsBorder, width: 1.5),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Mavzular bo‘yicha o‘zlashtirish',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.kidsDarkText,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildSubjectRow('Arifmetika va Sonlar', 0.95, AppColors.kidsGreen),
-                  const SizedBox(height: 12),
-                  _buildSubjectRow('Oddiy va O‘nli kasrlar', 0.88, AppColors.kidsPrimary),
-                  const SizedBox(height: 12),
-                  _buildSubjectRow('Geometriya va Shakllar', 0.76, AppColors.kidsOrange),
-                  const SizedBox(height: 12),
-                  _buildSubjectRow('Tenglamalar va Mantiq', 0.70, const Color(0xFF6C5CE7)),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
+                    const SizedBox(height: 24),
 
-            // Recommendation Box
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3F0FF),
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: const Color(0xFFDED6FF), width: 1.5),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.auto_awesome_rounded, color: AppColors.kidsPrimary, size: 28),
-                  SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      'Siz arifmetika va kasrlarni a’lo darajada bajardingiz! Endi geometriya va fazoviy shakllar bo‘yicha mashqlarni sinab ko‘ring.',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.kidsDarkText,
-                        height: 1.4,
+                    // Topic Mastery Section
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: colors.card,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: colors.border, width: 1.2),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Mavzular bo‘yicha o‘zlashtirish',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: colors.ink,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            '0.6 * (darslar) + 0.4 * (aniqlik)',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: colors.muted,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          if (topicMastery.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 20),
+                              child: Center(
+                                child: Text(
+                                  'Hozircha darslar boshlanmagan.',
+                                  style: TextStyle(color: colors.muted, fontSize: 13),
+                                ),
+                              ),
+                            )
+                          else
+                            ...topicMastery.map((topic) {
+                              final mastery = (topic['masteryPercentage'] ?? 0) as int;
+                              final statusLabel = (topic['statusLabel'] ?? 'Boshlanmagan') as String;
+                              final statusColor = _parseColor(topic['statusColor'], const Color(0xFF6C47FF));
+                              final total = topic['totalLessons'] ?? 1;
+                              final completed = topic['completedLessons'] ?? 0;
+
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 14),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            topic['chapterTitle'] ?? '',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700,
+                                              color: colors.ink,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                          decoration: BoxDecoration(
+                                            color: statusColor.withOpacity(0.12),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Text(
+                                            '$mastery% · $statusLabel',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w800,
+                                              color: statusColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 6),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: LinearProgressIndicator(
+                                        value: (mastery / 100.0).clamp(0.0, 1.0),
+                                        minHeight: 7,
+                                        backgroundColor: colors.field,
+                                        color: statusColor,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '$completed / $total dars yakunlangan',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: colors.muted,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+
+                    if (nextLesson != null) ...[
+                      const SizedBox(height: 20),
+                      Container(
+                        padding: const EdgeInsets.all(18),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF3F0FF),
+                          borderRadius: BorderRadius.circular(22),
+                          border: Border.all(color: const Color(0xFFDED6FF), width: 1.5),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.auto_awesome_rounded, color: Color(0xFF6C47FF), size: 28),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Tavsiya etilgan dars',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w800,
+                                      color: Color(0xFF6C47FF),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    nextLesson['title'] ?? 'Navbatdagi dars',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w800,
+                                      color: colors.ink,
+                                    ),
+                                  ),
+                                  Text(
+                                    nextLesson['chapterTitle'] ?? '',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: colors.muted,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF6C47FF),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              ),
+                              onPressed: () {
+                                context.push('/kids/lesson/${nextLesson['id']}');
+                              },
+                              child: const Text('Boshlash', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 
-  BarChartGroupData _buildBar(int x, double y) {
-    return BarChartGroupData(
-      x: x,
-      barRods: [
-        BarChartRodData(
-          toY: y,
-          color: AppColors.kidsPrimary,
-          width: 16,
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ],
-    );
+  double _calculateMaxBar(List<Map<String, dynamic>> list) {
+    double maxVal = 10;
+    for (final item in list) {
+      final count = (item['count'] ?? 0) as num;
+      if (count > maxVal) maxVal = count.toDouble();
+    }
+    return maxVal + 5;
   }
 
-  Widget _buildMetricCard({
+  Widget _buildKpiCard({
     required String title,
     required String value,
-    IconData? icon,
-    Widget? customIcon,
-    Color? color,
+    required IconData icon,
+    required Color iconColor,
+    required Color iconBg,
+    required AppThemeColors colors,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: AppColors.kidsBorder, width: 1.5),
+        color: colors.card,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: colors.border, width: 1.2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          customIcon ?? Icon(icon, color: color ?? AppColors.kidsPrimary, size: 26),
-          const SizedBox(height: 10),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
-              color: AppColors.kidsDarkText,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: iconBg,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: iconColor, size: 20),
+              ),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: colors.ink,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 12),
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 12,
+            style: TextStyle(
+              fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.kidsSecondaryText,
+              color: colors.muted,
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildSubjectRow(String title, double progress, Color color) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
-            ),
-            Text(
-              '${(progress * 100).toInt()}%',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: color),
-            ),
-          ],
-        ),
-        const SizedBox(height: 6),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: LinearProgressIndicator(
-            value: progress,
-            minHeight: 7,
-            backgroundColor: const Color(0xFFECEEFA),
-            color: color,
-          ),
-        ),
-      ],
     );
   }
 }

@@ -17,6 +17,8 @@ import { tasksRouter } from './modules/daily_tasks/tasks.routes.js';
 import { achievementsRouter } from './modules/achievements/achievements.routes.js';
 import { analyticsRouter } from './modules/analytics/analytics.routes.js';
 import { studentsRouter } from './modules/students/profile.routes.js';
+import { profileRouter } from './modules/profile/profile.routes.js';
+import { settingsRouter } from './modules/settings/settings.routes.js';
 import { subscriptionsRouter } from './modules/subscriptions/subscriptions.routes.js';
 import { adminRouter } from './modules/admin/admin.routes.js';
 import { paymentsRouter } from './modules/payments/click.routes.js';
@@ -100,8 +102,14 @@ app.use('/api/city', cityRouter);
 app.use('/api/coins', coinsRouter);
 app.use('/api/xp', xpRouter);
 app.use('/api/tasks', tasksRouter);
+app.use('/api/daily-tasks', tasksRouter);
+app.use('/api/missions', tasksRouter);
 app.use('/api/achievements', achievementsRouter);
 app.use('/api/analytics', analyticsRouter);
+app.use('/api/stats', analyticsRouter);
+app.use('/api/profile', profileRouter);
+app.use('/api/activity', profileRouter);
+app.use('/api/settings', settingsRouter);
 app.use('/api/students', studentsRouter);
 app.use('/api/subscriptions', subscriptionsRouter);
 app.use('/api/admin', adminRouter);
@@ -123,6 +131,17 @@ app.get(['/api/leaderboard', '/leaderboard'], (req, res, next) => {
 app.patch(['/api/users/me/avatar', '/api/students/avatar'], (req, res, next) => {
   req.url = '/avatar';
   studentsRouter(req, res, next);
+});
+
+// Privacy & Account endpoints: /api/me/export and /api/me (DELETE)
+app.get(['/api/me/export', '/api/me/export-data'], (req, res, next) => {
+  req.url = '/export';
+  settingsRouter(req, res, next);
+});
+
+app.delete(['/api/me', '/api/users/me'], (req, res, next) => {
+  req.url = '/';
+  settingsRouter(req, res, next);
 });
 
 // 4. Standalone Admin Dashboard Static Portal

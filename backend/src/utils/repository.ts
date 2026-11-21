@@ -15,6 +15,12 @@ import {
 } from './dataStore.js';
 import { mathQuestionBank, archivedDemoQuestions, QuestionBankItem } from './questionBank.js';
 import { AgeMode } from './age.js';
+import {
+  getTashkentDateString,
+  getTashkentWeekDays,
+  getTashkentSecondsUntilMidnight,
+  getTashkentDayOfWeek,
+} from './tashkentTime.js';
 
 export type SubscriptionStatus =
   | 'FREE_TRIAL_ACTIVE'
@@ -80,7 +86,56 @@ export interface UserAccount {
     [taskKey: string]: { currentCount: number; isCompleted: boolean; claimed: boolean };
   };
   unlockedAchievements: string[]; // achievementKeys
+  claimedAchievements?: string[]; // achievementKeys claimed
+  consecutiveCorrectAnswers?: number;
+  currentStreak?: number;
+  longestStreak?: number;
+  lastActiveDate?: string; // YYYY-MM-DD
+  friendsCount?: number;
+  settings?: {
+    soundEnabled: boolean;
+    animationsEnabled: boolean;
+    dailyReminderEnabled: boolean;
+    reminderTime: string;
+    mode: string;
+    theme: string;
+  };
+  gameResults?: Array<{
+    id: string;
+    gameKey: string;
+    score: number;
+    coinsEarned: number;
+    xpEarned: number;
+    playedAt: string;
+  }>;
   createdAt: string;
+}
+
+export interface DailyActivityRecord {
+  userId: string;
+  date: string; // YYYY-MM-DD
+  seconds: number;
+  lessonsDone: number;
+  problemsSolved: number;
+  lastHeartbeat: number;
+}
+
+export type MissionStatus = 'ACTIVE' | 'COMPLETED' | 'CLAIMED' | 'EXPIRED';
+
+export interface DailyMissionRecord {
+  id: string;
+  userId: string;
+  date: string; // YYYY-MM-DD
+  templateId: string;
+  title: string;
+  description: string;
+  targetCount: number;
+  currentCount: number;
+  rewardCoins: number;
+  rewardXP: number;
+  status: MissionStatus;
+  isCompleted: boolean;
+  claimed: boolean;
 }
 
 class DataRepository {
@@ -89,11 +144,14 @@ class DataRepository {
   private buildings: BuildingModel[] = initialBuildings;
   private tasks: DailyTaskModel[] = initialDailyTasks;
   private achievements: AchievementModel[] = initialAchievements;
+  private dailyActivities: Map<string, DailyActivityRecord> = new Map();
+  private dailyMissions: Map<string, DailyMissionRecord[]> = new Map();
 
   constructor() {
     // Seed demo student with 100 coins (exact demonstration requirement: 100 coins to buy 100 coin building)
     const now = new Date();
     const trialExpiry = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30-day free trial
+    const todayStr = getTashkentDateString(now);
 
     const demoStudent: UserAccount = {
       id: 'demo-student-id',
@@ -112,6 +170,29 @@ class DataRepository {
       totalXP: 380,
       level: 3,
       cityLevel: 2,
+      currentStreak: 4,
+      longestStreak: 5,
+      friendsCount: 0,
+      claimedAchievements: [],
+      consecutiveCorrectAnswers: 5,
+      settings: {
+        soundEnabled: true,
+        animationsEnabled: true,
+        dailyReminderEnabled: true,
+        reminderTime: '18:00',
+        mode: 'KIDS',
+        theme: 'SYSTEM',
+      },
+      gameResults: [
+        {
+          id: 'game_demo_1',
+          gameKey: 'kosmik_hisob',
+          score: 80,
+          coinsEarned: 8,
+          xpEarned: 30,
+          playedAt: new Date(now.getTime() - 2 * 3600 * 1000).toISOString(),
+        },
+      ],
       subscription: {
         status: 'FREE_TRIAL_ACTIVE',
         trialStartedAt: now.toISOString(),
@@ -152,6 +233,16 @@ class DataRepository {
 
     this.users.set(demoStudent.id, demoStudent);
     this.users.set(demoStudent.email.toLowerCase(), demoStudent);
+
+    // Seed initial daily activity for demoStudent (7 mins today)
+    this.dailyActivities.set(`${demoStudent.id}:${todayStr}`, {
+      userId: demoStudent.id,
+      date: todayStr,
+      seconds: 7 * 60,
+      lessonsDone: 1,
+      problemsSolved: 4,
+      lastHeartbeat: now.getTime(),
+    });
   }
 
   // --- User Accounts ---
@@ -241,7 +332,7 @@ class DataRepository {
     }
 
     if (isDatabaseHealthy()) {
-      this.persistUserToDatabase(user).catch(() => {});
+      this.persistUserToDatabase(user).catch(() => { });
     }
 
     return user;
@@ -275,7 +366,7 @@ class DataRepository {
     }
 
     if (isDatabaseHealthy()) {
-      this.persistUserToDatabase(updated).catch(() => {});
+      this.persistUserToDatabase(updated).catch(() => { });
     }
 
     return updated;
@@ -297,7 +388,7 @@ class DataRepository {
     }
 
     if (isDatabaseHealthy()) {
-      prisma.user.delete({ where: { id } }).catch(() => {});
+      prisma.user.delete({ where: { id } }).catch(() => { });
     }
 
     return true;
@@ -384,7 +475,7 @@ class DataRepository {
           },
         });
       }
-    } catch (_) {}
+    } catch (_) { }
   }
 
   async initFromDatabase(): Promise<void> {
@@ -458,7 +549,7 @@ class DataRepository {
       if (dbUsers.length > 0) {
         console.log(`✅ [Database Sync] PostgreSQL bazasidan ${dbUsers.length} ta foydalanuvchi xotiraga yuklandi.`);
       }
-    } catch (_) {}
+    } catch (_) { }
   }
 
   // --- Curriculum Hierarchy Queries ---
@@ -694,8 +785,35 @@ class DataRepository {
         t.currentCount = Math.min(5, t.currentCount + 1);
         if (t.currentCount >= 5) t.isCompleted = true;
       }
+
+      // Consecutive correct answers & achievement: ach_math_whiz
+      user.consecutiveCorrectAnswers = (user.consecutiveCorrectAnswers || 0) + 1;
+      if (user.consecutiveCorrectAnswers >= 10 && !user.unlockedAchievements.includes('ach_math_whiz')) {
+        user.unlockedAchievements.push('ach_math_whiz');
+      }
+
+      // Check achievement: ach_sharp_shooter (>= 50 attempts, >= 90% accuracy)
+      if (user.attemptedQuestionCount >= 50) {
+        const acc = Math.round((user.correctQuestionCount / user.attemptedQuestionCount) * 100);
+        if (acc >= 90 && !user.unlockedAchievements.includes('ach_sharp_shooter')) {
+          user.unlockedAchievements.push('ach_sharp_shooter');
+        }
+      }
+
+      // Advance daily mission & record activity
+      this.advanceMissionProgress(userId, 'SOLVE_PROBLEM', 1);
+      const todayStr = getTashkentDateString();
+      const actKey = `${userId}:${todayStr}`;
+      let act = this.dailyActivities.get(actKey);
+      if (!act) {
+        act = { userId, date: todayStr, seconds: 60, lessonsDone: 0, problemsSolved: 0, lastHeartbeat: Date.now() };
+        this.dailyActivities.set(actKey, act);
+      }
+      act.problemsSolved++;
+      this.calculateStreak(userId);
     } else {
       user.incorrectQuestionCount++;
+      user.consecutiveCorrectAnswers = 0;
     }
 
     const accuracyPercentage =
@@ -779,15 +897,6 @@ class DataRepository {
 
     // Update city level
     user.cityLevel = Math.max(1, Math.floor(user.placedBuildings.length / 2) + 1);
-
-    // Check achievement "Shahar bunyodkori"
-    if (!user.unlockedAchievements.includes('ach_city_builder')) {
-      user.unlockedAchievements.push('ach_city_builder');
-    }
-
-    if (buildingKey === 'observatory_space' && !user.unlockedAchievements.includes('ach_observatory_master')) {
-      user.unlockedAchievements.push('ach_observatory_master');
-    }
 
     return {
       buildingKey,
@@ -949,6 +1058,751 @@ class DataRepository {
 
   getAchievements(): AchievementModel[] {
     return this.achievements;
+  }
+
+  // --- Daily Activity & Heartbeat ---
+  recordHeartbeat(userId: string, seconds = 15): { todayMinutes: number; totalMinutes: number } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    const todayStr = getTashkentDateString();
+    const key = `${userId}:${todayStr}`;
+
+    let activity = this.dailyActivities.get(key);
+    if (!activity) {
+      activity = {
+        userId,
+        date: todayStr,
+        seconds: 0,
+        lessonsDone: 0,
+        problemsSolved: 0,
+        lastHeartbeat: Date.now(),
+      };
+      this.dailyActivities.set(key, activity);
+    }
+
+    // Max 16 hours (57,600s) cap per day
+    const MAX_SECONDS = 16 * 3600;
+    activity.seconds = Math.min(MAX_SECONDS, activity.seconds + Math.min(30, Math.max(1, seconds)));
+    activity.lastHeartbeat = Date.now();
+
+    const todayMinutes = Math.floor(activity.seconds / 60);
+
+    // Check 10-minute mission
+    if (todayMinutes >= 10) {
+      this.advanceMissionProgress(userId, 'STUDY_MINUTES', todayMinutes);
+    }
+
+    let totalSeconds = 0;
+    for (const act of this.dailyActivities.values()) {
+      if (act.userId === userId) {
+        totalSeconds += act.seconds;
+      }
+    }
+    const totalMinutes = Math.floor(totalSeconds / 60);
+
+    return { todayMinutes, totalMinutes };
+  }
+
+  getWeeklyActivity(userId: string): {
+    week: Array<{
+      dayKey: string;
+      dayName: string;
+      dateStr: string;
+      minutes: number;
+      lessonsDone: number;
+      problemsSolved: number;
+      isToday: boolean;
+      dayIndex: number;
+    }>;
+    currentDayIndex: number;
+    todayDateStr: string;
+    currentStreak: number;
+  } {
+    const weekDays = getTashkentWeekDays();
+    const currentDayIndex = getTashkentDayOfWeek();
+    const todayDateStr = getTashkentDateString();
+    const streak = this.calculateStreak(userId);
+
+    const week = weekDays.map((w) => {
+      const key = `${userId}:${w.dateStr}`;
+      const act = this.dailyActivities.get(key);
+      return {
+        dayKey: w.dayKey,
+        dayName: w.dayName,
+        dateStr: w.dateStr,
+        minutes: act ? Math.floor(act.seconds / 60) : 0,
+        lessonsDone: act ? act.lessonsDone : 0,
+        problemsSolved: act ? act.problemsSolved : 0,
+        isToday: w.isToday,
+        dayIndex: w.dayIndex,
+      };
+    });
+
+    return {
+      week,
+      currentDayIndex,
+      todayDateStr,
+      currentStreak: streak.currentStreak,
+    };
+  }
+
+  getStudyHistory7Days(userId: string): {
+    history: Array<{
+      dateStr: string;
+      dayName: string;
+      dayKey: string;
+      minutes: number;
+      lessonsDone: number;
+      problemsSolved: number;
+    }>;
+    totalMinutes: number;
+    todayMinutes: number;
+  } {
+    const todayStr = getTashkentDateString();
+    const [y, m, d] = todayStr.split('-').map(Number);
+    const todayDate = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+
+    const history = [];
+    let totalMinutes = 0;
+    let todayMinutes = 0;
+
+    for (let i = 0; i < 7; i++) {
+      const dayDate = new Date(todayDate.getTime() - i * 24 * 3600 * 1000);
+      const dateStr = getTashkentDateString(dayDate);
+      const dayIdx = getTashkentDayOfWeek(dayDate);
+      const dayKey = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'][dayIdx];
+      const dayName = ['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba'][dayIdx];
+
+      const act = this.dailyActivities.get(`${userId}:${dateStr}`);
+      const mins = act ? Math.floor(act.seconds / 60) : 0;
+      if (i === 0) todayMinutes = mins;
+      totalMinutes += mins;
+
+      history.push({
+        dateStr,
+        dayName,
+        dayKey,
+        minutes: mins,
+        lessonsDone: act ? act.lessonsDone : 0,
+        problemsSolved: act ? act.problemsSolved : 0,
+      });
+    }
+
+    return { history, totalMinutes, todayMinutes };
+  }
+
+  // --- Streak Calculation ---
+  calculateStreak(userId: string): { currentStreak: number; longestStreak: number } {
+    const user = this.getUserById(userId);
+    if (!user) return { currentStreak: 0, longestStreak: 0 };
+
+    if (user.currentStreak === undefined) user.currentStreak = 1;
+    if (user.longestStreak === undefined) user.longestStreak = Math.max(1, user.currentStreak);
+
+    const todayStr = getTashkentDateString();
+    const [y, m, d] = todayStr.split('-').map(Number);
+    const todayDate = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+
+    let streak = 0;
+    for (let i = 0; i < 365; i++) {
+      const checkDate = new Date(todayDate.getTime() - i * 24 * 3600 * 1000);
+      const dateStr = getTashkentDateString(checkDate);
+      const key = `${userId}:${dateStr}`;
+      const act = this.dailyActivities.get(key);
+
+      const hadActivity =
+        (act && (act.lessonsDone > 0 || act.problemsSolved > 0 || act.seconds >= 60)) ||
+        (i === 0 && (user.completedLessons.length > 0 || user.solvedQuestions.length > 0));
+
+      if (hadActivity) {
+        streak++;
+      } else {
+        if (i === 0) continue; // if today is just starting, streak from yesterday still counts
+        break;
+      }
+    }
+
+    user.currentStreak = Math.max(user.currentStreak, streak);
+    user.longestStreak = Math.max(user.longestStreak, user.currentStreak);
+
+    if (user.currentStreak >= 7 && !user.unlockedAchievements.includes('ach_streak_hero')) {
+      user.unlockedAchievements.push('ach_streak_hero');
+    }
+
+    return { currentStreak: user.currentStreak, longestStreak: user.longestStreak };
+  }
+
+  // --- Daily Missions (Strictly 3 per day, Asia/Tashkent 00:00 midnight reset) ---
+  getTodayMissions(userId: string): {
+    missions: DailyMissionRecord[];
+    secondsUntilMidnight: number;
+    completedCount: number;
+    claimedCount: number;
+    todayDateStr: string;
+  } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    const today = getTashkentDateString();
+    const userMissions = this.dailyMissions.get(userId) || [];
+
+    // Expire older uncompleted missions
+    for (const m of userMissions) {
+      if (m.date !== today && m.status !== 'CLAIMED') {
+        m.status = 'EXPIRED';
+      }
+    }
+
+    let todayMissions = userMissions.filter((m) => m.date === today);
+
+    // If not created yet today, create exactly 3 missions from templates
+    if (todayMissions.length === 0) {
+      const templates = [
+        {
+          templateId: 'misol_5',
+          title: '5 ta misolni to‘g‘ri yeching',
+          description: 'Dars yoki mashqlardan 5 ta to‘g‘ri javob toping.',
+          targetCount: 5,
+          rewardCoins: 1,
+          rewardXP: 10,
+        },
+        {
+          templateId: 'dars_1',
+          title: '1 ta darsni tugating',
+          description: 'O‘quv mavzusidan kamida 1 ta darsni muvaffaqiyatli yakunlang.',
+          targetCount: 1,
+          rewardCoins: 2,
+          rewardXP: 20,
+        },
+        {
+          templateId: 'kosmik_1',
+          title: 'Kosmik hisob o‘yinini o‘ynang',
+          description: 'Fazoviy arifmetika o‘yinida kamida 1 raund o‘ynang.',
+          targetCount: 1,
+          rewardCoins: 1,
+          rewardXP: 10,
+        },
+      ];
+
+      todayMissions = templates.map((tmpl) => ({
+        id: `mission_${userId}_${today}_${tmpl.templateId}`,
+        userId,
+        date: today,
+        templateId: tmpl.templateId,
+        title: tmpl.title,
+        description: tmpl.description,
+        targetCount: tmpl.targetCount,
+        currentCount: 0,
+        rewardCoins: tmpl.rewardCoins,
+        rewardXP: tmpl.rewardXP,
+        status: 'ACTIVE' as MissionStatus,
+        isCompleted: false,
+        claimed: false,
+      }));
+
+      this.dailyMissions.set(userId, [...userMissions.filter((m) => m.date !== today), ...todayMissions]);
+    }
+
+    const completedCount = todayMissions.filter((m) => m.isCompleted || m.status === 'COMPLETED' || m.status === 'CLAIMED').length;
+    const claimedCount = todayMissions.filter((m) => m.claimed || m.status === 'CLAIMED').length;
+    const secondsUntilMidnight = getTashkentSecondsUntilMidnight();
+
+    return {
+      missions: todayMissions,
+      secondsUntilMidnight,
+      completedCount,
+      claimedCount,
+      todayDateStr: today,
+    };
+  }
+
+  advanceMissionProgress(userId: string, type: 'SOLVE_PROBLEM' | 'COMPLETE_LESSON' | 'PLAY_GAME' | 'AI_CONSULT' | 'STUDY_MINUTES', count = 1): void {
+    const user = this.getUserById(userId);
+    if (!user) return;
+
+    const { missions } = this.getTodayMissions(userId);
+    const templateMapping: Record<string, string> = {
+      SOLVE_PROBLEM: 'misol_5',
+      COMPLETE_LESSON: 'dars_1',
+      PLAY_GAME: 'kosmik_1',
+      AI_CONSULT: 'ziyo_1',
+      STUDY_MINUTES: 'vaqt_10',
+    };
+    const targetTemplateId = templateMapping[type];
+
+    for (const m of missions) {
+      if (m.status === 'CLAIMED' || m.status === 'EXPIRED') continue;
+      if (m.templateId === targetTemplateId) {
+        m.currentCount = Math.min(m.targetCount, m.currentCount + count);
+        if (m.currentCount >= m.targetCount) {
+          m.isCompleted = true;
+          if (m.status === 'ACTIVE') {
+            m.status = 'COMPLETED';
+          }
+        }
+      }
+    }
+  }
+
+  claimMissionReward(userId: string, missionIdOrKey: string): {
+    success: boolean;
+    coinsAwarded: number;
+    newCoinBalance: number;
+    newTotalXP: number;
+    error?: string;
+  } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    const { missions } = this.getTodayMissions(userId);
+    const mission = missions.find((m) => m.id === missionIdOrKey || m.templateId === missionIdOrKey);
+
+    if (!mission) {
+      return { success: false, coinsAwarded: 0, newCoinBalance: user.coinBalance, newTotalXP: user.totalXP, error: 'Vazifa topilmadi.' };
+    }
+
+    if (mission.status === 'CLAIMED') {
+      return { success: false, coinsAwarded: 0, newCoinBalance: user.coinBalance, newTotalXP: user.totalXP, error: 'Mukofot allaqachon olingan.' };
+    }
+
+    if (mission.currentCount < mission.targetCount) {
+      return { success: false, coinsAwarded: 0, newCoinBalance: user.coinBalance, newTotalXP: user.totalXP, error: 'Ushbu vazifa hali yakunlanmagan.' };
+    }
+
+    mission.claimed = true;
+    mission.status = 'CLAIMED';
+
+    this.creditCoins(userId, mission.rewardCoins, `Kunlik vazifa mukofoti: ${mission.title}`);
+    this.addXP(userId, mission.rewardXP);
+
+    return {
+      success: true,
+      coinsAwarded: mission.rewardCoins,
+      newCoinBalance: user.coinBalance,
+      newTotalXP: user.totalXP,
+    };
+  }
+
+  // --- Pro-Only Achievements ---
+  getAchievementsForUser(userId: string): {
+    isPro: boolean;
+    unlockedCount: number;
+    achievements: Array<{
+      key: string;
+      title: string;
+      description: string;
+      iconName: string;
+      rewardCoins: number;
+      rewardXP: number;
+      isUnlocked: boolean;
+      isClaimed: boolean;
+      progressText: string;
+      progressRatio: number;
+    }>;
+  } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    const isPro = user.subscription.status === 'PRO_ACTIVE';
+    user.claimedAchievements = user.claimedAchievements || [];
+
+    const all = this.achievements.map((ach) => {
+      const isUnlocked = user.unlockedAchievements.includes(ach.key);
+      const isClaimed = user.claimedAchievements!.includes(ach.key);
+
+      let progressText = isUnlocked ? 'Ochilgan' : '0/1';
+      let progressRatio = isUnlocked ? 1.0 : 0.0;
+
+      if (ach.key === 'ach_first_step') {
+        const count = user.completedLessons.length;
+        progressRatio = Math.min(1.0, count / 1);
+        progressText = isUnlocked ? '1/1 dars' : `${count}/1 dars`;
+      } else if (ach.key === 'ach_math_whiz') {
+        const consec = user.consecutiveCorrectAnswers || (isUnlocked ? 10 : 0);
+        progressRatio = Math.min(1.0, consec / 10);
+        progressText = `${consec}/10 xatosiz`;
+      } else if (ach.key === 'ach_streak_hero') {
+        const s = user.currentStreak || 0;
+        progressRatio = Math.min(1.0, s / 7);
+        progressText = `${s}/7 kun`;
+      } else if (ach.key === 'ach_sharp_shooter') {
+        const att = user.attemptedQuestionCount || 0;
+        const acc = att > 0 ? Math.round((user.correctQuestionCount / att) * 100) : 0;
+        progressRatio = att >= 50 && acc >= 90 ? 1.0 : Math.min(1.0, att / 50);
+        progressText = `${acc}% (${att}/50)`;
+      } else if (ach.key === 'ach_space_cadet') {
+        progressText = isUnlocked ? 'Yutildi' : '1-daraja';
+      }
+
+      return {
+        key: ach.key,
+        title: ach.title,
+        description: ach.description,
+        iconName: ach.iconName,
+        rewardCoins: ach.rewardCoins,
+        rewardXP: ach.rewardXP,
+        isUnlocked,
+        isClaimed,
+        progressText,
+        progressRatio,
+      };
+    });
+
+    const unlockedCount = all.filter((a) => a.isUnlocked).length;
+    return { isPro, unlockedCount, achievements: all };
+  }
+
+  claimAchievementReward(userId: string, achievementKey: string): {
+    success: boolean;
+    coinsAwarded: number;
+    xpAwarded: number;
+    newCoinBalance: number;
+    newTotalXP: number;
+    error?: string;
+  } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    if (user.subscription.status !== 'PRO_ACTIVE') {
+      return {
+        success: false,
+        coinsAwarded: 0,
+        xpAwarded: 0,
+        newCoinBalance: user.coinBalance,
+        newTotalXP: user.totalXP,
+        error: 'Yutuqlar mukofoti faqat MathCity Pro tarifida ochiladi.',
+      };
+    }
+
+    user.claimedAchievements = user.claimedAchievements || [];
+    if (user.claimedAchievements.includes(achievementKey)) {
+      return {
+        success: false,
+        coinsAwarded: 0,
+        xpAwarded: 0,
+        newCoinBalance: user.coinBalance,
+        newTotalXP: user.totalXP,
+        error: 'Mukofot avval olingan.',
+      };
+    }
+
+    const def = this.achievements.find((a) => a.key === achievementKey);
+    if (!def) {
+      return {
+        success: false,
+        coinsAwarded: 0,
+        xpAwarded: 0,
+        newCoinBalance: user.coinBalance,
+        newTotalXP: user.totalXP,
+        error: 'Yutuq topilmadi.',
+      };
+    }
+
+    if (!user.unlockedAchievements.includes(achievementKey)) {
+      return {
+        success: false,
+        coinsAwarded: 0,
+        xpAwarded: 0,
+        newCoinBalance: user.coinBalance,
+        newTotalXP: user.totalXP,
+        error: 'Ushbu yutuq hali ochilmagan.',
+      };
+    }
+
+    user.claimedAchievements.push(achievementKey);
+    this.creditCoins(userId, def.rewardCoins, `Yutuq mukofoti: ${def.title}`);
+    this.addXP(userId, def.rewardXP);
+
+    return {
+      success: true,
+      coinsAwarded: def.rewardCoins,
+      xpAwarded: def.rewardXP,
+      newCoinBalance: user.coinBalance,
+      newTotalXP: user.totalXP,
+    };
+  }
+
+  // --- Learning Statistics ---
+  getTodayStudyMinutes(userId: string): number {
+    const todayStr = getTashkentDateString();
+    const act = this.dailyActivities.get(`${userId}:${todayStr}`);
+    return act ? Math.floor(act.seconds / 60) : 0;
+  }
+
+  getLearningStats(userId: string): {
+    attemptedQuestions: number;
+    correctQuestions: number;
+    accuracyPercentage: number;
+    studyMinutesTotal: number;
+    longestStreak: number;
+    currentStreak: number;
+    totalCoins: number;
+    totalXP: number;
+    level: number;
+    completedLessons: number;
+    weeklyActivity: Array<{ dayKey: string; count: number; isToday: boolean }>;
+    topicMastery: Array<{
+      chapterTitle: string;
+      totalLessons: number;
+      completedLessons: number;
+      accuracy: number;
+      masteryPercentage: number;
+      statusLabel: string;
+      statusColor: string;
+    }>;
+  } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    const attempted = user.attemptedQuestionCount || 0;
+    const correct = user.correctQuestionCount || 0;
+    const accuracy = attempted > 0 ? Math.round((correct / attempted) * 100) : 100;
+
+    const weekDays = getTashkentWeekDays();
+    const weeklyActivity = weekDays.map((w) => {
+      const act = this.dailyActivities.get(`${userId}:${w.dateStr}`);
+      return {
+        dayKey: w.dayKey,
+        count: act ? act.problemsSolved : 0,
+        isToday: w.isToday,
+      };
+    });
+
+    const topicMastery = this.getTopicMastery(userId);
+
+    let totalSeconds = 0;
+    for (const act of this.dailyActivities.values()) {
+      if (act.userId === userId) {
+        totalSeconds += act.seconds;
+      }
+    }
+    const studyMinutesTotal = Math.floor(totalSeconds / 60);
+    const streak = this.calculateStreak(userId);
+
+    return {
+      attemptedQuestions: attempted,
+      correctQuestions: correct,
+      accuracyPercentage: accuracy,
+      studyMinutesTotal,
+      longestStreak: streak.longestStreak,
+      currentStreak: streak.currentStreak,
+      totalCoins: user.coinBalance,
+      totalXP: user.totalXP,
+      level: user.level || 1,
+      completedLessons: user.completedLessons.length,
+      weeklyActivity,
+      topicMastery,
+    };
+  }
+
+  getTopicMastery(userId: string): Array<{
+    chapterTitle: string;
+    totalLessons: number;
+    completedLessons: number;
+    accuracy: number;
+    masteryPercentage: number;
+    statusLabel: string;
+    statusColor: string;
+  }> {
+    const user = this.getUserById(userId);
+    if (!user) return [];
+
+    const chaptersMap = new Map<string, { total: number; completed: number }>();
+    for (const lesson of this.lessons) {
+      const ch = lesson.chapterTitle || 'Boshlang‘ich matematika';
+      let entry = chaptersMap.get(ch);
+      if (!entry) {
+        entry = { total: 0, completed: 0 };
+        chaptersMap.set(ch, entry);
+      }
+      entry.total++;
+      if (user.completedLessons.includes(lesson.id)) {
+        entry.completed++;
+      }
+    }
+
+    const overallAccuracy = user.attemptedQuestionCount > 0
+      ? (user.correctQuestionCount / user.attemptedQuestionCount) * 100
+      : 100;
+
+    return Array.from(chaptersMap.entries()).map(([chapterTitle, stats]) => {
+      const lessonRatio = stats.total > 0 ? stats.completed / stats.total : 0;
+      const accuracyPortion = stats.completed > 0 ? overallAccuracy : 0;
+
+      // Formula: 0.6 * (completed / total) + 0.4 * last30Accuracy
+      let mastery = Math.round(0.6 * lessonRatio * 100 + 0.4 * accuracyPortion);
+
+      let statusLabel = 'Boshlanmagan';
+      let statusColor = '#94A3B8';
+
+      if (stats.completed > 0 || mastery > 0) {
+        if (mastery >= 90) {
+          statusLabel = 'A‘lo';
+          statusColor = '#22C55E';
+        } else if (mastery >= 75) {
+          statusLabel = 'Yaxshi';
+          statusColor = '#6C55E0';
+        } else {
+          statusLabel = 'Qoniqarli';
+          statusColor = '#F59E0B';
+        }
+      }
+
+      return {
+        chapterTitle,
+        totalLessons: stats.total,
+        completedLessons: stats.completed,
+        accuracy: Math.round(accuracyPortion),
+        masteryPercentage: mastery,
+        statusLabel,
+        statusColor,
+      };
+    });
+  }
+
+  // --- User Settings ---
+  getUserSettings(userId: string) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+    return (
+      user.settings || {
+        soundEnabled: true,
+        animationsEnabled: true,
+        dailyReminderEnabled: true,
+        reminderTime: '18:00',
+        mode: user.mode || 'KIDS',
+        theme: 'SYSTEM',
+      }
+    );
+  }
+
+  updateUserSettings(
+    userId: string,
+    patch: Partial<{
+      soundEnabled: boolean;
+      animationsEnabled: boolean;
+      dailyReminderEnabled: boolean;
+      reminderTime: string;
+      mode: string;
+      theme: string;
+    }>
+  ) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    user.settings = { ...this.getUserSettings(userId), ...patch };
+    if (patch.mode && (patch.mode === 'KIDS' || patch.mode === 'TEEN')) {
+      user.mode = patch.mode;
+    }
+    return user.settings;
+  }
+
+  exportUserData(userId: string) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+    const { history } = this.getStudyHistory7Days(userId);
+    const { week } = this.getWeeklyActivity(userId);
+    const stats = this.getLearningStats(userId);
+
+    return {
+      profile: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        displayName: user.displayName,
+        grade: user.grade,
+        mode: user.mode,
+        coinBalance: user.coinBalance,
+        totalXP: user.totalXP,
+        level: user.level,
+        currentStreak: user.currentStreak || 1,
+        longestStreak: user.longestStreak || 1,
+        subscription: user.subscription,
+      },
+      stats,
+      weeklyStudyHistory: history,
+      weeklyActivity: week,
+      completedLessons: user.completedLessons,
+      gameResults: user.gameResults || [],
+      exportedAt: new Date().toISOString(),
+    };
+  }
+
+  // --- Real Game Rewards & Anti-Farming ---
+  finishGame(
+    userId: string,
+    gameKey: string,
+    score: number,
+    durationSeconds: number
+  ): {
+    success: boolean;
+    coinsEarned: number;
+    xpEarned: number;
+    newCoinBalance: number;
+    newTotalXP: number;
+    highScore: number;
+    timesPlayed: number;
+  } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    user.gameResults = user.gameResults || [];
+
+    // Coin award: 1 coin per 10 points up to 15 coins per game
+    const baseCoins = Math.min(15, Math.floor(score / 10));
+    const coinsEarned = baseCoins > 0 ? baseCoins : score >= 5 ? 1 : 0;
+    const xpEarned = Math.min(50, Math.max(10, Math.floor(score * 1.5)));
+
+    if (coinsEarned > 0) {
+      this.creditCoins(userId, coinsEarned, `${gameKey === 'kosmik_hisob' ? 'Kosmik hisob' : 'Kasrlar jangi'} yutug‘i`);
+    }
+    if (xpEarned > 0) {
+      this.addXP(userId, xpEarned);
+    }
+
+    user.gameResults.unshift({
+      id: `game_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      gameKey,
+      score,
+      coinsEarned,
+      xpEarned,
+      playedAt: new Date().toISOString(),
+    });
+    if (user.gameResults.length > 20) {
+      user.gameResults = user.gameResults.slice(0, 20);
+    }
+
+    // Advance daily mission
+    this.advanceMissionProgress(userId, 'PLAY_GAME', 1);
+
+    // Check achievement: ach_space_cadet
+    if (score >= 50 && !user.unlockedAchievements.includes('ach_space_cadet')) {
+      user.unlockedAchievements.push('ach_space_cadet');
+    }
+
+    const userGames = user.gameResults.filter((g) => g.gameKey === gameKey);
+    const highScore = userGames.reduce((max, g) => Math.max(max, g.score), score);
+    const timesPlayed = userGames.length;
+
+    return {
+      success: true,
+      coinsEarned,
+      xpEarned,
+      newCoinBalance: user.coinBalance,
+      newTotalXP: user.totalXP,
+      highScore,
+      timesPlayed,
+    };
+  }
+
+  getRecentGameResults(userId: string) {
+    const user = this.getUserById(userId);
+    if (!user) return [];
+    return (user.gameResults || []).slice(0, 3).map((g) => ({
+      ...g,
+      title: g.gameKey === 'kosmik_hisob' ? 'Kosmik hisob' : 'Kasrlar jangi',
+    }));
   }
 
   // --- Subscriptions ---

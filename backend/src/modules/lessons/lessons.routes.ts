@@ -1,6 +1,7 @@
 import { Router, Response } from 'express';
 import { authMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
 import { repository } from '../../utils/repository.js';
+import { getTashkentDateString } from '../../utils/tashkentTime.js';
 
 export const lessonsRouter = Router();
 
@@ -160,6 +161,20 @@ lessonsRouter.post('/:id/sections/:sectionId/complete', authMiddleware, (req: Au
   const allCompleted = found.lesson.sections.every((s) => user.completedSections.includes(s.id));
   if (allCompleted && !user.completedLessons.includes(lessonId)) {
     user.completedLessons.push(lessonId);
+    repository.advanceMissionProgress(user.id, 'COMPLETE_LESSON', 1);
+    if (!user.unlockedAchievements.includes('ach_first_step')) {
+      user.unlockedAchievements.push('ach_first_step');
+    }
+    const todayStr = getTashkentDateString();
+    const actKey = `${user.id}:${todayStr}`;
+    let act = (repository as any).dailyActivities?.get(actKey);
+    if (!act) {
+      act = { userId: user.id, date: todayStr, seconds: 120, lessonsDone: 1, problemsSolved: 0, lastHeartbeat: Date.now() };
+      (repository as any).dailyActivities?.set(actKey, act);
+    } else {
+      act.lessonsDone++;
+    }
+    repository.calculateStreak(user.id);
   }
 
   const nextSection = found.lesson.sections.find((s) => s.orderIndex === found.section.orderIndex + 1);

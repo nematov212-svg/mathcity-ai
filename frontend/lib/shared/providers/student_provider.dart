@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io' show Platform;
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/auth/auth_service.dart';
@@ -78,6 +79,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
   @override
   void dispose() {
     _googleAccountSub?.cancel();
+    _heartbeatTimer?.cancel();
     super.dispose();
   }
 
@@ -234,8 +236,72 @@ class StudentNotifier extends StateNotifier<StudentState> {
     }
   }
 
-  /// Reload student profile from backend and update subscription/coins/xp
+  Timer? _heartbeatTimer;
+  DateTime _lastInteractionTime = DateTime.now();
+
+  void recordInteraction() {
+    _lastInteractionTime = DateTime.now();
+  }
+
+  void startHeartbeat() {
+    _heartbeatTimer?.cancel();
+    _heartbeatTimer = Timer.periodic(const Duration(seconds: 15), (timer) async {
+      if (DateTime.now().difference(_lastInteractionTime).inSeconds > 60) return;
+      try {
+        final res = await ApiClient().dio.post('/activity/heartbeat', data: {'seconds': 15});
+        if (res.data['success'] == true && res.data['data'] != null) {
+          final todayMin = res.data['data']['todayMinutes'];
+          if (todayMin != null && state.student != null) {
+            state = state.copyWith(
+              student: state.student!.copyWith(studyMinutes: todayMin),
+            );
+          }
+        }
+      } catch (_) {}
+    });
+  }
+
+  void stopHeartbeat() {
+    _heartbeatTimer?.cancel();
+    _heartbeatTimer = null;
+  }
+
+  /// Reload student profile from backend and update subscription/coins/xp/streak
   Future<void> refreshProfile() async {
+    try {
+      final res = await ApiClient().dio.get('/profile/summary');
+      if (res.data['success'] == true && res.data['data'] != null) {
+        final d = res.data['data'];
+        if (state.student != null) {
+          state = state.copyWith(
+            student: state.student!.copyWith(
+              coinBalance: d['coinBalance'] ?? d['coins'] ?? state.student!.coinBalance,
+              totalXP: d['totalXP'] ?? d['xp'] ?? state.student!.totalXP,
+              level: d['level'] ?? state.student!.level,
+              studyMinutes: d['studyMinutesToday'] ?? state.student!.studyMinutes,
+              currentStreak: d['currentStreak'] ?? state.student!.currentStreak,
+              longestStreak: d['longestStreak'] ?? state.student!.longestStreak,
+              completedLessonsCount: d['completedLessonsCount'] ?? state.student!.completedLessonsCount,
+              completedTopicsCount: d['completedTopicsCount'] ?? state.student!.completedTopicsCount,
+              friendsCount: d['friendsCount'] ?? state.student!.friendsCount,
+              achievementsCount: d['unlockedAchievementsCount'] ?? state.student!.achievementsCount,
+              avatarUrl: d['avatarUrl'] ?? state.student!.avatarUrl,
+              displayName: d['displayName'] ?? state.student!.displayName,
+              username: d['username'] ?? state.student!.username,
+              subscription: d['isPro'] == true
+                  ? state.student!.subscription.copyWith(
+                      status: 'PRO_ACTIVE',
+                      isProActive: true,
+                      planName: 'MathCity Pro',
+                    )
+                  : state.student!.subscription,
+            ),
+          );
+          return;
+        }
+      }
+    } catch (_) {}
+
     try {
       final res = await ApiClient().dio.get('/students/profile');
       if (res.data['success'] == true) {
@@ -243,21 +309,180 @@ class StudentNotifier extends StateNotifier<StudentState> {
         final student = StudentModel.fromJson(userData);
         state = state.copyWith(student: student);
       }
-    } catch (e) {
-      if (state.student != null) {
-        state = state.copyWith(
-          student: state.student!.copyWith(
-            subscription: SubscriptionModel(
-              status: 'PRO_ACTIVE',
-              isProActive: true,
-              planName: 'MathCity Pro',
-              priceMonthlyUzs: 29000,
-              trialDaysRemaining: 0,
-            ),
-          ),
-        );
+    } catch (_) {}
+  }
+
+  Future<Map<String, dynamic>?> fetchWeeklyActivity() async {
+    try {
+      final res = await ApiClient().dio.get('/profile/weekly');
+      if (res.data['success'] == true) {
+        return res.data['data'];
       }
+    } catch (_) {}
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> fetchStudyHistory() async {
+    try {
+      final res = await ApiClient().dio.get('/profile/study-history');
+      if (res.data['success'] == true) {
+        return res.data['data'];
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> fetchDailyMissions() async {
+    try {
+      final res = await ApiClient().dio.get('/daily-tasks/today');
+      if (res.data['success'] == true) {
+        return res.data['data'];
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  Future<Map<String, dynamic>> claimDailyMission(String idOrKey) async {
+    try {
+      final res = await ApiClient().dio.post('/daily-tasks/$idOrKey/claim');
+      if (res.data['success'] == true) {
+        final d = res.data['data'];
+        final coins = d['coinsAwarded'] ?? d['rewardCoins'] ?? 0;
+        final newCoinBalance = d['newCoinBalance'];
+        if (newCoinBalance != null && state.student != null) {
+          state = state.copyWith(
+            student: state.student!.copyWith(coinBalance: newCoinBalance),
+            lastCoinsAwarded: coins,
+          );
+        } else if (coins > 0) {
+          updateCoins(coins);
+        }
+        return {'success': true, 'data': d};
+      }
+      return {'success': false, 'error': res.data['error'] ?? 'Mukofotni olib bo‘lmadi.'};
+    } catch (e) {
+      return {'success': false, 'error': 'Mukofotni olishda xatolik yuz berdi.'};
     }
+  }
+
+  Future<Map<String, dynamic>> fetchAchievements() async {
+    try {
+      final res = await ApiClient().dio.get('/achievements');
+      if (res.data['success'] == true) {
+        return {'success': true, 'isPro': true, 'data': res.data['data']};
+      }
+      return {'success': false, 'isPro': false, 'error': res.data['error']};
+    } on DioException catch (dioErr) {
+      if (dioErr.response?.statusCode == 403) {
+        return {'success': false, 'isPro': false, 'isProRequired': true};
+      }
+      return {'success': false, 'isPro': false, 'error': 'Yutuqlarni yuklab bo‘lmadi.'};
+    } catch (_) {
+      return {'success': false, 'isPro': false, 'error': 'Tarmoq xatosi.'};
+    }
+  }
+
+  Future<Map<String, dynamic>> claimAchievement(String key) async {
+    try {
+      final res = await ApiClient().dio.post('/achievements/$key/claim');
+      if (res.data['success'] == true) {
+        final d = res.data['data'];
+        final coins = d['coinsAwarded'] ?? d['rewardCoins'] ?? 0;
+        final xp = d['xpAwarded'] ?? d['rewardXP'] ?? 0;
+        final newCoins = d['newCoinBalance'];
+        final newXP = d['newTotalXP'];
+        if (state.student != null) {
+          state = state.copyWith(
+            student: state.student!.copyWith(
+              coinBalance: newCoins ?? (state.student!.coinBalance + coins),
+              totalXP: newXP ?? (state.student!.totalXP + xp),
+            ),
+            lastCoinsAwarded: coins,
+          );
+        }
+        return {'success': true, 'data': d};
+      }
+      return {'success': false, 'error': res.data['error'] ?? 'Mukofotni olib bo‘lmadi.'};
+    } catch (e) {
+      return {'success': false, 'error': 'Mukofotni olishda xatolik yuz berdi.'};
+    }
+  }
+
+  Future<Map<String, dynamic>?> fetchLearningStats() async {
+    try {
+      final res = await ApiClient().dio.get('/stats');
+      if (res.data['success'] == true) {
+        return res.data['data'];
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> fetchSettings() async {
+    try {
+      final res = await ApiClient().dio.get('/settings');
+      if (res.data['success'] == true) {
+        return res.data['data'];
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  Future<bool> updateSettings(Map<String, dynamic> patch) async {
+    try {
+      final res = await ApiClient().dio.patch('/settings', data: patch);
+      return res.data['success'] == true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<Map<String, dynamic>?> exportUserData() async {
+    try {
+      final res = await ApiClient().dio.get('/me/export');
+      if (res.data['success'] == true) {
+        return res.data['data'];
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  Future<bool> deleteAccountConfirm({String? username}) async {
+    try {
+      final res = await ApiClient().dio.delete('/me', data: {'username': username});
+      if (res.data['success'] == true) {
+        await _authService.signOut();
+        state = StudentState();
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
+  Future<Map<String, dynamic>?> finishGameResult(String gameKey, int score, int durationSeconds) async {
+    try {
+      final res = await ApiClient().dio.post('/games/$gameKey/finish', data: {
+        'score': score,
+        'durationSeconds': durationSeconds,
+      });
+      if (res.data['success'] == true) {
+        final d = res.data['data'];
+        final newCoinBalance = d['newCoinBalance'];
+        final newTotalXP = d['newTotalXP'];
+        final coinsEarned = d['coinsEarned'] ?? 0;
+        if (state.student != null && newCoinBalance != null) {
+          state = state.copyWith(
+            student: state.student!.copyWith(
+              coinBalance: newCoinBalance,
+              totalXP: newTotalXP ?? state.student!.totalXP,
+            ),
+            lastCoinsAwarded: coinsEarned,
+          );
+        }
+        return d;
+      }
+    } catch (_) {}
+    return null;
   }
 
   void updateCoins(int delta) {
