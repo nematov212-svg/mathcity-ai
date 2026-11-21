@@ -24,7 +24,7 @@ export const corsMiddleware = cors({
   origin: (origin, callback) => {
     // Allow non-browser requests (e.g. mobile apps, curl, tests) where origin is undefined
     if (!origin) return callback(null, true);
-
+      
     // Allow all localhost/127.0.0.1 ports (e.g. :8085, :4000, :3000)
     if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
       return callback(null, true);
