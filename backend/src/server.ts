@@ -45,11 +45,15 @@ const server = app.listen(port, host, async () => {
       console.log(`✅ PostgreSQL Connected successfully (latency: ${dbStatus.latencyMs}ms)`);
       await repository.initFromDatabase();
     } else {
-      console.warn(`⚠️ PostgreSQL connection notice: ${dbStatus.error}`);
-      console.log(`ℹ️ Dual-mode active: In-memory/local repository available for offline testing.`);
+      console.error(`❌ [DATABASE ERROR] PostgreSQL connection check failed: ${dbStatus.error}`);
+      if (config.isProduction) {
+        console.error('🚨 [CRITICAL ALERT] Production environment requires an active PostgreSQL database! Users and states will not persist if PostgreSQL is unreachable.');
+      } else {
+        console.log(`ℹ️ Development dual-mode active: In-memory/local repository available for offline testing.`);
+      }
     }
   } catch (err: any) {
-    console.warn(`⚠️ PostgreSQL connection check skipped: ${err?.message}`);
+    console.error(`❌ PostgreSQL connection check error: ${err?.message}`);
   }
 });
 

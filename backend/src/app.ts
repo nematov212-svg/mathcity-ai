@@ -41,20 +41,25 @@ app.use(generalRateLimiter);
 // 2. Health & Orchestration Probes (Render & Cloud compatible)
 // Standard Render root health check
 app.get('/health', async (req: Request, res: Response) => {
-  if (!isDatabaseHealthy() && process.env.DATABASE_URL) {
-    try {
-      await Promise.race([
-        checkDatabaseConnection(),
-        new Promise((resolve) => setTimeout(resolve, 2000)),
-      ]);
-    } catch (_) {}
+  let dbStatus = 'error';
+  try {
+    const dbCheck = await Promise.race([
+      checkDatabaseConnection(),
+      new Promise<{ connected: boolean }>((resolve) => setTimeout(() => resolve({ connected: false }), 2500)),
+    ]);
+    dbStatus = dbCheck.connected ? 'connected' : 'error';
+  } catch (_) {
+    dbStatus = 'error';
   }
+
+  // Render health check expects HTTP 200 to keep the deployment alive,
+  // while the payload explicitly reports the true database connection state.
   res.status(200).json({
     ok: true,
     time: Date.now(),
     status: 'healthy',
     service: 'mathcity-ai-api',
-    db: isDatabaseHealthy() ? 'postgres' : 'in-memory',
+    db: dbStatus,
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
   });
@@ -63,7 +68,7 @@ app.get('/health', async (req: Request, res: Response) => {
 app.get('/ready', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'ready',
-    database: isDatabaseHealthy() ? 'connected' : 'standby',
+    database: isDatabaseHealthy() ? 'connected' : 'error',
     timestamp: new Date().toISOString(),
   });
 });
@@ -77,20 +82,31 @@ app.get('/health/live', (req: Request, res: Response) => {
 app.get('/health/ready', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'ready',
-    database: isDatabaseHealthy() ? 'connected' : 'standby',
+    database: isDatabaseHealthy() ? 'connected' : 'error',
     timestamp: new Date().toISOString(),
   });
 });
 
 // Legacy / Backward-compatible health
-app.get('/api/health', (req: Request, res: Response) => {
+app.get('/api/health', async (req: Request, res: Response) => {
+  let dbStatus = 'error';
+  try {
+    const dbCheck = await Promise.race([
+      checkDatabaseConnection(),
+      new Promise<{ connected: boolean }>((resolve) => setTimeout(() => resolve({ connected: false }), 2500)),
+    ]);
+    dbStatus = dbCheck.connected ? 'connected' : 'error';
+  } catch (_) {
+    dbStatus = 'error';
+  }
+
   res.status(200).json({
     ok: true,
     time: Date.now(),
     status: 'healthy',
     name: 'MathCity AI Backend API',
     version: '1.0.0',
-    db: isDatabaseHealthy() ? 'postgres' : 'in-memory',
+    db: dbStatus,
     timestamp: new Date().toISOString(),
   });
 });

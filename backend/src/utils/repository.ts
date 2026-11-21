@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { prisma, isDatabaseHealthy } from '../db/client.js';
+import { config } from '../config/env.js';
 
 import {
   initialLessons,
@@ -332,7 +333,11 @@ class DataRepository {
     }
 
     if (isDatabaseHealthy()) {
-      this.persistUserToDatabase(user).catch(() => { });
+      this.persistUserToDatabase(user).catch((err) => {
+        console.error(`❌ [PERSISTENCE ERROR] Error persisting user ${user.id} to PostgreSQL:`, err?.message);
+      });
+    } else if (config.isProduction) {
+      console.error(`🚨 [CRITICAL ALERT] Cannot persist user ${user.id} to PostgreSQL: Database connection is not healthy!`);
     }
 
     return user;
@@ -366,7 +371,11 @@ class DataRepository {
     }
 
     if (isDatabaseHealthy()) {
-      this.persistUserToDatabase(updated).catch(() => { });
+      this.persistUserToDatabase(updated).catch((err) => {
+        console.error(`❌ [PERSISTENCE ERROR] Error updating user ${updated.id} in PostgreSQL:`, err?.message);
+      });
+    } else if (config.isProduction) {
+      console.error(`🚨 [CRITICAL ALERT] Cannot update user ${updated.id} in PostgreSQL: Database connection is not healthy!`);
     }
 
     return updated;
@@ -388,7 +397,11 @@ class DataRepository {
     }
 
     if (isDatabaseHealthy()) {
-      prisma.user.delete({ where: { id } }).catch(() => { });
+      prisma.user.delete({ where: { id } }).catch((err) => {
+        console.error(`❌ [PERSISTENCE ERROR] Error deleting user ${id} in PostgreSQL:`, err?.message);
+      });
+    } else if (config.isProduction) {
+      console.error(`🚨 [CRITICAL ALERT] Cannot delete user ${id} in PostgreSQL: Database connection is not healthy!`);
     }
 
     return true;
