@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/widgets/coin_icon.dart';
+import '../../core/widgets/user_avatar.dart';
 import '../../shared/providers/student_provider.dart';
 
 class LeaderboardUser {
@@ -56,7 +58,14 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   List<LeaderboardUser> _leaderboard = [];
   LeaderboardUser? _myRank;
   bool _isLoading = true;
+  String? _errorMessage;
   Timer? _pollingTimer;
+  Timer? _highlightClearTimer;
+
+  // Track previous ranks to animate rank climb and highlight users who move up
+  final Map<String, int> _previousRanks = {};
+  Set<String> _highlightedUserIds = {};
+
   late AnimationController _shimmerController;
 
   @override
@@ -69,8 +78,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
     _loadLeaderboard();
 
-    // 25-second background polling
-    _pollingTimer = Timer.periodic(const Duration(seconds: 25), (_) {
+    // Live background polling every 12 seconds while screen is open
+    _pollingTimer = Timer.periodic(const Duration(seconds: 12), (_) {
       if (mounted) _loadLeaderboard(silent: true);
     });
   }
@@ -78,13 +87,17 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   @override
   void dispose() {
     _pollingTimer?.cancel();
+    _highlightClearTimer?.cancel();
     _shimmerController.dispose();
     super.dispose();
   }
 
   Future<void> _loadLeaderboard({bool silent = false}) async {
     if (!silent) {
-      setState(() => _isLoading = true);
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
     }
 
     final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
@@ -115,6 +128,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
             id: student?.id ?? 'demo-3',
             username: student?.username ?? 'mirzobek',
             displayName: student?.displayName ?? 'Mirzobek',
+            avatarUrl: student?.avatarUrl,
             totalXP: student?.totalXP ?? 10,
             coinBalance: student?.coinBalance ?? 0,
             level: student?.level ?? 1,
@@ -136,20 +150,46 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
             [];
         final myRankJson = data['myRank'];
 
+        final climbingUsers = <String>{};
+        for (final u in list) {
+          final oldRank = _previousRanks[u.id];
+          if (oldRank != null && u.rank < oldRank) {
+            climbingUsers.add(u.id);
+          }
+          _previousRanks[u.id] = u.rank;
+        }
+
         if (mounted) {
           setState(() {
             _leaderboard = list;
             if (myRankJson != null) {
               _myRank = LeaderboardUser.fromJson(myRankJson);
             }
+            if (climbingUsers.isNotEmpty) {
+              _highlightedUserIds = climbingUsers;
+              _highlightClearTimer?.cancel();
+              _highlightClearTimer = Timer(const Duration(milliseconds: 1400), () {
+                if (mounted) {
+                  setState(() => _highlightedUserIds.clear());
+                }
+              });
+            }
             _isLoading = false;
+            _errorMessage = null;
           });
         }
         return;
       }
-    } catch (_) {}
+    } catch (e) {
+      if (mounted && !silent) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'Reytingni yuklab bo‘lmadi. Qayta urinib ko‘ring.';
+        });
+      }
+    }
 
-    if (mounted) {
+    if (mounted && !silent) {
       setState(() => _isLoading = false);
     }
   }
@@ -174,6 +214,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                     children: [
                       InkWell(
                         onTap: () {
+                          HapticFeedback.lightImpact();
                           if (context.canPop()) {
                             context.pop();
                           } else {
@@ -187,6 +228,13 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                             color: colors.card,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(color: colors.border),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
                           child: Icon(Icons.arrow_back_rounded, color: colors.ink, size: 20),
                         ),
@@ -216,7 +264,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                         ),
                       ),
                       InkWell(
-                        onTap: () => _loadLeaderboard(),
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          _loadLeaderboard();
+                        },
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
                           padding: const EdgeInsets.all(10),
@@ -224,6 +275,13 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                             color: colors.card,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(color: colors.border),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
                           child: Icon(Icons.refresh_rounded, color: colors.primary, size: 20),
                         ),
@@ -236,31 +294,46 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                 Expanded(
                   child: _isLoading
                       ? const Center(child: CircularProgressIndicator())
-                      : RefreshIndicator(
-                          onRefresh: () => _loadLeaderboard(),
-                          color: colors.primary,
-                          backgroundColor: colors.card,
-                          child: ListView.builder(
-                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
-                            physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                            itemCount: _leaderboard.length,
-                            itemBuilder: (context, index) {
-                              final user = _leaderboard[index];
-                              final isMyRow = _myRank != null && user.id == _myRank!.id;
-                              return _buildLeaderboardCard(user, isMyRow, colors, isDark);
-                            },
-                          ),
-                        ),
+                      : _errorMessage != null
+                          ? _buildErrorState(colors)
+                          : _leaderboard.isEmpty
+                              ? _buildEmptyState(colors)
+                              : RefreshIndicator(
+                                  onRefresh: () => _loadLeaderboard(),
+                                  color: colors.primary,
+                                  backgroundColor: colors.card,
+                                  child: ListView.builder(
+                                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 130),
+                                    physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                                    itemCount: _leaderboard.length,
+                                    itemBuilder: (context, index) {
+                                      final user = _leaderboard[index];
+                                      final isMyRow = _myRank != null && user.id == _myRank!.id;
+                                      final isHighlighted = _highlightedUserIds.contains(user.id);
+                                      return AnimatedContainer(
+                                        duration: const Duration(milliseconds: 450),
+                                        curve: Curves.easeInOutCubic,
+                                        child: _buildLeaderboardCard(
+                                          user: user,
+                                          isMyRow: isMyRow,
+                                          isHighlighted: isHighlighted,
+                                          colors: colors,
+                                          isDark: isDark,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
                 ),
               ],
             ),
 
-            // Sticky Bottom Personal Rank Card
+            // Sticky Bottom Personal Rank Card (Sizning joriy o'rningiz)
             if (_myRank != null)
               Positioned(
                 left: 16,
                 right: 16,
-                bottom: 24,
+                bottom: 20,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
                   decoration: BoxDecoration(
@@ -270,16 +343,18 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: Colors.white.withOpacity(0.35), width: 1.2),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF5B3BE8).withOpacity(0.4),
-                        blurRadius: 20,
+                        color: const Color(0xFF5B3BE8).withOpacity(0.45),
+                        blurRadius: 22,
                         offset: const Offset(0, 8),
                       ),
                     ],
                   ),
                   child: Row(
                     children: [
+                      // Rank number badge
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
@@ -295,7 +370,18 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                           ),
                         ),
                       ),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: 12),
+
+                      // User Avatar
+                      UserAvatar(
+                        avatarUrl: _myRank!.avatarUrl,
+                        displayName: _myRank!.displayName.isNotEmpty ? _myRank!.displayName : _myRank!.username,
+                        size: 38,
+                        borderColor: Colors.white,
+                        borderWidth: 1.5,
+                      ),
+                      const SizedBox(width: 12),
+
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -321,17 +407,29 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                           ],
                         ),
                       ),
+
+                      // Coin & XP stats with animated counter
                       Row(
                         children: [
                           const CoinIcon(size: 16),
                           const SizedBox(width: 4),
-                          Text(
-                            '${_myRank!.coinBalance}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w900,
-                              color: Color(0xFFFFD66B),
+                          TweenAnimationBuilder<double>(
+                            tween: Tween<double>(
+                              begin: _myRank!.coinBalance.toDouble(),
+                              end: _myRank!.coinBalance.toDouble(),
                             ),
+                            duration: const Duration(milliseconds: 600),
+                            curve: Curves.easeOutCubic,
+                            builder: (context, val, child) {
+                              return Text(
+                                '${val.round()}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xFFFFD66B),
+                                ),
+                              );
+                            },
                           ),
                           const SizedBox(width: 12),
                           Container(
@@ -361,17 +459,13 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     );
   }
 
-  Widget _buildLeaderboardCard(
-    LeaderboardUser user,
-    bool isMyRow,
-    AppThemeColors colors,
-    bool isDark,
-  ) {
-    // 1-o'rin: Sariq/Oltin fon + shimmer, Toj ikonkasi
-    // 2-o'rin: Kumush rang
-    // 3-o'rin: Bronza / to'q sariq rang
-    // 4+: Oddiy toza karta
-
+  Widget _buildLeaderboardCard({
+    required LeaderboardUser user,
+    required bool isMyRow,
+    required bool isHighlighted,
+    required AppThemeColors colors,
+    required bool isDark,
+  }) {
     BoxDecoration decoration;
     Color rankTextColor;
     Widget? rankBadgeIcon;
@@ -428,14 +522,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
         color: isDark ? colors.card : Colors.white,
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: isMyRow ? colors.primary : colors.border,
-          width: isMyRow ? 2 : 1,
+          color: isMyRow ? const Color(0xFF6C55E0) : colors.border,
+          width: isMyRow ? 2.2 : 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: isMyRow
+                ? const Color(0x226C55E0)
+                : Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
       );
@@ -446,12 +542,14 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: decoration,
+      decoration: decoration.copyWith(
+        color: isHighlighted ? const Color(0xFFD1FAE5) : null,
+      ),
       child: Row(
         children: [
           // Rank Badge
           SizedBox(
-            width: 36,
+            width: 38,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -472,28 +570,13 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
           ),
           const SizedBox(width: 8),
 
-          // Avatar
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: user.rank == 1 ? const Color(0xFFFFE082) : colors.bg,
-              border: Border.all(
-                color: user.rank == 1 ? const Color(0xFFFFB300) : colors.border,
-                width: 1.5,
-              ),
-            ),
-            child: Center(
-              child: Text(
-                user.username.isNotEmpty ? user.username[0].toUpperCase() : 'U',
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 16,
-                  color: user.rank == 1 ? const Color(0xFFB45309) : colors.primary,
-                ),
-              ),
-            ),
+          // Real User Avatar
+          UserAvatar(
+            avatarUrl: user.avatarUrl,
+            displayName: user.displayName.isNotEmpty ? user.displayName : user.username,
+            size: 42,
+            borderColor: user.rank == 1 ? const Color(0xFFFFB300) : colors.border,
+            borderWidth: user.rank == 1 ? 2.0 : 1.2,
           ),
           const SizedBox(width: 12),
 
@@ -519,26 +602,29 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                     if (isMyRow) ...[
                       const SizedBox(width: 6),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: colors.primary,
-                          borderRadius: BorderRadius.circular(6),
+                          color: const Color(0xFF6C55E0),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Text(
                           'Siz',
-                          style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Colors.white),
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
                   ],
                 ),
+                const SizedBox(height: 3),
                 Text(
-                  '${user.displayName} · ${user.level}-daraja',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  '${user.level}-daraja',
                   style: TextStyle(
                     fontSize: 11,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
                     color: user.rank == 1 ? const Color(0xFF92400E) : colors.muted,
                   ),
                 ),
@@ -549,39 +635,91 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
           // Coins and XP
           Row(
             children: [
-              const CoinIcon(size: 14),
+              const CoinIcon(size: 16),
               const SizedBox(width: 4),
               Text(
                 '${user.coinBalance}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFFD97706),
+                  fontWeight: FontWeight.w900,
+                  color: user.rank == 1 ? const Color(0xFF92400E) : const Color(0xFFD97706),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: user.rank == 1
-                      ? const Color(0xFFFFD54F)
-                      : isDark
-                          ? const Color(0xFF2C2455)
-                          : const Color(0xFFEDE9FE),
+                      ? const Color(0xFFFFB300).withOpacity(0.2)
+                      : (isDark ? const Color(0xFF281F5E) : const Color(0xFFEDE8FF)),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   '${user.totalXP} XP',
                   style: TextStyle(
                     fontSize: 12,
-                    fontWeight: FontWeight.w900,
-                    color: user.rank == 1 ? const Color(0xFF78350F) : colors.primary,
+                    fontWeight: FontWeight.w800,
+                    color: user.rank == 1 ? const Color(0xFF78350F) : const Color(0xFF6C55E0),
                   ),
                 ),
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(AppThemeColors colors) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.emoji_events_outlined, size: 56, color: colors.muted),
+            const SizedBox(height: 12),
+            Text(
+              'Hozircha reyting ma’lumoti yo‘q',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: colors.ink),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Misollarni yechib, birinchi bo‘lib peshqadamga aylaning!',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 13, color: colors.muted),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(AppThemeColors colors) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.wifi_off_rounded, size: 48, color: colors.muted),
+            const SizedBox(height: 12),
+            Text(
+              _errorMessage ?? 'Serverga ulanib bo‘lmadi',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.primary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              onPressed: () => _loadLeaderboard(),
+              child: const Text('Qayta urinish', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+            ),
+          ],
+        ),
       ),
     );
   }

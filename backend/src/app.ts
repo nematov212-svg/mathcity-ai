@@ -108,8 +108,19 @@ app.use('/api/admin', adminRouter);
 app.use('/api/payments', paymentsRouter);
 app.use('/api/media', mediaRouter);
 
+// Global aliases for /me, /leaderboard, and /users/me/avatar
+app.get(['/api/me', '/me', '/api/users/me'], (req, res, next) => {
+  req.url = '/me';
+  studentsRouter(req, res, next);
+});
+
+app.get(['/api/leaderboard', '/leaderboard'], (req, res, next) => {
+  req.url = '/leaderboard';
+  studentsRouter(req, res, next);
+});
+
 // Forward /api/users/me/avatar directly to studentsRouter patch
-app.patch('/api/users/me/avatar', (req, res, next) => {
+app.patch(['/api/users/me/avatar', '/api/students/avatar'], (req, res, next) => {
   req.url = '/avatar';
   studentsRouter(req, res, next);
 });

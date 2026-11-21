@@ -9,8 +9,11 @@ export const practiceRouter = Router();
 
 const submitSchema = z.object({
   questionId: z.string(),
-  answer: z.string(),
+  answer: z.string().optional(),
+  selectedOption: z.string().optional(),
   isRetry: z.boolean().optional(),
+}).refine((data) => data.answer !== undefined || data.selectedOption !== undefined, {
+  message: 'Javob varianti ko‘rsatilishi shart.',
 });
 
 const bulkSubmitSchema = z.object({
@@ -134,17 +137,18 @@ practiceRouter.get('/test', authMiddleware, (req: AuthenticatedRequest, res: Res
 });
 
 /**
- * POST /api/practice/submit
+ * POST /api/practice/submit & POST /api/practice/answer
  * Server-authoritative answer grading: evaluates correctness, awards +1 coin and +10 XP idempotently,
  * and reveals the correct answer and explanation.
  */
-practiceRouter.post('/submit', authMiddleware, practiceRateLimiter, (req: AuthenticatedRequest, res: Response) => {
+const handleAnswerSubmission = (req: AuthenticatedRequest, res: Response) => {
   const parse = submitSchema.safeParse(req.body);
   if (!parse.success) {
     return res.status(400).json({ success: false, error: 'Javob ma’lumoti noto‘g‘ri.' });
   }
 
-  const { questionId, answer, isRetry } = parse.data;
+  const { questionId, answer, selectedOption } = parse.data;
+  const userAnswer = (answer !== undefined ? answer : selectedOption) ?? '';
   const user = req.user!;
 
   const found = repository.findQuestionById(questionId);
@@ -153,10 +157,11 @@ practiceRouter.post('/submit', authMiddleware, practiceRateLimiter, (req: Authen
   }
 
   const targetQuestion = found.question;
-  const isCorrect = MathEngine.evaluateAnswer(answer, targetQuestion.correctAnswer);
+  const isCorrect = MathEngine.evaluateAnswer(userAnswer, targetQuestion.correctAnswer);
 
-  // Authoritative server-side evaluation with EXACTLY +1 coin rule
-  const result = repository.submitQuestionAnswer(user.id, questionId, isCorrect);
+  // Authoritative server-side evaluation: exactly 1 coin for /answer or free student
+  const forceSingleCoin = req.path.includes('/answer');
+  const result = repository.submitQuestionAnswer(user.id, questionId, isCorrect, forceSingleCoin);
 
   // Track in rotation cycle
   let solvedSet = userSolvedInCycle.get(user.id);
@@ -186,7 +191,10 @@ practiceRouter.post('/submit', authMiddleware, practiceRateLimiter, (req: Authen
       totalCorrect: result.totalCorrect,
     },
   });
-});
+};
+
+practiceRouter.post('/submit', authMiddleware, practiceRateLimiter, handleAnswerSubmission);
+practiceRouter.post('/answer', authMiddleware, practiceRateLimiter, handleAnswerSubmission);
 
 /**
  * POST /api/practice/test/submit

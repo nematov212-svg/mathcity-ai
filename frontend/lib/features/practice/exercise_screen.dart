@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
@@ -11,13 +12,6 @@ import '../../core/network/api_client.dart';
 import '../../core/services/sound_service.dart';
 import '../../shared/models/lesson_model.dart';
 import '../../shared/providers/student_provider.dart';
-
-class _QueueItem {
-  final QuestionModel question;
-  final bool isMistakeRetry;
-
-  _QueueItem({required this.question, this.isMistakeRetry = false});
-}
 
 class ExerciseScreen extends ConsumerStatefulWidget {
   final String? questionId;
@@ -43,6 +37,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
   String? _selectedOption;
   bool _isAnswerChecked = false;
   bool _isCorrect = false;
+  bool _isSubmitting = false;
   String _revealedCorrectAnswer = '';
   String _explanation = '';
 
@@ -50,48 +45,73 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
   int _sessionXpEarned = 0;
   int _correctCount = 0;
   int _wrongCount = 0;
-  int _streak = 0;
   bool _isCompleted = false;
   bool _isLoading = true;
 
-  late List<_QueueItem> _queue;
-  String _sessionTitle = 'Misollar ishlash';
+  late List<QuestionModel> _questions;
+  String _sessionTitle = 'Misollar';
   int _grade = 4;
+
+  // GlobalKeys for flight trajectory
+  final GlobalKey _coinBadgeKey = GlobalKey();
+  final Map<int, GlobalKey> _optionKeys = {
+    0: GlobalKey(),
+    1: GlobalKey(),
+    2: GlobalKey(),
+    3: GlobalKey(),
+  };
 
   // Animations
   late AnimationController _shakeController;
-  late AnimationController _correctScaleController;
-  late AnimationController _coinFlyController;
-  late AnimationController _flamePulseController;
+  late Animation<double> _shakeAnimation;
 
-  // Auto-advance timer for incorrect answers
+  late AnimationController _cardTransitionController;
+  late Animation<double> _cardScaleAnimation;
+  late Animation<double> _cardFadeAnimation;
+  late Animation<Offset> _cardSlideAnimation;
+
+  late AnimationController _particlesController;
+
   Timer? _autoAdvanceTimer;
-  int _autoAdvanceSecondsLeft = 5;
 
   @override
   void initState() {
     super.initState();
-    _queue = [];
+    _questions = [];
 
+    // Shake animation for incorrect answer
     _shakeController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 380),
     );
+    _shakeAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -8.0), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: -8.0, end: 8.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 8.0, end: -6.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: -6.0, end: 6.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 6.0, end: 0.0), weight: 1),
+    ]).animate(CurvedAnimation(parent: _shakeController, curve: Curves.easeInOut));
 
-    _correctScaleController = AnimationController(
+    // Question Card transition animation
+    _cardTransitionController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 350),
+    );
+    _cardScaleAnimation = Tween<double>(begin: 0.96, end: 1.0).animate(
+      CurvedAnimation(parent: _cardTransitionController, curve: Curves.easeOutCubic),
+    );
+    _cardFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _cardTransitionController, curve: Curves.easeOut),
+    );
+    _cardSlideAnimation = Tween<Offset>(begin: const Offset(0.06, 0.0), end: Offset.zero).animate(
+      CurvedAnimation(parent: _cardTransitionController, curve: Curves.easeOutCubic),
     );
 
-    _coinFlyController = AnimationController(
+    // Particle burst on correct answer
+    _particlesController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700),
     );
-
-    _flamePulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    )..repeat(reverse: true);
 
     SoundService().init();
     _loadQuestions();
@@ -101,16 +121,15 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
   void dispose() {
     _autoAdvanceTimer?.cancel();
     _shakeController.dispose();
-    _correctScaleController.dispose();
-    _coinFlyController.dispose();
-    _flamePulseController.dispose();
+    _cardTransitionController.dispose();
+    _particlesController.dispose();
     super.dispose();
   }
 
   void _loadQuestions() async {
     final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
 
-    // 20 Math questions bank for offline fallback / widget testing
+    // 20 realistic questions for testing and fallback
     final fallbackList = List.generate(20, (i) {
       final a = (i + 2) * 3;
       final b = (i + 1) * 2;
@@ -119,14 +138,14 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
         '$sum',
         '${sum + 2}',
         '${sum - 3}',
-        '${sum + 5}',
-      ]..shuffle(math.Random(i));
+        '${sum + 4}',
+      ]..shuffle(math.Random(i + 42));
       return QuestionModel(
-        id: 'q-auto-$i',
+        id: 'q-practice-${i + 1}',
         prompt: '$a + $b = ?',
         options: opts,
         correctAnswer: '$sum',
-        hint: '$a ga $b ni qo‘shing.',
+        hint: '$a ga $b sonini qo‘shing.',
         explanation: '$a + $b = $sum bo‘ladi.',
         orderIndex: i + 1,
       );
@@ -134,9 +153,10 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
 
     if (isTest) {
       setState(() {
-        _queue = fallbackList.map((q) => _QueueItem(question: q)).toList();
+        _questions = fallbackList;
         _isLoading = false;
       });
+      _cardTransitionController.forward(from: 0.0);
       return;
     }
 
@@ -157,125 +177,179 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
 
         if (questionsList != null && questionsList.isNotEmpty) {
           setState(() {
-            _queue = questionsList.map((q) => _QueueItem(question: q)).toList();
+            _questions = questionsList;
             _sessionTitle = data['topic'] ?? _sessionTitle;
             _grade = data['grade'] ?? _grade;
             _isLoading = false;
           });
+          _cardTransitionController.forward(from: 0.0);
           return;
         }
       }
     } catch (_) {}
 
     setState(() {
-      _queue = fallbackList.map((q) => _QueueItem(question: q)).toList();
+      _questions = fallbackList;
       _isLoading = false;
     });
+    _cardTransitionController.forward(from: 0.0);
   }
 
-  void _selectOption(String option) {
-    if (_isAnswerChecked) return;
+  void _onOptionSelected(String option) {
+    if (_isAnswerChecked || _isSubmitting) return;
+    HapticFeedback.selectionClick();
     setState(() {
       _selectedOption = option;
     });
-    _checkAnswer();
   }
 
   void _checkAnswer() async {
-    if (_selectedOption == null || _isAnswerChecked) return;
+    if (_selectedOption == null || _isAnswerChecked || _isSubmitting) return;
 
-    final currentItem = _queue[_currentIndex];
-    final answer = _selectedOption!;
+    setState(() => _isSubmitting = true);
+    final currentQ = _questions[_currentIndex];
+    final selected = _selectedOption!;
 
-    // Authoritative Server-side evaluation:
-    // POST /api/practice/submit { questionId, answer, isRetry }
-    final result = await ref.read(studentProvider.notifier).submitQuestion(
-          currentItem.question.id,
-          answer,
+    // Call server POST /practice/answer
+    final result = await ref.read(studentProvider.notifier).submitAnswer(
+          currentQ.id,
+          selected,
         );
 
     final bool isCorrect = result['isCorrect'] == true ||
-        (currentItem.question.correctAnswer.isNotEmpty &&
-            answer == currentItem.question.correctAnswer);
+        (currentQ.correctAnswer.isNotEmpty && selected == currentQ.correctAnswer);
 
-    final String serverCorrect =
-        result['correctAnswer'] ?? currentItem.question.correctAnswer;
-    final String serverExplanation =
-        result['explanation'] ?? currentItem.question.explanation;
+    final String serverCorrect = result['correctAnswer'] ?? currentQ.correctAnswer;
+    final String serverExplanation = result['explanation'] ?? currentQ.explanation;
     final int coinsAwarded = result['coinsAwarded'] ?? (isCorrect ? 1 : 0);
     final int xpAwarded = result['xpAwarded'] ?? (isCorrect ? 10 : 0);
 
+    if (!mounted) return;
+
     setState(() {
+      _isSubmitting = false;
       _isAnswerChecked = true;
       _isCorrect = isCorrect;
-      _revealedCorrectAnswer = serverCorrect.isNotEmpty ? serverCorrect : answer;
+      _revealedCorrectAnswer = serverCorrect.isNotEmpty ? serverCorrect : selected;
       _explanation = serverExplanation;
     });
 
     if (isCorrect) {
-      // Correct answer actions
       _correctCount++;
       _sessionCoinsEarned += coinsAwarded;
       _sessionXpEarned += xpAwarded;
-      _streak++;
 
-      // Trigger animations
-      _correctScaleController.forward(from: 0.0);
-      _coinFlyController.forward(from: 0.0);
-
-      // Play audio sounds
       SoundService().playCorrect();
-      if (_streak == 3 || _streak == 5) {
-        SoundService().playStreak();
-      }
+      _particlesController.forward(from: 0.0);
 
-      // Auto advance to next question after 1.4 seconds
+      // Trigger curved flying coin animation
+      _triggerFlyingCoin();
+
+      // Auto advance after coin flight & celebration (~1.2s)
       _autoAdvanceTimer?.cancel();
-      _autoAdvanceTimer = Timer(const Duration(milliseconds: 1400), () {
+      _autoAdvanceTimer = Timer(const Duration(milliseconds: 1200), () {
         if (mounted && _isAnswerChecked && _isCorrect) {
           _advanceToNext();
         }
       });
     } else {
-      // Wrong answer actions
       _wrongCount++;
-      _streak = 0; // Streak reset to 0
-
-      // Screen shake animation
       _shakeController.forward(from: 0.0);
+      HapticFeedback.mediumImpact();
       SoundService().playWrong();
 
-      // If question was not already a retry, queue it at the end of the session!
-      if (!currentItem.isMistakeRetry) {
-        _queue.add(_QueueItem(
-          question: currentItem.question,
-          isMistakeRetry: true,
-        ));
-      }
-
-      // Start 5-second countdown timer
-      _autoAdvanceSecondsLeft = 5;
+      // Auto advance after educational review (~1.4s)
       _autoAdvanceTimer?.cancel();
-      _autoAdvanceTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (!mounted) {
-          timer.cancel();
-          return;
+      _autoAdvanceTimer = Timer(const Duration(milliseconds: 1400), () {
+        if (mounted && _isAnswerChecked && !_isCorrect) {
+          _advanceToNext();
         }
-        setState(() {
-          if (_autoAdvanceSecondsLeft > 1) {
-            _autoAdvanceSecondsLeft--;
-          } else {
-            timer.cancel();
-            _advanceToNext();
-          }
-        });
       });
     }
   }
 
+  /// Curved Bezier Flight Animation: Coin flies from chosen option to top coin badge
+  void _triggerFlyingCoin() {
+    final disableAnimations = MediaQuery.of(context).disableAnimations;
+    if (disableAnimations) return;
+
+    final currentQ = _questions[_currentIndex];
+    final selectedIdx = currentQ.options.indexOf(_selectedOption ?? '');
+
+    final optionBox = _optionKeys[selectedIdx]?.currentContext?.findRenderObject() as RenderBox?;
+    final coinBadgeBox = _coinBadgeKey.currentContext?.findRenderObject() as RenderBox?;
+
+    if (optionBox == null || coinBadgeBox == null) return;
+
+    final startPos = optionBox.localToGlobal(Offset(optionBox.size.width / 2, optionBox.size.height / 2));
+    final endPos = coinBadgeBox.localToGlobal(Offset(coinBadgeBox.size.width * 0.25, coinBadgeBox.size.height / 2));
+
+    final overlay = Overlay.of(context);
+    late OverlayEntry entry;
+
+    final flightController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 750),
+    );
+
+    entry = OverlayEntry(
+      builder: (ctx) {
+        return AnimatedBuilder(
+          animation: flightController,
+          builder: (ctx, child) {
+            final t = flightController.value;
+            // Quadratic Bezier arc
+            final controlX = (startPos.dx + endPos.dx) / 2 + 30;
+            final controlY = math.min(startPos.dy, endPos.dy) - 70;
+
+            final x = (1 - t) * (1 - t) * startPos.dx + 2 * (1 - t) * t * controlX + t * t * endPos.dx;
+            final y = (1 - t) * (1 - t) * startPos.dy + 2 * (1 - t) * t * controlY + t * t * endPos.dy;
+            final scale = (1.25 - 0.35 * t).clamp(0.8, 1.3);
+
+            return Positioned(
+              left: x - 18,
+              top: y - 18,
+              child: Transform.scale(
+                scale: scale,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CoinIcon(size: 28, sparkle: true),
+                      const SizedBox(width: 4),
+                      Text(
+                        '+1',
+                        style: TextStyle(
+                          color: const Color(0xFFFFB300),
+                          fontSize: 18 * scale,
+                          fontWeight: FontWeight.w900,
+                          shadows: const [
+                            Shadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+
+    overlay.insert(entry);
+    flightController.forward().then((_) {
+      entry.remove();
+      flightController.dispose();
+      HapticFeedback.lightImpact();
+    });
+  }
+
   void _advanceToNext() {
     _autoAdvanceTimer?.cancel();
-    if (_currentIndex < _queue.length - 1) {
+    if (_currentIndex < _questions.length - 1) {
       setState(() {
         _currentIndex++;
         _selectedOption = null;
@@ -284,629 +358,417 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
         _revealedCorrectAnswer = '';
         _explanation = '';
       });
+      _cardTransitionController.forward(from: 0.0);
     } else {
       setState(() {
         _isCompleted = true;
       });
+      HapticFeedback.heavyImpact();
     }
   }
 
-  void _restartNewSession() {
-    setState(() {
-      _isLoading = true;
-      _isCompleted = false;
-      _currentIndex = 0;
-      _selectedOption = null;
-      _isAnswerChecked = false;
-      _isCorrect = false;
-      _revealedCorrectAnswer = '';
-      _explanation = '';
-      _sessionCoinsEarned = 0;
-      _sessionXpEarned = 0;
-      _correctCount = 0;
-      _wrongCount = 0;
-      _streak = 0;
-      _queue = [];
-    });
-    _loadQuestions();
+  void _confirmExit() {
+    HapticFeedback.lightImpact();
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        final colors = AppThemeColors.of(context);
+        return AlertDialog(
+          backgroundColor: colors.card,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          title: Text(
+            'Mashqni to‘xtatmoqchimisiz?',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: colors.ink),
+          ),
+          content: Text(
+            'Hozirgacha to‘plangan $_sessionCoinsEarned ta tanga va $_sessionXpEarned XP balansingizda saqlanadi.',
+            style: TextStyle(fontSize: 14, color: colors.muted),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(
+                'Davom etish',
+                style: TextStyle(color: colors.primary, fontWeight: FontWeight.w700),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFEF4444),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+              onPressed: () {
+                Navigator.pop(ctx);
+                context.go('/kids/home');
+              },
+              child: const Text(
+                'Chiqish',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final studentState = ref.watch(studentProvider);
-    final coins = studentState.student?.coinBalance ?? 0;
+    final student = ref.watch(studentProvider).student;
+    final totalCoins = student?.coinBalance ?? 0;
 
     if (_isLoading) {
       return Scaffold(
         backgroundColor: colors.bg,
-        body: const Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16),
-              Text(
-                '20 ta misol tayyorlanmoqda...',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-              ),
-            ],
-          ),
-        ),
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (_isCompleted) {
-      return _buildResultsScreen(colors, isDark);
+      return _buildResultScreen(colors, totalCoins);
     }
 
-    final currentItem = _queue[_currentIndex];
-    final currentQ = currentItem.question;
-    final totalInSession = _queue.length;
+    final currentQ = _questions[_currentIndex];
+    final totalQ = _questions.length;
+    final progress = (totalQ > 0) ? (_currentIndex + 1) / totalQ : 0.0;
+    final optionList = currentQ.options;
 
     return Scaffold(
       backgroundColor: colors.bg,
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            // Screen Shake AnimatedBuilder
-            AnimatedBuilder(
-              animation: _shakeController,
-              builder: (context, child) {
-                final offset = math.sin(_shakeController.value * 6 * math.pi) * 8.0;
-                return Transform.translate(
-                  offset: Offset(offset, 0),
-                  child: child,
-                );
-              },
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Top Navigation Header
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.close_rounded, size: 28),
-                          color: colors.ink,
-                          onPressed: () {
-                            if (context.canPop()) {
-                              context.pop();
-                            } else {
-                              context.go('/kids/home');
-                            }
-                          },
-                        ),
-                        // Current Streak & Extra Flame
-                        if (_streak >= 3)
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFFFF5722), Color(0xFFFF9800)],
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color(0xFFFF5722).withOpacity(0.4),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text('🔥', style: TextStyle(fontSize: 16)),
-                                const SizedBox(width: 4),
-                                Text(
-                                  _streak >= 5 ? 'EXTRA ×$_streak' : '$_streak STREAK',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 12,
-                                    letterSpacing: 0.5,
-                                  ),
-                                ),
-                              ],
-                            ),
+            // ==============================================================
+            // 1. TOP BAR: X (exit), Real Coin Counter, Animated Progress Bar
+            // ==============================================================
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Exit Button X
+                  InkWell(
+                    onTap: _confirmExit,
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: colors.card,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: colors.border),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
                           ),
-                        // Real-time Single Source of Truth Coin Badge
-                        CoinBadge(count: coins, size: 28),
-                      ],
+                        ],
+                      ),
+                      child: Icon(Icons.close_rounded, color: colors.ink, size: 22),
                     ),
+                  ),
 
-                    const SizedBox(height: 12),
+                  // Coin Badge Target
+                  CoinBadge(
+                    key: _coinBadgeKey,
+                    count: totalCoins,
+                    size: 26,
+                  ),
+                ],
+              ),
+            ),
 
-                    // Progress bar
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: LinearProgressIndicator(
-                        value: (_currentIndex + 1) / totalInSession,
-                        backgroundColor: colors.border,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          currentItem.isMistakeRetry
-                              ? const Color(0xFFF59E0B)
-                              : colors.primary,
+            // Progress Header: "Misol X / 20" & Animated Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Misol ${_currentIndex + 1} / $totalQ',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: colors.muted,
                         ),
-                        minHeight: 8,
+                      ),
+                      Text(
+                        '${(progress * 100).round()}%',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF6C55E0),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: SizedBox(
+                      height: 8,
+                      child: TweenAnimationBuilder<double>(
+                        tween: Tween<double>(begin: 0.0, end: progress),
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOutCubic,
+                        builder: (context, val, child) {
+                          return LinearProgressIndicator(
+                            value: val,
+                            backgroundColor: colors.border,
+                            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF6C55E0)),
+                          );
+                        },
                       ),
                     ),
+                  ),
+                ],
+              ),
+            ),
 
-                    const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
-                    // Progress Counter & Retry Badge
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Misol ${_currentIndex + 1} / $totalInSession',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w800,
-                            color: colors.muted,
+            // ==============================================================
+            // 2. SCROLLABLE QUESTION CARD & OPTIONS
+            // ==============================================================
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: Column(
+                  children: [
+                    // Question Card with entrance animation & shake on error
+                    AnimatedBuilder(
+                      animation: _shakeAnimation,
+                      builder: (context, child) {
+                        return Transform.translate(
+                          offset: Offset(_shakeAnimation.value, 0),
+                          child: child,
+                        );
+                      },
+                      child: SlideTransition(
+                        position: _cardSlideAnimation,
+                        child: FadeTransition(
+                          opacity: _cardFadeAnimation,
+                          child: ScaleTransition(
+                            scale: _cardScaleAnimation,
+                            child: _buildQuestionCard(currentQ, colors),
                           ),
                         ),
-                        if (currentItem.isMistakeRetry)
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFEF3C7),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: const Color(0xFFF59E0B)),
-                            ),
-                            child: const Text(
-                              'Qayta urinish',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w800,
-                                color: Color(0xFFB45309),
-                              ),
-                            ),
-                          ),
-                      ],
+                      ),
                     ),
 
                     const SizedBox(height: 20),
 
-                    // Question Card
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: colors.card,
-                        borderRadius: BorderRadius.circular(32),
-                        border: Border.all(color: colors.border, width: 1.5),
-                        boxShadow: [
-                          BoxShadow(
-                            color: isDark
-                                ? Colors.black26
-                                : colors.primary.withOpacity(0.06),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            currentQ.prompt,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w900,
-                              color: colors.ink,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          if (currentQ.hint.isNotEmpty && !_isAnswerChecked) ...[
-                            const SizedBox(height: 12),
-                            Text(
-                              'Maslahat: ${currentQ.hint}',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: colors.muted,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
+                    // Options A, B, C, D
+                    Column(
+                      children: List.generate(optionList.length, (idx) {
+                        final option = optionList[idx];
+                        final letter = String.fromCharCode(65 + idx); // A, B, C, D
+                        return _buildOptionCard(
+                          key: _optionKeys[idx],
+                          letter: letter,
+                          optionText: option,
+                          isSelected: _selectedOption == option,
+                          colors: colors,
+                          currentQ: currentQ,
+                        );
+                      }),
                     ),
 
                     const SizedBox(height: 24),
-
-                    // Options A, B, C, D
-                    ...currentQ.options.map((opt) {
-                      final isSelected = _selectedOption == opt;
-                      final isRevealedCorrect =
-                          _isAnswerChecked && opt == _revealedCorrectAnswer;
-                      final isWrongSelected =
-                          _isAnswerChecked && isSelected && !_isCorrect;
-
-                      Color cardBg = colors.card;
-                      Color borderColor = colors.border;
-                      Color textColor = colors.ink;
-
-                      if (isRevealedCorrect) {
-                        cardBg = const Color(0xFFDCFCE7);
-                        borderColor = const Color(0xFF22C55E);
-                        textColor = const Color(0xFF15803D);
-                      } else if (isWrongSelected) {
-                        cardBg = const Color(0xFFFEE2E2);
-                        borderColor = const Color(0xFFEF4444);
-                        textColor = const Color(0xFFB91C1C);
-                      } else if (isSelected) {
-                        cardBg = colors.primary.withOpacity(0.12);
-                        borderColor = colors.primary;
-                        textColor = colors.primary;
-                      }
-
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: InkWell(
-                          onTap: _isAnswerChecked ? null : () => _selectOption(opt),
-                          borderRadius: BorderRadius.circular(22),
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 18,
-                            ),
-                            decoration: BoxDecoration(
-                              color: cardBg,
-                              borderRadius: BorderRadius.circular(22),
-                              border: Border.all(color: borderColor, width: 2),
-                              boxShadow: [
-                                if (isRevealedCorrect)
-                                  BoxShadow(
-                                    color: const Color(0xFF22C55E).withOpacity(0.25),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  opt,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w800,
-                                    color: textColor,
-                                  ),
-                                ),
-                                if (isRevealedCorrect)
-                                  const Icon(
-                                    Icons.check_circle_rounded,
-                                    color: Color(0xFF15803D),
-                                    size: 24,
-                                  )
-                                else if (isWrongSelected)
-                                  const Icon(
-                                    Icons.cancel_rounded,
-                                    color: Color(0xFFB91C1C),
-                                    size: 24,
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
-
-                    const SizedBox(height: 16),
-
-                    // Explanation & Next Button on Incorrect Answer
-                    if (_isAnswerChecked && !_isCorrect) ...[
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF281C2A) : const Color(0xFFFFF1F2),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: const Color(0xFFFDA4AF)),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.info_outline_rounded,
-                                    color: Color(0xFFE11D48), size: 18),
-                                const SizedBox(width: 8),
-                                const Text(
-                                  'Tushuntirish',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 14,
-                                    color: Color(0xFFE11D48),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              _explanation.isNotEmpty
-                                  ? _explanation
-                                  : 'To‘g‘ri javob: $_revealedCorrectAnswer. Ushbu savol seans oxirida yana takrorlanadi.',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: colors.ink,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 52,
-                        child: ElevatedButton.icon(
-                          onPressed: _advanceToNext,
-                          icon: const Icon(Icons.arrow_forward_rounded, color: Colors.white),
-                          label: Text(
-                            'Keyingi ($_autoAdvanceSecondsLeft s)',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: colors.primary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ] else if (!_isAnswerChecked) ...[
-                      // Submit Answer Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 54,
-                        child: ElevatedButton(
-                          onPressed: _selectedOption == null ? null : _checkAnswer,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: colors.primary,
-                            disabledBackgroundColor: colors.border,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          child: const Text(
-                            'Javobni tekshirish',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-
-                    const SizedBox(height: 40),
                   ],
                 ),
               ),
             ),
 
-            // Floating Coin Animation (+1 Coin)
-            if (_coinFlyController.isAnimating)
-              AnimatedBuilder(
-                animation: _coinFlyController,
-                builder: (context, child) {
-                  final progress = _coinFlyController.value;
-                  final startY = MediaQuery.of(context).size.height * 0.55;
-                  final endY = 40.0;
-                  final currentY = startY - (startY - endY) * progress;
-                  final opacity = (1.0 - progress * 0.3).clamp(0.0, 1.0);
-
-                  return Positioned(
-                    top: currentY,
-                    right: 30 + progress * 20,
-                    child: Opacity(
-                      opacity: opacity,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFFFD66B), Color(0xFFF5A623)],
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFFF5A623).withOpacity(0.5),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CoinIcon(size: 20),
-                            SizedBox(width: 6),
-                            Text(
-                              '+1 tanga',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                fontSize: 14,
-                                color: Color(0xFF6A3B00),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+            // ==============================================================
+            // 3. BOTTOM ACTION BAR ("Javobni tekshirish" / "Keyingi")
+            // ==============================================================
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+              child: _buildBottomButton(colors),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildResultsScreen(AppThemeColors colors, bool isDark) {
-    final total = _correctCount + _wrongCount;
-    final accuracy = total > 0 ? ((_correctCount / total) * 100).round() : 100;
+  Widget _buildQuestionCard(QuestionModel q, AppThemeColors colors) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: colors.border, width: 1.4),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF6C55E0).withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Mathematical Formula in large prominent typography
+          Text(
+            q.prompt,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.w900,
+              color: colors.ink,
+              letterSpacing: 0.5,
+            ),
+          ),
 
-    return Scaffold(
-      backgroundColor: colors.bg,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            child: Column(
+          if (q.hint.isNotEmpty && !_isAnswerChecked) ...[
+            const SizedBox(height: 14),
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Cup / Trophy
+                const Icon(Icons.lightbulb_outline_rounded, color: Color(0xFFF59E0B), size: 16),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    q.hint,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: colors.muted,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+
+          if (_isAnswerChecked && _explanation.isNotEmpty) ...[
+            const SizedBox(height: 14),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: _isCorrect ? const Color(0xFFDDF5E8) : const Color(0xFFFDECEC),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                _explanation,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: _isCorrect ? const Color(0xFF1B8A55) : const Color(0xFFE24B4A),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOptionCard({
+    required Key? key,
+    required String letter,
+    required String optionText,
+    required bool isSelected,
+    required AppThemeColors colors,
+    required QuestionModel currentQ,
+  }) {
+    Color borderColor = colors.border;
+    Color bgColor = colors.card;
+    Color letterBgColor = colors.bg;
+    Color letterTextColor = colors.ink;
+    Widget letterChild = Text(
+      letter,
+      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: letterTextColor),
+    );
+
+    if (_isAnswerChecked) {
+      final isThisChoice = _selectedOption == optionText;
+      final isRealCorrect = optionText == _revealedCorrectAnswer;
+
+      if (isThisChoice && _isCorrect) {
+        // Correct selection: Green
+        borderColor = const Color(0xFF1B8A55);
+        bgColor = const Color(0xFFDDF5E8);
+        letterBgColor = const Color(0xFF1B8A55);
+        letterChild = const Icon(Icons.check_rounded, color: Colors.white, size: 18);
+      } else if (isThisChoice && !_isCorrect) {
+        // Wrong selection: Red
+        borderColor = const Color(0xFFE24B4A);
+        bgColor = const Color(0xFFFDECEC);
+        letterBgColor = const Color(0xFFE24B4A);
+        letterChild = const Icon(Icons.close_rounded, color: Colors.white, size: 18);
+      } else if (isRealCorrect) {
+        // Reveal correct answer: Soft Green
+        borderColor = const Color(0xFF1B8A55);
+        bgColor = const Color(0xFFF0FDF4);
+        letterBgColor = const Color(0xFF1B8A55);
+        letterChild = const Icon(Icons.check_rounded, color: Colors.white, size: 18);
+      }
+    } else if (isSelected) {
+      // Selected state: Primary purple
+      borderColor = const Color(0xFF6C55E0);
+      bgColor = const Color(0xFFEDE8FF);
+      letterBgColor = const Color(0xFF6C55E0);
+      letterChild = Text(
+        letter,
+        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: Colors.white),
+      );
+    }
+
+    return Padding(
+      key: key,
+      padding: const EdgeInsets.only(bottom: 12),
+      child: AnimatedScale(
+        scale: isSelected ? 1.0 : 0.985,
+        duration: const Duration(milliseconds: 150),
+        child: InkWell(
+          onTap: () => _onOptionSelected(optionText),
+          borderRadius: BorderRadius.circular(20),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: borderColor, width: isSelected || _isAnswerChecked ? 2.0 : 1.2),
+              boxShadow: [
+                BoxShadow(
+                  color: isSelected ? const Color(0x226C55E0) : Colors.black.withOpacity(0.02),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                // Letter badge
                 Container(
-                  width: 100,
-                  height: 100,
+                  width: 38,
+                  height: 38,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFFFD66B), Color(0xFFF5A623)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    color: letterBgColor,
                     shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFF5A623).withOpacity(0.4),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
                   ),
-                  child: const Center(
-                    child: Icon(Icons.emoji_events_rounded, color: Colors.white, size: 54),
-                  ),
+                  child: Center(child: letterChild),
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  'Ajoyib natija!',
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w900,
-                    color: colors.ink,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Siz 20 ta misoldan iborat seansni muvaffaqiyatli yakunladingiz!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: colors.muted,
-                  ),
-                ),
-                const SizedBox(height: 28),
-
-                // Stats Grid
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildResultStat(
-                        label: 'Olingan tangalar',
-                        value: '+$_sessionCoinsEarned',
-                        icon: Icons.monetization_on_rounded,
-                        color: const Color(0xFFF5A623),
-                        colors: colors,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildResultStat(
-                        label: 'Olingan XP',
-                        value: '+$_sessionXpEarned',
-                        icon: Icons.bolt_rounded,
-                        color: colors.primary,
-                        colors: colors,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildResultStat(
-                        label: 'To‘g‘ri javoblar',
-                        value: '$_correctCount ta',
-                        icon: Icons.check_circle_rounded,
-                        color: const Color(0xFF10B981),
-                        colors: colors,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildResultStat(
-                        label: 'Aniqlik foizi',
-                        value: '$accuracy%',
-                        icon: Icons.pie_chart_rounded,
-                        color: const Color(0xFF3B82F6),
-                        colors: colors,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 36),
-
-                // Action Buttons
-                SizedBox(
-                  width: double.infinity,
-                  height: 54,
-                  child: ElevatedButton.icon(
-                    onPressed: _restartNewSession,
-                    icon: const Icon(Icons.replay_rounded, color: Colors.white),
-                    label: const Text(
-                      'Keyingi 20 ta misol',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colors.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: OutlinedButton(
-                    onPressed: () => context.go('/kids/home'),
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: colors.border, width: 1.5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child: Text(
-                      'Bosh sahifa',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w800,
-                        color: colors.ink,
-                      ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    optionText,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
+                      color: colors.ink,
                     ),
                   ),
                 ),
@@ -918,44 +780,295 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
     );
   }
 
-  Widget _buildResultStat({
-    required String label,
-    required String value,
-    required IconData icon,
-    required Color color,
-    required AppThemeColors colors,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
+  Widget _buildBottomButton(AppThemeColors colors) {
+    if (_isAnswerChecked) {
+      return SizedBox(
+        width: double.infinity,
+        height: 56,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF6C55E0),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            elevation: 4,
+          ),
+          onPressed: _advanceToNext,
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Keyingi misol',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: Colors.white),
+              ),
+              SizedBox(width: 8),
+              Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final isEnabled = _selectedOption != null && !_isSubmitting;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      width: double.infinity,
+      height: 56,
       decoration: BoxDecoration(
-        color: colors.card,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colors.border),
+        gradient: isEnabled
+            ? const LinearGradient(
+                colors: [Color(0xFF6C55E0), Color(0xFF8B6BFF)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : null,
+        color: isEnabled ? null : colors.inactive.withOpacity(0.35),
+        boxShadow: isEnabled
+            ? [
+                BoxShadow(
+                  color: const Color(0xFF6C55E0).withOpacity(0.35),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ]
+            : null,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: color, size: 26),
-          const SizedBox(height: 10),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-              color: colors.ink,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isEnabled ? _checkAnswer : null,
+          borderRadius: BorderRadius.circular(20),
+          child: Center(
+            child: _isSubmitting
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                  )
+                : Text(
+                    'Javobni tekshirish',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w800,
+                      color: isEnabled ? Colors.white : colors.muted.withOpacity(0.7),
+                    ),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResultScreen(AppThemeColors colors, int totalCoins) {
+    final accuracy = _questions.isNotEmpty
+        ? ((_correctCount / _questions.length) * 100).round()
+        : 0;
+
+    return Scaffold(
+      backgroundColor: colors.bg,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Big celebration trophy badge
+                Container(
+                  width: 96,
+                  height: 96,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFFE082), Color(0xFFFFB300)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFFFB300).withOpacity(0.35),
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.emoji_events_rounded, color: Colors.white, size: 52),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                Text(
+                  'Mashq muvaffaqiyatli yakunlandi!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: colors.ink),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Barcha 20 ta misol ko‘rib chiqildi',
+                  style: TextStyle(fontSize: 14, color: colors.muted),
+                ),
+                const SizedBox(height: 28),
+
+                // Stats Card
+                Container(
+                  padding: const EdgeInsets.all(22),
+                  decoration: BoxDecoration(
+                    color: colors.card,
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: colors.border),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 16,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _buildResultStat(
+                            title: 'To‘g‘ri',
+                            value: '$_correctCount',
+                            color: const Color(0xFF10B981),
+                          ),
+                          _buildResultStat(
+                            title: 'Aniqlik',
+                            value: '$accuracy%',
+                            color: const Color(0xFF6C55E0),
+                          ),
+                          _buildResultStat(
+                            title: 'Noto‘g‘ri',
+                            value: '$_wrongCount',
+                            color: const Color(0xFFEF4444),
+                          ),
+                        ],
+                      ),
+                      const Divider(height: 28),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Row(
+                            children: [
+                              const CoinIcon(size: 24),
+                              const SizedBox(width: 8),
+                              TweenAnimationBuilder<double>(
+                                tween: Tween<double>(begin: 0.0, end: _sessionCoinsEarned.toDouble()),
+                                duration: const Duration(milliseconds: 700),
+                                curve: Curves.easeOutCubic,
+                                builder: (context, val, child) {
+                                  return Text(
+                                    '+${val.round()} tanga',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w900,
+                                      color: Color(0xFFD97706),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFEDE8FF),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '+$_sessionXpEarned XP',
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w900,
+                                color: Color(0xFF6C55E0),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 32),
+
+                // Action Buttons
+                SizedBox(
+                  width: double.infinity,
+                  height: 54,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6C55E0),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                      elevation: 4,
+                    ),
+                    onPressed: () => context.go('/kids/leaderboard'),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.leaderboard_rounded, color: Colors.white, size: 20),
+                        SizedBox(width: 8),
+                        Text(
+                          'Reytingni ko‘rish',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  height: 54,
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Color(0xFF6C55E0), width: 1.5),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isLoading = true;
+                        _isCompleted = false;
+                        _currentIndex = 0;
+                        _selectedOption = null;
+                        _isAnswerChecked = false;
+                        _sessionCoinsEarned = 0;
+                        _sessionXpEarned = 0;
+                        _correctCount = 0;
+                        _wrongCount = 0;
+                      });
+                      _loadQuestions();
+                    },
+                    child: const Text(
+                      'Yana mashq qilish',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Color(0xFF6C55E0)),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: colors.muted,
-            ),
-          ),
-        ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildResultStat({required String title, required String value, required Color color}) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: color),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF94A3B8)),
+        ),
+      ],
     );
   }
 }

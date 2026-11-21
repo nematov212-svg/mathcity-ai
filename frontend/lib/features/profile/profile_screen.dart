@@ -1058,7 +1058,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
               left: 0,
               right: 0,
               bottom: 0,
-              child: MathCityBottomNav(currentIndex: 5),
+              child: MathCityBottomNav(currentIndex: 4),
             ),
           ],
         ),

@@ -24,7 +24,6 @@ import '../features/games/fraction_battle_game_screen.dart';
 import '../features/games/game_result_screen.dart';
 import '../features/ai_teacher/ziyo_tutor_screen.dart';
 import '../features/ai_teacher/teen_ziyo_tutor_screen.dart';
-import '../features/city/city_screen.dart';
 import '../features/city/teen_city_screen.dart';
 import '../features/daily_tasks/daily_tasks_screen.dart';
 import '../features/achievements/achievements_screen.dart';
@@ -145,7 +144,7 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/kids/city',
-      builder: (context, state) => const CityScreen(),
+      redirect: (context, state) => '/kids/home',
     ),
     GoRoute(
       path: '/kids/daily-tasks',

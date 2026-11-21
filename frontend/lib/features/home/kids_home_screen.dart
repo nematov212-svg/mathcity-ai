@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
+import '../../core/widgets/user_avatar.dart';
 import '../../core/widgets/xp_bar.dart';
 import '../../shared/providers/student_provider.dart';
 
@@ -65,28 +66,15 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
                   Expanded(
                     child: Row(
                       children: [
-                        // Avatar with elegant purple outline
-                        Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: colors.card,
-                            border: Border.all(color: colors.primary, width: 2.2),
-                            boxShadow: [
-                              BoxShadow(
-                                color: colors.primary.withOpacity(0.15),
-                                blurRadius: 10,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Icon(
-                              Icons.face_rounded,
-                              color: colors.primary,
-                              size: 30,
-                            ),
+                        // Real Student Avatar with elegant purple outline
+                        GestureDetector(
+                          onTap: () => context.push('/kids/profile'),
+                          child: UserAvatar(
+                            avatarUrl: student?.avatarUrl,
+                            displayName: name,
+                            size: 48,
+                            borderColor: colors.primary,
+                            borderWidth: 2.2,
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -678,132 +666,13 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
                 ),
               ),
 
-              // ==============================================================
-              // 7.5. "3D UY QURISH" CARD (Navigates to /kids/city)
-              // ==============================================================
-              const SizedBox(height: 16),
-              InkWell(
-                onTap: () => context.push('/kids/city'),
-                borderRadius: BorderRadius.circular(28),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-                  decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF1E1742) : Colors.white,
-                    borderRadius: BorderRadius.circular(28),
-                    border: Border.all(
-                      color: const Color(0xFF10B981).withOpacity(0.35),
-                      width: 1.4,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF10B981).withOpacity(0.08),
-                        blurRadius: 18,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      // Floating animated 3D House container with subtle bobbing
-                      AnimatedBuilder(
-                        animation: _mathAnimController,
-                        builder: (context, child) {
-                          final floatOffset = disableAnim ? 0.0 : math.sin(_mathAnimController.value * 2 * math.pi) * 3.0;
-                          return Transform.translate(
-                            offset: Offset(0, floatOffset),
-                            child: Container(
-                              width: 52,
-                              height: 52,
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [Color(0xFF34D399), Color(0xFF059669)],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(18),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFF10B981).withOpacity(0.35),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.location_city_rounded,
-                                  color: Colors.white,
-                                  size: 28,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Wrap(
-                              spacing: 6,
-                              runSpacing: 4,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                Text(
-                                  '3D uy qurish',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w900,
-                                    color: colors.ink,
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFD1FAE5),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Text(
-                                    '3D orol',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w800,
-                                      color: Color(0xFF059669),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Shahringni qur va kengaytir',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: colors.muted,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: colors.muted,
-                        size: 16,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
               const SizedBox(height: 20),
             ],
           ),
         ),
       ),
       // ==============================================================
-      // 8. UNIFIED 6-TAB FLOATING BOTTOM NAVIGATION BAR
+      // 8. UNIFIED 5-TAB FLOATING GLASS BOTTOM NAVIGATION BAR
       // ==============================================================
       bottomNavigationBar: const MathCityBottomNav(currentIndex: 0),
     );

@@ -62,13 +62,18 @@ void main() {
     // Choices exist
     expect(find.text('8'), findsOneWidget);
 
-    // Tap correct answer 8 to submit directly
+    // Tap correct answer 8 to select it
     await tester.tap(find.text('8'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 150));
+
+    // Tap Javobni tekshirish button
+    await tester.tap(find.text('Javobni tekshirish'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
 
-    // Verify green checkmark icon appears on correct option
-    expect(find.byIcon(Icons.check_circle_rounded), findsOneWidget);
+    // Verify checkmark icon appears on correct option
+    expect(find.byIcon(Icons.check_rounded), findsOneWidget);
     await tester.pump(const Duration(milliseconds: 1500));
   });
 

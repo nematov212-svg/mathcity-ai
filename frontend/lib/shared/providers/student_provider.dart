@@ -311,8 +311,9 @@ class StudentNotifier extends StateNotifier<StudentState> {
     }
 
     try {
-      final res = await ApiClient().dio.post('/practice/submit', data: {
+      final res = await ApiClient().dio.post('/practice/answer', data: {
         'questionId': questionId,
+        'selectedOption': answer,
         'answer': answer,
       });
 
@@ -324,18 +325,21 @@ class StudentNotifier extends StateNotifier<StudentState> {
             data['newCoinBalance'] ?? ((state.student?.coinBalance ?? 0) + coinsAwarded);
         final int newTotalXP =
             data['newTotalXP'] ?? ((state.student?.totalXP ?? 0) + xpAwarded);
+        final int newLevel =
+            data['newLevel'] ?? ((newTotalXP ~/ 200) + 1);
         final int totalAttempted =
             data['totalAttempted'] ?? ((state.student?.attemptedQuestionCount ?? 0) + 1);
         final int totalCorrect = data['totalCorrect'] ??
             ((state.student?.correctQuestionCount ?? 0) + (data['isCorrect'] == true ? 1 : 0));
 
-        // Immediately update state reactively
+        // Immediately update state reactively across all screens
         if (state.student != null) {
           state = state.copyWith(
             lastCoinsAwarded: coinsAwarded,
             student: state.student!.copyWith(
               coinBalance: newCoinBalance,
               totalXP: newTotalXP,
+              level: newLevel,
               attemptedQuestionCount: totalAttempted,
               correctQuestionCount: totalCorrect,
             ),

@@ -638,7 +638,8 @@ class DataRepository {
   submitQuestionAnswer(
     userId: string,
     questionId: string,
-    isCorrect: boolean
+    isCorrect: boolean,
+    forceSingleCoin: boolean = false
   ): {
     coinsAwarded: number;
     xpAwarded: number;
@@ -667,7 +668,7 @@ class DataRepository {
 
       // Check whether user has an authoritative PAID PRO subscription
       const isPaidPro = user.subscription.status === 'PRO_ACTIVE';
-      const eligibleCoinReward = isPaidPro ? 3 : 1; // +3 coins for Pro, +1 coin for Free / Trial
+      const eligibleCoinReward = forceSingleCoin ? 1 : (isPaidPro ? 3 : 1);
 
       // STRICT RULE: Award coins ONLY if this question has NOT previously awarded coins
       if (!user.rewardedQuestionIds.includes(questionId)) {
@@ -677,13 +678,15 @@ class DataRepository {
         user.coinBalance += eligibleCoinReward;
         isFirstTimeCorrect = true;
       } else {
-        // Repeated solve: 0 extra coins, minimal practice XP
+        // Repeated solve: 0 extra coins, 0 extra XP (strictly idempotent)
         coinsAwarded = 0;
-        xpAwarded = 2;
+        xpAwarded = 0;
       }
 
       // Add XP & level check
-      this.addXP(userId, xpAwarded);
+      if (xpAwarded > 0) {
+        this.addXP(userId, xpAwarded);
+      }
 
       // Update daily task: task_solve_5
       if (user.dailyTaskProgress['task_solve_5']) {

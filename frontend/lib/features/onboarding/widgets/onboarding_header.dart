@@ -20,20 +20,20 @@ class OnboardingHeader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Back button
+            // Back button (rounded square card matching Figma screenshot)
             Material(
               color: Colors.white,
-              shape: const CircleBorder(),
+              borderRadius: BorderRadius.circular(16),
               elevation: 0,
               child: InkWell(
-                customBorder: const CircleBorder(),
+                borderRadius: BorderRadius.circular(16),
                 onTap: onBack,
                 child: Container(
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: OnboardingTheme.border, width: 1.5),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: OnboardingTheme.border, width: 1.2),
                     boxShadow: [
                       BoxShadow(
                         color: OnboardingTheme.primary.withOpacity(0.06),
@@ -45,7 +45,7 @@ class OnboardingHeader extends StatelessWidget {
                   child: const Center(
                     child: Icon(
                       Icons.arrow_back_rounded,
-                      size: 22,
+                      size: 20,
                       color: OnboardingTheme.ink,
                     ),
                   ),

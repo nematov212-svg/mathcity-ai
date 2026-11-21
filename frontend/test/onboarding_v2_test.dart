@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mathcity_ai/features/onboarding/intro_screen.dart';
-import 'package:mathcity_ai/features/onboarding/widgets/mascot_view.dart';
-import 'package:mathcity_ai/features/onboarding/widgets/speech_bubble.dart';
 import 'package:mathcity_ai/features/onboarding/widgets/mode_card.dart';
 import 'package:mathcity_ai/features/onboarding/widgets/primary_button.dart';
 
 void main() {
   group('MathCity AI Onboarding Flow v2 Tests (Figma Match)', () {
-    testWidgets('Screen 1 renders Mascot, SpeechBubble, # badge, chips, and input', (WidgetTester tester) async {
+    testWidgets('Screen 1 renders # badge, title, chips, suggestions, and input', (WidgetTester tester) async {
       tester.view.physicalSize = const Size(1080, 2400);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -21,22 +19,21 @@ void main() {
           ),
         ),
       );
-      await tester.pump(const Duration(milliseconds: 300));
-
-      // Mascot & Speech bubble
-      expect(find.byType(MascotView), findsOneWidget);
-      expect(find.byType(SpeechBubble), findsOneWidget);
-      expect(find.text('Salom! Men Ustoz AI. Keling, ismingni tanlaymiz!'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 1));
 
       // Header & Badge
       expect(find.text('1/3'), findsOneWidget);
       expect(find.text('#'), findsOneWidget);
       expect(find.text('MathCity AI’ga xush kelibsiz'), findsOneWidget);
+      expect(find.text('Foydalanuvchi nomi'), findsOneWidget);
+      expect(find.text('MathHero2026'), findsOneWidget);
+      expect(find.text('Bu nom bo‘sh'), findsOneWidget);
 
-      // Chips
+      // Chips & Suggestions
       expect(find.text('3–20 belgi'), findsOneWidget);
       expect(find.text('Lotin harflari'), findsOneWidget);
       expect(find.text('Raqamlar'), findsOneWidget);
+      expect(find.text('Tavsiyalar'), findsOneWidget);
       expect(find.text('MathNinja'), findsOneWidget);
       expect(find.text('AlgebraStar'), findsOneWidget);
       expect(find.text('NumberKing'), findsOneWidget);
@@ -57,7 +54,7 @@ void main() {
           ),
         ),
       );
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(seconds: 1));
 
       // Tap Davom etish to go to Step 2
       final davomBtn1 = find.widgetWithText(PrimaryButton, 'Davom etish').last;
@@ -106,7 +103,7 @@ void main() {
           ),
         ),
       );
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(seconds: 1));
 
       expect(tester.takeException(), isNull);
 

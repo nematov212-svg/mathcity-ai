@@ -90,18 +90,11 @@ class _ModeCardState extends State<ModeCard> with SingleTickerProviderStateMixin
             ScaleTransition(
               scale: _bounceAnimation,
               child: Container(
-                width: 58,
-                height: 58,
+                width: 54,
+                height: 54,
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isSelected ? OnboardingTheme.lilac : Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  borderRadius: BorderRadius.circular(16),
+                  color: isSelected ? OnboardingTheme.lilac : const Color(0xFFEAE8F2),
                 ),
                 child: Center(
                   child: widget.icon,

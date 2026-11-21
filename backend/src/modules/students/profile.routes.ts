@@ -32,6 +32,43 @@ studentsRouter.get('/profile', authMiddleware, (req: AuthenticatedRequest, res: 
 });
 
 /**
+ * GET /api/me & GET /me
+ * Single source of truth for user profile, coins, xp, level, and real leaderboard rank.
+ */
+studentsRouter.get('/me', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const allUsers = repository.getAllUsers();
+  const sorted = [...allUsers].sort((a, b) => {
+    if (b.totalXP !== a.totalXP) return b.totalXP - a.totalXP;
+    if (b.coinBalance !== a.coinBalance) return b.coinBalance - a.coinBalance;
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+  });
+  const myRankIndex = sorted.findIndex((u) => u.id === user.id);
+  const rank = myRankIndex !== -1 ? myRankIndex + 1 : 1;
+
+  return res.json({
+    success: true,
+    data: {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      displayName: user.displayName,
+      avatarUrl: user.avatarUrl,
+      coins: user.coinBalance,
+      coinBalance: user.coinBalance,
+      xp: user.totalXP,
+      totalXP: user.totalXP,
+      level: user.level,
+      rank,
+      grade: user.grade,
+      mode: user.mode,
+      subscription: user.subscription,
+      createdAt: user.createdAt,
+    },
+  });
+});
+
+/**
  * GET /api/students/leaderboard
  * Global leaderboard sorted by: totalXP DESC -> coinBalance DESC -> createdAt ASC
  * Privacy: ONLY exposes rank, username, public first name, avatar, XP, and coin balance.
