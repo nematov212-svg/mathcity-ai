@@ -791,7 +791,7 @@ class DataRepository {
         user.solvedQuestions.push(questionId);
       }
 
-      // Check whether user has an authoritative PAID PRO subscription
+      // Practice /answer enforces strictly 1 coin; Paid Pro on other submit endpoints gets 3
       const isPaidPro = user.subscription.status === 'PRO_ACTIVE';
       const eligibleCoinReward = forceSingleCoin ? 1 : (isPaidPro ? 3 : 1);
 

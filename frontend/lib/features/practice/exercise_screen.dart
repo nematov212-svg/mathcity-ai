@@ -73,6 +73,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
   late AnimationController _particlesController;
 
   Timer? _autoAdvanceTimer;
+  DateTime _questionStartTime = DateTime.now();
 
   @override
   void initState() {
@@ -209,11 +210,13 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
     setState(() => _isSubmitting = true);
     final currentQ = _questions[_currentIndex];
     final selected = _selectedOption!;
+    final timeSpentMs = DateTime.now().difference(_questionStartTime).inMilliseconds;
 
     // Call server POST /practice/answer
     final result = await ref.read(studentProvider.notifier).submitAnswer(
           currentQ.id,
           selected,
+          timeSpentMs: timeSpentMs,
         );
 
     final bool isCorrect = result['isCorrect'] == true ||
@@ -349,6 +352,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
 
   void _advanceToNext() {
     _autoAdvanceTimer?.cancel();
+    _questionStartTime = DateTime.now();
     if (_currentIndex < _questions.length - 1) {
       setState(() {
         _currentIndex++;

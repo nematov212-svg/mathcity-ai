@@ -54,6 +54,7 @@ describe('Centralized Coin, XP, Practice, Avatar & Leaderboard Integration Tests
       .send({
         questionId: 'q-add-01', // 7 + 5 = 12
         selectedOption: '12',
+        timeSpentMs: 2500,
       });
 
     expect(res.status).toBe(200);

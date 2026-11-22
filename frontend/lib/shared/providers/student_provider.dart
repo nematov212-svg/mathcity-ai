@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/auth/auth_service.dart';
 import '../../core/network/api_client.dart';
 import '../models/student_model.dart';
@@ -234,6 +236,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
     if (result.success && result.student != null) {
       state = state.copyWith(student: result.student);
     }
+    unawaited(syncOfflineAnswers());
   }
 
   Timer? _heartbeatTimer;
@@ -513,7 +516,11 @@ class StudentNotifier extends StateNotifier<StudentState> {
   }
 
   // --- Real-time Question Submission with EXACTLY 1 COIN RULE ---
-  Future<Map<String, dynamic>> submitAnswer(String questionId, String answer) async {
+  Future<Map<String, dynamic>> submitAnswer(
+    String questionId,
+    String answer, {
+    int? timeSpentMs,
+  }) async {
     // In widget test environment, immediately update state without network delay
     if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) {
       if (state.student != null) {
@@ -535,11 +542,26 @@ class StudentNotifier extends StateNotifier<StudentState> {
       };
     }
 
+    // 1. Optimistic UI update: tentatively increase coin counter by +1 and XP by 10
+    final prevCoins = state.student?.coinBalance ?? 0;
+    final prevXP = state.student?.totalXP ?? 0;
+    if (state.student != null) {
+      state = state.copyWith(
+        lastCoinsAwarded: 1,
+        student: state.student!.copyWith(
+          coinBalance: prevCoins + 1,
+          totalXP: prevXP + 10,
+          attemptedQuestionCount: state.student!.attemptedQuestionCount + 1,
+        ),
+      );
+    }
+
     try {
       final res = await ApiClient().dio.post('/practice/answer', data: {
         'questionId': questionId,
         'selectedOption': answer,
         'answer': answer,
+        if (timeSpentMs != null) 'timeSpentMs': timeSpentMs,
       });
 
       if (res.data['success'] == true) {
@@ -547,17 +569,17 @@ class StudentNotifier extends StateNotifier<StudentState> {
         final int coinsAwarded = data['coinsAwarded'] ?? 0;
         final int xpAwarded = data['xpAwarded'] ?? 0;
         final int newCoinBalance =
-            data['newCoinBalance'] ?? ((state.student?.coinBalance ?? 0) + coinsAwarded);
+            data['newCoinBalance'] ?? (prevCoins + coinsAwarded);
         final int newTotalXP =
-            data['newTotalXP'] ?? ((state.student?.totalXP ?? 0) + xpAwarded);
+            data['newTotalXP'] ?? (prevXP + xpAwarded);
         final int newLevel =
             data['newLevel'] ?? ((newTotalXP ~/ 200) + 1);
         final int totalAttempted =
-            data['totalAttempted'] ?? ((state.student?.attemptedQuestionCount ?? 0) + 1);
+            data['totalAttempted'] ?? ((state.student?.attemptedQuestionCount ?? 0));
         final int totalCorrect = data['totalCorrect'] ??
             ((state.student?.correctQuestionCount ?? 0) + (data['isCorrect'] == true ? 1 : 0));
 
-        // Immediately update state reactively across all screens
+        // Authoritative reconciliation
         if (state.student != null) {
           state = state.copyWith(
             lastCoinsAwarded: coinsAwarded,
@@ -575,30 +597,61 @@ class StudentNotifier extends StateNotifier<StudentState> {
       }
     } catch (e) {
       debugPrint('⚠️ submitAnswer API xatoligi: $e');
+      _queueOfflineAnswer(questionId, answer, timeSpentMs);
     }
 
-    // Local fallback with exact 1-coin rule
-    if (state.student != null) {
-      final newCoins = state.student!.coinBalance + 1;
-      state = state.copyWith(
-        lastCoinsAwarded: 1,
-        student: state.student!.copyWith(
-          coinBalance: newCoins,
-          totalXP: state.student!.totalXP + 10,
-          attemptedQuestionCount: state.student!.attemptedQuestionCount + 1,
-          correctQuestionCount: state.student!.correctQuestionCount + 1,
-        ),
-      );
-    }
+    // Offline / Network fallback response
     return {
       'isCorrect': true,
       'coinsAwarded': 1,
-      'explanation': 'To‘g‘ri javob!',
+      'explanation': 'To‘g‘ri javob! (Oflayn)',
     };
   }
 
-  Future<Map<String, dynamic>> submitQuestion(String questionId, String answer) =>
-      submitAnswer(questionId, answer);
+  Future<void> _queueOfflineAnswer(String questionId, String answer, int? timeSpentMs) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final list = prefs.getStringList('offline_practice_answers') ?? [];
+      final item = jsonEncode({
+        'questionId': questionId,
+        'answer': answer,
+        'timeSpentMs': timeSpentMs,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+      list.add(item);
+      await prefs.setStringList('offline_practice_answers', list);
+    } catch (_) {}
+  }
+
+  Future<void> syncOfflineAnswers() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final list = prefs.getStringList('offline_practice_answers');
+      if (list == null || list.isEmpty) return;
+
+      final remaining = <String>[];
+      for (final raw in list) {
+        try {
+          final map = jsonDecode(raw) as Map<String, dynamic>;
+          final res = await ApiClient().dio.post('/practice/answer', data: {
+            'questionId': map['questionId'],
+            'selectedOption': map['answer'],
+            'answer': map['answer'],
+            if (map['timeSpentMs'] != null) 'timeSpentMs': map['timeSpentMs'],
+          });
+          if (res.data['success'] != true) {
+            remaining.add(raw);
+          }
+        } catch (_) {
+          remaining.add(raw);
+        }
+      }
+      await prefs.setStringList('offline_practice_answers', remaining);
+    } catch (_) {}
+  }
+
+  Future<Map<String, dynamic>> submitQuestion(String questionId, String answer, {int? timeSpentMs}) =>
+      submitAnswer(questionId, answer, timeSpentMs: timeSpentMs);
 
   // --- Purchase Building for 100 Coins ---
   Future<bool> purchaseBuilding(String buildingKey, int gridX, int gridY) async {

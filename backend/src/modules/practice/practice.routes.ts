@@ -11,6 +11,7 @@ const submitSchema = z.object({
   questionId: z.string(),
   answer: z.string().optional(),
   selectedOption: z.string().optional(),
+  timeSpentMs: z.number().optional(),
   isRetry: z.boolean().optional(),
 }).refine((data) => data.answer !== undefined || data.selectedOption !== undefined, {
   message: 'Javob varianti ko‘rsatilishi shart.',
