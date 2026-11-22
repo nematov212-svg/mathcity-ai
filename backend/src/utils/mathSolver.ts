@@ -16,6 +16,7 @@
 import { evaluate } from 'mathjs';
 import { Rational } from './exactArithmetic.js';
 import { logUnrecognizedQuery } from './repository.js';
+import { findTopicExplanation, MathTopic } from './mathTopicsKnowledgeBase.js';
 
 export interface MathStep {
   stepNumber: number;
@@ -432,6 +433,14 @@ export class MathSolver {
     let solution: MathSolution | null = null;
 
     try {
+      // 3.0 Topic Explanation from Knowledge Base: e.g. "Kasrlarni qanday qo‘shamiz?", "Foizlarni tushuntirib ber"
+      if (/qanday|tushuntir|o['ʻʼ`‘]?rgat|nima|jadvali|haqida|qoidasi/i.test(clean)) {
+        const topic = findTopicExplanation(clean);
+        if (topic) {
+          solution = this.buildTopicExplanationSolution(clean, topic);
+        }
+      }
+
       // 3.1 Modulus Equations: |x - 3| = 5
       solution = solution || this.solveModulusEquation(clean, norm);
 
@@ -518,6 +527,14 @@ export class MathSolver {
 
       // 3.29 General arithmetic & expressions
       solution = solution || this.solveArithmeticAndExpressions(norm, clean);
+
+      // 3.30 Topic explanation fallback
+      if (!solution) {
+        const topic = findTopicExplanation(clean);
+        if (topic) {
+          solution = this.buildTopicExplanationSolution(clean, topic);
+        }
+      }
     } catch (err: any) {
       logUnrecognizedQuery(`Xatolik: ${err.message} | Savol: ${clean}`);
       return null;
@@ -613,6 +630,59 @@ export class MathSolver {
     }
 
     return adapted;
+  }
+
+  public static buildTopicExplanationSolution(clean: string, topic: MathTopic): MathSolution {
+    const steps: MathStep[] = [
+      {
+        stepNumber: 1,
+        title: "1) Berilgan (Mavzu)",
+        explanation: `${topic.title} (${topic.gradeLevel}-sinf dasturi). ${topic.theory}`,
+        latex: topic.formulaLatex,
+        ruleName: topic.ruleName,
+      },
+      {
+        stepNumber: 2,
+        title: "2) Qoida va formula",
+        explanation: `Asosiy qoida: ${topic.ruleName}. ${topic.commonMistake}`,
+        latex: topic.formulaLatex,
+        ruleName: topic.ruleName,
+      },
+      ...topic.examples.map((ex, idx) => ({
+        stepNumber: 3 + idx,
+        title: `3) Hisoblash (${idx + 1}-misol: ${ex.problem})`,
+        explanation: `${ex.given} ${ex.calculation.join(' ')}`,
+        latex: ex.formulaLatex,
+        ruleName: ex.rule,
+      })),
+    ];
+
+    const rawReply = `1) Berilgan:\n${topic.title} (${topic.gradeLevel}-sinf).\n${topic.theory}\n\n` +
+      `2) Qoida:\n${topic.ruleName}: $${topic.formulaLatex}$\n${topic.commonMistake}\n\n` +
+      `3) Hisoblash va yechilgan misollar:\n` +
+      topic.examples.map((ex, i) => `Misol ${i + 1}: ${ex.problem}\n${ex.calculation.join('\n')}\nJavob: ${ex.answer}`).join('\n\n') +
+      `\n\n4) Javob:\n${topic.title} qoidasi bo‘yicha hisoblash to‘liq keltirildi.\n\n` +
+      `5) Tekshirish:\n${topic.examples[0]?.verification || 'Qoida matematik isbotga ega (✓).'}`;
+
+    return {
+      originalQuestion: clean,
+      problemType: topic.category.toUpperCase(),
+      understood: `${topic.title} mavzusini tushuntirish`,
+      formulaLatex: topic.formulaLatex,
+      steps,
+      finalAnswer: topic.title,
+      verification: topic.examples[0]?.verification || 'Qoida matematik isbotga ega (✓).',
+      rawReply,
+      verifiedCorrect: true,
+      confidence: 1.0,
+      ruleName: topic.ruleName,
+    };
+  }
+
+  public static explainTopic(topicQuery: string, gradeLevel?: number): MathSolution | null {
+    const topic = findTopicExplanation(topicQuery);
+    if (!topic) return null;
+    return this.buildTopicExplanationSolution(topicQuery, topic);
   }
 
   // --------------------------------------------------------------------------
@@ -2367,9 +2437,9 @@ export class MathSolver {
       }
     }
 
-    // Square root: sqrt(a), ildiz(a)
-    const sqrtMatch = norm.match(/(?:sqrt|ildiz)\s*\(?\s*(\d+(?:\.\d+)?)\s*\)?/i) ||
-      norm.match(/√\s*(\d+(?:\.\d+)?)/);
+    // Square root: sqrt(a), ildiz(a) (only if standalone root)
+    const sqrtMatch = norm.match(/^\s*(?:sqrt|ildiz)\s*\(?\s*(\d+(?:\.\d+)?)\s*\)?\s*$/i) ||
+      norm.match(/^\s*√\s*(\d+(?:\.\d+)?)\s*$/);
 
     if (sqrtMatch) {
       const a = parseFloat(sqrtMatch[1]);
@@ -2409,9 +2479,9 @@ export class MathSolver {
       };
     }
 
-    // Power: a^b, a ning kvadrati, a ning kubi
-    const powMatch = norm.match(/(\d+(?:\.\d+)?)\s*\^\s*(\d+)/) ||
-      norm.match(/(\d+(?:\.\d+)?)\s*ning\s*(kvadrati|kubi)/i);
+    // Power: a^b, a ning kvadrati, a ning kubi (only if standalone power)
+    const powMatch = norm.match(/^\s*(\d+(?:\.\d+)?)\s*\^\s*(\d+)\s*$/) ||
+      norm.match(/^\s*(\d+(?:\.\d+)?)\s*ning\s*(kvadrati|kubi)\s*$/i);
 
     if (powMatch) {
       const base = parseFloat(powMatch[1]);

@@ -666,3 +666,165 @@ aiRouter.post('/voice/learn-correction', authMiddleware, (req: AuthenticatedRequ
   });
 });
 
+// ============================================================================
+// 7. Standalone Math Solve Endpoint (POST /api/ai/solve)
+// ============================================================================
+const solveSchema = z.object({
+  problem: z.string().optional(),
+  question: z.string().optional(),
+  message: z.string().optional(),
+  mode: z.enum(['full', 'only_answer', 'explain_detailed', 'hint', 'similar_example']).optional().default('full'),
+  gradeLevel: z.number().int().min(1).max(11).optional(),
+  userAge: z.number().int().min(5).max(18).optional(),
+  conversationId: z.string().nullable().optional(),
+});
+
+aiRouter.post('/solve', authMiddleware, aiRateLimiter, async (req: AuthenticatedRequest, res: Response) => {
+  const parse = solveSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: parse.error.errors[0].message });
+  }
+
+  const rawProblem = (parse.data.problem || parse.data.question || parse.data.message || '').trim();
+  if (!rawProblem) {
+    return res.status(400).json({ success: false, error: 'Misol yoki masala matni kiritilmadi.' });
+  }
+
+  const user = req.user!;
+  const isPaidPro = user.subscription.status === 'PRO_ACTIVE';
+
+  const quotaStatus = aiQuotaStore.checkQuota(user.id, isPaidPro);
+  if (!quotaStatus.allowed) {
+    return res.status(429).json({
+      success: false,
+      code: 'AI_QUOTA_EXCEEDED',
+      error: 'Bugungi 5 ta bepul AI so‘rovingiz tugadi.',
+      data: {
+        remaining: 0,
+        limit: 5,
+        resetAt: quotaStatus.resetAt,
+      },
+    });
+  }
+
+  aiQuotaStore.consumeQuota(user.id, isPaidPro, 'TEXT');
+
+  const solution = MathSolver.solve(rawProblem, {
+    mode: parse.data.mode,
+    gradeLevel: parse.data.gradeLevel,
+    userAge: parse.data.userAge,
+  });
+
+  if (!solution) {
+    return res.json({
+      success: true,
+      data: {
+        problem: rawProblem,
+        solved: false,
+        message: 'Savolni to‘liq tushunmadim. Iltimos, aniqroq yozing (masalan: 12 + 7 yoki 2x + 6 = 16).',
+        remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
+      },
+    });
+  }
+
+  return res.json({
+    success: true,
+    data: {
+      problem: rawProblem,
+      solved: true,
+      solution,
+      reply: solution.rawReply,
+      finalAnswer: solution.finalAnswer,
+      formulaLatex: solution.formulaLatex,
+      steps: solution.steps,
+      verification: solution.verification,
+      remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
+    },
+  });
+});
+
+// ============================================================================
+// 8. Topic Explanation Endpoint (POST /api/ai/explain)
+// ============================================================================
+const explainSchema = z.object({
+  topic: z.string().optional(),
+  query: z.string().optional(),
+  message: z.string().optional(),
+  gradeLevel: z.number().int().min(1).max(11).optional(),
+});
+
+aiRouter.post('/explain', authMiddleware, aiRateLimiter, async (req: AuthenticatedRequest, res: Response) => {
+  const parse = explainSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: parse.error.errors[0].message });
+  }
+
+  const topicQuery = (parse.data.topic || parse.data.query || parse.data.message || '').trim();
+  if (!topicQuery) {
+    return res.status(400).json({ success: false, error: 'Mavzu nomi kiritilmadi.' });
+  }
+
+  const user = req.user!;
+  const isPaidPro = user.subscription.status === 'PRO_ACTIVE';
+
+  const quotaStatus = aiQuotaStore.checkQuota(user.id, isPaidPro);
+  if (!quotaStatus.allowed) {
+    return res.status(429).json({
+      success: false,
+      code: 'AI_QUOTA_EXCEEDED',
+      error: 'Bugungi 5 ta bepul AI so‘rovingiz tugadi.',
+      data: {
+        remaining: 0,
+        limit: 5,
+        resetAt: quotaStatus.resetAt,
+      },
+    });
+  }
+
+  aiQuotaStore.consumeQuota(user.id, isPaidPro, 'TEXT');
+
+  const solution = MathSolver.explainTopic(topicQuery, parse.data.gradeLevel);
+
+  if (!solution) {
+    return res.json({
+      success: true,
+      data: {
+        topic: topicQuery,
+        explained: false,
+        message: 'Mavzu bo‘yicha tushuntirish topilmadi. Mavjud mavzular: kasrlar, foizlar, tenglamalar, ko‘paytirish jadvali, geometriya, EKUB/EKUK.',
+        remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
+      },
+    });
+  }
+
+  return res.json({
+    success: true,
+    data: {
+      topic: topicQuery,
+      explained: true,
+      solution,
+      reply: solution.rawReply,
+      title: solution.finalAnswer,
+      formulaLatex: solution.formulaLatex,
+      steps: solution.steps,
+      verification: solution.verification,
+      remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
+    },
+  });
+});
+
+// ============================================================================
+// 9. User AI Chat History Endpoint (GET /api/ai/history)
+// ============================================================================
+aiRouter.get('/history', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const conversations = repository.listConversations(user.id);
+  return res.json({
+    success: true,
+    data: {
+      conversations,
+      total: conversations.length,
+    },
+  });
+});
+

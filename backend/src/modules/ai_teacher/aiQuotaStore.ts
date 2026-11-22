@@ -82,6 +82,13 @@ class AiQuotaStore {
   }
 
   /**
+   * Resets quota for a given user (useful for tests or admin override)
+   */
+  public resetQuota(userId: string): void {
+    this.requestLogs = this.requestLogs.filter((l) => l.userId !== userId);
+  }
+
+  /**
    * Returns total statistics for operator admin dashboard
    */
   public getStats(): {
