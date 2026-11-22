@@ -219,6 +219,7 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
 
     try {
       final res = await ApiClient().dio.post('/city/citizens/recruit');
+      if (!mounted) return;
       if (res.data != null && res.data['success'] == true) {
         final newCount = res.data['data']['citizenCount'] ?? (_citizenCount + 5);
         final newBalance = res.data['data']['newCoinBalance'];
@@ -521,6 +522,7 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
     _triggerCoinDeduction(building.costInCoins);
 
     final success = await ref.read(studentProvider.notifier).purchaseBuilding(building.key, gridX, gridY);
+    if (!mounted) return;
 
     if (success) {
       setState(() {

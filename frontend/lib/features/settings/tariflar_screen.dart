@@ -84,9 +84,8 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
   void _restorePurchases() async {
     setState(() => _isLoading = true);
     final success = await ref.read(studentProvider.notifier).restorePurchases();
-    setState(() => _isLoading = false);
-
     if (!mounted) return;
+    setState(() => _isLoading = false);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
