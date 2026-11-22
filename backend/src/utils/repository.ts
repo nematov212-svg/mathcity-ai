@@ -93,6 +93,7 @@ export interface UserAccount {
   currentStreak?: number;
   longestStreak?: number;
   lastActiveDate?: string; // YYYY-MM-DD
+  isBlocked?: boolean;
   friendsCount?: number;
   settings?: {
     soundEnabled: boolean;
@@ -604,8 +605,8 @@ class DataRepository {
   getLessonById(id: string): LessonModel | undefined {
     const direct = this.lessons.find((l) => l.id === id);
     if (direct) return direct;
-    // Alias fallback: 'lesson-k3-01' -> 'lesson-g3-addsub'
-    if (this.lessons.length > 0) return this.lessons[0];
+    // Alias fallback for known legacy ID
+    if (id === 'lesson-k3-01') return this.lessons.find((l) => l.id === 'lesson-g3-addsub');
     return undefined;
   }
 

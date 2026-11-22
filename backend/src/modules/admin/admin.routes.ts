@@ -347,6 +347,7 @@ adminRouter.get('/students', adminAuth, (req: Request, res: Response) => {
       cityLevel: u.cityLevel,
       subscriptionPlan: u.subscription.planName,
       subscriptionStatus: u.subscription.status,
+      isBlocked: !!u.isBlocked,
       completedLessonsCount: u.completedLessons ? u.completedLessons.length : 0,
       solvedQuestionsCount: u.solvedQuestions ? u.solvedQuestions.length : 0,
       createdAt: u.createdAt,
@@ -358,6 +359,50 @@ adminRouter.get('/students', adminAuth, (req: Request, res: Response) => {
     success: true,
     total: list.length,
     data: list,
+  });
+});
+
+adminRouter.patch('/students/:id/block', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const studentId = String(req.params.id);
+  const user = repository.getUserById(studentId);
+  if (!user) {
+    return res.status(404).json({ success: false, error: 'O‘quvchi hisobi topilmadi.' });
+  }
+  user.isBlocked = true;
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'BLOCK_STUDENT',
+    targetType: 'STUDENT',
+    targetId: user.id,
+    details: { username: user.username || user.email },
+  });
+  return res.json({
+    success: true,
+    message: 'O‘quvchi hisobi muvaffaqiyatli bloklandi.',
+    data: { id: user.id, isBlocked: true },
+  });
+});
+
+adminRouter.patch('/students/:id/unblock', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const studentId = String(req.params.id);
+  const user = repository.getUserById(studentId);
+  if (!user) {
+    return res.status(404).json({ success: false, error: 'O‘quvchi hisobi topilmadi.' });
+  }
+  user.isBlocked = false;
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'UNBLOCK_STUDENT',
+    targetType: 'STUDENT',
+    targetId: user.id,
+    details: { username: user.username || user.email },
+  });
+  return res.json({
+    success: true,
+    message: 'O‘quvchi hisobi blokdan chiqarildi.',
+    data: { id: user.id, isBlocked: false },
   });
 });
 
@@ -814,9 +859,14 @@ adminRouter.post('/lessons', adminAuth, (req: AuthenticatedAdminRequest, res: Re
     textExplanation,
     orderIndex,
     examples,
+    exercises,
+    questions: rawQ,
     rewardCoins,
     rewardXP,
     status,
+    icon,
+    accentColor,
+    color,
   } = req.body;
 
   if (!title || !grade) {
@@ -828,6 +878,23 @@ adminRouter.post('/lessons', adminAuth, (req: AuthenticatedAdminRequest, res: Re
 
   const newLessonId = `lesson-${resolvedAudience.toLowerCase()}-${Date.now()}`;
   const now = new Date().toISOString();
+
+  const rawExercises = exercises || rawQ || [];
+  const formattedQuestions = Array.isArray(rawExercises)
+    ? rawExercises.map((ex: any, idx: number) => ({
+      id: `q-${newLessonId}-${idx + 1}`,
+      lessonId: newLessonId,
+      sectionId: `sec-${newLessonId}-s1`,
+      prompt: ex.prompt || ex.question || '',
+      type: ex.type || 'MULTIPLE_CHOICE',
+      options: Array.isArray(ex.options) ? ex.options : ['A', 'B', 'C', 'D'],
+      correctAnswer: String(ex.correctAnswer !== undefined ? ex.correctAnswer : ex.options ? ex.options[0] : 'A'),
+      explanation: ex.explanation || '',
+      hint: ex.hint || '',
+      formulaLatex: ex.formulaLatex || '',
+      orderIndex: idx + 1,
+    }))
+    : [];
 
   const newLesson: LessonModel = {
     id: newLessonId,
@@ -842,6 +909,8 @@ adminRouter.post('/lessons', adminAuth, (req: AuthenticatedAdminRequest, res: Re
     formulaLatex: formulaLatex || '',
     contentMd: contentMd || `## ${title}\n\n${description || ''}`,
     coverImage: coverImage || undefined,
+    icon: icon || undefined,
+    accentColor: accentColor || color || undefined,
     gallery: Array.isArray(gallery) ? gallery : [],
     videoUrl: videoUrl || undefined,
     audioUrl: audioUrl || undefined,
@@ -855,11 +924,11 @@ adminRouter.post('/lessons', adminAuth, (req: AuthenticatedAdminRequest, res: Re
     updatedAt: now,
     sections: [
       {
-        id: `sec-${Date.now()}`,
+        id: `sec-${newLessonId}-s1`,
         lessonId: newLessonId,
         title: '1-qism: Asosiy mashqlar',
         orderIndex: 1,
-        questions: [],
+        questions: formattedQuestions,
       },
     ],
   };
@@ -887,11 +956,96 @@ adminRouter.post('/lessons', adminAuth, (req: AuthenticatedAdminRequest, res: Re
 
 adminRouter.put('/lessons/:id', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
   const id = req.params.id as string;
-  const updates = { ...req.body, updatedAt: new Date().toISOString() };
-  const updated = repository.updateLesson(id, updates);
-  if (!updated) {
+  const existing = repository.getLessonById(id);
+  if (!existing) {
     return res.status(404).json({ success: false, error: 'Dars topilmadi.' });
   }
+
+  const {
+    title,
+    audience,
+    grade,
+    subject,
+    chapterTitle,
+    topic,
+    description,
+    contentMd,
+    formulaLatex,
+    coverImage,
+    gallery,
+    videoUrl,
+    audioUrl,
+    textExplanation,
+    orderIndex,
+    examples,
+    exercises,
+    questions: rawQ,
+    rewardCoins,
+    rewardXP,
+    status,
+    icon,
+    accentColor,
+    color,
+  } = req.body;
+
+  const updates: Partial<LessonModel> = {
+    updatedAt: new Date().toISOString(),
+  };
+
+  if (title !== undefined) updates.title = title.trim();
+  if (grade !== undefined) updates.grade = Number(grade);
+  if (audience !== undefined) updates.mode = audience;
+  if (subject !== undefined || chapterTitle !== undefined) updates.chapterTitle = subject || chapterTitle;
+  if (topic !== undefined) updates.topicKey = topic;
+  if (description !== undefined) updates.description = description;
+  if (contentMd !== undefined) updates.contentMd = contentMd;
+  if (formulaLatex !== undefined) updates.formulaLatex = formulaLatex;
+  if (coverImage !== undefined) updates.coverImage = coverImage;
+  if (gallery !== undefined) updates.gallery = gallery;
+  if (videoUrl !== undefined) updates.videoUrl = videoUrl;
+  if (audioUrl !== undefined) updates.audioUrl = audioUrl;
+  if (textExplanation !== undefined) updates.textExplanation = textExplanation;
+  if (orderIndex !== undefined) updates.orderIndex = Number(orderIndex);
+  if (rewardXP !== undefined) updates.rewardXP = Number(rewardXP);
+  if (rewardCoins !== undefined) updates.rewardCoins = Number(rewardCoins);
+  if (status !== undefined) updates.status = status;
+  if (icon !== undefined) updates.icon = icon;
+  if (accentColor !== undefined || color !== undefined) updates.accentColor = accentColor || color;
+  if (examples !== undefined) updates.examples = examples;
+
+  const rawExercises = exercises || rawQ;
+  if (Array.isArray(rawExercises)) {
+    const formattedQuestions = rawExercises.map((ex: any, idx: number) => ({
+      id: ex.id || `q-${id}-${idx + 1}`,
+      lessonId: id,
+      sectionId: existing.sections[0]?.id || `sec-${id}-s1`,
+      prompt: ex.prompt || ex.question || '',
+      type: ex.type || 'MULTIPLE_CHOICE',
+      options: Array.isArray(ex.options) ? ex.options : ['A', 'B', 'C', 'D'],
+      correctAnswer: String(ex.correctAnswer !== undefined ? ex.correctAnswer : ex.options ? ex.options[0] : 'A'),
+      explanation: ex.explanation || '',
+      hint: ex.hint || '',
+      formulaLatex: ex.formulaLatex || '',
+      orderIndex: idx + 1,
+    }));
+
+    if (existing.sections.length > 0) {
+      existing.sections[0].questions = formattedQuestions;
+    } else {
+      existing.sections = [
+        {
+          id: `sec-${id}-s1`,
+          lessonId: id,
+          title: '1-qism: Asosiy mashqlar',
+          orderIndex: 1,
+          questions: formattedQuestions,
+        },
+      ];
+    }
+  }
+
+  repository.updateLesson(id, updates);
+  const updatedLesson = repository.getLessonById(id);
 
   broadcastLessonEvent('LESSON_UPDATED', { id, ...updates });
 
@@ -903,7 +1057,7 @@ adminRouter.put('/lessons/:id', adminAuth, (req: AuthenticatedAdminRequest, res:
     targetId: id,
   });
 
-  return res.json({ success: true, message: 'Dars muvaffaqiyatli yangilandi.' });
+  return res.json({ success: true, message: 'Dars muvaffaqiyatli yangilandi.', data: updatedLesson });
 });
 
 adminRouter.patch('/lessons/:id/publish', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {

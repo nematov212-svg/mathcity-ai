@@ -44,36 +44,105 @@ lessonsRouter.get('/stream', (req, res: Response) => {
  */
 lessonsRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
-  const modeParam = (req.query.mode as 'KIDS' | 'TEEN') || user.mode;
+  const modeQuery = (req.query.mode as string | undefined)?.toUpperCase();
+  const modeParam: 'KIDS' | 'TEEN' | undefined =
+    modeQuery === 'ALL'
+      ? undefined
+      : modeQuery === 'KIDS' || modeQuery === 'TEEN'
+      ? (modeQuery as 'KIDS' | 'TEEN')
+      : req.query.grade
+      ? undefined // If specific grade is requested, do not force user.mode restriction
+      : user.mode;
+
   const gradeParam = req.query.grade ? parseInt(req.query.grade as string, 10) : undefined;
+  const searchQuery = (req.query.search || req.query.q || '').toString().toLowerCase().trim();
+  const categoryQuery = (req.query.category || req.query.subject || '').toString().toLowerCase().trim();
 
-  const lessons = repository.getLessons(modeParam, gradeParam);
+  let lessons = repository.getLessons(modeParam, gradeParam);
 
-  const mapped = lessons.map((l) => ({
-    id: l.id,
-    courseId: l.courseId,
-    chapterId: l.chapterId,
-    chapterTitle: l.chapterTitle,
-    grade: l.grade,
-    mode: l.mode,
-    title: l.title,
-    topicKey: l.topicKey,
-    description: l.description,
-    formulaLatex: l.formulaLatex,
-    coverImage: l.coverImage || null,
-    gallery: l.gallery || [],
-    videoUrl: l.videoUrl || null,
-    audioUrl: l.audioUrl || null,
-    textExplanation: l.textExplanation || l.contentMd || '',
-    rewardXP: l.rewardXP,
-    rewardCoins: l.rewardCoins,
-    orderIndex: l.orderIndex,
-    status: l.status || 'PUBLISHED',
-    sectionCount: l.sections ? l.sections.length : 0,
-    isCompleted: user.completedLessons.includes(l.id),
-  }));
+  if (searchQuery) {
+    lessons = lessons.filter(
+      (l) =>
+        l.title.toLowerCase().includes(searchQuery) ||
+        l.description.toLowerCase().includes(searchQuery) ||
+        l.topicKey.toLowerCase().includes(searchQuery) ||
+        (l.chapterTitle && l.chapterTitle.toLowerCase().includes(searchQuery))
+    );
+  }
 
-  return res.json({ success: true, data: mapped });
+  if (categoryQuery) {
+    lessons = lessons.filter(
+      (l) =>
+        (l.chapterTitle && l.chapterTitle.toLowerCase().includes(categoryQuery)) ||
+        l.topicKey.toLowerCase().includes(categoryQuery)
+    );
+  }
+
+  // Sort by grade asc, orderIndex asc
+  lessons.sort((a, b) => {
+    if (a.grade !== b.grade) return a.grade - b.grade;
+    return (a.orderIndex || 0) - (b.orderIndex || 0);
+  });
+
+  const page = Math.max(1, parseInt(req.query.page as string, 10) || 1);
+  const limit = Math.max(1, parseInt(req.query.limit as string, 10) || 100);
+  const total = lessons.length;
+  const startIndex = (page - 1) * limit;
+  const paginated = lessons.slice(startIndex, startIndex + limit);
+
+  const mapped = paginated.map((l, idx) => {
+    const isCompleted = user.completedLessons.includes(l.id);
+    // Determine default icon based on topic/content
+    const defaultIcon = l.icon || (
+      l.topicKey.includes('fraction') || l.title.toLowerCase().includes('kasr') ? '½' :
+      l.topicKey.includes('mult') || l.title.toLowerCase().includes('karra') ? '×' :
+      l.topicKey.includes('geom') || l.title.toLowerCase().includes('shakllar') ? '📐' :
+      l.topicKey.includes('equat') || l.title.toLowerCase().includes('tenglama') ? 'x=' :
+      l.topicKey.includes('add') || l.topicKey.includes('sub') ? '±' :
+      l.topicKey.includes('percent') || l.title.toLowerCase().includes('foiz') ? '%' :
+      '📚'
+    );
+
+    const defaultColor = l.accentColor || (
+      l.topicKey.includes('fraction') || l.title.toLowerCase().includes('kasr') ? '#6C47FF' :
+      l.topicKey.includes('mult') || l.title.toLowerCase().includes('karra') ? '#059669' :
+      l.topicKey.includes('geom') || l.title.toLowerCase().includes('shakllar') ? '#D97706' :
+      l.topicKey.includes('equat') || l.title.toLowerCase().includes('tenglama') ? '#E11D48' :
+      '#6366F1'
+    );
+
+    // Locking logic: first lesson is unlocked; subsequent lessons are unlocked if previous is completed
+    const isLocked = l.orderIndex > 1 && !isCompleted && idx > 0 && !user.completedLessons.includes(lessons[idx - 1]?.id);
+
+    return {
+      id: l.id,
+      courseId: l.courseId,
+      chapterId: l.chapterId,
+      chapterTitle: l.chapterTitle,
+      grade: l.grade,
+      mode: l.mode,
+      title: l.title,
+      topicKey: l.topicKey,
+      description: l.description,
+      formulaLatex: l.formulaLatex,
+      icon: defaultIcon,
+      accentColor: defaultColor,
+      coverImage: l.coverImage || null,
+      gallery: l.gallery || [],
+      videoUrl: l.videoUrl || null,
+      audioUrl: l.audioUrl || null,
+      textExplanation: l.textExplanation || l.contentMd || '',
+      rewardXP: l.rewardXP,
+      rewardCoins: l.rewardCoins,
+      orderIndex: l.orderIndex,
+      status: l.status || 'PUBLISHED',
+      sectionCount: l.sections ? l.sections.length : 0,
+      isCompleted,
+      isLocked: false, // Keep accessible in MVP unless explicitly locked
+    };
+  });
+
+  return res.json({ success: true, total, page, limit, data: mapped });
 });
 
 /**

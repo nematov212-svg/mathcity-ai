@@ -489,6 +489,7 @@
                     <th class="px-5 py-3.5">Balans & Tajriba</th>
                     <th class="px-5 py-3.5">Obuna</th>
                     <th class="px-5 py-3.5">Ro‘yxat sanasi</th>
+                    <th class="px-5 py-3.5 text-right">Holat & Amallar</th>
                   </tr>
                 </thead>
                 <tbody id="studentsTableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
@@ -525,6 +526,33 @@
               class="pb-3 text-slate-500 hover:text-slate-800">Kids darslari (1–4-sinf)</button>
             <button onclick="switchLessonAudience('TEEN')" id="tab-l-teens"
               class="pb-3 text-slate-500 hover:text-slate-800">O‘smirlar darslari (5–11-sinf)</button>
+          </div>
+
+          <!-- Lessons Search & Grade Filter -->
+          <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
+            <div class="relative w-full sm:w-80">
+              <input id="lessonSearchInput" type="text" oninput="filterLessonsTable()" placeholder="Dars yoki mavzuni qidirish..."
+                class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 pl-9 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <select id="lessonGradeFilter" onchange="filterLessonsTable()" class="w-full sm:w-auto bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-700 font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="ALL">Barcha sinflar</option>
+                <option value="1">1-sinf</option>
+                <option value="2">2-sinf</option>
+                <option value="3">3-sinf</option>
+                <option value="4">4-sinf</option>
+                <option value="5">5-sinf</option>
+                <option value="6">6-sinf</option>
+                <option value="7">7-sinf</option>
+                <option value="8">8-sinf</option>
+                <option value="9">9-sinf</option>
+                <option value="10">10-sinf</option>
+                <option value="11">11-sinf</option>
+              </select>
+            </div>
           </div>
 
           <!-- Lessons Table -->
@@ -1014,21 +1042,23 @@
        ========================================================================= -->
   <div id="createLessonModal"
     class="fixed inset-0 z-50 bg-slate-900/60 hidden items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
-    <div class="bg-white max-w-2xl w-full p-6 md:p-8 rounded-3xl shadow-2xl border border-slate-200 my-8 text-left">
+    <div class="bg-white max-w-2xl w-full p-6 md:p-8 rounded-3xl shadow-2xl border border-slate-200 my-8 text-left max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
         <div>
-          <h3 class="text-lg font-extrabold text-slate-900">Yangi dars yaratish</h3>
-          <p class="text-xs text-slate-500">Mavzu, nazariy tushuntirish va amaliy misollar</p>
+          <h3 id="lessonModalHeading" class="text-lg font-extrabold text-slate-900">Yangi dars yaratish</h3>
+          <p class="text-xs text-slate-500">Mavzu, nazariy tushuntirish, amaliy misollar va interaktiv mashqlar</p>
         </div>
         <button onclick="closeCreateLessonModal()"
           class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
       </div>
 
+      <input id="editingLessonId" type="hidden" value="">
+
       <div class="space-y-4 text-xs font-semibold">
         <div>
           <label class="block text-slate-700 mb-1">Dars nomi *</label>
           <input id="lTitle" type="text" placeholder="Masalan: Oddiy kasrlarni qo‘shish va ayirish"
-            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -1057,20 +1087,45 @@
             </select>
           </div>
           <div>
-            <label class="block text-slate-700 mb-1">Fan yoki Bo‘lim</label>
-            <input id="lChapter" type="text" placeholder="Algebra / Arifmetika"
-              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+            <label class="block text-slate-700 mb-1">Bo‘lim / Fan</label>
+            <input id="lChapter" type="text" placeholder="Arifmetika / Kasrlar / Geometriya / Algebra"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 font-bold">
+          </div>
+        </div>
+
+        <!-- Icon, Accent Color & Order Index -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-slate-700 mb-1">Ikona (Emoji / Belgisi)</label>
+            <input id="lIcon" type="text" placeholder="📚, 📐, ½, ×, x=, %, 🧮" value="📚"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 font-bold">
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Mavzu rangi</label>
+            <select id="lColor" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 font-medium">
+              <option value="#6C47FF">Binafsharang (#6C47FF) — Kasrlar</option>
+              <option value="#059669">Yashil (#059669) — Arifmetika</option>
+              <option value="#D97706">Sariq/Jigarrang (#D97706) — Geometriya</option>
+              <option value="#E11D48">Qizil (#E11D48) — Tenglamalar</option>
+              <option value="#0891B2">Moviy (#0891B2) — Foizlar</option>
+              <option value="#7C3AED">Binafsha (#7C3AED) — Boshqa</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Tartib raqami</label>
+            <input id="lOrderIndex" type="number" min="1" value="1"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 font-bold">
           </div>
         </div>
 
         <div>
-          <label class="block text-slate-700 mb-1">Dars tavsifi (Qisqa xulosa)</label>
+          <label class="block text-slate-700 mb-1">Dars tavsifi (1 qator qisqa xulosa)</label>
           <textarea id="lDesc" rows="2" placeholder="Ushbu darsda o‘quvchilar kasrlar qoidasini o‘rganadilar."
             class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900"></textarea>
         </div>
 
         <div>
-          <label class="block text-slate-700 mb-1">Darsning asosiy tushuntirishi (Markdown / Matn)</label>
+          <label class="block text-slate-700 mb-1">Darsning asosiy nazariyasi (Markdown / Matn)</label>
           <textarea id="lContent" rows="4"
             placeholder="Kasrlarning asosiy xossasi: Surat va maxrajni noldan farqli bir xil songa ko‘paytirsak..."
             class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 font-mono"></textarea>
@@ -1090,6 +1145,20 @@
           <textarea id="exSolution" rows="2"
             placeholder="Bosqichma-bosqich yechim: Maxrajlar bir xil (4), shuning uchun suratlarni qo‘shamiz: 1 + 2 = 3. Javob: 3/4."
             class="w-full bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-slate-900 text-xs"></textarea>
+        </div>
+
+        <!-- Interactive Practice Exercises (3–5 mashq) -->
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-[11px] font-bold uppercase tracking-wider text-slate-700">Dars mashqlari (3–5 ta interaktiv mashq)</div>
+              <p class="text-[10px] text-slate-400">Har bir to‘g‘ri yechilgan mashq uchun o‘quvchiga +1 tanga beriladi</p>
+            </div>
+            <button type="button" onclick="addExerciseRow()" class="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-lg border border-indigo-200 transition">+ Mashq qo‘shish</button>
+          </div>
+          <div id="exerciseRowsContainer" class="space-y-3">
+            <!-- Populated via addExerciseRow() -->
+          </div>
         </div>
 
         <!-- Media Attachments: Cover Image, Video Lesson, Audio Explanation -->
@@ -1457,7 +1526,7 @@
       const tbody = document.getElementById('studentsTableBody');
       tbody.innerHTML = '';
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="px-5 py-8 text-center text-slate-400">Hech qanday o‘quvchi topilmadi.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="px-5 py-8 text-center text-slate-400">Hech qanday o‘quvchi topilmadi.</td></tr>`;
         return;
       }
 
@@ -1465,6 +1534,7 @@
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50 transition';
         const isPro = s.subscriptionStatus === 'PRO_ACTIVE';
+        const isBlocked = !!s.isBlocked;
         tr.innerHTML = `
           <td class="px-5 py-4">
             <div class="flex items-center space-x-3">
@@ -1495,9 +1565,38 @@
           <td class="px-5 py-4 text-slate-400 text-[11px]">
             ${new Date(s.createdAt).toLocaleDateString('uz-UZ')}
           </td>
+          <td class="px-5 py-4 text-right">
+            <div class="flex items-center justify-end space-x-2">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isBlocked ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'}">
+                ${isBlocked ? '🚫 Bloklangan' : '✓ Faol'}
+              </span>
+              <button onclick="toggleStudentBlock('${s.id}', ${!isBlocked})" class="px-2.5 py-1 text-[11px] font-bold rounded-lg border transition ${isBlocked ? 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100' : 'border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100'}">
+                ${isBlocked ? 'Ochish' : 'Bloklash'}
+              </button>
+            </div>
+          </td>
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    async function toggleStudentBlock(id, willBlock) {
+      const actionText = willBlock ? 'bloklashni' : 'blokdan chiqarishni';
+      if (!confirm(`Haqiqatan ham ushbu o‘quvchini ${actionText} xohlaysizmi?`)) return;
+      try {
+        const res = await apiFetch(`/api/admin/students/${id}/${willBlock ? 'block' : 'unblock'}`, {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success) {
+          loadStudents();
+        } else {
+          alert(json.error || 'Amalni bajarishda xatolik yuz berdi');
+        }
+      } catch (err) {
+        alert(err.message || 'Server bilan bog‘lanishda xatolik');
+      }
     }
 
     function filterStudentsTable() {
@@ -1512,6 +1611,73 @@
     }
 
     // --- 3. LESSONS DATA ---
+    async     let cachedLessons = [];
+
+    function renderLessonsTable(list) {
+      const tbody = document.getElementById('lessonsTableBody');
+      tbody.innerHTML = '';
+      if (!list || list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="px-5 py-8 text-center text-slate-400">Darslar topilmadi. Yangi dars qo‘shishingiz mumkin.</td></tr>`;
+        return;
+      }
+
+      list.forEach(l => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition';
+        const isPub = l.status === 'PUBLISHED';
+        tr.innerHTML = `
+          <td class="px-5 py-4">
+            <div class="flex items-center space-x-2.5">
+              <span class="text-base font-bold">${l.icon || '📚'}</span>
+              <div>
+                <div class="font-bold text-slate-900">${l.title}</div>
+                <div class="text-[11px] text-slate-400 line-clamp-1">${l.description || ''}</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-5 py-4">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${l.mode === 'KIDS' ? 'badge-kids' : 'badge-teens'}">
+              ${l.mode === 'KIDS' ? 'Kids' : 'O‘smirlar'} • ${l.grade}-sinf
+            </span>
+          </td>
+          <td class="px-5 py-4 text-slate-600 font-medium">${l.chapterTitle || 'Matematika'}</td>
+          <td class="px-5 py-4 text-slate-500">${l.examplesCount || (l.examples ? l.examples.length : 0)} misol • ${l.totalQuestions || (l.sections && l.sections[0] ? l.sections[0].questions.length : 0)} mashq</td>
+          <td class="px-5 py-4 font-bold text-amber-600">+${l.rewardCoins} π <span class="text-[10px] text-slate-400">/${l.rewardXP}XP</span></td>
+          <td class="px-5 py-4">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isPub ? 'badge-published' : 'badge-draft'}">
+              ${isPub ? 'Nashr qilingan' : 'Qoralama'}
+            </span>
+          </td>
+          <td class="px-5 py-4 text-right space-x-2">
+            <button onclick="openEditLessonModal('${l.id}')" class="text-xs text-blue-600 hover:text-blue-800 font-bold">
+              Tahrirlash
+            </button>
+            <button onclick="toggleLessonPublish('${l.id}', ${isPub})" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold">
+              ${isPub ? 'Qoralama' : 'Nashr qilish'}
+            </button>
+            <button onclick="deleteLesson('${l.id}')" class="text-xs text-red-500 hover:text-red-700">O‘chirish</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterLessonsTable() {
+      const q = (document.getElementById('lessonSearchInput')?.value || '').toLowerCase().trim();
+      const grade = document.getElementById('lessonGradeFilter')?.value || 'ALL';
+
+      const filtered = cachedLessons.filter(l => {
+        if (grade !== 'ALL' && String(l.grade) !== grade) return false;
+        if (!q) return true;
+        const title = (l.title || '').toLowerCase();
+        const desc = (l.description || '').toLowerCase();
+        const ch = (l.chapterTitle || '').toLowerCase();
+        return title.includes(q) || desc.includes(q) || ch.includes(q);
+      });
+
+      renderLessonsTable(filtered);
+    }
+
     async function loadLessons() {
       try {
         let endpoint = '/api/admin/lessons';
@@ -1522,41 +1688,10 @@
           headers: { 'Authorization': `Bearer ${currentToken}` }
         });
         const json = await res.json();
-        const tbody = document.getElementById('lessonsTableBody');
-        tbody.innerHTML = '';
         if (json.success && json.data) {
-          if (json.data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="px-5 py-8 text-center text-slate-400">Darslar mavjud emas. Yangi dars qo‘shishingiz mumkin.</td></tr>`;
-            return;
-          }
-          json.data.forEach(l => {
-            const tr = document.createElement('tr');
-            tr.className = 'hover:bg-slate-50 transition';
-            const isPub = l.status === 'PUBLISHED';
-            tr.innerHTML = `
-              <td class="px-5 py-4 font-bold text-slate-900">${l.title}</td>
-              <td class="px-5 py-4">
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${l.mode === 'KIDS' ? 'badge-kids' : 'badge-teens'}">
-                  ${l.mode === 'KIDS' ? 'Kids' : 'O‘smirlar'} • ${l.grade}-sinf
-                </span>
-              </td>
-              <td class="px-5 py-4 text-slate-600">${l.chapterTitle || 'Matematika'}</td>
-              <td class="px-5 py-4 text-slate-500">${l.examplesCount || 0} misol • ${l.totalQuestions || 0} mashq</td>
-              <td class="px-5 py-4 font-bold text-amber-600">+${l.rewardCoins} π <span class="text-[10px] text-slate-400">/${l.rewardXP}XP</span></td>
-              <td class="px-5 py-4">
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isPub ? 'badge-published' : 'badge-draft'}">
-                  ${isPub ? 'Nashr qilingan' : 'Qoralama'}
-                </span>
-              </td>
-              <td class="px-5 py-4 text-right space-x-2">
-                <button onclick="toggleLessonPublish('${l.id}', ${isPub})" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold">
-                  ${isPub ? 'Qoralama' : 'Nashr qilish'}
-                </button>
-                <button onclick="deleteLesson('${l.id}')" class="text-xs text-red-500 hover:text-red-700">O‘chirish</button>
-              </td>
-            `;
-            tbody.appendChild(tr);
-          });
+          cachedLessons = json.data;
+          document.getElementById('badge-total-lessons').textContent = cachedLessons.length;
+          filterLessonsTable();
         }
       } catch (err) {
         console.error('loadLessons error:', err);
@@ -1606,9 +1741,170 @@
       }
     }
 
+    function addExerciseRow(data = {}) {
+      const container = document.getElementById('exerciseRowsContainer');
+      const idx = container.children.length + 1;
+      const row = document.createElement('div');
+      row.className = 'p-3 rounded-xl bg-white border border-slate-200 space-y-2 exercise-row relative';
+      const prompt = data.prompt || data.question || '';
+      const options = Array.isArray(data.options) ? data.options : ['', '', '', ''];
+      const optA = options[0] || '';
+      const optB = options[1] || '';
+      const optC = options[2] || '';
+      const optD = options[3] || '';
+      const correct = data.correctAnswer || optA;
+      const explanation = data.explanation || '';
+
+      row.innerHTML = `
+        <div class="flex items-center justify-between pb-1 border-b border-slate-100">
+          <span class="text-[11px] font-bold text-indigo-700">Mashq #${idx}</span>
+          <button type="button" onclick="this.closest('.exercise-row').remove()" class="text-rose-500 hover:text-rose-700 text-xs font-bold">&times; O‘chirish</button>
+        </div>
+        <div>
+          <label class="block text-[10px] text-slate-600 mb-0.5">Savol matni *</label>
+          <input type="text" class="ex-prompt w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-900" placeholder="Masalan: 3/4 + 1/4 = ?" value="${prompt.replace(/"/g, '&quot;')}">
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div>
+            <label class="block text-[10px] text-slate-600 mb-0.5">Variant A</label>
+            <input type="text" class="ex-opt-a w-full bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-900" placeholder="1" value="${optA.replace(/"/g, '&quot;')}">
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-600 mb-0.5">Variant B</label>
+            <input type="text" class="ex-opt-b w-full bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-900" placeholder="2/4" value="${optB.replace(/"/g, '&quot;')}">
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-600 mb-0.5">Variant C</label>
+            <input type="text" class="ex-opt-c w-full bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-900" placeholder="4/8" value="${optC.replace(/"/g, '&quot;')}">
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-600 mb-0.5">Variant D</label>
+            <input type="text" class="ex-opt-d w-full bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 text-xs text-slate-900" placeholder="0" value="${optD.replace(/"/g, '&quot;')}">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[10px] text-slate-600 mb-0.5">To‘g‘ri javob *</label>
+            <input type="text" class="ex-correct w-full bg-slate-50 border border-emerald-300 rounded-lg px-2.5 py-1 text-xs text-slate-900 font-bold" placeholder="To‘g‘ri javob qiymati" value="${correct.replace(/"/g, '&quot;')}">
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-600 mb-0.5">Yechim izohi</label>
+            <input type="text" class="ex-expl w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1 text-xs text-slate-900" placeholder="Nima uchun bu javob to‘g‘ri" value="${explanation.replace(/"/g, '&quot;')}">
+          </div>
+        </div>
+      `;
+      container.appendChild(row);
+    }
+
+    function getExerciseRowsData() {
+      const container = document.getElementById('exerciseRowsContainer');
+      const rows = container.querySelectorAll('.exercise-row');
+      const list = [];
+      rows.forEach(r => {
+        const prompt = r.querySelector('.ex-prompt')?.value.trim();
+        const a = r.querySelector('.ex-opt-a')?.value.trim();
+        const b = r.querySelector('.ex-opt-b')?.value.trim();
+        const c = r.querySelector('.ex-opt-c')?.value.trim();
+        const d = r.querySelector('.ex-opt-d')?.value.trim();
+        const correct = r.querySelector('.ex-correct')?.value.trim();
+        const expl = r.querySelector('.ex-expl')?.value.trim();
+
+        if (prompt) {
+          const options = [a || 'A', b || 'B', c || 'C', d || 'D'];
+          list.push({
+            prompt,
+            options,
+            correctAnswer: correct || options[0],
+            explanation: expl || '',
+          });
+        }
+      });
+      return list;
+    }
+
     function openCreateLessonModal() {
+      document.getElementById('editingLessonId').value = '';
+      document.getElementById('lessonModalHeading').textContent = 'Yangi dars yaratish';
+
+      document.getElementById('lTitle').value = '';
+      document.getElementById('lAudience').value = 'KIDS';
+      document.getElementById('lGrade').value = '4';
+      document.getElementById('lChapter').value = 'Arifmetika';
+      document.getElementById('lIcon').value = '📚';
+      document.getElementById('lColor').value = '#059669';
+      document.getElementById('lOrderIndex').value = '1';
+      document.getElementById('lDesc').value = '';
+      document.getElementById('lContent').value = '';
+      document.getElementById('lFormula').value = '';
+      document.getElementById('exProblem').value = '';
+      document.getElementById('exSolution').value = '';
+      document.getElementById('lCoverUrl').value = '';
+      document.getElementById('lVideoUrl').value = '';
+      document.getElementById('lAudioUrl').value = '';
+      document.getElementById('lXP').value = '50';
+      document.getElementById('lCoins').value = '10';
+
+      const container = document.getElementById('exerciseRowsContainer');
+      container.innerHTML = '';
+      addExerciseRow(); // Add 1 blank row by default
+
       document.getElementById('createLessonModal').classList.remove('hidden');
       document.getElementById('createLessonModal').classList.add('flex');
+    }
+
+    async function openEditLessonModal(id) {
+      try {
+        const res = await apiFetch(`/api/admin/lessons/${id}`, {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (!json.success || !json.data) {
+          alert('Dars ma’lumotlarini yuklab bo‘lmadi');
+          return;
+        }
+
+        const l = json.data;
+        document.getElementById('editingLessonId').value = l.id;
+        document.getElementById('lessonModalHeading').textContent = 'Darsni tahrirlash';
+
+        document.getElementById('lTitle').value = l.title || '';
+        document.getElementById('lAudience').value = l.mode || 'KIDS';
+        document.getElementById('lGrade').value = String(l.grade || 4);
+        document.getElementById('lChapter').value = l.chapterTitle || '';
+        document.getElementById('lIcon').value = l.icon || '📚';
+        document.getElementById('lColor').value = l.accentColor || '#6C47FF';
+        document.getElementById('lOrderIndex').value = String(l.orderIndex || 1);
+        document.getElementById('lDesc').value = l.description || '';
+        document.getElementById('lContent').value = l.contentMd || l.textExplanation || '';
+        document.getElementById('lFormula').value = l.formulaLatex || '';
+        document.getElementById('lXP').value = String(l.rewardXP || 50);
+        document.getElementById('lCoins').value = String(l.rewardCoins || 10);
+        document.getElementById('lCoverUrl').value = l.coverImage || '';
+        document.getElementById('lVideoUrl').value = l.videoUrl || '';
+        document.getElementById('lAudioUrl').value = l.audioUrl || '';
+
+        if (l.examples && l.examples.length > 0) {
+          document.getElementById('exProblem').value = l.examples[0].problem || '';
+          document.getElementById('exSolution').value = l.examples[0].solution || '';
+        } else {
+          document.getElementById('exProblem').value = '';
+          document.getElementById('exSolution').value = '';
+        }
+
+        const container = document.getElementById('exerciseRowsContainer');
+        container.innerHTML = '';
+        const questions = (l.sections && l.sections[0] && l.sections[0].questions) ? l.sections[0].questions : [];
+        if (questions.length > 0) {
+          questions.forEach(q => addExerciseRow(q));
+        } else {
+          addExerciseRow();
+        }
+
+        document.getElementById('createLessonModal').classList.remove('hidden');
+        document.getElementById('createLessonModal').classList.add('flex');
+      } catch (err) {
+        alert('Server bilan bog‘lanishda xatolik yuz berdi');
+      }
     }
 
     function closeCreateLessonModal() {
@@ -1617,10 +1913,14 @@
     }
 
     async function saveNewLesson(status) {
+      const editingId = document.getElementById('editingLessonId').value;
       const title = document.getElementById('lTitle').value.trim();
       const audience = document.getElementById('lAudience').value;
       const grade = parseInt(document.getElementById('lGrade').value, 10);
       const subject = document.getElementById('lChapter').value.trim();
+      const icon = document.getElementById('lIcon').value.trim() || '📚';
+      const accentColor = document.getElementById('lColor').value;
+      const orderIndex = parseInt(document.getElementById('lOrderIndex').value, 10) || 1;
       const description = document.getElementById('lDesc').value.trim();
       const contentMd = document.getElementById('lContent').value.trim();
       const formulaLatex = document.getElementById('lFormula').value.trim();
@@ -1633,22 +1933,27 @@
       const exProb = document.getElementById('exProblem').value.trim();
       const exSol = document.getElementById('exSolution').value.trim();
       const examples = exProb ? [{ id: 'ex-1', title: 'Namunaviy misol', problem: exProb, solution: exSol }] : [];
+      const exercises = getExerciseRowsData();
 
       if (!title || !grade) {
         alert('Dars nomi va sinfini kiriting');
         return;
       }
 
+      const url = editingId ? `/api/admin/lessons/${editingId}` : '/api/admin/lessons';
+      const method = editingId ? 'PUT' : 'POST';
+
       try {
-        const res = await apiFetch('/api/admin/lessons', {
-          method: 'POST',
+        const res = await apiFetch(url, {
+          method,
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${currentToken}`
           },
           body: JSON.stringify({
-            title, audience, grade, subject, description, contentMd, formulaLatex, rewardXP, rewardCoins, status, examples,
-            coverImage, videoUrl, audioUrl
+            title, audience, grade, subject, icon, accentColor, orderIndex,
+            description, contentMd, formulaLatex, rewardXP, rewardCoins, status, examples,
+            exercises, coverImage, videoUrl, audioUrl
           })
         });
         const json = await res.json();

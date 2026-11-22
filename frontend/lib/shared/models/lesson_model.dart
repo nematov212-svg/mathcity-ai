@@ -20,6 +20,9 @@ class LessonModel {
   final int orderIndex;
   final int sectionCount;
   final bool isCompleted;
+  final String? icon;
+  final String? accentColor;
+  final bool isLocked;
 
   LessonModel({
     required this.id,
@@ -43,6 +46,9 @@ class LessonModel {
     required this.orderIndex,
     required this.sectionCount,
     required this.isCompleted,
+    this.icon,
+    this.accentColor,
+    this.isLocked = false,
   });
 
   factory LessonModel.fromJson(Map<String, dynamic> json) {
@@ -68,6 +74,9 @@ class LessonModel {
       orderIndex: json['orderIndex'] ?? 0,
       sectionCount: json['sectionCount'] ?? json['questionCount'] ?? 1,
       isCompleted: json['isCompleted'] ?? false,
+      icon: json['icon'],
+      accentColor: json['accentColor'],
+      isLocked: json['isLocked'] ?? false,
     );
   }
 }

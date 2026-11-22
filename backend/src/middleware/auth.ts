@@ -31,6 +31,14 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
       });
     }
 
+    if (user.isBlocked) {
+      return res.status(403).json({
+        success: false,
+        errorCode: 'ACCOUNT_BLOCKED',
+        error: 'Hisobingiz administrator tomonidan bloklangan.',
+      });
+    }
+
     // Strict dynamic age verification only for completed profiles with dateOfBirth
     if (user.dateOfBirth) {
       const dobDate = new Date(user.dateOfBirth);

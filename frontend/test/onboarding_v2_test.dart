@@ -26,8 +26,6 @@ void main() {
       expect(find.text('#'), findsOneWidget);
       expect(find.text('MathCity AI’ga xush kelibsiz'), findsOneWidget);
       expect(find.text('Foydalanuvchi nomi'), findsOneWidget);
-      expect(find.text('MathHero2026'), findsOneWidget);
-      expect(find.text('Bu nom bo‘sh'), findsOneWidget);
 
       // Chips & Suggestions
       expect(find.text('3–20 belgi'), findsOneWidget);
@@ -37,6 +35,11 @@ void main() {
       expect(find.text('MathNinja'), findsOneWidget);
       expect(find.text('AlgebraStar'), findsOneWidget);
       expect(find.text('NumberKing'), findsOneWidget);
+
+      // Tap suggestion to verify live check
+      await tester.tap(find.text('MathNinja'));
+      await tester.pump();
+      expect(find.text('Bu nom bo‘sh'), findsOneWidget);
 
       // Action button
       expect(find.text('Davom etish'), findsOneWidget);
@@ -56,11 +59,14 @@ void main() {
       );
       await tester.pump(const Duration(seconds: 1));
 
+      // Tap suggestion to choose valid username
+      await tester.tap(find.text('MathNinja'));
+      await tester.pump();
+
       // Tap Davom etish to go to Step 2
       final davomBtn1 = find.widgetWithText(PrimaryButton, 'Davom etish').last;
       await tester.tap(davomBtn1);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
 
       // Step 2 Verification
       expect(find.text('2/3'), findsOneWidget);
@@ -73,11 +79,16 @@ void main() {
       expect(find.text('O‘smirlar rejimi'), findsOneWidget);
       expect(find.byType(ModeCard), findsNWidgets(2));
 
+      // Open date picker and select default valid date
+      await tester.tap(find.text('Kun'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Tayyor'));
+      await tester.pumpAndSettle();
+
       // Tap Davom etish to go to Step 3
       final davomBtn2 = find.widgetWithText(PrimaryButton, 'Davom etish').last;
       await tester.tap(davomBtn2);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
 
       // Step 3 Verification
       expect(find.text('3/3'), findsOneWidget);

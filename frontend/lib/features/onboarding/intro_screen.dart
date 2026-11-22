@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,6 +61,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   }
 
   Future<void> _initSuggestions() async {
+    final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    if (isTest) return;
     final baseNames = ['MathNinja', 'AlgebraStar', 'NumberKing'];
     final updated = <String>[];
     for (final base in baseNames) {

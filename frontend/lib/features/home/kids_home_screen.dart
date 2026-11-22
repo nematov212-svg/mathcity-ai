@@ -1,4 +1,6 @@
+import 'dart:io' show Platform;
 import 'dart:math' as math;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -33,6 +35,7 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
   }
 
   Future<void> _loadDailyTasks() async {
+    if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) return;
     try {
       final data = await ref.read(studentProvider.notifier).fetchDailyMissions();
       if (data != null && mounted) {

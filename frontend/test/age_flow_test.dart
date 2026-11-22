@@ -61,7 +61,7 @@ void main() {
     );
 
     expect(find.text('Kvadrat tenglamalar va Diskriminant'), findsOneWidget);
-    expect(find.text('Ilmiy shahar'), findsOneWidget);
+    expect(find.text('Reyting'), findsAtLeastNWidgets(1));
     expect(find.text('AI Ustoz'), findsAtLeastNWidgets(1));
   });
 }

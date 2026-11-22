@@ -41,6 +41,8 @@ export interface LessonModel {
   contentMd: string;
   formulaLatex?: string;
   coverImage?: string;
+  icon?: string;
+  accentColor?: string;
   gallery?: string[];
   videoUrl?: string;
   audioUrl?: string;
