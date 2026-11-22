@@ -161,4 +161,36 @@ describe('Production Authentication System Tests', () => {
     expect(newLogin.status).toBe(200);
     expect(newLogin.body.success).toBe(true);
   });
+
+  it('Test 9: GET /api/users/check-username validates uniqueness case-insensitively', async () => {
+    // 1. Taken username (same case)
+    const takenRes = await request(app).get(`/api/users/check-username?u=${testUsername}`);
+    expect(takenRes.status).toBe(200);
+    expect(takenRes.body.data.available).toBe(false);
+    expect(takenRes.body.data.message).toContain('band');
+
+    // 2. Taken username (UPPERCASE)
+    const upperRes = await request(app).get(`/api/users/check-username?u=${testUsername.toUpperCase()}`);
+    expect(upperRes.status).toBe(200);
+    expect(upperRes.body.data.available).toBe(false);
+    expect(upperRes.body.data.message).toContain('band');
+
+    // 3. Available username
+    const freeRes = await request(app).get('/api/users/check-username?u=MathUniqueHero99');
+    expect(freeRes.status).toBe(200);
+    expect(freeRes.body.data.available).toBe(true);
+    expect(freeRes.body.data.message).toContain('bo‘sh');
+
+    // 4. Registration with case-insensitive collision returns 409
+    const collisionRes = await request(app)
+      .post('/api/auth/register')
+      .send({
+        displayName: 'Sarvar Collision',
+        loginOrEmail: testUsername.toUpperCase(),
+        password: 'Password123!',
+        confirmPassword: 'Password123!',
+      });
+    expect(collisionRes.status).toBe(409);
+    expect(collisionRes.body.error).toContain('band');
+  });
 });

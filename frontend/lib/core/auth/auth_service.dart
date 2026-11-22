@@ -82,7 +82,7 @@ class AuthService {
   static void setIosClientId(String clientId) {
     iosClientId = clientId;
   }
-
+  
   
 
   /// Controlled lazy initialization for GoogleSignIn
@@ -657,17 +657,33 @@ class AuthService {
 
   /// Check username availability and uniqueness
   Future<Map<String, dynamic>> checkUsername(String username) async {
+    final clean = username.trim();
     try {
-      final res = await ApiClient().dio.get('/auth/username-available', queryParameters: {
-        'username': username.trim(),
+      final res = await ApiClient().dio.get('/users/check-username', queryParameters: {
+        'u': clean,
       });
       if (res.data['success'] == true) {
         return res.data['data'] as Map<String, dynamic>;
       }
-      return {'available': false, 'message': res.data['error'] ?? 'Xatolik'};
+      return {'available': false, 'message': res.data['error'] ?? '✕ Bu nom band, boshqasini tanlang'};
     } catch (e) {
-      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
-        return {'available': false, 'message': e.response!.data['error'].toString()};
+      try {
+        final fallbackRes = await ApiClient().dio.get('/auth/username-available', queryParameters: {
+          'username': clean,
+        });
+        if (fallbackRes.data['success'] == true) {
+          return fallbackRes.data['data'] as Map<String, dynamic>;
+        }
+      } catch (_) {}
+
+      if (e is DioException && e.response?.data != null) {
+        final data = e.response!.data;
+        if (data is Map && data['data'] != null && data['data']['message'] != null) {
+          return {'available': false, 'message': data['data']['message'].toString()};
+        }
+        if (data is Map && data['error'] != null) {
+          return {'available': false, 'message': data['error'].toString()};
+        }
       }
       return {'available': false, 'message': 'Foydalanuvchi nomini tekshirishda xatolik yuz berdi.'};
     }

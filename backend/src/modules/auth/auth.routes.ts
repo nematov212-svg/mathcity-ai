@@ -438,7 +438,7 @@ authRouter.post('/register', authRateLimiter, (req: Request, res: Response) => {
     userEmail = `${username.toLowerCase()}@student.mathcity.ai`;
 
     // Check if username already taken
-    const existing = repository.getUserByUsernameOrEmail(username);
+    const existing = repository.getUserByUsernameOrEmail(username) || repository.isUsernameTaken(username);
     if (existing) {
       return res.status(409).json({
         success: false,
@@ -1345,30 +1345,39 @@ function validateCalendarBirthDate(day: number, month: number, year: number): { 
   return { valid: true, age };
 }
 
-// GET /api/auth/username-available and GET /api/auth/check-username
+// GET /api/auth/username-available and GET /api/auth/check-username and GET /api/users/check-username
 authRouter.get(['/username-available', '/check-username'], (req: Request, res: Response) => {
-  const username = ((req.query.username as string) || '').trim();
+  const username = ((req.query.u as string) || (req.query.username as string) || '').trim();
   if (!username) {
-    return res.status(400).json({ success: false, error: 'Foydalanuvchi nomi kiritilmagan.' });
+    return res.status(400).json({
+      success: false,
+      error: 'Foydalanuvchi nomi kiritilmagan.',
+      data: { available: false, message: 'Foydalanuvchi nomini kiriting.' },
+    });
   }
 
   const val = validateUsernameInput(username);
   if (!val.valid) {
-    return res.status(400).json({ success: false, error: val.error });
+    return res.status(400).json({
+      success: false,
+      error: val.error,
+      data: {
+        available: false,
+        formatValid: false,
+        message: val.error || 'Format noto‘g‘ri (3–20 belgi, faqat lotin harflari va raqamlar)',
+      },
+    });
   }
 
-  const lower = username.toLowerCase();
-  const taken = repository.getAllUsers().some((u) => {
-    const uName = (u.username || u.displayName || '').toLowerCase();
-    return uName === lower;
-  });
+  const taken = repository.isUsernameTaken(username);
 
   if (taken) {
     return res.json({
       success: true,
       data: {
         available: false,
-        message: 'Bu foydalanuvchi nomi band. Boshqasini tanlang.',
+        username,
+        message: '✕ Bu nom band, boshqasini tanlang',
       },
     });
   }
@@ -1377,7 +1386,8 @@ authRouter.get(['/username-available', '/check-username'], (req: Request, res: R
     success: true,
     data: {
       available: true,
-      message: 'Foydalanuvchi nomi bo‘sh!',
+      username,
+      message: '✓ Bu nom bo‘sh',
     },
   });
 });
@@ -1403,13 +1413,7 @@ authRouter.post(['/complete-profile', '/complete-onboarding'], authMiddleware, (
   }
 
   // Ensure case-insensitive uniqueness across all other users
-  const lower = rawUsername.toLowerCase();
-  const conflict = repository.getAllUsers().some((u) => {
-    if (u.id === user.id) return false;
-    const uName = (u.username || u.displayName || '').toLowerCase();
-    return uName === lower;
-  });
-
+  const conflict = repository.isUsernameTaken(rawUsername, user.id);
   if (conflict) {
     return res.status(409).json({ success: false, error: 'Bu foydalanuvchi nomi band. Boshqasini tanlang.' });
   }

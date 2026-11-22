@@ -43,6 +43,7 @@ export interface UserAccount {
   id: string;
   email: string;
   username?: string;
+  usernameLower?: string;
   passwordHash?: string;
   googleId?: string;
   appleId?: string;
@@ -316,7 +317,21 @@ class DataRepository {
     return Array.from(unique.values());
   }
 
+  isUsernameTaken(rawUsername: string, excludeUserId?: string): boolean {
+    const clean = (rawUsername || '').trim().toLowerCase();
+    if (!clean) return false;
+    for (const user of this.getAllUsers()) {
+      if (excludeUserId && user.id === excludeUserId) continue;
+      const lower = (user.usernameLower || user.username || '').trim().toLowerCase();
+      if (lower === clean) return true;
+    }
+    return false;
+  }
+
   createUser(user: UserAccount): UserAccount {
+    if (user.username) {
+      user.usernameLower = user.username.trim().toLowerCase();
+    }
     if (user.passwordHash && !user.passwordHash.startsWith('$2')) {
       user.passwordHash = bcrypt.hashSync(user.passwordHash, 10);
     }
@@ -354,6 +369,9 @@ class DataRepository {
   updateUser(id: string, updates: Partial<UserAccount>): UserAccount {
     const user = this.getUserById(id);
     if (!user) throw new Error('Foydalanuvchi topilmadi');
+    if (updates.username) {
+      updates.usernameLower = updates.username.trim().toLowerCase();
+    }
     if (updates.passwordHash && !updates.passwordHash.startsWith('$2')) {
       updates.passwordHash = bcrypt.hashSync(updates.passwordHash, 10);
     }
@@ -413,7 +431,8 @@ class DataRepository {
         where: { id: user.id },
         update: {
           email: user.email.toLowerCase(),
-          username: user.username?.toLowerCase() || null,
+          username: user.username?.trim() || null,
+          usernameLower: user.username ? user.username.trim().toLowerCase() : null,
           passwordHash: user.passwordHash || null,
           googleId: user.googleId || null,
           appleId: user.appleId || null,
@@ -421,7 +440,8 @@ class DataRepository {
         create: {
           id: user.id,
           email: user.email.toLowerCase(),
-          username: user.username?.toLowerCase() || null,
+          username: user.username?.trim() || null,
+          usernameLower: user.username ? user.username.trim().toLowerCase() : null,
           passwordHash: user.passwordHash || null,
           googleId: user.googleId || null,
           appleId: user.appleId || null,
@@ -513,6 +533,7 @@ class DataRepository {
           id: u.id,
           email: u.email,
           username: u.username || undefined,
+          usernameLower: (u as any).usernameLower || (u.username ? u.username.toLowerCase() : undefined),
           passwordHash: u.passwordHash || undefined,
           googleId: u.googleId || undefined,
           appleId: u.appleId || undefined,

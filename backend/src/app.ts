@@ -142,6 +142,12 @@ app.get(['/api/me', '/me', '/api/users/me'], (req, res, next) => {
   studentsRouter(req, res, next);
 });
 
+// Endpoint: /api/users/check-username
+app.get(['/api/users/check-username', '/api/users/username-available'], (req, res, next) => {
+  req.url = '/check-username';
+  authRouter(req, res, next);
+});
+
 app.get(['/api/leaderboard', '/leaderboard'], (req, res, next) => {
   req.url = '/leaderboard';
   studentsRouter(req, res, next);
