@@ -18,6 +18,9 @@ class KidsHomeScreen extends ConsumerStatefulWidget {
 
 class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTickerProviderStateMixin {
   late AnimationController _mathAnimController;
+  int _completedTasksCount = 0;
+  int _totalTasksCount = 4;
+  String _taskProgressText = '5 ta matematika masalasini to‘g‘ri yeching';
 
   @override
   void initState() {
@@ -26,6 +29,33 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
       vsync: this,
       duration: const Duration(seconds: 6),
     )..repeat();
+    _loadDailyTasks();
+  }
+
+  Future<void> _loadDailyTasks() async {
+    try {
+      final data = await ref.read(studentProvider.notifier).fetchDailyMissions();
+      if (data != null && mounted) {
+        final missions = data['missions'] as List<dynamic>? ?? [];
+        final completed = data['completedCount'] as int? ?? 0;
+        String taskDesc = '5 ta matematika masalasini to‘g‘ri yeching';
+        if (missions.isNotEmpty) {
+          final firstPending = missions.firstWhere(
+            (m) => m['isCompleted'] != true,
+            orElse: () => missions.first,
+          );
+          final title = firstPending['title'] ?? 'Matematika vazifasi';
+          final curr = firstPending['currentProgress'] ?? firstPending['currentCount'] ?? 0;
+          final target = firstPending['targetProgress'] ?? firstPending['targetCount'] ?? 5;
+          taskDesc = '$title ($curr/$target)';
+        }
+        setState(() {
+          _completedTasksCount = completed;
+          _totalTasksCount = missions.isNotEmpty ? missions.length : 4;
+          _taskProgressText = taskDesc;
+        });
+      }
+    } catch (_) {}
   }
 
   @override
@@ -347,7 +377,9 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Siz ${studentState.student?.rank ?? 1}-o‘rindasiz',
+                              (student != null && (student.coinBalance > 0 || student.totalXP > 0))
+                                  ? 'Siz ${student.rank}-o‘rindasiz'
+                                  : 'Hali reytingda emassiz',
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
@@ -408,16 +440,16 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
                               ),
                             ),
                             const SizedBox(height: 4),
-                            const Row(
+                            Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                CoinIcon(size: 13),
-                                SizedBox(width: 4),
+                                const CoinIcon(size: 13),
+                                const SizedBox(width: 4),
                                 Flexible(
                                   child: Text(
-                                    '+30 oltin tanga',
+                                    coins > 0 ? '+$coins oltin tanga' : '0 oltin tanga',
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w800,
                                       color: Color(0xFFD97706),
@@ -641,9 +673,9 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
                               color: const Color(0xFFD4F8E6),
                               borderRadius: BorderRadius.circular(999),
                             ),
-                            child: const Text(
-                              '1 / 4 bajarildi',
-                              style: TextStyle(
+                            child: Text(
+                              '$_completedTasksCount / $_totalTasksCount bajarildi',
+                              style: const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w800,
                                 color: Color(0xFF0F9D58),
@@ -654,7 +686,7 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        '5 ta matematika masalasini to‘g‘ri yeching',
+                        _taskProgressText,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,

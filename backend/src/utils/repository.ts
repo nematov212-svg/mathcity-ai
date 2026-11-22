@@ -1558,6 +1558,10 @@ class DataRepository {
   }
 
   // --- Learning Statistics ---
+  getDailyActivity(userId: string, dateStr: string): DailyActivityRecord | undefined {
+    return this.dailyActivities.get(`${userId}:${dateStr}`);
+  }
+
   getTodayStudyMinutes(userId: string): number {
     const todayStr = getTashkentDateString();
     const act = this.dailyActivities.get(`${userId}:${todayStr}`);

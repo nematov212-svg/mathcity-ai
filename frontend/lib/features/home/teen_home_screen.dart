@@ -181,12 +181,12 @@ class TeenHomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 20),
 
-              // Two Column Cards: High-Tech City & Ziyo AI
+              // Two Column Cards: Reyting & Ziyo AI
               Row(
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: () => context.push('/teen/city'),
+                      onTap: () => context.push('/kids/leaderboard'),
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
                         padding: const EdgeInsets.all(18),
@@ -195,23 +195,27 @@ class TeenHomeScreen extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: AppColors.teenBorder),
                         ),
-                        child: const Column(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.biotech_rounded, color: Color(0xFF00CEC9), size: 32),
-                            SizedBox(height: 12),
-                            Text(
-                              'Ilmiy shahar',
+                            const Icon(Icons.emoji_events_rounded, color: Color(0xFFFFB300), size: 32),
+                            const SizedBox(height: 12),
+                            const Text(
+                              'Reyting',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
                                 color: Colors.white,
                               ),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Text(
-                              'Kiber minora & Laboratoriya',
-                              style: TextStyle(
+                              (student != null && (student.coinBalance > 0 || student.totalXP > 0))
+                                  ? 'Siz ${student.rank}-o‘rindasiz'
+                                  : 'Hali reytingda emassiz',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
                                 fontSize: 11,
                                 color: AppColors.teenMutedText,
                               ),
@@ -334,7 +338,7 @@ class TeenHomeScreen extends ConsumerWidget {
           if (index == 0) context.go('/teen/home');
           if (index == 1) context.push('/teen/courses');
           if (index == 2) context.push('/teen/ai-tutor');
-          if (index == 3) context.push('/teen/city');
+          if (index == 3) context.push('/kids/leaderboard');
           if (index == 4) context.push('/teen/analytics');
         },
         items: const [
@@ -351,8 +355,8 @@ class TeenHomeScreen extends ConsumerWidget {
             label: 'AI Ustoz',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.location_city_rounded),
-            label: 'Shahar',
+            icon: Icon(Icons.leaderboard_rounded),
+            label: 'Reyting',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.insights_rounded),

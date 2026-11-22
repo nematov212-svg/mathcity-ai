@@ -138,4 +138,38 @@ describe('Centralized Coin, XP, Practice, Avatar & Leaderboard Integration Tests
     expect(res.body.data.myRank).toBeDefined();
     expect(res.body.data.myRank.id).toBe(user1Id);
   });
+
+  it('7. GET /api/leaderboard/me returns personal rank and weekly XP accurately', async () => {
+    // 1. User with points
+    const meRes = await request(app)
+      .get('/api/leaderboard/me')
+      .set('Authorization', `Bearer ${user1Token}`);
+
+    expect(meRes.status).toBe(200);
+    expect(meRes.body.success).toBe(true);
+    expect(meRes.body.data.hasRank).toBe(true);
+    expect(typeof meRes.body.data.rank).toBe('number');
+    expect(typeof meRes.body.data.weeklyXP).toBe('number');
+    expect(meRes.body.data.message).toContain('o‘rindasiz');
+
+    // 2. Fresh new user without points
+    const freshRegister = await request(app)
+      .post('/api/auth/register')
+      .send({
+        displayName: 'Zero User',
+        loginOrEmail: 'zero_rank_user',
+        password: 'Password123!',
+        confirmPassword: 'Password123!',
+      });
+    const freshToken = freshRegister.body.data.token;
+
+    const freshRankRes = await request(app)
+      .get('/api/leaderboard/me')
+      .set('Authorization', `Bearer ${freshToken}`);
+
+    expect(freshRankRes.status).toBe(200);
+    expect(freshRankRes.body.data.hasRank).toBe(false);
+    expect(freshRankRes.body.data.rank).toBeNull();
+    expect(freshRankRes.body.data.message).toContain('Hali reytingda emassiz');
+  });
 });

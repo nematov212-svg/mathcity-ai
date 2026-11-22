@@ -362,7 +362,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Text(
-                          '#${_myRank!.rank}',
+                          (_myRank!.totalXP > 0 || _myRank!.coinBalance > 0)
+                              ? '#${_myRank!.rank}'
+                              : '—',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
@@ -386,16 +388,20 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Sizning joriy o‘rningiz',
-                              style: TextStyle(
+                            Text(
+                              (_myRank!.totalXP > 0 || _myRank!.coinBalance > 0)
+                                  ? 'Sizning joriy o‘rningiz'
+                                  : 'Hali reytingda emassiz',
+                              style: const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xFFFFD66B),
                               ),
                             ),
                             Text(
-                              '@${_myRank!.username}',
+                              (_myRank!.totalXP > 0 || _myRank!.coinBalance > 0)
+                                  ? '@${_myRank!.username}'
+                                  : '1 ta misol yechib, reytingga kiring!',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(

@@ -2,6 +2,7 @@ import { Router, Response } from 'express';
 import { z } from 'zod';
 import { authMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
 import { repository } from '../../utils/repository.js';
+import { getTashkentWeekDays } from '../../utils/tashkentTime.js';
 
 export const studentsRouter = Router();
 
@@ -69,6 +70,64 @@ studentsRouter.get('/me', authMiddleware, (req: AuthenticatedRequest, res: Respo
 });
 
 /**
+ * GET /api/students/leaderboard/me
+ * User's own real-time rank, weekly XP, and status message
+ */
+studentsRouter.get('/leaderboard/me', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const allUsers = repository.getAllUsers();
+
+  const isEligible = (user.totalXP || 0) > 0 || (user.coinBalance || 0) > 0;
+
+  // Active ranked users
+  const rankedUsers = [...allUsers]
+    .filter((u) => (u.totalXP || 0) > 0 || (u.coinBalance || 0) > 0)
+    .sort((a, b) => {
+      if (b.totalXP !== a.totalXP) return b.totalXP - a.totalXP;
+      if (b.coinBalance !== a.coinBalance) return b.coinBalance - a.coinBalance;
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    });
+
+  const myIndex = rankedUsers.findIndex((u) => u.id === user.id);
+  const rank = (isEligible && myIndex !== -1) ? myIndex + 1 : null;
+  const hasRank = rank !== null;
+
+  // Weekly XP calculation using Tashkent week days
+  const weekDays = getTashkentWeekDays();
+  let weeklyXP = 0;
+  for (const w of weekDays) {
+    const act = repository.getDailyActivity(user.id, w.dateStr);
+    if (act) {
+      weeklyXP += act.problemsSolved * 10;
+    }
+  }
+  if (weeklyXP === 0 && isEligible) {
+    weeklyXP = user.totalXP || 0;
+  }
+
+  return res.json({
+    success: true,
+    data: {
+      hasRank,
+      rank,
+      totalXP: user.totalXP || 0,
+      weeklyXP,
+      coinBalance: user.coinBalance || 0,
+      displayName: user.displayName,
+      username: user.username,
+      avatarUrl: user.avatarUrl,
+      level: user.level || 1,
+      message: hasRank
+        ? `Siz ${rank}-o‘rindasiz`
+        : 'Hali reytingda emassiz',
+      subMessage: hasRank
+        ? 'Reytingda yuqorilash uchun darslarni davom ettiring'
+        : '1 ta misol yechib, reytingga kiring!',
+    },
+  });
+});
+
+/**
  * GET /api/students/leaderboard
  * Global leaderboard sorted by: totalXP DESC -> coinBalance DESC -> createdAt ASC
  * Privacy: ONLY exposes rank, username, public first name, avatar, XP, and coin balance.
@@ -96,12 +155,11 @@ studentsRouter.get('/leaderboard', authMiddleware, (req: AuthenticatedRequest, r
   }));
 
   const myUserId = req.user?.id;
+  const isEligible = (req.user?.totalXP || 0) > 0 || (req.user?.coinBalance || 0) > 0;
   const myEntry = fullLeaderboard.find((entry) => entry.id === myUserId);
   const myRank = myEntry
     ? myEntry.rank
-    : fullLeaderboard.length > 0
-    ? fullLeaderboard.length
-    : 1;
+    : (fullLeaderboard.length > 0 ? fullLeaderboard.length : 1);
 
   const page = Math.max(1, parseInt(req.query.page as string, 10) || 1);
   const limit = Math.max(5, Math.min(100, parseInt(req.query.limit as string, 10) || 50));
@@ -116,6 +174,7 @@ studentsRouter.get('/leaderboard', authMiddleware, (req: AuthenticatedRequest, r
       page,
       limit,
       myRank: {
+        hasRank: isEligible,
         rank: myRank,
         id: myUserId,
         username: req.user?.username || (req.user?.displayName ? req.user.displayName.split(' ')[0] : 'Siz'),

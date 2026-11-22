@@ -148,6 +148,11 @@ app.get(['/api/users/check-username', '/api/users/username-available'], (req, re
   authRouter(req, res, next);
 });
 
+app.get(['/api/leaderboard/me', '/leaderboard/me'], (req, res, next) => {
+  req.url = '/leaderboard/me';
+  studentsRouter(req, res, next);
+});
+
 app.get(['/api/leaderboard', '/leaderboard'], (req, res, next) => {
   req.url = '/leaderboard';
   studentsRouter(req, res, next);
