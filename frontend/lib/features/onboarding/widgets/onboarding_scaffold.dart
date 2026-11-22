@@ -90,23 +90,26 @@ class _OnboardingScaffoldState extends State<OnboardingScaffold> with SingleTick
             // ─── 3. Main Responsive Content ──────────────────────────────────
             SafeArea(
               child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: isTablet ? 560 : double.infinity),
-                  child: isTablet
-                      ? Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(32),
-                            border: Border.all(color: OnboardingTheme.border, width: 1.5),
-                            boxShadow: OnboardingTheme.cardShadow(opacity: 0.14, blur: 32),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(32),
-                            child: widget.child,
-                          ),
-                        )
-                      : widget.child,
+                child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: isTablet ? 560 : double.infinity),
+                    child: isTablet
+                        ? Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(32),
+                              border: Border.all(color: OnboardingTheme.border, width: 1.5),
+                              boxShadow: OnboardingTheme.cardShadow(opacity: 0.14, blur: 32),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(32),
+                              child: widget.child,
+                            ),
+                          )
+                        : widget.child,
+                  ),
                 ),
               ),
             ),

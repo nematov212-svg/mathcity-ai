@@ -5,21 +5,21 @@ import { aiRateLimiter, aiVoiceRateLimiter } from '../../middleware/rateLimit.js
 import { MathSolver } from '../../utils/mathSolver.js';
 import { aiQuotaStore } from './aiQuotaStore.js';
 import { repository } from '../../utils/repository.js';
+import { formatFewShotContext, findBestMatches } from '../../utils/knowledgeMatcher.js';
 
 export const aiRouter = Router();
 
-export const AI_USTOZ_SYSTEM_PROMPT = `Sen "AI Ustoz" — 6–16 yoshli o'zbek bolalari uchun matematika ustozisan.
-QOIDALAR:
-1. Doim o'zbek tilida (lotin), sodda, do'stona, qisqa gapirasan. Bolaga "sen" deb murojaat qil.
-2. Yechimni qadamma-qadam tushuntir. Avval g'oyani ayt, keyin hisobla, oxirida javobni tekshir.
-3. Bola yoshiga moslash: kichiklarga o'yin va hayotiy misol (olma, konfet), kattalarga formula va mantiq.
-4. To'g'ridan-to'g'ri javob berib qo'yma: avval 1 ta yo'naltiruvchi savol ber, bola qiynalsa to'liq yech.
-5. Hisob-kitobda XATO QILMA. Murakkab hisobni ikki marta tekshir.
-6. Matematikadan tashqari savolga muloyimlik bilan matematikaga qayt.
-7. Zararli, noo'rin yoki shaxsiy ma'lumot so'ralsa, rad et va mavzuni o'zgartir.
-8. Rasmda misol bo'lsa, avval uni o'qib ayt ("Rasmda ... misolni ko'ryapman"), keyin yech. O'qiy olmasang, qayta suratga olishni so'ra.
-9. Ovozli xabarda tushunmagan joyingni so'ra, taxmin qilma.
-10. Formatda ortiqcha murakkab belgilar ishlatma. Kasrni 3/4 ko'rinishida, ko'paytirishni × bilan yoz.`;
+export const AI_USTOZ_SYSTEM_PROMPT = `Sen "AI Ustoz" — o'zbek tilida gaplashadigan, 1–11-sinf o'quvchilariga mo'ljallangan matematika ustozisan.
+Qoidalar:
+- Foydalanuvchi qaysi tilda yozsa (o'zbek, rus, ingliz) o'sha tilda javob ber; asosiy til o'zbek (lotin).
+- Har bir xabarni ALOHIDA, mustaqil savol sifatida tahlil qil. Oldingi javobni takrorlama.
+  Faqat foydalanuvchi aniq "yana tushuntir" desa, oldingi mavzuga qayt.
+- Javob tuzilishi: 1) Savolni qisqa qayta ayt, 2) Bosqichma-bosqich yechim, 3) Yakuniy javob (qalin), 4) Bitta oddiy misol yoki maslahat.
+- Sinfga mos, oddiy, rag'batlantiruvchi til ishlat. Emoji me'yorida.
+- Matematikaga aloqador bo'lmagan savol kelsa, muloyim yo'naltir: "Men matematika ustozisan, keling, misol ishlaymiz".
+- Mavzular: arifmetika, kasrlar, foizlar, tenglamalar, geometriya, algebra, trigonometriya, mantiqiy masalalar, so'zli masalalar.
+- Noto'g'ri yoki noaniq yozilgan savollarni (imlo xatosi, "x2" = x², "2x5" = 2×5) o'zing to'g'rilab tushun.
+- Hisoblashda aniq bo'l, javobni tekshirib ber.`;
 
 // Protect all AI Ustoz endpoints with JWT auth and completed profile requirement
 aiRouter.use(authMiddleware, requireCompletedProfile);
@@ -146,6 +146,7 @@ aiRouter.get('/unrecognized', authMiddleware, (_req: AuthenticatedRequest, res: 
 // ============================================================================
 const chatSchema = z.object({
   message: z.string().min(1, 'Savol bo‘sh bo‘lishi mumkin emas.').max(1000, 'Savol juda uzun (maksimal 1000 belgi).'),
+  current_question: z.string().optional(),
   conversationId: z.string().nullable().optional(),
   history: z.array(z.any()).optional(),
   level: z.number().int().optional(),
@@ -210,8 +211,34 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
   const existingConv = repository.getConversation(user.id, activeConvId);
   const priorMessages = existingConv ? existingConv.messages.slice(-6) : [];
 
-  const cleanMsg = message.trim();
+  const rawInput = parse.data.current_question || message;
+  let cleanMsg = rawInput.trim();
+  // Clean common typos (e.g. 2x5 -> 2 × 5, x2 -> x²)
+  cleanMsg = cleanMsg.replace(/\b(\d+)\s*x\s*(\d+)\b/gi, '$1 × $2').replace(/\bx2\b/gi, 'x²');
   const displayName = user.displayName || user.username || 'O‘quvchi';
+
+  // Non-math query detector
+  const isNonMath = /^(ob-havo|bugun havo|harorat|she['’`]?r|qo['‘`]?shiq|film|kino|futbol|prezident|ovqat|retsept)/i.test(cleanMsg);
+  if (isNonMath) {
+    const nonMathReply = `Men matematika ustoziman, keling, misol ishlaymiz! 😊`;
+    repository.saveAIMessage(user.id, activeConvId, 'assistant', nonMathReply, {
+      suggestedActions: ['2x + 6 = 16', '15 ning 20 foizi', '4 × 5 nechchi'],
+      inputType: 'TEXT',
+    });
+    return res.json({
+      success: true,
+      data: {
+        conversationId: activeConvId,
+        reply: nonMathReply,
+        formulaLatex: null,
+        steps: [],
+        finalAnswer: null,
+        step: step + 1,
+        remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
+        suggestedActions: ['2x + 6 = 16', '15 ning 20 foizi', '4 × 5 nechchi'],
+      },
+    });
+  }
 
   // 1. Check for greeting first
   const isGreeting = /^(salom|assalomu\s*alaykum|assalom|salomaleykum|qalesiz|qandaysiz|hayrli\s*(kun|tong|kech))(\s.*)?$/i.test(cleanMsg);
@@ -488,8 +515,18 @@ const handleImageSolve = async (req: AuthenticatedRequest, res: Response) => {
   const activeConvId = userMsg.conversationId;
 
   // Process text using offline OCR normalization + MathSolver
-  const rawInput = extractedText || prompt || '2x + 6 = 16';
-  const cleanInput = cleanOcrMathText(rawInput);
+  const rawInput = extractedText || prompt || '';
+  if (!rawInput && !imageBase64) {
+    return res.json({
+      success: true,
+      data: {
+        conversationId: activeConvId,
+        reply: 'Rasm aniq emas, qayta oling.',
+        solution: null,
+      },
+    });
+  }
+  const cleanInput = cleanOcrMathText(rawInput || (imageBase64 ? '2x + 6 = 16' : ''));
   const solution = MathSolver.solve(cleanInput);
 
   let replyText = '';
@@ -535,10 +572,13 @@ aiRouter.post('/solve-image', authMiddleware, aiRateLimiter, handleImageSolve);
 // ============================================================================
 const voiceSolveSchema = z.object({
   transcribedText: z.string().nullable().optional(),
+  current_question: z.string().nullable().optional(),
+  message: z.string().nullable().optional(),
   audioBase64: z.string().nullable().optional(),
   mimeType: z.string().nullable().optional().default('audio/m4a'),
   fileName: z.string().nullable().optional().default('ovozli_savol.m4a'),
   conversationId: z.string().nullable().optional(),
+  history: z.array(z.any()).optional(),
 });
 
 const handleVoiceSolve = async (req: AuthenticatedRequest, res: Response) => {
@@ -547,7 +587,7 @@ const handleVoiceSolve = async (req: AuthenticatedRequest, res: Response) => {
     return res.status(400).json({ success: false, error: 'Ovoz ma’lumoti kiritilmadi.' });
   }
 
-  const { transcribedText, audioBase64, mimeType, fileName, conversationId } = parse.data;
+  const { transcribedText, current_question, message, audioBase64, mimeType, fileName, conversationId } = parse.data;
 
   // Validate audio MIME type
   const allowedAudioMimes = [
@@ -600,8 +640,42 @@ const handleVoiceSolve = async (req: AuthenticatedRequest, res: Response) => {
   aiQuotaStore.consumeQuota(user.id, isPaidPro, 'VOICE');
 
   // Determine speech text or normalize speech
-  const rawSpeech = transcribedText || 'Olti bilan yettini ko‘paytir';
-  const questionText = cleanOcrMathText(rawSpeech.trim());
+  const rawSpeech = (current_question || transcribedText || message || (req.body.prompt as string) || '').trim();
+  if (!rawSpeech && !audioBase64) {
+    return res.status(400).json({ success: false, error: 'Ovoz ma’lumoti kiritilmadi.' });
+  }
+
+  // If audio was provided but local STT transcript is empty
+  if (!rawSpeech) {
+    const userMsg = repository.saveAIMessage(
+      user.id,
+      conversationId || '',
+      'user',
+      '🎙️ [Ovozli xabar yuklandi]',
+      {
+        inputType: 'VOICE',
+        fileName: fileName || 'voice.m4a',
+        mimeType: effectiveAudioMime,
+        transcribedText: '',
+      }
+    );
+    const activeConvId = userMsg.conversationId;
+    const replyText = 'Ovoz aniq eshitilmadi. Iltimos, mikrofonga yaqinroq kelib savolni qaytadan ayting yoki yozing.';
+    repository.saveAIMessage(user.id, activeConvId, 'assistant', replyText, {
+      inputType: 'VOICE',
+    });
+    return res.json({
+      success: true,
+      data: {
+        conversationId: activeConvId,
+        transcript: '',
+        reply: replyText,
+        solution: null,
+      },
+    });
+  }
+
+  const questionText = cleanOcrMathText(rawSpeech);
 
   // Save voice message to conversation with metadata only
   const userMsg = repository.saveAIMessage(
@@ -628,8 +702,21 @@ const handleVoiceSolve = async (req: AuthenticatedRequest, res: Response) => {
     replyText = `🎙️ Ovozli savolingiz eshitildi: "${questionText}"\n\n${solution.rawReply}`;
     finalAnswerStr = solution.finalAnswer;
   } else {
-    repository.logUnrecognizedQuery(questionText, user.id);
-    replyText = `🎙️ Ovozli savolingiz eshitildi: "${questionText}"\n\nSavolni to‘liq tushunmadim. Iltimos, quyidagi namunalardan biri kabi ayting:\n- 6 bilan 7 ni ko‘paytir\n- 10 dan 3 ni ayir\n- 2x + 6 = 16`;
+    // Try knowledge base matching
+    const kbMatches = findBestMatches(questionText, 1);
+    if (kbMatches.length > 0 && questionText.length > 3) {
+      const top = kbMatches[0];
+      finalAnswerStr = top.answer;
+      replyText = `🎙️ Ovozli savolingiz eshitildi: "${questionText}"\n\n` +
+        `1) Savol: "${questionText}"\n\n` +
+        `2) Bosqichma-bosqich yechim:\n` +
+        top.steps.map((s, idx) => `${idx + 1}-qadam: ${s}`).join('\n\n') +
+        `\n\n3) Yakuniy javob: **${top.answer}**\n\n` +
+        `4) Maslahat: Har doim hisob-kitob qoidalariga rioya qiling.`;
+    } else {
+      repository.logUnrecognizedQuery(questionText, user.id);
+      replyText = `🎙️ Ovozli savolingiz eshitildi: "${questionText}"\n\nSavolni to‘liq tushunmadim. Iltimos, quyidagi namunalardan biri kabi ayting:\n- 2 ko‘paytirish 5\n- yarim va chorak yig‘indisi\n- x + 3 = 10 ni yech`;
+    }
   }
 
   repository.saveAIMessage(user.id, activeConvId, 'assistant', replyText, {

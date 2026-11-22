@@ -11,6 +11,9 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:record/record.dart';
+import 'package:uuid/uuid.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:flutter_tts/flutter_tts.dart';
 import '../../core/network/api_client.dart';
 import '../../core/widgets/responsive_layout.dart';
 import '../../core/theme/app_theme.dart';
@@ -41,6 +44,7 @@ class SolutionStep {
 }
 
 class MessageItem {
+  final String id;
   final String text;
   final bool isUser;
   final String? formulaLatex;
@@ -52,6 +56,7 @@ class MessageItem {
   final DateTime timestamp;
 
   MessageItem({
+    String? id,
     required this.text,
     required this.isUser,
     this.formulaLatex,
@@ -61,7 +66,8 @@ class MessageItem {
     this.inputType = 'TEXT',
     this.imagePreviewBytes,
     DateTime? timestamp,
-  }) : timestamp = timestamp ?? DateTime.now();
+  })  : id = id ?? const Uuid().v4(),
+        timestamp = timestamp ?? DateTime.now();
 }
 
 class ConversationSummary {
@@ -103,7 +109,17 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   final ImagePicker _picker = ImagePicker();
   AudioRecorder? _audioRecorder;
 
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  final FlutterTts _flutterTts = FlutterTts();
+  bool _speechAvailable = false;
+  String _speechLocale = 'uz_UZ';
+  String _liveTranscript = '';
+  bool _isSpeaking = false;
+
   bool _isLoading = false;
+  bool _isSending = false;
+  DateTime? _lastSendTime;
+  final Set<String> _sentMessageIds = {};
   int _currentStep = 1;
 
   // Quota status
@@ -137,6 +153,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     super.initState();
     _fetchQuotaStatus();
     _fetchConversations();
+    _initSpeech();
+    _initTts();
   }
 
   @override
@@ -144,8 +162,70 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     _textController.dispose();
     _scrollController.dispose();
     _recordingTimer?.cancel();
+    try {
+      _speech.stop();
+      _speech.cancel();
+    } catch (_) {}
+    try {
+      _flutterTts.stop();
+    } catch (_) {}
     _disposeRecorder();
     super.dispose();
+  }
+
+  Future<void> _initSpeech() async {
+    try {
+      _speechAvailable = await _speech.initialize(
+        onError: (val) => debugPrint('ℹ️ [Speech] Error: $val'),
+        onStatus: (val) => debugPrint('ℹ️ [Speech] Status: $val'),
+      );
+      if (_speechAvailable) {
+        final locales = await _speech.locales();
+        final uzLocale = locales.where((l) => l.localeId.startsWith('uz')).firstOrNull;
+        final ruLocale = locales.where((l) => l.localeId.startsWith('ru')).firstOrNull;
+        final enLocale = locales.where((l) => l.localeId.startsWith('en')).firstOrNull;
+        _speechLocale = uzLocale?.localeId ?? ruLocale?.localeId ?? enLocale?.localeId ?? 'uz_UZ';
+      }
+    } catch (e) {
+      debugPrint('ℹ️ [Speech] Init exception: $e');
+      _speechAvailable = false;
+    }
+  }
+
+  Future<void> _initTts() async {
+    try {
+      await _flutterTts.setLanguage('uz-UZ');
+      await _flutterTts.setPitch(1.0);
+      await _flutterTts.setSpeechRate(0.9);
+      _flutterTts.setCompletionHandler(() {
+        if (mounted) setState(() => _isSpeaking = false);
+      });
+      _flutterTts.setErrorHandler((_) {
+        if (mounted) setState(() => _isSpeaking = false);
+      });
+    } catch (e) {
+      debugPrint('ℹ️ [TTS] Init exception: $e');
+    }
+  }
+
+  Future<void> _speakText(String text) async {
+    try {
+      if (_isSpeaking) {
+        await _flutterTts.stop();
+        if (mounted) setState(() => _isSpeaking = false);
+        return;
+      }
+      final cleanText = text
+          .replaceAll(RegExp(r'\*\*|\*|#|`|_'), '')
+          .replaceAll(RegExp(r'\\[a-zA-Z]+'), '')
+          .trim();
+      if (cleanText.isEmpty) return;
+      setState(() => _isSpeaking = true);
+      await _flutterTts.speak(cleanText);
+    } catch (e) {
+      debugPrint('ℹ️ [TTS] Speak exception: $e');
+      if (mounted) setState(() => _isSpeaking = false);
+    }
   }
 
   AudioRecorder _getOrCreateRecorder() {
@@ -301,80 +381,142 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
 
   void _toggleRecording() async {
     if (_isRecording) {
-      // Stop recording
-      _recordingTimer?.cancel();
-      try {
-        final recorder = _audioRecorder;
-        final path = await recorder?.stop();
-        setState(() {
-          _isRecording = false;
-          _recordingSeconds = 0;
-        });
-        _disposeRecorder();
-        if (path != null) {
-          _sendVoiceMessage(path);
-        }
-      } catch (e) {
-        setState(() {
-          _isRecording = false;
-          _recordingSeconds = 0;
-        });
-        _disposeRecorder();
-      }
+      _finishVoiceRecording();
     } else {
-      // Start recording lazily
-      try {
-        final recorder = _getOrCreateRecorder();
-        final hasPermission = await recorder.hasPermission();
-        if (!mounted) return;
-        if (!hasPermission) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Mikrofon ruxsati berilmadi. Iltimos, brauzer sozlamalarida mikrofonga ruxsat bering.'),
-              backgroundColor: Color(0xFFDC2626),
+      _startVoiceRecording();
+    }
+  }
+
+  Future<void> _startVoiceRecording() async {
+    if (_isSending || _isLoading) return;
+
+    // Reset independent session state
+    _liveTranscript = '';
+    _recordingSeconds = 0;
+
+    try {
+      final recorder = _getOrCreateRecorder();
+      final hasPermission = await recorder.hasPermission();
+      if (!mounted) return;
+      if (!hasPermission) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Mikrofon ruxsati berilmadi. Iltimos, sozlamalarda mikrofonga ruxsat bering.'),
+            backgroundColor: Color(0xFFDC2626),
+          ),
+        );
+        _disposeRecorder();
+        return;
+      }
+
+      final config = kIsWeb
+          ? const RecordConfig(encoder: AudioEncoder.opus)
+          : const RecordConfig(encoder: AudioEncoder.aacLc);
+
+      await recorder.start(config, path: '');
+
+      // Start SpeechToText for live transcription
+      if (_speechAvailable) {
+        try {
+          await _speech.listen(
+            onResult: (result) {
+              if (mounted) {
+                setState(() {
+                  _liveTranscript = result.recognizedWords;
+                });
+              }
+            },
+            localeId: _speechLocale,
+            pauseFor: const Duration(seconds: 3),
+            listenOptions: stt.SpeechListenOptions(
+              partialResults: true,
+              cancelOnError: false,
             ),
           );
-          _disposeRecorder();
+        } catch (e) {
+          debugPrint('ℹ️ [Speech] Listen ogohlantirish: $e');
+        }
+      }
+
+      setState(() {
+        _isRecording = true;
+      });
+
+      _recordingTimer?.cancel();
+      _recordingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (!mounted) {
+          timer.cancel();
           return;
         }
-
-        final config = kIsWeb
-            ? const RecordConfig(encoder: AudioEncoder.opus)
-            : const RecordConfig(encoder: AudioEncoder.aacLc);
-
-        await recorder.start(config, path: '');
-        setState(() {
-          _isRecording = true;
-          _recordingSeconds = 0;
-        });
-        _recordingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-          if (!mounted) {
-            timer.cancel();
-            return;
-          }
-          setState(() => _recordingSeconds++);
-        });
-      } catch (e) {
-        debugPrint('⚠️ Ovoz yozish xatosi: $e');
-        setState(() {
-          _isRecording = false;
-          _recordingSeconds = 0;
-        });
-        _disposeRecorder();
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Ovoz yozishda xatolik yuz berdi. Mikrofon ulanganligini tekshiring.'),
-              backgroundColor: Color(0xFFDC2626),
-            ),
-          );
-        }
+        setState(() => _recordingSeconds++);
+      });
+    } catch (e) {
+      debugPrint('⚠️ Ovoz yozish xatosi: $e');
+      setState(() {
+        _isRecording = false;
+        _recordingSeconds = 0;
+      });
+      _disposeRecorder();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Ovoz yozishda xatolik yuz berdi. Mikrofon ulanganligini tekshiring.'),
+            backgroundColor: Color(0xFFDC2626),
+          ),
+        );
       }
     }
   }
 
+  Future<void> _finishVoiceRecording() async {
+    if (!_isRecording) return;
+
+    _recordingTimer?.cancel();
+
+    // Guard against double submission
+    if (_isSending) return;
+    _isSending = true;
+
+    String? path;
+    try {
+      if (_speechAvailable) {
+        await _speech.stop();
+      }
+    } catch (_) {}
+
+    try {
+      final recorder = _audioRecorder;
+      path = await recorder?.stop();
+    } catch (e) {
+      debugPrint('⚠️ Recorder stop xatosi: $e');
+    }
+
+    final transcriptToSend = _liveTranscript.trim();
+
+    // Reset independent session state
+    _liveTranscript = '';
+    _textController.clear();
+    try {
+      await _speech.cancel();
+    } catch (_) {}
+    _disposeRecorder();
+
+    setState(() {
+      _isRecording = false;
+      _recordingSeconds = 0;
+    });
+
+    _sendVoiceMessage(path: path ?? '', transcript: transcriptToSend);
+  }
+
   void _cancelRecording() async {
     _recordingTimer?.cancel();
+    try {
+      if (_speechAvailable) {
+        await _speech.stop();
+        await _speech.cancel();
+      }
+    } catch (_) {}
     try {
       await _audioRecorder?.stop();
     } catch (_) {}
@@ -382,10 +524,19 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     setState(() {
       _isRecording = false;
       _recordingSeconds = 0;
+      _liveTranscript = '';
     });
   }
 
-  void _sendVoiceMessage(String path) async {
+  void _sendVoiceMessage({
+    required String path,
+    required String transcript,
+    int retryCount = 0,
+  }) async {
+    final messageId = const Uuid().v4();
+    if (_sentMessageIds.contains(messageId)) return;
+    _sentMessageIds.add(messageId);
+
     Uint8List? audioBytes;
     try {
       if (path.isNotEmpty && !kIsWeb) {
@@ -398,10 +549,19 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       debugPrint('ℹ️ [ZiyoTutor] Audio faylni o‘qish: $e');
     }
 
+    final questionText = transcript.isNotEmpty
+        ? transcript
+        : (path.isNotEmpty ? 'Ovozli masala' : '');
+
     final userMessageIndex = _messages.length;
+    final displayUserText = transcript.isNotEmpty
+        ? '🎙️ "$transcript"'
+        : '🎙️ [Ovoz yozildi, tahlil qilinmoqda...]';
+
     setState(() {
       _messages.add(MessageItem(
-        text: '🎙️ [Ovoz yozildi, tahlil qilinmoqda...]',
+        id: messageId,
+        text: displayUserText,
         isUser: true,
         inputType: 'VOICE',
       ));
@@ -409,12 +569,22 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     });
     _scrollToBottom();
 
+    // Cap recent history at 4 messages
+    final recentHistory = _messages.reversed.take(4).toList().reversed.map((m) => {
+      'role': m.isUser ? 'user' : 'model',
+      'text': m.text,
+    }).toList();
+
     try {
       final res = await ApiClient().dio.post('/ai/chat/voice', data: {
+        'messageId': messageId,
+        'current_question': questionText.isNotEmpty ? questionText : null,
+        'transcribedText': questionText.isNotEmpty ? questionText : null,
+        'message': questionText.isNotEmpty ? questionText : null,
         if (audioBytes != null) 'audioBase64': base64Encode(audioBytes),
-        'transcribedText': 'Olti bilan yettini ko‘paytir',
         'mimeType': kIsWeb ? 'audio/webm' : 'audio/m4a',
         'conversationId': _activeConversationId,
+        'history': recentHistory,
       });
 
       if (!mounted) return;
@@ -426,12 +596,13 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
 
         final reply = data['reply'] as String? ?? 'Savolingiz tahlil qilindi.';
         final solution = data['solution'];
-        final transcript = data['transcript'] as String?;
+        final serverTranscript = data['transcript'] as String?;
 
         setState(() {
-          if (transcript != null && transcript.isNotEmpty && userMessageIndex < _messages.length) {
+          if (serverTranscript != null && serverTranscript.isNotEmpty && userMessageIndex < _messages.length) {
             _messages[userMessageIndex] = MessageItem(
-              text: '🎙️ "$transcript"',
+              id: messageId,
+              text: '🎙️ "$serverTranscript"',
               isUser: true,
               inputType: 'VOICE',
             );
@@ -443,26 +614,105 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             finalAnswer: solution != null ? solution['finalAnswer'] : null,
             inputType: 'VOICE',
           ));
-          _isLoading = false;
         });
         _fetchConversations();
         _fetchQuotaStatus();
+
+        // Voice reply speech
+        _speakText(reply);
       }
     } catch (e) {
       if (!mounted) return;
-      _handleSendError(e, onRetry: () => _sendVoiceMessage(path));
+      _handleVoiceError(
+        e,
+        path: path,
+        transcript: transcript,
+        retryCount: retryCount,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _isSending = false;
+        });
+        _scrollToBottom();
+      }
     }
-    if (mounted) _scrollToBottom();
+  }
+
+  void _handleVoiceError(
+    dynamic e, {
+    required String path,
+    required String transcript,
+    required int retryCount,
+  }) {
+    if (e is DioException && e.response?.statusCode == 429) {
+      final responseData = e.response?.data;
+      final isQuotaLimit = responseData is Map &&
+          (responseData['code'] == 'AI_QUOTA_EXCEEDED' ||
+           responseData['error']?.toString().contains('bepul') == true);
+
+      if (isQuotaLimit) {
+        _showQuotaExceededDialog();
+        setState(() {
+          _messages.add(MessageItem(
+            text:
+                'Bugungi 5 ta bepul AI so‘rovingiz tugadi. Limit 24 soatlik muddat asosida yangilanadi.\nCheksiz savollar berish uchun MathCity Pro ga obuna bo‘ling!',
+            isUser: false,
+            suggestedActions: ['Pro tarifiga o‘tish (Cheksiz savollar)'],
+          ));
+        });
+        return;
+      }
+
+      // Upstream 429: exponential backoff up to 2 retries (1.5s, 3s)
+      if (retryCount < 2) {
+        final backoffMs = retryCount == 0 ? 1500 : 3000;
+        Future.delayed(Duration(milliseconds: backoffMs), () {
+          if (mounted) {
+            _sendVoiceMessage(path: path, transcript: transcript, retryCount: retryCount + 1);
+          }
+        });
+      } else {
+        setState(() {
+          _messages.add(MessageItem(
+            text: 'Ustoz biroz band, 10 soniyadan keyin urinib ko‘ring.',
+            isUser: false,
+          ));
+        });
+      }
+    } else {
+      debugPrint('🚨 [ZiyoTutor] Ovozli xabar xatosi: $e');
+      setState(() {
+        _messages.add(MessageItem(
+          text: 'Ovozli xabarni tahlil qilishda xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.',
+          isUser: false,
+        ));
+      });
+    }
   }
 
   void _sendMessage({
     String? customText,
     String action = 'chat',
+    int retryCount = 0,
   }) async {
+    if (_isSending || _isLoading) return;
+
+    final now = DateTime.now();
+    if (_lastSendTime != null && now.difference(_lastSendTime!) < const Duration(milliseconds: 1500)) {
+      return;
+    }
+    _lastSendTime = now;
+
     final text = customText ?? _textController.text.trim();
     final hasImage = _selectedImageBytes != null;
 
     if (text.isEmpty && !hasImage) return;
+
+    final messageId = const Uuid().v4();
+    if (_sentMessageIds.contains(messageId)) return;
+    _sentMessageIds.add(messageId);
 
     final imageBytesToSend = _selectedImageBytes;
 
@@ -471,8 +721,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       _clearSelectedImage();
     }
 
+    _isSending = true;
     setState(() {
       _messages.add(MessageItem(
+        id: messageId,
         text: text.isNotEmpty ? text : '📷 Surat yuborildi',
         isUser: true,
         inputType: hasImage ? 'IMAGE' : 'TEXT',
@@ -487,7 +739,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     final userAge = student?.age ?? 10;
     final currentLevel = ExerciseRepository.determineLevelForAge(userAge);
 
-    final recentHistory = _messages.take(10).map((m) => {
+    // Capped at 4 recent history items
+    final recentHistory = _messages.reversed.take(4).toList().reversed.map((m) => {
       'role': m.isUser ? 'user' : 'model',
       'text': m.text,
     }).toList();
@@ -497,6 +750,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         // Send image analysis request
         final base64Img = base64Encode(imageBytesToSend!);
         final res = await ApiClient().dio.post('/ai/chat/image', data: {
+          'messageId': messageId,
+          'current_question': text.isNotEmpty ? text : null,
           'imageBase64': base64Img,
           'mimeType': 'image/jpeg',
           'fileName': 'matematika_surati.jpg',
@@ -522,7 +777,6 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               finalAnswer: solution != null ? solution['finalAnswer'] : null,
               inputType: 'IMAGE',
             ));
-            _isLoading = false;
           });
           _fetchConversations();
           _fetchQuotaStatus();
@@ -530,6 +784,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       } else {
         // Send regular text chat request with history and level
         final res = await ApiClient().dio.post('/ai/chat', data: {
+          'messageId': messageId,
+          'current_question': text,
           'message': text,
           'action': action,
           'step': _currentStep,
@@ -568,21 +824,36 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             if (!_isPro && data['remainingQuota'] != null) {
               _remainingQuota = data['remainingQuota'];
             }
-            _isLoading = false;
           });
           _fetchConversations();
         }
       }
     } catch (e) {
       if (!mounted) return;
-      _handleSendError(e, onRetry: () => _sendMessage(customText: text, action: action));
+      _handleTextSendError(
+        e,
+        customText: text,
+        action: action,
+        retryCount: retryCount,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _isSending = false;
+        });
+        _scrollToBottom();
+      }
     }
-    if (mounted) _scrollToBottom();
   }
 
-  void _handleSendError(dynamic e, {VoidCallback? onRetry}) {
+  void _handleTextSendError(
+    dynamic e, {
+    required String customText,
+    required String action,
+    required int retryCount,
+  }) {
     if (!mounted) return;
-    setState(() => _isLoading = false);
 
     if (e is DioException && e.response?.statusCode == 429) {
       final responseData = e.response?.data;
@@ -600,21 +871,24 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             suggestedActions: ['Pro tarifiga o‘tish (Cheksiz savollar)'],
           ));
         });
+        return;
+      }
+
+      // Upstream busy / rate limit: exponential backoff up to 2 retries (1.5s, 3s)
+      if (retryCount < 2) {
+        final backoffMs = retryCount == 0 ? 1500 : 3000;
+        Future.delayed(Duration(milliseconds: backoffMs), () {
+          if (mounted) {
+            _sendMessage(customText: customText, action: action, retryCount: retryCount + 1);
+          }
+        });
       } else {
-        // Upstream busy / rate limit: friendly notification and single auto-retry after 5s
         setState(() {
           _messages.add(MessageItem(
-            text: 'Ustoz biroz band, 5 soniyadan so‘ng qayta urinaman...',
+            text: 'Ustoz biroz band, 10 soniyadan keyin urinib ko‘ring.',
             isUser: false,
           ));
         });
-        if (onRetry != null) {
-          Future.delayed(const Duration(seconds: 5), () {
-            if (mounted && !_isLoading) {
-              onRetry();
-            }
-          });
-        }
       }
     } else {
       debugPrint('🚨 [ZiyoTutor] Xatolik: $e');
@@ -878,6 +1152,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     return AppBar(
       backgroundColor: colors.card,
       elevation: 0,
+      titleSpacing: 0,
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios_new_rounded, color: colors.ink),
         onPressed: () {
@@ -929,8 +1204,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         // Quota Badge
         Center(
           child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 4),
-            padding: EdgeInsets.symmetric(horizontal: isDesktop ? 10 : 8, vertical: 4),
+            margin: const EdgeInsets.symmetric(horizontal: 2),
+            padding: EdgeInsets.symmetric(horizontal: isDesktop ? 10 : 7, vertical: 4),
             decoration: BoxDecoration(
               color: _isPro
                   ? (isDark ? const Color(0xFF143828) : const Color(0xFFE8F8EE))
@@ -946,7 +1221,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                 Icon(
                   _isPro ? Icons.stars_rounded : Icons.bolt_rounded,
                   color: _isPro ? const Color(0xFF10B981) : colors.primary,
-                  size: 14,
+                  size: 13,
                 ),
                 const SizedBox(width: 3),
                 Text(
@@ -977,6 +1252,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         else
           IconButton(
             tooltip: 'Tarix',
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            constraints: const BoxConstraints(),
             onPressed: _openHistoryBottomSheet,
             icon: Icon(Icons.history_rounded, size: 20, color: colors.primary),
           ),
@@ -1258,6 +1535,18 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                   'AI Ustoz',
                   style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: colors.primary),
                 ),
+                const Spacer(),
+                IconButton(
+                  icon: Icon(
+                    _isSpeaking ? Icons.volume_up_rounded : Icons.volume_down_rounded,
+                    size: 18,
+                    color: colors.primary,
+                  ),
+                  tooltip: 'Ovozli eshitish',
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () => _speakText(msg.text),
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -1496,8 +1785,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     final seconds = (_recordingSeconds % 60).toString().padLeft(2, '0');
 
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: colors.card,
         borderRadius: BorderRadius.circular(28),
@@ -1509,26 +1798,40 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       child: Row(
         children: [
           Container(
-            width: 12,
-            height: 12,
+            width: 10,
+            height: 10,
             decoration: const BoxDecoration(
               color: Color(0xFFEF4444),
               shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 12),
-          Text(
-            'Ovoz yozilmoqda: $minutes:$seconds',
-            style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFFEF4444), fontSize: 14),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              _liveTranscript.isNotEmpty
+                  ? '🎙️ "$_liveTranscript"'
+                  : 'Ovoz yozilmoqda: $minutes:$seconds',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFFEF4444), fontSize: 13),
+            ),
           ),
-          const Spacer(),
+          const SizedBox(width: 8),
           TextButton(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
             onPressed: _cancelRecording,
-            child: Text('Bekor qilish', style: TextStyle(color: colors.muted)),
+            child: Text('Bekor qilish', style: TextStyle(color: colors.muted, fontSize: 12)),
           ),
+          const SizedBox(width: 4),
           IconButton(
-            icon: const Icon(Icons.stop_circle_rounded, color: Color(0xFFEF4444), size: 32),
-            onPressed: _toggleRecording,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            icon: const Icon(Icons.stop_circle_rounded, color: Color(0xFFEF4444), size: 30),
+            onPressed: _finishVoiceRecording,
           ),
         ],
       ),
@@ -1537,7 +1840,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
 
   Widget _buildInputComposer(AppThemeColors colors, bool isDark) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: colors.card,
         border: Border(top: BorderSide(color: colors.border)),
@@ -1551,23 +1854,23 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               icon: Icons.photo_library_rounded,
               tooltip: 'Galereyadan rasm tanlash',
               colors: colors,
-              onTap: _isLoading ? null : _pickGalleryImage,
+              onTap: (_isLoading || _isSending) ? null : _pickGalleryImage,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
 
             // Voice recording button
             _buildActionSquareButton(
               icon: Icons.mic_rounded,
               tooltip: 'Ovozli xabar yuborish',
               colors: colors,
-              onTap: _isLoading ? null : _toggleRecording,
+              onTap: (_isLoading || _isSending) ? null : _toggleRecording,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
 
             // Message text input
             Expanded(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
                   color: colors.field,
                   borderRadius: BorderRadius.circular(24),
@@ -1575,28 +1878,28 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                 ),
                 child: TextField(
                   controller: _textController,
-                  enabled: !_isLoading,
+                  enabled: !_isLoading && !_isSending,
                   style: TextStyle(
                     fontSize: 14,
                     color: colors.ink,
                     fontWeight: FontWeight.w500,
                   ),
                   onSubmitted: (_) {
-                    if (!_isLoading) _sendMessage();
+                    if (!_isLoading && !_isSending) _sendMessage();
                   },
                   decoration: InputDecoration(
-                    hintText: _isLoading
+                    hintText: (_isLoading || _isSending)
                         ? 'Ustoz javob bermoqda...'
                         : 'Savol, misol yoki tenglamani yozing...',
-                    hintStyle: TextStyle(fontSize: 14, color: colors.inactive),
+                    hintStyle: TextStyle(fontSize: 13, color: colors.inactive),
                     border: InputBorder.none,
                     isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
 
             // Send button
             _buildActionSquareButton(
@@ -1604,7 +1907,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               tooltip: 'Yuborish',
               colors: colors,
               isPrimary: true,
-              onTap: _isLoading ? null : () => _sendMessage(),
+              onTap: (_isLoading || _isSending) ? null : () => _sendMessage(),
             ),
           ],
         ),

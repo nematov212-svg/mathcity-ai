@@ -318,15 +318,24 @@ class AuthService {
         );
       }
     } catch (e) {
-      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
-        return AuthResult(
-          success: false,
-          errorMessage: e.response!.data['error'].toString(),
-        );
+      if (e is DioException) {
+        if (e.response?.statusCode == 401) {
+          final serverMsg = e.response?.data is Map ? e.response?.data['error'] : null;
+          return AuthResult(
+            success: false,
+            errorMessage: serverMsg ?? 'Login yoki parol noto‘g‘ri.',
+          );
+        }
+        if (e.response?.data != null && e.response?.data['error'] != null) {
+          return AuthResult(
+            success: false,
+            errorMessage: e.response!.data['error'].toString(),
+          );
+        }
       }
       return const AuthResult(
         success: false,
-        errorMessage: 'Login yoki parol noto‘g‘ri yoki server bilan aloqa yo‘q.',
+        errorMessage: 'Login yoki parol noto‘g‘ri.',
       );
     }
   }

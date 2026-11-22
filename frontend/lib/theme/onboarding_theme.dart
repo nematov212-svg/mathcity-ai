@@ -64,6 +64,14 @@ class OnboardingTheme {
     ),
   ];
 
+  static const List<String> fallbackFonts = [
+    'Nunito',
+    'Noto Sans',
+    'Noto Sans Math',
+    'Noto Color Emoji',
+    'sans-serif',
+  ];
+
   // ─── Typography ───────────────────────────────────────────────────────────
   static TextStyle titleStyle({Color color = ink, double fontSize = 30}) {
     try {
@@ -73,10 +81,11 @@ class OnboardingTheme {
         color: color,
         letterSpacing: -0.5,
         height: 1.25,
-      );
+      ).copyWith(fontFamilyFallback: fallbackFonts);
     } catch (_) {
       return TextStyle(
         fontFamily: 'Nunito',
+        fontFamilyFallback: fallbackFonts,
         fontSize: fontSize,
         fontWeight: FontWeight.w700,
         color: color,
@@ -93,10 +102,11 @@ class OnboardingTheme {
         fontWeight: FontWeight.w500,
         color: color,
         height: 1.45,
-      );
+      ).copyWith(fontFamilyFallback: fallbackFonts);
     } catch (_) {
       return TextStyle(
         fontFamily: 'Nunito',
+        fontFamilyFallback: fallbackFonts,
         fontSize: fontSize,
         fontWeight: FontWeight.w500,
         color: color,
@@ -111,10 +121,11 @@ class OnboardingTheme {
         fontSize: fontSize,
         fontWeight: FontWeight.w700,
         color: color,
-      );
+      ).copyWith(fontFamilyFallback: fallbackFonts);
     } catch (_) {
       return TextStyle(
         fontFamily: 'Nunito',
+        fontFamilyFallback: fallbackFonts,
         fontSize: fontSize,
         fontWeight: FontWeight.w700,
         color: color,
@@ -128,10 +139,11 @@ class OnboardingTheme {
         fontSize: fontSize,
         fontWeight: FontWeight.w700,
         color: color,
-      );
+      ).copyWith(fontFamilyFallback: fallbackFonts);
     } catch (_) {
       return TextStyle(
         fontFamily: 'Nunito',
+        fontFamilyFallback: fallbackFonts,
         fontSize: fontSize,
         fontWeight: FontWeight.w700,
         color: color,
@@ -146,10 +158,11 @@ class OnboardingTheme {
         fontWeight: FontWeight.w700,
         color: color,
         letterSpacing: 0.2,
-      );
+      ).copyWith(fontFamilyFallback: fallbackFonts);
     } catch (_) {
       return TextStyle(
         fontFamily: 'Nunito',
+        fontFamilyFallback: fallbackFonts,
         fontSize: fontSize,
         fontWeight: FontWeight.w700,
         color: color,

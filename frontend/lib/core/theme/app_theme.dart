@@ -157,11 +157,20 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
 
 /// ThemeData Factory for MathCity AI
 class AppTheme {
+  static const List<String> fallbackFonts = [
+    'Nunito',
+    'Noto Sans',
+    'Noto Sans Math',
+    'Noto Color Emoji',
+    'sans-serif',
+  ];
+
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
       fontFamily: 'Nunito',
+      fontFamilyFallback: fallbackFonts,
       scaffoldBackgroundColor: AppThemeColors.light.bg,
       colorScheme: ColorScheme.light(
         primary: AppThemeColors.light.primary,
@@ -179,6 +188,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       fontFamily: 'Nunito',
+      fontFamilyFallback: fallbackFonts,
       scaffoldBackgroundColor: AppThemeColors.dark.bg,
       colorScheme: ColorScheme.dark(
         primary: AppThemeColors.dark.primary,

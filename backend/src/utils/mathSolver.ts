@@ -280,11 +280,16 @@ export class UzbekMathNLU {
     text = this.normalizeApostrophes(text);
     text = this.parseUzbekWordsToNumbers(text);
 
+    // Spoken fractions & words normalization
+    text = text.replace(/\byarim\b/gi, '1/2');
+    text = text.replace(/\bchorak\b/gi, '1/4');
+
     // Polite / question words
     text = text
       .replace(/iltimos/gi, '')
       .replace(/menga/gi, '')
       .replace(/tenglamani\s+yech/gi, '')
+      .replace(/ni\s+yech/gi, '')
       .replace(/yechib\s+ber/gi, '')
       .replace(/topib\s+ber/gi, '')
       .replace(/hisoblang/gi, '')
@@ -300,9 +305,14 @@ export class UzbekMathNLU {
       .replace(/chiqadi/gi, '')
       .replace(/nechaga\s+teng/gi, '')
       .replace(/qanchaga\s+teng/gi, '')
+      .replace(/yig['‘`]?indisi/gi, '')
       .replace(/yech/gi, '')
       .replace(/\?/g, '')
       .trim();
+
+    // Map infix "ko'paytirish": e.g. "2 ko'paytirish 5" -> "2 * 5"
+    text = text.replace(/(\d+(?:\.\d+)?)\s*(?:ko['‘`]?paytirish|ko['‘`]?paytir|karra)\s*(\d+(?:\.\d+)?)/gi, '$1 * $2');
+    text = text.replace(/((?:\d+\/\d+|\d+))\s+va\s+((?:\d+\/\d+|\d+))/gi, '$1 + $2');
 
     // Map case suffixes to mathematical operators:
     text = text.replace(/(\d+(?:\.\d+)?)\s*(?:ga|ka|qa)\s*(\d+(?:\.\d+)?)\s*(?:ni)?\s*(?:qosh\w*|plus|\+)/gi, '$1 + $2');

@@ -245,9 +245,11 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
           ),
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
               // Sheet Header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -319,9 +321,10 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
               ),
             ],
           ),
-        );
-      },
-    );
+        ),
+      );
+    },
+  );
   }
 
   void _onDatePicked(DateTime date) {

@@ -31,19 +31,22 @@ class _ModeCardState extends State<ModeCard> with SingleTickerProviderStateMixin
     super.initState();
     _bounceCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 250),
     );
-    _bounceAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.14), weight: 50),
-      TweenSequenceItem(tween: Tween(begin: 1.14, end: 1.0), weight: 50),
-    ]).animate(CurvedAnimation(parent: _bounceCtrl, curve: Curves.easeOutBack));
+    _bounceAnimation = Tween<double>(begin: 1.0, end: 1.08).animate(
+      CurvedAnimation(parent: _bounceCtrl, curve: Curves.easeOut),
+    );
   }
 
   @override
   void didUpdateWidget(covariant ModeCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isSelected && !oldWidget.isSelected) {
-      _bounceCtrl.forward(from: 0.0);
+      _bounceCtrl.forward(from: 0.0).then((_) {
+        if (mounted) {
+          _bounceCtrl.reverse();
+        }
+      });
     }
   }
 
