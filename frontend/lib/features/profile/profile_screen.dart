@@ -1212,6 +1212,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                               ),
                               _buildDivider(colors),
                               _buildMenuItem(
+                                icon: isDark ? Icons.dark_mode_rounded : Icons.wb_sunny_rounded,
+                                tileColor: isDark ? const Color(0xFF2E2660) : const Color(0xFFEDE9FE),
+                                iconColor: colors.primary,
+                                title: 'Tungi rejim',
+                                subtitle: () {
+                                  final mode = ref.watch(themeModeProvider);
+                                  if (mode == ThemeMode.dark) return 'Tungi rejim (Faol)';
+                                  if (mode == ThemeMode.light) return 'Kunduzgi rejim (Faol)';
+                                  return 'Tizim bo‘yicha (Avtomatik)';
+                                }(),
+                                colors: colors,
+                                onTap: () => _showThemeModeDialog(context, colors),
+                              ),
+                              _buildDivider(colors),
+                              _buildMenuItem(
                                 icon: Icons.settings_rounded,
                                 tileColor: isDark ? const Color(0xFF2A2452) : const Color(0xFFECEBF3),
                                 iconColor: isDark ? const Color(0xFFA9A4CF) : const Color(0xFF6B6785),
@@ -1806,6 +1821,155 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
       indent: 74,
       endIndent: 16,
       color: colors.border.withOpacity(0.8),
+    );
+  }
+
+  void _showThemeModeDialog(BuildContext context, AppThemeColors colors) {
+    final currentMode = ref.read(themeModeProvider);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: colors.card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Mavzu rejimini tanlang',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: colors.ink,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close_rounded, color: colors.muted),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                _buildThemeOptionTile(
+                  title: 'Kunduzgi rejim',
+                  subtitle: 'Yorqin va toza fon',
+                  icon: Icons.wb_sunny_rounded,
+                  iconColor: const Color(0xFFF59E0B),
+                  selected: currentMode == ThemeMode.light,
+                  colors: colors,
+                  onTap: () {
+                    ref.read(themeModeProvider.notifier).setThemeMode(ThemeMode.light);
+                    Navigator.pop(context);
+                  },
+                ),
+                const SizedBox(height: 10),
+                _buildThemeOptionTile(
+                  title: 'Tungi rejim',
+                  subtitle: 'Ko‘zga qulay qorong‘i fon',
+                  icon: Icons.dark_mode_rounded,
+                  iconColor: const Color(0xFF8B6BFF),
+                  selected: currentMode == ThemeMode.dark,
+                  colors: colors,
+                  onTap: () {
+                    ref.read(themeModeProvider.notifier).setThemeMode(ThemeMode.dark);
+                    Navigator.pop(context);
+                  },
+                ),
+                const SizedBox(height: 10),
+                _buildThemeOptionTile(
+                  title: 'Tizim bo‘yicha',
+                  subtitle: 'Qurilma sozlamasiga avtomatik moslashadi',
+                  icon: Icons.settings_brightness_rounded,
+                  iconColor: const Color(0xFF3B82F6),
+                  selected: currentMode == ThemeMode.system,
+                  colors: colors,
+                  onTap: () {
+                    ref.read(themeModeProvider.notifier).setThemeMode(ThemeMode.system);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildThemeOptionTile({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color iconColor,
+    required bool selected,
+    required AppThemeColors colors,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: selected
+              ? colors.primary.withOpacity(0.12)
+              : colors.field,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: selected ? colors.primary : colors.border,
+            width: selected ? 1.8 : 1.0,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: iconColor.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: iconColor, size: 22),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: colors.ink,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: colors.muted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (selected)
+              Icon(Icons.check_circle_rounded, color: colors.primary, size: 22)
+            else
+              Icon(Icons.circle_outlined, color: colors.inactive, size: 22),
+          ],
+        ),
+      ),
     );
   }
 

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:record/record.dart';
 import '../../core/network/api_client.dart';
 import '../../core/widgets/responsive_layout.dart';
+import '../../core/theme/app_theme.dart';
 import '../../shared/providers/student_provider.dart';
 
 class SolutionStep {
@@ -604,9 +606,11 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   }
 
   void _openHistoryBottomSheet() {
+    final colors = AppThemeColors.of(context);
+
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: colors.card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
@@ -620,12 +624,16 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'So‘nggi suhbatlar',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF1E1742)),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: colors.ink,
+                    ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.add_circle_outline_rounded, color: Color(0xFF6C5CE7), size: 26),
+                    icon: Icon(Icons.add_circle_outline_rounded, color: colors.primary, size: 26),
                     tooltip: 'Yangi suhbat',
                     onPressed: () {
                       Navigator.pop(ctx);
@@ -634,14 +642,14 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                   ),
                 ],
               ),
-              const Divider(height: 20),
+              Divider(height: 20, color: colors.border),
               Expanded(
                 child: _conversations.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Text(
                           'Saqlangan suhbatlar topilmadi.\nYangi savol berib suhbatni boshlang!',
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                          style: TextStyle(color: colors.muted, fontSize: 13),
                         ),
                       )
                     : ListView.builder(
@@ -652,16 +660,18 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                           return Container(
                             margin: const EdgeInsets.only(bottom: 8),
                             decoration: BoxDecoration(
-                              color: isSelected ? const Color(0xFFEDE9FE) : const Color(0xFFF8FAFC),
+                              color: isSelected
+                                  ? colors.primary.withOpacity(0.12)
+                                  : colors.field,
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: isSelected ? const Color(0xFF6C5CE7) : const Color(0xFFE2E8F0),
+                                color: isSelected ? colors.primary : colors.border,
                               ),
                             ),
                             child: ListTile(
                               leading: Icon(
                                 Icons.chat_bubble_outline_rounded,
-                                color: isSelected ? const Color(0xFF6C5CE7) : const Color(0xFF64748B),
+                                color: isSelected ? colors.primary : colors.muted,
                                 size: 20,
                               ),
                               title: Text(
@@ -670,7 +680,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                                  color: isSelected ? const Color(0xFF6C5CE7) : const Color(0xFF1E293B),
+                                  color: isSelected ? colors.primary : colors.ink,
                                   fontSize: 14,
                                 ),
                               ),
@@ -678,7 +688,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                                 conv.preview,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                                style: TextStyle(fontSize: 12, color: colors.muted),
                               ),
                               trailing: IconButton(
                                 icon: const Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFEF4444)),
@@ -705,8 +715,35 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     );
   }
 
+  void _copySolution(MessageItem msg) {
+    final buffer = StringBuffer();
+    buffer.writeln(msg.text);
+    if (msg.formulaLatex != null && msg.formulaLatex!.isNotEmpty) {
+      buffer.writeln(msg.formulaLatex);
+    }
+    if (msg.steps != null && msg.steps!.isNotEmpty) {
+      for (final s in msg.steps!) {
+        buffer.writeln('${s.stepNumber}-qadam: ${s.explanation}');
+        if (s.latex.isNotEmpty) buffer.writeln(s.latex);
+      }
+    }
+    if (msg.finalAnswer != null && msg.finalAnswer!.isNotEmpty) {
+      buffer.writeln('Javob: ${msg.finalAnswer}');
+    }
+    Clipboard.setData(ClipboardData(text: buffer.toString().trim()));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Yechim nusxalandi!'),
+        duration: Duration(seconds: 1),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final colors = AppThemeColors.of(context);
+    final isDark = colors.isDark;
     final student = ref.watch(studentProvider).student;
     final displayName = (student != null && student.displayName.trim().isNotEmpty)
         ? student.displayName.trim()
@@ -718,13 +755,13 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         final isDesktop = screenType == ScreenType.expanded;
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF7F6FC),
-          appBar: _buildAppBar(isDesktop),
+          backgroundColor: colors.bg,
+          appBar: _buildAppBar(isDesktop, colors, isDark),
           body: Row(
             children: [
               // Desktop History Sidebar
               if (isDesktop && _showDesktopSidebar)
-                _buildDesktopSidebar(),
+                _buildDesktopSidebar(colors, isDark),
 
               // Main Chat Area
               Expanded(
@@ -736,19 +773,19 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                         // Messages or Welcoming Greeting
                         Expanded(
                           child: _messages.isEmpty
-                              ? _buildWelcomingState(displayName)
-                              : _buildMessageList(),
+                              ? _buildWelcomingState(displayName, colors, isDark)
+                              : _buildMessageList(colors, isDark),
                         ),
 
                         // Selected Image Preview Banner
                         if (_selectedImageBytes != null)
-                          _buildSelectedImageBanner(),
+                          _buildSelectedImageBanner(colors, isDark),
 
                         // Voice Recording Bar or Input Composer
                         if (_isRecording)
-                          _buildVoiceRecordingBar()
+                          _buildVoiceRecordingBar(colors, isDark)
                         else
-                          _buildInputComposer(),
+                          _buildInputComposer(colors, isDark),
                       ],
                     ),
                   ),
@@ -761,12 +798,12 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(bool isDesktop) {
+  PreferredSizeWidget _buildAppBar(bool isDesktop, AppThemeColors colors, bool isDark) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: colors.card,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Color(0xFF1E1742)),
+        icon: Icon(Icons.arrow_back_ios_new_rounded, color: colors.ink),
         onPressed: () {
           if (context.canPop()) {
             context.pop();
@@ -781,10 +818,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: const Color(0xFFEDE9FE),
+              color: isDark ? const Color(0xFF282055) : const Color(0xFFEDE9FE),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.auto_awesome_rounded, color: Color(0xFF6C5CE7), size: 18),
+            child: Icon(Icons.auto_awesome_rounded, color: colors.primary, size: 18),
           ),
           const SizedBox(width: 8),
           Flexible(
@@ -792,20 +829,20 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
+                Text(
                   'AI Ustoz',
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
-                    color: Color(0xFF1E1742),
+                    color: colors.ink,
                   ),
                 ),
                 if (isDesktop)
-                  const Text(
+                  Text(
                     'Shaxsiy matematika repetitori',
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 11, color: Color(0xFF64748B), fontWeight: FontWeight.w500),
+                    style: TextStyle(fontSize: 11, color: colors.muted, fontWeight: FontWeight.w500),
                   ),
               ],
             ),
@@ -819,10 +856,12 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             margin: const EdgeInsets.symmetric(horizontal: 4),
             padding: EdgeInsets.symmetric(horizontal: isDesktop ? 10 : 8, vertical: 4),
             decoration: BoxDecoration(
-              color: _isPro ? const Color(0xFFE8F8EE) : const Color(0xFFF1F5F9),
+              color: _isPro
+                  ? (isDark ? const Color(0xFF143828) : const Color(0xFFE8F8EE))
+                  : colors.field,
               borderRadius: BorderRadius.circular(999),
               border: Border.all(
-                color: _isPro ? const Color(0xFF34D399) : const Color(0xFFCBD5E1),
+                color: _isPro ? const Color(0xFF10B981) : colors.border,
               ),
             ),
             child: Row(
@@ -830,16 +869,18 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               children: [
                 Icon(
                   _isPro ? Icons.stars_rounded : Icons.bolt_rounded,
-                  color: _isPro ? const Color(0xFF10B981) : const Color(0xFF6C5CE7),
+                  color: _isPro ? const Color(0xFF10B981) : colors.primary,
                   size: 14,
                 ),
                 const SizedBox(width: 3),
                 Text(
-                  _isPro ? (isDesktop ? 'Pro — Cheksiz' : 'Pro') : (isDesktop ? '$_remainingQuota/5 bepul' : '$_remainingQuota/5'),
+                  _isPro
+                      ? (isDesktop ? 'Pro — Cheksiz' : 'Pro')
+                      : (isDesktop ? '$_remainingQuota/5 bepul' : '$_remainingQuota/5'),
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
-                    color: _isPro ? const Color(0xFF047857) : const Color(0xFF475569),
+                    color: _isPro ? const Color(0xFF10B981) : colors.muted,
                   ),
                 ),
               ],
@@ -851,29 +892,29 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         if (isDesktop)
           TextButton.icon(
             onPressed: () => setState(() => _showDesktopSidebar = !_showDesktopSidebar),
-            icon: const Icon(Icons.history_rounded, size: 18, color: Color(0xFF6C5CE7)),
-            label: const Text(
+            icon: Icon(Icons.history_rounded, size: 18, color: colors.primary),
+            label: Text(
               'Tarix',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF6C5CE7)),
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: colors.primary),
             ),
           )
         else
           IconButton(
             tooltip: 'Tarix',
             onPressed: _openHistoryBottomSheet,
-            icon: const Icon(Icons.history_rounded, size: 20, color: Color(0xFF6C5CE7)),
+            icon: Icon(Icons.history_rounded, size: 20, color: colors.primary),
           ),
         const SizedBox(width: 4),
       ],
     );
   }
 
-  Widget _buildDesktopSidebar() {
+  Widget _buildDesktopSidebar(AppThemeColors colors, bool isDark) {
     return Container(
       width: 290,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(right: BorderSide(color: Color(0xFFE2E8F0))),
+      decoration: BoxDecoration(
+        color: colors.card,
+        border: Border(right: BorderSide(color: colors.border)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -883,25 +924,25 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'So‘nggi suhbatlar',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Color(0xFF1E1742)),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: colors.ink),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add_circle_outline_rounded, color: Color(0xFF6C5CE7), size: 22),
+                  icon: Icon(Icons.add_circle_outline_rounded, color: colors.primary, size: 22),
                   tooltip: 'Yangi suhbat boshlash',
                   onPressed: _startNewConversation,
                 ),
               ],
             ),
           ),
-          const Divider(height: 1, color: Color(0xFFE2E8F0)),
+          Divider(height: 1, color: colors.border),
           Expanded(
             child: _conversations.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
                       'Saqlangan suhbatlar yo‘q',
-                      style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                      style: TextStyle(color: colors.muted, fontSize: 12),
                     ),
                   )
                 : ListView.builder(
@@ -913,10 +954,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                       return Container(
                         margin: const EdgeInsets.only(bottom: 6),
                         decoration: BoxDecoration(
-                          color: isSelected ? const Color(0xFFEDE9FE) : Colors.transparent,
+                          color: isSelected ? colors.primary.withOpacity(0.12) : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: isSelected ? const Color(0xFF6C5CE7) : Colors.transparent,
+                            color: isSelected ? colors.primary : Colors.transparent,
                           ),
                         ),
                         child: ListTile(
@@ -925,7 +966,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                           leading: Icon(
                             Icons.chat_bubble_outline_rounded,
                             size: 16,
-                            color: isSelected ? const Color(0xFF6C5CE7) : const Color(0xFF64748B),
+                            color: isSelected ? colors.primary : colors.muted,
                           ),
                           title: Text(
                             conv.title,
@@ -934,17 +975,17 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                              color: isSelected ? const Color(0xFF6C5CE7) : const Color(0xFF1E293B),
+                              color: isSelected ? colors.primary : colors.ink,
                             ),
                           ),
                           subtitle: Text(
                             conv.preview,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                            style: TextStyle(fontSize: 11, color: colors.muted),
                           ),
                           trailing: IconButton(
-                            icon: const Icon(Icons.delete_outline_rounded, size: 16, color: Color(0xFF94A3B8)),
+                            icon: Icon(Icons.delete_outline_rounded, size: 16, color: colors.muted),
                             onPressed: () => _deleteConversation(conv.id),
                           ),
                           onTap: () => _loadConversation(conv.id),
@@ -958,43 +999,33 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     );
   }
 
-  Widget _buildWelcomingState(String displayName) {
+  Widget _buildWelcomingState(String displayName, AppThemeColors colors, bool isDark) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       child: Column(
         children: [
-          // AI Mascot Icon / Avatar
-          Container(
-            width: 90,
-            height: 90,
-            decoration: const BoxDecoration(
-              color: Color(0xFFEDE9FE),
-              shape: BoxShape.circle,
-            ),
-            child: const Center(
-              child: Icon(Icons.smart_toy_rounded, size: 52, color: Color(0xFF6C5CE7)),
-            ),
-          ),
+          // Animated Mascot Avatar
+          _MascotAvatar(isDark: isDark, primaryColor: colors.primary),
           const SizedBox(height: 20),
 
           // Greeting
           Text(
             'Salom, $displayName! 👋',
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w900,
-              color: Color(0xFF1E1742),
+              color: colors.ink,
             ),
           ),
           const SizedBox(height: 6),
-          const Text(
+          Text(
             'Men sizning AI matematik ustozingizman.\nBugun sizga qanday yordam bera olaman?',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF64748B),
+              color: colors.muted,
               height: 1.4,
             ),
           ),
@@ -1012,28 +1043,28 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: colors.card,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFFE2E8F0)),
-                    boxShadow: const [
+                    border: Border.all(color: colors.border),
+                    boxShadow: [
                       BoxShadow(
-                        color: Color(0x04000000),
+                        color: isDark ? Colors.black26 : const Color(0x04000000),
                         blurRadius: 8,
-                        offset: Offset(0, 3),
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.help_outline_rounded, size: 16, color: Color(0xFF6C5CE7)),
+                      Icon(Icons.help_outline_rounded, size: 16, color: colors.primary),
                       const SizedBox(width: 8),
                       Text(
                         prompt,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF1E293B),
+                          color: colors.ink,
                         ),
                       ),
                     ],
@@ -1047,21 +1078,21 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     );
   }
 
-  Widget _buildMessageList() {
+  Widget _buildMessageList(AppThemeColors colors, bool isDark) {
     return ListView.builder(
       controller: _scrollController,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       itemCount: _messages.length + (_isLoading ? 1 : 0),
       itemBuilder: (context, index) {
         if (index == _messages.length && _isLoading) {
-          return _buildLoadingBubble();
+          return _buildLoadingBubble(colors, isDark);
         }
-        return _buildMessageBubble(_messages[index]);
+        return _buildMessageBubble(_messages[index], colors, isDark);
       },
     );
   }
 
-  Widget _buildMessageBubble(MessageItem msg) {
+  Widget _buildMessageBubble(MessageItem msg, AppThemeColors colors, bool isDark) {
     if (msg.isUser) {
       return Align(
         alignment: Alignment.centerRight,
@@ -1070,10 +1101,18 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
           constraints: const BoxConstraints(maxWidth: 540),
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
           decoration: BoxDecoration(
-            color: const Color(0xFF6C5CE7),
+            gradient: LinearGradient(
+              colors: [colors.primary, colors.primaryDark],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(20).copyWith(bottomRight: const Radius.circular(4)),
-            boxShadow: const [
-              BoxShadow(color: Color(0x1A6C5CE7), blurRadius: 10, offset: Offset(0, 4)),
+            boxShadow: [
+              BoxShadow(
+                color: colors.primary.withOpacity(0.25),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
             ],
           ),
           child: Column(
@@ -1113,11 +1152,15 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         constraints: const BoxConstraints(maxWidth: 620),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colors.card,
           borderRadius: BorderRadius.circular(24).copyWith(topLeft: const Radius.circular(4)),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
-          boxShadow: const [
-            BoxShadow(color: Color(0x06000000), blurRadius: 16, offset: Offset(0, 4)),
+          border: Border.all(color: colors.border),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? Colors.black26 : const Color(0x06000000),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+            ),
           ],
         ),
         child: Column(
@@ -1127,17 +1170,17 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFEDE9FE),
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF282055) : const Color(0xFFEDE9FE),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.smart_toy_rounded, size: 16, color: Color(0xFF6C5CE7)),
+                  child: Icon(Icons.smart_toy_rounded, size: 16, color: colors.primary),
                 ),
                 const SizedBox(width: 8),
-                const Text(
+                Text(
                   'AI Ustoz',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: Color(0xFF6C5CE7)),
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: colors.primary),
                 ),
               ],
             ),
@@ -1146,10 +1189,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             // Text message
             Text(
               msg.text,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
-                color: Color(0xFF1E293B),
+                color: colors.ink,
                 height: 1.45,
               ),
             ),
@@ -1161,16 +1204,16 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8FAFC),
+                  color: colors.field,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                  border: Border.all(color: colors.border),
                 ),
                 child: Center(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Math.tex(
                       msg.formulaLatex!,
-                      textStyle: const TextStyle(fontSize: 18, color: Color(0xFF1E293B)),
+                      textStyle: TextStyle(fontSize: 18, color: colors.ink),
                     ),
                   ),
                 ),
@@ -1186,11 +1229,11 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CircleAvatar(
-                          radius: 10,
-                          backgroundColor: const Color(0xFFEDE9FE),
+                          radius: 11,
+                          backgroundColor: isDark ? const Color(0xFF282055) : const Color(0xFFEDE9FE),
                           child: Text(
                             '${step.stepNumber}',
-                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF6C5CE7)),
+                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: colors.primary),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -1198,10 +1241,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(step.explanation, style: const TextStyle(fontSize: 13, color: Color(0xFF475569))),
+                              Text(step.explanation, style: TextStyle(fontSize: 13, color: colors.muted)),
                               if (step.latex.isNotEmpty) ...[
                                 const SizedBox(height: 4),
-                                Math.tex(step.latex, textStyle: const TextStyle(fontSize: 14, color: Color(0xFF1E293B))),
+                                Math.tex(step.latex, textStyle: TextStyle(fontSize: 14, color: colors.ink)),
                               ],
                             ],
                           ),
@@ -1215,70 +1258,110 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             if (msg.finalAnswer != null && msg.finalAnswer!.isNotEmpty) ...[
               const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE8F8EE),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFF34D399)),
+                  color: isDark ? const Color(0xFF143828) : const Color(0xFFE8F8EE),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFF10B981), width: 1.2),
                 ),
-                child: Text(
-                  'Yakuniy javob: ${msg.finalAnswer}',
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF047857), fontSize: 13),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.check_circle_rounded, color: Color(0xFF10B981), size: 16),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Javob: ${msg.finalAnswer}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        color: isDark ? const Color(0xFF34D399) : const Color(0xFF047857),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
 
-            // Suggested actions
-            if (msg.suggestedActions != null && msg.suggestedActions!.isNotEmpty) ...[
-              const SizedBox(height: 14),
-              Wrap(
-                spacing: 8,
-                runSpacing: 6,
-                children: msg.suggestedActions!.map((act) {
-                  return ActionChip(
-                    backgroundColor: const Color(0xFFF1F5F9),
-                    side: const BorderSide(color: Color(0xFFE2E8F0)),
-                    label: Text(act, style: const TextStyle(fontSize: 12, color: Color(0xFF475569), fontWeight: FontWeight.w600)),
-                    onPressed: () {
-                      if (act.contains('Pro')) {
-                        context.push('/payment/add');
-                      } else {
-                        _sendMessage(customText: act);
-                      }
-                    },
-                  );
-                }).toList(),
-              ),
-            ],
+            // Action Buttons: Nusxalash, Soddaroq tushuntir, Yana bir misol ber
+            const SizedBox(height: 14),
+            Wrap(
+              spacing: 8,
+              runSpacing: 6,
+              children: [
+                ActionChip(
+                  backgroundColor: colors.field,
+                  side: BorderSide(color: colors.border),
+                  avatar: Icon(Icons.copy_rounded, size: 14, color: colors.primary),
+                  label: Text('Nusxalash', style: TextStyle(fontSize: 12, color: colors.ink, fontWeight: FontWeight.w600)),
+                  onPressed: () => _copySolution(msg),
+                ),
+                ActionChip(
+                  backgroundColor: colors.field,
+                  side: BorderSide(color: colors.border),
+                  avatar: Icon(Icons.lightbulb_outline_rounded, size: 14, color: const Color(0xFFF59E0B)),
+                  label: Text('Tushunmadim, soddaroq tushuntir', style: TextStyle(fontSize: 12, color: colors.ink, fontWeight: FontWeight.w600)),
+                  onPressed: () => _sendMessage(customText: 'Tushunmadim, soddaroq tushuntir', action: 'explain_more'),
+                ),
+                ActionChip(
+                  backgroundColor: colors.field,
+                  side: BorderSide(color: colors.border),
+                  avatar: Icon(Icons.refresh_rounded, size: 14, color: const Color(0xFF3B82F6)),
+                  label: Text('Yana bir misol ber', style: TextStyle(fontSize: 12, color: colors.ink, fontWeight: FontWeight.w600)),
+                  onPressed: () => _sendMessage(customText: 'Yana bir shunga o‘xshash misol ber', action: 'similar_example'),
+                ),
+                if (msg.suggestedActions != null)
+                  ...msg.suggestedActions!.map((act) {
+                    return ActionChip(
+                      backgroundColor: colors.field,
+                      side: BorderSide(color: colors.border),
+                      label: Text(act, style: TextStyle(fontSize: 12, color: colors.muted, fontWeight: FontWeight.w600)),
+                      onPressed: () {
+                        if (act.contains('Pro')) {
+                          context.push('/payment/add');
+                        } else {
+                          _sendMessage(customText: act);
+                        }
+                      },
+                    );
+                  }),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildLoadingBubble() {
+  Widget _buildLoadingBubble(AppThemeColors colors, bool isDark) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colors.card,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
+          border: Border.all(color: colors.border),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? Colors.black26 : const Color(0x06000000),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        child: const Row(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF6C5CE7)),
-            ),
-            SizedBox(width: 12),
+            _BouncingDotsIndicator(color: colors.primary),
+            const SizedBox(width: 12),
             Text(
-              'AI Ustoz yechim tayyorlamoqda...',
-              style: TextStyle(fontSize: 13, color: Color(0xFF64748B), fontWeight: FontWeight.w500),
+              'AI Ustoz yozmoqda...',
+              style: TextStyle(
+                fontSize: 13,
+                color: colors.muted,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -1286,14 +1369,14 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     );
   }
 
-  Widget _buildSelectedImageBanner() {
+  Widget _buildSelectedImageBanner(AppThemeColors colors, bool isDark) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colors.card,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF6C5CE7)),
+        border: Border.all(color: colors.primary),
       ),
       child: Row(
         children: [
@@ -1307,18 +1390,18 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             ),
           ),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   'Galereyadan surat tanlandi',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFF1E1742)),
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: colors.ink),
                 ),
                 Text(
                   'Savol yozing yoki darhol yechish uchun yuboring',
-                  style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                  style: TextStyle(fontSize: 11, color: colors.muted),
                 ),
               ],
             ),
@@ -1332,7 +1415,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     );
   }
 
-  Widget _buildVoiceRecordingBar() {
+  Widget _buildVoiceRecordingBar(AppThemeColors colors, bool isDark) {
     final minutes = (_recordingSeconds ~/ 60).toString().padLeft(2, '0');
     final seconds = (_recordingSeconds % 60).toString().padLeft(2, '0');
 
@@ -1340,7 +1423,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colors.card,
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: const Color(0xFFEF4444), width: 1.5),
         boxShadow: const [
@@ -1365,7 +1448,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
           const Spacer(),
           TextButton(
             onPressed: _cancelRecording,
-            child: const Text('Bekor qilish', style: TextStyle(color: Color(0xFF64748B))),
+            child: Text('Bekor qilish', style: TextStyle(color: colors.muted)),
           ),
           IconButton(
             icon: const Icon(Icons.stop_circle_rounded, color: Color(0xFFEF4444), size: 32),
@@ -1376,48 +1459,58 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     );
   }
 
-  Widget _buildInputComposer() {
+  Widget _buildInputComposer(AppThemeColors colors, bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
+      decoration: BoxDecoration(
+        color: colors.card,
+        border: Border(top: BorderSide(color: colors.border)),
       ),
       child: SafeArea(
+        top: false,
         child: Row(
           children: [
             // Gallery image picker button
-            IconButton(
-              icon: const Icon(Icons.photo_library_rounded, color: Color(0xFF6C5CE7)),
+            _buildActionSquareButton(
+              icon: Icons.photo_library_rounded,
               tooltip: 'Galereyadan rasm tanlash',
-              onPressed: _pickGalleryImage,
+              colors: colors,
+              onTap: _pickGalleryImage,
             ),
+            const SizedBox(width: 8),
 
             // Voice recording button
-            IconButton(
-              icon: const Icon(Icons.mic_rounded, color: Color(0xFF6C5CE7)),
+            _buildActionSquareButton(
+              icon: Icons.mic_rounded,
               tooltip: 'Ovozli xabar yuborish',
-              onPressed: _toggleRecording,
+              colors: colors,
+              onTap: _toggleRecording,
             ),
+            const SizedBox(width: 8),
 
             // Message text input
             Expanded(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8FAFC),
+                  color: colors.field,
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                  border: Border.all(color: colors.border),
                 ),
                 child: TextField(
                   controller: _textController,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: colors.ink,
+                    fontWeight: FontWeight.w500,
+                  ),
                   onSubmitted: (_) => _sendMessage(),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Savol, misol yoki tenglamani yozing...',
-                    hintStyle: TextStyle(fontSize: 14, color: Color(0xFF94A3B8)),
+                    hintStyle: TextStyle(fontSize: 14, color: colors.inactive),
                     border: InputBorder.none,
                     isDense: true,
-                    contentPadding: EdgeInsets.symmetric(vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                 ),
               ),
@@ -1425,13 +1518,177 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             const SizedBox(width: 8),
 
             // Send button
-            IconButton(
-              icon: const Icon(Icons.send_rounded, color: Color(0xFF6C5CE7)),
-              onPressed: () => _sendMessage(),
+            _buildActionSquareButton(
+              icon: Icons.send_rounded,
+              tooltip: 'Yuborish',
+              colors: colors,
+              isPrimary: true,
+              onTap: () => _sendMessage(),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildActionSquareButton({
+    required IconData icon,
+    required String tooltip,
+    required AppThemeColors colors,
+    required VoidCallback onTap,
+    bool isPrimary = false,
+  }) {
+    return Material(
+      color: isPrimary ? colors.primary : colors.field,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          width: 44,
+          height: 44,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isPrimary ? colors.primary : colors.border,
+            ),
+          ),
+          child: Icon(
+            icon,
+            size: 20,
+            color: isPrimary ? Colors.white : colors.primary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MascotAvatar extends StatefulWidget {
+  final bool isDark;
+  final Color primaryColor;
+  const _MascotAvatar({required this.isDark, required this.primaryColor});
+
+  @override
+  State<_MascotAvatar> createState() => _MascotAvatarState();
+}
+
+class _MascotAvatarState extends State<_MascotAvatar>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2400),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        final floatOffset = _controller.value * 6.0;
+        final scale = 1.0 + (_controller.value * 0.04);
+        return Transform.translate(
+          offset: Offset(0, -floatOffset),
+          child: Transform.scale(
+            scale: scale,
+            child: Container(
+              width: 96,
+              height: 96,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: widget.isDark
+                      ? [const Color(0xFF382B7D), const Color(0xFF1E1742)]
+                      : [const Color(0xFFEDE9FE), const Color(0xFFDDD6FE)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: widget.primaryColor.withOpacity(widget.isDark ? 0.3 : 0.2),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.smart_toy_rounded,
+                  size: 54,
+                  color: widget.primaryColor,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _BouncingDotsIndicator extends StatefulWidget {
+  final Color color;
+  const _BouncingDotsIndicator({required this.color});
+
+  @override
+  State<_BouncingDotsIndicator> createState() => _BouncingDotsIndicatorState();
+}
+
+class _BouncingDotsIndicatorState extends State<_BouncingDotsIndicator>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animController,
+      builder: (context, child) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(3, (index) {
+            final delay = index * 0.2;
+            final val = (_animController.value - delay) % 1.0;
+            final bounce = (val < 0.5) ? (val * 2) : ((1.0 - val) * 2);
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 2.5),
+              width: 7,
+              height: 7 + (bounce * 4),
+              decoration: BoxDecoration(
+                color: widget.color.withOpacity(0.4 + (bounce * 0.6)),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            );
+          }),
+        );
+      },
     );
   }
 }
