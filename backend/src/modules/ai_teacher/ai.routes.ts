@@ -6,6 +6,7 @@ import { MathSolver } from '../../utils/mathSolver.js';
 import { aiQuotaStore } from './aiQuotaStore.js';
 import { repository } from '../../utils/repository.js';
 import { formatFewShotContext, findBestMatches } from '../../utils/knowledgeMatcher.js';
+import { MathUnderstandingEngine } from '../../utils/mathUnderstandingEngine.js';
 
 export const aiRouter = Router();
 
@@ -277,11 +278,12 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
   // 2. Check if user requests similar example
   if (action === 'similar_example') {
     const lastAssistant = [...priorMessages].reverse().find((m) => m.role === 'assistant' && m.id !== userMsg.id);
-    const similarText = lastAssistant?.formulaLatex ? `Mana sizga mashq qilish uchun ajoyib o‘xshash misol:\nQani, urinib ko‘ring-chi:\n$3x + 5 = 20$` : `Mana sizga mashq qilish uchun yangi misol:\n$4x - 8 = 12$`;
+    const similar = MathUnderstandingEngine.generateSimilar(lastAssistant?.formulaLatex || lastAssistant?.text);
 
-    repository.saveAIMessage(user.id, activeConvId, 'assistant', similarText, {
-      formulaLatex: '3x + 5 = 20',
+    repository.saveAIMessage(user.id, activeConvId, 'assistant', similar.reply, {
+      formulaLatex: similar.formulaLatex,
       step: step + 1,
+      finalAnswer: similar.answer,
       suggestedActions: ['Batafsil tushuntir', 'Keyingi qadam', 'Javobni tekshirish'],
       inputType: 'TEXT',
     });
@@ -290,10 +292,10 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
       success: true,
       data: {
         conversationId: activeConvId,
-        reply: similarText,
-        formulaLatex: '3x + 5 = 20',
+        reply: similar.reply,
+        formulaLatex: similar.formulaLatex,
         steps: [],
-        finalAnswer: 'x = 5',
+        finalAnswer: similar.answer,
         step: step + 1,
         remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
         suggestedActions: ['Batafsil tushuntir', 'Keyingi qadam', 'Javobni tekshirish'],
@@ -310,12 +312,7 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
 
   if (isFollowUpExplain) {
     const lastAssistant = [...priorMessages].reverse().find((m) => m.role === 'assistant' && m.id !== userMsg.id);
-    const altReply =
-      `Albatta! Ushbu misolni yanada soddaroq, hayotiy misol bilan tushuntiraman:\n\n` +
-      `Keling, buni oddiy taroziga qiyoslaymiz! Tarozining har ikki pallasida tenglik turibdi. ` +
-      `Agar bir tomondan biror sonni ayirsak yoki bo‘lsak, muvozanat saqlanishi uchun ikkinchi tomonda ham xuddi shu amalni bajarishimiz shart.\n\n` +
-      `Shu sababli har qanday had narigi tomonga qarama-qarshi ishora bilan o‘tadi.\n\n` +
-      `Oldingi misol bo‘yicha tushunarli bo‘ldimi?`;
+    const altReply = MathUnderstandingEngine.explainSimpler(lastAssistant?.formulaLatex || lastAssistant?.text);
 
     repository.saveAIMessage(user.id, activeConvId, 'assistant', altReply, {
       formulaLatex: lastAssistant?.formulaLatex || contextFormula || null,
@@ -334,8 +331,8 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
         steps: [
           {
             stepNumber: 1,
-            title: 'Qo‘shimcha tushuntirish',
-            explanation: 'Tarozi muvozanati usulida vizual tushuntirish berildi.',
+            title: 'Soddaroq tushuntirish',
+            explanation: 'Vizual va hayotiy qiyoslash orqali sodda tushuntirish berildi.',
             latex: lastAssistant?.formulaLatex || 'ax + b = c',
           },
         ],
@@ -395,19 +392,83 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
     });
   }
 
-  // 5. Unrecognized query handling (Strictly NO hallucination, log for template expansion)
+  // 5. Check MathUnderstandingEngine directly for closest guess or structured response
+  const underRes = MathUnderstandingEngine.solve(cleanMsg);
+  if (underRes.success) {
+    repository.saveAIMessage(user.id, activeConvId, 'assistant', underRes.reply, {
+      formulaLatex: underRes.formulaLatex || null,
+      step: step + 1,
+      finalAnswer: underRes.shortAnswer,
+      suggestedActions: [
+        'Keyingi qadam',
+        'Batafsil tushuntir',
+        'O‘xshash misol ber',
+        'Tushundim, rahmat!',
+      ],
+      inputType: 'TEXT',
+    });
+
+    return res.json({
+      success: true,
+      data: {
+        conversationId: activeConvId,
+        reply: underRes.reply,
+        formulaLatex: underRes.formulaLatex,
+        steps: underRes.steps,
+        finalAnswer: underRes.shortAnswer,
+        problemType: 'UNDERSTANDING_ENGINE',
+        step: step + 1,
+        remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
+        suggestedActions: [
+          'Keyingi qadam',
+          'Batafsil tushuntir',
+          'O‘xshash misol ber',
+          'Tushundim, rahmat!',
+        ],
+      },
+    });
+  }
+
+  if (underRes.closestGuess) {
+    const guessReply = underRes.reply;
+    repository.saveAIMessage(user.id, activeConvId, 'assistant', guessReply, {
+      formulaLatex: underRes.formulaLatex || null,
+      step: step + 1,
+      finalAnswer: underRes.shortAnswer,
+      suggestedActions: underRes.suggestedActions || ['Ha, hisobla', 'Yo‘q, boshqa amal'],
+      inputType: 'TEXT',
+    });
+
+    return res.json({
+      success: true,
+      data: {
+        conversationId: activeConvId,
+        reply: guessReply,
+        formulaLatex: underRes.formulaLatex || null,
+        steps: underRes.steps,
+        finalAnswer: underRes.shortAnswer,
+        problemType: 'CLOSEST_GUESS',
+        step: step + 1,
+        remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
+        suggestedActions: underRes.suggestedActions || ['Ha, hisobla', 'Yo‘q, boshqa amal'],
+      },
+    });
+  }
+
+  // 6. Unrecognized query handling (Strictly NO hallucination, log for template expansion)
   repository.logUnrecognizedQuery(cleanMsg, user.id);
 
-  const unrecognizedReply = `Savolni to‘liq tushunmadim. Iltimos, quyidagi namunalardan biri kabi yozing:\n• 2x + 6 = 16 (tenglamalar)\n• 15 ning 20 foizi (foizlar)\n• EKUB(24, 36) yoki EKUK(12, 18)\n• 4 ga 5 ni qo‘shsa nechi chiqadi`;
+  const unrecognizedReply = `Savolni to‘liq tushunmadim. Iltimos, quyidagi namunalardan biri kabi yozing:\n• 5 ga 6 ni qo‘shib ber\n• 10 dan 4 ni ayir\n• 2x + 6 = 16 (tenglamalar)\n• 15 ning 20 foizi (foizlar)\n• EKUB(24, 36) yoki EKUK(12, 18)`;
 
   repository.saveAIMessage(user.id, activeConvId, 'assistant', unrecognizedReply, {
     formulaLatex: null,
     step: step + 1,
     suggestedActions: [
+      '5 ga 6 ni qo‘shib ber',
+      '10 dan 4 ni ayir',
       '2x + 6 = 16',
       '15 ning 20 foizi',
       'EKUB(24, 36)',
-      '4 ga 5 ni qo‘sh',
     ],
     inputType: 'TEXT',
   });
@@ -424,10 +485,11 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
       step: step + 1,
       remainingQuota: isPaidPro ? 999999 : quotaStatus.remaining - 1,
       suggestedActions: [
+        '5 ga 6 ni qo‘shib ber',
+        '10 dan 4 ni ayir',
         '2x + 6 = 16',
         '15 ning 20 foizi',
         'EKUB(24, 36)',
-        '4 ga 5 ni qo‘sh',
       ],
     },
   });
@@ -527,7 +589,31 @@ const handleImageSolve = async (req: AuthenticatedRequest, res: Response) => {
     });
   }
   const cleanInput = cleanOcrMathText(rawInput || (imageBase64 ? '2x + 6 = 16' : ''));
-  const solution = MathSolver.solve(cleanInput);
+  let solution = MathSolver.solve(cleanInput);
+
+  if (!solution) {
+    const under = MathUnderstandingEngine.solve(cleanInput);
+    if (under.success) {
+      solution = {
+        originalQuestion: cleanInput,
+        problemType: 'UNDERSTANDING_ENGINE',
+        understood: under.understoodQuery,
+        formulaLatex: under.formulaLatex,
+        steps: under.steps.map((s) => ({
+          stepNumber: s.stepNumber,
+          title: s.title,
+          explanation: s.explanation,
+          latex: s.latex,
+        })),
+        finalAnswer: under.shortAnswer,
+        verification: 'Verified by MathUnderstandingEngine',
+        rawReply: under.reply,
+        verifiedCorrect: true,
+        confidence: 0.99,
+        similarExample: under.similarExample,
+      };
+    }
+  }
 
   let replyText = '';
   if (solution) {
@@ -693,7 +779,30 @@ const handleVoiceSolve = async (req: AuthenticatedRequest, res: Response) => {
   const activeConvId = userMsg.conversationId;
 
   // Solve offline using UzbekMathNLU & MathSolver
-  const solution = MathSolver.solve(questionText);
+  let solution = MathSolver.solve(questionText);
+  if (!solution) {
+    const under = MathUnderstandingEngine.solve(questionText);
+    if (under.success) {
+      solution = {
+        originalQuestion: questionText,
+        problemType: 'UNDERSTANDING_ENGINE',
+        understood: under.understoodQuery,
+        formulaLatex: under.formulaLatex,
+        steps: under.steps.map((s) => ({
+          stepNumber: s.stepNumber,
+          title: s.title,
+          explanation: s.explanation,
+          latex: s.latex,
+        })),
+        finalAnswer: under.shortAnswer,
+        verification: 'Verified by MathUnderstandingEngine',
+        rawReply: under.reply,
+        verifiedCorrect: true,
+        confidence: 0.99,
+        similarExample: under.similarExample,
+      };
+    }
+  }
 
   let replyText = '';
   let finalAnswerStr: string | undefined = undefined;

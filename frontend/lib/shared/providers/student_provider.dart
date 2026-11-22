@@ -308,6 +308,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
               completedTopicsCount: d['completedTopicsCount'] ?? state.student!.completedTopicsCount,
               friendsCount: d['friendsCount'] ?? state.student!.friendsCount,
               achievementsCount: d['unlockedAchievementsCount'] ?? state.student!.achievementsCount,
+              rank: d['rank'] ?? state.student!.rank,
               avatarUrl: d['avatarUrl'] ?? state.student!.avatarUrl,
               displayName: d['displayName'] ?? state.student!.displayName,
               username: d['username'] ?? state.student!.username,

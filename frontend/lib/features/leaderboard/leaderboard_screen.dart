@@ -62,6 +62,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   Timer? _pollingTimer;
   Timer? _highlightClearTimer;
 
+  final List<Map<String, String>> _scopes = const [
+    {'id': 'top100', 'label': 'Top 100'},
+    {'id': 'top50', 'label': 'Top 50'},
+    {'id': 'top10', 'label': 'Top 10'},
+    {'id': 'top5', 'label': 'Top 5'},
+  ];
+  String _selectedScope = 'top100';
+  int _coinsToTop100 = 0;
+  int _coinsToNextRank = 0;
+
   // Track previous ranks to animate rank climb and highlight users who move up
   final Map<String, int> _previousRanks = {};
   Set<String> _highlightedUserIds = {};
@@ -141,7 +151,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     }
 
     try {
-      final res = await ApiClient().dio.get('/students/leaderboard');
+      final res = await ApiClient().dio.get(
+        '/students/leaderboard',
+        queryParameters: {'scope': _selectedScope},
+      );
       if (res.data['success'] == true) {
         final data = res.data['data'];
         final list = (data['leaderboard'] as List<dynamic>?)
@@ -158,6 +171,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
           }
           _previousRanks[u.id] = u.rank;
         }
+
+        // Fetch detailed me stats
+        try {
+          final meRes = await ApiClient().dio.get('/students/leaderboard/me');
+          if (meRes.data['success'] == true && meRes.data['data'] != null) {
+            final meData = meRes.data['data'];
+            _coinsToTop100 = meData['coinsToTop100'] ?? 0;
+            _coinsToNextRank = meData['coinsToNextRank'] ?? 0;
+          }
+        } catch (_) {}
 
         if (mounted) {
           setState(() {
@@ -290,6 +313,54 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                   ),
                 ),
 
+                // Scope Selector Tabs: [Top 100], [Top 50], [Top 10], [Top 5]
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: colors.card,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: colors.border),
+                    ),
+                    child: Row(
+                      children: _scopes.map((s) {
+                        final isSelected = _selectedScope == s['id'];
+                        return Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              if (_selectedScope != s['id']) {
+                                HapticFeedback.selectionClick();
+                                setState(() {
+                                  _selectedScope = s['id']!;
+                                });
+                                _loadLeaderboard();
+                              }
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              decoration: BoxDecoration(
+                                color: isSelected ? const Color(0xFF6C55E0) : Colors.transparent,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                s['label']!,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800,
+                                  color: isSelected ? Colors.white : colors.muted,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+
                 // Main Content
                 Expanded(
                   child: _isLoading
@@ -390,24 +461,25 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                           children: [
                             Text(
                               (_myRank!.totalXP > 0 || _myRank!.coinBalance > 0)
-                                  ? 'Sizning joriy o‘rningiz'
-                                  : 'Hali reytingda emassiz',
-                              style: const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFFFFD66B),
-                              ),
-                            ),
-                            Text(
-                              (_myRank!.totalXP > 0 || _myRank!.coinBalance > 0)
-                                  ? '@${_myRank!.username}'
-                                  : '1 ta misol yechib, reytingga kiring!',
+                                  ? 'Siz ${_myRank!.rank}-o‘rindasiz • ${_myRank!.coinBalance} coin • ${_myRank!.totalXP} XP${_coinsToTop100 > 0 ? " • Top 100 ga $_coinsToTop100 coin qoldi" : (_coinsToNextRank > 0 ? " • Keyingi o‘ringa $_coinsToNextRank coin qoldi" : "")}'
+                                  : 'Hali reytingda emassiz • 1 ta misol yechib, reytingga kiring!',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w900,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w800,
                                 color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              '@${_myRank!.username}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFFFFD66B),
                               ),
                             ),
                           ],
@@ -618,6 +690,24 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                    if (isHighlighted) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF10B981),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Text(
+                          '↑ +1',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w900,
                             color: Colors.white,
                           ),
                         ),

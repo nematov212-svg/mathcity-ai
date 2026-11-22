@@ -716,6 +716,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
     Color bgColor = colors.card;
     Color letterBgColor = colors.bg;
     Color letterTextColor = colors.ink;
+    Color optionTextColor = colors.ink;
     Widget letterChild = Text(
       letter,
       style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: letterTextColor),
@@ -727,28 +728,32 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
 
       if (isThisChoice && _isCorrect) {
         // Correct selection: Green
-        borderColor = const Color(0xFF1B8A55);
+        borderColor = const Color(0xFF10B981);
         bgColor = const Color(0xFFDDF5E8);
-        letterBgColor = const Color(0xFF1B8A55);
+        letterBgColor = const Color(0xFF10B981);
+        optionTextColor = const Color(0xFF064E3B);
         letterChild = const Icon(Icons.check_rounded, color: Colors.white, size: 18);
       } else if (isThisChoice && !_isCorrect) {
         // Wrong selection: Red
-        borderColor = const Color(0xFFE24B4A);
+        borderColor = const Color(0xFFEF4444);
         bgColor = const Color(0xFFFDECEC);
-        letterBgColor = const Color(0xFFE24B4A);
+        letterBgColor = const Color(0xFFEF4444);
+        optionTextColor = const Color(0xFF7F1D1D);
         letterChild = const Icon(Icons.close_rounded, color: Colors.white, size: 18);
       } else if (isRealCorrect) {
         // Reveal correct answer: Soft Green
-        borderColor = const Color(0xFF1B8A55);
+        borderColor = const Color(0xFF10B981);
         bgColor = const Color(0xFFF0FDF4);
-        letterBgColor = const Color(0xFF1B8A55);
+        letterBgColor = const Color(0xFF10B981);
+        optionTextColor = const Color(0xFF064E3B);
         letterChild = const Icon(Icons.check_rounded, color: Colors.white, size: 18);
       }
     } else if (isSelected) {
-      // Selected state: Primary purple
+      // Selected state: Primary purple background with high contrast dark text
       borderColor = const Color(0xFF6C55E0);
       bgColor = const Color(0xFFEDE8FF);
       letterBgColor = const Color(0xFF6C55E0);
+      optionTextColor = const Color(0xFF1E1742);
       letterChild = Text(
         letter,
         style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: Colors.white),
@@ -798,7 +803,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
-                      color: colors.ink,
+                      color: optionTextColor,
                     ),
                   ),
                 ),

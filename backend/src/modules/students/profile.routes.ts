@@ -32,6 +32,22 @@ studentsRouter.get('/profile', authMiddleware, (req: AuthenticatedRequest, res: 
   });
 });
 
+// Helper to sort users: Primarily coinBalance DESC -> totalXP DESC -> createdAt ASC
+function sortLeaderboardUsers(
+  a: { coinBalance?: number; totalXP?: number; createdAt?: string },
+  b: { coinBalance?: number; totalXP?: number; createdAt?: string }
+): number {
+  const coinsA = a.coinBalance || 0;
+  const coinsB = b.coinBalance || 0;
+  if (coinsB !== coinsA) return coinsB - coinsA;
+  const xpA = a.totalXP || 0;
+  const xpB = b.totalXP || 0;
+  if (xpB !== xpA) return xpB - xpA;
+  const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+  const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+  return timeA - timeB;
+}
+
 /**
  * GET /api/me & GET /me
  * Single source of truth for user profile, coins, xp, level, and real leaderboard rank.
@@ -39,11 +55,7 @@ studentsRouter.get('/profile', authMiddleware, (req: AuthenticatedRequest, res: 
 studentsRouter.get('/me', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
   const allUsers = repository.getAllUsers();
-  const sorted = [...allUsers].sort((a, b) => {
-    if (b.totalXP !== a.totalXP) return b.totalXP - a.totalXP;
-    if (b.coinBalance !== a.coinBalance) return b.coinBalance - a.coinBalance;
-    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-  });
+  const sorted = [...allUsers].sort(sortLeaderboardUsers);
   const myRankIndex = sorted.findIndex((u) => u.id === user.id);
   const rank = myRankIndex !== -1 ? myRankIndex + 1 : 1;
 
@@ -71,26 +83,28 @@ studentsRouter.get('/me', authMiddleware, (req: AuthenticatedRequest, res: Respo
 
 /**
  * GET /api/students/leaderboard/me
- * User's own real-time rank, weekly XP, and status message
+ * User's own real-time rank, stats, distance to ranks, and status message
  */
 studentsRouter.get('/leaderboard/me', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
   const allUsers = repository.getAllUsers();
 
   const isEligible = (user.totalXP || 0) > 0 || (user.coinBalance || 0) > 0;
+  const hasRank = isEligible;
 
-  // Active ranked users
-  const rankedUsers = [...allUsers]
-    .filter((u) => (u.totalXP || 0) > 0 || (u.coinBalance || 0) > 0)
-    .sort((a, b) => {
-      if (b.totalXP !== a.totalXP) return b.totalXP - a.totalXP;
-      if (b.coinBalance !== a.coinBalance) return b.coinBalance - a.coinBalance;
-      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-    });
+  // Active ranked users sorted by coinBalance DESC -> totalXP DESC -> createdAt ASC
+  const rankedUsers = [...allUsers].sort(sortLeaderboardUsers);
 
   const myIndex = rankedUsers.findIndex((u) => u.id === user.id);
-  const rank = (isEligible && myIndex !== -1) ? myIndex + 1 : null;
-  const hasRank = rank !== null;
+  const rank = isEligible ? (myIndex !== -1 ? myIndex + 1 : rankedUsers.length + 1) : null;
+
+  const myCoins = user.coinBalance || 0;
+  const coinsToNextRank = (rank !== null && rank > 1) ? Math.max(0, (rankedUsers[rank - 2]?.coinBalance || 0) - myCoins + 1) : 0;
+  const coinsToTop100 = (rank !== null && rank <= 100) ? 0 : (rankedUsers.length >= 100 ? Math.max(0, (rankedUsers[99]?.coinBalance || 0) - myCoins + 1) : 0);
+  const coinsToTop50 = (rank !== null && rank <= 50) ? 0 : (rankedUsers.length >= 50 ? Math.max(0, (rankedUsers[49]?.coinBalance || 0) - myCoins + 1) : 0);
+  const coinsToTop10 = (rank !== null && rank <= 10) ? 0 : (rankedUsers.length >= 10 ? Math.max(0, (rankedUsers[9]?.coinBalance || 0) - myCoins + 1) : 0);
+  const coinsToTop5 = (rank !== null && rank <= 5) ? 0 : (rankedUsers.length >= 5 ? Math.max(0, (rankedUsers[4]?.coinBalance || 0) - myCoins + 1) : 0);
+  const percentile = (rank !== null && rankedUsers.length > 0) ? Math.round(((rankedUsers.length - rank + 1) / rankedUsers.length) * 100) : 100;
 
   // Weekly XP calculation using Tashkent week days
   const weekDays = getTashkentWeekDays();
@@ -110,18 +124,27 @@ studentsRouter.get('/leaderboard/me', authMiddleware, (req: AuthenticatedRequest
     data: {
       hasRank,
       rank,
-      totalXP: user.totalXP || 0,
-      weeklyXP,
+      totalUsers: rankedUsers.length,
+      coins: user.coinBalance || 0,
       coinBalance: user.coinBalance || 0,
+      xp: user.totalXP || 0,
+      totalXP: user.totalXP || 0,
+      level: user.level || 1,
+      percentile,
+      coinsToNextRank,
+      coinsToTop100,
+      coinsToTop50,
+      coinsToTop10,
+      coinsToTop5,
+      weeklyXP,
       displayName: user.displayName,
       username: user.username,
       avatarUrl: user.avatarUrl,
-      level: user.level || 1,
       message: hasRank
         ? `Siz ${rank}-o‘rindasiz`
         : 'Hali reytingda emassiz',
       subMessage: hasRank
-        ? 'Reytingda yuqorilash uchun darslarni davom ettiring'
+        ? (coinsToTop100 > 0 ? `Top 100 ga ${coinsToTop100} coin qoldi` : 'Reytingda yuqorilash uchun darslarni davom ettiring')
         : '1 ta misol yechib, reytingga kiring!',
     },
   });
@@ -129,19 +152,22 @@ studentsRouter.get('/leaderboard/me', authMiddleware, (req: AuthenticatedRequest
 
 /**
  * GET /api/students/leaderboard
- * Global leaderboard sorted by: totalXP DESC -> coinBalance DESC -> createdAt ASC
+ * Global leaderboard sorted by: coinBalance DESC -> totalXP DESC -> createdAt ASC
+ * Scopes: top100 (default), top50, top10, top5.
  * Privacy: ONLY exposes rank, username, public first name, avatar, XP, and coin balance.
- * NEVER returns emails, passwords, phones, or sensitive details.
  */
 studentsRouter.get('/leaderboard', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const allUsers = repository.getAllUsers();
+  const scope = (req.query.scope as string) || 'top100';
+  const period = (req.query.period as string) || 'all';
 
-  // Sort: XP DESC, then Coins DESC, then older registration first
-  const sorted = [...allUsers].sort((a, b) => {
-    if (b.totalXP !== a.totalXP) return b.totalXP - a.totalXP;
-    if (b.coinBalance !== a.coinBalance) return b.coinBalance - a.coinBalance;
-    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-  });
+  let limit = 100;
+  if (scope === 'top5') limit = 5;
+  else if (scope === 'top10') limit = 10;
+  else if (scope === 'top50') limit = 50;
+  else if (scope === 'top100') limit = 100;
+
+  const allUsers = repository.getAllUsers();
+  const sorted = [...allUsers].sort(sortLeaderboardUsers);
 
   const fullLeaderboard = sorted.map((u, index) => ({
     rank: index + 1,
@@ -161,17 +187,15 @@ studentsRouter.get('/leaderboard', authMiddleware, (req: AuthenticatedRequest, r
     ? myEntry.rank
     : (fullLeaderboard.length > 0 ? fullLeaderboard.length : 1);
 
-  const page = Math.max(1, parseInt(req.query.page as string, 10) || 1);
-  const limit = Math.max(5, Math.min(100, parseInt(req.query.limit as string, 10) || 50));
-  const startIndex = (page - 1) * limit;
-  const paginatedList = fullLeaderboard.slice(startIndex, startIndex + limit);
+  const slicedList = fullLeaderboard.slice(0, limit);
 
   return res.json({
     success: true,
     data: {
-      leaderboard: paginatedList,
+      leaderboard: slicedList,
       totalCount: fullLeaderboard.length,
-      page,
+      scope,
+      period,
       limit,
       myRank: {
         hasRank: isEligible,

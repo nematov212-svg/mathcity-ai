@@ -95,6 +95,7 @@ export interface UserAccount {
   lastActiveDate?: string; // YYYY-MM-DD
   isBlocked?: boolean;
   friendsCount?: number;
+  isTestUser?: boolean;
   settings?: {
     soundEnabled: boolean;
     animationsEnabled: boolean;
@@ -246,6 +247,85 @@ class DataRepository {
       problemsSolved: 4,
       lastHeartbeat: now.getTime(),
     });
+
+    // Seed 120 test users for rich leaderboard in development
+    this.seedLeaderboardUsers();
+  }
+
+  private seedLeaderboardUsers(): void {
+    if (process.env.NODE_ENV === 'production') return;
+
+    const names = [
+      'Jasur', 'Madina', 'Temur', 'Shahzoda', 'Bekzod', 'Diyora', 'Azizbek', 'Nigora',
+      'Sardor', 'Rayhon', 'Bobur', 'Kamola', 'Javohir', 'Dilnoza', 'Shohruh', 'Mohira',
+      'Farrux', 'Malika', "Ulug'bek", 'Laylo', 'Sherzod', 'Gulnoza', 'Rustam', 'Zilola',
+      'Mirjalol', 'Sevara', 'Oybek', 'Nafisa', 'Akmal', 'Feruza', 'Jamshid', 'Zarina',
+      'Ilhom', 'Dildora', 'Nodir', 'Umida', 'Botir', 'Gulbahor', 'Sanjar', 'Shaxnoza',
+      'Doniyor', 'Munisa', 'Otabek', 'Robiya', 'Jahongir', 'Ozoda', 'Eldor', 'Lola',
+      'Mansur', 'Fotima', 'Behruz', 'Zuhra', 'Murod', 'Nozima', 'Asadbek', 'Nilufar',
+      'Shahboz', 'Yulduz', 'Zafar', "Go'zal", 'Akbar', 'Saodat', 'Anvar', 'Ruxshona',
+      'Davron', 'Charos', 'Siroj', 'Dilafruz', 'Shavkat', 'Muslima', 'Alisher', 'Iroda',
+      "G'ayrat", 'Komila', 'Samandar', 'Sabina', 'Abbos', 'Gulchehra', 'Humoyun', 'Muhabbat',
+      'Islombek', "E'zoza", 'Quvonch', 'Parizoda', 'Tohir', 'Durdona', 'Ravshan', 'Farida',
+      'Umidbek', 'Mahliyo', 'Odil', 'Zulfiya', "Ma'ruf", 'Nargiza', 'Muzaffar', 'Mastura',
+      'Bahrom', 'Shoira', 'Xurshid', 'Dilrabo', 'Muhriddin', 'Sayyora', 'Qobil', 'Mohinur',
+      'Sobir', 'Gulruh', 'Olim', "Ra'no", 'Elbek', 'Barno', 'Shuhrat', 'Dinora',
+      'Furqat', 'Oygul', 'Hamza', 'Sarvinoz', 'Sunnat', 'Hilola', 'Shohjahon', 'Muattar'
+    ];
+
+    const now = Date.now();
+    for (let i = 0; i < names.length; i++) {
+      const name = names[i];
+      const username = `${name.toLowerCase().replace(/[^a-z0-9]/g, '')}_${10 + (i % 89)}`;
+      const id = `test-user-${i + 1}`;
+      // Decreasing coins from 480 down to 10
+      const coinBalance = Math.max(10, Math.round(480 - i * 3.8));
+      const totalXP = Math.max(50, Math.round(coinBalance * 9.5 + (names.length - i) * 15));
+      const level = Math.min(15, Math.floor(totalXP / 350) + 1);
+      const createdAt = new Date(now - (i + 1) * 6 * 3600 * 1000).toISOString();
+
+      const testUser: UserAccount = {
+        id,
+        email: `${username}@test.mathcity.ai`,
+        username,
+        usernameLower: username.toLowerCase(),
+        displayName: name,
+        dateOfBirth: '2014-04-12',
+        age: 12,
+        mode: 'KIDS',
+        grade: 5,
+        avatarUrl: `assets/images/avatars/avatar_${(i % 12) + 1}.png`,
+        profileCompleted: true,
+        coinBalance,
+        totalXP,
+        level,
+        cityLevel: Math.min(5, Math.floor(level / 2) + 1),
+        currentStreak: (i % 7) + 1,
+        longestStreak: (i % 14) + 2,
+        friendsCount: (i % 8),
+        unlockedAchievements: ['ach_first_step'],
+        attemptedQuestionCount: Math.round(totalXP / 10),
+        correctQuestionCount: Math.round(totalXP / 12),
+        incorrectQuestionCount: Math.round(totalXP / 60),
+        completedLessons: ['lesson-g3-addsub'],
+        completedSections: ['sec-g3-01-s1'],
+        solvedQuestions: [],
+        rewardedQuestionIds: [],
+        dailyTaskProgress: {},
+        isTestUser: true,
+        subscription: {
+          status: 'FREE_TRIAL_ACTIVE',
+          trialStartedAt: createdAt,
+          trialExpiresAt: new Date(now + 25 * 86400 * 1000).toISOString(),
+          planName: 'MathCity Free Trial',
+          priceMonthlyUzs: 29000,
+        },
+        placedBuildings: [],
+        createdAt,
+      };
+
+      this.users.set(id, testUser);
+    }
   }
 
   // --- User Accounts ---
@@ -310,9 +390,10 @@ class DataRepository {
     return undefined;
   }
 
-  getAllUsers(): UserAccount[] {
+  getAllUsers(includeTestUsers = (process.env.NODE_ENV !== 'production')): UserAccount[] {
     const unique = new Map<string, UserAccount>();
     for (const user of this.users.values()) {
+      if (!includeTestUsers && user.isTestUser) continue;
       unique.set(user.id, user);
     }
     return Array.from(unique.values());

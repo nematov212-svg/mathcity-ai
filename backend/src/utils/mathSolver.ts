@@ -17,6 +17,7 @@ import { evaluate } from 'mathjs';
 import { Rational } from './exactArithmetic.js';
 import { logUnrecognizedQuery } from './repository.js';
 import { findTopicExplanation, MathTopic } from './mathTopicsKnowledgeBase.js';
+import { MathUnderstandingEngine } from './mathUnderstandingEngine.js';
 
 export interface MathStep {
   stepNumber: number;
@@ -543,6 +544,31 @@ export class MathSolver {
         const topic = findTopicExplanation(clean);
         if (topic) {
           solution = this.buildTopicExplanationSolution(clean, topic);
+        }
+      }
+
+      // 3.31 MathUnderstandingEngine fallback (Uzbek conversational & natural questions)
+      if (!solution) {
+        const under = MathUnderstandingEngine.solve(clean);
+        if (under.success) {
+          solution = {
+            originalQuestion: clean,
+            problemType: 'UNDERSTANDING_ENGINE',
+            understood: under.understoodQuery,
+            formulaLatex: under.formulaLatex,
+            steps: under.steps.map((s) => ({
+              stepNumber: s.stepNumber,
+              title: s.title,
+              explanation: s.explanation,
+              latex: s.latex,
+            })),
+            finalAnswer: under.shortAnswer,
+            verification: 'Verified by MathUnderstandingEngine',
+            rawReply: under.reply,
+            verifiedCorrect: true,
+            confidence: 0.99,
+            similarExample: under.similarExample,
+          };
         }
       }
     } catch (err: any) {

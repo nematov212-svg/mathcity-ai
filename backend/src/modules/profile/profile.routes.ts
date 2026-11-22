@@ -31,6 +31,23 @@ profileRouter.get('/summary', authMiddleware, (req: AuthenticatedRequest, res: R
     allLessons.filter((l) => completedLessons.includes(l.id)).map((l) => l.chapterId || l.topicKey)
   );
 
+  // Compute unified rank: coinBalance DESC -> totalXP DESC -> createdAt ASC
+  const allUsers = repository.getAllUsers();
+  const sortedUsers = [...allUsers].sort((a, b) => {
+    const coinsA = a.coinBalance || 0;
+    const coinsB = b.coinBalance || 0;
+    if (coinsB !== coinsA) return coinsB - coinsA;
+    const xpA = a.totalXP || 0;
+    const xpB = b.totalXP || 0;
+    if (xpB !== xpA) return xpB - xpA;
+    const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return timeA - timeB;
+  });
+  const myIndex = sortedUsers.findIndex((u) => u.id === user.id);
+  const isEligible = (user.totalXP || 0) > 0 || (user.coinBalance || 0) > 0;
+  const rank = (isEligible && myIndex !== -1) ? myIndex + 1 : (isEligible ? sortedUsers.length + 1 : 1);
+
   return res.json({
     success: true,
     data: {
@@ -43,6 +60,7 @@ profileRouter.get('/summary', authMiddleware, (req: AuthenticatedRequest, res: R
       totalXP: user.totalXP,
       xp: user.totalXP,
       level: user.level || 1,
+      rank,
       friendsCount: user.friendsCount || 0,
       studyMinutesToday,
       completedLessonsCount,
