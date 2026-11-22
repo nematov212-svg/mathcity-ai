@@ -233,8 +233,26 @@ class StudentNotifier extends StateNotifier<StudentState> {
   /// Initialize authenticated session from storage or backend demo endpoint
   Future<void> initializeSession() async {
     final result = await _authService.restoreSession();
+    if (!mounted) return;
     if (result.success && result.student != null) {
       state = state.copyWith(student: result.student);
+    }
+    // Also restore cached coins if available
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (!mounted) return;
+      final cachedCoins = prefs.getInt('cached_coin_balance');
+      final cachedXP = prefs.getInt('cached_total_xp');
+      if (cachedCoins != null && state.student != null && cachedCoins > state.student!.coinBalance) {
+        state = state.copyWith(
+          student: state.student!.copyWith(
+            coinBalance: cachedCoins,
+            totalXP: cachedXP ?? state.student!.totalXP,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('ℹ️ [StudentNotifier] Keshdagi tangalarni tiklashda: $e');
     }
     unawaited(syncOfflineAnswers());
   }
@@ -254,13 +272,15 @@ class StudentNotifier extends StateNotifier<StudentState> {
         final res = await ApiClient().dio.post('/activity/heartbeat', data: {'seconds': 15});
         if (res.data['success'] == true && res.data['data'] != null) {
           final todayMin = res.data['data']['todayMinutes'];
-          if (todayMin != null && state.student != null) {
+          if (mounted && todayMin != null && state.student != null) {
             state = state.copyWith(
               student: state.student!.copyWith(studyMinutes: todayMin),
             );
           }
         }
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('ℹ️ [StudentNotifier] Heartbeat xatoligi: $e');
+      }
     });
   }
 
@@ -275,7 +295,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
       final res = await ApiClient().dio.get('/profile/summary');
       if (res.data['success'] == true && res.data['data'] != null) {
         final d = res.data['data'];
-        if (state.student != null) {
+        if (mounted && state.student != null) {
           state = state.copyWith(
             student: state.student!.copyWith(
               coinBalance: d['coinBalance'] ?? d['coins'] ?? state.student!.coinBalance,
@@ -515,47 +535,94 @@ class StudentNotifier extends StateNotifier<StudentState> {
     }
   }
 
+  final Set<String> _answeredQuestionIds = <String>{};
+  Set<String> get answeredQuestionIds => _answeredQuestionIds;
+
   // --- Real-time Question Submission with EXACTLY 1 COIN RULE ---
   Future<Map<String, dynamic>> submitAnswer(
     String questionId,
     String answer, {
     int? timeSpentMs,
+    bool isCorrectLocally = true,
+    String? correctAnswer,
+    String? explanation,
   }) async {
-    // In widget test environment, immediately update state without network delay
-    if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) {
-      if (state.student != null) {
-        state = state.copyWith(
-          lastCoinsAwarded: 1,
-          student: state.student!.copyWith(
-            coinBalance: state.student!.coinBalance + 1,
-            totalXP: state.student!.totalXP + 10,
-            attemptedQuestionCount: state.student!.attemptedQuestionCount + 1,
-            correctQuestionCount: state.student!.correctQuestionCount + 1,
-          ),
-        );
-      }
-      return {
-        'isCorrect': true,
-        'coinsAwarded': 1,
-        'newCoinBalance': (state.student?.coinBalance ?? 0),
-        'explanation': 'To‘g‘ri javob!',
-      };
+    final bool alreadyAnswered = _answeredQuestionIds.contains(questionId);
+    if (!alreadyAnswered) {
+      _answeredQuestionIds.add(questionId);
     }
 
-    // 1. Optimistic UI update: tentatively increase coin counter by +1 and XP by 10
-    final prevCoins = state.student?.coinBalance ?? 0;
-    final prevXP = state.student?.totalXP ?? 0;
-    if (state.student != null) {
+    // Business rules:
+    // 1. Correct answer -> +1 coin (exactly once per question)
+    // 2. Incorrect answer -> +0 coin, coins never decrease
+    // 3. Repeated submission -> +0 coin
+    final int coinsAwarded = (isCorrectLocally && !alreadyAnswered) ? 1 : 0;
+    final int xpAwarded = (isCorrectLocally && !alreadyAnswered) ? 10 : 0;
+
+    // Instant local state update (ZERO delay, zero defunct risk)
+    if (mounted && state.student != null) {
+      final prevCoins = state.student!.coinBalance;
+      final prevXP = state.student!.totalXP;
+      final newCoins = prevCoins + coinsAwarded;
+      final newXP = prevXP + xpAwarded;
+      final newLevel = (newXP ~/ 200) + 1;
+      final newAttempted = state.student!.attemptedQuestionCount + 1;
+      final newCorrect = state.student!.correctQuestionCount + (isCorrectLocally ? 1 : 0);
+
       state = state.copyWith(
-        lastCoinsAwarded: 1,
+        lastCoinsAwarded: coinsAwarded,
         student: state.student!.copyWith(
-          coinBalance: prevCoins + 1,
-          totalXP: prevXP + 10,
-          attemptedQuestionCount: state.student!.attemptedQuestionCount + 1,
+          coinBalance: newCoins,
+          totalXP: newXP,
+          level: newLevel,
+          attemptedQuestionCount: newAttempted,
+          correctQuestionCount: newCorrect,
         ),
       );
+
+      // Persist to local storage
+      unawaited(_persistLocalCoinsAndXP(newCoins, newXP));
     }
 
+    // Background resilient sync to server (skipped in flutter_test to avoid pending FakeAsync timers)
+    final isTestEnv = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    if (!isTestEnv) {
+      unawaited(_syncAnswerToServer(
+        questionId: questionId,
+        answer: answer,
+        timeSpentMs: timeSpentMs,
+        isCorrect: isCorrectLocally,
+        coinsAwarded: coinsAwarded,
+      ));
+    }
+
+    return {
+      'isCorrect': isCorrectLocally,
+      'coinsAwarded': coinsAwarded,
+      'xpAwarded': xpAwarded,
+      'newCoinBalance': state.student?.coinBalance ?? 0,
+      'correctAnswer': correctAnswer ?? answer,
+      'explanation': explanation ?? (isCorrectLocally ? 'To‘g‘ri javob!' : 'Noto‘g‘ri javob.'),
+    };
+  }
+
+  Future<void> _persistLocalCoinsAndXP(int coins, int xp) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('cached_coin_balance', coins);
+      await prefs.setInt('cached_total_xp', xp);
+    } catch (e) {
+      debugPrint('ℹ️ [StudentNotifier] Keshga saqlashda xatolik: $e');
+    }
+  }
+
+  Future<void> _syncAnswerToServer({
+    required String questionId,
+    required String answer,
+    int? timeSpentMs,
+    required bool isCorrect,
+    required int coinsAwarded,
+  }) async {
     try {
       final res = await ApiClient().dio.post('/practice/answer', data: {
         'questionId': questionId,
@@ -564,48 +631,25 @@ class StudentNotifier extends StateNotifier<StudentState> {
         if (timeSpentMs != null) 'timeSpentMs': timeSpentMs,
       });
 
-      if (res.data['success'] == true) {
-        final data = res.data['data'];
-        final int coinsAwarded = data['coinsAwarded'] ?? 0;
-        final int xpAwarded = data['xpAwarded'] ?? 0;
-        final int newCoinBalance =
-            data['newCoinBalance'] ?? (prevCoins + coinsAwarded);
-        final int newTotalXP =
-            data['newTotalXP'] ?? (prevXP + xpAwarded);
-        final int newLevel =
-            data['newLevel'] ?? ((newTotalXP ~/ 200) + 1);
-        final int totalAttempted =
-            data['totalAttempted'] ?? ((state.student?.attemptedQuestionCount ?? 0));
-        final int totalCorrect = data['totalCorrect'] ??
-            ((state.student?.correctQuestionCount ?? 0) + (data['isCorrect'] == true ? 1 : 0));
+      if (!mounted) return;
 
-        // Authoritative reconciliation
-        if (state.student != null) {
+      if (res.data['success'] == true && res.data['data'] != null) {
+        final data = res.data['data'];
+        final int? serverCoins = data['newCoinBalance'];
+        final int? serverXP = data['newTotalXP'];
+        if (mounted && state.student != null && serverCoins != null && serverCoins >= state.student!.coinBalance) {
           state = state.copyWith(
-            lastCoinsAwarded: coinsAwarded,
             student: state.student!.copyWith(
-              coinBalance: newCoinBalance,
-              totalXP: newTotalXP,
-              level: newLevel,
-              attemptedQuestionCount: totalAttempted,
-              correctQuestionCount: totalCorrect,
+              coinBalance: serverCoins,
+              totalXP: serverXP ?? state.student!.totalXP,
             ),
           );
         }
-
-        return data;
       }
     } catch (e) {
-      debugPrint('⚠️ submitAnswer API xatoligi: $e');
-      _queueOfflineAnswer(questionId, answer, timeSpentMs);
+      debugPrint('ℹ️ [StudentNotifier] Server sinxronizatsiyasi kechikmoqda, oflayn saqlandi: $e');
+      await _queueOfflineAnswer(questionId, answer, timeSpentMs);
     }
-
-    // Offline / Network fallback response
-    return {
-      'isCorrect': true,
-      'coinsAwarded': 1,
-      'explanation': 'To‘g‘ri javob! (Oflayn)',
-    };
   }
 
   Future<void> _queueOfflineAnswer(String questionId, String answer, int? timeSpentMs) async {

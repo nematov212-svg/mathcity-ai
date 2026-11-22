@@ -8,9 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
-import '../../core/network/api_client.dart';
 import '../../core/services/sound_service.dart';
 import '../../shared/models/lesson_model.dart';
+import '../../shared/repositories/exercise_repository.dart';
 import '../../shared/providers/student_provider.dart';
 
 class ExerciseScreen extends ConsumerStatefulWidget {
@@ -49,8 +49,6 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
   bool _isLoading = true;
 
   late List<QuestionModel> _questions;
-  String _sessionTitle = 'Misollar';
-  int _grade = 4;
 
   // GlobalKeys for flight trajectory
   final GlobalKey _coinBadgeKey = GlobalKey();
@@ -130,29 +128,27 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
   void _loadQuestions() async {
     final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
 
-    // 20 realistic questions for testing and fallback
-    final fallbackList = List.generate(20, (i) {
-      final a = (i + 2) * 3;
-      final b = (i + 1) * 2;
-      final sum = a + b;
-      final opts = [
-        '$sum',
-        '${sum + 2}',
-        '${sum - 3}',
-        '${sum + 4}',
-      ]..shuffle(math.Random(i + 42));
-      return QuestionModel(
-        id: 'q-practice-${i + 1}',
-        prompt: '$a + $b = ?',
-        options: opts,
-        correctAnswer: '$sum',
-        hint: '$a ga $b sonini qo‘shing.',
-        explanation: '$a + $b = $sum bo‘ladi.',
-        orderIndex: i + 1,
-      );
-    });
-
     if (isTest) {
+      final fallbackList = List.generate(20, (i) {
+        final a = (i + 2) * 3;
+        final b = (i + 1) * 2;
+        final sum = a + b;
+        final opts = [
+          '$sum',
+          '${sum + 2}',
+          '${sum - 3}',
+          '${sum + 4}',
+        ]..shuffle(math.Random(i + 42));
+        return QuestionModel(
+          id: 'q-practice-${i + 1}',
+          prompt: '$a + $b = ?',
+          options: opts,
+          correctAnswer: '$sum',
+          hint: '$a ga $b sonini qo‘shing.',
+          explanation: '$a + $b = $sum bo‘ladi.',
+          orderIndex: i + 1,
+        );
+      });
       setState(() {
         _questions = fallbackList;
         _isLoading = false;
@@ -162,38 +158,63 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
     }
 
     try {
-      final res = await ApiClient().dio.get(
-        '/practice/session',
-        queryParameters: {
-          'grade': _grade,
-          'topic': widget.lessonId ?? 'Misollar',
-        },
+      final student = ref.read(studentProvider).student;
+      final exercises = await ExerciseRepository().getSessionExercises(
+        age: student?.age,
+        count: 20,
       );
 
-      if (res.data['success'] == true) {
-        final data = res.data['data'];
-        final questionsList = (data['questions'] as List<dynamic>?)
-            ?.map((q) => QuestionModel.fromJson(q))
-            .toList();
+      if (!mounted) return;
 
-        if (questionsList != null && questionsList.isNotEmpty) {
-          setState(() {
-            _questions = questionsList;
-            _sessionTitle = data['topic'] ?? _sessionTitle;
-            _grade = data['grade'] ?? _grade;
-            _isLoading = false;
-          });
-          _cardTransitionController.forward(from: 0.0);
-          return;
-        }
+      if (exercises.isNotEmpty) {
+        final questionsList = exercises.asMap().entries.map((entry) {
+          final i = entry.key;
+          final ex = entry.value;
+          return QuestionModel(
+            id: 'q-${ex.id}',
+            prompt: ex.question,
+            options: ex.options,
+            correctAnswer: ex.answer,
+            hint: ex.hint,
+            explanation: ex.explanation,
+            orderIndex: i + 1,
+          );
+        }).toList();
+
+        setState(() {
+          _questions = questionsList;
+          _isLoading = false;
+        });
+        _cardTransitionController.forward(from: 0.0);
+        return;
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('ℹ️ [ExerciseScreen] Savollarni yuklashda xatolik: $e');
+    }
 
-    setState(() {
-      _questions = fallbackList;
-      _isLoading = false;
+    // Secondary fallback
+    final fallbackList = List.generate(20, (i) {
+      final a = (i + 1) * 3;
+      final b = (i + 2) * 2;
+      final sum = a + b;
+      return QuestionModel(
+        id: 'q-fallback-${i + 1}',
+        prompt: '$a + $b = ?',
+        options: ['$sum', '${sum + 1}', '${sum - 2}', '${sum + 3}'],
+        correctAnswer: '$sum',
+        hint: '$a ga $b sonini qo‘shing.',
+        explanation: '$a + $b = $sum bo‘ladi.',
+        orderIndex: i + 1,
+      );
     });
-    _cardTransitionController.forward(from: 0.0);
+
+    if (mounted) {
+      setState(() {
+        _questions = fallbackList;
+        _isLoading = false;
+      });
+      _cardTransitionController.forward(from: 0.0);
+    }
   }
 
   void _onOptionSelected(String option) {
@@ -212,22 +233,27 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
     final selected = _selectedOption!;
     final timeSpentMs = DateTime.now().difference(_questionStartTime).inMilliseconds;
 
-    // Call server POST /practice/answer
+    // Check correctness locally
+    final bool isCorrect = selected == currentQ.correctAnswer ||
+        (currentQ.options.contains(selected) &&
+         currentQ.options.indexOf(selected) == currentQ.options.indexOf(currentQ.correctAnswer));
+
+    // Call student notifier submitAnswer with local correctness evaluated
     final result = await ref.read(studentProvider.notifier).submitAnswer(
           currentQ.id,
           selected,
           timeSpentMs: timeSpentMs,
+          isCorrectLocally: isCorrect,
+          correctAnswer: currentQ.correctAnswer,
+          explanation: currentQ.explanation,
         );
 
-    final bool isCorrect = result['isCorrect'] == true ||
-        (currentQ.correctAnswer.isNotEmpty && selected == currentQ.correctAnswer);
+    if (!mounted) return;
 
     final String serverCorrect = result['correctAnswer'] ?? currentQ.correctAnswer;
     final String serverExplanation = result['explanation'] ?? currentQ.explanation;
     final int coinsAwarded = result['coinsAwarded'] ?? (isCorrect ? 1 : 0);
     final int xpAwarded = result['xpAwarded'] ?? (isCorrect ? 10 : 0);
-
-    if (!mounted) return;
 
     setState(() {
       _isSubmitting = false;
@@ -261,9 +287,9 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
       HapticFeedback.mediumImpact();
       SoundService().playWrong();
 
-      // Auto advance after educational review (~1.4s)
+      // Educational review: give time to read explanation or tap Davom etish
       _autoAdvanceTimer?.cancel();
-      _autoAdvanceTimer = Timer(const Duration(milliseconds: 1400), () {
+      _autoAdvanceTimer = Timer(const Duration(milliseconds: 2500), () {
         if (mounted && _isAnswerChecked && !_isCorrect) {
           _advanceToNext();
         }

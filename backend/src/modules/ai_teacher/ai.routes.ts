@@ -1,12 +1,25 @@
 import { Router, Response } from 'express';
 import { z } from 'zod';
 import { authMiddleware, requireCompletedProfile, AuthenticatedRequest } from '../../middleware/auth.js';
-import { aiRateLimiter } from '../../middleware/rateLimit.js';
+import { aiRateLimiter, aiVoiceRateLimiter } from '../../middleware/rateLimit.js';
 import { MathSolver } from '../../utils/mathSolver.js';
 import { aiQuotaStore } from './aiQuotaStore.js';
 import { repository } from '../../utils/repository.js';
 
 export const aiRouter = Router();
+
+export const AI_USTOZ_SYSTEM_PROMPT = `Sen "AI Ustoz" — 6–16 yoshli o'zbek bolalari uchun matematika ustozisan.
+QOIDALAR:
+1. Doim o'zbek tilida (lotin), sodda, do'stona, qisqa gapirasan. Bolaga "sen" deb murojaat qil.
+2. Yechimni qadamma-qadam tushuntir. Avval g'oyani ayt, keyin hisobla, oxirida javobni tekshir.
+3. Bola yoshiga moslash: kichiklarga o'yin va hayotiy misol (olma, konfet), kattalarga formula va mantiq.
+4. To'g'ridan-to'g'ri javob berib qo'yma: avval 1 ta yo'naltiruvchi savol ber, bola qiynalsa to'liq yech.
+5. Hisob-kitobda XATO QILMA. Murakkab hisobni ikki marta tekshir.
+6. Matematikadan tashqari savolga muloyimlik bilan matematikaga qayt.
+7. Zararli, noo'rin yoki shaxsiy ma'lumot so'ralsa, rad et va mavzuni o'zgartir.
+8. Rasmda misol bo'lsa, avval uni o'qib ayt ("Rasmda ... misolni ko'ryapman"), keyin yech. O'qiy olmasang, qayta suratga olishni so'ra.
+9. Ovozli xabarda tushunmagan joyingni so'ra, taxmin qilma.
+10. Formatda ortiqcha murakkab belgilar ishlatma. Kasrni 3/4 ko'rinishida, ko'paytirishni × bilan yoz.`;
 
 // Protect all AI Ustoz endpoints with JWT auth and completed profile requirement
 aiRouter.use(authMiddleware, requireCompletedProfile);
@@ -134,6 +147,8 @@ aiRouter.get('/unrecognized', authMiddleware, (_req: AuthenticatedRequest, res: 
 const chatSchema = z.object({
   message: z.string().min(1, 'Savol bo‘sh bo‘lishi mumkin emas.').max(1000, 'Savol juda uzun (maksimal 1000 belgi).'),
   conversationId: z.string().nullable().optional(),
+  history: z.array(z.any()).optional(),
+  level: z.number().int().optional(),
   action: z
     .enum(['chat', 'next_step', 'explain_more', 'similar_example', 'check_solution'])
     .optional()
@@ -645,8 +660,8 @@ const handleVoiceSolve = async (req: AuthenticatedRequest, res: Response) => {
   });
 };
 
-aiRouter.post('/chat/voice', authMiddleware, aiRateLimiter, handleVoiceSolve);
-aiRouter.post('/solve-voice', authMiddleware, aiRateLimiter, handleVoiceSolve);
+aiRouter.post('/chat/voice', authMiddleware, aiVoiceRateLimiter, handleVoiceSolve);
+aiRouter.post('/solve-voice', authMiddleware, aiVoiceRateLimiter, handleVoiceSolve);
 
 // ============================================================================
 // 6. Voice Learning / Correction Feedback Endpoint

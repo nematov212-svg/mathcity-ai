@@ -68,6 +68,7 @@ flutter:
     - assets/city/
     - assets/animations/
     - assets/fonts/
+    - assets/data/
 
   fonts:
     - family: Nunito

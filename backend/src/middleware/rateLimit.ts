@@ -76,11 +76,26 @@ export const authRateLimiter = createRateLimiter({
   keyGenerator: (req) => req.ip || 'anonymous-auth',
 });
 
-// 2. AI Tutor Rate Limiter (Cost protection: 25 requests per hour)
+// 2. AI Tutor Rate Limiter (Per User / Token: 30 requests per minute)
 export const aiRateLimiter = createRateLimiter({
-  windowMs: 60 * 60 * 1000,
-  maxRequests: 25,
-  message: 'AI Ustoz uchun soatlik savollar limiti tugadi. Iltimos, birozdan keyin murojaat qiling.',
+  windowMs: 60 * 1000,
+  maxRequests: 30,
+  message: 'AI Ustoz uchun so‘rovlar limiti oshdi. Iltimos, 1 daqiqadan so‘ng qayta urinib ko‘ring.',
+  keyGenerator: (req) => {
+    const authReq = req as AuthenticatedRequest;
+    return authReq.user?.id || (req.headers['authorization'] as string) || req.ip || 'anonymous-ai';
+  },
+});
+
+// 2b. AI Voice Endpoint Rate Limiter (At least 10 requests per minute per user)
+export const aiVoiceRateLimiter = createRateLimiter({
+  windowMs: 60 * 1000,
+  maxRequests: 15,
+  message: 'Ovozli so‘rovlar limiti oshdi. Iltimos, 1 daqiqadan so‘ng qayta urinib ko‘ring.',
+  keyGenerator: (req) => {
+    const authReq = req as AuthenticatedRequest;
+    return authReq.user?.id || (req.headers['authorization'] as string) || req.ip || 'anonymous-voice';
+  },
 });
 
 // 3. Practice Submission Rate Limiter (Anti-farming: 60 per minute)

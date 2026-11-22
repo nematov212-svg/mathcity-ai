@@ -33,6 +33,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
   int _selectedDayIndex = -1;
   List<Map<String, dynamic>> _weeklyActivity = [];
   bool _isLoadingWeekly = true;
+  StudentNotifier? _studentNotifier;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _studentNotifier = ref.read(studentProvider.notifier);
+  }
 
   @override
   void initState() {
@@ -91,7 +98,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
 
   @override
   void dispose() {
-    ref.read(studentProvider.notifier).stopHeartbeat();
+    _studentNotifier?.stopHeartbeat();
     _entranceController.dispose();
     _crownController.dispose();
     _starController.dispose();

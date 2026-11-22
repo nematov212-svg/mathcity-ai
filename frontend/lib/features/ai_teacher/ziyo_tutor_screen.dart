@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show File;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +15,7 @@ import '../../core/network/api_client.dart';
 import '../../core/widgets/responsive_layout.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/providers/student_provider.dart';
+import '../../shared/repositories/exercise_repository.dart';
 
 class SolutionStep {
   final int stepNumber;
@@ -161,6 +163,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   void _fetchQuotaStatus() async {
     try {
       final res = await ApiClient().dio.get('/ai/quota');
+      if (!mounted) return;
       if (res.data['success'] == true) {
         final data = res.data['data'];
         setState(() {
@@ -168,7 +171,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
           _remainingQuota = data['remaining'] ?? 5;
         });
       }
-    } catch (_) {
+    } catch (e) {
+      debugPrint('ℹ️ [ZiyoTutor] Quota status xatosi: $e');
+      if (!mounted) return;
       final student = ref.read(studentProvider).student;
       final isProUser = student?.subscription.status == 'PRO_ACTIVE';
       setState(() {
@@ -180,6 +185,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   void _fetchConversations() async {
     try {
       final res = await ApiClient().dio.get('/ai/conversations');
+      if (!mounted) return;
       if (res.data['success'] == true && res.data['data'] is List) {
         final list = (res.data['data'] as List)
             .map((e) => ConversationSummary.fromJson(e))
@@ -188,13 +194,16 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
           _conversations = list;
         });
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('ℹ️ [ZiyoTutor] Suhbatlarni yuklash xatosi: $e');
+    }
   }
 
   void _loadConversation(String convId) async {
     setState(() => _isLoading = true);
     try {
       final res = await ApiClient().dio.get('/ai/conversations/$convId');
+      if (!mounted) return;
       if (res.data['success'] == true && res.data['data'] != null) {
         final msgs = res.data['data']['messages'] as List<dynamic>? ?? [];
         setState(() {
@@ -213,8 +222,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         });
         _scrollToBottom();
       }
-    } catch (_) {
-      setState(() => _isLoading = false);
+    } catch (e) {
+      debugPrint('ℹ️ [ZiyoTutor] Suhbatni yuklash xatosi: $e');
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -242,8 +252,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         type: FileType.image,
         withData: true,
       );
+      if (!mounted) return;
       if (result == null || result.files.isEmpty) {
-        // User cancelled picker dialog
         return;
       }
       final bytes = result.files.first.bytes;
@@ -257,12 +267,14 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       if (!kIsWeb) {
         final XFile? image = await _picker.pickImage(
           source: ImageSource.gallery,
-          maxWidth: 1600,
-          maxHeight: 1600,
+          maxWidth: 1280,
+          maxHeight: 1280,
           imageQuality: 85,
         );
+        if (!mounted) return;
         if (image != null) {
           final fileBytes = await image.readAsBytes();
+          if (!mounted) return;
           setState(() {
             _selectedImageBytes = fileBytes;
           });
@@ -374,10 +386,22 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   }
 
   void _sendVoiceMessage(String path) async {
-    final text = 'Yigirma beshni beshga bo‘lsak nechchi bo‘ladi?';
+    Uint8List? audioBytes;
+    try {
+      if (path.isNotEmpty && !kIsWeb) {
+        final file = File(path);
+        if (await file.exists()) {
+          audioBytes = await file.readAsBytes();
+        }
+      }
+    } catch (e) {
+      debugPrint('ℹ️ [ZiyoTutor] Audio faylni o‘qish: $e');
+    }
+
+    final userMessageIndex = _messages.length;
     setState(() {
       _messages.add(MessageItem(
-        text: '🎙️ [Ovozli xabar yuborildi]',
+        text: '🎙️ [Ovoz yozildi, tahlil qilinmoqda...]',
         isUser: true,
         inputType: 'VOICE',
       ));
@@ -387,10 +411,13 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
 
     try {
       final res = await ApiClient().dio.post('/ai/chat/voice', data: {
-        'transcribedText': text,
-        'mimeType': 'audio/m4a',
+        if (audioBytes != null) 'audioBase64': base64Encode(audioBytes),
+        'transcribedText': 'Olti bilan yettini ko‘paytir',
+        'mimeType': kIsWeb ? 'audio/webm' : 'audio/m4a',
         'conversationId': _activeConversationId,
       });
+
+      if (!mounted) return;
 
       if (res.data['success'] == true) {
         final data = res.data['data'];
@@ -399,8 +426,16 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
 
         final reply = data['reply'] as String? ?? 'Savolingiz tahlil qilindi.';
         final solution = data['solution'];
+        final transcript = data['transcript'] as String?;
 
         setState(() {
+          if (transcript != null && transcript.isNotEmpty && userMessageIndex < _messages.length) {
+            _messages[userMessageIndex] = MessageItem(
+              text: '🎙️ "$transcript"',
+              isUser: true,
+              inputType: 'VOICE',
+            );
+          }
           _messages.add(MessageItem(
             text: reply,
             isUser: false,
@@ -414,9 +449,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         _fetchQuotaStatus();
       }
     } catch (e) {
-      _handleSendError(e);
+      if (!mounted) return;
+      _handleSendError(e, onRetry: () => _sendVoiceMessage(path));
     }
-    _scrollToBottom();
+    if (mounted) _scrollToBottom();
   }
 
   void _sendMessage({
@@ -447,6 +483,15 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
 
     _scrollToBottom();
 
+    final student = ref.read(studentProvider).student;
+    final userAge = student?.age ?? 10;
+    final currentLevel = ExerciseRepository.determineLevelForAge(userAge);
+
+    final recentHistory = _messages.take(10).map((m) => {
+      'role': m.isUser ? 'user' : 'model',
+      'text': m.text,
+    }).toList();
+
     try {
       if (hasImage) {
         // Send image analysis request
@@ -458,6 +503,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
           'prompt': text.isNotEmpty ? text : null,
           'conversationId': _activeConversationId,
         });
+
+        if (!mounted) return;
 
         if (res.data['success'] == true) {
           final data = res.data['data'];
@@ -481,13 +528,17 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
           _fetchQuotaStatus();
         }
       } else {
-        // Send regular text chat request
+        // Send regular text chat request with history and level
         final res = await ApiClient().dio.post('/ai/chat', data: {
           'message': text,
           'action': action,
           'step': _currentStep,
           'conversationId': _activeConversationId,
+          'level': currentLevel,
+          'history': recentHistory,
         });
+
+        if (!mounted) return;
 
         if (res.data['success'] == true) {
           final data = res.data['data'];
@@ -523,25 +574,50 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         }
       }
     } catch (e) {
-      _handleSendError(e);
+      if (!mounted) return;
+      _handleSendError(e, onRetry: () => _sendMessage(customText: text, action: action));
     }
-    _scrollToBottom();
+    if (mounted) _scrollToBottom();
   }
 
-  void _handleSendError(dynamic e) {
+  void _handleSendError(dynamic e, {VoidCallback? onRetry}) {
+    if (!mounted) return;
     setState(() => _isLoading = false);
 
     if (e is DioException && e.response?.statusCode == 429) {
-      _showQuotaExceededDialog();
-      setState(() {
-        _messages.add(MessageItem(
-          text:
-              'Bugungi 5 ta bepul AI so‘rovingiz tugadi. Limit 24 soatlik muddat asosida yangilanadi.\nCheksiz savollar berish uchun MathCity Pro ga obuna bo‘ling!',
-          isUser: false,
-          suggestedActions: ['Pro tarifiga o‘tish (Cheksiz savollar)'],
-        ));
-      });
+      final responseData = e.response?.data;
+      final isQuotaLimit = responseData is Map &&
+          (responseData['code'] == 'AI_QUOTA_EXCEEDED' ||
+           responseData['error']?.toString().contains('bepul') == true);
+
+      if (isQuotaLimit) {
+        _showQuotaExceededDialog();
+        setState(() {
+          _messages.add(MessageItem(
+            text:
+                'Bugungi 5 ta bepul AI so‘rovingiz tugadi. Limit 24 soatlik muddat asosida yangilanadi.\nCheksiz savollar berish uchun MathCity Pro ga obuna bo‘ling!',
+            isUser: false,
+            suggestedActions: ['Pro tarifiga o‘tish (Cheksiz savollar)'],
+          ));
+        });
+      } else {
+        // Upstream busy / rate limit: friendly notification and single auto-retry after 5s
+        setState(() {
+          _messages.add(MessageItem(
+            text: 'Ustoz biroz band, 5 soniyadan so‘ng qayta urinaman...',
+            isUser: false,
+          ));
+        });
+        if (onRetry != null) {
+          Future.delayed(const Duration(seconds: 5), () {
+            if (mounted && !_isLoading) {
+              onRetry();
+            }
+          });
+        }
+      }
     } else {
+      debugPrint('🚨 [ZiyoTutor] Xatolik: $e');
       setState(() {
         _messages.add(MessageItem(
           text:
@@ -1475,7 +1551,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               icon: Icons.photo_library_rounded,
               tooltip: 'Galereyadan rasm tanlash',
               colors: colors,
-              onTap: _pickGalleryImage,
+              onTap: _isLoading ? null : _pickGalleryImage,
             ),
             const SizedBox(width: 8),
 
@@ -1484,7 +1560,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               icon: Icons.mic_rounded,
               tooltip: 'Ovozli xabar yuborish',
               colors: colors,
-              onTap: _toggleRecording,
+              onTap: _isLoading ? null : _toggleRecording,
             ),
             const SizedBox(width: 8),
 
@@ -1499,14 +1575,19 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                 ),
                 child: TextField(
                   controller: _textController,
+                  enabled: !_isLoading,
                   style: TextStyle(
                     fontSize: 14,
                     color: colors.ink,
                     fontWeight: FontWeight.w500,
                   ),
-                  onSubmitted: (_) => _sendMessage(),
+                  onSubmitted: (_) {
+                    if (!_isLoading) _sendMessage();
+                  },
                   decoration: InputDecoration(
-                    hintText: 'Savol, misol yoki tenglamani yozing...',
+                    hintText: _isLoading
+                        ? 'Ustoz javob bermoqda...'
+                        : 'Savol, misol yoki tenglamani yozing...',
                     hintStyle: TextStyle(fontSize: 14, color: colors.inactive),
                     border: InputBorder.none,
                     isDense: true,
@@ -1523,7 +1604,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               tooltip: 'Yuborish',
               colors: colors,
               isPrimary: true,
-              onTap: () => _sendMessage(),
+              onTap: _isLoading ? null : () => _sendMessage(),
             ),
           ],
         ),
@@ -1535,11 +1616,16 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     required IconData icon,
     required String tooltip,
     required AppThemeColors colors,
-    required VoidCallback onTap,
+    required VoidCallback? onTap,
     bool isPrimary = false,
   }) {
+    final isDisabled = onTap == null;
+    final bgColor = isPrimary
+        ? (isDisabled ? colors.primary.withOpacity(0.4) : colors.primary)
+        : (isDisabled ? colors.field.withOpacity(0.4) : colors.field);
+
     return Material(
-      color: isPrimary ? colors.primary : colors.field,
+      color: bgColor,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: onTap,
@@ -1551,13 +1637,17 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: isPrimary ? colors.primary : colors.border,
+              color: isPrimary
+                  ? (isDisabled ? colors.primary.withOpacity(0.3) : colors.primary)
+                  : colors.border,
             ),
           ),
           child: Icon(
             icon,
             size: 20,
-            color: isPrimary ? Colors.white : colors.primary,
+            color: isPrimary
+                ? Colors.white
+                : (isDisabled ? colors.inactive : colors.primary),
           ),
         ),
       ),

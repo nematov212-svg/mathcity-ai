@@ -23,6 +23,7 @@ import { subscriptionsRouter } from './modules/subscriptions/subscriptions.route
 import { adminRouter } from './modules/admin/admin.routes.js';
 import { paymentsRouter } from './modules/payments/click.routes.js';
 import { mediaRouter } from './modules/media/media.routes.js';
+import { exercisesRouter } from './modules/exercises/exercises.routes.js';
 import { isDatabaseHealthy, checkDatabaseConnection } from './db/client.js';
 
 const adminStaticPath = path.resolve(process.cwd(), 'public/admin');
@@ -135,6 +136,7 @@ app.use('/api/subscriptions', subscriptionsRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/payments', paymentsRouter);
 app.use('/api/media', mediaRouter);
+app.use('/api/exercises', exercisesRouter);
 
 // Global aliases for /me, /leaderboard, and /users/me/avatar
 app.get(['/api/me', '/me', '/api/users/me'], (req, res, next) => {

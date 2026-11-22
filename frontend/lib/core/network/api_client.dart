@@ -89,27 +89,23 @@ class ApiClient {
             return handler.next(error);
           }
 
-          // 1. Localhost Fallback: Strictly permitted ONLY in Debug mode on Web (kDebugMode && kIsWeb)
-          // Release va mobil (Android/iOS) da butunlay o'chirilgan
-          if (kDebugMode && kIsWeb && AppConfig.isLocalhostFallbackAllowed &&
-              reqOptions.baseUrl.contains('onrender.com') &&
-              (error.type == DioExceptionType.connectionError ||
-               error.type == DioExceptionType.connectionTimeout ||
-               statusCode == 503)) {
+          // 1. Localhost Fallback: Only attempted if base URL is intentionally pointing to local
+          if (kDebugMode && kIsWeb && reqOptions.baseUrl.contains('localhost')) {
             try {
               const localFallbackUrl = 'http://localhost:4000/api';
-              final pingDio = Dio(BaseOptions(connectTimeout: const Duration(milliseconds: 1000)));
+              final pingDio = Dio(BaseOptions(connectTimeout: const Duration(milliseconds: 800)));
               final pingRes = await pingDio.get('http://localhost:4000/health');
               if (pingRes.statusCode == 200) {
-                debugPrint('ℹ️ [Web Debug] Render servisi o‘rniga mahalliy backendga ($localFallbackUrl) ulandi.');
+                debugPrint('ℹ️ [Web Debug] Mahalliy backend ($localFallbackUrl) bilan ulanish tiklandi.');
                 AppConfig.setBaseUrl(localFallbackUrl);
 
                 reqOptions.baseUrl = localFallbackUrl;
                 final retryRes = await dio.fetch(reqOptions);
                 return handler.resolve(retryRes);
               }
-            } catch (_) {
-              // Local backend not reachable either; continue with normal cold-start retry
+            } catch (localErr) {
+              debugPrint('ℹ️ [API Client] Lokal backend mavjud emas, Render URL ga yo‘naltirilmoqda: $localErr');
+              AppConfig.setBaseUrl(AppConfig.productionApiUrl);
             }
           }
 
@@ -160,8 +156,8 @@ class ApiClient {
 
   /// Sends a background warm-up request to the health endpoint when the app starts
   Future<void> warmUp() async {
-    // In Web debug mode only, probe local backend first to prevent noise
-    if (kDebugMode && kIsWeb && AppConfig.isLocalhostFallbackAllowed) {
+    // If explicitly set to local API in debug, check local health first
+    if (kDebugMode && kIsWeb && AppConfig.baseUrl.contains('localhost')) {
       try {
         final localDio = Dio(BaseOptions(connectTimeout: const Duration(milliseconds: 1000)));
         final localRes = await localDio.get('http://localhost:4000/health');
@@ -170,7 +166,10 @@ class ApiClient {
           debugPrint('☀️ [API Client] Mahalliy backend faol va ulandi: http://localhost:4000/api');
           return;
         }
-      } catch (_) {}
+      } catch (localErr) {
+        debugPrint('ℹ️ [API Client] Mahalliy backend ulanmadi, Render ishlatiladi: $localErr');
+        AppConfig.setBaseUrl(AppConfig.productionApiUrl);
+      }
     }
 
     try {

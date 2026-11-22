@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io' show Platform;
+import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -225,12 +226,19 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   // ─── Step 2: Date Picker Wheel Modal ──────────────────────────────────────
   void _openDatePickerSheet() {
     HapticFeedback.lightImpact();
-    DateTime tempDate = _selectedDate ?? DateTime(DateTime.now().year - 10, 5, 15);
+    final now = DateTime.now();
+    final minDate = DateTime(now.year - 100, 1, 1);
+    final maxDate = now;
+
+    DateTime tempDate = _selectedDate ?? DateTime(now.year - 10, 5, 15);
+    if (tempDate.isBefore(minDate)) tempDate = minDate;
+    if (tempDate.isAfter(maxDate)) tempDate = maxDate;
 
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
+      isScrollControlled: true,
+      builder: (BuildContext sheetContext) {
         return Container(
           decoration: const BoxDecoration(
             color: Colors.white,
@@ -248,32 +256,65 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
                     'Tug‘ilgan sanani tanlang',
                     style: OnboardingTheme.labelStyle(fontSize: 17),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      _onDatePicked(tempDate);
-                    },
-                    child: Text(
-                      'Tayyor',
-                      style: OnboardingTheme.labelStyle(
-                        color: OnboardingTheme.primary,
-                        fontSize: 16,
-                      ).copyWith(fontWeight: FontWeight.w800),
-                    ),
+                  Row(
+                    children: [
+                      // Material DatePicker fallback for web / accessibility
+                      IconButton(
+                        tooltip: 'Taqvim orqali tanlash',
+                        icon: const Icon(Icons.calendar_month_rounded, color: OnboardingTheme.primary),
+                        onPressed: () async {
+                          final picked = await showDatePicker(
+                            context: sheetContext,
+                            initialDate: tempDate,
+                            firstDate: minDate,
+                            lastDate: maxDate,
+                          );
+                          if (picked != null) {
+                            if (mounted) {
+                              Navigator.of(sheetContext).pop();
+                              _onDatePicked(picked);
+                            }
+                          }
+                        },
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(sheetContext).pop();
+                          _onDatePicked(tempDate);
+                        },
+                        child: Text(
+                          'Tayyor',
+                          style: OnboardingTheme.labelStyle(
+                            color: OnboardingTheme.primary,
+                            fontSize: 16,
+                          ).copyWith(fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
               const Divider(color: OnboardingTheme.border),
               SizedBox(
-                height: 200,
-                child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.date,
-                  initialDateTime: tempDate,
-                  minimumDate: DateTime(DateTime.now().year - 20, 1, 1),
-                  maximumDate: DateTime.now(),
-                  onDateTimeChanged: (DateTime newDate) {
-                    tempDate = newDate;
-                  },
+                height: 280,
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(sheetContext).copyWith(
+                    dragDevices: {
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.mouse,
+                      PointerDeviceKind.trackpad,
+                      PointerDeviceKind.stylus,
+                    },
+                  ),
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime: tempDate,
+                    minimumDate: minDate,
+                    maximumDate: maxDate,
+                    onDateTimeChanged: (DateTime newDate) {
+                      tempDate = newDate;
+                    },
+                  ),
                 ),
               ),
             ],
@@ -286,13 +327,24 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   void _onDatePicked(DateTime date) {
     setState(() {
       _selectedDate = date;
-      _hasDateError = false;
-      _dateErrorMessage = null;
       final age = _calculateAge(date);
+
       if (age >= 13 && age <= 16) {
         _selectedMode = 'TEEN';
-      } else {
+        _hasDateError = false;
+        _dateErrorMessage = null;
+      } else if (age >= 6 && age <= 12) {
         _selectedMode = 'KIDS';
+        _hasDateError = false;
+        _dateErrorMessage = null;
+      } else if (age < 6) {
+        _selectedMode = 'KIDS';
+        _hasDateError = false;
+        _dateErrorMessage = 'MathCity AI 6–16 yosh uchun mo‘ljallangan. Sizga Bolalar rejimi tavsiya etiladi.';
+      } else {
+        _selectedMode = 'TEEN';
+        _hasDateError = false;
+        _dateErrorMessage = 'MathCity AI 6–16 yosh uchun mo‘ljallangan. Sizga O‘smirlar rejimi tavsiya etiladi.';
       }
     });
   }
@@ -319,20 +371,13 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
 
     final age = _calculateAge(_selectedDate!);
     if (age < 6) {
-      setState(() {
-        _hasDateError = true;
-        _dateErrorMessage = 'MathCity AI 6 yoshdan katta bolalar uchun mo‘ljallangan';
-      });
-      HapticFeedback.mediumImpact();
-      return;
-    }
-    if (age > 16) {
-      setState(() {
-        _hasDateError = true;
-        _dateErrorMessage = 'MathCity AI maktab o‘quvchilari (16 yoshgacha) uchun mo‘ljallangan';
-      });
-      HapticFeedback.mediumImpact();
-      return;
+      _selectedMode = 'KIDS';
+    } else if (age > 16) {
+      _selectedMode = 'TEEN';
+    } else if (age >= 13) {
+      _selectedMode = 'TEEN';
+    } else {
+      _selectedMode = 'KIDS';
     }
 
     setState(() {
