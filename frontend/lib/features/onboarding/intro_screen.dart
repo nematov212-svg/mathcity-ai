@@ -27,16 +27,19 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   int _currentStep = 0; // 0: Username, 1: Date of Birth, 2: Summary / Finish
 
   // ─── Step 1 State ─────────────────────────────────────────────────────────
-  final _usernameController = TextEditingController(text: 'MathHero2026');
+  final _usernameController = TextEditingController();
   Timer? _debounceTimer;
   bool _isCheckingUsername = false;
-  bool _isUsernameValid = true;
-  String? _usernameMessage = '✓ Bu nom bo‘sh';
+  bool _isUsernameValid = false;
+  String? _usernameMessage;
   bool _isUsernameError = false;
   bool _isShakeField = false;
+  List<String> _suggestions = ['MathNinja', 'AlgebraStar', 'NumberKing'];
 
   // ─── Step 2 State ─────────────────────────────────────────────────────────
-  DateTime _selectedDate = DateTime(2016, 5, 15); // Default 10 years old
+  DateTime? _selectedDate;
+  bool _hasDateError = false;
+  String? _dateErrorMessage;
   String _selectedMode = 'KIDS'; // 'KIDS' (Bolalar) or 'TEEN' (O‘smirlar)
   int _activeDateBox = 0; // 0: Kun, 1: Oy, 2: Yil
 
@@ -52,7 +55,37 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   @override
   void initState() {
     super.initState();
-    _checkUsernameLive(_usernameController.text);
+    _initSuggestions();
+  }
+
+  Future<void> _initSuggestions() async {
+    final baseNames = ['MathNinja', 'AlgebraStar', 'NumberKing'];
+    final updated = <String>[];
+    for (final base in baseNames) {
+      String candidate = base;
+      int suffix = 1;
+      bool available = false;
+      while (!available && suffix <= 99) {
+        try {
+          final res = await AuthService().checkUsername(candidate);
+          if (res['available'] == true) {
+            available = true;
+            break;
+          }
+        } catch (_) {
+          available = true;
+          break;
+        }
+        suffix++;
+        candidate = '$base$suffix';
+      }
+      updated.add(candidate);
+    }
+    if (mounted) {
+      setState(() {
+        _suggestions = updated;
+      });
+    }
   }
 
   @override
@@ -86,8 +119,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       setState(() {
         _isCheckingUsername = false;
         _isUsernameValid = false;
-        _isUsernameError = true;
-        _usernameMessage = 'Foydalanuvchi nomini kiriting.';
+        _isUsernameError = false;
+        _usernameMessage = null;
       });
       return;
     }
@@ -97,7 +130,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         _isCheckingUsername = false;
         _isUsernameValid = false;
         _isUsernameError = true;
-        _usernameMessage = 'Nom 3 dan 20 tagacha belgidan iborat bo‘lishi lozim.';
+        _usernameMessage = 'Format noto‘g‘ri (3–20 belgi, faqat lotin harflari va raqamlar)';
       });
       return;
     }
@@ -107,7 +140,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         _isCheckingUsername = false;
         _isUsernameValid = false;
         _isUsernameError = true;
-        _usernameMessage = 'Faqat lotin harflari va raqamlardan foydalaning.';
+        _usernameMessage = 'Format noto‘g‘ri (3–20 belgi, faqat lotin harflari va raqamlar)';
       });
       return;
     }
@@ -144,12 +177,11 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
           _isCheckingUsername = false;
           _isUsernameValid = false;
           _isUsernameError = true;
-          _usernameMessage = res['message'] ?? 'Bu foydalanuvchi nomi band. Boshqasini tanlang.';
+          _usernameMessage = res['message'] ?? '✕ Bu nom band, boshqasini tanlang';
         });
       }
     } catch (_) {
       if (!mounted) return;
-      // Default to optimistic valid for offline/mock cases
       setState(() {
         _isCheckingUsername = false;
         _isUsernameValid = true;
@@ -165,8 +197,15 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   }
 
   void _handleStep1Continue() {
-    if (!_isUsernameValid) {
-      setState(() => _isShakeField = true);
+    final username = _usernameController.text.trim();
+    if (username.isEmpty || !_isUsernameValid) {
+      setState(() {
+        _isShakeField = true;
+        _isUsernameError = true;
+        if (username.isEmpty) {
+          _usernameMessage = 'Foydalanuvchi nomini kiriting.';
+        }
+      });
       Future.delayed(const Duration(milliseconds: 350), () {
         if (mounted) setState(() => _isShakeField = false);
       });
@@ -182,7 +221,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   // ─── Step 2: Date Picker Wheel Modal ──────────────────────────────────────
   void _openDatePickerSheet() {
     HapticFeedback.lightImpact();
-    DateTime tempDate = _selectedDate;
+    DateTime tempDate = _selectedDate ?? DateTime(DateTime.now().year - 10, 5, 15);
 
     showModalBottomSheet<void>(
       context: context,
@@ -225,9 +264,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
                 height: 200,
                 child: CupertinoDatePicker(
                   mode: CupertinoDatePickerMode.date,
-                  initialDateTime: _selectedDate,
+                  initialDateTime: tempDate,
                   minimumDate: DateTime(DateTime.now().year - 20, 1, 1),
-                  maximumDate: DateTime(DateTime.now().year - 4, 12, 31),
+                  maximumDate: DateTime.now(),
                   onDateTimeChanged: (DateTime newDate) {
                     tempDate = newDate;
                   },
@@ -243,6 +282,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   void _onDatePicked(DateTime date) {
     setState(() {
       _selectedDate = date;
+      _hasDateError = false;
+      _dateErrorMessage = null;
       final age = _calculateAge(date);
       if (age >= 13 && age <= 16) {
         _selectedMode = 'TEEN';
@@ -253,59 +294,123 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   }
 
   void _handleStep2Continue() {
-    final age = _calculateAge(_selectedDate);
-    if (age >= 17) {
-      context.go('/access-denied');
+    if (_selectedDate == null) {
+      setState(() {
+        _hasDateError = true;
+        _dateErrorMessage = 'Avval kun, oy va yilni kiriting';
+      });
+      HapticFeedback.mediumImpact();
       return;
     }
+
+    final now = DateTime.now();
+    if (_selectedDate!.isAfter(now)) {
+      setState(() {
+        _hasDateError = true;
+        _dateErrorMessage = 'Tug‘ilgan sana kelajakda bo‘lishi mumkin emas';
+      });
+      HapticFeedback.mediumImpact();
+      return;
+    }
+
+    final age = _calculateAge(_selectedDate!);
     if (age < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('MathCity AI 6–16 yoshdagi o‘quvchilar uchun mo‘ljallangan.'),
-          backgroundColor: OnboardingTheme.error,
-        ),
-      );
+      setState(() {
+        _hasDateError = true;
+        _dateErrorMessage = 'MathCity AI 6 yoshdan katta bolalar uchun mo‘ljallangan';
+      });
+      HapticFeedback.mediumImpact();
+      return;
+    }
+    if (age > 16) {
+      setState(() {
+        _hasDateError = true;
+        _dateErrorMessage = 'MathCity AI maktab o‘quvchilari (16 yoshgacha) uchun mo‘ljallangan';
+      });
+      HapticFeedback.mediumImpact();
       return;
     }
 
     setState(() {
+      _hasDateError = false;
+      _dateErrorMessage = null;
       _currentStep = 2;
     });
   }
 
   // ─── Step 3: Finish & Submit ──────────────────────────────────────────────
   Future<void> _handleFinishRegistration() async {
+    if (_selectedDate == null) {
+      setState(() {
+        _currentStep = 1;
+        _hasDateError = true;
+        _dateErrorMessage = 'Avval kun, oy va yilni kiriting';
+      });
+      return;
+    }
+
     setState(() => _isSubmitting = true);
     final username = _usernameController.text.trim();
-    final age = _calculateAge(_selectedDate);
+    final chosenDate = _selectedDate!;
+    final age = _calculateAge(chosenDate);
 
     bool success = false;
+    bool conflictOccurred = false;
     try {
       success = await ref.read(studentProvider.notifier).completeOnboarding(
         username: username,
-        day: _selectedDate.day,
-        month: _selectedDate.month,
-        year: _selectedDate.year,
+        day: chosenDate.day,
+        month: chosenDate.month,
+        year: chosenDate.year,
       ).timeout(const Duration(seconds: 5));
-    } catch (_) {
+    } catch (e) {
+      if (e.toString().contains('409') || e.toString().toLowerCase().contains('band')) {
+        conflictOccurred = true;
+      }
       success = false;
     }
 
-    if (!success) {
+    if (!success && !conflictOccurred) {
       try {
         await ref.read(studentProvider.notifier).register(
           name: username,
-          dob: _selectedDate,
+          dob: chosenDate,
           email: '${username.toLowerCase()}@mathcity.ai',
           password: 'securepassword123',
         ).timeout(const Duration(seconds: 5));
         success = true;
-      } catch (_) {
-        success = true; // Optimistic flow progression
+      } catch (e) {
+        if (e.toString().contains('409') || e.toString().toLowerCase().contains('band')) {
+          conflictOccurred = true;
+        } else {
+          success = true; // Optimistic flow progression for offline/local
+        }
       }
     }
 
     if (!mounted) return;
+
+    if (conflictOccurred) {
+      setState(() {
+        _isSubmitting = false;
+        _currentStep = 0;
+        _isUsernameValid = false;
+        _isUsernameError = true;
+        _usernameMessage = '✕ Bu nom band, boshqasini tanlang';
+        _isShakeField = true;
+      });
+      Future.delayed(const Duration(milliseconds: 350), () {
+        if (mounted) setState(() => _isShakeField = false);
+      });
+      HapticFeedback.mediumImpact();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('✕ Bu nom band, boshqasini tanlang'),
+          backgroundColor: OnboardingTheme.error,
+        ),
+      );
+      return;
+    }
 
     if (success) {
       setState(() {
@@ -557,23 +662,13 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: [
-            ChipTag(
-              label: 'MathNinja',
+          children: _suggestions.map((suggestion) {
+            return ChipTag(
+              label: suggestion,
               variant: ChipVariant.suggestion,
-              onTap: () => _applySuggestion('MathNinja'),
-            ),
-            ChipTag(
-              label: 'AlgebraStar',
-              variant: ChipVariant.suggestion,
-              onTap: () => _applySuggestion('AlgebraStar'),
-            ),
-            ChipTag(
-              label: 'NumberKing',
-              variant: ChipVariant.suggestion,
-              onTap: () => _applySuggestion('NumberKing'),
-            ),
-          ],
+              onTap: () => _applySuggestion(suggestion),
+            );
+          }).toList(),
         ),
 
         const SizedBox(height: 32),
@@ -582,7 +677,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         PrimaryButton(
           text: 'Davom etish',
           trailing: const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
-          onPressed: _isUsernameValid ? _handleStep1Continue : null,
+          onPressed: (_isUsernameValid && !_isCheckingUsername && _usernameController.text.trim().isNotEmpty)
+              ? _handleStep1Continue
+              : null,
         ),
       ],
     );
@@ -592,8 +689,11 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   // SCREEN 2: TUG‘ILGAN SANA
   // ─────────────────────────────────────────────────────────────────────────
   Widget _buildStep2BirthDate() {
-    final age = _calculateAge(_selectedDate);
-    final monthName = _monthNames[_selectedDate.month - 1];
+    final hasDate = _selectedDate != null;
+    final age = hasDate ? _calculateAge(_selectedDate!) : null;
+    final dayStr = hasDate ? '${_selectedDate!.day}' : 'KK';
+    final monthStr = hasDate ? _monthNames[_selectedDate!.month - 1] : 'OO';
+    final yearStr = hasDate ? '${_selectedDate!.year}' : 'YYYY';
     final isKidsMode = _selectedMode == 'KIDS';
 
     return Column(
@@ -638,7 +738,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             Expanded(
               child: _buildDateBox(
                 label: 'Kun',
-                value: '${_selectedDate.day}',
+                value: dayStr,
+                isPlaceholder: !hasDate,
+                hasError: _hasDateError,
                 isActive: _activeDateBox == 0,
                 onTap: () {
                   setState(() => _activeDateBox = 0);
@@ -650,7 +752,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             Expanded(
               child: _buildDateBox(
                 label: 'Oy',
-                value: monthName,
+                value: monthStr,
+                isPlaceholder: !hasDate,
+                hasError: _hasDateError,
                 isActive: _activeDateBox == 1,
                 onTap: () {
                   setState(() => _activeDateBox = 1);
@@ -662,7 +766,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             Expanded(
               child: _buildDateBox(
                 label: 'Yil',
-                value: '${_selectedDate.year}',
+                value: yearStr,
+                isPlaceholder: !hasDate,
+                hasError: _hasDateError,
                 isActive: _activeDateBox == 2,
                 onTap: () {
                   setState(() => _activeDateBox = 2);
@@ -672,6 +778,30 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             ),
           ],
         ),
+
+        // Red validation error message below date boxes
+        if (_hasDateError && _dateErrorMessage != null) ...[
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              const Icon(
+                Icons.error_outline_rounded,
+                color: OnboardingTheme.error,
+                size: 16,
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  _dateErrorMessage!,
+                  style: OnboardingTheme.subStyle(
+                    color: OnboardingTheme.error,
+                    fontSize: 13,
+                  ).copyWith(fontWeight: FontWeight.w700),
+                ),
+              ),
+            ],
+          ),
+        ],
 
         const SizedBox(height: 14),
 
@@ -685,16 +815,16 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             );
           },
           child: Container(
-            key: ValueKey<int>(age),
+            key: ValueKey<String>(age != null ? '$age yosh' : 'no_age'),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
             decoration: BoxDecoration(
-              color: OnboardingTheme.lilac,
+              color: hasDate ? OnboardingTheme.lilac : const Color(0xFFF3F4F6),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Text(
-              '$age yosh',
+              age != null ? '$age yosh' : '— yosh',
               style: OnboardingTheme.labelStyle(
-                color: OnboardingTheme.primary,
+                color: hasDate ? OnboardingTheme.primary : OnboardingTheme.muted,
                 fontSize: 14,
               ).copyWith(fontWeight: FontWeight.w800),
             ),
@@ -710,33 +840,39 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
 
         const SizedBox(height: 12),
 
-        // 2 Mode Cards side-by-side
-        Row(
-          children: [
-            Expanded(
-              child: ModeCard(
-                title: 'Bolalar rejimi',
-                subtitle: '6–12 yosh',
-                icon: const Icon(Icons.smart_toy_rounded, color: OnboardingTheme.primary, size: 28),
-                isSelected: isKidsMode,
-                onTap: () => setState(() => _selectedMode = 'KIDS'),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: ModeCard(
-                title: 'O‘smirlar rejimi',
-                subtitle: '13–16 yosh',
-                icon: Icon(
-                  Icons.rocket_launch_rounded,
-                  color: !isKidsMode ? OnboardingTheme.primary : OnboardingTheme.muted,
-                  size: 28,
+        // 2 Mode Cards side-by-side (activated only after date is selected)
+        Opacity(
+          opacity: hasDate ? 1.0 : 0.45,
+          child: IgnorePointer(
+            ignoring: !hasDate,
+            child: Row(
+              children: [
+                Expanded(
+                  child: ModeCard(
+                    title: 'Bolalar rejimi',
+                    subtitle: '6–12 yosh',
+                    icon: const Icon(Icons.smart_toy_rounded, color: OnboardingTheme.primary, size: 28),
+                    isSelected: isKidsMode,
+                    onTap: () => setState(() => _selectedMode = 'KIDS'),
+                  ),
                 ),
-                isSelected: !isKidsMode,
-                onTap: () => setState(() => _selectedMode = 'TEEN'),
-              ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ModeCard(
+                    title: 'O‘smirlar rejimi',
+                    subtitle: '13–16 yosh',
+                    icon: Icon(
+                      Icons.rocket_launch_rounded,
+                      color: !isKidsMode ? OnboardingTheme.primary : OnboardingTheme.muted,
+                      size: 28,
+                    ),
+                    isSelected: !isKidsMode,
+                    onTap: () => setState(() => _selectedMode = 'TEEN'),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
 
         const SizedBox(height: 20),
@@ -777,23 +913,30 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   Widget _buildDateBox({
     required String label,
     required String value,
+    required bool isPlaceholder,
+    required bool hasError,
     required bool isActive,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
         height: 72,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: isActive ? OnboardingTheme.primary : OnboardingTheme.border,
-            width: isActive ? 2.0 : 1.5,
+            color: hasError
+                ? OnboardingTheme.error
+                : (isActive ? OnboardingTheme.primary : OnboardingTheme.border),
+            width: hasError ? 2.0 : (isActive ? 2.0 : 1.5),
           ),
           boxShadow: [
             BoxShadow(
-              color: OnboardingTheme.primary.withOpacity(isActive ? 0.12 : 0.04),
+              color: hasError
+                  ? OnboardingTheme.error.withOpacity(0.18)
+                  : OnboardingTheme.primary.withOpacity(isActive ? 0.12 : 0.04),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -805,7 +948,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             Text(
               label,
               style: OnboardingTheme.subStyle(
-                color: OnboardingTheme.muted,
+                color: hasError ? OnboardingTheme.error : OnboardingTheme.muted,
                 fontSize: 12,
               ).copyWith(fontWeight: FontWeight.w600),
             ),
@@ -813,7 +956,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             Text(
               value,
               style: OnboardingTheme.labelStyle(
-                color: OnboardingTheme.ink,
+                color: isPlaceholder
+                    ? OnboardingTheme.muted.withOpacity(0.6)
+                    : (hasError ? OnboardingTheme.error : OnboardingTheme.ink),
                 fontSize: 19,
               ).copyWith(fontWeight: FontWeight.w800),
             ),
@@ -827,7 +972,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   // SCREEN 3: YAKUN
   // ─────────────────────────────────────────────────────────────────────────
   Widget _buildStep3Summary() {
-    final age = _calculateAge(_selectedDate);
+    final age = _selectedDate != null ? _calculateAge(_selectedDate!) : 10;
     final username = _usernameController.text.trim();
     final modeLabel = _selectedMode == 'KIDS' ? 'Bolalar rejimi' : 'O‘smirlar rejimi';
 
