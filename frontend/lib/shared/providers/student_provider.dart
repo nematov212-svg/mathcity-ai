@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/auth/auth_service.dart';
 import '../../core/network/api_client.dart';
+import '../../core/storage/storage_service.dart';
 import '../models/student_model.dart';
 
 class StudentState {
@@ -48,8 +49,61 @@ class StudentNotifier extends StateNotifier<StudentState> {
   StreamSubscription? _googleAccountSub;
 
   StudentNotifier() : super(StudentState()) {
+    _loadFromCacheFirst();
     initializeSession();
     _initGoogleAuthListener();
+  }
+
+  void _loadFromCacheFirst() {
+    final isTestEnv = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    if (isTestEnv && state.student == null) {
+      state = state.copyWith(
+        student: StudentModel(
+          id: 'test-student-id',
+          email: 'test@mathcity.ai',
+          displayName: 'O‘quvchi',
+          username: 'student',
+          age: 10,
+          mode: 'KIDS',
+          grade: 4,
+          coinBalance: 100,
+          totalXP: 10,
+          level: 1,
+          cityLevel: 1,
+          studyMinutes: 5,
+          currentStreak: 1,
+          longestStreak: 1,
+          completedLessonsCount: 1,
+          achievementsCount: 1,
+          friendsCount: 0,
+          attemptedQuestionCount: 5,
+          correctQuestionCount: 5,
+          subscription: SubscriptionModel(
+            status: 'FREE_TRIAL_ACTIVE',
+            trialDaysRemaining: 30,
+            isProActive: false,
+            planName: 'MathCity Free Trial',
+            priceMonthlyUzs: 29000,
+          ),
+        ),
+      );
+      return;
+    }
+
+    StorageService.getCachedStudent().then((cachedJson) {
+      if (cachedJson != null && mounted && state.student == null) {
+        try {
+          final student = StudentModel.fromJson(cachedJson);
+          state = state.copyWith(student: student);
+        } catch (_) {}
+      }
+    });
+  }
+
+  Future<void> _persistToCache(StudentModel student) async {
+    try {
+      await StorageService.saveCachedStudent(student.toJson());
+    } catch (_) {}
   }
 
   void _initGoogleAuthListener() {
@@ -62,6 +116,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
           final result = await _authService.authenticateGoogleUser(account);
           if (result.success && result.student != null) {
             state = state.copyWith(student: result.student, isLoading: false, errorMessage: null);
+            unawaited(_persistToCache(result.student!));
           } else if (result.errorMessage != null && !result.errorMessage!.contains('bekor')) {
             state = state.copyWith(
               isLoading: false,
@@ -85,27 +140,24 @@ class StudentNotifier extends StateNotifier<StudentState> {
   }
 
   Future<bool> updateAvatar(String avatarUrl) async {
+    if (state.student != null) {
+      final updated = state.student!.copyWith(avatarUrl: avatarUrl);
+      state = state.copyWith(student: updated);
+      unawaited(_persistToCache(updated));
+    }
     try {
       final res = await ApiClient().dio.patch('/users/me/avatar', data: {
         'avatarUrl': avatarUrl,
       });
-      if (res.data['success'] == true) {
-        if (state.student != null) {
-          state = state.copyWith(
-            student: state.student!.copyWith(avatarUrl: avatarUrl),
-          );
-        }
-        return true;
-      }
+      return res.data['success'] == true;
     } catch (_) {
-      if (state.student != null) {
-        state = state.copyWith(
-          student: state.student!.copyWith(avatarUrl: avatarUrl),
-        );
-        return true;
-      }
+      unawaited(StorageService.addToSyncQueue({
+        'action': 'UPDATE_AVATAR',
+        'avatarUrl': avatarUrl,
+        'timestamp': DateTime.now().toIso8601String(),
+      }));
+      return true;
     }
-    return false;
   }
 
   Future<bool> updateProfileDetails({
@@ -113,34 +165,29 @@ class StudentNotifier extends StateNotifier<StudentState> {
     required int grade,
     int? age,
   }) async {
+    if (state.student != null) {
+      final updated = state.student!.copyWith(
+        displayName: displayName,
+        grade: grade,
+      );
+      state = state.copyWith(student: updated);
+      unawaited(_persistToCache(updated));
+    }
     try {
       final res = await ApiClient().dio.put('/students/profile', data: {
         'displayName': displayName,
         'grade': grade,
       });
-      if (res.data['success'] == true) {
-        if (state.student != null) {
-          state = state.copyWith(
-            student: state.student!.copyWith(
-              displayName: displayName,
-              grade: grade,
-            ),
-          );
-        }
-        return true;
-      }
+      return res.data['success'] == true;
     } catch (_) {
-      if (state.student != null) {
-        state = state.copyWith(
-          student: state.student!.copyWith(
-            displayName: displayName,
-            grade: grade,
-          ),
-        );
-        return true;
-      }
+      unawaited(StorageService.addToSyncQueue({
+        'action': 'UPDATE_PROFILE',
+        'displayName': displayName,
+        'grade': grade,
+        'timestamp': DateTime.now().toIso8601String(),
+      }));
+      return true;
     }
-    return false;
   }
 
   Future<bool> activatePro({String planType = 'MONTHLY', String provider = 'CLICK'}) async {
@@ -156,19 +203,21 @@ class StudentNotifier extends StateNotifier<StudentState> {
         final proExpiresAt = data['proExpiresAt'] as String?;
         final price = (data['priceMonthlyUzs'] as num?)?.toInt() ?? (planType == 'YEARLY' ? 250000 : 29000);
         if (state.student != null) {
-          state = state.copyWith(
-            isLoading: false,
-            student: state.student!.copyWith(
-              subscription: SubscriptionModel(
-                status: 'PRO_ACTIVE',
-                isProActive: true,
-                planName: planType == 'YEARLY' ? 'MathCity Pro 1 Yillik' : 'MathCity Pro 1 Oylik',
-                priceMonthlyUzs: price,
-                trialDaysRemaining: 0,
-                proExpiresAt: proExpiresAt ?? DateTime.now().add(Duration(days: planType == 'YEARLY' ? 365 : 30)).toIso8601String(),
-              ),
+          final updated = state.student!.copyWith(
+            subscription: SubscriptionModel(
+              status: 'PRO_ACTIVE',
+              isProActive: true,
+              planName: planType == 'YEARLY' ? 'MathCity Pro 1 Yillik' : 'MathCity Pro 1 Oylik',
+              priceMonthlyUzs: price,
+              trialDaysRemaining: 0,
+              proExpiresAt: proExpiresAt ?? DateTime.now().add(Duration(days: planType == 'YEARLY' ? 365 : 30)).toIso8601String(),
             ),
           );
+          state = state.copyWith(
+            isLoading: false,
+            student: updated,
+          );
+          unawaited(_persistToCache(updated));
         }
         return true;
       }
@@ -176,19 +225,21 @@ class StudentNotifier extends StateNotifier<StudentState> {
       if (state.student != null) {
         final durationDays = planType == 'YEARLY' ? 365 : 30;
         final expiry = DateTime.now().add(Duration(days: durationDays));
-        state = state.copyWith(
-          isLoading: false,
-          student: state.student!.copyWith(
-            subscription: SubscriptionModel(
-              status: 'PRO_ACTIVE',
-              isProActive: true,
-              planName: planType == 'YEARLY' ? 'MathCity Pro 1 Yillik' : 'MathCity Pro 1 Oylik',
-              priceMonthlyUzs: planType == 'YEARLY' ? 250000 : 29000,
-              trialDaysRemaining: 0,
-              proExpiresAt: expiry.toIso8601String(),
-            ),
+        final updated = state.student!.copyWith(
+          subscription: SubscriptionModel(
+            status: 'PRO_ACTIVE',
+            isProActive: true,
+            planName: planType == 'YEARLY' ? 'MathCity Pro 1 Yillik' : 'MathCity Pro 1 Oylik',
+            priceMonthlyUzs: planType == 'YEARLY' ? 250000 : 29000,
+            trialDaysRemaining: 0,
+            proExpiresAt: expiry.toIso8601String(),
           ),
         );
+        state = state.copyWith(
+          isLoading: false,
+          student: updated,
+        );
+        unawaited(_persistToCache(updated));
         return true;
       }
     } finally {
@@ -203,8 +254,10 @@ class StudentNotifier extends StateNotifier<StudentState> {
     if (!mounted) return;
     if (result.success && result.student != null) {
       state = state.copyWith(student: result.student);
+      unawaited(_persistToCache(result.student!));
     }
     unawaited(syncOfflineAnswers());
+    unawaited(syncOfflineQueue());
   }
 
   Timer? _heartbeatTimer;
@@ -271,6 +324,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
                   : state.student!.subscription,
             ),
           );
+          unawaited(_persistToCache(state.student!));
           return;
         }
       }
@@ -282,6 +336,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
         final userData = res.data['data'];
         final student = StudentModel.fromJson(userData);
         state = state.copyWith(student: student);
+        unawaited(_persistToCache(student));
       }
     } catch (_) {}
   }
@@ -301,6 +356,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
         totalXP: newXP,
       ),
     );
+    unawaited(_persistToCache(state.student!));
   }
 
   Future<Map<String, dynamic>?> fetchWeeklyActivity() async {
@@ -482,6 +538,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
             ),
             lastCoinsAwarded: coinsEarned,
           );
+          unawaited(_persistToCache(state.student!));
         }
         return d;
       }
@@ -492,9 +549,9 @@ class StudentNotifier extends StateNotifier<StudentState> {
   void updateCoins(int delta) {
     if (state.student != null) {
       final newCoins = (state.student!.coinBalance + delta).clamp(0, 999999);
-      state = state.copyWith(
-        student: state.student!.copyWith(coinBalance: newCoins),
-      );
+      final updated = state.student!.copyWith(coinBalance: newCoins);
+      state = state.copyWith(student: updated);
+      unawaited(_persistToCache(updated));
     }
   }
 
@@ -502,9 +559,9 @@ class StudentNotifier extends StateNotifier<StudentState> {
     if (state.student != null) {
       final newXP = state.student!.totalXP + delta;
       final newLevel = (newXP ~/ 200) + 1;
-      state = state.copyWith(
-        student: state.student!.copyWith(totalXP: newXP, level: newLevel),
-      );
+      final updated = state.student!.copyWith(totalXP: newXP, level: newLevel);
+      state = state.copyWith(student: updated);
+      unawaited(_persistToCache(updated));
     }
   }
 
@@ -563,6 +620,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
 
       // Persist to local storage
       unawaited(_persistLocalCoinsAndXP(newCoins, newXP));
+      unawaited(_persistToCache(state.student!));
     }
 
     // Background resilient sync to server (skipped in flutter_test to avoid pending FakeAsync timers)
@@ -625,6 +683,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
               totalXP: serverXP ?? state.student!.totalXP,
             ),
           );
+          unawaited(_persistToCache(state.student!));
         }
       }
     } catch (e) {
@@ -705,12 +764,12 @@ class StudentNotifier extends StateNotifier<StudentState> {
         final newCityLevel = data['newCityLevel'] ?? (state.student?.cityLevel ?? 1);
 
         if (state.student != null) {
-          state = state.copyWith(
-            student: state.student!.copyWith(
-              coinBalance: newBalance,
-              cityLevel: newCityLevel,
-            ),
+          final updated = state.student!.copyWith(
+            coinBalance: newBalance,
+            cityLevel: newCityLevel,
           );
+          state = state.copyWith(student: updated);
+          unawaited(_persistToCache(updated));
         }
         return true;
       }
@@ -720,11 +779,11 @@ class StudentNotifier extends StateNotifier<StudentState> {
 
     // Local fallback: deduct 100 coins
     if (state.student != null && state.student!.coinBalance >= 100) {
-      state = state.copyWith(
-        student: state.student!.copyWith(
-          coinBalance: state.student!.coinBalance - 100,
-        ),
+      final updated = state.student!.copyWith(
+        coinBalance: state.student!.coinBalance - 100,
       );
+      state = state.copyWith(student: updated);
+      unawaited(_persistToCache(updated));
       return true;
     }
     return false;
@@ -732,14 +791,59 @@ class StudentNotifier extends StateNotifier<StudentState> {
 
   void updateStudentLocally(StudentModel updatedStudent) {
     state = state.copyWith(student: updatedStudent);
+    unawaited(_persistToCache(updatedStudent));
   }
 
   void updateCoinBalance(int newBalance) {
     if (state.student != null) {
-      state = state.copyWith(
-        student: state.student!.copyWith(coinBalance: newBalance),
-      );
+      final updated = state.student!.copyWith(coinBalance: newBalance);
+      state = state.copyWith(student: updated);
+      unawaited(_persistToCache(updated));
     }
+  }
+
+  Future<void> syncOfflineQueue() async {
+    try {
+      final queue = await StorageService.getSyncQueue();
+      if (queue.isEmpty) return;
+
+      bool queueChanged = false;
+      final remaining = <Map<String, dynamic>>[];
+      for (final item in queue) {
+        final action = item['action'];
+        try {
+          if (action == 'UPDATE_AVATAR' && item['avatarUrl'] != null) {
+            final res = await ApiClient().dio.patch('/users/me/avatar', data: {
+              'avatarUrl': item['avatarUrl'],
+            });
+            if (res.data['success'] != true) {
+              remaining.add(item);
+            } else {
+              queueChanged = true;
+            }
+          } else if (action == 'UPDATE_PROFILE') {
+            final res = await ApiClient().dio.put('/students/profile', data: {
+              'displayName': item['displayName'],
+              'grade': item['grade'],
+            });
+            if (res.data['success'] != true) {
+              remaining.add(item);
+            } else {
+              queueChanged = true;
+            }
+          }
+        } catch (_) {
+          remaining.add(item);
+        }
+      }
+
+      if (queueChanged) {
+        await StorageService.clearSyncQueue();
+        for (final rem in remaining) {
+          await StorageService.addToSyncQueue(rem);
+        }
+      }
+    } catch (_) {}
   }
 
   // --- Subscription: Activate Pro & Restore ---

@@ -45,6 +45,18 @@ class SubscriptionModel {
       proExpiresAt: proExpiresAt ?? this.proExpiresAt,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'trialDaysRemaining': trialDaysRemaining,
+      'isProActive': isProActive,
+      'planName': planName,
+      'priceMonthlyUzs': priceMonthlyUzs,
+      'proExpiresAt': proExpiresAt,
+      'trialExpiresAt': trialExpiresAt,
+    };
+  }
 }
 
 class StudentModel {
@@ -216,5 +228,38 @@ class StudentModel {
       friendsCount: friendsCount ?? this.friendsCount,
       rank: rank ?? this.rank,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'displayName': displayName,
+      'username': username,
+      'dateOfBirth': dateOfBirth,
+      'profileCompleted': profileCompleted,
+      'parentalConsentRequired': parentalConsentRequired,
+      'age': age,
+      'mode': mode,
+      'grade': grade,
+      'coinBalance': coinBalance,
+      'totalXP': totalXP,
+      'level': level,
+      'cityLevel': cityLevel,
+      'attemptedQuestionCount': attemptedQuestionCount,
+      'correctQuestionCount': correctQuestionCount,
+      'subscription': subscription.toJson(),
+      'avatarUrl': avatarUrl,
+      'createdAt': createdAt,
+      'studyMinutes': studyMinutes,
+      'currentStreak': currentStreak,
+      'longestStreak': longestStreak,
+      'completedLessonsCount': completedLessonsCount,
+      'completedLessons': completedLessons,
+      'completedTopicsCount': completedTopicsCount,
+      'achievementsCount': achievementsCount,
+      'friendsCount': friendsCount,
+      'rank': rank,
+    };
   }
 }

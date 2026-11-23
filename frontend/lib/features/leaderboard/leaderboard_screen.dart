@@ -8,7 +8,9 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/widgets/coin_icon.dart';
+import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/user_avatar.dart';
+import '../../shared/models/student_model.dart';
 import '../../shared/providers/student_provider.dart';
 
 class LeaderboardUser {
@@ -231,6 +233,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
     return Scaffold(
       backgroundColor: colors.bg,
+      extendBody: true,
+      bottomNavigationBar: const MathCityBottomNav(currentIndex: 3),
       body: SafeArea(
         bottom: false,
         child: Stack(
@@ -380,29 +384,40 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                                   onRefresh: () => _loadLeaderboard(),
                                   color: colors.primary,
                                   backgroundColor: colors.card,
-                                  child: ListView.builder(
-                                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 130),
-                                    physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                                    itemCount: _leaderboard.length + (_leaderboard.length < 5 ? 1 : 0),
-                                    itemBuilder: (context, index) {
-                                      if (index >= _leaderboard.length) {
-                                        return _buildFewUsersBanner(colors, isDark);
-                                      }
-                                      final user = _leaderboard[index];
-                                      final currentStudent = ref.watch(studentProvider).student;
-                                      final isMyRow = (_myRank != null && (user.id == _myRank!.id || user.userId == _myRank!.userId)) ||
-                                          (currentStudent != null && (user.id == currentStudent.id || user.userId == currentStudent.id));
-                                      final isHighlighted = _highlightedUserIds.contains(user.id);
-                                      return AnimatedContainer(
-                                        duration: const Duration(milliseconds: 450),
-                                        curve: Curves.easeInOutCubic,
-                                        child: _buildLeaderboardCard(
-                                          user: user,
-                                          isMyRow: isMyRow,
-                                          isHighlighted: isHighlighted,
-                                          colors: colors,
-                                          isDark: isDark,
-                                        ),
+                                  child: Builder(
+                                    builder: (context) {
+                                      final remainingCount = _leaderboard.length > 3 ? _leaderboard.length - 3 : 0;
+                                      final showFewBanner = _leaderboard.length < 5;
+                                      final totalCount = 1 + remainingCount + (showFewBanner ? 1 : 0);
+
+                                      return ListView.builder(
+                                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 175),
+                                        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                                        itemCount: totalCount,
+                                        itemBuilder: (context, index) {
+                                          if (index == 0) {
+                                            return _buildTop3Podium(colors, isDark);
+                                          }
+                                          if (index > remainingCount) {
+                                            return _buildFewUsersBanner(colors, isDark);
+                                          }
+                                          final user = _leaderboard[2 + index];
+                                          final currentStudent = ref.watch(studentProvider).student;
+                                          final isMyRow = (_myRank != null && (user.id == _myRank!.id || user.userId == _myRank!.userId)) ||
+                                              (currentStudent != null && (user.id == currentStudent.id || user.userId == currentStudent.id));
+                                          final isHighlighted = _highlightedUserIds.contains(user.id);
+                                          return AnimatedContainer(
+                                            duration: const Duration(milliseconds: 450),
+                                            curve: Curves.easeInOutCubic,
+                                            child: _buildLeaderboardCard(
+                                              user: user,
+                                              isMyRow: isMyRow,
+                                              isHighlighted: isHighlighted,
+                                              colors: colors,
+                                              isDark: isDark,
+                                            ),
+                                          );
+                                        },
                                       );
                                     },
                                   ),
@@ -416,7 +431,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
               Positioned(
                 left: 16,
                 right: 16,
-                bottom: 20,
+                bottom: 92,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
                   decoration: BoxDecoration(
@@ -771,6 +786,267 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTop3Podium(AppThemeColors colors, bool isDark) {
+    if (_leaderboard.isEmpty) return const SizedBox.shrink();
+
+    final first = _leaderboard.isNotEmpty ? _leaderboard[0] : null;
+    final second = _leaderboard.length > 1 ? _leaderboard[1] : null;
+    final third = _leaderboard.length > 2 ? _leaderboard[2] : null;
+
+    final currentStudent = ref.watch(studentProvider).student;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 12, 4, 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          // 2nd Place (Silver) - Left
+          if (second != null)
+            Expanded(
+              child: _buildPodiumColumn(
+                user: second,
+                rank: 2,
+                pedestalHeight: 105,
+                podiumColor: const Color(0xFF94A3B8),
+                gradientColors: isDark
+                    ? [const Color(0xFF2E3447), const Color(0xFF1E2330)]
+                    : [const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)],
+                badgeIcon: '🥈',
+                crown: false,
+                colors: colors,
+                isDark: isDark,
+                currentStudent: currentStudent,
+              ),
+            )
+          else
+            const Expanded(child: SizedBox.shrink()),
+
+          const SizedBox(width: 8),
+
+          // 1st Place (Gold) - Center (Tallest)
+          if (first != null)
+            Expanded(
+              flex: 12,
+              child: _buildPodiumColumn(
+                user: first,
+                rank: 1,
+                pedestalHeight: 135,
+                podiumColor: const Color(0xFFFFB800),
+                gradientColors: isDark
+                    ? [const Color(0xFF4A3816), const Color(0xFF33250A)]
+                    : [const Color(0xFFFFE89E), const Color(0xFFFFD566)],
+                badgeIcon: '👑',
+                crown: true,
+                colors: colors,
+                isDark: isDark,
+                currentStudent: currentStudent,
+              ),
+            ),
+
+          const SizedBox(width: 8),
+
+          // 3rd Place (Bronze) - Right
+          if (third != null)
+            Expanded(
+              child: _buildPodiumColumn(
+                user: third,
+                rank: 3,
+                pedestalHeight: 90,
+                podiumColor: const Color(0xFFF97316),
+                gradientColors: isDark
+                    ? [const Color(0xFF3D271E), const Color(0xFF2B1912)]
+                    : [const Color(0xFFFFDFC9), const Color(0xFFFFC8A8)],
+                badgeIcon: '🥉',
+                crown: false,
+                colors: colors,
+                isDark: isDark,
+                currentStudent: currentStudent,
+              ),
+            )
+          else
+            const Expanded(child: SizedBox.shrink()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPodiumColumn({
+    required LeaderboardUser user,
+    required int rank,
+    required double pedestalHeight,
+    required Color podiumColor,
+    required List<Color> gradientColors,
+    required String badgeIcon,
+    required bool crown,
+    required AppThemeColors colors,
+    required bool isDark,
+    required StudentModel? currentStudent,
+  }) {
+    final isMe = (_myRank != null && (user.id == _myRank!.id || user.userId == _myRank!.userId)) ||
+        (currentStudent != null && (user.id == currentStudent.id || user.userId == currentStudent.id));
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (crown)
+          const Text('👑', style: TextStyle(fontSize: 24))
+        else
+          const SizedBox(height: 12),
+
+        const SizedBox(height: 2),
+
+        // Avatar with podium border
+        Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: podiumColor.withOpacity(0.35),
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: UserAvatar(
+                avatarUrl: user.avatarUrl,
+                displayName: user.displayName.isNotEmpty ? user.displayName : user.username,
+                size: rank == 1 ? 54 : 44,
+                borderColor: podiumColor,
+                borderWidth: rank == 1 ? 2.5 : 2.0,
+              ),
+            ),
+            Positioned(
+              bottom: -5,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                decoration: BoxDecoration(
+                  color: podiumColor,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  '#$rank',
+                  style: const TextStyle(
+                    fontSize: 9.5,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 10),
+
+        // Display Name
+        Text(
+          isMe ? 'Siz' : user.displayName,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 11.5,
+            fontWeight: FontWeight.w800,
+            color: isMe ? const Color(0xFF6C55E0) : colors.ink,
+          ),
+        ),
+
+        const SizedBox(height: 2),
+
+        // Coin count
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CoinIcon(size: 12),
+            const SizedBox(width: 3),
+            Text(
+              '${user.coinBalance}',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                color: isDark ? const Color(0xFFFFD66B) : const Color(0xFFB45309),
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 6),
+
+        // Pedestal Body
+        Container(
+          width: double.infinity,
+          height: pedestalHeight,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: gradientColors,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            border: Border.all(
+              color: podiumColor.withOpacity(0.55),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: podiumColor.withOpacity(0.18),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 8),
+              Text(
+                badgeIcon,
+                style: const TextStyle(fontSize: 20),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                '$rank',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w900,
+                  color: isDark ? Colors.white.withOpacity(0.85) : Colors.black.withOpacity(0.65),
+                ),
+              ),
+              if (isMe)
+                Container(
+                  margin: const EdgeInsets.only(top: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1.5),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF6C55E0),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text(
+                    'SIZ',
+                    style: TextStyle(
+                      fontSize: 8.5,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

@@ -18,9 +18,10 @@ void main() {
     expect(find.text('MathCity AI'), findsOneWidget);
     expect(find.text('Matematika va Kelajak Shahri'), findsOneWidget);
 
-    // Advance timer past splash transition
-    await tester.pump(const Duration(milliseconds: 2000));
-    await tester.pumpAndSettle();
+    // Advance timer past splash transition (1200ms delay in SplashScreen)
+    await tester.pump(const Duration(milliseconds: 1500));
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump();
     
     // Login screen frame verification (Reference Image 2)
     expect(find.text('Yana xush kelibsiz!'), findsOneWidget);

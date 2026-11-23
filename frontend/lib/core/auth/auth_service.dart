@@ -172,6 +172,7 @@ class AuthService {
         }
 
         final student = StudentModel.fromJson(userData);
+        await StorageService.saveCachedStudent(student.toJson());
         return AuthResult(
           success: true,
           student: student,
@@ -297,13 +298,18 @@ class AuthService {
 
       if (res.data['success'] == true) {
         final token = res.data['data']['token'] as String;
+        final refreshToken = res.data['data']['refreshToken'] as String?;
         final bool isNewUser = res.data['data']['isNewUser'] == true;
         final bool profileCompleted = res.data['data']['profileCompleted'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
+        if (refreshToken != null && refreshToken.isNotEmpty) {
+          await StorageService.saveRefreshToken(refreshToken);
+        }
 
         final userData = res.data['data']['user'];
         final student = StudentModel.fromJson(userData);
+        await StorageService.saveCachedStudent(student.toJson());
         return AuthResult(
           success: true,
           student: student,
@@ -411,13 +417,18 @@ class AuthService {
 
       if (res.data['success'] == true) {
         final token = res.data['data']['token'] as String;
+        final refreshToken = res.data['data']['refreshToken'] as String?;
         final bool isNewUser = res.data['data']['isNewUser'] == true;
         final bool profileCompleted = res.data['data']['profileCompleted'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
+        if (refreshToken != null && refreshToken.isNotEmpty) {
+          await StorageService.saveRefreshToken(refreshToken);
+        }
 
         final userData = res.data['data']['user'];
         final student = StudentModel.fromJson(userData);
+        await StorageService.saveCachedStudent(student.toJson());
         return AuthResult(
           success: true,
           student: student,
@@ -468,23 +479,42 @@ class AuthService {
       final savedToken = await StorageService.getAuthToken();
       if (savedToken != null && savedToken.isNotEmpty) {
         ApiClient().setAuthToken(savedToken);
+
+        // Instant offline fallback from local cache
+        StudentModel? fallbackStudent;
+        final cachedJson = await StorageService.getCachedStudent();
+        if (cachedJson != null) {
+          try {
+            fallbackStudent = StudentModel.fromJson(cachedJson);
+          } catch (_) {}
+        }
+
         try {
           final res = await ApiClient().dio.get('/auth/me');
           if (res.data['success'] == true) {
             final student = StudentModel.fromJson(res.data['data']);
+            await StorageService.saveCachedStudent(student.toJson());
             return AuthResult(success: true, student: student, token: savedToken);
           }
         } catch (meError) {
           final is401 = meError is DioException && meError.response?.statusCode == 401;
           if (is401) {
-            // Token may be expired - attempt refresh
+            // Token expired - attempt refresh with stored refresh token
             try {
-              final refreshRes = await ApiClient().dio.post('/auth/refresh');
+              final storedRefresh = await StorageService.getRefreshToken();
+              final refreshRes = await ApiClient().dio.post('/auth/refresh', data: {
+                if (storedRefresh != null) 'refreshToken': storedRefresh,
+              });
               if (refreshRes.data['success'] == true) {
                 final newToken = refreshRes.data['data']['token'] as String;
+                final newRefresh = refreshRes.data['data']['refreshToken'] as String?;
                 ApiClient().setAuthToken(newToken);
                 await StorageService.saveAuthToken(newToken);
+                if (newRefresh != null && newRefresh.isNotEmpty) {
+                  await StorageService.saveRefreshToken(newRefresh);
+                }
                 final student = StudentModel.fromJson(refreshRes.data['data']['user']);
+                await StorageService.saveCachedStudent(student.toJson());
                 return AuthResult(success: true, student: student, token: newToken);
               }
             } catch (refreshError) {
@@ -493,11 +523,17 @@ class AuthService {
                 // Token definitely rejected by server
                 await StorageService.clear();
                 ApiClient().clearAuthToken();
+                return const AuthResult(success: false);
               }
             }
           }
-          // Server might be sleeping (Render spin-up) or network transient issue - do NOT clear tokens or demo fallback
-          return const AuthResult(success: false);
+          // Server might be sleeping (Render spin-up) or network is offline
+          // DO NOT clear tokens! Return cached student so user stays logged in!
+          if (fallbackStudent != null) {
+            return AuthResult(success: true, student: fallbackStudent, token: savedToken);
+          }
+          // If we had a token, treat as temporary offline success even without full profile
+          return AuthResult(success: true, token: savedToken);
         }
       }
 
@@ -624,13 +660,18 @@ class AuthService {
 
       if (res.data['success'] == true) {
         final token = res.data['data']['token'] as String;
+        final refreshToken = res.data['data']['refreshToken'] as String?;
         final bool isNewUser = res.data['data']['isNewUser'] == true;
         final bool profileCompleted = res.data['data']['profileCompleted'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
+        if (refreshToken != null && refreshToken.isNotEmpty) {
+          await StorageService.saveRefreshToken(refreshToken);
+        }
 
         final userData = res.data['data']['user'];
         final student = StudentModel.fromJson(userData);
+        await StorageService.saveCachedStudent(student.toJson());
         return AuthResult(
           success: true,
           student: student,

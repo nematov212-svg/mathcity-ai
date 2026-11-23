@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/auth/auth_service.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/storage/storage_service.dart';
 import '../../core/widgets/mathcity_logo.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -41,28 +43,40 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   Future<void> _checkAuthAndNavigate() async {
     try {
-      final sessionFuture = AuthService()
-          .restoreSession(allowDemoFallback: false)
-          .timeout(const Duration(seconds: 3), onTimeout: () {
-        return const AuthResult(success: false);
-      });
-      final delayFuture = Future.delayed(const Duration(milliseconds: 1200));
+      final tokenCheck = StorageService.hasAuthToken();
+      final cachedCheck = StorageService.getCachedStudent();
+      final minDelay = Future.delayed(const Duration(milliseconds: 1200));
 
-      final results = await Future.wait([sessionFuture, delayFuture]);
+      // Trigger background session warm-up / restore without blocking splash screen
+      unawaited(AuthService().restoreSession(allowDemoFallback: false));
+
+      final results = await Future.wait([tokenCheck, cachedCheck, minDelay]);
       if (!mounted) return;
 
-      final authResult = results[0] as AuthResult;
-      if (authResult.success && authResult.student != null) {
-        if (!authResult.student!.profileCompleted) {
+      final bool hasToken = results[0] as bool;
+      final Map<String, dynamic>? cachedStudent = results[1] as Map<String, dynamic>?;
+
+      if (hasToken) {
+        // Authenticated user: go straight to dashboard (or complete-profile if profile incomplete)
+        if (cachedStudent != null && cachedStudent['profileCompleted'] == false) {
           context.go('/complete-profile');
           return;
         }
         context.go('/kids/home');
       } else {
+        // First-time or signed-out user
         context.go('/login');
       }
     } catch (_) {
-      if (mounted) context.go('/login');
+      if (!mounted) return;
+      try {
+        final hasToken = await StorageService.hasAuthToken();
+        if (hasToken) {
+          context.go('/kids/home');
+          return;
+        }
+      } catch (_) {}
+      context.go('/login');
     }
   }
 

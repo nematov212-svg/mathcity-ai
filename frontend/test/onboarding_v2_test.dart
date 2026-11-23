@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mathcity_ai/features/onboarding/intro_screen.dart';
-import 'package:mathcity_ai/features/onboarding/widgets/mode_card.dart';
 import 'package:mathcity_ai/features/onboarding/widgets/primary_button.dart';
 
 void main() {
@@ -74,10 +73,7 @@ void main() {
       expect(find.text('Kun'), findsOneWidget);
       expect(find.text('Oy'), findsOneWidget);
       expect(find.text('Yil'), findsOneWidget);
-      expect(find.text('Tavsiya etilgan ta’lim rejimi'), findsOneWidget);
-      expect(find.text('Bolalar rejimi'), findsOneWidget);
-      expect(find.text('O‘smirlar rejimi'), findsOneWidget);
-      expect(find.byType(ModeCard), findsNWidgets(2));
+      expect(find.text('Matematika rejimi'), findsOneWidget);
 
       // Open date picker and select default valid date
       await tester.tap(find.text('Kun'));

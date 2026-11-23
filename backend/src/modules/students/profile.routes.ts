@@ -152,22 +152,26 @@ studentsRouter.get('/leaderboard/me', authMiddleware, (req: AuthenticatedRequest
 /**
  * GET /api/students/leaderboard
  * Global leaderboard sorted by: coinBalance DESC -> totalXP DESC -> createdAt ASC
- * Scopes: top100 (default), top50, top10, top5, or custom ?limit=N
+ * Scopes: top100 (default), top50, top10, top5, or custom ?limit=N&offset=M
  */
 studentsRouter.get('/leaderboard', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const authUser = req.user;
+
   const scope = (req.query.scope as string) || 'top100';
   const period = (req.query.period as string) || 'all';
 
-  let limit = 100;
+  let limit = 50;
   if (req.query.limit) {
-    limit = Math.max(1, parseInt(req.query.limit as string, 10) || 100);
+    limit = Math.max(1, parseInt(req.query.limit as string, 10) || 50);
   } else if (scope === 'top5') limit = 5;
   else if (scope === 'top10') limit = 10;
   else if (scope === 'top50') limit = 50;
   else if (scope === 'top100') limit = 100;
 
+  const offset = Math.max(0, parseInt((req.query.offset as string) || '0', 10) || 0);
+
   const allUsers = repository.getAllUsers();
-  // Bazadagi BARCHA foydalanuvchilar (0 tanga bo'lsa ham): coins DESC -> xp DESC -> createdAt ASC
+  // Bazadagi BARCHA haqiqiy foydalanuvchilar (0 tanga bo'lsa ham): coins DESC -> xp DESC -> createdAt ASC
   const sorted = [...allUsers].sort(sortLeaderboardUsers);
 
   const fullLeaderboard = sorted.map((u, index) => ({
@@ -184,31 +188,30 @@ studentsRouter.get('/leaderboard', authMiddleware, (req: AuthenticatedRequest, r
     totalXP: u.totalXP || 0,
   }));
 
-  const myUserId = req.user?.id;
+  const myUserId = authUser?.id;
   const myEntry = fullLeaderboard.find((entry) => entry.userId === myUserId);
   const myRank = myEntry
     ? myEntry.rank
     : (myUserId ? fullLeaderboard.length + 1 : 1);
 
-  const myUser = req.user;
-  const meObject = myUser ? {
+  const meObject = authUser ? {
     hasRank: true,
     rank: myRank,
-    userId: myUser.id,
-    id: myUser.id,
-    username: myUser.username || (myUser.displayName ? myUser.displayName.split(' ')[0] : 'Siz'),
-    displayName: myUser.displayName || 'Siz',
-    avatarUrl: myUser.avatarUrl || null,
-    level: myUser.level || 1,
-    coins: myUser.coinBalance || 0,
-    coinBalance: myUser.coinBalance || 0,
-    xp: myUser.totalXP || 0,
-    totalXP: myUser.totalXP || 0,
+    userId: authUser.id,
+    id: authUser.id,
+    username: authUser.username || (authUser.displayName ? authUser.displayName.split(' ')[0] : 'Siz'),
+    displayName: authUser.displayName || 'Siz',
+    avatarUrl: authUser.avatarUrl || null,
+    level: authUser.level || 1,
+    coins: authUser.coinBalance || 0,
+    coinBalance: authUser.coinBalance || 0,
+    xp: authUser.totalXP || 0,
+    totalXP: authUser.totalXP || 0,
     isTop100: myRank <= 100,
     message: `Siz ${myRank}-o‘rindasiz`,
   } : null;
 
-  const slicedList = fullLeaderboard.slice(0, limit);
+  const slicedList = fullLeaderboard.slice(offset, offset + limit);
 
   return res.json({
     success: true,
@@ -218,6 +221,7 @@ studentsRouter.get('/leaderboard', authMiddleware, (req: AuthenticatedRequest, r
       scope,
       period,
       limit,
+      offset,
       me: meObject,
       myRank: meObject,
     },

@@ -89,6 +89,18 @@ class ApiClient {
             return handler.next(error);
           }
 
+          // Automatic Token Refresh on 401 for authenticated API requests
+          if (statusCode == 401 && !reqOptions.path.contains('/auth/')) {
+            final isRefreshed = await _attemptTokenRefresh();
+            if (isRefreshed && _authToken != null) {
+              reqOptions.headers['Authorization'] = 'Bearer $_authToken';
+              try {
+                final retriedResponse = await dio.fetch(reqOptions);
+                return handler.resolve(retriedResponse);
+              } catch (_) {}
+            }
+          }
+
           // Cold Start Retry Logic:
           // Faqat timeout yoki 5xx server xatolarida qayta uriniladi.
           // CORS yoki 4xx xatolarida (400, 401, 403, 404, 422) QAYTA URILMAYDI!
@@ -132,6 +144,54 @@ class ApiClient {
         },
       ),
     );
+  }
+
+  Completer<bool>? _refreshCompleter;
+
+  Future<bool> _attemptTokenRefresh() async {
+    if (_refreshCompleter != null) {
+      return _refreshCompleter!.future;
+    }
+    _refreshCompleter = Completer<bool>();
+
+    try {
+      final refreshToken = await StorageService.getRefreshToken();
+      final currentToken = _authToken ?? await StorageService.getAuthToken();
+      final refreshDio = Dio(
+        BaseOptions(
+          baseUrl: AppConfig.baseUrl,
+          connectTimeout: const Duration(seconds: 15),
+          receiveTimeout: const Duration(seconds: 15),
+          headers: {
+            'Content-Type': 'application/json',
+            if (currentToken != null) 'Authorization': 'Bearer $currentToken',
+          },
+        ),
+      );
+
+      final res = await refreshDio.post('/auth/refresh', data: {
+        if (refreshToken != null) 'refreshToken': refreshToken,
+      });
+
+      if (res.data['success'] == true && res.data['data'] != null) {
+        final newToken = res.data['data']['token'] as String;
+        final newRefresh = res.data['data']['refreshToken'] as String?;
+        setAuthToken(newToken);
+        await StorageService.saveAuthToken(newToken);
+        if (newRefresh != null && newRefresh.isNotEmpty) {
+          await StorageService.saveRefreshToken(newRefresh);
+        }
+        _refreshCompleter!.complete(true);
+        _refreshCompleter = null;
+        return true;
+      }
+    } catch (e) {
+      debugPrint('ℹ️ [API Client] Avtomatik token yangilash muvaffaqiyatsiz bo‘ldi: $e');
+    }
+
+    _refreshCompleter!.complete(false);
+    _refreshCompleter = null;
+    return false;
   }
 
   /// Sends a background warm-up request to the health endpoint when the app starts

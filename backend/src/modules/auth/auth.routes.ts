@@ -542,15 +542,20 @@ authRouter.post('/register', authRateLimiter, (req: Request, res: Response) => {
 
   repository.createUser(newUser);
 
-  // 4. Issue JWT
+  // 4. Issue JWT (90-day session with 180-day refresh)
   const token = jwt.sign({ userId: newUser.id }, config.jwtSecret, {
-    expiresIn: '7d',
+    expiresIn: '90d',
+  });
+  const refreshToken = jwt.sign({ userId: newUser.id, type: 'refresh' }, config.jwtSecret, {
+    expiresIn: '180d',
   });
 
   return res.status(201).json({
     success: true,
     data: {
       token,
+      accessToken: token,
+      refreshToken,
       isNewUser: true,
       profileCompleted: true,
       user: formatAuthUser(newUser),
@@ -600,7 +605,10 @@ authRouter.post('/login', authRateLimiter, (req: Request, res: Response) => {
   }
 
   const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
-    expiresIn: '7d',
+    expiresIn: '90d',
+  });
+  const refreshToken = jwt.sign({ userId: user.id, type: 'refresh' }, config.jwtSecret, {
+    expiresIn: '180d',
   });
 
   const isProfileComplete = user.profileCompleted ?? Boolean(user.username && user.username.length >= 3 && user.dateOfBirth);
@@ -609,6 +617,8 @@ authRouter.post('/login', authRateLimiter, (req: Request, res: Response) => {
     success: true,
     data: {
       token,
+      accessToken: token,
+      refreshToken,
       isNewUser: false,
       profileCompleted: isProfileComplete,
       user: formatAuthUser(user),
@@ -616,18 +626,56 @@ authRouter.post('/login', authRateLimiter, (req: Request, res: Response) => {
   });
 });
 
-// POST /api/auth/refresh - Refresh JWT session token
-authRouter.post('/refresh', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const user = req.user!;
-  const isProfileComplete = user.profileCompleted ?? Boolean(user.username && user.username.length >= 3 && user.dateOfBirth);
-  const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
-    expiresIn: '7d',
+// POST /api/auth/refresh - Refresh JWT session token with rotation
+authRouter.post('/refresh', async (req: Request, res: Response) => {
+  let targetUserId: string | null = null;
+  const authHeader = req.headers.authorization;
+  const bodyRefreshToken = req.body?.refreshToken;
+
+  if (bodyRefreshToken && typeof bodyRefreshToken === 'string') {
+    try {
+      const decoded = jwt.verify(bodyRefreshToken, config.jwtSecret) as { userId: string };
+      targetUserId = decoded.userId;
+    } catch (_) {}
+  }
+
+  if (!targetUserId && authHeader && authHeader.startsWith('Bearer ')) {
+    const rawToken = authHeader.split(' ')[1];
+    try {
+      const decoded = jwt.verify(rawToken, config.jwtSecret, { ignoreExpiration: true }) as { userId: string };
+      targetUserId = decoded.userId;
+    } catch (_) {}
+  }
+
+  if (!targetUserId) {
+    return res.status(401).json({
+      success: false,
+      error: 'Avtorizatsiyadan o‘tilmagan yoki token topilmadi.',
+    });
+  }
+
+  const user = repository.getUserById(targetUserId);
+  if (!user || user.isBlocked) {
+    return res.status(401).json({
+      success: false,
+      error: 'Foydalanuvchi hisobi topilmadi yoki bloklangan.',
+    });
+  }
+
+  const newToken = jwt.sign({ userId: user.id }, config.jwtSecret, {
+    expiresIn: '90d',
   });
+  const newRefreshToken = jwt.sign({ userId: user.id, type: 'refresh' }, config.jwtSecret, {
+    expiresIn: '180d',
+  });
+  const isProfileComplete = user.profileCompleted ?? Boolean(user.username && user.username.length >= 3 && user.dateOfBirth);
 
   return res.json({
     success: true,
     data: {
-      token,
+      token: newToken,
+      accessToken: newToken,
+      refreshToken: newRefreshToken,
       profileCompleted: isProfileComplete,
       user: formatAuthUser(user),
     },
@@ -854,10 +902,10 @@ authRouter.post('/google', authRateLimiter, async (req: Request, res: Response) 
   }
 
   const accessTokenJwt = jwt.sign({ userId: user.id }, config.jwtSecret, {
-    expiresIn: '7d',
+    expiresIn: '90d',
   });
   const refreshTokenJwt = jwt.sign({ userId: user.id, type: 'refresh' }, config.jwtSecret, {
-    expiresIn: '30d',
+    expiresIn: '180d',
   });
 
   const needsProfile = isNewUser || !user.profileCompleted || !user.username || !user.dateOfBirth;
