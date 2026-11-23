@@ -35,6 +35,7 @@ import '../features/settings/settings_screen.dart';
 import '../features/settings/mathcity_pro_screen.dart';
 import '../features/payment/add_payment_screen.dart';
 import '../features/leaderboard/leaderboard_screen.dart';
+import '../features/legal/privacy_policy_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -207,6 +208,15 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/payment/add',
       builder: (context, state) => const AddPaymentScreen(),
+    ),
+    // Public Legal & Compliance Routes (Unauthenticated access)
+    GoRoute(
+      path: '/privacy-policy',
+      builder: (context, state) => const PrivacyPolicyScreen(),
+    ),
+    GoRoute(
+      path: '/privacy',
+      builder: (context, state) => const PrivacyPolicyScreen(),
     ),
   ],
 );

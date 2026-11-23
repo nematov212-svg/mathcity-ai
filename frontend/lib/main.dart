@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'app/app.dart';
 import 'core/auth/auth_service.dart';
 import 'core/network/api_client.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  usePathUrlStrategy();
 
   // Central error handling to prevent uncaught promise or Dart runtime crashes
   FlutterError.onError = (FlutterErrorDetails details) {

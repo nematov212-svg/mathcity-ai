@@ -199,6 +199,10 @@ if (fs.existsSync(webStaticPath)) {
     },
   }));
 
+  app.get(['/privacy.html', '/privacy-policy.html'], (req: Request, res: Response) => {
+    res.sendFile(path.join(webStaticPath, 'privacy.html'));
+  });
+
   // SPA fallback for non-API web navigation routes
   app.get('*', (req: Request, res: Response, next) => {
     if (

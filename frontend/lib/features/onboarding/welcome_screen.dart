@@ -110,6 +110,22 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                 isLoading: _isGoogleLoading,
                 onFallbackPressed: _handleGoogleSignIn,
               ),
+              const SizedBox(height: 20),
+
+              // Privacy Policy Footer Link
+              GestureDetector(
+                onTap: () => context.push('/privacy-policy'),
+                child: const Text(
+                  'Maxfiylik siyosati',
+                  style: TextStyle(
+                    fontFamily: 'Nunito',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.kidsSecondaryText,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
               const SizedBox(height: 16),
             ],
           ),

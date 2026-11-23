@@ -1158,7 +1158,7 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () => context.push('/privacy-policy'),
                             child: const Text(
                               'Maxfiylik',
                               style: TextStyle(

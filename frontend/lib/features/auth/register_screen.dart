@@ -734,31 +734,50 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
           ),
         ),
       ),
-      bottomChild: Wrap(
-        alignment: WrapAlignment.center,
-        crossAxisAlignment: WrapCrossAlignment.center,
+      bottomChild: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            'Hisobingiz bormi? ',
-            style: TextStyle(
-              fontFamily: 'Nunito',
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: AuthTokens.mute(context),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => context.go('/login'),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Text(
-                'Kirish',
+          Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(
+                'Hisobingiz bormi? ',
                 style: TextStyle(
                   fontFamily: 'Nunito',
                   fontSize: 15,
-                  fontWeight: FontWeight.w800,
-                  color: AuthTokens.brand(context),
+                  fontWeight: FontWeight.w600,
+                  color: AuthTokens.mute(context),
                 ),
+              ),
+              GestureDetector(
+                onTap: () => context.go('/login'),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Text(
+                    'Kirish',
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: AuthTokens.brand(context),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          GestureDetector(
+            onTap: () => context.push('/privacy-policy'),
+            child: Text(
+              'Maxfiylik siyosati',
+              style: TextStyle(
+                fontFamily: 'Nunito',
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AuthTokens.mute(context),
+                decoration: TextDecoration.underline,
               ),
             ),
           ),
