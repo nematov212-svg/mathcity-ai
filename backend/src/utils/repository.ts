@@ -129,6 +129,28 @@ export interface DailyActivityRecord {
 
 export type MissionStatus = 'ACTIVE' | 'COMPLETED' | 'CLAIMED' | 'EXPIRED';
 
+export type AnnouncementType = 'URGENT_ANNOUNCEMENT' | 'SPECIAL_OFFER' | 'ANNOUNCEMENT' | 'AD';
+
+export interface AnnouncementModel {
+  id: string;
+  title: string;
+  text: string;
+  imageUrl?: string;
+  buttonText?: string;
+  buttonRoute?: string;
+  type: AnnouncementType;
+  startDate: string; // ISO
+  endDate?: string; // ISO
+  delaySeconds: number; // e.g. 0 on app open, 300 for 5 minutes
+  autoCloseSeconds?: number; // e.g. 5 for 5-second auto close
+  discountPercent?: number; // e.g. 30
+  discountPrice?: number; // e.g. 20300
+  originalPrice?: number; // e.g. 29000
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface DailyMissionRecord {
   id: string;
   userId: string;
@@ -161,6 +183,40 @@ class DataRepository {
   private achievements: AchievementModel[] = initialAchievements;
   private dailyActivities: Map<string, DailyActivityRecord> = new Map();
   private dailyMissions: Map<string, DailyMissionRecord[]> = new Map();
+  private announcements: AnnouncementModel[] = [
+    {
+      id: 'announcement-urgent-01',
+      title: '30 kun ichida 1, 2 yoki 3-o‘rinni egallasangiz, ko‘plab coin yutib olishingiz mumkin!',
+      text: '1-o‘rin 500 coin, 2-o‘rin 250 coin, 3-o‘rin 150 coin.',
+      buttonText: '1-o‘rinni egallash uchun harakat',
+      buttonRoute: '/kids/leaderboard',
+      type: 'URGENT_ANNOUNCEMENT',
+      startDate: new Date(Date.now() - 3600000).toISOString(),
+      endDate: new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString(),
+      delaySeconds: 0,
+      autoCloseSeconds: 5,
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: 'announcement-special-offer-01',
+      title: 'Maxsus taklif — MathCity AI dan',
+      text: 'Yangi o‘quvchilar uchun MathCity PRO obunasiga 30% chegirma! 7 kun amal qiladi.',
+      buttonText: 'PRO sotib olish',
+      buttonRoute: '/kids/pro',
+      type: 'SPECIAL_OFFER',
+      startDate: new Date(Date.now() - 3600000).toISOString(),
+      endDate: new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString(),
+      delaySeconds: 300,
+      discountPercent: 30,
+      discountPrice: 20300,
+      originalPrice: 29000,
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+  ];
 
   constructor() {
     // Seed demo student with 100 coins (exact demonstration requirement: 100 coins to buy 100 coin building)
@@ -440,6 +496,7 @@ class DataRepository {
   }
 
   async persistUserToDatabase(user: UserAccount): Promise<void> {
+    if (!isDatabaseHealthy()) return;
     try {
       await prisma.user.upsert({
         where: { id: user.id },
@@ -1114,6 +1171,13 @@ class DataRepository {
     trialExpiresAt: string;
     proExpiresAt?: string;
     proDaysRemaining?: number;
+    originalPriceMonthlyUzs?: number;
+    hasNewUserDiscount?: boolean;
+    discountPercent?: number;
+    discountPriceUzs?: number;
+    discountExpiresAt?: string;
+    discountDaysRemaining?: number;
+    discountSecondsRemaining?: number;
   } {
     const user = this.getUserById(userId);
     if (!user) throw new Error('Foydalanuvchi topilmadi');
@@ -1143,17 +1207,117 @@ class DataRepository {
       proDaysRemaining = Math.max(0, Math.ceil(pDiff / (1000 * 60 * 60 * 24)));
     }
 
+    // 7-day new user 30% discount calculation (from user.createdAt)
+    const userCreatedAt = user.createdAt ? new Date(user.createdAt).getTime() : now.getTime();
+    const discountExpiresAtMs = userCreatedAt + 7 * 24 * 60 * 60 * 1000;
+    const isNewUserDiscountActive = now.getTime() < discountExpiresAtMs && status !== 'PRO_ACTIVE';
+    const discountSecondsRemaining = isNewUserDiscountActive
+      ? Math.max(0, Math.floor((discountExpiresAtMs - now.getTime()) / 1000))
+      : 0;
+    const discountDaysRemaining = Math.ceil(discountSecondsRemaining / 86400);
+
+    const priceMonthlyUzs = user.subscription.priceMonthlyUzs || 29000;
+
     return {
       status,
       planName: status === 'PRO_ACTIVE' ? (user.subscription.planName || 'MathCity Pro') : 'MathCity Free Trial',
       trialDaysRemaining,
       isTrialActive: status === 'FREE_TRIAL_ACTIVE',
       isProActive: status === 'PRO_ACTIVE',
-      priceMonthlyUzs: user.subscription.priceMonthlyUzs || 29000,
+      priceMonthlyUzs,
+      originalPriceMonthlyUzs: 29000,
+      hasNewUserDiscount: isNewUserDiscountActive,
+      discountPercent: isNewUserDiscountActive ? 30 : 0,
+      discountPriceUzs: 20300,
+      discountExpiresAt: new Date(discountExpiresAtMs).toISOString(),
+      discountDaysRemaining,
+      discountSecondsRemaining,
       trialExpiresAt: user.subscription.trialExpiresAt,
       proExpiresAt: user.subscription.proExpiresAt,
       proDaysRemaining,
     };
+  }
+
+  // --- Announcements & Advertisements Management ---
+  getAllAnnouncements(): AnnouncementModel[] {
+    return [...this.announcements];
+  }
+
+  getActiveAnnouncements(userCreatedAt?: string): AnnouncementModel[] {
+    const now = new Date().getTime();
+    return this.announcements.filter((a) => {
+      if (!a.isActive) return false;
+      const start = new Date(a.startDate).getTime();
+      if (!isNaN(start) && now < start) return false;
+      if (a.endDate) {
+        const end = new Date(a.endDate).getTime();
+        if (!isNaN(end) && now > end) return false;
+      }
+      // If Special Offer for new users, check 7-day limit from user registration
+      if (a.type === 'SPECIAL_OFFER' && userCreatedAt) {
+        const regTime = new Date(userCreatedAt).getTime();
+        if (!isNaN(regTime)) {
+          const sevenDaysMs = 7 * 24 * 3600 * 1000;
+          if (now - regTime > sevenDaysMs) {
+            return false; // Expired for this user
+          }
+        }
+      }
+      return true;
+    });
+  }
+
+  getAnnouncementById(id: string): AnnouncementModel | undefined {
+    return this.announcements.find((a) => a.id === id);
+  }
+
+  createAnnouncement(data: Partial<AnnouncementModel>): AnnouncementModel {
+    const id = `announcement-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    const now = new Date().toISOString();
+    const item: AnnouncementModel = {
+      id,
+      title: data.title || 'E‘lon',
+      text: data.text || '',
+      imageUrl: data.imageUrl,
+      buttonText: data.buttonText || 'Batafsil',
+      buttonRoute: data.buttonRoute || '/kids/leaderboard',
+      type: data.type || 'ANNOUNCEMENT',
+      startDate: data.startDate || now,
+      endDate: data.endDate,
+      delaySeconds: typeof data.delaySeconds === 'number' ? data.delaySeconds : 0,
+      autoCloseSeconds: data.autoCloseSeconds,
+      discountPercent: data.discountPercent,
+      discountPrice: data.discountPrice,
+      originalPrice: data.originalPrice,
+      isActive: data.isActive !== false,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.announcements.unshift(item);
+    return item;
+  }
+
+  updateAnnouncement(id: string, data: Partial<AnnouncementModel>): AnnouncementModel {
+    const index = this.announcements.findIndex((a) => a.id === id);
+    if (index === -1) {
+      throw new Error('E‘lon topilmadi');
+    }
+    const current = this.announcements[index];
+    const updated: AnnouncementModel = {
+      ...current,
+      ...data,
+      id: current.id,
+      updatedAt: new Date().toISOString(),
+    };
+    this.announcements[index] = updated;
+    return updated;
+  }
+
+  deleteAnnouncement(id: string): boolean {
+    const index = this.announcements.findIndex((a) => a.id === id);
+    if (index === -1) return false;
+    this.announcements.splice(index, 1);
+    return true;
   }
 
   private usedPurchaseTokens: Set<string> = new Set();

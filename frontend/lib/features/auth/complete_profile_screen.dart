@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../core/widgets/mathcity_logo.dart';
 import '../../core/widgets/responsive_layout.dart';
@@ -210,9 +211,11 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     final age = _calculatedAge;
     final isMinor = age != null && age < 13;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF6F4FF),
-      body: SafeArea(
+    return Theme(
+      data: AppTheme.lightTheme,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF6F4FF),
+        body: SafeArea(
         child: ResponsiveAuthCard(
           maxCardWidth: 500,
           child: SingleChildScrollView(
@@ -687,8 +690,9 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   InputDecoration _dropdownDecoration(String label) {
     return InputDecoration(
@@ -697,7 +701,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
         fontFamily: 'Nunito',
         fontSize: 13,
         fontWeight: FontWeight.w700,
-        color: Color(0xFF64748B),
+        color: Color(0xFF334155),
       ),
       floatingLabelStyle: const TextStyle(
         fontFamily: 'Nunito',

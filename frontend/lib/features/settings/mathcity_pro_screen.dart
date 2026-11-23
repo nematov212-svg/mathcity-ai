@@ -64,8 +64,13 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
   void _showPaymentSheet(BuildContext context) {
     final isYearly = _selectedPlanIndex == 1;
     final planType = isYearly ? 'YEARLY' : 'MONTHLY';
-    final amountUzs = isYearly ? 250000 : 29000;
-    final amountFormatted = isYearly ? '250 000 so‘m' : '29 000 so‘m';
+    final sub = ref.read(studentProvider).student?.subscription;
+    final hasDiscount = !isYearly && (sub?.hasNewUserDiscount == true);
+    final monthlyPrice = hasDiscount ? (sub?.discountPriceUzs ?? 20300) : 29000;
+    final amountUzs = isYearly ? 250000 : monthlyPrice;
+    final amountFormatted = isYearly
+        ? '250 000 so‘m'
+        : (hasDiscount ? '${sub?.discountPriceUzs ?? 20300} so‘m' : '29 000 so‘m');
 
     String selectedProvider = 'PAYME';
     bool isProcessing = false;

@@ -214,6 +214,10 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final sub = ref.watch(studentProvider).student?.subscription;
+    final hasDiscount = sub?.hasNewUserDiscount == true;
+    final priceFormatted = hasDiscount ? '20 300 so‘m' : '29 000 so‘m';
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7F6FC),
       appBar: AppBar(
@@ -259,7 +263,7 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                       ),
                     ],
                   ),
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
@@ -288,8 +292,8 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        '29 000 UZS / oyiga',
-                        style: TextStyle(
+                        hasDiscount ? '20 300 UZS / oyiga (-30% chegirma)' : '29 000 UZS / oyiga',
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -381,7 +385,7 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
 
                 // Action Pay Button
                 CustomButton(
-                  text: _isLoading ? 'To‘lovga ulanmoqda...' : '29 000 so‘m to‘lash',
+                  text: _isLoading ? 'To‘lovga ulanmoqda...' : '$priceFormatted to‘lash',
                   backgroundColor: const Color(0xFF6C5CE7),
                   borderRadius: 18,
                   icon: const Icon(Icons.lock_rounded, color: Colors.white, size: 20),

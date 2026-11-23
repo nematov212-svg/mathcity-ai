@@ -279,7 +279,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Peshqadamlar',
+                              'Reyting',
                               style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w900,
@@ -388,7 +388,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                                     builder: (context) {
                                       final remainingCount = _leaderboard.length > 3 ? _leaderboard.length - 3 : 0;
                                       final showFewBanner = _leaderboard.length < 5;
-                                      final totalCount = 1 + remainingCount + (showFewBanner ? 1 : 0);
+                                      final totalCount = 2 + remainingCount + (showFewBanner ? 1 : 0);
 
                                       return ListView.builder(
                                         padding: const EdgeInsets.fromLTRB(16, 4, 16, 175),
@@ -396,12 +396,15 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                                         itemCount: totalCount,
                                         itemBuilder: (context, index) {
                                           if (index == 0) {
+                                            return _buildContestBanner(colors, isDark);
+                                          }
+                                          if (index == 1) {
                                             return _buildTop3Podium(colors, isDark);
                                           }
-                                          if (index > remainingCount) {
+                                          if (index > 1 + remainingCount) {
                                             return _buildFewUsersBanner(colors, isDark);
                                           }
-                                          final user = _leaderboard[2 + index];
+                                          final user = _leaderboard[1 + index];
                                           final currentStudent = ref.watch(studentProvider).student;
                                           final isMyRow = (_myRank != null && (user.id == _myRank!.id || user.userId == _myRank!.userId)) ||
                                               (currentStudent != null && (user.id == currentStudent.id || user.userId == currentStudent.id));
@@ -428,131 +431,145 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
             // Sticky Bottom Personal Rank Card (Sizning joriy o'rningiz)
             if (_myRank != null)
-              Positioned(
-                left: 16,
-                right: 16,
-                bottom: 92,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF5B3BE8), Color(0xFF7A58F8)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.white.withOpacity(0.35), width: 1.2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF5B3BE8).withOpacity(0.45),
-                        blurRadius: 22,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      // Rank number badge
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.25),
-                          borderRadius: BorderRadius.circular(14),
+              Builder(
+                builder: (context) {
+                  final curStudent = ref.watch(studentProvider).student;
+                  final realCoins = (curStudent != null && curStudent.coinBalance > 0)
+                      ? curStudent.coinBalance
+                      : _myRank!.coinBalance;
+                  final realXP = (curStudent != null && curStudent.totalXP > 0)
+                      ? curStudent.totalXP
+                      : _myRank!.totalXP;
+
+                  return Positioned(
+                    left: 16,
+                    right: 16,
+                    bottom: 92,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF5B3BE8), Color(0xFF7A58F8)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                        child: Text(
-                          '#${_myRank!.rank}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
+                        borderRadius: BorderRadius.circular(22),
+                        border: Border.all(color: Colors.white.withOpacity(0.35), width: 1.2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF5B3BE8).withOpacity(0.45),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
                           ),
-                        ),
+                        ],
                       ),
-                      const SizedBox(width: 12),
-
-                      // User Avatar
-                      UserAvatar(
-                        avatarUrl: _myRank!.avatarUrl,
-                        displayName: _myRank!.displayName.isNotEmpty ? _myRank!.displayName : _myRank!.username,
-                        size: 38,
-                        borderColor: Colors.white,
-                        borderWidth: 1.5,
-                      ),
-                      const SizedBox(width: 12),
-
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Siz ${_myRank!.rank}-o‘rindasiz • ${_myRank!.coinBalance} coin • ${_myRank!.totalXP} XP${_coinsToTop100 > 0 ? " • Top 100 ga $_coinsToTop100 coin qoldi" : (_coinsToNextRank > 0 ? " • Keyingi o‘ringa $_coinsToNextRank coin qoldi" : "")}',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              '@${_myRank!.username}',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFFFFD66B),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Coin & XP stats with animated counter
-                      Row(
+                      child: Row(
                         children: [
-                          const CoinIcon(size: 16),
-                          const SizedBox(width: 4),
-                          TweenAnimationBuilder<double>(
-                            tween: Tween<double>(
-                              begin: _myRank!.coinBalance.toDouble(),
-                              end: _myRank!.coinBalance.toDouble(),
-                            ),
-                            duration: const Duration(milliseconds: 600),
-                            curve: Curves.easeOutCubic,
-                            builder: (context, val, child) {
-                              return Text(
-                                '${val.round()}',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w900,
-                                  color: Color(0xFFFFD66B),
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(width: 12),
+                          // Rank number badge
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withOpacity(0.25),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              '${_myRank!.totalXP} XP',
+                              '#${_myRank!.rank}',
                               style: const TextStyle(
-                                fontSize: 13,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w900,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+
+                          // User Avatar
+                          UserAvatar(
+                            avatarUrl: curStudent?.avatarUrl ?? _myRank!.avatarUrl,
+                            displayName: (curStudent?.displayName.isNotEmpty == true)
+                                ? curStudent!.displayName
+                                : (_myRank!.displayName.isNotEmpty ? _myRank!.displayName : _myRank!.username),
+                            size: 38,
+                            borderColor: Colors.white,
+                            borderWidth: 1.5,
+                          ),
+                          const SizedBox(width: 10),
+
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '#${_myRank!.rank} Siz ${_myRank!.rank}-o‘rindasiz',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '@${curStudent?.username ?? _myRank!.username} • ${_coinsToTop100 > 0 ? "Top 100 ga $_coinsToTop100 coin" : (_coinsToNextRank > 0 ? "+$_coinsToNextRank coin keyingi o‘rin" : "Ajoyib natija!")}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFFE0E7FF),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(width: 8),
+
+                          // Coin & XP badges
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.18),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const CoinIcon(size: 14),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '$realCoins',
+                                  style: const TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w900,
+                                    color: Color(0xFFFFD66B),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              '$realXP XP',
+                              style: const TextStyle(
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w800,
                                 color: Colors.white,
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
           ],
         ),
@@ -789,6 +806,151 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     );
   }
 
+  Widget _buildContestBanner(AppThemeColors colors, bool isDark) {
+    final now = DateTime.now();
+    final daysRemaining = 30 - (now.day % 30);
+    final hoursRemaining = 23 - now.hour;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDark
+              ? [const Color(0xFF2B1B54), const Color(0xFF1E143E)]
+              : [const Color(0xFFFAF5FF), const Color(0xFFF3E8FF)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: const Color(0xFF8B5CF6).withOpacity(0.4),
+          width: 1.2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF8B5CF6).withOpacity(0.12),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFD700).withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Text('🏆', style: TextStyle(fontSize: 16)),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      '30 kunlik musobaqa',
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFF8B5CF6),
+                      ),
+                    ),
+                    Text(
+                      '1, 2 va 3-o‘rin egalariga coin beriladi',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: colors.muted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF8B5CF6).withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.timer_outlined, size: 12, color: Color(0xFF8B5CF6)),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${daysRemaining}k ${hoursRemaining}s',
+                      style: const TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF8B5CF6),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              _buildPrizeChip('1-o‘rin', '500', const Color(0xFFFFD700)),
+              const SizedBox(width: 6),
+              _buildPrizeChip('2-o‘rin', '250', const Color(0xFFFF9800)),
+              const SizedBox(width: 6),
+              _buildPrizeChip('3-o‘rin', '150', const Color(0xFF9E9E9E)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPrizeChip(String place, String coins, Color accentColor) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+        decoration: BoxDecoration(
+          color: accentColor.withOpacity(0.12),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: accentColor.withOpacity(0.35)),
+        ),
+        child: Column(
+          children: [
+            Text(
+              place,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                color: accentColor.computeLuminance() > 0.5 ? const Color(0xFF78350F) : accentColor,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CoinIcon(size: 11),
+                const SizedBox(width: 3),
+                Text(
+                  coins,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildTop3Podium(AppThemeColors colors, bool isDark) {
     if (_leaderboard.isEmpty) return const SizedBox.shrink();
 
@@ -804,17 +966,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // 2nd Place (Silver) - Left
+          // 2nd Place (Orange) - Left
           if (second != null)
             Expanded(
+              flex: 10,
               child: _buildPodiumColumn(
                 user: second,
                 rank: 2,
                 pedestalHeight: 105,
-                podiumColor: const Color(0xFF94A3B8),
-                gradientColors: isDark
-                    ? [const Color(0xFF2E3447), const Color(0xFF1E2330)]
-                    : [const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)],
+                podiumColor: const Color(0xFFFF9800),
+                gradientColors: const [Color(0xFFFFB347), Color(0xFFFF8C00)],
                 badgeIcon: '🥈',
                 crown: false,
                 colors: colors,
@@ -823,43 +984,42 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
               ),
             )
           else
-            const Expanded(child: SizedBox.shrink()),
+            const Expanded(flex: 10, child: SizedBox.shrink()),
 
           const SizedBox(width: 8),
 
-          // 1st Place (Gold) - Center (Tallest)
+          // 1st Place (Yellow) - Center (Tallest)
           if (first != null)
             Expanded(
-              flex: 12,
+              flex: 11,
               child: _buildPodiumColumn(
                 user: first,
                 rank: 1,
-                pedestalHeight: 135,
-                podiumColor: const Color(0xFFFFB800),
-                gradientColors: isDark
-                    ? [const Color(0xFF4A3816), const Color(0xFF33250A)]
-                    : [const Color(0xFFFFE89E), const Color(0xFFFFD566)],
+                pedestalHeight: 140,
+                podiumColor: const Color(0xFFFFD700),
+                gradientColors: const [Color(0xFFFFE066), Color(0xFFFFC000)],
                 badgeIcon: '👑',
                 crown: true,
                 colors: colors,
                 isDark: isDark,
                 currentStudent: currentStudent,
               ),
-            ),
+            )
+          else
+            const Expanded(flex: 11, child: SizedBox.shrink()),
 
           const SizedBox(width: 8),
 
-          // 3rd Place (Bronze) - Right
+          // 3rd Place (Grey) - Right
           if (third != null)
             Expanded(
+              flex: 10,
               child: _buildPodiumColumn(
                 user: third,
                 rank: 3,
-                pedestalHeight: 90,
-                podiumColor: const Color(0xFFF97316),
-                gradientColors: isDark
-                    ? [const Color(0xFF3D271E), const Color(0xFF2B1912)]
-                    : [const Color(0xFFFFDFC9), const Color(0xFFFFC8A8)],
+                pedestalHeight: 80,
+                podiumColor: const Color(0xFF9E9E9E),
+                gradientColors: const [Color(0xFFCFD8DC), Color(0xFF90A4AE)],
                 badgeIcon: '🥉',
                 crown: false,
                 colors: colors,
@@ -868,7 +1028,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
               ),
             )
           else
-            const Expanded(child: SizedBox.shrink()),
+            const Expanded(flex: 10, child: SizedBox.shrink()),
         ],
       ),
     );

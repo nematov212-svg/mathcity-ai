@@ -2,15 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/widgets/announcement_popup.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/xp_bar.dart';
 import '../../shared/providers/student_provider.dart';
 
-class TeenHomeScreen extends ConsumerWidget {
+class TeenHomeScreen extends ConsumerStatefulWidget {
   const TeenHomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TeenHomeScreen> createState() => _TeenHomeScreenState();
+}
+
+class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        AnnouncementManager.checkAndShowAnnouncements(context, ref);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final studentState = ref.watch(studentProvider);
     final student = studentState.student;
 

@@ -7,6 +7,10 @@ class SubscriptionModel {
   final String? proExpiresAt;
   final String? trialExpiresAt;
 
+  final bool hasNewUserDiscount;
+  final int discountPercent;
+  final int discountPriceUzs;
+
   SubscriptionModel({
     required this.status,
     required this.trialDaysRemaining,
@@ -15,6 +19,9 @@ class SubscriptionModel {
     required this.priceMonthlyUzs,
     this.proExpiresAt,
     this.trialExpiresAt,
+    this.hasNewUserDiscount = false,
+    this.discountPercent = 30,
+    this.discountPriceUzs = 20300,
   });
 
   factory SubscriptionModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +33,9 @@ class SubscriptionModel {
       priceMonthlyUzs: json['priceMonthlyUzs'] ?? 29000,
       proExpiresAt: json['proExpiresAt'],
       trialExpiresAt: json['trialExpiresAt'],
+      hasNewUserDiscount: json['hasNewUserDiscount'] == true,
+      discountPercent: (json['discountPercent'] as num?)?.toInt() ?? 30,
+      discountPriceUzs: (json['discountPriceUzs'] as num?)?.toInt() ?? 20300,
     );
   }
 
@@ -35,6 +45,9 @@ class SubscriptionModel {
     bool? isProActive,
     String? planName,
     String? proExpiresAt,
+    bool? hasNewUserDiscount,
+    int? discountPercent,
+    int? discountPriceUzs,
   }) {
     return SubscriptionModel(
       status: status ?? this.status,
@@ -43,6 +56,9 @@ class SubscriptionModel {
       planName: planName ?? this.planName,
       priceMonthlyUzs: priceMonthlyUzs,
       proExpiresAt: proExpiresAt ?? this.proExpiresAt,
+      hasNewUserDiscount: hasNewUserDiscount ?? this.hasNewUserDiscount,
+      discountPercent: discountPercent ?? this.discountPercent,
+      discountPriceUzs: discountPriceUzs ?? this.discountPriceUzs,
     );
   }
 
@@ -119,6 +135,8 @@ class StudentModel {
     this.friendsCount = 0,
     this.rank = 1,
   });
+
+  bool get isPro => subscription.isProActive;
 
   int get accuracyPercentage {
     if (attemptedQuestionCount == 0) return 100;

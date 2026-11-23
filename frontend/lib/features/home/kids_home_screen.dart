@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/announcement_popup.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/user_avatar.dart';
@@ -32,6 +33,11 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
       duration: const Duration(seconds: 6),
     )..repeat();
     _loadDailyTasks();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        AnnouncementManager.checkAndShowAnnouncements(context, ref);
+      }
+    });
   }
 
   Future<void> _loadDailyTasks() async {

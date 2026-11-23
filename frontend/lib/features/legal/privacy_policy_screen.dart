@@ -217,7 +217,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       'MathCity AI maktab o‘quvchilari uchun mo‘ljallangan ta’lim ilovasi bo‘lganligi sababli, voyaga yetmaganlarning shaxsiy daxlsizligi eng yuqori darajada himoyalanadi:\n\n'
                       '• 13 yoshga to‘lmagan o‘quvchilar ro‘yxatdan o‘tganda tizim ota-ona bilan birgalikda foydalanish haqida ogohlantirish beradi.\n'
                       '• Ilovada boshqa o‘quvchilar bilan xususiy yozishmalar (shaxsiy chatlar) yoki begona shaxslar bilan nazoratsiz aloqa kanallari MAVJUD EMAS.\n'
-                      '• Peshqadamlar reytingida faqat foydalanuvchi nomi, o‘rganish natijasi (tanga/XP) va tanlangan avatar ko‘rsatiladi — shaxsiy aloqa vositalari yoki shaxsni tasdiqlovchi ma’lumotlar oshkor etilmaydi.\n'
+                      '• Reyting jadvalida faqat foydalanuvchi nomi, o‘rganish natijasi (tanga/XP) va tanlangan avatar ko‘rsatiladi — shaxsiy aloqa vositalari yoki shaxsni tasdiqlovchi ma’lumotlar oshkor etilmaydi.\n'
                       '• Ota-onalar istalgan vaqt farzandining barcha o‘quv ma’lumotlarini ko‘rish, eksport qilish yoki butunlay o‘chirib yuborish huquqiga ega.',
                 ),
 

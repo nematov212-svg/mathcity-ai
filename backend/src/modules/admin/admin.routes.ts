@@ -1152,3 +1152,106 @@ adminRouter.get('/unrecognized-queries', adminAuth, (req: Request, res: Response
   });
 });
 
+// ---------------------------------------------------------------------------
+// 8. ANNOUNCEMENTS & ADVERTISEMENTS MANAGEMENT
+// ---------------------------------------------------------------------------
+adminRouter.get('/announcements', adminAuth, (_req: Request, res: Response) => {
+  const list = repository.getAllAnnouncements();
+  return res.json({
+    success: true,
+    data: list,
+  });
+});
+
+adminRouter.post('/announcements', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const {
+    title,
+    text,
+    imageUrl,
+    buttonText,
+    buttonRoute,
+    type,
+    startDate,
+    endDate,
+    delaySeconds,
+    autoCloseSeconds,
+    discountPercent,
+    discountPrice,
+    originalPrice,
+    isActive,
+  } = req.body;
+
+  if (!title || !text) {
+    return res.status(400).json({
+      success: false,
+      error: 'E‘lon nomi va matnini kiritish majburiy.',
+    });
+  }
+
+  const item = repository.createAnnouncement({
+    title: String(title).trim(),
+    text: String(text).trim(),
+    imageUrl: imageUrl ? String(imageUrl).trim() : undefined,
+    buttonText: buttonText ? String(buttonText).trim() : undefined,
+    buttonRoute: buttonRoute ? String(buttonRoute).trim() : undefined,
+    type: type || 'ANNOUNCEMENT',
+    startDate: startDate || new Date().toISOString(),
+    endDate: endDate || undefined,
+    delaySeconds: typeof delaySeconds === 'number' ? delaySeconds : parseInt(delaySeconds, 10) || 0,
+    autoCloseSeconds: autoCloseSeconds ? parseInt(autoCloseSeconds, 10) : undefined,
+    discountPercent: discountPercent ? Number(discountPercent) : undefined,
+    discountPrice: discountPrice ? Number(discountPrice) : undefined,
+    originalPrice: originalPrice ? Number(originalPrice) : undefined,
+    isActive: isActive !== false && isActive !== 'false',
+  });
+
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'CREATE_ANNOUNCEMENT',
+    targetType: 'ANNOUNCEMENT',
+    targetId: item.id,
+    details: { title: item.title, type: item.type },
+  });
+
+  return res.status(201).json({
+    success: true,
+    data: item,
+  });
+});
+
+adminRouter.put('/announcements/:id', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const annId = String(req.params.id);
+  try {
+    const item = repository.updateAnnouncement(annId, req.body);
+    adminStore.logAction({
+      adminId: req.adminUser?.id || 'admin',
+      adminUsername: req.adminUser?.username || 'mirzobek',
+      action: 'UPDATE_ANNOUNCEMENT',
+      targetType: 'ANNOUNCEMENT',
+      targetId: item.id,
+      details: { title: item.title },
+    });
+    return res.json({ success: true, data: item });
+  } catch (err: any) {
+    return res.status(404).json({ success: false, error: err.message || 'E‘lon topilmadi.' });
+  }
+});
+
+adminRouter.delete('/announcements/:id', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const annId = String(req.params.id);
+  const success = repository.deleteAnnouncement(annId);
+  if (!success) {
+    return res.status(404).json({ success: false, error: 'E‘lon topilmadi.' });
+  }
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'DELETE_ANNOUNCEMENT',
+    targetType: 'ANNOUNCEMENT',
+    targetId: annId,
+  });
+  return res.json({ success: true, message: 'E‘lon o‘chirildi.' });
+});
+
+

@@ -234,6 +234,19 @@
 
         <div class="pt-2">
           <div class="px-3.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Moliya & AI</div>
+          <button onclick="navigate('announcements')" id="nav-announcements"
+            class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+            <div class="flex items-center space-x-3">
+              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+              </svg>
+              <span>Reklamalar / E‘lonlar</span>
+            </div>
+            <span id="badge-total-announcements"
+              class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-bold">2</span>
+          </button>
+
           <button onclick="navigate('finance')" id="nav-finance"
             class="nav-btn w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
             <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -829,8 +842,184 @@
           </div>
         </section>
 
+        <!-- =====================================================================
+             VIEW: REKLAMALAR VA E'LONLAR (ANNOUNCEMENTS & ADS)
+             ===================================================================== -->
+        <section id="view-announcements" class="space-y-6 hidden">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">E‘lonlar va Reklama boshqaruvi</h3>
+              <p class="text-xs text-slate-500">Ilova ochilganda chiqadigan shoshilinch e‘lonlar, popuplar va 30%
+                chegirmali takliflar</p>
+            </div>
+            <button onclick="openAnnouncementModal()"
+              class="brand-purple hover:opacity-95 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-md shadow-indigo-500/20 flex items-center justify-center space-x-2">
+              <span>+ Yangi e‘lon qo‘shish</span>
+            </button>
+          </div>
+
+          <!-- Announcements Table -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="p-4 border-b border-slate-200 flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Barcha e‘lonlar ro‘yxati</span>
+              <span id="announcementsCountBadge"
+                class="text-xs bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded-full">0 ta</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-bold">
+                  <tr>
+                    <th class="px-5 py-3.5">E‘lon nomi va Turi</th>
+                    <th class="px-5 py-3.5">Matn</th>
+                    <th class="px-5 py-3.5">Tugma / Havola</th>
+                    <th class="px-5 py-3.5">Kechikish / Yopilish</th>
+                    <th class="px-5 py-3.5">Holat</th>
+                    <th class="px-5 py-3.5 text-right">Amallar</th>
+                  </tr>
+                </thead>
+                <tbody id="announcementsTableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
       </div>
     </main>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: CREATE / EDIT ANNOUNCEMENT
+       ========================================================================= -->
+  <div id="announcementModal"
+    class="fixed inset-0 z-50 bg-slate-900/60 hidden items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white max-w-2xl w-full p-6 md:p-8 rounded-3xl shadow-2xl border border-slate-200 my-8 text-left">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+        <div>
+          <h3 id="annModalTitle" class="text-lg font-extrabold text-slate-900">Yangi e‘lon / reklama qo‘shish</h3>
+          <p class="text-xs text-slate-500">Mobil va web ilova uchun shoshilinch e‘lon, popup va chegirmali takliflar
+          </p>
+        </div>
+        <button onclick="closeAnnouncementModal()"
+          class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <input type="hidden" id="annEditId" value="" />
+
+      <div class="space-y-4 text-xs font-semibold">
+        <!-- Row 1: Nomi & Turi -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-700 mb-1">E‘lon nomi / Sarlavha *</label>
+            <input type="text" id="annTitle" placeholder="Masalan: 30 kunlik musobaqa"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">E‘lon turi *</label>
+            <select id="annType" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+              <option value="URGENT_ANNOUNCEMENT">🚨 Shoshilinch e‘lon (Popup)</option>
+              <option value="SPECIAL_OFFER">⚡ Maxsus taklif (30% chegirma)</option>
+              <option value="ANNOUNCEMENT">📢 Oddiy e‘lon</option>
+              <option value="AD">🎯 Reklama</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Matn -->
+        <div>
+          <label class="block text-slate-700 mb-1">E‘lon matni / Tavsifi *</label>
+          <textarea id="annText" rows="3" placeholder="Foydalanuvchilarga ko‘rinadigan batafsil xabar..."
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+
+        <!-- Rasm havolasi -->
+        <div>
+          <label class="block text-slate-700 mb-1">Rasm havolasi (URL / fayl manzili)</label>
+          <input type="text" id="annImageUrl" placeholder="https://... yoki assets/images/..."
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500" />
+        </div>
+
+        <!-- Row 2: Tugma matni & O'tish ekrani -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-700 mb-1">Tugma matni</label>
+            <input type="text" id="annButtonText" placeholder="Masalan: 1-o‘rinni egallash uchun harakat"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Tugma yo‘nalishi / o‘tish ekrani</label>
+            <input type="text" id="annButtonRoute" placeholder="/kids/leaderboard yoki /kids/pro"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500" />
+          </div>
+        </div>
+
+        <!-- Row 3: Kechikish va Avto-yopilish -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-700 mb-1">Ko‘rsatish kechikishi (soniyalarda)</label>
+            <input type="number" id="annDelaySeconds" value="0" min="0"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500" />
+            <p class="text-[10px] text-slate-400 mt-0.5">0 = ilova ochilishi bilan; 300 = 5 daqiqadan keyin</p>
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Avtomatik yopilish vaqti (soniya)</label>
+            <input type="number" id="annAutoCloseSeconds" value="5" min="0"
+              placeholder="Bo‘sh = foydalanuvchi o‘zi yopadi"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500" />
+            <p class="text-[10px] text-slate-400 mt-0.5">Masalan: 5 soniyalik progress chizig‘i</p>
+          </div>
+        </div>
+
+        <!-- Row 4: Chegirma ma'lumotlari (Maxsus taklif uchun) -->
+        <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-amber-900 mb-1">Chegirma foizi (%)</label>
+            <input type="number" id="annDiscountPercent" value="30" min="0" max="100"
+              class="w-full bg-white border border-amber-300 rounded-lg px-2.5 py-1.5 text-slate-900" />
+          </div>
+          <div>
+            <label class="block text-amber-900 mb-1">Yangi narx (so‘m)</label>
+            <input type="number" id="annDiscountPrice" value="20300" min="0"
+              class="w-full bg-white border border-amber-300 rounded-lg px-2.5 py-1.5 text-slate-900" />
+          </div>
+          <div>
+            <label class="block text-amber-900 mb-1">Eski narx (so‘m)</label>
+            <input type="number" id="annOriginalPrice" value="29000" min="0"
+              class="w-full bg-white border border-amber-300 rounded-lg px-2.5 py-1.5 text-slate-900" />
+          </div>
+        </div>
+
+        <!-- Row 5: Muddatlar & Faol/nofaol -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-700 mb-1">Boshlanish sanasi</label>
+            <input type="datetime-local" id="annStartDate"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900" />
+          </div>
+          <div>
+            <label class="block text-slate-700 mb-1">Tugash sanasi (ixtiyoriy)</label>
+            <input type="datetime-local" id="annEndDate"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900" />
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-2 pt-2">
+          <input type="checkbox" id="annIsActive" checked
+            class="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500" />
+          <label for="annIsActive" class="text-xs text-slate-800 font-bold">Ushbu e‘lon darhol ilovada faol
+            bo‘lsin</label>
+        </div>
+
+        <div class="flex items-center justify-end space-x-3 pt-4 border-t border-slate-100">
+          <button type="button" onclick="closeAnnouncementModal()"
+            class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 font-bold hover:bg-slate-50 transition">Bekor
+            qilish</button>
+          <button type="button" onclick="saveAnnouncementSubmit()"
+            class="brand-purple hover:opacity-95 text-white font-bold px-6 py-2.5 rounded-xl transition shadow-md shadow-indigo-500/20">Saqlash</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- =========================================================================
@@ -1430,7 +1619,7 @@
     // Navigation Dispatcher
     function navigate(viewName) {
       currentView = viewName;
-      ['overview', 'students', 'lessons', 'questions', 'finance', 'ai', 'settings'].forEach(v => {
+      ['overview', 'students', 'lessons', 'questions', 'announcements', 'finance', 'ai', 'settings'].forEach(v => {
         const elem = document.getElementById(`view-${v}`);
         const nav = document.getElementById(`nav-${v}`);
         if (elem) elem.classList.add('hidden');
@@ -1453,6 +1642,7 @@
         students: { t: 'O‘quvchilar', s: 'Ro‘yxatdan o‘tgan barcha foydalanuvchilar va ularning profillari' },
         lessons: { t: 'Darslar boshqaruvi', s: 'Kids va O‘smirlar uchun matematika darslari va mashqlar' },
         questions: { t: 'Savollar bazasi', s: 'Mustaqil matematik savollar banki (Kids & O‘smirlar)' },
+        announcements: { t: 'Reklamalar va E‘lonlar', s: 'Shoshilinch e‘lonlar, popuplar va chegirmali takliflar boshqaruvi' },
         finance: { t: 'Moliya va Karta', s: 'MathCity Pro obuna xaridlari va tasdiqlangan daromad' },
         ai: { t: 'AI Ustoz statistikasi', s: 'Sun’iy intellekt tomonidan javob berilgan savollar tahlili' },
         settings: { t: 'Sozlamalar va Xavfsizlik', s: 'Admin paroli, tizim parametrlari va audit jurnali' }
@@ -1467,6 +1657,7 @@
       if (viewName === 'students') loadStudents();
       if (viewName === 'lessons') loadLessons();
       if (viewName === 'questions') loadQuestions();
+      if (viewName === 'announcements') loadAnnouncements();
       if (viewName === 'finance') loadFinance();
       if (viewName === 'settings') loadSettings();
     }
@@ -2355,6 +2546,246 @@
         }
       } catch (err) {
         alert(err.message || 'Xatolik');
+      }
+    }
+
+    // =========================================================================
+    // 8. ANNOUNCEMENTS & ADVERTISEMENTS MANAGEMENT JS
+    // =========================================================================
+    let announcementsList = [];
+
+    async function loadAnnouncements() {
+      try {
+        const res = await apiFetch('/api/admin/announcements', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          announcementsList = json.data;
+          renderAnnouncements(announcementsList);
+          const badge = document.getElementById('announcementsCountBadge');
+          if (badge) badge.textContent = `${announcementsList.length} ta`;
+        }
+      } catch (err) {
+        console.error('loadAnnouncements error:', err);
+      }
+    }
+
+    function renderAnnouncements(list) {
+      const tbody = document.getElementById('announcementsTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if (!list || list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="px-5 py-8 text-center text-slate-400">Hech qanday e‘lon topilmadi. Yangi qo‘shish tugmasini bosing.</td></tr>`;
+        return;
+      }
+
+      list.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
+
+        let typeBadge = '';
+        if (item.type === 'URGENT_ANNOUNCEMENT') {
+          typeBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-red-100 text-red-700">🚨 Shoshilinch</span>';
+        } else if (item.type === 'SPECIAL_OFFER') {
+          typeBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800">⚡ Maxsus taklif (-30%)</span>';
+        } else if (item.type === 'AD') {
+          typeBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700">🎯 Reklama</span>';
+        } else {
+          typeBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 text-purple-700">📢 E‘lon</span>';
+        }
+
+        const isChecked = item.isActive ? 'checked' : '';
+        const statusBadge = `
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" ${isChecked} onchange="toggleAnnouncementStatus('${item.id}', this.checked)" class="sr-only peer">
+            <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+          </label>
+        `;
+
+        const buttonInfo = item.buttonText
+          ? `<span class="font-bold text-slate-800">${item.buttonText}</span><br><code class="text-[10px] text-slate-400">${item.buttonRoute || ''}</code>`
+          : '<span class="text-slate-400 italic">Tugma yo‘q</span>';
+
+        const timing = `Kechikish: ${item.delaySeconds || 0}s<br>Yopilish: ${item.autoCloseSeconds ? item.autoCloseSeconds + 's' : 'qo‘lda'}`;
+
+        tr.innerHTML = `
+          <td class="px-5 py-4">
+            <div class="font-bold text-slate-900">${item.title}</div>
+            <div class="mt-1">${typeBadge}</div>
+          </td>
+          <td class="px-5 py-4 max-w-xs truncate text-slate-600" title="${item.text}">
+            ${item.text}
+          </td>
+          <td class="px-5 py-4 text-xs">${buttonInfo}</td>
+          <td class="px-5 py-4 text-[11px] text-slate-500">${timing}</td>
+          <td class="px-5 py-4">${statusBadge}</td>
+          <td class="px-5 py-4 text-right space-x-2">
+            <button onclick="openAnnouncementModal('${item.id}')" class="px-2.5 py-1 text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition">Tahrirlash</button>
+            <button onclick="deleteAnnouncement('${item.id}')" class="px-2.5 py-1 text-xs font-bold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 rounded-lg transition">O‘chirish</button>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openAnnouncementModal(editId = null) {
+      const modal = document.getElementById('announcementModal');
+      const heading = document.getElementById('annModalTitle');
+      const editInput = document.getElementById('annEditId');
+
+      if (editId) {
+        const item = announcementsList.find(x => x.id === editId);
+        if (item) {
+          heading.textContent = 'E‘lonni tahrirlash';
+          editInput.value = item.id;
+          document.getElementById('annTitle').value = item.title || '';
+          document.getElementById('annType').value = item.type || 'ANNOUNCEMENT';
+          document.getElementById('annText').value = item.text || '';
+          document.getElementById('annImageUrl').value = item.imageUrl || '';
+          document.getElementById('annButtonText').value = item.buttonText || '';
+          document.getElementById('annButtonRoute').value = item.buttonRoute || '';
+          document.getElementById('annDelaySeconds').value = item.delaySeconds || 0;
+          document.getElementById('annAutoCloseSeconds').value = item.autoCloseSeconds || '';
+          document.getElementById('annDiscountPercent').value = item.discountPercent || 30;
+          document.getElementById('annDiscountPrice').value = item.discountPrice || 20300;
+          document.getElementById('annOriginalPrice').value = item.originalPrice || 29000;
+          document.getElementById('annStartDate').value = item.startDate ? item.startDate.slice(0, 16) : '';
+          document.getElementById('annEndDate').value = item.endDate ? item.endDate.slice(0, 16) : '';
+          document.getElementById('annIsActive').checked = item.isActive !== false;
+        }
+      } else {
+        heading.textContent = 'Yangi e‘lon / reklama qo‘shish';
+        editInput.value = '';
+        document.getElementById('annTitle').value = '';
+        document.getElementById('annType').value = 'URGENT_ANNOUNCEMENT';
+        document.getElementById('annText').value = '';
+        document.getElementById('annImageUrl').value = '';
+        document.getElementById('annButtonText').value = '1-o‘rinni egallash uchun harakat';
+        document.getElementById('annButtonRoute').value = '/kids/leaderboard';
+        document.getElementById('annDelaySeconds').value = 0;
+        document.getElementById('annAutoCloseSeconds').value = 5;
+        document.getElementById('annDiscountPercent').value = 30;
+        document.getElementById('annDiscountPrice').value = 20300;
+        document.getElementById('annOriginalPrice').value = 29000;
+        document.getElementById('annStartDate').value = '';
+        document.getElementById('annEndDate').value = '';
+        document.getElementById('annIsActive').checked = true;
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeAnnouncementModal() {
+      const modal = document.getElementById('announcementModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    async function saveAnnouncementSubmit() {
+      const editId = document.getElementById('annEditId').value;
+      const title = document.getElementById('annTitle').value.trim();
+      const type = document.getElementById('annType').value;
+      const text = document.getElementById('annText').value.trim();
+      const imageUrl = document.getElementById('annImageUrl').value.trim();
+      const buttonText = document.getElementById('annButtonText').value.trim();
+      const buttonRoute = document.getElementById('annButtonRoute').value.trim();
+      const delaySeconds = parseInt(document.getElementById('annDelaySeconds').value) || 0;
+      const autoCloseInput = document.getElementById('annAutoCloseSeconds').value;
+      const autoCloseSeconds = autoCloseInput ? parseInt(autoCloseInput) : undefined;
+      const discountPercent = parseInt(document.getElementById('annDiscountPercent').value) || 30;
+      const discountPrice = parseInt(document.getElementById('annDiscountPrice').value) || 20300;
+      const originalPrice = parseInt(document.getElementById('annOriginalPrice').value) || 29000;
+      const startDate = document.getElementById('annStartDate').value || undefined;
+      const endDate = document.getElementById('annEndDate').value || undefined;
+      const isActive = document.getElementById('annIsActive').checked;
+
+      if (!title || !text) {
+        alert('Iltimos, e‘lon nomi va matnini kiriting.');
+        return;
+      }
+
+      const payload = {
+        title,
+        type,
+        text,
+        imageUrl,
+        buttonText,
+        buttonRoute,
+        delaySeconds,
+        autoCloseSeconds,
+        discountPercent,
+        discountPrice,
+        originalPrice,
+        startDate,
+        endDate,
+        isActive,
+      };
+
+      try {
+        const url = editId ? `/api/admin/announcements/${editId}` : '/api/admin/announcements';
+        const method = editId ? 'PUT' : 'POST';
+
+        const res = await apiFetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const json = await res.json();
+        if (json.success) {
+          closeAnnouncementModal();
+          loadAnnouncements();
+        } else {
+          alert(json.error || 'Xatolik yuz berdi');
+        }
+      } catch (err) {
+        alert(err.message || 'Xatolik');
+      }
+    }
+
+    async function deleteAnnouncement(id) {
+      if (!confirm('Ushbu e‘lonni o‘chirishni xohlaysizmi?')) return;
+      try {
+        const res = await apiFetch(`/api/admin/announcements/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success) {
+          loadAnnouncements();
+        } else {
+          alert(json.error || 'Xatolik yuz berdi');
+        }
+      } catch (err) {
+        alert(err.message || 'Xatolik');
+      }
+    }
+
+    async function toggleAnnouncementStatus(id, isActive) {
+      try {
+        const res = await apiFetch(`/api/admin/announcements/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({ isActive })
+        });
+        const json = await res.json();
+        if (!json.success) {
+          alert(json.error || 'Holatni yangilab bo‘lmadi');
+          loadAnnouncements();
+        }
+      } catch (err) {
+        alert(err.message || 'Xatolik');
+        loadAnnouncements();
       }
     }
 

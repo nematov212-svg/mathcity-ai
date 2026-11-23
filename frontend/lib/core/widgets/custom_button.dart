@@ -33,61 +33,73 @@ class _CustomButtonState extends State<CustomButton> {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = widget.backgroundColor ?? Theme.of(context).primaryColor;
+    final bgColor = widget.backgroundColor ?? const Color(0xFF6A4CFF);
     final fgColor = widget.textColor ?? Colors.white;
+    final isInteractive = widget.onPressed != null && !widget.isLoading;
 
     return AnimatedScale(
-      scale: _isPressed ? 0.96 : 1.0,
+      scale: _isPressed ? 0.97 : 1.0,
       duration: const Duration(milliseconds: 120),
       curve: Curves.easeOutCubic,
-      child: SizedBox(
+      child: Container(
         width: widget.isFullWidth ? double.infinity : null,
         height: widget.height,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: bgColor,
-            foregroundColor: fgColor,
-            disabledBackgroundColor: bgColor.withOpacity(0.40),
-            disabledForegroundColor: Colors.white.withOpacity(0.85),
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
+        decoration: BoxDecoration(
+          color: isInteractive ? bgColor : bgColor.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+          boxShadow: isInteractive
+              ? [
+                  BoxShadow(
+                    color: bgColor.withOpacity(0.35),
+                    blurRadius: 18,
+                    offset: const Offset(0, 6),
+                  ),
+                ]
+              : null,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            onHighlightChanged: (val) {
+              if (mounted) setState(() => _isPressed = val);
+            },
+            onTap: isInteractive ? widget.onPressed : null,
+            child: Center(
+              child: widget.isLoading
+                  ? SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        valueColor: AlwaysStoppedAnimation<Color>(fgColor),
+                      ),
+                    )
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (widget.icon != null) ...[
+                          widget.icon!,
+                          const SizedBox(width: 8),
+                        ],
+                        Flexible(
+                          child: Text(
+                            widget.text,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontFamily: 'Nunito',
+                              color: fgColor,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ),
-          onPressed: widget.isLoading ? null : widget.onPressed,
-          onFocusChange: (focus) {},
-          child: widget.isLoading
-              ? SizedBox(
-                  width: 22,
-                  height: 22,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    valueColor: AlwaysStoppedAnimation<Color>(fgColor),
-                  ),
-                )
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (widget.icon != null) ...[
-                      widget.icon!,
-                      const SizedBox(width: 8),
-                    ],
-                    Flexible(
-                      child: Text(
-                        widget.text,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontFamily: 'Nunito',
-                          color: widget.onPressed != null ? fgColor : Colors.white.withOpacity(0.85),
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
         ),
       ),
     );
