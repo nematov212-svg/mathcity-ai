@@ -47,6 +47,8 @@ class _CustomButtonState extends State<CustomButton> {
           style: ElevatedButton.styleFrom(
             backgroundColor: bgColor,
             foregroundColor: fgColor,
+            disabledBackgroundColor: bgColor.withOpacity(0.40),
+            disabledForegroundColor: Colors.white.withOpacity(0.85),
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -77,7 +79,8 @@ class _CustomButtonState extends State<CustomButton> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: fgColor,
+                          fontFamily: 'Nunito',
+                          color: widget.onPressed != null ? fgColor : Colors.white.withOpacity(0.85),
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
                         ),

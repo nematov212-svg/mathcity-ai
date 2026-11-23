@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../core/widgets/mathcity_logo.dart';
 import '../../core/widgets/responsive_layout.dart';
@@ -212,7 +211,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     final isMinor = age != null && age < 13;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F6FC),
+      backgroundColor: const Color(0xFFF6F4FF),
       body: SafeArea(
         child: ResponsiveAuthCard(
           maxCardWidth: 500,
@@ -232,21 +231,23 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                   'Profilni to‘ldiring',
                   textAlign: TextAlign.center,
                   style: TextStyle(
+                    fontFamily: 'Nunito',
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
-                    color: Color(0xFF1E1B4B),
+                    color: Color(0xFF1D1646),
                     letterSpacing: -0.5,
                   ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   student?.email.isNotEmpty == true
-                      ? 'Uланган hisob: ${student!.email}\nIlovaga to‘liq kirish uchun foydalanuvchi nomi va tug‘ilgan sanangizni kiriting.'
+                      ? 'Ulangan hisob: ${student!.email}\nIlovaga to‘liq kirish uchun foydalanuvchi nomi va tug‘ilgan sanangizni kiriting.'
                       : 'Ilovaga to‘liq kirish uchun foydalanuvchi nomi va tug‘ilgan sanangizni kiriting.',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
+                    fontFamily: 'Nunito',
                     fontSize: 13,
-                    color: Color(0xFF64748B),
+                    color: Color(0xFF7A74A3),
                     height: 1.4,
                   ),
                 ),
@@ -284,9 +285,10 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                 const Text(
                   'Foydalanuvchi nomi (Username)',
                   style: TextStyle(
+                    fontFamily: 'Nunito',
                     fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF334155),
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF1D1646),
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -294,17 +296,28 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                   controller: _usernameController,
                   onChanged: _onUsernameChanged,
                   textInputAction: TextInputAction.next,
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1E293B)),
+                  style: const TextStyle(
+                    fontFamily: 'Nunito',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1D1646),
+                  ),
                   decoration: InputDecoration(
                     hintText: 'masalan: sarvar_2026',
-                    prefixIcon: const Icon(Icons.alternate_email, color: AppColors.kidsPrimary, size: 20),
+                    hintStyle: const TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF94A3B8),
+                    ),
+                    prefixIcon: const Icon(Icons.alternate_email, color: Color(0xFF6A4CFF), size: 20),
                     suffixIcon: _isCheckingUsername
                         ? const Padding(
                             padding: EdgeInsets.all(12.0),
                             child: SizedBox(
                               width: 16,
                               height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.kidsPrimary),
+                              child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF6A4CFF)),
                             ),
                           )
                         : _hasCheckedUsername
@@ -319,19 +332,20 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                     contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                      borderSide: const BorderSide(color: Color(0xFFCBD5E1), width: 1.5),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide(
                         color: _hasCheckedUsername
-                            ? (_isUsernameAvailable ? const Color(0xFF86EFAC) : const Color(0xFFFCA5A5))
+                            ? (_isUsernameAvailable ? const Color(0xFF16A34A) : const Color(0xFFDC2626))
                             : const Color(0xFFCBD5E1),
+                        width: 1.5,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: AppColors.kidsPrimary, width: 2),
+                      borderSide: const BorderSide(color: Color(0xFF6A4CFF), width: 2),
                     ),
                   ),
                 ),
@@ -359,9 +373,10 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                 const Text(
                   'Tug‘ilgan sana',
                   style: TextStyle(
+                    fontFamily: 'Nunito',
                     fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF334155),
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF1D1646),
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -373,11 +388,43 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                       child: DropdownButtonFormField<int>(
                         value: _selectedDay,
                         isExpanded: true,
+                        dropdownColor: Colors.white,
+                        icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF64748B), size: 20),
+                        style: const TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF1D1646),
+                        ),
                         decoration: _dropdownDecoration('Kun'),
+                        selectedItemBuilder: (BuildContext context) {
+                          return List.generate(_maxDaysInMonth(_selectedYear, _selectedMonth), (i) => i + 1)
+                              .map((day) => Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      '$day',
+                                      style: const TextStyle(
+                                        fontFamily: 'Nunito',
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xFF1D1646),
+                                      ),
+                                    ),
+                                  ))
+                              .toList();
+                        },
                         items: List.generate(_maxDaysInMonth(_selectedYear, _selectedMonth), (i) => i + 1)
                             .map((day) => DropdownMenuItem(
                                   value: day,
-                                  child: Text('$day', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                                  child: Text(
+                                    '$day',
+                                    style: const TextStyle(
+                                      fontFamily: 'Nunito',
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF1D1646),
+                                    ),
+                                  ),
                                 ))
                             .toList(),
                         onChanged: (val) {
@@ -393,12 +440,45 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                       child: DropdownButtonFormField<int>(
                         value: _selectedMonth,
                         isExpanded: true,
+                        dropdownColor: Colors.white,
+                        icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF64748B), size: 20),
+                        style: const TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF1D1646),
+                        ),
                         decoration: _dropdownDecoration('Oy'),
+                        selectedItemBuilder: (BuildContext context) {
+                          return List.generate(12, (i) => i + 1)
+                              .map((m) => Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      _uzbekMonths[m - 1],
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontFamily: 'Nunito',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xFF1D1646),
+                                      ),
+                                    ),
+                                  ))
+                              .toList();
+                        },
                         items: List.generate(12, (i) => i + 1)
                             .map((m) => DropdownMenuItem(
                                   value: m,
-                                  child: Text(_uzbekMonths[m - 1],
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                                  child: Text(
+                                    _uzbekMonths[m - 1],
+                                    style: const TextStyle(
+                                      fontFamily: 'Nunito',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF1D1646),
+                                    ),
+                                  ),
                                 ))
                             .toList(),
                         onChanged: (val) {
@@ -420,11 +500,43 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                       child: DropdownButtonFormField<int>(
                         value: _selectedYear,
                         isExpanded: true,
+                        dropdownColor: Colors.white,
+                        icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF64748B), size: 20),
+                        style: const TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF1D1646),
+                        ),
                         decoration: _dropdownDecoration('Yil'),
+                        selectedItemBuilder: (BuildContext context) {
+                          return List.generate(currentYear - 5 - (currentYear - 100) + 1, (i) => currentYear - 5 - i)
+                              .map((y) => Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      '$y',
+                                      style: const TextStyle(
+                                        fontFamily: 'Nunito',
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xFF1D1646),
+                                      ),
+                                    ),
+                                  ))
+                              .toList();
+                        },
                         items: List.generate(currentYear - 5 - (currentYear - 100) + 1, (i) => currentYear - 5 - i)
                             .map((y) => DropdownMenuItem(
                                   value: y,
-                                  child: Text('$y', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                                  child: Text(
+                                    '$y',
+                                    style: const TextStyle(
+                                      fontFamily: 'Nunito',
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF1D1646),
+                                    ),
+                                  ),
                                 ))
                             .toList(),
                         onChanged: (val) {
@@ -443,32 +555,33 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
 
                 // Age Indicator Badge
                 if (age != null) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
                       color: age < 5 || age > 100
                           ? const Color(0xFFFEF2F2)
                           : const Color(0xFFEDE9FE),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       children: [
                         Icon(
                           age < 5 || age > 100 ? Icons.warning_amber_rounded : Icons.cake_outlined,
-                          size: 18,
-                          color: age < 5 || age > 100 ? const Color(0xFFDC2626) : AppColors.kidsPrimary,
+                          size: 20,
+                          color: age < 5 || age > 100 ? const Color(0xFFDC2626) : const Color(0xFF6A4CFF),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             age < 5 || age > 100
                                 ? 'Yoshingiz 5 dan kichik yoki 100 dan katta bo‘lmasligi kerak.'
                                 : 'Yoshingiz: $age yosh • ${age <= 12 ? 'Bolalar rejimi (Kids)' : 'O‘smirlar rejimi (Teen)'}',
                             style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: age < 5 || age > 100 ? const Color(0xFFDC2626) : AppColors.kidsPrimary,
+                              fontFamily: 'Nunito',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: age < 5 || age > 100 ? const Color(0xFFDC2626) : const Color(0xFF5B21B6),
                             ),
                           ),
                         ),
@@ -494,12 +607,15 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                           children: [
                             Icon(Icons.family_restroom, color: Color(0xFFD97706), size: 20),
                             SizedBox(width: 8),
-                            Text(
-                              'Ota-onalar bilan birgalikda',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF92400E),
+                            Expanded(
+                              child: Text(
+                                'Ota-onalar bilan birgalikda',
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF92400E),
+                                ),
                               ),
                             ),
                           ],
@@ -507,14 +623,14 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                         const SizedBox(height: 6),
                         const Text(
                           'Ota-onangiz bilan birga foydalaning. MathCity AI bolalar xavfsizligi va maxfiyligi qoidalariga to‘liq rioya qiladi.',
-                          style: TextStyle(fontSize: 12, color: Color(0xFF78350F), height: 1.35),
+                          style: TextStyle(fontFamily: 'Nunito', fontSize: 12, color: Color(0xFF78350F), height: 1.35),
                         ),
                         const SizedBox(height: 6),
                         Row(
                           children: [
                             Checkbox(
                               value: _parentalConsentChecked,
-                              activeColor: AppColors.kidsPrimary,
+                              activeColor: const Color(0xFF6A4CFF),
                               onChanged: (val) {
                                 setState(() => _parentalConsentChecked = val ?? false);
                               },
@@ -522,7 +638,12 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                             const Expanded(
                               child: Text(
                                 'Tushundim, ota-onam bilan birga foydalanaman',
-                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF92400E)),
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF92400E),
+                                ),
                               ),
                             ),
                           ],
@@ -538,8 +659,25 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                 CustomButton(
                   text: 'Davom etish',
                   isLoading: _isSubmitting,
-                  onPressed: _isFormValid ? _handleSubmit : null,
-                  backgroundColor: AppColors.kidsPrimary,
+                  onPressed: () {
+                    if (!_isFormValid) {
+                      final u = _usernameController.text.trim();
+                      if (u.isEmpty) {
+                        setState(() => _errorMessage = 'Iltimos, foydalanuvchi nomini kiriting.');
+                      } else if (_isCheckingUsername) {
+                        setState(() => _errorMessage = 'Foydalanuvchi nomi tekshirilmoqda, iltimos kuting.');
+                      } else if (!_isUsernameAvailable) {
+                        setState(() => _errorMessage = _usernameStatusMessage ?? 'Foydalanuvchi nomi yaroqsiz yoki band.');
+                      } else if (!_isDateValid) {
+                        setState(() => _errorMessage = 'Tug‘ilgan sanangizni to‘g‘ri tanlang.');
+                      } else if (isMinor && !_parentalConsentChecked) {
+                        setState(() => _errorMessage = 'Ota-ona bilan birgalikda foydalanishni tasdiqlang.');
+                      }
+                      return;
+                    }
+                    _handleSubmit();
+                  },
+                  backgroundColor: const Color(0xFF6A4CFF),
                   textColor: Colors.white,
                   height: 52,
                 ),
@@ -555,22 +693,35 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
   InputDecoration _dropdownDecoration(String label) {
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+      labelStyle: const TextStyle(
+        fontFamily: 'Nunito',
+        fontSize: 13,
+        fontWeight: FontWeight.w700,
+        color: Color(0xFF64748B),
+      ),
+      floatingLabelStyle: const TextStyle(
+        fontFamily: 'Nunito',
+        fontSize: 13,
+        fontWeight: FontWeight.w800,
+        color: Color(0xFF6A4CFF),
+      ),
       filled: true,
       fillColor: Colors.white,
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+        borderSide: const BorderSide(color: Color(0xFFCBD5E1), width: 1.5),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+        borderSide: const BorderSide(color: Color(0xFFCBD5E1), width: 1.5),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.kidsPrimary, width: 2),
+        borderSide: const BorderSide(color: Color(0xFF6A4CFF), width: 2),
       ),
     );
   }
 }
+
+
