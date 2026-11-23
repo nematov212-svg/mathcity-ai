@@ -1,61 +1,53 @@
 import { calculateAge, checkAgeEligibility } from '../src/utils/age.js';
 
-describe('Strict Age Eligibility Engine', () => {
+describe('Universal Age Eligibility Engine (No Age Limits)', () => {
   const refDate = new Date('2026-11-16');
 
-  test('Age 6: Should be eligible for KIDS mode', () => {
-    const dob = new Date('2020-11-16'); // Exactly 6 years old today
+  test('Age 6: Should be eligible', () => {
+    const dob = new Date('2020-11-16');
     const res = checkAgeEligibility(dob, refDate);
     expect(res.eligible).toBe(true);
     expect(res.age).toBe(6);
     expect(res.mode).toBe('KIDS');
   });
 
-  test('Age 12: Should be eligible for KIDS mode', () => {
-    const dob = new Date('2014-05-10'); // 12 years old
+  test('Age 12: Should be eligible', () => {
+    const dob = new Date('2014-05-10');
     const res = checkAgeEligibility(dob, refDate);
     expect(res.eligible).toBe(true);
     expect(res.age).toBe(12);
     expect(res.mode).toBe('KIDS');
   });
 
-  test('Age 13: Should transition to TEEN mode', () => {
-    const dob = new Date('2013-11-10'); // 13 years old
+  test('Age 13: Should be eligible without restriction', () => {
+    const dob = new Date('2013-11-10');
     const res = checkAgeEligibility(dob, refDate);
     expect(res.eligible).toBe(true);
     expect(res.age).toBe(13);
-    expect(res.mode).toBe('TEEN');
+    expect(res.mode).toBe('KIDS');
   });
 
-  test('Age 16: Should be allowed and in TEEN mode', () => {
-    const dob = new Date('2010-02-14'); // 16 years old
+  test('Age 17: Should be eligible without restriction', () => {
+    const dob = new Date('2009-10-01');
     const res = checkAgeEligibility(dob, refDate);
     expect(res.eligible).toBe(true);
-    expect(res.age).toBe(16);
-    expect(res.mode).toBe('TEEN');
-  });
-
-  test('Age 17: MUST be strictly denied student access', () => {
-    const dob = new Date('2009-10-01'); // 17 years old
-    const res = checkAgeEligibility(dob, refDate);
-    expect(res.eligible).toBe(false);
     expect(res.age).toBe(17);
-    expect(res.mode).toBeNull();
-    expect(res.message).toContain('faqat 16 yoshgacha');
+    expect(res.mode).toBe('KIDS');
   });
 
-  test('Age 18: MUST be strictly denied student access', () => {
-    const dob = new Date('2008-01-01'); // 18 years old
+  test('Age 25: Should be eligible without restriction', () => {
+    const dob = new Date('2001-01-01');
     const res = checkAgeEligibility(dob, refDate);
-    expect(res.eligible).toBe(false);
-    expect(res.age).toBe(18);
-    expect(res.mode).toBeNull();
+    expect(res.eligible).toBe(true);
+    expect(res.age).toBe(25);
+    expect(res.mode).toBe('KIDS');
   });
 
-  test('Under 6: Unsupported', () => {
-    const dob = new Date('2022-01-01'); // 4 years old
+  test('Age 5: Should be eligible', () => {
+    const dob = new Date('2021-01-01');
     const res = checkAgeEligibility(dob, refDate);
-    expect(res.eligible).toBe(false);
-    expect(res.age).toBe(4);
+    expect(res.eligible).toBe(true);
+    expect(res.age).toBe(5);
+    expect(res.mode).toBe('KIDS');
   });
 });

@@ -10,6 +10,7 @@
  */
 
 import { evaluate } from 'mathjs';
+import { findTopicExplanation } from './mathTopicsKnowledgeBase.js';
 
 export interface UnderstandingStep {
   stepNumber: number;
@@ -123,13 +124,9 @@ export class MathUnderstandingEngine {
 
     // Replace mathematical symbols with standardized ones
     text = text.replace(/[—–−]/g, '-');
-    text = text.replace(/[×✕x]/gi, (match, offset, str) => {
-      // If 'x' is surrounded by digits or preceded/followed by digits, treat as *
-      const before = str[offset - 1] || '';
-      const after = str[offset + 1] || '';
-      if (/\d/.test(before) && /\d/.test(after)) return '*';
-      return match;
-    });
+    text = text.replace(/[×✕✖·]/g, '*');
+    text = text.replace(/(\d+)\s*[xX]\s*(\d+)/g, '$1 * $2');
+    text = text.replace(/(\d+)\s*karra\s*(\d+)/gi, '$1 * $2');
     text = text.replace(/[÷:]/g, '/');
     text = text.replace(/·/g, '*');
 
@@ -338,6 +335,17 @@ export class MathUnderstandingEngine {
     const normalized = this.normalize(rawQuery);
     const converted = this.parseWordsToNumbers(normalized);
 
+    // 0a. Check conversational greetings / general dialogue
+    const convResult = this.trySolveConversational(rawQuery);
+    if (convResult) return convResult;
+
+    // 0b. If query is a conceptual / pedagogical question, prioritize curriculum topic explanation
+    const isConceptQuery = /\b(qanday|qanaqa|tushuntir|tushuntirib|o[‘'ʻ`]?rgat|nima|qoidasi|haqida|usuli)\b/i.test(rawQuery);
+    if (isConceptQuery) {
+      const topicResult = this.trySolveConceptTopic(rawQuery);
+      if (topicResult) return topicResult;
+    }
+
     // 1. Check if user is asking for EKUB / EKUK (GCD / LCM)
     const gcdLcmResult = this.trySolveGcdLcm(converted, rawQuery);
     if (gcdLcmResult) return gcdLcmResult;
@@ -370,6 +378,10 @@ export class MathUnderstandingEngine {
     // 8. General mathematical expression evaluation via mathjs
     const exprResult = this.trySolveDirectExpression(converted, rawQuery);
     if (exprResult) return exprResult;
+
+    // 8b. Concept topic fallback if not caught by prior solvers
+    const fallbackTopic = this.trySolveConceptTopic(rawQuery);
+    if (fallbackTopic) return fallbackTopic;
 
     // 9. If not strictly recognized, generate closest helpful mathematical guess
     return this.generateClosestGuess(rawQuery, converted);
@@ -1057,19 +1069,121 @@ export class MathUnderstandingEngine {
     }
 
     return {
-      success: false,
+      success: true,
       isMathematical: false,
       understoodQuery: rawQuery,
-      shortAnswer: 'Savol noaniq',
+      shortAnswer: 'Matematik yordamchi',
       formulaLatex: '',
       suggestedActions: [
+        '2 × 5 nechchi bo‘ladi?',
         '5 ga 6 ni qo‘shib ber',
-        '24 va 36 ning EKUB',
-        '10 dan 4 ni ayir',
-        '15 ning 20 foizi'
+        'Kasrlarni qanday qo‘shamiz?',
+        'Foizlarni tushuntirib ber',
+        '2x + 6 = 16',
       ],
-      steps: [],
-      reply: 'Savolni to‘liq tushunmadim. Men matematika ustoziman! Iltimos, namunadagidek savol bering:\n- "5 ga 6 ni qo‘shib ber"\n- "10 dan 4 ni ayir"\n- "15 ning 20 foizi"\n- "2x + 6 = 16"',
+      steps: [
+        {
+          stepNumber: 1,
+          title: 'Savol qabul qilindi',
+          explanation: 'Men matematika ustoziman. Har qanday arifmetik misollar, tenglamalar, foizlar va kasrlarni qadam-baqadam yechib beraman.',
+          latex: 'a + b = c',
+        },
+      ],
+      reply: `Men matematika ustoziman! Menga aniq misol yoki ifodani yozing (masalan: "2 × 5", "5 ga 6 ni qo‘shib ber", "Kasrlarni qanday qo‘shamiz?", "15 ning 20 foizi", "2x + 6 = 16") yoki darslikdagi misol rasmini yuboring — darhol qadam-baqadam yechib beraman!`,
+    };
+  }
+
+  private static trySolveConversational(raw: string): UnderstandingResult | null {
+    const clean = raw.toLowerCase().trim().replace(/['ʻʼ`]/g, "'");
+    const isGreeting = /\b(salom|assalomu\s+alaykum|assalom|qalaysiz|qandaysiz|kimsan|kim\s+siz|ziyo|rahmat|tashakkur|nima\s+qila\s+olasan)\b/i.test(clean);
+    if (!isGreeting) return null;
+
+    let greetingText = '';
+    if (clean.includes('rahmat') || clean.includes('tashakkur')) {
+      greetingText = 'Arzimaydi! Doimo bilim olishingizga yordam berishdan xursandman. Qandaydir yangi misol yoki savolingiz bo‘lsa, marhamat, so‘rayvering!';
+    } else {
+      greetingText = 'Assalomu alaykum! Men MathCity AI platformasidagi shaxsiy AI Ustozingiz Ziyoman.\n\nSizga har qanday matematik savol, misol va masalalarni qadam-baqadam yechishda 24/7 yordam beraman!\n\nMenga istalgan savol yoki misolni yuboring:\n• "2 × 5 nechchi bo‘ladi?"\n• "5 ga 6 ni qo‘shib ber"\n• "Kasrlarni qanday qo‘shamiz?"\n• "Foizlarni tushuntirib ber"\n• "2x + 6 = 16 tenglamasini yech"';
+    }
+
+    return {
+      success: true,
+      isMathematical: true,
+      understoodQuery: raw,
+      shortAnswer: 'AI Ustoz Ziyo tayyor!',
+      formulaLatex: '',
+      steps: [
+        {
+          stepNumber: 1,
+          title: 'AI Ustoz bilan muloqot',
+          explanation: greetingText,
+          latex: '\\text{MathCity AI Ustoz}',
+        },
+      ],
+      suggestedActions: [
+        '2 × 5 nechchi bo‘ladi?',
+        '5 ga 6 ni qo‘shib ber',
+        'Kasrlarni qanday qo‘shamiz?',
+        'Foizlarni tushuntirib ber',
+      ],
+      reply: greetingText,
+    };
+  }
+
+  private static trySolveConceptTopic(raw: string): UnderstandingResult | null {
+    const topic = findTopicExplanation(raw);
+    if (!topic) return null;
+
+    const ex = topic.examples[0];
+    const steps: UnderstandingStep[] = [
+      {
+        stepNumber: 1,
+        title: 'Tushuncha va mohiyat',
+        explanation: topic.theory,
+        latex: topic.formulaLatex,
+      },
+      {
+        stepNumber: 2,
+        title: 'Asosiy qoida',
+        explanation: `${topic.ruleName}: amallarni aniq ketma-ketlikda bajaramiz.`,
+        latex: ex ? ex.formulaLatex : topic.formulaLatex,
+      },
+    ];
+
+    if (ex) {
+      steps.push({
+        stepNumber: 3,
+        title: `Ishlangan misol: ${ex.problem}`,
+        explanation: ex.calculation.join('\n'),
+        latex: ex.formulaLatex,
+      });
+      steps.push({
+        stepNumber: 4,
+        title: 'Natijani tekshirish',
+        explanation: ex.verification,
+        latex: `\\text{Javob: } ${ex.answer}`,
+      });
+    }
+
+    const reply = `**${topic.title}**\n\n` +
+      `💡 **Qisqa javob:** ${topic.ruleName}\n\n` +
+      `📖 **Tushuntirish:** ${topic.theory}\n\n` +
+      (ex ? `🔢 **Ishlangan misol:** ${ex.problem}\n${ex.calculation.join('\n')}\nNatija: **${ex.answer}**\n\n` : '') +
+      (ex ? `✅ **Tekshirish:** ${ex.verification}\n\n` : '') +
+      `⚠️ **Keng tarqalgan xato:** ${topic.commonMistake}`;
+
+    return {
+      success: true,
+      isMathematical: true,
+      understoodQuery: raw,
+      shortAnswer: ex ? ex.answer : topic.ruleName,
+      formulaLatex: ex ? ex.formulaLatex : topic.formulaLatex,
+      steps,
+      suggestedActions: [
+        'O‘xshash misol ber',
+        'Boshqacha tushuntir',
+        'Tushundim, rahmat!',
+      ],
+      reply,
     };
   }
 

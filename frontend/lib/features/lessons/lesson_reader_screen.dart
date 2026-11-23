@@ -1,84 +1,50 @@
 import 'dart:io' show Platform;
+import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/coin_icon.dart';
-import '../../core/widgets/custom_button.dart';
+import '../../core/widgets/coin_badge.dart';
 import '../../core/network/api_client.dart';
 import '../../shared/models/lesson_model.dart';
+import '../../shared/providers/student_provider.dart';
+import 'widgets/math_markdown_view.dart';
 
-class LessonReaderScreen extends StatefulWidget {
+class LessonReaderScreen extends ConsumerStatefulWidget {
   final String lessonId;
 
   const LessonReaderScreen({super.key, required this.lessonId});
 
   @override
-  State<LessonReaderScreen> createState() => _LessonReaderScreenState();
+  ConsumerState<LessonReaderScreen> createState() => _LessonReaderScreenState();
 }
 
-class _LessonReaderScreenState extends State<LessonReaderScreen> {
+class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
   LessonModel? _lesson;
-  String? _firstSectionId;
-  String? _firstQuestionId;
   bool _isLoading = true;
+  int _currentStep = 0; // 0: Kirish, 1: Tushuntirish, 2: Misollar, 3: Mashq, 4: Mini-test
 
-  AudioPlayer? _audioPlayer;
-  bool _isPlayingAudio = false;
-  Duration _audioPos = Duration.zero;
-  Duration _audioDur = Duration.zero;
-  double _playbackSpeed = 1.0;
+  // Quiz state
+  List<Map<String, dynamic>> _quizQuestions = [];
+  final Map<int, String> _selectedAnswers = {};
+  int _correctCount = 0;
+  bool _quizSubmitted = false;
+  bool _isSavingProgress = false;
+
+  final List<String> _stepTitles = [
+    'Kirish',
+    'Tushuntirish',
+    'Misollar',
+    'Mashqlar',
+    'Mini-test',
+  ];
 
   @override
   void initState() {
     super.initState();
     _fetchLesson();
-  }
-
-  @override
-  void dispose() {
-    _audioPlayer?.dispose();
-    super.dispose();
-  }
-
-  void _initAudioPlayer(String url) {
-    if (_audioPlayer != null) return;
-    _audioPlayer = AudioPlayer();
-    _audioPlayer!.onDurationChanged.listen((d) {
-      if (mounted) setState(() => _audioDur = d);
-    });
-    _audioPlayer!.onPositionChanged.listen((p) {
-      if (mounted) setState(() => _audioPos = p);
-    });
-    _audioPlayer!.onPlayerComplete.listen((_) {
-      if (mounted) {
-        setState(() {
-          _isPlayingAudio = false;
-          _audioPos = Duration.zero;
-        });
-      }
-    });
-  }
-
-  void _toggleAudio(String url) async {
-    _initAudioPlayer(url);
-    if (_isPlayingAudio) {
-      await _audioPlayer?.pause();
-      setState(() => _isPlayingAudio = false);
-    } else {
-      await _audioPlayer?.play(UrlSource(url));
-      setState(() => _isPlayingAudio = true);
-    }
-  }
-
-  void _cycleSpeed() async {
-    final speeds = [1.0, 1.25, 1.5, 2.0];
-    final nextIdx = (speeds.indexOf(_playbackSpeed) + 1) % speeds.length;
-    _playbackSpeed = speeds[nextIdx];
-    await _audioPlayer?.setPlaybackRate(_playbackSpeed);
-    setState(() {});
   }
 
   void _fetchLesson() async {
@@ -93,572 +59,900 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
       if (res.data['success'] == true) {
         final data = res.data['data'];
         final lesson = LessonModel.fromJson(data);
-        String? secId;
+
+        // Extract quiz questions from sections if available
+        final questions = <Map<String, dynamic>>[];
         if (data['sections'] != null && (data['sections'] as List).isNotEmpty) {
-          secId = data['sections'][0]['id'];
+          for (final sec in data['sections']) {
+            if (sec['questions'] != null && (sec['questions'] as List).isNotEmpty) {
+              for (final q in sec['questions']) {
+                questions.add({
+                  'id': q['id'],
+                  'prompt': q['prompt'] ?? '',
+                  'options': List<String>.from(q['options'] ?? ['A', 'B', 'C', 'D']),
+                  'correctAnswer': q['correctAnswer'] ?? '',
+                  'explanation': q['explanation'] ?? '',
+                });
+              }
+            }
+          }
         }
-        setState(() {
-          _lesson = lesson;
-          _firstSectionId = secId;
-          _firstQuestionId = 'q-${lesson.id}-01';
-          _isLoading = false;
-        });
-        return;
+
+        if (questions.isEmpty) {
+          questions.addAll(_generateFallbackQuiz(lesson));
+        }
+
+        if (mounted) {
+          setState(() {
+            _lesson = lesson;
+            _quizQuestions = questions;
+            _isLoading = false;
+          });
+          return;
+        }
       }
-    } catch (_) {
-      // Fallback
-    }
+    } catch (_) {}
 
     _loadFallbackLesson();
   }
 
   void _loadFallbackLesson() {
-    // High-quality fallback for Grades 4-7
-    if (widget.lessonId.contains('g5') || widget.lessonId.contains('k4')) {
-      _lesson = LessonModel(
-        id: widget.lessonId,
-        courseId: 'course-g5-math',
-        grade: 5,
-        mode: 'KIDS',
-        chapterTitle: 'Oddiy kasrlar',
-        title: 'Kasr nima? Surat va maxraj tushunchasi',
-        topicKey: 'fractions_intro',
-        description: 'Kasrning ma’nosi, butunning teng bo‘laklari va doiraviy tasvir.',
-        formulaLatex: r'\frac{1}{4} = \text{to‘rtdan bir}',
-        contentMd: 'Kasr butunning bir yoki bir nechta teng bo‘laklarini ifodalaydi.',
-        rewardCoins: 15,
-        rewardXP: 100,
-        orderIndex: 1,
-        sectionCount: 1,
-        isCompleted: false,
-      );
-    } else if (widget.lessonId.contains('g6')) {
-      _lesson = LessonModel(
-        id: widget.lessonId,
-        courseId: 'course-g6-math',
-        grade: 6,
-        mode: 'KIDS',
-        chapterTitle: 'Foizlar',
-        title: 'Foizlar tushunchasi va sonning foizini topish',
-        topicKey: 'percentages_intro_6th',
-        description: 'Yuzdan bir qism — foiz ma’nosi, formulalar va hisoblash.',
-        formulaLatex: r'1\% = \frac{1}{100} = 0.01',
-        contentMd: 'Har qanday sonning yuzdan bir qismi foiz deyiladi.',
-        rewardCoins: 15,
-        rewardXP: 110,
-        orderIndex: 2,
-        sectionCount: 1,
-        isCompleted: false,
-      );
-    } else {
-      _lesson = LessonModel(
-        id: widget.lessonId,
-        courseId: 'course-g7-algebra',
-        grade: 7,
-        mode: 'TEEN',
-        chapterTitle: 'Chiziqli tenglamalar',
-        title: 'Chiziqli bir noma’lumli tenglamalar',
-        topicKey: 'linear_equations_7th',
-        description: 'ax + b = c ko‘rinishidagi tenglamalarni yechish bosqichlari.',
-        formulaLatex: r'ax + b = c \implies x = \frac{c - b}{a}',
-        contentMd: 'Tenglama — noma’lum son qatnashgan tenglikdir.',
-        rewardCoins: 20,
-        rewardXP: 120,
-        orderIndex: 3,
-        sectionCount: 1,
-        isCompleted: false,
-      );
-    }
+    final lesson = LessonModel(
+      id: widget.lessonId,
+      courseId: 'course-g4-math',
+      grade: 4,
+      mode: 'KIDS',
+      chapterTitle: 'Kasrlar va Bo‘laklar',
+      title: 'Oddiy kasrlar: Butunning bo‘laklari',
+      topicKey: 'fractions_intro',
+      description: 'Kasr nima? Surat va maxraj ma’nosi hamda qismlarga ajratish.',
+      formulaLatex: r'\frac{1}{4} = \text{to‘rtdan bir}',
+      contentMd: 'Kasr butunning bir yoki bir nechta teng bo‘laklarini ifodalaydi. Yuqoridagi son surat, pastdagi son esa maxraj deb ataladi.',
+      rewardCoins: 12,
+      rewardXP: 100,
+      orderIndex: 1,
+      sectionCount: 1,
+      isCompleted: false,
+    );
 
-    _firstSectionId = 'sec-${widget.lessonId}-s1';
-    _firstQuestionId = 'q-${widget.lessonId}-01';
-    setState(() => _isLoading = false);
+    if (mounted) {
+      setState(() {
+        _lesson = lesson;
+        _quizQuestions = _generateFallbackQuiz(lesson);
+        _isLoading = false;
+      });
+    }
+  }
+
+  List<Map<String, dynamic>> _generateFallbackQuiz(LessonModel lesson) {
+    return [
+      {
+        'id': 'q1',
+        'prompt': 'Kasrning chiziq ustidagi soni nima deb ataladi?',
+        'options': ['Surat', 'Maxraj', 'Bo‘linuvchi', 'Ko‘paytuvchi'],
+        'correctAnswer': 'Surat',
+        'explanation': 'Kasr chizig‘i ustidagi son surat bo‘lib, olingan teng bo‘laklar sonini bildiradi.',
+      },
+      {
+        'id': 'q2',
+        'prompt': 'Kasrning maxraji nimani bildiradi?',
+        'options': ['Butun nechta teng bo‘lakka bo‘linganini', 'Nechta qism olinganini', 'Yig‘indini', 'Ko‘paytmani'],
+        'correctAnswer': 'Butun nechta teng bo‘lakka bo‘linganini',
+        'explanation': 'Maxraj butun jami nechta teng qismga bo‘linganini ko‘rsatadi.',
+      },
+      {
+        'id': 'q3',
+        'prompt': 'Pitsaning 4 ta teng bo‘lagidan 1 tasini yesak, qancha qismi qoladi?',
+        'options': ['3/4', '1/4', '2/4', '4/4'],
+        'correctAnswer': '3/4',
+        'explanation': '4 ta bo‘lakdan 1 tasi yeyilsa, 3 ta bo‘lak qoladi, ya’ni 3/4 qismi.',
+      },
+    ];
+  }
+
+  Future<void> _completeLesson() async {
+    if (_lesson == null || _isSavingProgress) return;
+    setState(() => _isSavingProgress = true);
+
+    try {
+      final res = await ApiClient().dio.post('/lessons/${_lesson!.id}/complete');
+      if (res.data['success'] == true) {
+        final data = res.data['data'];
+        final isFirst = data['isFirstCompletion'] == true;
+        final coins = data['coinsAwarded'] as int? ?? (isFirst ? _lesson!.rewardCoins : 0);
+        final xp = data['xpAwarded'] as int? ?? (isFirst ? _lesson!.rewardXP : 0);
+
+        ref.read(studentProvider.notifier).markLessonCompleted(
+          lessonId: _lesson!.id,
+          rewardCoins: coins,
+          rewardXP: xp,
+        );
+
+        if (!mounted) return;
+        _showSuccessDialog(isFirst, coins, xp);
+        return;
+      }
+    } catch (_) {}
+
+    // Offline / fallback completion
+    ref.read(studentProvider.notifier).markLessonCompleted(
+      lessonId: _lesson!.id,
+      rewardCoins: _lesson!.rewardCoins,
+      rewardXP: _lesson!.rewardXP,
+    );
+
+    if (mounted) {
+      _showSuccessDialog(true, _lesson!.rewardCoins, _lesson!.rewardXP);
+    }
+  }
+
+  void _showSuccessDialog(bool isFirst, int coins, int xp) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+          contentPadding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 72,
+                height: 72,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFECFDF5),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.stars_rounded, color: Color(0xFF10B981), size: 44),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Dars muvaffaqiyatli yakunlandi!',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                isFirst
+                  ? 'Siz ${_quizQuestions.length} ta savoldan $_correctCount tasiga to‘g‘ri javob berdingiz va yutuqlarni qo‘lga kiritdingiz!'
+                  : 'Siz ${_quizQuestions.length} ta savoldan $_correctCount tasiga to‘g‘ri javob berdingiz.',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 13, color: Colors.grey),
+              ),
+              const SizedBox(height: 18),
+              if (isFirst)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF7ED),
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: const Color(0xFFFED7AA)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.bolt_rounded, color: Color(0xFFD97706), size: 16),
+                          const SizedBox(width: 4),
+                          Text('+$xp XP', style: const TextStyle(color: Color(0xFFD97706), fontWeight: FontWeight.w900)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFEFCE8),
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: const Color(0xFFFEF08A)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.monetization_on_rounded, color: Color(0xFFCA8A04), size: 16),
+                          const SizedBox(width: 4),
+                          Text('+$coins', style: const TextStyle(color: Color(0xFFCA8A04), fontWeight: FontWeight.w900)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 44,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    context.pop(); // Go back to lesson list or map
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF6C47FF),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  ),
+                  child: const Text('Darslar ro‘yxatiga qaytish', style: TextStyle(fontWeight: FontWeight.w800)),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final student = ref.watch(studentProvider).student;
+    final coins = student?.coinBalance ?? 0;
 
-    if (_isLoading || _lesson == null) {
+    if (_isLoading) {
       return Scaffold(
         backgroundColor: colors.bg,
-        body: Center(child: CircularProgressIndicator(color: colors.primary)),
+        body: Center(
+          child: CircularProgressIndicator(color: colors.primary),
+        ),
       );
     }
 
     final lesson = _lesson!;
-    final isFraction = lesson.topicKey.contains('fraction') || lesson.title.toLowerCase().contains('kasr');
-    final isPercentage = lesson.topicKey.contains('percentage') || lesson.title.toLowerCase().contains('foiz');
-    final isEquation = lesson.topicKey.contains('equation') || lesson.title.toLowerCase().contains('tenglama');
 
     return Scaffold(
       backgroundColor: colors.bg,
       appBar: AppBar(
         backgroundColor: colors.card,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded, color: colors.ink),
-          onPressed: () {
-            if (context.canPop()) {
-              context.pop();
-            } else {
-              context.go('/kids/lessons');
-            }
-          },
-        ),
         title: Text(
-          '${lesson.grade}-sinf darsi',
+          lesson.title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            fontWeight: FontWeight.w800,
-            fontSize: 18,
+            fontWeight: FontWeight.w900,
+            fontSize: 16,
             color: colors.ink,
           ),
         ),
         actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFF5DF),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFFFE8B8)),
-            ),
-            child: Row(
-              children: [
-                const CoinIcon(size: 16),
-                const SizedBox(width: 5),
-                Text('+${lesson.rewardCoins}', style: const TextStyle(color: Color(0xFF78350F), fontWeight: FontWeight.bold, fontSize: 12)),
-              ],
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Center(
+              child: CoinBadge(count: coins, size: 24),
             ),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Media Gallery if available
-            if (lesson.coverImage != null || lesson.gallery.isNotEmpty) ...[
-              _buildMediaGallery(lesson, colors),
-              const SizedBox(height: 16),
-            ],
+            // Top Step Progress Indicator (1 of 5)
+            _buildStepIndicator(colors),
 
-            // Video Lesson Card if available
-            if (lesson.videoUrl != null && lesson.videoUrl!.isNotEmpty) ...[
-              _buildVideoPlayerCard(lesson, colors),
-              const SizedBox(height: 16),
-            ],
-
-            // Audio Player Card if available
-            if (lesson.audioUrl != null && lesson.audioUrl!.isNotEmpty) ...[
-              _buildAudioPlayerCard(lesson, colors),
-              const SizedBox(height: 16),
-            ],
-
-            // Lesson Header Tag & Title
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: colors.primary.withOpacity(0.12),
-                borderRadius: BorderRadius.circular(12),
+            // Step Content Area
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                child: _buildCurrentStepContent(colors, lesson),
               ),
-              child: Text(
-                '${lesson.grade}-SINF • ${(lesson.chapterTitle ?? 'MATEMATIKA').toUpperCase()}',
+            ),
+
+            // Bottom Navigation Bar (Orqaga / Keyingi)
+            _buildBottomNav(colors),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStepIndicator(AppThemeColors colors) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      decoration: BoxDecoration(
+        color: colors.card,
+        border: Border(bottom: BorderSide(color: colors.border, width: 1)),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${_currentStep + 1}-qadam: ${_stepTitles[_currentStep]}',
                 style: TextStyle(
-                  color: colors.primary,
+                  fontSize: 13,
                   fontWeight: FontWeight.w800,
-                  fontSize: 12,
-                  letterSpacing: 1.1,
+                  color: colors.primary,
                 ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              lesson.title,
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w900,
-                color: colors.ink,
-                height: 1.3,
+              Text(
+                '${_currentStep + 1} / ${_stepTitles.length}',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: colors.muted,
+                ),
               ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: (_currentStep + 1) / _stepTitles.length,
+              backgroundColor: colors.border,
+              valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
+              minHeight: 6,
             ),
-            const SizedBox(height: 10),
-            Text(
-              lesson.description,
-              style: TextStyle(
-                fontSize: 14,
-                color: colors.muted,
-                height: 1.4,
-              ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCurrentStepContent(AppThemeColors colors, LessonModel lesson) {
+    switch (_currentStep) {
+      case 0:
+        return _buildStepKirish(colors, lesson);
+      case 1:
+        return _buildStepTushuntirish(colors, lesson);
+      case 2:
+        return _buildStepMisollar(colors, lesson);
+      case 3:
+        return _buildStepMashq(colors, lesson);
+      case 4:
+        return _buildStepMiniTest(colors, lesson);
+      default:
+        return const SizedBox();
+    }
+  }
+
+  Widget _buildStepKirish(AppThemeColors colors, LessonModel lesson) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Grade & Chapter Pill
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            color: colors.primary.withOpacity(0.12),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            '${lesson.grade}-SINF • ${(lesson.chapterTitle ?? 'MATEMATIKA').toUpperCase()}',
+            style: TextStyle(
+              color: colors.primary,
+              fontWeight: FontWeight.w800,
+              fontSize: 12,
             ),
-            const SizedBox(height: 20),
+          ),
+        ),
+        const SizedBox(height: 14),
 
-            // Visual Diagram Component based on Topic
-            _buildVisualDiagram(isFraction, isPercentage, isEquation),
-            const SizedBox(height: 24),
+        // Title
+        Text(
+          lesson.title,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w900,
+            color: colors.ink,
+            height: 1.3,
+          ),
+        ),
+        const SizedBox(height: 8),
 
-            // 1. Introduction Card
-            _buildContentCard(
-              title: '1. Kirish va Dars Maqsadi',
-              icon: Icons.menu_book_rounded,
-              iconColor: const Color(0xFF6C5CE7),
-              content: lesson.contentMd ??
-                  'Ushbu mavzuda yangi matematik tushunchalar va qonuniyatlar bilan tanishasiz. Bosqichma-bosqich ishlangan misollarni diqqat bilan o‘rganing.',
-            ),
-            const SizedBox(height: 16),
+        // Description
+        Text(
+          lesson.description,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: colors.muted,
+            height: 1.45,
+          ),
+        ),
+        const SizedBox(height: 20),
 
-            // 2. Worked Example
-            _buildWorkedExampleCard(isFraction, isPercentage, isEquation),
-            const SizedBox(height: 16),
+        // Visual Illustration Card
+        _buildVisualDiagram(lesson),
+        const SizedBox(height: 20),
 
-            // 3. Common Mistake Explanation
-            _buildCommonMistakeCard(isFraction, isPercentage, isEquation),
-            const SizedBox(height: 16),
-
-            // 4. AI Ustoz Tip
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1B2824) : const Color(0xFFF2FBF6),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0xFFD3F4E4).withOpacity(0.3)),
-              ),
-              child: const Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        // Clean Markdown Section
+        Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: colors.card,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: colors.border),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Icon(Icons.smart_toy_rounded, color: AppColors.kidsGreen, size: 28),
-                  SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
+                  Icon(Icons.explore_rounded, color: colors.primary, size: 22),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Dars maqsadi',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: colors.ink,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              MathMarkdownView(
+                content: lesson.contentMd ??
+                    'Ushbu mavzuda siz yangi matematik tushunchalar bilan tanishasiz. Keyingi bosqichlarda formulalar va ishlangan misollarni o‘rganamiz.',
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStepTushuntirish(AppThemeColors colors, LessonModel lesson) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Formula Banner if available
+        if (lesson.formulaLatex != null && lesson.formulaLatex!.isNotEmpty) ...[
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [colors.primary.withOpacity(0.12), colors.primary.withOpacity(0.04)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: colors.primary.withOpacity(0.3)),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Asosiy Formula / Qoida',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    color: colors.primary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  lesson.formulaLatex!,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    color: colors.ink,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 18),
+        ],
+
+        // Detailed Explanation Card
+        Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: colors.card,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: colors.border),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.menu_book_rounded, color: colors.primary, size: 22),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Nazariy tushunchalar',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: colors.ink),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              MathMarkdownView(
+                content: '''### Qoidaning mohiyati
+Har qanday matematik amal va formula aniq mantiqqa tayanadi.
+Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimroq.
+
+- Diqqat bilan shartni o‘qing.
+- Amallar tartibiga e’tibor bering.
+- Natijani tekshirishni unutmang.''',
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStepMisollar(AppThemeColors colors, LessonModel lesson) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.calculate_rounded, color: colors.primary, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              'Ishlangan misollar',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: colors.ink),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+
+        // Example 1
+        _buildExampleCard(
+          number: '1',
+          title: 'Asosiy misol',
+          problem: 'Berilgan qoida asosida hisoblash amalini qadam-baqadam bajaring.',
+          solution: '1-qadam: Formulani yozamiz.\n2-qadam: Qiymatlarni o‘rniga qo‘yamiz.\n3-qadam: Yakuniy to‘g‘ri natijani olamiz.',
+          colors: colors,
+        ),
+        const SizedBox(height: 14),
+
+        // Example 2
+        _buildExampleCard(
+          number: '2',
+          title: 'Amaliy masala',
+          problem: 'Kundalik hayotda ushbu mavzu qanday qo‘llaniladi?',
+          solution: 'Tushunchani real narsalar (taqsimot, o‘lchash, hisob) bilan solishtirib yechim topamiz.',
+          colors: colors,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildExampleCard({
+    required String number,
+    required String title,
+    required String problem,
+    required String solution,
+    required AppThemeColors colors,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: colors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: colors.primary,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Misol $number',
+                  style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: colors.ink),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            problem,
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colors.bg,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: colors.border.withOpacity(0.5)),
+            ),
+            child: Text(
+              solution,
+              style: TextStyle(fontSize: 12, height: 1.45, color: colors.muted),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStepMashq(AppThemeColors colors, LessonModel lesson) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Common Mistakes Card
+        Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFEF2F2),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0xFFFCA5A5).withOpacity(0.4)),
+          ),
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.warning_amber_rounded, color: Color(0xFFEF4444), size: 22),
+                  SizedBox(width: 8),
+                  Text(
+                    'Keng tarqalgan xatolar',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFFB91C1C),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Text(
+                '• Amallar tartibini buzish (ko‘paytirish/bo‘lishni qo‘shish/ayirishdan keyin bajarish).\n'
+                '• Ishoralarni unutib qoldirish (minus va plyus qoidalari).\n'
+                '• Masala shartini oxirigacha diqqat bilan o‘qimaslik.',
+                style: TextStyle(fontSize: 13, height: 1.45, color: Color(0xFF991B1B)),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // AI Ustoz Tip Card
+        Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0FDF4),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0xFF86EFAC).withOpacity(0.4)),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.smart_toy_rounded, color: Color(0xFF16A34A), size: 28),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'AI Ustoz maslahati',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF15803D),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Keyingi bosqichda siz 3–5 ta mini-test savollariga javob berasiz. '
+                      'Har bir to‘g‘ri javob uchun sizga XP va tangalar beriladi. Tayyormisiz?',
+                      style: TextStyle(fontSize: 13, height: 1.4, color: const Color(0xFF166534).withOpacity(0.9)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStepMiniTest(AppThemeColors colors, LessonModel lesson) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.quiz_rounded, color: colors.primary, size: 24),
+                const SizedBox(width: 8),
+                Text(
+                  'Nazorat mini-testi',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: colors.ink),
+                ),
+              ],
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: colors.primary.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '${_quizQuestions.length} ta savol',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: colors.primary),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+
+        // Render each question card
+        ..._quizQuestions.asMap().entries.map((entry) {
+          final qIdx = entry.key;
+          final q = entry.value;
+          final prompt = q['prompt'] as String;
+          final options = q['options'] as List<String>;
+          final correctAns = q['correctAnswer'] as String;
+          final explanation = q['explanation'] as String;
+          final userSelected = _selectedAnswers[qIdx];
+
+          return Container(
+            margin: const EdgeInsets.only(bottom: 18),
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: colors.card,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: colors.border),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${qIdx + 1}. $prompt',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                    color: colors.ink,
+                    height: 1.35,
+                  ),
+                ),
+                const SizedBox(height: 14),
+
+                // Option Cards
+                ...options.map((opt) {
+                  final isSelected = userSelected == opt;
+                  final isCorrect = opt == correctAns;
+                  final showResult = _quizSubmitted;
+
+                  Color tileColor = colors.bg;
+                  Color borderColor = colors.border;
+                  Color textColor = colors.ink;
+
+                  if (showResult) {
+                    if (isCorrect) {
+                      tileColor = const Color(0xFFECFDF5);
+                      borderColor = const Color(0xFF10B981);
+                      textColor = const Color(0xFF047857);
+                    } else if (isSelected && !isCorrect) {
+                      tileColor = const Color(0xFFFEF2F2);
+                      borderColor = const Color(0xFFEF4444);
+                      textColor = const Color(0xFFB91C1C);
+                    }
+                  } else if (isSelected) {
+                    tileColor = colors.primary.withOpacity(0.1);
+                    borderColor = colors.primary;
+                    textColor = colors.primary;
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: showResult
+                          ? null
+                          : () {
+                              setState(() {
+                                _selectedAnswers[qIdx] = opt;
+                              });
+                            },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: tileColor,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: borderColor, width: 1.5),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 22,
+                              height: 22,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: isSelected ? borderColor : Colors.transparent,
+                                border: Border.all(color: borderColor, width: 1.5),
+                              ),
+                              child: isSelected
+                                  ? const Icon(Icons.check, size: 14, color: Colors.white)
+                                  : null,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                opt,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                                  color: textColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+
+                if (_quizSubmitted) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: colors.bg,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'AI Ustozdan maslahat',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.kidsGreen,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Tushunmagan joyingiz bo‘lsa, istalgan paytda AI Ustozga savol bering yoki formulani rasmga olib jo‘nating!',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF13533E),
-                            height: 1.4,
+                        const Icon(Icons.info_outline_rounded, size: 16, color: Colors.grey),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            explanation,
+                            style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.3),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ],
-              ),
+              ],
             ),
-            const SizedBox(height: 32),
-
-            // Start Exercises CTA
-            CustomButton(
-              text: 'Mashqlarga o‘tish',
-              backgroundColor: colors.primary,
-              borderRadius: 20,
-              icon: const Icon(Icons.arrow_forward_rounded, color: Colors.white),
-              onPressed: () {
-                final qId = _firstQuestionId ?? 'q-math-01';
-                final secId = _firstSectionId ?? 'sec-g5-01-s1';
-                context.push('/kids/exercise/$qId?lessonId=${lesson.id}&sectionId=$secId');
-              },
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMediaGallery(LessonModel lesson, AppThemeColors colors) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (lesson.coverImage != null && lesson.coverImage!.isNotEmpty)
-          ClipRRect(
-            borderRadius: BorderRadius.circular(22),
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Image.network(
-                lesson.coverImage!,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  color: colors.card,
-                  child: Center(
-                    child: Icon(Icons.image_not_supported_rounded, color: colors.muted, size: 40),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        if (lesson.gallery.isNotEmpty) ...[
-          const SizedBox(height: 10),
-          SizedBox(
-            height: 72,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: lesson.gallery.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 8),
-              itemBuilder: (context, idx) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(14),
-                  child: AspectRatio(
-                    aspectRatio: 4 / 3,
-                    child: Image.network(
-                      lesson.gallery[idx],
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(color: colors.card),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+          );
+        }),
       ],
     );
   }
 
-  Widget _buildVideoPlayerCard(LessonModel lesson, AppThemeColors colors) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E1B4B),
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF6C47FF).withOpacity(0.2),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF7C3AED), Color(0xFF6366F1)],
-              ),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: const Center(
-              child: Icon(Icons.play_arrow_rounded, color: Colors.white, size: 32),
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Video darslik',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Interaktiv video tushuntirishni tomosha qiling',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white.withOpacity(0.8),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildVisualDiagram(LessonModel lesson) {
+    final title = lesson.title.toLowerCase();
+    final isFraction = title.contains('kasr');
+    final isPercentage = title.contains('foiz');
 
-  Widget _buildAudioPlayerCard(LessonModel lesson, AppThemeColors colors) {
-    final posStr = _formatDuration(_audioPos);
-    final durStr = _formatDuration(_audioDur);
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: colors.card,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: colors.primary.withOpacity(0.3), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: colors.primary.withOpacity(0.06),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              InkWell(
-                onTap: () => _toggleAudio(lesson.audioUrl!),
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: colors.primary,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      _isPlayingAudio ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                      color: Colors.white,
-                      size: 26,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Ovozli tushuntirish',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        color: colors.ink,
-                      ),
-                    ),
-                    Text(
-                      '$posStr / $durStr',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: colors.muted,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: _cycleSpeed,
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: colors.primary.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    '${_playbackSpeed}x',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
-                      color: colors.primary,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          if (_audioDur.inSeconds > 0)
-            SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                trackHeight: 3,
-                thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-                overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
-                activeTrackColor: colors.primary,
-                inactiveTrackColor: colors.border,
-                thumbColor: colors.primary,
-              ),
-              child: Slider(
-                value: _audioPos.inSeconds.toDouble().clamp(0.0, _audioDur.inSeconds.toDouble()),
-                max: _audioDur.inSeconds.toDouble(),
-                onChanged: (val) {
-                  _audioPlayer?.seek(Duration(seconds: val.toInt()));
-                },
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  String _formatDuration(Duration d) {
-    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return '$m:$s';
-  }
-
-  Widget _buildVisualDiagram(bool isFraction, bool isPercentage, bool isEquation) {
     if (isFraction) {
       return Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: AppColors.kidsBorder, width: 1.5),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.kidsDarkText.withOpacity(0.04),
-              blurRadius: 18,
-              offset: const Offset(0, 8),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: AppColors.kidsBorder, width: 1.2),
         ),
         child: Column(
           children: [
             SizedBox(
-              width: 140,
-              height: 140,
+              width: 120,
+              height: 120,
               child: CustomPaint(
                 painter: FractionPiePainter(highlightedSlices: 1, totalSlices: 4),
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF3F0FF),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFFDED6FF)),
-                  ),
-                  child: const Column(
-                    children: [
-                      Text('1', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.kidsPrimary)),
-                      SizedBox(width: 32, child: Divider(color: AppColors.kidsPrimary, thickness: 2.5, height: 8)),
-                      Text('4', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.kidsDarkText)),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('1 — Surat (bo‘yalgan qism)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.kidsPrimary)),
-                    SizedBox(height: 4),
-                    Text('4 — Maxraj (jami teng bo‘laklar)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.kidsDarkText)),
-                  ],
-                ),
-              ],
+            const SizedBox(height: 14),
+            const Text(
+              '1/4 — To‘rtdan bir qism (chorak)',
+              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.kidsDarkText),
             ),
           ],
         ),
@@ -666,32 +960,30 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
     } else if (isPercentage) {
       return Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: AppColors.kidsBorder, width: 1.5),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: AppColors.kidsBorder, width: 1.2),
         ),
         child: Column(
           children: [
-            const Text('Foiz shkalasi: 100% — Butun', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-            const SizedBox(height: 16),
+            const Text('Foiz shkalasi: 100% — Butun', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+            const SizedBox(height: 12),
             ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
               child: Container(
-                height: 32,
+                height: 28,
                 color: const Color(0xFFEFF0FA),
                 child: Row(
                   children: [
-                    Expanded(flex: 25, child: Container(color: const Color(0xFF6C5CE7), child: const Center(child: Text('25%', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))))),
-                    Expanded(flex: 25, child: Container(color: const Color(0xFF8B7CF6), child: const Center(child: Text('50%', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))))),
-                    Expanded(flex: 50, child: Container(color: const Color(0xFFDED6FF), child: const Center(child: Text('100%', style: TextStyle(color: Color(0xFF4C3EC7), fontSize: 11, fontWeight: FontWeight.bold))))),
+                    Expanded(flex: 25, child: Container(color: const Color(0xFF6C5CE7), child: const Center(child: Text('25%', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))))),
+                    Expanded(flex: 25, child: Container(color: const Color(0xFF8B7CF6), child: const Center(child: Text('50%', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))))),
+                    Expanded(flex: 50, child: Container(color: const Color(0xFFDED6FF), child: const Center(child: Text('100%', style: TextStyle(color: Color(0xFF4C3EC7), fontSize: 10, fontWeight: FontWeight.bold))))),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            const Text('25% = 1/4 (chorak)  •  50% = 1/2 (yarim)  •  100% = 1 (butun)', style: TextStyle(fontSize: 12, color: AppColors.kidsSecondaryText)),
           ],
         ),
       );
@@ -701,25 +993,16 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: AppColors.kidsBorder, width: 1.5),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: AppColors.kidsBorder, width: 1.2),
         ),
         child: Column(
           children: [
-            const Icon(Icons.balance_rounded, size: 48, color: Color(0xFF6C5CE7)),
-            const SizedBox(height: 10),
-            const Text('Tenglama Muvozanati (Tarozisi)', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-            const SizedBox(height: 6),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3F0FF),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                _lesson?.formulaLatex ?? 'ax + b = c',
-                style: const TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF6C5CE7), fontSize: 16),
-              ),
+            const Icon(Icons.functions_rounded, size: 40, color: Color(0xFF6C47FF)),
+            const SizedBox(height: 8),
+            Text(
+              lesson.formulaLatex ?? 'a + b = c',
+              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: Color(0xFF6C47FF)),
             ),
           ],
         ),
@@ -727,115 +1010,83 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
     }
   }
 
-  Widget _buildContentCard({required String title, required IconData icon, required Color iconColor, required String content}) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.kidsBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: iconColor, size: 22),
-              const SizedBox(width: 10),
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: AppColors.kidsDarkText)),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(content, style: const TextStyle(fontSize: 14, color: AppColors.kidsDarkText, height: 1.5)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWorkedExampleCard(bool isFraction, bool isPercentage, bool isEquation) {
-    String exTitle = '2. Ishlangan Misol';
-    String step1 = '1. Misolni diqqat bilan o‘qing va berilgan qiymatlarni aniqlang.';
-    String step2 = '2. Tegishli matematik formulani qo‘llang.';
-    String step3 = '3. Natijani tekshiring va soddalashtiring.';
-
-    if (isFraction) {
-      step1 = 'Misol: 2/8 + 3/8 yig‘indisini toping.';
-      step2 = 'Yechish: Maxrajlar bir xil bo‘lgani uchun maxraj 8 ligicha qoladi: (2 + 3)/8 = 5/8.';
-      step3 = 'Javob: 5/8 (to‘g‘ri va qisqarmaydigan kasr).';
-    } else if (isPercentage) {
-      step1 = 'Misol: 300 ning 20% ini toping.';
-      step2 = 'Yechish: 300 sonini 20 ga ko‘paytirib, 100 ga bo‘lamiz: (300 * 20) / 100 = 6000 / 100 = 60.';
-      step3 = 'Javob: 60.';
-    } else if (isEquation) {
-      step1 = 'Misol: 2x + 6 = 16 tenglamani yeching.';
-      step2 = 'Yechish: 6 sonini o‘ng tomonga ayirish qilib o‘tkazamiz: 2x = 16 - 6 => 2x = 10.';
-      step3 = 'Ikkala tomonni 2 ga bo‘lamiz: x = 10 / 2 => x = 5. Javob: x = 5.';
-    }
+  Widget _buildBottomNav(AppThemeColors colors) {
+    final isLastStep = _currentStep == _stepTitles.length - 1;
 
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.kidsBorder),
+        color: colors.card,
+        border: Border(top: BorderSide(color: colors.border, width: 1)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              const Icon(Icons.assignment_turned_in_rounded, color: Color(0xFF0F9D58), size: 22),
-              const SizedBox(width: 10),
-              Text(exTitle, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: AppColors.kidsDarkText)),
-            ],
+          // "Orqaga" Button (if not first step)
+          if (_currentStep > 0) ...[
+            OutlinedButton(
+              onPressed: () {
+                setState(() {
+                  _currentStep--;
+                });
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: colors.ink,
+                side: BorderSide(color: colors.border),
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+              child: const Text('Orqaga', style: TextStyle(fontWeight: FontWeight.w700)),
+            ),
+            const SizedBox(width: 12),
+          ],
+
+          // "Keyingi" or "Testni tekshirish" or "Yakunlash" Button
+          Expanded(
+            child: SizedBox(
+              height: 46,
+              child: ElevatedButton(
+                onPressed: () {
+                  if (!isLastStep) {
+                    setState(() {
+                      _currentStep++;
+                    });
+                  } else {
+                    // Mini-test step
+                    if (!_quizSubmitted) {
+                      // Check answers
+                      int correct = 0;
+                      for (int i = 0; i < _quizQuestions.length; i++) {
+                        if (_selectedAnswers[i] == _quizQuestions[i]['correctAnswer']) {
+                          correct++;
+                        }
+                      }
+                      setState(() {
+                        _quizSubmitted = true;
+                        _correctCount = correct;
+                      });
+                    } else {
+                      // Complete lesson
+                      _completeLesson();
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  elevation: 0,
+                ),
+                child: Text(
+                  !isLastStep
+                      ? 'Keyingi bosqich'
+                      : (!_quizSubmitted
+                          ? 'Testni tekshirish'
+                          : 'Darsni yakunlash'),
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+                ),
+              ),
+            ),
           ),
-          const SizedBox(height: 12),
-          Text(step1, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF1E1B4B))),
-          const SizedBox(height: 6),
-          Text(step2, style: const TextStyle(fontSize: 13, color: Color(0xFF4B5563), height: 1.4)),
-          const SizedBox(height: 6),
-          Text(step3, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF0F9D58))),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCommonMistakeCard(bool isFraction, bool isPercentage, bool isEquation) {
-    String mistake = 'Keng tarqalgan xato: Maxrajlarni bir-biriga qo‘shib yuborish!';
-    String correction = 'To‘g‘ri yo‘l: Maxrajlar teng bo‘lsa, maxraj hech qachon qo‘shilmaydi, faqat suratlar qo‘shiladi.';
-
-    if (isPercentage) {
-      mistake = 'Keng tarqalgan xato: Foiz belgisini oddiy songa to‘g‘ridan-to‘g‘ri qo‘shish!';
-      correction = 'To‘g‘ri yo‘l: Avval foiz qanchani tashkil qilishini hisoblab olib, so‘ng amal bajariladi.';
-    } else if (isEquation) {
-      mistake = 'Keng tarqalgan xato: Sonni tenglikdan o‘tkazganda ishorasini o‘zgartirishni unutish!';
-      correction = 'To‘g‘ri yo‘l: Tenglikning narigi tomoniga o‘tganda (+) ishora (-) ga, (-) ishora esa (+) ga aylanadi!';
-    }
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF7ED),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFFFEDD5)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            children: [
-              Icon(Icons.warning_amber_rounded, color: Color(0xFFEA580C), size: 22),
-              SizedBox(width: 10),
-              Text('3. Keng Tarqalgan Xatolar', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Color(0xFF9A3412))),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(mistake, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFFC2410C))),
-          const SizedBox(height: 4),
-          Text(correction, style: const TextStyle(fontSize: 13, color: Color(0xFF7C2D12), height: 1.4)),
         ],
       ),
     );
@@ -852,44 +1103,44 @@ class FractionPiePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
-    const double startAngle = -3.14159265 / 2;
-    final sweepAngle = (2 * 3.14159265) / totalSlices;
+    final sweepAngle = 2 * math.pi / totalSlices;
 
-    final paintEmpty = Paint()
-      ..color = const Color(0xFFE8EBFA)
+    final basePaint = Paint()
+      ..color = const Color(0xFFF3F0FF)
       ..style = PaintingStyle.fill;
 
-    final paintHighlighted = Paint()
-      ..color = AppColors.kidsPrimary
+    final highlightPaint = Paint()
+      ..color = const Color(0xFF6C5CE7)
       ..style = PaintingStyle.fill;
 
-    final paintBorder = Paint()
+    final borderPaint = Paint()
       ..color = Colors.white
-      ..strokeWidth = 3
-      ..style = PaintingStyle.stroke;
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5;
 
     for (int i = 0; i < totalSlices; i++) {
+      final startAngle = -math.pi / 2 + i * sweepAngle;
       final isHighlighted = i < highlightedSlices;
-      final angle = startAngle + i * sweepAngle;
-
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius),
-        angle,
+        startAngle,
         sweepAngle,
         true,
-        isHighlighted ? paintHighlighted : paintEmpty,
+        isHighlighted ? highlightPaint : basePaint,
       );
-
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius),
-        angle,
+        startAngle,
         sweepAngle,
         true,
-        paintBorder,
+        borderPaint,
       );
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant FractionPiePainter oldDelegate) {
+    return oldDelegate.highlightedSlices != highlightedSlices || oldDelegate.totalSlices != totalSlices;
+  }
 }
+

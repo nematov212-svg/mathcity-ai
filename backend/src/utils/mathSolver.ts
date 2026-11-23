@@ -550,7 +550,7 @@ export class MathSolver {
       // 3.31 MathUnderstandingEngine fallback (Uzbek conversational & natural questions)
       if (!solution) {
         const under = MathUnderstandingEngine.solve(clean);
-        if (under.success) {
+        if (under.success && under.isMathematical !== false) {
           solution = {
             originalQuestion: clean,
             problemType: 'UNDERSTANDING_ENGINE',

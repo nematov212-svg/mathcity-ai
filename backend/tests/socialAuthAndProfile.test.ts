@@ -126,8 +126,8 @@ describe('Google, Apple & Complete Profile Comprehensive Test Suite', () => {
     expect(resFuture.body.error).toContain('kelajakda');
   });
 
-  it('8. POST /api/auth/complete-profile rejects age under 5 or over 100', async () => {
-    const resTooYoung = await request(app)
+  it('8. POST /api/auth/complete-profile accepts any age without restriction', async () => {
+    const res = await request(app)
       .post('/api/auth/complete-profile')
       .set('Authorization', `Bearer ${googleUserToken}`)
       .send({
@@ -137,8 +137,8 @@ describe('Google, Apple & Complete Profile Comprehensive Test Suite', () => {
         birthYear: 2024,
       });
 
-    expect(resTooYoung.status).toBe(400);
-    expect(resTooYoung.body.error).toContain('5 dan kichik');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
   });
 
   it('9. POST /api/auth/complete-profile successfully completes profile for Google user with parental advisory', async () => {

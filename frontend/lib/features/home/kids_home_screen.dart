@@ -380,7 +380,7 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              (student != null && (student.coinBalance > 0 || student.totalXP > 0))
+                              student != null
                                   ? 'Siz ${student.rank}-o‘rindasiz'
                                   : 'Hali reytingda emassiz',
                               style: const TextStyle(

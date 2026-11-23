@@ -24,7 +24,7 @@ studentsRouter.get('/profile', authMiddleware, (req: AuthenticatedRequest, res: 
       totalXP: user.totalXP,
       level: user.level,
       cityLevel: user.cityLevel,
-      subscription: user.subscription,
+      subscription: repository.getSubscription(user.id),
       placedBuildingsCount: user.placedBuildings.length,
       unlockedAchievementsCount: user.unlockedAchievements.length,
       createdAt: user.createdAt,
@@ -75,7 +75,7 @@ studentsRouter.get('/me', authMiddleware, (req: AuthenticatedRequest, res: Respo
       rank,
       grade: user.grade,
       mode: user.mode,
-      subscription: user.subscription,
+      subscription: repository.getSubscription(user.id),
       createdAt: user.createdAt,
     },
   });
@@ -89,22 +89,20 @@ studentsRouter.get('/leaderboard/me', authMiddleware, (req: AuthenticatedRequest
   const user = req.user!;
   const allUsers = repository.getAllUsers();
 
-  const isEligible = (user.totalXP || 0) > 0 || (user.coinBalance || 0) > 0;
-  const hasRank = isEligible;
-
   // Active ranked users sorted by coinBalance DESC -> totalXP DESC -> createdAt ASC
   const rankedUsers = [...allUsers].sort(sortLeaderboardUsers);
 
   const myIndex = rankedUsers.findIndex((u) => u.id === user.id);
-  const rank = isEligible ? (myIndex !== -1 ? myIndex + 1 : rankedUsers.length + 1) : null;
+  const rank = myIndex !== -1 ? myIndex + 1 : rankedUsers.length + 1;
+  const hasRank = true; // Every registered user has an authoritative rank
 
   const myCoins = user.coinBalance || 0;
-  const coinsToNextRank = (rank !== null && rank > 1) ? Math.max(0, (rankedUsers[rank - 2]?.coinBalance || 0) - myCoins + 1) : 0;
-  const coinsToTop100 = (rank !== null && rank <= 100) ? 0 : (rankedUsers.length >= 100 ? Math.max(0, (rankedUsers[99]?.coinBalance || 0) - myCoins + 1) : 0);
-  const coinsToTop50 = (rank !== null && rank <= 50) ? 0 : (rankedUsers.length >= 50 ? Math.max(0, (rankedUsers[49]?.coinBalance || 0) - myCoins + 1) : 0);
-  const coinsToTop10 = (rank !== null && rank <= 10) ? 0 : (rankedUsers.length >= 10 ? Math.max(0, (rankedUsers[9]?.coinBalance || 0) - myCoins + 1) : 0);
-  const coinsToTop5 = (rank !== null && rank <= 5) ? 0 : (rankedUsers.length >= 5 ? Math.max(0, (rankedUsers[4]?.coinBalance || 0) - myCoins + 1) : 0);
-  const percentile = (rank !== null && rankedUsers.length > 0) ? Math.round(((rankedUsers.length - rank + 1) / rankedUsers.length) * 100) : 100;
+  const coinsToNextRank = rank > 1 ? Math.max(0, (rankedUsers[rank - 2]?.coinBalance || 0) - myCoins + 1) : 0;
+  const coinsToTop100 = rank <= 100 ? 0 : (rankedUsers.length >= 100 ? Math.max(0, (rankedUsers[99]?.coinBalance || 0) - myCoins + 1) : 0);
+  const coinsToTop50 = rank <= 50 ? 0 : (rankedUsers.length >= 50 ? Math.max(0, (rankedUsers[49]?.coinBalance || 0) - myCoins + 1) : 0);
+  const coinsToTop10 = rank <= 10 ? 0 : (rankedUsers.length >= 10 ? Math.max(0, (rankedUsers[9]?.coinBalance || 0) - myCoins + 1) : 0);
+  const coinsToTop5 = rank <= 5 ? 0 : (rankedUsers.length >= 5 ? Math.max(0, (rankedUsers[4]?.coinBalance || 0) - myCoins + 1) : 0);
+  const percentile = rankedUsers.length > 0 ? Math.round(((rankedUsers.length - rank + 1) / rankedUsers.length) * 100) : 100;
 
   // Weekly XP calculation using Tashkent week days
   const weekDays = getTashkentWeekDays();
@@ -115,7 +113,7 @@ studentsRouter.get('/leaderboard/me', authMiddleware, (req: AuthenticatedRequest
       weeklyXP += act.problemsSolved * 10;
     }
   }
-  if (weeklyXP === 0 && isEligible) {
+  if (weeklyXP === 0) {
     weeklyXP = user.totalXP || 0;
   }
 
@@ -125,6 +123,8 @@ studentsRouter.get('/leaderboard/me', authMiddleware, (req: AuthenticatedRequest
       hasRank,
       rank,
       totalUsers: rankedUsers.length,
+      userId: user.id,
+      id: user.id,
       coins: user.coinBalance || 0,
       coinBalance: user.coinBalance || 0,
       xp: user.totalXP || 0,
@@ -140,12 +140,10 @@ studentsRouter.get('/leaderboard/me', authMiddleware, (req: AuthenticatedRequest
       displayName: user.displayName,
       username: user.username,
       avatarUrl: user.avatarUrl,
-      message: hasRank
-        ? `Siz ${rank}-o‘rindasiz`
-        : 'Hali reytingda emassiz',
-      subMessage: hasRank
-        ? (coinsToTop100 > 0 ? `Top 100 ga ${coinsToTop100} coin qoldi` : 'Reytingda yuqorilash uchun darslarni davom ettiring')
-        : '1 ta misol yechib, reytingga kiring!',
+      message: `Siz ${rank}-o‘rindasiz`,
+      subMessage: coinsToTop100 > 0
+        ? `Top 100 ga ${coinsToTop100} coin qoldi`
+        : 'Reytingda yuqorilash uchun darslarni davom ettiring',
     },
   });
 });
@@ -153,39 +151,61 @@ studentsRouter.get('/leaderboard/me', authMiddleware, (req: AuthenticatedRequest
 /**
  * GET /api/students/leaderboard
  * Global leaderboard sorted by: coinBalance DESC -> totalXP DESC -> createdAt ASC
- * Scopes: top100 (default), top50, top10, top5.
- * Privacy: ONLY exposes rank, username, public first name, avatar, XP, and coin balance.
+ * Scopes: top100 (default), top50, top10, top5, or custom ?limit=N
  */
 studentsRouter.get('/leaderboard', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const scope = (req.query.scope as string) || 'top100';
   const period = (req.query.period as string) || 'all';
 
   let limit = 100;
-  if (scope === 'top5') limit = 5;
+  if (req.query.limit) {
+    limit = Math.max(1, parseInt(req.query.limit as string, 10) || 100);
+  } else if (scope === 'top5') limit = 5;
   else if (scope === 'top10') limit = 10;
   else if (scope === 'top50') limit = 50;
   else if (scope === 'top100') limit = 100;
 
   const allUsers = repository.getAllUsers();
+  // Bazadagi BARCHA foydalanuvchilar (0 tanga bo'lsa ham): coins DESC -> xp DESC -> createdAt ASC
   const sorted = [...allUsers].sort(sortLeaderboardUsers);
 
   const fullLeaderboard = sorted.map((u, index) => ({
     rank: index + 1,
+    userId: u.id,
     id: u.id,
     username: u.username || `user_${u.id.slice(0, 6)}`,
-    displayName: u.displayName ? u.displayName.split(' ')[0] : 'O‘quvchi',
+    displayName: u.displayName ? u.displayName.split(' ')[0] : (u.username || 'O‘quvchi'),
     avatarUrl: u.avatarUrl || null,
-    totalXP: u.totalXP || 0,
-    coinBalance: u.coinBalance || 0,
     level: u.level || 1,
+    coins: u.coinBalance || 0,
+    coinBalance: u.coinBalance || 0,
+    xp: u.totalXP || 0,
+    totalXP: u.totalXP || 0,
   }));
 
   const myUserId = req.user?.id;
-  const isEligible = (req.user?.totalXP || 0) > 0 || (req.user?.coinBalance || 0) > 0;
-  const myEntry = fullLeaderboard.find((entry) => entry.id === myUserId);
+  const myEntry = fullLeaderboard.find((entry) => entry.userId === myUserId);
   const myRank = myEntry
     ? myEntry.rank
-    : (fullLeaderboard.length > 0 ? fullLeaderboard.length : 1);
+    : (myUserId ? fullLeaderboard.length + 1 : 1);
+
+  const myUser = req.user;
+  const meObject = myUser ? {
+    hasRank: true,
+    rank: myRank,
+    userId: myUser.id,
+    id: myUser.id,
+    username: myUser.username || (myUser.displayName ? myUser.displayName.split(' ')[0] : 'Siz'),
+    displayName: myUser.displayName || 'Siz',
+    avatarUrl: myUser.avatarUrl || null,
+    level: myUser.level || 1,
+    coins: myUser.coinBalance || 0,
+    coinBalance: myUser.coinBalance || 0,
+    xp: myUser.totalXP || 0,
+    totalXP: myUser.totalXP || 0,
+    isTop100: myRank <= 100,
+    message: `Siz ${myRank}-o‘rindasiz`,
+  } : null;
 
   const slicedList = fullLeaderboard.slice(0, limit);
 
@@ -197,17 +217,8 @@ studentsRouter.get('/leaderboard', authMiddleware, (req: AuthenticatedRequest, r
       scope,
       period,
       limit,
-      myRank: {
-        hasRank: isEligible,
-        rank: myRank,
-        id: myUserId,
-        username: req.user?.username || (req.user?.displayName ? req.user.displayName.split(' ')[0] : 'Siz'),
-        displayName: req.user?.displayName || 'Siz',
-        totalXP: req.user?.totalXP || 0,
-        coinBalance: req.user?.coinBalance || 0,
-        avatarUrl: req.user?.avatarUrl || null,
-        level: req.user?.level || 1,
-      },
+      me: meObject,
+      myRank: meObject,
     },
   });
 });

@@ -474,7 +474,7 @@ authRouter.post('/register', authRateLimiter, (req: Request, res: Response) => {
     age: eligibility.age,
     mode: eligibility.mode,
     grade,
-    avatarUrl: eligibility.mode === 'KIDS' ? 'assets/images/avatar_kid.png' : 'assets/images/avatar_teen.png',
+    avatarUrl: 'assets/images/avatar_kid.png',
     profileCompleted: true,
     parentalConsentRequired: eligibility.age < 13,
     coinBalance: 0, // Genuinely new accounts start with exactly 0 coins
@@ -977,6 +977,21 @@ authRouter.get('/me', authMiddleware, (req: AuthenticatedRequest, res: Response)
   const user = req.user!;
   const isProfileComplete = user.profileCompleted ?? Boolean(user.username && user.username.length >= 3 && user.dateOfBirth);
 
+  const allUsers = repository.getAllUsers();
+  const sorted = [...allUsers].sort((a, b) => {
+    const coinsA = a.coinBalance || 0;
+    const coinsB = b.coinBalance || 0;
+    if (coinsB !== coinsA) return coinsB - coinsA;
+    const xpA = a.totalXP || 0;
+    const xpB = b.totalXP || 0;
+    if (xpB !== xpA) return xpB - xpA;
+    const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return timeA - timeB;
+  });
+  const myIndex = sorted.findIndex((u) => u.id === user.id);
+  const rank = myIndex !== -1 ? myIndex + 1 : sorted.length + 1;
+
   return res.json({
     success: true,
     data: {
@@ -990,9 +1005,12 @@ authRouter.get('/me', authMiddleware, (req: AuthenticatedRequest, res: Response)
       profileCompleted: isProfileComplete,
       parentalConsentRequired: user.parentalConsentRequired ?? (user.age > 0 && user.age < 13),
       coinBalance: user.coinBalance,
+      coins: user.coinBalance,
       totalXP: user.totalXP,
+      xp: user.totalXP,
       level: user.level,
       cityLevel: user.cityLevel,
+      rank,
       completedLessonsCount: user.completedLessons.length,
       solvedQuestionsCount: user.solvedQuestions.length,
       placedBuildingsCount: user.placedBuildings.length,
@@ -1338,8 +1356,8 @@ function validateCalendarBirthDate(day: number, month: number, year: number): { 
     age--;
   }
 
-  if (age < 5 || age > 100) {
-    return { valid: false, error: 'Yoshingiz 5 dan kichik yoki 100 dan katta bo‘lmasligi kerak.' };
+  if (age < 0) {
+    return { valid: false, error: 'Tug‘ilgan sana noto‘g‘ri.' };
   }
 
   return { valid: true, age };
@@ -1420,8 +1438,8 @@ authRouter.post(['/complete-profile', '/complete-onboarding'], authMiddleware, (
 
   const age = dVal.age;
   const isMinor = age < 13;
-  const mode = age <= 10 ? 'KIDS' : 'TEEN';
-  const grade = Math.max(1, Math.min(11, age - 5));
+  const mode = 'KIDS';
+  const grade = Math.max(1, Math.min(11, age >= 6 ? Math.min(11, age - 5) : 1));
   const formattedDob = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
   user.username = rawUsername;
@@ -1432,7 +1450,7 @@ authRouter.post(['/complete-profile', '/complete-onboarding'], authMiddleware, (
   user.grade = grade;
   user.profileCompleted = true;
   user.parentalConsentRequired = isMinor;
-  user.avatarUrl = mode === 'KIDS' ? 'assets/images/avatar_kid.png' : 'assets/images/avatar_teen.png';
+  user.avatarUrl = 'assets/images/avatar_kid.png';
 
   repository.updateUser(user.id, user);
 

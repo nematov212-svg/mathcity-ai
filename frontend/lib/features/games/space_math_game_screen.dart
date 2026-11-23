@@ -212,13 +212,11 @@ class _SpaceMathGameScreenState extends ConsumerState<SpaceMathGameScreen> {
       if (res.data['success'] == true) {
         earnedCoins = res.data['data']['coinsEarned'] ?? 30;
         earnedXP = res.data['data']['xpEarned'] ?? 40;
+        await ref.read(studentProvider.notifier).refreshProfile();
       }
     } catch (e) {
       debugPrint('Game submit local fallback: $e');
     }
-
-    ref.read(studentProvider.notifier).updateCoins(earnedCoins);
-    ref.read(studentProvider.notifier).updateXP(earnedXP);
 
     if (!mounted) return;
 

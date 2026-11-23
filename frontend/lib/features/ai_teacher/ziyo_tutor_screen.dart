@@ -196,16 +196,73 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     try {
       await _flutterTts.setLanguage('uz-UZ');
       await _flutterTts.setPitch(1.0);
-      await _flutterTts.setSpeechRate(0.9);
+      await _flutterTts.setSpeechRate(0.88);
       _flutterTts.setCompletionHandler(() {
         if (mounted) setState(() => _isSpeaking = false);
       });
-      _flutterTts.setErrorHandler((_) {
+      _flutterTts.setErrorHandler((dynamic err) {
+        debugPrint('ℹ️ [TTS] Handled SpeechSynthesis error: $err');
+        if (mounted) setState(() => _isSpeaking = false);
+      });
+      _flutterTts.setCancelHandler(() {
         if (mounted) setState(() => _isSpeaking = false);
       });
     } catch (e) {
       debugPrint('ℹ️ [TTS] Init exception: $e');
     }
+  }
+
+  String _prepareSpokenText(String input) {
+    String text = input
+        .replaceAll(RegExp(r'\*\*|\*|#|`|_'), '')
+        .replaceAll(RegExp(r'\\[a-zA-Z]+'), ' ')
+        .trim();
+
+    // Map mathematical symbols to spoken Uzbek words
+    text = text
+        .replaceAll('×', ' ko‘paytirish ')
+        .replaceAll('*', ' ko‘paytirish ')
+        .replaceAll('+', ' qo‘shish ')
+        .replaceAll('−', ' ayirish ')
+        .replaceAll('–', ' ayirish ')
+        .replaceAll('-', ' ayirish ')
+        .replaceAll('÷', ' bo‘lish ')
+        .replaceAll(':', ' bo‘lish ')
+        .replaceAll('=', ' teng ')
+        .replaceAll('≠', ' teng emas ')
+        .replaceAll('≈', ' taqriban teng ')
+        .replaceAll('>', ' katta ')
+        .replaceAll('<', ' kichik ')
+        .replaceAll('≥', ' katta yoki teng ')
+        .replaceAll('≤', ' kichik yoki teng ')
+        .replaceAll('%', ' foiz ')
+        .replaceAll('²', ' kvadrat ')
+        .replaceAll('³', ' kub ')
+        .replaceAll('½', ' ikkidan bir, ya’ni yarim ')
+        .replaceAll('¼', ' to‘rtdan bir, ya’ni chorak ')
+        .replaceAll('¾', ' to‘rtdan uch ');
+
+    // Convert "2 ko‘paytirish 5" into words "ikki ko‘paytirish besh"
+    text = text.replaceAllMapped(RegExp(r'(\d+)\s*ko‘paytirish\s*(\d+)'), (m) {
+      final n1 = _numberToWord(int.tryParse(m.group(1) ?? '') ?? 0);
+      final n2 = _numberToWord(int.tryParse(m.group(2) ?? '') ?? 0);
+      return '$n1 ko‘paytirish $n2';
+    });
+
+    return text.replaceAll(RegExp(r'\s+'), ' ').trim();
+  }
+
+  static String _numberToWord(int n) {
+    if (n == 0) return 'nol';
+    const ones = ['', 'bir', 'ikki', 'uch', 'to‘rt', 'besh', 'olti', 'yetti', 'sakkiz', 'to‘qqiz'];
+    const tens = ['', 'o‘n', 'yigirma', 'o‘ttiz', 'qirq', 'ellik', 'oltmish', 'yetmish', 'sakson', 'to‘qson'];
+    if (n < 10) return ones[n];
+    if (n < 100) {
+      final t = n ~/ 10;
+      final o = n % 10;
+      return '${tens[t]} ${ones[o]}'.trim();
+    }
+    return '$n';
   }
 
   Future<void> _speakText(String text) async {
@@ -215,15 +272,12 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         if (mounted) setState(() => _isSpeaking = false);
         return;
       }
-      final cleanText = text
-          .replaceAll(RegExp(r'\*\*|\*|#|`|_'), '')
-          .replaceAll(RegExp(r'\\[a-zA-Z]+'), '')
-          .trim();
+      final cleanText = _prepareSpokenText(text);
       if (cleanText.isEmpty) return;
-      setState(() => _isSpeaking = true);
+      if (mounted) setState(() => _isSpeaking = true);
       await _flutterTts.speak(cleanText);
     } catch (e) {
-      debugPrint('ℹ️ [TTS] Speak exception: $e');
+      debugPrint('ℹ️ [TTS] Handled speak exception gracefully: $e');
       if (mounted) setState(() => _isSpeaking = false);
     }
   }
@@ -1538,11 +1592,11 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                 const Spacer(),
                 IconButton(
                   icon: Icon(
-                    _isSpeaking ? Icons.volume_up_rounded : Icons.volume_down_rounded,
-                    size: 18,
-                    color: colors.primary,
+                    _isSpeaking ? Icons.stop_circle_rounded : Icons.volume_up_rounded,
+                    size: 20,
+                    color: _isSpeaking ? const Color(0xFFEF4444) : colors.primary,
                   ),
-                  tooltip: 'Ovozli eshitish',
+                  tooltip: _isSpeaking ? 'To‘xtatish' : 'Ovozli eshitish',
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => _speakText(msg.text),

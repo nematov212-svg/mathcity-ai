@@ -17,8 +17,9 @@ subscriptionsRouter.get('/status', authMiddleware, (req: AuthenticatedRequest, r
 });
 
 const purchaseSchema = z.object({
-  platform: z.enum(['google_play', 'app_store', 'web']),
+  platform: z.enum(['google_play', 'app_store', 'web']).default('web'),
   productId: z.string().optional().default('mathcity_pro_monthly'),
+  planType: z.enum(['MONTHLY', 'YEARLY']).optional().default('MONTHLY'),
   purchaseToken: z.string().optional(),
   orderId: z.string().optional(),
 });
@@ -31,10 +32,10 @@ subscriptionsRouter.post('/purchase', authMiddleware, (req: AuthenticatedRequest
   }
 
   const user = req.user!;
-  const { platform, orderId, purchaseToken } = parse.data;
+  const { platform, orderId, purchaseToken, planType } = parse.data;
 
   try {
-    const result = repository.activatePro(user.id, platform, orderId, purchaseToken);
+    const result = repository.activatePro(user.id, platform, orderId, purchaseToken, planType);
 
     return res.json({
       success: true,
@@ -42,8 +43,9 @@ subscriptionsRouter.post('/purchase', authMiddleware, (req: AuthenticatedRequest
         status: result.status,
         message: result.message,
         proExpiresAt: result.proExpiresAt,
+        proDaysRemaining: result.proDaysRemaining,
         isProActive: true,
-        priceMonthlyUzs: 29000,
+        priceMonthlyUzs: planType === 'YEARLY' ? 250000 : 29000,
       },
     });
   } catch (err: any) {

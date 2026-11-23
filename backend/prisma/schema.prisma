@@ -10,7 +10,6 @@ generator client {
 
 enum Mode {
   KIDS
-  TEEN
 }
 
 enum Role {
@@ -40,6 +39,8 @@ enum CoinTransactionType {
   ACHIEVEMENT_REWARD
   BUILDING_PURCHASE
   SYSTEM_GRANT
+  CAR_PURCHASE
+  CAR_REPAIR
 }
 
 enum XPTransactionType {
@@ -81,6 +82,8 @@ model User {
   purchaseEvents     PurchaseEvent[]
   mediaAttachments   MediaAttachment[]
   auditLogs          AdminAuditLog[]
+  ownedGameCars      UserGameCar[]
+  gameDriftScores    GameDriftScore[]
 
   @@map("users")
 }
@@ -497,4 +500,61 @@ model AdminAuditLog {
   createdAt  DateTime @default(now())
 
   @@map("admin_audit_logs")
+}
+
+model GameCar {
+  id                String          @id @default(uuid())
+  key               String          @unique
+  name              String
+  category          String          // supercar, muscle, drift, classic, suv, truck, hypercar, hot_hatch, electric, sedan
+  priceCoins        Int             @default(0)
+  maxSpeed          Int             // km/h
+  acceleration      Float           // seconds (0-100) or rating
+  handling          Float           // 1.0 - 10.0
+  driftRating       Float           // 1.0 - 10.0
+  mass              Int             // kg
+  engineSoundType   String          // v10_screamer, v8_muscle, turbo_drift, hyper_v12, classic_v8, etc.
+  defaultColor      String          @default("#E11D48")
+  defaultWheels     String          @default("sport_5spoke")
+  isLockedByDefault Boolean         @default(true)
+  description       String
+  createdAt         DateTime        @default(now())
+
+  userCars          UserGameCar[]
+  driftScores       GameDriftScore[]
+
+  @@map("game_cars")
+}
+
+model UserGameCar {
+  id             String    @id @default(uuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  carKey         String
+  car            GameCar   @relation(fields: [carKey], references: [key], onDelete: Cascade)
+  selectedColor  String    @default("#E11D48")
+  selectedWheels String    @default("sport_5spoke")
+  condition      Int       @default(100) // 0 - 100%
+  isFavorite     Boolean   @default(false)
+  purchasedAt    DateTime  @default(now())
+
+  @@unique([userId, carKey])
+  @@map("user_game_cars")
+}
+
+model GameDriftScore {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  carKey          String
+  car             GameCar   @relation(fields: [carKey], references: [key], onDelete: Cascade)
+  mode            String    @default("drift") // drift, free, time_attack
+  score           Int
+  maxCombo        Int       @default(1)
+  maxSpeedReached Int       @default(0)
+  durationSeconds Int       @default(60)
+  coinsAwarded    Int       @default(0)
+  createdAt       DateTime  @default(now())
+
+  @@map("game_drift_scores")
 }

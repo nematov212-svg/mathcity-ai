@@ -190,13 +190,11 @@ class _FractionBattleGameScreenState extends ConsumerState<FractionBattleGameScr
       if (res.data['success'] == true) {
         earnedCoins = res.data['data']['coinsEarned'] ?? 40;
         earnedXP = res.data['data']['xpEarned'] ?? 50;
+        await ref.read(studentProvider.notifier).refreshProfile();
       }
     } catch (e) {
       debugPrint('Fraction game submit fallback: $e');
     }
-
-    ref.read(studentProvider.notifier).updateCoins(earnedCoins);
-    ref.read(studentProvider.notifier).updateXP(earnedXP);
 
     if (!mounted) return;
 

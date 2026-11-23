@@ -14,6 +14,7 @@ import '../../shared/providers/student_provider.dart';
 class LeaderboardUser {
   final int rank;
   final String id;
+  final String userId;
   final String username;
   final String displayName;
   final String? avatarUrl;
@@ -24,6 +25,7 @@ class LeaderboardUser {
   LeaderboardUser({
     required this.rank,
     required this.id,
+    required this.userId,
     required this.username,
     required this.displayName,
     this.avatarUrl,
@@ -33,15 +35,17 @@ class LeaderboardUser {
   });
 
   factory LeaderboardUser.fromJson(Map<String, dynamic> json) {
+    final uid = (json['userId'] ?? json['id'] ?? '').toString();
     return LeaderboardUser(
-      rank: json['rank'] ?? 1,
-      id: json['id'] ?? '',
-      username: json['username'] ?? 'foydalanuvchi',
-      displayName: json['displayName'] ?? 'O‘quvchi',
-      avatarUrl: json['avatarUrl'],
-      totalXP: json['totalXP'] ?? 0,
-      coinBalance: json['coinBalance'] ?? 0,
-      level: json['level'] ?? 1,
+      rank: (json['rank'] as num?)?.toInt() ?? 1,
+      id: uid,
+      userId: uid,
+      username: (json['username'] as String?) ?? 'foydalanuvchi',
+      displayName: (json['displayName'] as String?) ?? 'O‘quvchi',
+      avatarUrl: json['avatarUrl'] as String?,
+      totalXP: (json['totalXP'] ?? json['xp'] as num?)?.toInt() ?? 0,
+      coinBalance: (json['coinBalance'] ?? json['coins'] as num?)?.toInt() ?? 0,
+      level: (json['level'] as num?)?.toInt() ?? 1,
     );
   }
 }
@@ -118,6 +122,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
           LeaderboardUser(
             rank: 1,
             id: 'demo-1',
+            userId: 'demo-1',
             username: 'jasur_matem',
             displayName: 'Jasur',
             totalXP: 450,
@@ -127,6 +132,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
           LeaderboardUser(
             rank: 2,
             id: 'demo-2',
+            userId: 'demo-2',
             username: 'madina_algeb',
             displayName: 'Madina',
             totalXP: 320,
@@ -136,6 +142,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
           LeaderboardUser(
             rank: 3,
             id: student?.id ?? 'demo-3',
+            userId: student?.id ?? 'demo-3',
             username: student?.username ?? 'mirzobek',
             displayName: student?.displayName ?? 'Mirzobek',
             avatarUrl: student?.avatarUrl,
@@ -161,7 +168,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                 ?.map((item) => LeaderboardUser.fromJson(item))
                 .toList() ??
             [];
-        final myRankJson = data['myRank'];
+        final myRankJson = data['me'] ?? data['myRank'];
 
         final climbingUsers = <String>{};
         for (final u in list) {
@@ -379,7 +386,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                                     itemCount: _leaderboard.length,
                                     itemBuilder: (context, index) {
                                       final user = _leaderboard[index];
-                                      final isMyRow = _myRank != null && user.id == _myRank!.id;
+                                      final currentStudent = ref.watch(studentProvider).student;
+                                      final isMyRow = (_myRank != null && (user.id == _myRank!.id || user.userId == _myRank!.userId)) ||
+                                          (currentStudent != null && (user.id == currentStudent.id || user.userId == currentStudent.id));
                                       final isHighlighted = _highlightedUserIds.contains(user.id);
                                       return AnimatedContainer(
                                         duration: const Duration(milliseconds: 450),
@@ -433,9 +442,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Text(
-                          (_myRank!.totalXP > 0 || _myRank!.coinBalance > 0)
-                              ? '#${_myRank!.rank}'
-                              : '—',
+                          '#${_myRank!.rank}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
@@ -460,9 +467,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              (_myRank!.totalXP > 0 || _myRank!.coinBalance > 0)
-                                  ? 'Siz ${_myRank!.rank}-o‘rindasiz • ${_myRank!.coinBalance} coin • ${_myRank!.totalXP} XP${_coinsToTop100 > 0 ? " • Top 100 ga $_coinsToTop100 coin qoldi" : (_coinsToNextRank > 0 ? " • Keyingi o‘ringa $_coinsToNextRank coin qoldi" : "")}'
-                                  : 'Hali reytingda emassiz • 1 ta misol yechib, reytingga kiring!',
+                              'Siz ${_myRank!.rank}-o‘rindasiz • ${_myRank!.coinBalance} coin • ${_myRank!.totalXP} XP${_coinsToTop100 > 0 ? " • Top 100 ga $_coinsToTop100 coin qoldi" : (_coinsToNextRank > 0 ? " • Keyingi o‘ringa $_coinsToNextRank coin qoldi" : "")}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(

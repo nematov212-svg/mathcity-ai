@@ -168,8 +168,8 @@ describe('Centralized Coin, XP, Practice, Avatar & Leaderboard Integration Tests
       .set('Authorization', `Bearer ${freshToken}`);
 
     expect(freshRankRes.status).toBe(200);
-    expect(freshRankRes.body.data.hasRank).toBe(false);
-    expect(freshRankRes.body.data.rank).toBeNull();
-    expect(freshRankRes.body.data.message).toContain('Hali reytingda emassiz');
+    expect(freshRankRes.body.data.hasRank).toBe(true);
+    expect(typeof freshRankRes.body.data.rank).toBe('number');
+    expect(freshRankRes.body.data.message).toContain('o‘rindasiz');
   });
 });

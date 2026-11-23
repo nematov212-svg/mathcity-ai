@@ -1,6 +1,6 @@
 export interface QuestionBankItem {
   id: string;
-  audience?: 'KIDS' | 'TEEN';
+  audience?: 'KIDS';
   grade: number;
   subject?: string;
   topic: string;
@@ -1667,7 +1667,7 @@ export const archivedDemoQuestions: QuestionBankItem[] = [
 // Mark all archived demo questions with appropriate audience
 for (const item of archivedDemoQuestions) {
   if (!item.audience) {
-    item.audience = item.grade <= 4 ? 'KIDS' : 'TEEN';
+    item.audience = 'KIDS';
   }
 }
 
@@ -1677,7 +1677,7 @@ for (const item of archivedDemoQuestions) {
 // =========================================================================
 export const mathQuestionBank: QuestionBankItem[] = [];
 
-export function getActiveQuestions(audience?: 'KIDS' | 'TEEN', grade?: number): QuestionBankItem[] {
+export function getActiveQuestions(audience?: 'KIDS', grade?: number): QuestionBankItem[] {
   return mathQuestionBank.filter((q) => {
     if (audience && q.audience !== audience) return false;
     if (grade && q.grade !== grade) return false;
@@ -1685,7 +1685,7 @@ export function getActiveQuestions(audience?: 'KIDS' | 'TEEN', grade?: number): 
   });
 }
 
-export function getAllAdminQuestions(filters?: { audience?: 'KIDS' | 'TEEN'; grade?: number; status?: string }): QuestionBankItem[] {
+export function getAllAdminQuestions(filters?: { audience?: 'KIDS'; grade?: number; status?: string }): QuestionBankItem[] {
   return mathQuestionBank.filter((q) => {
     if (filters?.audience && q.audience !== filters.audience) return false;
     if (filters?.grade && q.grade !== filters.grade) return false;

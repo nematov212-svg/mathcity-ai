@@ -97,6 +97,21 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
           'icon': Icons.pie_chart_rounded,
           'gradient': const [Color(0xFF10B981), Color(0xFF059669)],
         },
+        {
+          'key': 'mathcity_drift',
+          'title': 'MathCity Drift: 3D Poyga & Garaj',
+          'description': '10+ mashina, real deformatsiya, kuchli dvigatel ovozi va drift reytingi!',
+          'difficulty': 'O‘rta - Qiyin',
+          'duration': 'Cheksiz',
+          'rewardBadge': '+50 oltin tanga',
+          'rewardCoins': 40,
+          'rewardXP': 80,
+          'highScore': 0,
+          'timesPlayed': 0,
+          'route': '/kids/games/drift-car',
+          'icon': Icons.sports_motorsports_rounded,
+          'gradient': const [Color(0xFFF43F5E), Color(0xFFEA580C)],
+        },
       ];
     }
 
@@ -408,7 +423,9 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
     final highScore = game['highScore'] ?? 0;
     final timesPlayed = game['timesPlayed'] ?? 0;
     final key = game['key'] ?? '';
-    final route = key == 'kasrlar_jangi' ? '/kids/games/fraction-battle' : '/kids/games/space-math';
+    final route = key == 'kasrlar_jangi'
+        ? '/kids/games/fraction-battle'
+        : (key == 'mathcity_drift' ? '/kids/games/drift-car' : '/kids/games/space-math');
     final isLocked = game['isLocked'] == true;
 
     return Container(
@@ -438,14 +455,20 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
                   gradient: LinearGradient(
                     colors: key == 'kasrlar_jangi'
                         ? const [Color(0xFF10B981), Color(0xFF059669)]
-                        : const [Color(0xFF6C47FF), Color(0xFF8B6BFF)],
+                        : (key == 'mathcity_drift'
+                            ? const [Color(0xFFF43F5E), Color(0xFFEA580C)]
+                            : const [Color(0xFF6C47FF), Color(0xFF8B6BFF)]),
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Icon(
-                  key == 'kasrlar_jangi' ? Icons.pie_chart_rounded : Icons.rocket_launch_rounded,
+                  key == 'kasrlar_jangi'
+                      ? Icons.pie_chart_rounded
+                      : (key == 'mathcity_drift'
+                          ? Icons.sports_motorsports_rounded
+                          : Icons.rocket_launch_rounded),
                   color: Colors.white,
                   size: 28,
                 ),

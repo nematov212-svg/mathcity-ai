@@ -89,27 +89,7 @@ class ApiClient {
             return handler.next(error);
           }
 
-          // 1. Localhost Fallback: Only attempted if base URL is intentionally pointing to local
-          if (kDebugMode && kIsWeb && reqOptions.baseUrl.contains('localhost')) {
-            try {
-              const localFallbackUrl = 'http://localhost:4000/api';
-              final pingDio = Dio(BaseOptions(connectTimeout: const Duration(milliseconds: 800)));
-              final pingRes = await pingDio.get('http://localhost:4000/health');
-              if (pingRes.statusCode == 200) {
-                debugPrint('ℹ️ [Web Debug] Mahalliy backend ($localFallbackUrl) bilan ulanish tiklandi.');
-                AppConfig.setBaseUrl(localFallbackUrl);
-
-                reqOptions.baseUrl = localFallbackUrl;
-                final retryRes = await dio.fetch(reqOptions);
-                return handler.resolve(retryRes);
-              }
-            } catch (localErr) {
-              debugPrint('ℹ️ [API Client] Lokal backend mavjud emas, Render URL ga yo‘naltirilmoqda: $localErr');
-              AppConfig.setBaseUrl(AppConfig.productionApiUrl);
-            }
-          }
-
-          // 2. Cold Start Retry Logic:
+          // Cold Start Retry Logic:
           // Faqat timeout yoki 5xx server xatolarida qayta uriniladi.
           // CORS yoki 4xx xatolarida (400, 401, 403, 404, 422) QAYTA URILMAYDI!
           final is4xxClientError = statusCode != null && statusCode >= 400 && statusCode < 500;
@@ -156,31 +136,13 @@ class ApiClient {
 
   /// Sends a background warm-up request to the health endpoint when the app starts
   Future<void> warmUp() async {
-    // If explicitly set to local API in debug, check local health first
-    if (kDebugMode && kIsWeb && AppConfig.baseUrl.contains('localhost')) {
-      try {
-        final localDio = Dio(BaseOptions(connectTimeout: const Duration(milliseconds: 1000)));
-        final localRes = await localDio.get('http://localhost:4000/health');
-        if (localRes.statusCode == 200) {
-          AppConfig.setBaseUrl('http://localhost:4000/api');
-          debugPrint('☀️ [API Client] Mahalliy backend faol va ulandi: http://localhost:4000/api');
-          return;
-        }
-      } catch (localErr) {
-        debugPrint('ℹ️ [API Client] Mahalliy backend ulanmadi, Render ishlatiladi: $localErr');
-        AppConfig.setBaseUrl(AppConfig.productionApiUrl);
-      }
-    }
-
     try {
       final warmupDio = Dio(
         BaseOptions(
-          baseUrl: AppConfig.baseUrl,
           connectTimeout: const Duration(seconds: 15),
           receiveTimeout: const Duration(seconds: 15),
         ),
       );
-      // Remove '/api' from end if checking root /health, or check /health directly
       final rootUrl = AppConfig.baseUrl.replaceAll(RegExp(r'/api/?$'), '');
       await warmupDio.get('$rootUrl/health');
       debugPrint('☀️ [API Client] Server uyg‘oq va faol: $rootUrl/health');

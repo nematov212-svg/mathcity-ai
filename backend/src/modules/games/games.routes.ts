@@ -46,6 +46,19 @@ gamesRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response) 
       timesPlayed: getTimesPlayed('kasrlar_jangi'),
       isLocked: false,
     },
+    {
+      key: 'mathcity_drift',
+      title: 'MathCity Drift: 3D Poyga & Garaj',
+      description: '10 ta sport mashinasi, 3D shahar, drift fizikasi, real to‘qnashuv deformatsiyasi va ovozlar!',
+      category: '3d_driving',
+      iconName: 'directions_car',
+      difficulty: 'Poyga / Simulyator',
+      rewardCoins: 25,
+      rewardXP: 80,
+      highScore: getHighScore('mathcity_drift'),
+      timesPlayed: getTimesPlayed('mathcity_drift'),
+      isLocked: false,
+    },
   ];
 
   return res.json({ success: true, data: games });
@@ -122,4 +135,90 @@ gamesRouter.post('/hint', authMiddleware, (req: AuthenticatedRequest, res: Respo
       newCoinBalance: user.coinBalance,
     },
   });
+});
+
+/**
+ * GET /api/games/cars
+ * Returns list of 10 cars with user unlock status, colors, and condition.
+ */
+gamesRouter.get('/cars', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const cars = repository.getGameCars(user.id);
+  return res.json({ success: true, data: cars });
+});
+
+/**
+ * POST /api/games/cars/:key/buy
+ * Purchase a car using coins.
+ */
+gamesRouter.post('/cars/:key/buy', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const carKey = String(req.params.key);
+  try {
+    const result = repository.buyGameCar(user.id, carKey);
+    return res.json({ success: true, data: result });
+  } catch (err: any) {
+    return res.status(400).json({ success: false, error: err.message || 'Xatolik yuz berdi' });
+  }
+});
+
+/**
+ * POST /api/games/cars/:key/customize
+ * Customize color and wheel rims.
+ */
+gamesRouter.post('/cars/:key/customize', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const carKey = String(req.params.key);
+  const { color, wheels } = req.body || {};
+  try {
+    const result = repository.customizeGameCar(user.id, carKey, color, wheels);
+    return res.json({ success: true, data: result });
+  } catch (err: any) {
+    return res.status(400).json({ success: false, error: err.message || 'Xatolik yuz berdi' });
+  }
+});
+
+/**
+ * POST /api/games/cars/:key/repair
+ * Repair damaged car.
+ */
+gamesRouter.post('/cars/:key/repair', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const carKey = String(req.params.key);
+  try {
+    const result = repository.repairGameCar(user.id, carKey);
+    return res.json({ success: true, data: result });
+  } catch (err: any) {
+    return res.status(400).json({ success: false, error: err.message || 'Xatolik yuz berdi' });
+  }
+});
+
+/**
+ * POST /api/games/drift/score
+ * Submit drift run score and receive rewards.
+ */
+const driftScoreSchema = z.object({
+  carKey: z.string().default('samarkand_gt'),
+  score: z.number().int().min(0),
+  maxCombo: z.number().int().min(1).default(1),
+});
+
+gamesRouter.post('/drift/score', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const parse = driftScoreSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: 'Drift ball ma’lumotlari noto‘g‘ri' });
+  }
+  const { carKey, score, maxCombo } = parse.data;
+  const result = repository.saveDriftScore(user.id, carKey, score, maxCombo);
+  return res.json({ success: true, data: result });
+});
+
+/**
+ * GET /api/games/drift/leaderboard
+ * Drift mode high-scores leaderboard.
+ */
+gamesRouter.get('/drift/leaderboard', authMiddleware, (_req: AuthenticatedRequest, res: Response) => {
+  const leaderboard = repository.getDriftLeaderboard(20);
+  return res.json({ success: true, data: leaderboard });
 });

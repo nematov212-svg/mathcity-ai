@@ -66,14 +66,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
   void _navigateToDashboard(dynamic student) {
     if (!mounted) return;
-    final age = student?.age ?? 10;
-    if (age >= 17) {
-      context.go('/access-denied');
-    } else if (age >= 13) {
-      context.go('/teen/home');
-    } else {
-      context.go('/kids/home');
-    }
+    context.go('/kids/home');
   }
 
   Future<void> _handleLogin() async {

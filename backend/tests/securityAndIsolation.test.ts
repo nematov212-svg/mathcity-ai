@@ -52,7 +52,7 @@ describe('MathCity AI — Security, Authorization & Data Isolation Tests', () =>
       expect(res.body.success).toBe(false);
     });
 
-    it('enforces age boundary: 16 allowed, 17 strictly rejected', async () => {
+    it('allows any age to register without restriction in Matematika rejimi', async () => {
       // 16-year-old student
       const res16 = await request(app).post('/api/auth/register').send({
         email: 'eligible16@mathcity.ai',
@@ -62,18 +62,18 @@ describe('MathCity AI — Security, Authorization & Data Isolation Tests', () =>
         grade: 10,
       });
       expect(res16.status).toBe(201);
-      expect(res16.body.data.user.mode).toBe('TEEN');
+      expect(res16.body.data.user.mode).toBe('KIDS');
 
       // 17-year-old student
       const res17 = await request(app).post('/api/auth/register').send({
-        email: 'denied17@mathcity.ai',
+        email: 'eligible17@mathcity.ai',
         password: 'password123!',
         displayName: 'Seventeen Year Old',
         dateOfBirth: '2009-01-01',
         grade: 11,
       });
-      expect(res17.status).toBe(403);
-      expect(res17.body.errorCode).toBe('ELIGIBILITY_FAILED');
+      expect(res17.status).toBe(201);
+      expect(res17.body.data.user.mode).toBe('KIDS');
     });
 
     it('Google Sign-In initializes new account with 0 coins and 0 XP, and preserves existing data', async () => {

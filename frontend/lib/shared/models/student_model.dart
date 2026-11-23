@@ -71,6 +71,7 @@ class StudentModel {
   final int currentStreak;
   final int longestStreak;
   final int completedLessonsCount;
+  final List<String> completedLessons;
   final int completedTopicsCount;
   final int achievementsCount;
   final int friendsCount;
@@ -100,6 +101,7 @@ class StudentModel {
     this.currentStreak = 1,
     this.longestStreak = 1,
     this.completedLessonsCount = 0,
+    this.completedLessons = const [],
     this.completedTopicsCount = 0,
     this.achievementsCount = 0,
     this.friendsCount = 0,
@@ -140,6 +142,7 @@ class StudentModel {
       currentStreak: json['currentStreak'] ?? 1,
       longestStreak: json['longestStreak'] ?? 1,
       completedLessonsCount: json['completedLessonsCount'] ?? (json['completedLessons'] is List ? (json['completedLessons'] as List).length : 0),
+      completedLessons: (json['completedLessons'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
       completedTopicsCount: json['completedTopicsCount'] ?? 0,
       achievementsCount: json['achievementsCount'] ?? (json['unlockedAchievementsCount'] ?? 0),
       friendsCount: json['friendsCount'] ?? 0,
@@ -177,6 +180,7 @@ class StudentModel {
     int? currentStreak,
     int? longestStreak,
     int? completedLessonsCount,
+    List<String>? completedLessons,
     int? completedTopicsCount,
     int? achievementsCount,
     int? friendsCount,
@@ -206,6 +210,7 @@ class StudentModel {
       currentStreak: currentStreak ?? this.currentStreak,
       longestStreak: longestStreak ?? this.longestStreak,
       completedLessonsCount: completedLessonsCount ?? this.completedLessonsCount,
+      completedLessons: completedLessons ?? this.completedLessons,
       completedTopicsCount: completedTopicsCount ?? this.completedTopicsCount,
       achievementsCount: achievementsCount ?? this.achievementsCount,
       friendsCount: friendsCount ?? this.friendsCount,

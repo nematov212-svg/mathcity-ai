@@ -377,7 +377,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final colors = AppThemeColors.of(context);
     final studentState = ref.watch(studentProvider);
     final student = studentState.student;
-    final currentMode = student?.mode ?? 'KIDS';
     final isPro = student?.subscription.isProActive == true;
 
     return Scaffold(
@@ -481,36 +480,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Interfeys rejimi',
+                            'Ta’lim rejimi',
                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: colors.ink),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'Bolalar (6-12) yoki O‘smirlar (13-16)',
+                            'Matematika rejimi (barcha yoshlar uchun)',
                             style: TextStyle(fontSize: 12, color: colors.muted),
                           ),
                         ],
                       ),
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: currentMode == 'KIDS' ? colors.primary : const Color(0xFF101526),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: colors.primary.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(14),
                       ),
-                      onPressed: () {
-                        if (currentMode == 'KIDS') {
-                          ref.read(studentProvider.notifier).setMode('TEEN');
-                          context.go('/teen/home');
-                        } else {
-                          ref.read(studentProvider.notifier).setMode('KIDS');
-                          context.go('/kids/home');
-                        }
-                      },
                       child: Text(
-                        currentMode == 'KIDS' ? 'Bolalar rejimi' : 'O‘smirlar rejimi',
-                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
+                        'Faol',
+                        style: TextStyle(
+                          color: colors.primary,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 13,
+                        ),
                       ),
                     ),
                   ],

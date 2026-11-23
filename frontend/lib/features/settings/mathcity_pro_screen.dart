@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import '../../core/network/api_client.dart';
 import '../../shared/providers/student_provider.dart';
 
 class MathCityProScreen extends ConsumerStatefulWidget {
@@ -20,7 +21,7 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
   late AnimationController _badgeController;
 
   bool _isLoading = false;
-  int _selectedPlanIndex = 1; // 0 = 1 yillik (disabled), 1 = 1 oylik (selected)
+  int _selectedPlanIndex = 0; // 0 = 1 oylik, 1 = 1 yillik
 
   @override
   void initState() {
@@ -56,44 +57,553 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     super.dispose();
   }
 
-  Future<void> _handlePurchase() async {
-    if (_isLoading) return;
+  void _handlePurchase() {
+    _showPaymentSheet(context);
+  }
 
+  void _showPaymentSheet(BuildContext context) {
+    final isYearly = _selectedPlanIndex == 1;
+    final planType = isYearly ? 'YEARLY' : 'MONTHLY';
+    final amountUzs = isYearly ? 250000 : 29000;
+    final amountFormatted = isYearly ? '250 000 so‘m' : '29 000 so‘m';
+
+    String selectedProvider = 'PAYME';
+    bool isProcessing = false;
+    String? sheetError;
+
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (BuildContext sheetCtx) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            final providerLogo = selectedProvider == 'PAYME'
+                ? 'assets/images/payme_logo.png'
+                : 'assets/images/click_logo.png';
+            final providerName = selectedProvider == 'PAYME' ? 'Payme' : 'Click';
+
+            return Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(sheetCtx).size.height * 0.9,
+              ),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFF261868),
+                    Color(0xFF160E42),
+                  ],
+                ),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.12),
+                  width: 1.2,
+                ),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black54,
+                    blurRadius: 30,
+                    offset: Offset(0, -8),
+                  ),
+                ],
+              ),
+              child: SafeArea(
+                top: false,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20, 14, 20, 28),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Handle bar
+                      Container(
+                        width: 44,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: Colors.white24,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+
+                      // Sarlavha
+                      const Text(
+                        'To‘lov usulini tanlang',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 21,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Tarif ma'lumoti pilli
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFD66B).withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: const Color(0xFFFFD66B).withOpacity(0.35),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              isYearly ? Icons.stars_rounded : Icons.calendar_today_rounded,
+                              size: 15,
+                              color: const Color(0xFFFFD66B),
+                            ),
+                            const SizedBox(width: 7),
+                            Text(
+                              isYearly
+                                  ? '1 Yillik tarif • 250 000 so‘m'
+                                  : '1 Oylik tarif • 29 000 so‘m',
+                              style: const TextStyle(
+                                color: Color(0xFFFFD66B),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            if (isYearly) ...[
+                              const SizedBox(width: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFFD66B),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: const Text(
+                                  'ENG TEJAMKOR',
+                                  style: TextStyle(
+                                    color: Color(0xFF1C1450),
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+
+                      // Trust note
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.lock_rounded,
+                            size: 13,
+                            color: const Color(0xFFA9A4CF).withOpacity(0.8),
+                          ),
+                          const SizedBox(width: 5),
+                          const Text(
+                            '256-bit xavfsiz to‘lov shlyuzi orqali',
+                            style: TextStyle(
+                              color: Color(0xFFA9A4CF),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 22),
+
+                      // Payme Card
+                      _buildPaymentProviderCard(
+                        title: 'Payme',
+                        subtitle: 'Uzcard, Humo, Visa, Mastercard',
+                        logoAsset: 'assets/images/payme_logo.png',
+                        brandColor: const Color(0xFF00CCCC),
+                        fallbackIcon: Icons.credit_card_rounded,
+                        isSelected: selectedProvider == 'PAYME',
+                        onTap: isProcessing
+                            ? () {}
+                            : () => setSheetState(() {
+                                  selectedProvider = 'PAYME';
+                                  sheetError = null;
+                                }),
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Click Card
+                      _buildPaymentProviderCard(
+                        title: 'Click',
+                        subtitle: 'Click Up, Uzcard, Humo',
+                        logoAsset: 'assets/images/click_logo.png',
+                        brandColor: const Color(0xFF0073FF),
+                        fallbackIcon: Icons.touch_app_rounded,
+                        isSelected: selectedProvider == 'CLICK',
+                        onTap: isProcessing
+                            ? () {}
+                            : () => setSheetState(() {
+                                  selectedProvider = 'CLICK';
+                                  sheetError = null;
+                                }),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Error message if any
+                      if (sheetError != null) ...[
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEF4444).withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: const Color(0xFFEF4444).withOpacity(0.4),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.error_outline_rounded,
+                                color: Color(0xFFEF4444),
+                                size: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  sheetError!,
+                                  style: const TextStyle(
+                                    color: Color(0xFFFCA5A5),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                      ],
+
+                      // Action Button with selected provider logo & dynamic price
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFFFFD66B), Color(0xFFF5A623)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(28),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFFFFD66B).withOpacity(0.4),
+                                blurRadius: 18,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(28),
+                              ),
+                            ),
+                            onPressed: isProcessing
+                                ? null
+                                : () async {
+                                    setSheetState(() {
+                                      isProcessing = true;
+                                      sheetError = null;
+                                    });
+
+                                    final success = await _executePayment(
+                                      selectedProvider,
+                                      planType,
+                                      amountUzs,
+                                    );
+
+                                    if (!sheetCtx.mounted) return;
+
+                                    if (success) {
+                                      Navigator.of(sheetCtx).pop();
+                                    } else {
+                                      setSheetState(() {
+                                        isProcessing = false;
+                                        sheetError =
+                                            'To‘lov amalga oshmadi. Qayta urinib ko‘ring.';
+                                      });
+                                    }
+                                  },
+                            child: isProcessing
+                                ? const SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: Color(0xFF1C1450),
+                                      strokeWidth: 2.6,
+                                    ),
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 26,
+                                        height: 26,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(7),
+                                        ),
+                                        padding: const EdgeInsets.all(3),
+                                        child: Image.asset(
+                                          providerLogo,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Flexible(
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            '$providerName orqali $amountFormatted to‘lash',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w900,
+                                              color: Color(0xFF1C1450),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Xarid amalga oshirilgach, barcha Pro imkoniyatlar darhol faollashadi',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xFF9C96C8),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildPaymentProviderCard({
+    required String title,
+    required String subtitle,
+    required String logoAsset,
+    required Color brandColor,
+    required IconData fallbackIcon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedScale(
+        scale: isSelected ? 1.02 : 1.0,
+        duration: const Duration(milliseconds: 180),
+        curve: Curves.easeOutBack,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? const Color(0xFF2E2070).withOpacity(0.75)
+                : Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isSelected
+                  ? const Color(0xFFFFD66B)
+                  : Colors.white.withOpacity(0.12),
+              width: isSelected ? 2.0 : 1.2,
+            ),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: const Color(0xFFFFD66B).withOpacity(0.24),
+                      blurRadius: 16,
+                      spreadRadius: 1,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Row(
+            children: [
+              // 56x56 Container with radius 16 and light background
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(7),
+                child: Image.asset(
+                  logoAsset,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) => Icon(
+                    fallbackIcon,
+                    color: brandColor,
+                    size: 28,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: brandColor.withOpacity(0.18),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            isSelected ? 'Tanlandi' : 'Tezkor',
+                            style: TextStyle(
+                              color: brandColor,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: Color(0xFFA9A4CF),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+              // Animated selection indicator
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                width: 26,
+                height: 26,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isSelected
+                        ? const Color(0xFFFFD66B)
+                        : Colors.white.withOpacity(0.25),
+                    width: 2,
+                  ),
+                  color: isSelected
+                      ? const Color(0xFFFFD66B)
+                      : Colors.transparent,
+                ),
+                child: isSelected
+                    ? const Icon(
+                        Icons.check_rounded,
+                        color: Color(0xFF1C1450),
+                        size: 17,
+                      )
+                    : null,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<bool> _executePayment(String provider, String planType, int amountUzs) async {
     setState(() => _isLoading = true);
-
     try {
-      final success = await ref.read(studentProvider.notifier).activatePro();
+      final orderRes = await ApiClient().dio.post('/payments/create-order', data: {
+        'provider': provider,
+        'planType': planType,
+      });
 
-      if (!mounted) return;
+      if (orderRes.data['success'] == true && orderRes.data['data'] != null) {
+        final orderId = orderRes.data['data']['orderId'] as String;
 
+        final confirmRes = await ApiClient().dio.post('/payments/confirm-order', data: {
+          'orderId': orderId,
+          'provider': provider,
+        });
+
+        if (confirmRes.data['success'] == true) {
+          await ref.read(studentProvider.notifier).refreshProfile();
+          if (!mounted) return true;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Tabriklaymiz! $provider orqali MathCity Pro obunasi muvaffaqiyatli faollashtirildi!'),
+              backgroundColor: const Color(0xFF10B981),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          return true;
+        }
+      }
+
+      // Direct fallback
+      final success = await ref.read(studentProvider.notifier).activatePro(
+        planType: planType,
+        provider: provider,
+      );
+      if (!mounted) return success;
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Tabriklaymiz! MathCity Pro obunasi muvaffaqiyatli faollashtirildi!'),
-            backgroundColor: Color(0xFF10B981),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-        // Navigate or pop
-        context.pop();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('To‘lovni amalga oshirishda xatolik yuz berdi. Qayta urinib ko‘ring.'),
-            backgroundColor: Color(0xFFEF4444),
+          SnackBar(
+            content: Text('Tabriklaymiz! $provider orqali MathCity Pro obunasi muvaffaqiyatli faollashtirildi!'),
+            backgroundColor: const Color(0xFF10B981),
             behavior: SnackBarBehavior.floating,
           ),
         );
       }
+      return success;
     } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Serverga ulanishda xatolik yuz berdi.'),
-          backgroundColor: Color(0xFFEF4444),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      return false;
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -104,8 +614,6 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     final student = ref.watch(studentProvider).student;
     final isPro = student?.subscription.isProActive == true;
     final disableAnim = MediaQuery.of(context).disableAnimations;
-
-    final priceFormatted = '29 000 so‘m';
 
     return Scaffold(
       body: Container(
@@ -406,95 +914,96 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                'Tugash sanasi: ${_formatDate(student?.subscription.proExpiresAt)}',
+                                'Tugash sanasi: ${_formatDate(student?.subscription.proExpiresAt)} (${_calculateRemainingDays(student?.subscription.proExpiresAt)} kun qoldi)',
                                 style: const TextStyle(
-                                  color: Color(0xFFA9A4CF),
+                                  color: Color(0xFFFFD66B),
                                   fontSize: 13,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ],
                           ),
                         )
                       else ...[
-                        // Tariffs 2 columns
+                        // Tariffs 2 columns (Flexible, responsive, zero RenderFlex overflow)
                         Row(
                           children: [
-                            // 1 yillik (disabled)
+                            // 1 oylik
                             Expanded(
-                              child: Opacity(
-                                opacity: 0.55,
-                                child: Container(
-                                  height: 112,
-                                  padding: const EdgeInsets.all(14),
+                              child: GestureDetector(
+                                onTap: () => setState(() => _selectedPlanIndex = 0),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  constraints: const BoxConstraints(minHeight: 124),
+                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.04),
+                                    gradient: _selectedPlanIndex == 0
+                                        ? const LinearGradient(
+                                            colors: [Color(0xFF2E1C7A), Color(0xFF1E1452)],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          )
+                                        : null,
+                                    color: _selectedPlanIndex == 0 ? null : Colors.white.withOpacity(0.04),
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
                                       color: _selectedPlanIndex == 0
                                           ? const Color(0xFFFFD66B)
                                           : Colors.white.withOpacity(0.2),
-                                      width: 1.2,
+                                      width: _selectedPlanIndex == 0 ? 2.0 : 1.2,
                                     ),
+                                    boxShadow: _selectedPlanIndex == 0
+                                        ? [
+                                            BoxShadow(
+                                              color: const Color(0xFFFFD66B).withOpacity(0.25),
+                                              blurRadius: 14,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ]
+                                        : null,
                                   ),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          AnimatedBuilder(
-                                            animation: _badgeController,
-                                            builder: (context, child) {
-                                              final scale = disableAnim
-                                                  ? 1.0
-                                                  : 1.0 + (_badgeController.value * 0.06);
-                                              return Transform.scale(
-                                                scale: scale,
-                                                child: child,
-                                              );
-                                            },
-                                            child: Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white.withOpacity(0.12),
-                                                borderRadius: BorderRadius.circular(8),
-                                              ),
-                                              child: const Text(
-                                                'Tez kunda',
-                                                style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
+                                          const Text(
+                                            '1 oylik',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w800,
                                             ),
                                           ),
+                                          if (_selectedPlanIndex == 0)
+                                            const Icon(
+                                              Icons.check_circle_rounded,
+                                              color: Color(0xFFFFD66B),
+                                              size: 18,
+                                            ),
                                         ],
                                       ),
-                                      const Text(
-                                        '1 yillik',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w700,
+                                      const SizedBox(height: 8),
+                                      const FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          '29 000 so‘m',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 19,
+                                            fontWeight: FontWeight.w900,
+                                          ),
                                         ),
                                       ),
+                                      const SizedBox(height: 4),
                                       const Text(
-                                        '—',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w800,
-                                        ),
-                                      ),
-                                      const Text(
-                                        'Tez orada',
+                                        'Har oyda to‘lanadi',
                                         style: TextStyle(
                                           color: Color(0xFFA9A4CF),
                                           fontSize: 11,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ],
@@ -505,80 +1014,101 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
 
                             const SizedBox(width: 12),
 
-                            // 1 oylik (Selected)
+                            // 1 yillik (Eng tejamkor)
                             Expanded(
                               child: GestureDetector(
-                                onTap: () {
-                                  setState(() => _selectedPlanIndex = 1);
-                                },
-                                child: Semantics(
-                                  label: '1 oylik, $priceFormatted, tanlangan',
-                                  selected: _selectedPlanIndex == 1,
-                                  child: Container(
-                                    height: 112,
-                                    padding: const EdgeInsets.all(14),
-                                    decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [Color(0xFF2E1C7A), Color(0xFF1E1452)],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        color: const Color(0xFFFFD66B),
-                                        width: 2,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: const Color(0xFFFFD66B).withOpacity(0.2),
-                                          blurRadius: 14,
-                                          offset: const Offset(0, 4),
-                                        ),
-                                      ],
+                                onTap: () => setState(() => _selectedPlanIndex = 1),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  constraints: const BoxConstraints(minHeight: 124),
+                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    gradient: _selectedPlanIndex == 1
+                                        ? const LinearGradient(
+                                            colors: [Color(0xFF2E1C7A), Color(0xFF1E1452)],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          )
+                                        : null,
+                                    color: _selectedPlanIndex == 1 ? null : Colors.white.withOpacity(0.04),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: _selectedPlanIndex == 1
+                                          ? const Color(0xFFFFD66B)
+                                          : Colors.white.withOpacity(0.2),
+                                      width: _selectedPlanIndex == 1 ? 2.0 : 1.2,
                                     ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: const [
-                                            Text(
-                                              '1 oylik',
+                                    boxShadow: _selectedPlanIndex == 1
+                                        ? [
+                                            BoxShadow(
+                                              color: const Color(0xFFFFD66B).withOpacity(0.25),
+                                              blurRadius: 14,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFFFD66B),
+                                              borderRadius: BorderRadius.circular(6),
+                                            ),
+                                            child: const Text(
+                                              'Eng tejamkor',
                                               style: TextStyle(
-                                                color: Color(0xFFFFD66B),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w800,
+                                                color: Color(0xFF1C1450),
+                                                fontSize: 9,
+                                                fontWeight: FontWeight.w900,
                                               ),
                                             ),
-                                            Icon(
+                                          ),
+                                          if (_selectedPlanIndex == 1)
+                                            const Icon(
                                               Icons.check_circle_rounded,
                                               color: Color(0xFFFFD66B),
-                                              size: 20,
+                                              size: 18,
                                             ),
-                                          ],
+                                        ],
+                                      ),
+                                      const SizedBox(height: 6),
+                                      const Text(
+                                        '1 yillik',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w800,
                                         ),
-                                        FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: Text(
-                                            priceFormatted,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w900,
-                                            ),
-                                          ),
-                                        ),
-                                        const Text(
-                                          'Har oyda to‘lanadi',
+                                      ),
+                                      const SizedBox(height: 4),
+                                      const FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          '250 000 so‘m',
                                           style: TextStyle(
-                                            color: Color(0xFFA9A4CF),
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            fontSize: 19,
+                                            fontWeight: FontWeight.w900,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      const Text(
+                                        '≈20 833 so‘m/oy (-28%)',
+                                        style: TextStyle(
+                                          color: Color(0xFFFFD66B),
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -830,6 +1360,17 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
         ),
       ],
     );
+  }
+
+  int _calculateRemainingDays(String? raw) {
+    if (raw == null) return 30;
+    try {
+      final dt = DateTime.parse(raw);
+      final diff = dt.difference(DateTime.now()).inDays;
+      return diff > 0 ? diff : 0;
+    } catch (_) {
+      return 0;
+    }
   }
 
   String _formatDate(String? raw) {

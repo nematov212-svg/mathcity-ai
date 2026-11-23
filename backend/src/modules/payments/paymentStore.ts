@@ -1,15 +1,18 @@
 import { randomUUID } from 'crypto';
 
 export type PaymentOrderStatus = 'PENDING' | 'PAID' | 'FAILED' | 'CANCELED' | 'REFUNDED';
-export type PaymentMethod = 'UZCARD' | 'HUMO' | 'VISA' | 'MASTERCARD' | 'CLICK';
+export type PaymentMethod = 'UZCARD' | 'HUMO' | 'VISA' | 'MASTERCARD' | 'CLICK' | 'PAYME';
+export type PaymentProvider = 'CLICK' | 'PAYME' | 'CLICK_BUSINESS' | 'CARD_ACQUIRER';
+export type PlanType = 'MONTHLY' | 'YEARLY';
 
 export interface PaymentOrder {
   id: string;
   userId: string;
   amountUzs: number;
   currency: 'UZS';
-  plan: 'MATHCITY_PRO_MONTHLY';
-  provider: 'CLICK_BUSINESS' | 'CARD_ACQUIRER';
+  plan: 'MATHCITY_PRO_MONTHLY' | 'MATHCITY_PRO_YEARLY';
+  planType: PlanType;
+  provider: PaymentProvider;
   status: PaymentOrderStatus;
   checkoutUrl: string;
   createdAt: string;
@@ -87,7 +90,13 @@ class PaymentDataStore {
     });
   }
 
-  createOrder(userId: string, amountUzs: number = 29000, checkoutUrl: string): PaymentOrder {
+  createOrder(
+    userId: string,
+    amountUzs: number = 29000,
+    checkoutUrl: string,
+    provider: PaymentProvider = 'CLICK_BUSINESS',
+    planType: PlanType = 'MONTHLY'
+  ): PaymentOrder {
     const id = `order_${randomUUID().slice(0, 8)}_${Date.now()}`;
     const now = new Date().toISOString();
     const order: PaymentOrder = {
@@ -95,8 +104,9 @@ class PaymentDataStore {
       userId,
       amountUzs,
       currency: 'UZS',
-      plan: 'MATHCITY_PRO_MONTHLY',
-      provider: 'CLICK_BUSINESS',
+      plan: planType === 'YEARLY' ? 'MATHCITY_PRO_YEARLY' : 'MATHCITY_PRO_MONTHLY',
+      planType,
+      provider,
       status: 'PENDING',
       checkoutUrl,
       createdAt: now,
@@ -107,7 +117,7 @@ class PaymentDataStore {
       event: 'ORDER_CREATED',
       userId,
       orderId: id,
-      details: { amountUzs, plan: 'MATHCITY_PRO_MONTHLY' },
+      details: { amountUzs, plan: order.plan, provider, planType },
     });
     return order;
   }

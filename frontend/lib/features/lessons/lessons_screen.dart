@@ -28,28 +28,42 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
   List<Map<String, dynamic>> _apiLessons = [];
   Timer? _autoSyncTimer;
 
-  // Baseline flagship lessons
+  // Baseline flagship starter lessons
   final List<Map<String, dynamic>> _defaultTopics = [
     {
-      'id': 'lesson-k4-01',
-      'title': 'Oddiy kasrlar: Butunning bo‘laklari',
-      'description': 'Surat, maxraj va teng bo‘laklar tushunchasi.',
-      'grade': 4,
-      'chapterTitle': 'Kasrlar',
-      'rewardXP': 100,
+      'id': 'lesson-k1-01',
+      'title': '1 dan 10 gacha sonlar va sanash',
+      'description': 'Narsalarni sanash, sonlar ketma-ketligi va taqqoslash asoslari.',
+      'grade': 1,
+      'chapterTitle': 'Boshlang‘ich hisob',
+      'rewardXP': 80,
       'rewardCoins': 10,
-      'progress': 0.65,
+      'progress': 1.0,
+      'isCompleted': true,
+      'isLocked': false,
+      'icon': '123',
+      'accentColor': const Color(0xFF10B981),
+    },
+    {
+      'id': 'lesson-k2-01',
+      'title': '20 ichida qo‘shish va ayirish',
+      'description': 'O‘nlikdan oshirib qo‘shish va qulay ayirish usullari.',
+      'grade': 2,
+      'chapterTitle': 'Arifmetika',
+      'rewardXP': 90,
+      'rewardCoins': 10,
+      'progress': 0.75,
       'isCompleted': false,
       'isLocked': false,
-      'icon': '½',
-      'accentColor': const Color(0xFF6C47FF),
+      'icon': '±',
+      'accentColor': const Color(0xFF3B82F6),
     },
     {
       'id': 'lesson-k3-01',
-      'title': 'Ko‘paytirish jadvali sirlari',
-      'description': '1 dan 10 gacha karra jadvali va tezkor hisob.',
+      'title': 'Ko‘paytirish jadvali: Karra jadvali sirlari',
+      'description': '1 dan 10 gacha bo‘lgan karra jadvalining oson va tez hisoblash usullari.',
       'grade': 3,
-      'chapterTitle': 'Arifmetika',
+      'chapterTitle': 'Ko‘paytirish va Bo‘lish',
       'rewardXP': 120,
       'rewardCoins': 15,
       'progress': 0.80,
@@ -59,11 +73,25 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
       'accentColor': const Color(0xFF059669),
     },
     {
-      'id': 'lesson-k4-02',
-      'title': 'Perimetr va Yuza hisoblash',
-      'description': 'To‘rtburchak va shakllar perimetri hamda yuzasi.',
+      'id': 'lesson-k4-01',
+      'title': 'Oddiy kasrlar: Butunning bo‘laklari',
+      'description': 'Surat, maxraj va teng bo‘laklar tushunchasi hamda taqqoslash.',
       'grade': 4,
-      'chapterTitle': 'Geometriya',
+      'chapterTitle': 'Kasrlar va Bo‘laklar',
+      'rewardXP': 100,
+      'rewardCoins': 10,
+      'progress': 0.65,
+      'isCompleted': false,
+      'isLocked': false,
+      'icon': '½',
+      'accentColor': const Color(0xFF6C47FF),
+    },
+    {
+      'id': 'lesson-k4-02',
+      'title': 'Perimetr va Yuza hisoblash asoslari',
+      'description': 'To‘g‘ri to‘rtburchak va kvadrat perimetri hamda yuzasi formulalari.',
+      'grade': 4,
+      'chapterTitle': 'Geometriya asoslari',
       'rewardXP': 110,
       'rewardCoins': 12,
       'progress': 0.40,
@@ -73,11 +101,39 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
       'accentColor': const Color(0xFFD97706),
     },
     {
+      'id': 'lesson-g5-01',
+      'title': 'O‘nli kasrlar va ular ustida amallar',
+      'description': 'Vergul bilan yozish, o‘nli kasrlarni qo‘shish, ayirish va ko‘paytirish.',
+      'grade': 5,
+      'chapterTitle': 'Kasrlar',
+      'rewardXP': 115,
+      'rewardCoins': 12,
+      'progress': 0.0,
+      'isCompleted': false,
+      'isLocked': false,
+      'icon': '0.5',
+      'accentColor': const Color(0xFF8B5CF6),
+    },
+    {
+      'id': 'lesson-g6-01',
+      'title': 'Foizlar: Sonning foizini topish',
+      'description': 'Yuzdan bir qism ma’nosi, hayotiy foiz masalalari va formulalar.',
+      'grade': 6,
+      'chapterTitle': 'Foizlar va Nisbatlar',
+      'rewardXP': 120,
+      'rewardCoins': 15,
+      'progress': 0.0,
+      'isCompleted': false,
+      'isLocked': false,
+      'icon': '%',
+      'accentColor': const Color(0xFF0891B2),
+    },
+    {
       'id': 'lesson-g7-01',
       'title': 'Chiziqli bir noma’lumli tenglamalar',
-      'description': 'ax + b = c ko‘rinishidagi tenglamalarni yechish.',
+      'description': 'ax + b = c ko‘rinishidagi tenglamalarni yechish va ildizni topish.',
       'grade': 7,
-      'chapterTitle': 'Tenglamalar va Algebra',
+      'chapterTitle': 'Algebra va Tenglamalar',
       'rewardXP': 130,
       'rewardCoins': 15,
       'progress': 0.0,
@@ -87,18 +143,60 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
       'accentColor': const Color(0xFFE11D48),
     },
     {
-      'id': 'lesson-g6-01',
-      'title': 'Foizlar: Sonning qismini topish',
-      'description': 'Yuzdan bir qism ma’nosi va formulalar.',
-      'grade': 6,
-      'chapterTitle': 'Foizlar',
-      'rewardXP': 115,
-      'rewardCoins': 12,
+      'id': 'lesson-g8-01',
+      'title': 'Kvadrat tenglamalar va Viyet teoremasi',
+      'description': 'Diskriminant formulasi yordamida ildizlarni topish va tekshirish.',
+      'grade': 8,
+      'chapterTitle': 'Kvadrat tenglamalar',
+      'rewardXP': 140,
+      'rewardCoins': 18,
       'progress': 0.0,
       'isCompleted': false,
       'isLocked': false,
-      'icon': '%',
-      'accentColor': const Color(0xFF0891B2),
+      'icon': 'x²',
+      'accentColor': const Color(0xFFF59E0B),
+    },
+    {
+      'id': 'lesson-g9-01',
+      'title': 'Funksiyalar va ularning grafiklari',
+      'description': 'Chiziqli va kvadratik funksiyalar, aniqlanish va qiymatlar sohasi.',
+      'grade': 9,
+      'chapterTitle': 'Funksiyalar',
+      'rewardXP': 145,
+      'rewardCoins': 20,
+      'progress': 0.0,
+      'isCompleted': false,
+      'isLocked': false,
+      'icon': 'f(x)',
+      'accentColor': const Color(0xFF10B981),
+    },
+    {
+      'id': 'lesson-g10-01',
+      'title': 'Trigonometriya asoslari va formulalari',
+      'description': 'Sinus, kosinus, tangens va asosiy trigonometrik ayniyatlar.',
+      'grade': 10,
+      'chapterTitle': 'Trigonometriya',
+      'rewardXP': 150,
+      'rewardCoins': 20,
+      'progress': 0.0,
+      'isCompleted': false,
+      'isLocked': false,
+      'icon': 'sin',
+      'accentColor': const Color(0xFF6366F1),
+    },
+    {
+      'id': 'lesson-g11-01',
+      'title': 'Hosila va uning geometrik ma’nosi',
+      'description': 'Funksiyaning o‘sish va kamayish oraliqlari, urinma tenglamasi.',
+      'grade': 11,
+      'chapterTitle': 'Matematik analiz',
+      'rewardXP': 160,
+      'rewardCoins': 25,
+      'progress': 0.0,
+      'isCompleted': false,
+      'isLocked': false,
+      'icon': '∫dx',
+      'accentColor': const Color(0xFF4F46E5),
     },
   ];
 
@@ -108,7 +206,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
     _tabController = TabController(length: 2, vsync: this);
     _fetchLessons();
 
-    _autoSyncTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+    _autoSyncTimer = Timer.periodic(const Duration(seconds: 25), (_) {
       if (mounted) _fetchLessons(silent: true);
     });
   }
@@ -129,7 +227,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
       setState(() => _isLoading = true);
     }
     try {
-      final res = await ApiClient().dio.get('/lessons', queryParameters: {'mode': 'ALL'});
+      final res = await ApiClient().dio.get('/lessons', queryParameters: {'limit': 300});
       if (res.data != null && res.data['success'] == true) {
         final list = List<Map<String, dynamic>>.from(res.data['data'] ?? []);
         if (mounted) {
@@ -157,11 +255,17 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
 
     final catLower = category.toLowerCase();
     if (catLower.contains('kasr')) return const Color(0xFF6C47FF);
-    if (catLower.contains('arifmet') || catLower.contains('karra') || catLower.contains('hisob')) return const Color(0xFF059669);
-    if (catLower.contains('geom')) return const Color(0xFFD97706);
+    if (catLower.contains('arifmet') || catLower.contains('karra') || catLower.contains('hisob')) {
+      return const Color(0xFF059669);
+    }
+    if (catLower.contains('geom') || catLower.contains('shakl')) return const Color(0xFFD97706);
     if (catLower.contains('tenglam') || catLower.contains('algeb')) return const Color(0xFFE11D48);
-    if (catLower.contains('foiz')) return const Color(0xFF0891B2);
-    return const Color(0xFF7C3AED);
+    if (catLower.contains('foiz') || catLower.contains('nisbat')) return const Color(0xFF0891B2);
+    if (catLower.contains('trigono')) return const Color(0xFF7C3AED);
+    if (catLower.contains('analiz') || catLower.contains('hosila') || catLower.contains('integral')) {
+      return const Color(0xFF4F46E5);
+    }
+    return const Color(0xFF6366F1);
   }
 
   String _resolveCategoryName(Map<String, dynamic> lesson) {
@@ -170,12 +274,34 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
       return chapter;
     }
     final title = (lesson['title'] ?? '').toString().toLowerCase();
-    if (title.contains('kasr')) return 'Kasrlar';
-    if (title.contains('karra') || title.contains('jadval') || title.contains('qo‘shish') || title.contains('ayirish')) return 'Arifmetika';
-    if (title.contains('shakl') || title.contains('perimetr') || title.contains('yuza') || title.contains('burchak')) return 'Geometriya';
-    if (title.contains('tenglama') || title.contains('noma’lum')) return 'Tenglamalar';
-    if (title.contains('foiz')) return 'Foizlar';
+    if (title.contains('kasr')) return 'Kasrlar va Bo‘laklar';
+    if (title.contains('karra') || title.contains('jadval') || title.contains('qo‘shish') || title.contains('ayirish')) {
+      return 'Arifmetika va Hisoblash';
+    }
+    if (title.contains('shakl') || title.contains('perimetr') || title.contains('yuza') || title.contains('geometriya')) {
+      return 'Geometriya asoslari';
+    }
+    if (title.contains('tenglama') || title.contains('viyet') || title.contains('ildiz')) {
+      return 'Tenglamalar va Algebra';
+    }
+    if (title.contains('foiz') || title.contains('proporsiya')) return 'Foizlar va Nisbatlar';
+    if (title.contains('trigonometriya') || title.contains('sinus')) return 'Trigonometriya';
+    if (title.contains('hosila') || title.contains('integral') || title.contains('funksiya')) {
+      return 'Funksiyalar va Analiz';
+    }
     return chapter.isNotEmpty ? chapter : 'Umumiy matematika';
+  }
+
+  String _getDifficulty(int grade) {
+    if (grade <= 4) return 'Boshlang‘ich';
+    if (grade <= 8) return 'O‘rta daraja';
+    return 'Yuqori daraja';
+  }
+
+  String _getEstimatedTime(int grade) {
+    if (grade <= 4) return '10–12 daq';
+    if (grade <= 8) return '15–18 daq';
+    return '20–25 daq';
   }
 
   @override
@@ -227,7 +353,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
           RefreshIndicator(
             onRefresh: _fetchLessons,
             color: colors.primary,
-            child: _buildTopicsList(colors, isDark),
+            child: _buildTopicsList(colors, isDark, student?.completedLessons ?? []),
           ),
           const LessonMapContent(),
         ],
@@ -236,7 +362,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
     );
   }
 
-  Widget _buildTopicsList(AppThemeColors colors, bool isDark) {
+  Widget _buildTopicsList(AppThemeColors colors, bool isDark, List<String> userCompletedLessons) {
     // 1. Merge default and API lessons uniquely
     final allLessons = <Map<String, dynamic>>[];
     allLessons.addAll(_defaultTopics);
@@ -244,17 +370,18 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
     for (final apiL in _apiLessons) {
       final id = apiL['id']?.toString() ?? '';
       final idx = allLessons.indexWhere((l) => l['id'] == id);
+      final isDone = userCompletedLessons.contains(id) || apiL['isCompleted'] == true;
       final item = {
         'id': id,
         'title': apiL['title'] ?? 'Yangi dars',
-        'description': apiL['description'] ?? 'Matematika darsi',
+        'description': apiL['description'] ?? 'Matematika fani bo‘yicha to‘liq va tushunarli darslik.',
         'grade': apiL['grade'] ?? 4,
         'chapterTitle': apiL['chapterTitle'] ?? 'Matematika',
-        'rewardXP': apiL['rewardXP'] ?? 50,
-        'rewardCoins': apiL['rewardCoins'] ?? 10,
-        'progress': (apiL['isCompleted'] == true) ? 1.0 : 0.0,
-        'isCompleted': apiL['isCompleted'] == true,
-        'isLocked': apiL['isLocked'] == true,
+        'rewardXP': apiL['rewardXP'] ?? 100,
+        'rewardCoins': apiL['rewardCoins'] ?? 12,
+        'progress': isDone ? 1.0 : (apiL['progress'] as double? ?? 0.0),
+        'isCompleted': isDone,
+        'isLocked': apiL['isLocked'] == true && !isDone,
         'icon': apiL['icon'] ?? '📚',
         'accentColor': apiL['accentColor'] != null
             ? _resolveCategoryColor('', apiL['accentColor'])
@@ -269,7 +396,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
     }
 
     // 2. Filter by Grade and Search Query
-    final filtered = allLessons.filter((l) {
+    final filtered = allLessons.where((l) {
       final gradeMatch = _selectedGrade == null || l['grade'] == _selectedGrade;
       if (!gradeMatch) return false;
 
@@ -298,17 +425,17 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Search Input
+                // Modern Search Bar
                 Container(
                   decoration: BoxDecoration(
                     color: colors.card,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: colors.border, width: 1),
+                    border: Border.all(color: colors.border, width: 1.2),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.03),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
+                        color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
@@ -325,7 +452,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                       fontWeight: FontWeight.w600,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Dars yoki mavzuni qidirish...',
+                      hintText: 'Dars yoki mavzuni qidirish (masalan: kasr, tenglama)...',
                       hintStyle: TextStyle(
                         color: colors.muted,
                         fontSize: 13,
@@ -342,15 +469,15 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                             )
                           : null,
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 14),
 
-                // Grade Filter Chips (Horizontal Scroll)
+                // Grade Filter Chips: "Barchasi" + 1..11
                 SizedBox(
-                  height: 36,
+                  height: 38,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: 12, // Barchasi + 1..11
@@ -367,20 +494,20 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                           });
                         },
                         child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                          duration: const Duration(milliseconds: 220),
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                           decoration: BoxDecoration(
                             color: isSelected ? colors.primary : colors.card,
                             borderRadius: BorderRadius.circular(999),
                             border: Border.all(
                               color: isSelected ? colors.primary : colors.border,
-                              width: 1,
+                              width: 1.2,
                             ),
                             boxShadow: isSelected
                                 ? [
                                     BoxShadow(
-                                      color: colors.primary.withOpacity(0.25),
-                                      blurRadius: 6,
+                                      color: colors.primary.withOpacity(0.35),
+                                      blurRadius: 8,
                                       offset: const Offset(0, 2),
                                     ),
                                   ]
@@ -391,7 +518,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                             isAll ? 'Barchasi' : '$grade-sinf',
                             style: TextStyle(
                               fontSize: 12,
-                              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                              fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
                               color: isSelected ? Colors.white : colors.ink,
                             ),
                           ),
@@ -405,17 +532,11 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
           ),
         ),
 
-        // Skeleton loading state if fetching and empty
+        // Skeleton loading state
         if (_isLoading && _apiLessons.isEmpty)
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.82,
-              ),
+            sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) => _buildSkeletonCard(colors, isDark),
                 childCount: 4,
@@ -423,6 +544,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
             ),
           )
         else if (filtered.isEmpty)
+          // Empty State Design
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
@@ -431,28 +553,28 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      width: 64,
-                      height: 64,
+                      width: 72,
+                      height: 72,
                       decoration: BoxDecoration(
-                        color: colors.primary.withOpacity(0.1),
+                        color: colors.primary.withOpacity(0.12),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.search_off_rounded, color: colors.primary, size: 32),
+                      child: Icon(Icons.search_off_rounded, color: colors.primary, size: 36),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 18),
                     Text(
                       'Mos darslar topilmadi',
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w900,
                         color: colors.ink,
                       ),
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Boshqa sinf yoki kalit so‘z bilan qidirib ko‘ring.',
+                      'Qidiruv so‘zini o‘zgartiring yoki boshqa sinfni tanlab ko‘ring.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12, color: colors.muted),
+                      style: TextStyle(fontSize: 13, color: colors.muted),
                     ),
                   ],
                 ),
@@ -460,7 +582,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
             ),
           )
         else
-          // Grouped Categories
+          // Grouped Categories with Full-Width Professional Cards
           ...grouped.entries.map((entry) {
             final categoryName = entry.key;
             final lessons = entry.value;
@@ -471,7 +593,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                 // Category Header
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(18, 16, 18, 8),
+                    padding: const EdgeInsets.fromLTRB(18, 16, 18, 10),
                     child: Row(
                       children: [
                         Container(
@@ -486,22 +608,22 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                         Text(
                           categoryName,
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 16,
                             fontWeight: FontWeight.w900,
                             color: colors.ink,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                             color: catColor.withOpacity(0.12),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            '${lessons.length}',
+                            '${lessons.length} ta mavzu',
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 11,
                               fontWeight: FontWeight.w800,
                               color: catColor,
                             ),
@@ -512,19 +634,16 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                   ),
                 ),
 
-                // Compact 2-column grid of lessons
+                // Full-width cards list
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  sliver: SliverGrid(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: 0.82,
-                    ),
+                  sliver: SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        return _buildCompactLessonCard(lessons[index], colors, isDark, catColor);
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: _buildFullWidthLessonCard(lessons[index], colors, isDark, catColor),
+                        );
                       },
                       childCount: lessons.length,
                     ),
@@ -541,7 +660,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
     );
   }
 
-  Widget _buildCompactLessonCard(
+  Widget _buildFullWidthLessonCard(
     Map<String, dynamic> lesson,
     AppThemeColors colors,
     bool isDark,
@@ -550,37 +669,40 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
     final title = (lesson['title'] ?? '').toString();
     final description = (lesson['description'] ?? '').toString();
     final grade = (lesson['grade'] as int?) ?? 4;
-    final xp = (lesson['rewardXP'] as int?) ?? 50;
+    final xp = (lesson['rewardXP'] as int?) ?? 100;
+    final coins = (lesson['rewardCoins'] as int?) ?? 12;
     final progress = (lesson['progress'] as double?) ?? 0.0;
     final isCompleted = lesson['isCompleted'] == true;
     final isLocked = lesson['isLocked'] == true;
     final icon = (lesson['icon'] ?? '📚').toString();
     final lessonId = lesson['id']?.toString() ?? '';
+    final difficulty = _getDifficulty(grade);
+    final estTime = _getEstimatedTime(grade);
 
     return Container(
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(22),
         border: Border.all(
           color: isCompleted
               ? const Color(0xFF10B981).withOpacity(0.4)
               : isLocked
                   ? colors.border.withOpacity(0.5)
                   : catColor.withOpacity(0.25),
-          width: 1.2,
+          width: 1.3,
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black26 : catColor.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+            color: isDark ? Colors.black38 : catColor.withOpacity(0.06),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(22),
           onTap: isLocked
               ? () {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -594,29 +716,30 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                   context.push('/kids/lesson/$lessonId');
                 },
           child: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top Row: Math symbol icon + Badges (Grade & XP & Status)
+                // Top Row: Math symbol squircle + Badges (Grade, Difficulty, Duration, Status)
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    // Squircle Gradient Icon
                     Container(
-                      width: 36,
-                      height: 36,
+                      width: 48,
+                      height: 48,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [catColor, catColor.withOpacity(0.8)],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
-                            color: catColor.withOpacity(0.25),
-                            blurRadius: 6,
-                            offset: const Offset(0, 2),
+                            color: catColor.withOpacity(0.35),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
@@ -625,151 +748,274 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                         icon,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: 20,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (isCompleted)
+                    const SizedBox(width: 14),
+
+                    // Badges row
+                    Expanded(
+                      child: Wrap(
+                        spacing: 6,
+                        runSpacing: 4,
+                        children: [
+                          // Grade badge
                           Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFECFDF5),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(Icons.check_rounded, color: Color(0xFF059669), size: 14),
-                          )
-                        else if (isLocked)
-                          Container(
-                            padding: const EdgeInsets.all(4),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
-                              color: colors.border.withOpacity(0.5),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(Icons.lock_rounded, color: colors.muted, size: 14),
-                          )
-                        else
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFFF7ED),
-                              borderRadius: BorderRadius.circular(999),
-                              border: Border.all(color: const Color(0xFFFED7AA), width: 0.8),
+                              color: catColor.withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              '+$xp XP',
-                              style: const TextStyle(
-                                color: Color(0xFFD97706),
-                                fontSize: 9,
+                              '$grade-sinf',
+                              style: TextStyle(
+                                color: catColor,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
                           ),
-                      ],
+
+                          // Difficulty badge
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: colors.primary.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              difficulty,
+                              style: TextStyle(
+                                color: colors.primary,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+
+                          // Estimated time badge
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: colors.border.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.access_time_rounded, size: 12, color: colors.muted),
+                                const SizedBox(width: 4),
+                                Text(
+                                  estTime,
+                                  style: TextStyle(
+                                    color: colors.muted,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+
+                    // Status icon / badge
+                    if (isCompleted)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFECFDF5),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: const Color(0xFF059669).withOpacity(0.3)),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.check_circle_rounded, color: Color(0xFF059669), size: 15),
+                            SizedBox(width: 4),
+                            Text(
+                              'Tugatildi',
+                              style: TextStyle(
+                                color: Color(0xFF059669),
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else if (isLocked)
+                      Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: colors.border.withOpacity(0.5),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.lock_rounded, color: colors.muted, size: 16),
+                      ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
 
-                // Grade Pill
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: catColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    '$grade-sinf',
-                    style: TextStyle(
-                      color: catColor,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w800,
-                    ),
+                // Title: 2 lines max without truncation
+                Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    color: colors.ink,
+                    height: 1.3,
                   ),
                 ),
                 const SizedBox(height: 6),
 
-                // 1-line Title
+                // Description: 2 lines max without truncation
                 Text(
-                  title,
-                  maxLines: 1,
+                  description,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: colors.ink,
-                    height: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 2),
-
-                // 1-line Description
-                Text(
-                  description,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 11,
                     fontWeight: FontWeight.w500,
                     color: colors.muted,
+                    height: 1.4,
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(height: 14),
 
-                // Progress Bar
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(999),
-                  child: LinearProgressIndicator(
-                    value: isCompleted ? 1.0 : progress,
-                    backgroundColor: colors.border,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      isCompleted ? const Color(0xFF10B981) : catColor,
-                    ),
-                    minHeight: 4,
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                // Prominent "Boshlash" or "Ko‘rish" Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 32,
-                  child: ElevatedButton(
-                    onPressed: isLocked
-                        ? null
-                        : () {
-                            context.push('/kids/lesson/$lessonId');
-                          },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isCompleted
-                          ? const Color(0xFF10B981)
-                          : isLocked
-                              ? colors.border
-                              : catColor,
-                      foregroundColor: Colors.white,
-                      disabledBackgroundColor: colors.border.withOpacity(0.6),
-                      disabledForegroundColor: colors.muted,
-                      elevation: 0,
-                      padding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                // Bottom Row: Rewards (XP + Coin) + Progress + Action Button
+                Row(
+                  children: [
+                    // XP Reward Pill
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF7ED),
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: const Color(0xFFFED7AA), width: 1),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.bolt_rounded, size: 14, color: Color(0xFFD97706)),
+                          const SizedBox(width: 2),
+                          Text(
+                            '+$xp XP',
+                            style: const TextStyle(
+                              color: Color(0xFFD97706),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: Text(
-                      isCompleted
-                          ? '✓ Qayta ko‘rish'
-                          : isLocked
-                              ? '🔒 Qulflangan'
-                              : 'Boshlash',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
+                    const SizedBox(width: 8),
+
+                    // Coin Reward Pill
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFEFCE8),
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: const Color(0xFFFEF08A), width: 1),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.monetization_on_rounded, size: 14, color: Color(0xFFCA8A04)),
+                          const SizedBox(width: 2),
+                          Text(
+                            '+$coins',
+                            style: const TextStyle(
+                              color: Color(0xFFCA8A04),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
+
+                    const Spacer(),
+
+                    // Progress indicator if in progress
+                    if (!isCompleted && !isLocked && progress > 0.0) ...[
+                      Text(
+                        '${(progress * 100).toInt()}%',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          color: catColor,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        width: 50,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(999),
+                          child: LinearProgressIndicator(
+                            value: progress,
+                            backgroundColor: colors.border,
+                            valueColor: AlwaysStoppedAnimation<Color>(catColor),
+                            minHeight: 6,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                    ],
+
+                    // Action Button
+                    SizedBox(
+                      height: 36,
+                      child: ElevatedButton.icon(
+                        onPressed: isLocked
+                            ? null
+                            : () {
+                                context.push('/kids/lesson/$lessonId');
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isCompleted
+                              ? const Color(0xFF10B981)
+                              : isLocked
+                                  ? colors.border
+                                  : catColor,
+                          foregroundColor: Colors.white,
+                          disabledBackgroundColor: colors.border.withOpacity(0.6),
+                          disabledForegroundColor: colors.muted,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(horizontal: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        icon: Icon(
+                          isCompleted
+                              ? Icons.replay_rounded
+                              : isLocked
+                                  ? Icons.lock_outline_rounded
+                                  : Icons.play_arrow_rounded,
+                          size: 16,
+                        ),
+                        label: Text(
+                          isCompleted
+                              ? 'Qayta ko‘rish'
+                              : isLocked
+                                  ? 'Qulflangan'
+                                  : (progress > 0 ? 'Davom etish' : 'Boshlash'),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -780,83 +1026,91 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
   }
 
   Widget _buildSkeletonCard(AppThemeColors colors, bool isDark) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: colors.card,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: colors.border, width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: colors.border,
-                  borderRadius: BorderRadius.circular(12),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: colors.card,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: colors.border, width: 1),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: colors.border,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
                 ),
-              ),
-              Container(
-                width: 48,
-                height: 16,
-                decoration: BoxDecoration(
-                  color: colors.border,
-                  borderRadius: BorderRadius.circular(8),
+                const SizedBox(width: 14),
+                Container(
+                  width: 70,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    color: colors.border,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
+                const SizedBox(width: 8),
+                Container(
+                  width: 60,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    color: colors.border,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Container(
+              width: double.infinity,
+              height: 16,
+              decoration: BoxDecoration(
+                color: colors.border,
+                borderRadius: BorderRadius.circular(6),
               ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Container(
-            width: double.infinity,
-            height: 14,
-            decoration: BoxDecoration(
-              color: colors.border,
-              borderRadius: BorderRadius.circular(6),
             ),
-          ),
-          const SizedBox(height: 6),
-          Container(
-            width: 80,
-            height: 10,
-            decoration: BoxDecoration(
-              color: colors.border,
-              borderRadius: BorderRadius.circular(6),
+            const SizedBox(height: 8),
+            Container(
+              width: 200,
+              height: 14,
+              decoration: BoxDecoration(
+                color: colors.border,
+                borderRadius: BorderRadius.circular(6),
+              ),
             ),
-          ),
-          const Spacer(),
-          Container(
-            width: double.infinity,
-            height: 4,
-            decoration: BoxDecoration(
-              color: colors.border,
-              borderRadius: BorderRadius.circular(999),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Container(
+                  width: 60,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    color: colors.border,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  width: 90,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    color: colors.border,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            width: double.infinity,
-            height: 32,
-            decoration: BoxDecoration(
-              color: colors.border,
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
-  }
-}
-
-extension _ListFilter<T> on List<T> {
-  Iterable<T> filter(bool Function(T element) test) sync* {
-    for (final element in this) {
-      if (test(element)) yield element;
-    }
   }
 }

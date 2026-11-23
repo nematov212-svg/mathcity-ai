@@ -34,7 +34,7 @@ export interface LessonModel {
   chapterId: string;
   chapterTitle: string;
   grade: number;
-  mode: 'KIDS' | 'TEEN';
+  mode: 'KIDS';
   title: string;
   topicKey: string;
   description: string;
@@ -69,7 +69,7 @@ export interface ChapterModel {
 export interface SubjectModel {
   id: string;
   grade: number;
-  mode: 'KIDS' | 'TEEN';
+  mode: 'KIDS';
   title: string;
   description: string;
   chapters: ChapterModel[];
@@ -83,7 +83,7 @@ export interface BuildingModel {
   requiredLevel: number;
   description: string;
   iconName: string;
-  mode: 'KIDS' | 'TEEN';
+  mode: 'KIDS';
 }
 
 export interface AchievementModel {
@@ -209,7 +209,7 @@ export const initialBuildings: BuildingModel[] = [
     requiredLevel: 1,
     description: 'O‘smirlar shahri uchun ilmiy tadqiqot markazi.',
     iconName: 'biotech',
-    mode: 'TEEN',
+    mode: 'KIDS',
   },
   {
     key: 'teen_cyber_tower',
@@ -219,7 +219,7 @@ export const initialBuildings: BuildingModel[] = [
     requiredLevel: 2,
     description: 'Yuqori texnologiyali kelajak aloqa minorasi.',
     iconName: 'cell_tower',
-    mode: 'TEEN',
+    mode: 'KIDS',
   },
 ];
 
@@ -1042,7 +1042,7 @@ Misol: x / 6 = 4 / 3 bo‘lsa, x * 3 = 6 * 4 => 3x = 24 => x = 8.`,
     chapterId: 'chap-g7-01',
     chapterTitle: 'Chiziqli tenglamalar',
     grade: 7,
-    mode: 'TEEN',
+    mode: 'KIDS',
     title: 'Chiziqli bir noma’lumli tenglamalar',
     topicKey: 'linear_equations_7th',
     description: 'ax + b = c ko‘rinishidagi tenglamalarni yechish bosqichlari.',
@@ -1075,7 +1075,7 @@ Misol: 2x + 6 = 16 => 2x = 10 => x = 5.`,
     chapterId: 'chap-g7-01',
     chapterTitle: 'Algebraik ifodalar',
     grade: 7,
-    mode: 'TEEN',
+    mode: 'KIDS',
     title: 'Qavslarni ochish va o‘xshash hadlarni ixchamlash',
     topicKey: 'algebraic_terms_7th',
     description: 'Taqsimot qonuni, qavslar oldidagi ishoralar va ixchamlash.',
@@ -1103,7 +1103,7 @@ Misol: 2x + 6 = 16 => 2x = 10 => x = 5.`,
     chapterId: 'chap-g7-02',
     chapterTitle: 'Qisqa ko‘paytirish formulalari',
     grade: 7,
-    mode: 'TEEN',
+    mode: 'KIDS',
     title: 'Qisqa ko‘paytirish: Yig‘indining kvadrati',
     topicKey: 'binomial_square_7th',
     description: '(a + b)² formulasining ma’nosi va ifodalarni soddalashtirish.',
@@ -1133,7 +1133,7 @@ Hech qachon (a + b)² = a² + b² deb yozmang! O‘rtadagi 2ab qismi tushirib qo
     chapterId: 'chap-g7-02',
     chapterTitle: 'Matnli masalalar',
     grade: 7,
-    mode: 'TEEN',
+    mode: 'KIDS',
     title: 'Tenglamalar yordamida matnli masalalarni yechish',
     topicKey: 'word_problems_linear_7th',
     description: 'Matnli masalalarni matematik tilga o‘girish va tenglama tuzish.',
@@ -1164,7 +1164,7 @@ Hech qachon (a + b)² = a² + b² deb yozmang! O‘rtadagi 2ab qismi tushirib qo
     chapterId: 'chap-g8-01',
     chapterTitle: 'Kvadrat tenglamalar',
     grade: 8,
-    mode: 'TEEN',
+    mode: 'KIDS',
     title: 'Kvadrat tenglamalar va Diskriminant',
     topicKey: 'quadratic_equations',
     description: 'ax² + bx + c = 0 ko‘rinishidagi tenglamalarni yechish qoidalari.',
@@ -1276,5 +1276,185 @@ export const initialAchievements: AchievementModel[] = [
     iconName: 'track_changes',
     rewardCoins: 15,
     rewardXP: 80,
+  },
+];
+
+export interface GameCarModel {
+  key: string;
+  name: string;
+  category: string;
+  priceCoins: number;
+  maxSpeed: number;        // km/h
+  acceleration: number;    // rating 1-10
+  handling: number;        // rating 1-10
+  driftRating: number;     // rating 1-10
+  mass: number;            // kg
+  engineSoundType: string;
+  defaultColor: string;
+  defaultWheels: string;
+  isLockedByDefault: boolean;
+  description: string;
+}
+
+export const initialGameCars: GameCarModel[] = [
+  {
+    key: 'samarkand_gt',
+    name: 'Samarkand GT',
+    category: 'Supercar',
+    priceCoins: 0, // Bepul - birinchi mashina
+    maxSpeed: 310,
+    acceleration: 9.2,
+    handling: 8.8,
+    driftRating: 8.5,
+    mass: 1350,
+    engineSoundType: 'v10_screamer',
+    defaultColor: '#E11D48', // Crimson Red
+    defaultWheels: 'sport_5spoke',
+    isLockedByDefault: false,
+    description: 'Aerodinamik uglerod korpus va yuqori tezlanishga ega professional superkar.',
+  },
+  {
+    key: 'tashkent_v8',
+    name: 'Tashkent V8',
+    category: 'Muscle Car',
+    priceCoins: 150,
+    maxSpeed: 275,
+    acceleration: 8.9,
+    handling: 7.2,
+    driftRating: 9.3,
+    mass: 1680,
+    engineSoundType: 'v8_muscle',
+    defaultColor: '#EA580C', // Sunset Orange
+    defaultWheels: 'classic_dish',
+    isLockedByDefault: true,
+    description: 'Kuchli 6.2L V8 motor, chuqur g‘uldirash va orqa g‘ildirakli drift burnouti.',
+  },
+  {
+    key: 'fergana_drift',
+    name: 'Fergana R-Spec',
+    category: 'Drift Maxsus',
+    priceCoins: 280,
+    maxSpeed: 285,
+    acceleration: 9.0,
+    handling: 9.5,
+    driftRating: 10.0,
+    mass: 1240,
+    engineSoundType: 'turbo_drift',
+    defaultColor: '#10B981', // Neon Mint Green
+    defaultWheels: 'deep_dish_drift',
+    isLockedByDefault: true,
+    description: 'Kengaytirilgan burilish burchagi (60° lock) va agressiv turbo blow-off ovozli drift yetakchisi.',
+  },
+  {
+    key: 'bukhara_phantom',
+    name: 'Bukhara Phantom',
+    category: 'Hypercar',
+    priceCoins: 500,
+    maxSpeed: 345,
+    acceleration: 9.9,
+    handling: 9.6,
+    driftRating: 8.8,
+    mass: 1420,
+    engineSoundType: 'hyper_v12',
+    defaultColor: '#8B5CF6', // Royal Purple
+    defaultWheels: 'multi_spoke_mesh',
+    isLockedByDefault: true,
+    description: 'Aktiv aerodinamik qanotga ega 1200 ot kuchli gibrid giperkar.',
+  },
+  {
+    key: 'andijan_turbo',
+    name: 'Andijan Turbo',
+    category: 'Hot-Hatch',
+    priceCoins: 90,
+    maxSpeed: 235,
+    acceleration: 7.8,
+    handling: 9.1,
+    driftRating: 7.9,
+    mass: 1180,
+    engineSoundType: 'turbo_inline4',
+    defaultColor: '#06B6D4', // Electric Cyan
+    defaultWheels: 'sport_5spoke',
+    isLockedByDefault: true,
+    description: 'Shahar ko‘chalarida chaqqon, qisqa burilish radiusi bilan tor joylarda ustun.',
+  },
+  {
+    key: 'khiva_cruiser',
+    name: 'Khiva Cruiser',
+    category: 'Klassik Coupe',
+    priceCoins: 120,
+    maxSpeed: 220,
+    acceleration: 7.0,
+    handling: 7.0,
+    driftRating: 8.2,
+    mass: 1540,
+    engineSoundType: 'classic_v8',
+    defaultColor: '#D97706', // Classic Amber Gold
+    defaultWheels: 'classic_dish',
+    isLockedByDefault: true,
+    description: 'Xrom detallar, vintage kuzov va klassik sokin g‘uldirash bilan hashamatli kupé.',
+  },
+  {
+    key: 'zaamin_beast',
+    name: 'Zaamin Beast',
+    category: 'SUV 4x4',
+    priceCoins: 220,
+    maxSpeed: 240,
+    acceleration: 7.5,
+    handling: 7.8,
+    driftRating: 7.2,
+    mass: 2350,
+    engineSoundType: 'v8_heavy',
+    defaultColor: '#1E293B', // Midnight Slate
+    defaultWheels: 'rugged_offroad',
+    isLockedByDefault: true,
+    description: 'Mustahkam himoya bamperlari va yuqori to‘qnashuv chidamliligiga ega tog‘ yo‘ltanlami.',
+  },
+  {
+    key: 'surxon_hauler',
+    name: 'Surxon Titan',
+    category: 'Pikap / Yuk',
+    priceCoins: 180,
+    maxSpeed: 205,
+    acceleration: 6.8,
+    handling: 6.5,
+    driftRating: 7.5,
+    mass: 2800,
+    engineSoundType: 'diesel_turbo',
+    defaultColor: '#78350F', // Desert Bronze
+    defaultWheels: 'rugged_offroad',
+    isLockedByDefault: true,
+    description: 'Og‘ir to‘siqlarni yorib o‘tuvchi ulkan turtki quvvatiga ega mustahkam pikap.',
+  },
+  {
+    key: 'navoi_lightning',
+    name: 'Navoi Lightning',
+    category: 'Elektr Sport',
+    priceCoins: 380,
+    maxSpeed: 325,
+    acceleration: 9.8,
+    handling: 9.2,
+    driftRating: 8.6,
+    mass: 1650,
+    engineSoundType: 'electric_whine',
+    defaultColor: '#EC4899', // Neon Rose Pink
+    defaultWheels: 'multi_spoke_mesh',
+    isLockedByDefault: true,
+    description: 'Bir lahzada maksimal quvvatga chiquvchi ikki motorli zamonaviy elektr sportkar.',
+  },
+  {
+    key: 'kokand_interceptor',
+    name: 'Kokand Interceptor',
+    category: 'Sport Sedan',
+    priceCoins: 320,
+    maxSpeed: 290,
+    acceleration: 8.7,
+    handling: 9.0,
+    driftRating: 9.0,
+    mass: 1520,
+    engineSoundType: 'twin_turbo_v6',
+    defaultColor: '#0F172A', // Obsidian Black
+    defaultWheels: 'sport_5spoke',
+    isLockedByDefault: true,
+    description: 'Mukammal muvozanat va drift barqarorligiga ega professional poyga sedani.',
   },
 ];

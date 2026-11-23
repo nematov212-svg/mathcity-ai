@@ -149,7 +149,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
 
     final age = _calculatedAge;
     if (age == null) return false;
-    if (age < 5 || age > 100) return false;
+    if (age < 0) return false;
     return true;
   }
 
@@ -181,14 +181,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     setState(() => _isSubmitting = false);
 
     if (result.success && result.student != null) {
-      final age = result.student!.age;
-      if (age >= 17) {
-        context.go('/access-denied');
-      } else if (age >= 13 || result.student!.mode == 'TEEN') {
-        context.go('/teen/home');
-      } else {
-        context.go('/kids/home');
-      }
+      context.go('/kids/home');
     } else {
       setState(() {
         _errorMessage = result.errorMessage ?? 'Profilni saqlashda xatolik yuz berdi. Qayta urinib ko‘ring.';

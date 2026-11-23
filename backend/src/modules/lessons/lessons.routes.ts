@@ -45,14 +45,7 @@ lessonsRouter.get('/stream', (req, res: Response) => {
 lessonsRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
   const modeQuery = (req.query.mode as string | undefined)?.toUpperCase();
-  const modeParam: 'KIDS' | 'TEEN' | undefined =
-    modeQuery === 'ALL'
-      ? undefined
-      : modeQuery === 'KIDS' || modeQuery === 'TEEN'
-      ? (modeQuery as 'KIDS' | 'TEEN')
-      : req.query.grade
-      ? undefined // If specific grade is requested, do not force user.mode restriction
-      : user.mode;
+  const modeParam: 'KIDS' | undefined = undefined; // Return curriculum openly across all grades
 
   const gradeParam = req.query.grade ? parseInt(req.query.grade as string, 10) : undefined;
   const searchQuery = (req.query.search || req.query.q || '').toString().toLowerCase().trim();
@@ -244,6 +237,7 @@ lessonsRouter.post('/:id/sections/:sectionId/complete', authMiddleware, (req: Au
       act.lessonsDone++;
     }
     repository.calculateStreak(user.id);
+    repository.persistUserToDatabase(user).catch(() => {});
   }
 
   const nextSection = found.lesson.sections.find((s) => s.orderIndex === found.section.orderIndex + 1);
@@ -261,3 +255,79 @@ lessonsRouter.post('/:id/sections/:sectionId/complete', authMiddleware, (req: Au
     },
   });
 });
+
+/**
+ * POST /api/lessons/:id/complete
+ * Directly completes the entire lesson, awards coins & XP on first pass,
+ * updates streak, daily activity and unlocks next progress.
+ */
+lessonsRouter.post('/:id/complete', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const lessonId = String(req.params.id);
+  const lesson = repository.getLessonById(lessonId);
+
+  if (!lesson) {
+    return res.status(404).json({ success: false, error: 'Dars topilmadi.' });
+  }
+
+  const isFirstCompletion = !user.completedLessons.includes(lessonId);
+  const coinsAwarded = isFirstCompletion ? (lesson.rewardCoins || 12) : 0;
+  const xpAwarded = isFirstCompletion ? (lesson.rewardXP || 100) : 0;
+
+  if (isFirstCompletion) {
+    user.completedLessons.push(lessonId);
+    user.coinBalance += coinsAwarded;
+    user.totalXP += xpAwarded;
+
+    if (lesson.sections) {
+      for (const s of lesson.sections) {
+        if (!user.completedSections.includes(s.id)) {
+          user.completedSections.push(s.id);
+        }
+      }
+    }
+
+    repository.advanceMissionProgress(user.id, 'COMPLETE_LESSON', 1);
+    if (!user.unlockedAchievements.includes('ach_first_step')) {
+      user.unlockedAchievements.push('ach_first_step');
+    }
+
+    const todayStr = getTashkentDateString();
+    const actKey = `${user.id}:${todayStr}`;
+    let act = (repository as any).dailyActivities?.get(actKey);
+    if (!act) {
+      act = { userId: user.id, date: todayStr, seconds: 180, lessonsDone: 1, problemsSolved: 5, lastHeartbeat: Date.now() };
+      (repository as any).dailyActivities?.set(actKey, act);
+    } else {
+      act.lessonsDone++;
+      act.problemsSolved += 5;
+    }
+    repository.calculateStreak(user.id);
+    repository.persistUserToDatabase(user).catch(() => {});
+  }
+
+  broadcastLessonEvent('lesson_completed', {
+    userId: user.id,
+    lessonId,
+    totalXP: user.totalXP,
+    coinBalance: user.coinBalance,
+  });
+
+  return res.json({
+    success: true,
+    data: {
+      lessonId,
+      title: lesson.title,
+      isFirstCompletion,
+      coinsAwarded,
+      xpAwarded,
+      coinBalance: user.coinBalance,
+      totalXP: user.totalXP,
+      completedLessons: user.completedLessons,
+      message: isFirstCompletion
+        ? `Tabriklaymiz! "${lesson.title}" darsini muvaffaqiyatli yakunladingiz! +${coinsAwarded} tanga va +${xpAwarded} XP berildi.`
+        : `"${lesson.title}" darsini qayta ko‘rib chiqdingiz!`,
+    },
+  });
+});
+

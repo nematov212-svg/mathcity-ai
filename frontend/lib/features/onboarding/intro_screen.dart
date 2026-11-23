@@ -330,25 +330,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   void _onDatePicked(DateTime date) {
     setState(() {
       _selectedDate = date;
-      final age = _calculateAge(date);
-
-      if (age >= 13 && age <= 16) {
-        _selectedMode = 'TEEN';
-        _hasDateError = false;
-        _dateErrorMessage = null;
-      } else if (age >= 6 && age <= 12) {
-        _selectedMode = 'KIDS';
-        _hasDateError = false;
-        _dateErrorMessage = null;
-      } else if (age < 6) {
-        _selectedMode = 'KIDS';
-        _hasDateError = false;
-        _dateErrorMessage = 'MathCity AI 6–16 yosh uchun mo‘ljallangan. Sizga Bolalar rejimi tavsiya etiladi.';
-      } else {
-        _selectedMode = 'TEEN';
-        _hasDateError = false;
-        _dateErrorMessage = 'MathCity AI 6–16 yosh uchun mo‘ljallangan. Sizga O‘smirlar rejimi tavsiya etiladi.';
-      }
+      _selectedMode = 'KIDS';
+      _hasDateError = false;
+      _dateErrorMessage = null;
     });
   }
 
@@ -372,16 +356,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       return;
     }
 
-    final age = _calculateAge(_selectedDate!);
-    if (age < 6) {
-      _selectedMode = 'KIDS';
-    } else if (age > 16) {
-      _selectedMode = 'TEEN';
-    } else if (age >= 13) {
-      _selectedMode = 'TEEN';
-    } else {
-      _selectedMode = 'KIDS';
-    }
+    _selectedMode = 'KIDS';
 
     setState(() {
       _hasDateError = false;
@@ -404,7 +379,6 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
     setState(() => _isSubmitting = true);
     final username = _usernameController.text.trim();
     final chosenDate = _selectedDate!;
-    final age = _calculateAge(chosenDate);
 
     bool success = false;
     bool conflictOccurred = false;
@@ -474,11 +448,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       await Future.delayed(const Duration(milliseconds: 900));
       if (!mounted) return;
 
-      if (age <= 12) {
-        context.go('/kids/home');
-      } else {
-        context.go('/teen/home');
-      }
+      context.go('/kids/home');
     } else {
       setState(() => _isSubmitting = false);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -746,7 +716,6 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
     final dayStr = hasDate ? '${_selectedDate!.day}' : 'KK';
     final monthStr = hasDate ? _monthNames[_selectedDate!.month - 1] : 'OO';
     final yearStr = hasDate ? '${_selectedDate!.year}' : 'YYYY';
-    final isKidsMode = _selectedMode == 'KIDS';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -886,43 +855,23 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         const SizedBox(height: 24),
 
         Text(
-          'Tavsiya etilgan ta’lim rejimi',
+          'Ta’lim rejimi',
           style: OnboardingTheme.labelStyle(),
         ),
 
         const SizedBox(height: 12),
 
-        // 2 Mode Cards side-by-side (activated only after date is selected)
+        // Neutral Mode Card
         Opacity(
           opacity: hasDate ? 1.0 : 0.45,
           child: IgnorePointer(
             ignoring: !hasDate,
-            child: Row(
-              children: [
-                Expanded(
-                  child: ModeCard(
-                    title: 'Bolalar rejimi',
-                    subtitle: '6–12 yosh',
-                    icon: const Icon(Icons.smart_toy_rounded, color: OnboardingTheme.primary, size: 28),
-                    isSelected: isKidsMode,
-                    onTap: () => setState(() => _selectedMode = 'KIDS'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ModeCard(
-                    title: 'O‘smirlar rejimi',
-                    subtitle: '13–16 yosh',
-                    icon: Icon(
-                      Icons.rocket_launch_rounded,
-                      color: !isKidsMode ? OnboardingTheme.primary : OnboardingTheme.muted,
-                      size: 28,
-                    ),
-                    isSelected: !isKidsMode,
-                    onTap: () => setState(() => _selectedMode = 'TEEN'),
-                  ),
-                ),
-              ],
+            child: ModeCard(
+              title: 'Matematika rejimi',
+              subtitle: 'Interaktiv va qiziqarli ta’lim dasturi',
+              icon: const Icon(Icons.smart_toy_rounded, color: OnboardingTheme.primary, size: 28),
+              isSelected: true,
+              onTap: () {},
             ),
           ),
         ),

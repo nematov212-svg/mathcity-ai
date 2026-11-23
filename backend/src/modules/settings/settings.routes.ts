@@ -19,7 +19,7 @@ settingsRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Respons
 });
 
 const updateSettingsSchema = z.object({
-  interfaceMode: z.enum(['CHILDREN', 'TEENAGERS']).optional(),
+  interfaceMode: z.string().optional(),
   themeMode: z.enum(['LIGHT', 'DARK', 'SYSTEM']).optional(),
   soundEnabled: z.boolean().optional(),
   animationsEnabled: z.boolean().optional(),

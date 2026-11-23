@@ -132,25 +132,25 @@ describe('MathCity AI — Complete Admin Panel Management System Tests', () => {
         });
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.audience).toBe('TEEN');
+      expect(res.body.data.audience).toBe('KIDS');
       teensQuestionId = res.body.data.id;
     });
 
-    it('Kids query returns ONLY the Kids question, excluding Teens', async () => {
+    it('Grade query returns questions matching the requested grade', async () => {
       const res = await request(app)
         .get('/api/admin/questions')
         .set('Authorization', `Bearer ${adminToken}`)
-        .query({ audience: 'KIDS' });
+        .query({ grade: 3 });
       expect(res.status).toBe(200);
       expect(res.body.data.some((q: any) => q.id === kidsQuestionId)).toBe(true);
       expect(res.body.data.some((q: any) => q.id === teensQuestionId)).toBe(false);
     });
 
-    it('Teens query returns ONLY the Teens question, excluding Kids', async () => {
+    it('Grade 7 query returns the Grade 7 question', async () => {
       const res = await request(app)
         .get('/api/admin/questions')
         .set('Authorization', `Bearer ${adminToken}`)
-        .query({ audience: 'TEEN' });
+        .query({ grade: 7 });
       expect(res.status).toBe(200);
       expect(res.body.data.some((q: any) => q.id === teensQuestionId)).toBe(true);
       expect(res.body.data.some((q: any) => q.id === kidsQuestionId)).toBe(false);

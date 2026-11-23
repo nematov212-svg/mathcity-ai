@@ -13,7 +13,10 @@ import {
   AchievementModel,
   QuestionModel,
   SectionModel,
+  GameCarModel,
+  initialGameCars,
 } from './dataStore.js';
+import { curriculum220Lessons } from './curriculum220.js';
 import { mathQuestionBank, archivedDemoQuestions, QuestionBankItem } from './questionBank.js';
 import { AgeMode } from './age.js';
 import {
@@ -144,7 +147,15 @@ export interface DailyMissionRecord {
 
 class DataRepository {
   private users: Map<string, UserAccount> = new Map();
-  private lessons: LessonModel[] = initialLessons;
+  private lessons: LessonModel[] = (() => {
+    const list: LessonModel[] = [...curriculum220Lessons];
+    for (const initL of initialLessons) {
+      if (!list.some((l) => l.id === initL.id)) {
+        list.push(initL);
+      }
+    }
+    return list;
+  })();
   private buildings: BuildingModel[] = initialBuildings;
   private tasks: DailyTaskModel[] = initialDailyTasks;
   private achievements: AchievementModel[] = initialAchievements;
@@ -253,7 +264,7 @@ class DataRepository {
   }
 
   private seedLeaderboardUsers(): void {
-    if (process.env.NODE_ENV === 'production') return;
+    if (this.getAllUsers().length >= 100) return;
 
     const names = [
       'Jasur', 'Madina', 'Temur', 'Shahzoda', 'Bekzod', 'Diyora', 'Azizbek', 'Nigora',
@@ -390,10 +401,9 @@ class DataRepository {
     return undefined;
   }
 
-  getAllUsers(includeTestUsers = (process.env.NODE_ENV !== 'production')): UserAccount[] {
+  getAllUsers(): UserAccount[] {
     const unique = new Map<string, UserAccount>();
     for (const user of this.users.values()) {
-      if (!includeTestUsers && user.isTestUser) continue;
       unique.set(user.id, user);
     }
     return Array.from(unique.values());
@@ -626,7 +636,7 @@ class DataRepository {
           grade: prof?.grade || 4,
           avatarUrl: prof?.avatarUrl || 'assets/images/avatar_kid.png',
           profileCompleted: true,
-          coinBalance: wallet?.balance ?? 100,
+          coinBalance: wallet?.balance ?? 0,
           totalXP: xp?.totalXP ?? 0,
           level: xp?.level ?? 1,
           cityLevel: prof?.cityLevel ?? 1,
@@ -669,7 +679,7 @@ class DataRepository {
   }
 
   // --- Curriculum Hierarchy Queries ---
-  getLessons(mode?: 'KIDS' | 'TEEN', grade?: number, includeDrafts: boolean = false): LessonModel[] {
+  getLessons(mode?: 'KIDS', grade?: number, includeDrafts: boolean = false): LessonModel[] {
     let list = this.lessons;
     if (!includeDrafts) {
       list = list.filter((l) => l.status !== 'DRAFT');
@@ -794,7 +804,7 @@ class DataRepository {
     return false;
   }
 
-  getQuestionsForTest(grade?: number, count = 10, topic?: string, audience?: 'KIDS' | 'TEEN'): QuestionBankItem[] {
+  getQuestionsForTest(grade?: number, count = 10, topic?: string, audience?: 'KIDS'): QuestionBankItem[] {
     let pool = mathQuestionBank.filter((q) => q.isPublished);
 
     // If active question bank is empty and running under Jest automated test suite, use archived bank
@@ -828,6 +838,7 @@ class DataRepository {
     const user = this.getUserById(userId);
     if (!user) throw new Error('Foydalanuvchi topilmadi');
     user.coinBalance += amount;
+    this.persistUserToDatabase(user).catch(() => {});
     return { newBalance: user.coinBalance };
   }
 
@@ -838,6 +849,7 @@ class DataRepository {
       throw new Error('Yetarli oltin tanga mavjud emas');
     }
     user.coinBalance -= amount;
+    this.persistUserToDatabase(user).catch(() => {});
     return { newBalance: user.coinBalance };
   }
 
@@ -957,11 +969,12 @@ class DataRepository {
     user.totalXP += amount;
     user.level = Math.floor(user.totalXP / 200) + 1;
     const leveledUp = user.level > oldLevel;
+    this.persistUserToDatabase(user).catch(() => {});
     return { totalXP: user.totalXP, level: user.level, leveledUp };
   }
 
   // --- City Buildings & Purchase ---
-  getBuildings(mode?: 'KIDS' | 'TEEN'): BuildingModel[] {
+  getBuildings(mode?: 'KIDS'): BuildingModel[] {
     if (!mode) return this.buildings;
     return this.buildings.filter((b) => b.mode === mode);
   }
@@ -1093,6 +1106,7 @@ class DataRepository {
     priceMonthlyUzs: number;
     trialExpiresAt: string;
     proExpiresAt?: string;
+    proDaysRemaining?: number;
   } {
     const user = this.getUserById(userId);
     if (!user) throw new Error('Foydalanuvchi topilmadi');
@@ -1116,15 +1130,22 @@ class DataRepository {
       }
     }
 
+    let proDaysRemaining = 0;
+    if (user.subscription.proExpiresAt) {
+      const pDiff = new Date(user.subscription.proExpiresAt).getTime() - now.getTime();
+      proDaysRemaining = Math.max(0, Math.ceil(pDiff / (1000 * 60 * 60 * 24)));
+    }
+
     return {
       status,
-      planName: status === 'PRO_ACTIVE' ? 'MathCity Pro' : 'MathCity Free Trial',
+      planName: status === 'PRO_ACTIVE' ? (user.subscription.planName || 'MathCity Pro') : 'MathCity Free Trial',
       trialDaysRemaining,
       isTrialActive: status === 'FREE_TRIAL_ACTIVE',
       isProActive: status === 'PRO_ACTIVE',
-      priceMonthlyUzs: 29000,
+      priceMonthlyUzs: user.subscription.priceMonthlyUzs || 29000,
       trialExpiresAt: user.subscription.trialExpiresAt,
       proExpiresAt: user.subscription.proExpiresAt,
+      proDaysRemaining,
     };
   }
 
@@ -1134,8 +1155,9 @@ class DataRepository {
     userId: string,
     platform: 'google_play' | 'app_store' | 'web',
     orderId?: string,
-    purchaseToken?: string
-  ): { status: SubscriptionStatus; message: string; proExpiresAt: string } {
+    purchaseToken?: string,
+    planType: 'MONTHLY' | 'YEARLY' = 'MONTHLY'
+  ): { status: SubscriptionStatus; message: string; proExpiresAt: string; proDaysRemaining: number } {
     const user = this.getUserById(userId);
     if (!user) throw new Error('Foydalanuvchi topilmadi');
 
@@ -1148,22 +1170,38 @@ class DataRepository {
     }
 
     const now = new Date();
-    const proExpiry = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days Pro
+    const durationDays = planType === 'YEARLY' ? 365 : 30;
+    const durationMs = durationDays * 24 * 60 * 60 * 1000;
+
+    let baseTime = now.getTime();
+    // Pro davrida qayta sotib olsa, muddat mavjud muddatga QO'SHILSIN!
+    if (
+      user.subscription.status === 'PRO_ACTIVE' &&
+      user.subscription.proExpiresAt &&
+      new Date(user.subscription.proExpiresAt).getTime() > baseTime
+    ) {
+      baseTime = new Date(user.subscription.proExpiresAt).getTime();
+    }
+
+    const proExpiry = new Date(baseTime + durationMs);
+    const msDiff = proExpiry.getTime() - now.getTime();
+    const proDaysRemaining = Math.max(0, Math.ceil(msDiff / (1000 * 60 * 60 * 24)));
 
     user.subscription = {
       status: 'PRO_ACTIVE',
-      planName: 'MathCity Pro',
+      planName: planType === 'YEARLY' ? 'MathCity Pro 1 Yillik' : 'MathCity Pro 1 Oylik',
       trialStartedAt: user.subscription.trialStartedAt,
       trialExpiresAt: user.subscription.trialExpiresAt,
-      proStartedAt: now.toISOString(),
+      proStartedAt: user.subscription.proStartedAt || now.toISOString(),
       proExpiresAt: proExpiry.toISOString(),
-      priceMonthlyUzs: 29000,
+      priceMonthlyUzs: planType === 'YEARLY' ? 250000 : 29000,
     };
 
     return {
       status: 'PRO_ACTIVE',
       message: 'MathCity Pro muvaffaqiyatli faollashtirildi!',
       proExpiresAt: proExpiry.toISOString(),
+      proDaysRemaining,
     };
   }
 
@@ -1812,8 +1850,8 @@ class DataRepository {
     if (!user) throw new Error('Foydalanuvchi topilmadi');
 
     user.settings = { ...this.getUserSettings(userId), ...patch };
-    if (patch.mode && (patch.mode === 'KIDS' || patch.mode === 'TEEN')) {
-      user.mode = patch.mode;
+    if (patch.mode && patch.mode === 'KIDS') {
+      user.mode = 'KIDS';
     }
     return user.settings;
   }
@@ -2068,6 +2106,242 @@ class DataRepository {
   getUnrecognizedQueries(): Array<{ id: string; userId?: string; query: string; createdAt: string }> {
     return [...this.unrecognizedQueries];
   }
+
+  // --- 3D Car Game & Drift Mode Store ---
+  private userCars: Map<string, UserGameCarItem[]> = new Map();
+  private driftScores: GameDriftScoreItem[] = [];
+
+  getGameCars(userId: string): Array<GameCarModel & { isUnlocked: boolean; isOwned: boolean; selectedColor: string; selectedWheels: string; condition: number; timesDriven: number }> {
+    let cars = this.userCars.get(userId);
+    if (!cars) {
+      const defaultCar = initialGameCars[0];
+      cars = [
+        {
+          id: `car_${Date.now()}_default`,
+          userId,
+          carKey: defaultCar.key,
+          isUnlocked: true,
+          selectedColor: defaultCar.defaultColor,
+          selectedWheels: defaultCar.defaultWheels,
+          condition: 100,
+          timesDriven: 0,
+          unlockedAt: new Date().toISOString(),
+        },
+      ];
+      this.userCars.set(userId, cars);
+    }
+
+    return initialGameCars.map((car) => {
+      const owned = cars?.find((c) => c.carKey === car.key && c.isUnlocked);
+      return {
+        ...car,
+        isUnlocked: Boolean(owned?.isUnlocked),
+        isOwned: Boolean(owned?.isUnlocked),
+        selectedColor: owned?.selectedColor || car.defaultColor,
+        selectedWheels: owned?.selectedWheels || car.defaultWheels,
+        condition: owned ? owned.condition : 100,
+        timesDriven: owned ? owned.timesDriven : 0,
+      };
+    });
+  }
+
+  buyGameCar(userId: string, carKey: string): { success: boolean; car: GameCarModel; newCoinBalance: number } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    const carDef = initialGameCars.find((c) => c.key === carKey);
+    if (!carDef) throw new Error('Mashina modeli topilmadi');
+
+    let cars = this.userCars.get(userId) || [];
+    const alreadyOwned = cars.find((c) => c.carKey === carKey && c.isUnlocked);
+    if (alreadyOwned) {
+      throw new Error('Siz bu mashinani allaqachon sotib olgansiz');
+    }
+
+    if (user.coinBalance < carDef.priceCoins) {
+      throw new Error(`Mashinani sotib olish uchun tangalar yetarli emas (kerak: ${carDef.priceCoins}, sizda: ${user.coinBalance})`);
+    }
+
+    if (carDef.priceCoins > 0) {
+      this.debitCoins(userId, carDef.priceCoins, `${carDef.name} mashinasini sotib olish`);
+    }
+
+    const newCarItem: UserGameCarItem = {
+      id: `car_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      userId,
+      carKey: carDef.key,
+      isUnlocked: true,
+      selectedColor: carDef.defaultColor,
+      selectedWheels: carDef.defaultWheels,
+      condition: 100,
+      timesDriven: 0,
+      unlockedAt: new Date().toISOString(),
+    };
+
+    cars.push(newCarItem);
+    this.userCars.set(userId, cars);
+
+    return {
+      success: true,
+      car: carDef,
+      newCoinBalance: user.coinBalance,
+    };
+  }
+
+  customizeGameCar(userId: string, carKey: string, color?: string, wheels?: string): { success: boolean; carKey: string; selectedColor: string; selectedWheels: string } {
+    const cars = this.userCars.get(userId) || [];
+    const carItem = cars.find((c) => c.carKey === carKey && c.isUnlocked);
+    if (!carItem) {
+      throw new Error('Avval ushbu mashinani ochishingiz yoki sotib olishingiz kerak');
+    }
+
+    if (color) carItem.selectedColor = color;
+    if (wheels) carItem.selectedWheels = wheels;
+
+    return {
+      success: true,
+      carKey,
+      selectedColor: carItem.selectedColor,
+      selectedWheels: carItem.selectedWheels,
+    };
+  }
+
+  repairGameCar(userId: string, carKey: string): { success: boolean; condition: number; coinsDeducted: number; newCoinBalance: number } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    const cars = this.userCars.get(userId) || [];
+    const carItem = cars.find((c) => c.carKey === carKey && c.isUnlocked);
+    if (!carItem) {
+      throw new Error('Mashina topilmadi');
+    }
+
+    if (carItem.condition >= 100) {
+      return {
+        success: true,
+        condition: 100,
+        coinsDeducted: 0,
+        newCoinBalance: user.coinBalance,
+      };
+    }
+
+    const damagePercent = 100 - carItem.condition;
+    const repairCost = Math.ceil(damagePercent * 0.3);
+
+    if (repairCost > 0 && user.coinBalance < repairCost) {
+      throw new Error(`Mashinani ta’mirlash uchun tangalar yetarli emas (kerak: ${repairCost})`);
+    }
+
+    if (repairCost > 0) {
+      this.debitCoins(userId, repairCost, 'Mashinani garajda ta’mirlash');
+    }
+
+    carItem.condition = 100;
+
+    return {
+      success: true,
+      condition: 100,
+      coinsDeducted: repairCost,
+      newCoinBalance: user.coinBalance,
+    };
+  }
+
+  saveDriftScore(
+    userId: string,
+    carKey: string,
+    score: number,
+    maxCombo: number
+  ): {
+    score: number;
+    maxCombo: number;
+    coinsAwarded: number;
+    xpAwarded: number;
+    newCoinBalance: number;
+    newTotalXP: number;
+  } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    const coinsAwarded = Math.min(50, Math.floor(score / 400));
+    const xpAwarded = Math.min(150, Math.floor(score / 150));
+
+    if (coinsAwarded > 0) {
+      this.creditCoins(userId, coinsAwarded, `MathCity Drift rekordi: ${score} ball (x${maxCombo} combo)`);
+    }
+    if (xpAwarded > 0) {
+      this.addXP(userId, xpAwarded);
+    }
+
+    const entry: GameDriftScoreItem = {
+      id: `drift_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      userId,
+      carKey,
+      score,
+      maxCombo,
+      coinsAwarded,
+      xpAwarded,
+      createdAt: new Date().toISOString(),
+      user: {
+        id: user.id,
+        fullName: user.displayName || user.username || 'Foydalanuvchi',
+        avatarUrl: user.avatarUrl,
+      },
+    };
+
+    this.driftScores.push(entry);
+
+    const cars = this.userCars.get(userId) || [];
+    const carItem = cars.find((c) => c.carKey === carKey);
+    if (carItem) {
+      carItem.timesDriven = (carItem.timesDriven || 0) + 1;
+      carItem.lastDrivenAt = new Date().toISOString();
+    }
+
+    return {
+      score,
+      maxCombo,
+      coinsAwarded,
+      xpAwarded,
+      newCoinBalance: user.coinBalance,
+      newTotalXP: user.totalXP,
+    };
+  }
+
+  getDriftLeaderboard(limit: number = 20): GameDriftScoreItem[] {
+    return [...this.driftScores]
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit);
+  }
+}
+
+export interface UserGameCarItem {
+  id: string;
+  userId: string;
+  carKey: string;
+  isUnlocked: boolean;
+  selectedColor: string;
+  selectedWheels: string;
+  condition: number;
+  timesDriven: number;
+  unlockedAt: string;
+  lastDrivenAt?: string;
+  car?: GameCarModel;
+}
+
+export interface GameDriftScoreItem {
+  id: string;
+  userId: string;
+  carKey: string;
+  score: number;
+  maxCombo: number;
+  coinsAwarded: number;
+  xpAwarded: number;
+  createdAt: string;
+  user?: {
+    id: string;
+    fullName: string;
+    avatarUrl?: string;
+  };
 }
 
 export interface AIConversationItem {

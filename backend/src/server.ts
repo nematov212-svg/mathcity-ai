@@ -55,6 +55,25 @@ const server = app.listen(port, host, async () => {
   } catch (err: any) {
     console.error(`❌ PostgreSQL connection check error: ${err?.message}`);
   }
+
+  // Background subscription scheduler: automatically transitions expired Pro to FREE
+  setInterval(() => {
+    try {
+      const allUsers = repository.getAllUsers();
+      const now = new Date();
+      for (const u of allUsers) {
+        if (u.subscription.status === 'PRO_ACTIVE' && u.subscription.proExpiresAt) {
+          if (new Date(u.subscription.proExpiresAt) < now) {
+            u.subscription.status = 'PRO_EXPIRED';
+            repository.updateUser(u.id, u);
+            console.log(`⏱️ Foydalanuvchi ${u.id} Pro obunasi muddati tugadi, avtomatik bepul tarifga o‘tkazildi.`);
+          }
+        }
+      }
+    } catch (err: any) {
+      console.error('Subscription scheduler error:', err?.message);
+    }
+  }, 60 * 1000); // 1 daqiqalik davriy tekshiruv
 });
 
 // Graceful shutdown

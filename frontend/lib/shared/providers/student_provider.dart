@@ -48,7 +48,6 @@ class StudentNotifier extends StateNotifier<StudentState> {
   StreamSubscription? _googleAccountSub;
 
   StudentNotifier() : super(StudentState()) {
-    _initDemoStudent();
     initializeSession();
     _initGoogleAuthListener();
   }
@@ -83,40 +82,6 @@ class StudentNotifier extends StateNotifier<StudentState> {
     _googleAccountSub?.cancel();
     _heartbeatTimer?.cancel();
     super.dispose();
-  }
-
-  void _initDemoStudent() {
-    state = state.copyWith(
-      student: StudentModel(
-        id: 'demo-student-id',
-        email: 'mirzobek@mathcity.ai',
-        displayName: 'Mirzobek Nematov',
-        username: 'mirzobek',
-        age: 10,
-        mode: 'KIDS',
-        grade: 4,
-        coinBalance: 100,
-        totalXP: 10,
-        level: 1,
-        cityLevel: 1,
-        studyMinutes: 7,
-        currentStreak: 4,
-        longestStreak: 4,
-        completedLessonsCount: 1,
-        achievementsCount: 4,
-        friendsCount: 0,
-        createdAt: '2026-11-01T00:00:00.000Z',
-        attemptedQuestionCount: 5,
-        correctQuestionCount: 5,
-        subscription: SubscriptionModel(
-          status: 'FREE_TRIAL_ACTIVE',
-          trialDaysRemaining: 30,
-          isProActive: false,
-          planName: 'MathCity Free Trial',
-          priceMonthlyUzs: 29000,
-        ),
-      ),
-    );
   }
 
   Future<bool> updateAvatar(String avatarUrl) async {
@@ -178,27 +143,29 @@ class StudentNotifier extends StateNotifier<StudentState> {
     return false;
   }
 
-  Future<bool> activatePro() async {
+  Future<bool> activatePro({String planType = 'MONTHLY', String provider = 'CLICK'}) async {
     state = state.copyWith(isLoading: true);
     try {
       final res = await ApiClient().dio.post('/subscriptions/purchase', data: {
         'platform': 'web',
-        'productId': 'mathcity_pro_monthly',
+        'productId': planType == 'YEARLY' ? 'mathcity_pro_yearly' : 'mathcity_pro_monthly',
+        'planType': planType,
       });
-      if (res.data['success'] == true) {
+      if (res.data['success'] == true && res.data['data'] != null) {
+        final data = res.data['data'];
+        final proExpiresAt = data['proExpiresAt'] as String?;
+        final price = (data['priceMonthlyUzs'] as num?)?.toInt() ?? (planType == 'YEARLY' ? 250000 : 29000);
         if (state.student != null) {
-          final now = DateTime.now();
-          final expiry = now.add(const Duration(days: 30));
           state = state.copyWith(
             isLoading: false,
             student: state.student!.copyWith(
               subscription: SubscriptionModel(
                 status: 'PRO_ACTIVE',
                 isProActive: true,
-                planName: 'MathCity Pro',
-                priceMonthlyUzs: 29000,
+                planName: planType == 'YEARLY' ? 'MathCity Pro 1 Yillik' : 'MathCity Pro 1 Oylik',
+                priceMonthlyUzs: price,
                 trialDaysRemaining: 0,
-                proExpiresAt: expiry.toIso8601String(),
+                proExpiresAt: proExpiresAt ?? DateTime.now().add(Duration(days: planType == 'YEARLY' ? 365 : 30)).toIso8601String(),
               ),
             ),
           );
@@ -207,16 +174,16 @@ class StudentNotifier extends StateNotifier<StudentState> {
       }
     } catch (_) {
       if (state.student != null) {
-        final now = DateTime.now();
-        final expiry = now.add(const Duration(days: 30));
+        final durationDays = planType == 'YEARLY' ? 365 : 30;
+        final expiry = DateTime.now().add(Duration(days: durationDays));
         state = state.copyWith(
           isLoading: false,
           student: state.student!.copyWith(
             subscription: SubscriptionModel(
               status: 'PRO_ACTIVE',
               isProActive: true,
-              planName: 'MathCity Pro',
-              priceMonthlyUzs: 29000,
+              planName: planType == 'YEARLY' ? 'MathCity Pro 1 Yillik' : 'MathCity Pro 1 Oylik',
+              priceMonthlyUzs: planType == 'YEARLY' ? 250000 : 29000,
               trialDaysRemaining: 0,
               proExpiresAt: expiry.toIso8601String(),
             ),
@@ -236,23 +203,6 @@ class StudentNotifier extends StateNotifier<StudentState> {
     if (!mounted) return;
     if (result.success && result.student != null) {
       state = state.copyWith(student: result.student);
-    }
-    // Also restore cached coins if available
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      if (!mounted) return;
-      final cachedCoins = prefs.getInt('cached_coin_balance');
-      final cachedXP = prefs.getInt('cached_total_xp');
-      if (cachedCoins != null && state.student != null && cachedCoins > state.student!.coinBalance) {
-        state = state.copyWith(
-          student: state.student!.copyWith(
-            coinBalance: cachedCoins,
-            totalXP: cachedXP ?? state.student!.totalXP,
-          ),
-        );
-      }
-    } catch (e) {
-      debugPrint('ℹ️ [StudentNotifier] Keshdagi tangalarni tiklashda: $e');
     }
     unawaited(syncOfflineAnswers());
   }
@@ -334,6 +284,23 @@ class StudentNotifier extends StateNotifier<StudentState> {
         state = state.copyWith(student: student);
       }
     } catch (_) {}
+  }
+
+  void markLessonCompleted({required String lessonId, required int rewardCoins, required int rewardXP}) {
+    if (state.student == null) return;
+    final isNew = !state.student!.completedLessons.contains(lessonId);
+    final updatedList = List<String>.from(state.student!.completedLessons);
+    if (isNew) updatedList.add(lessonId);
+    final newCoins = state.student!.coinBalance + (isNew ? rewardCoins : 0);
+    final newXP = state.student!.totalXP + (isNew ? rewardXP : 0);
+    state = state.copyWith(
+      student: state.student!.copyWith(
+        completedLessons: updatedList,
+        completedLessonsCount: updatedList.length,
+        coinBalance: newCoins,
+        totalXP: newXP,
+      ),
+    );
   }
 
   Future<Map<String, dynamic>?> fetchWeeklyActivity() async {
@@ -970,6 +937,10 @@ class StudentNotifier extends StateNotifier<StudentState> {
   // --- Multi-Account Logout & Clean State Revocation ---
   Future<void> logout() async {
     await _authService.signOut();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+    } catch (_) {}
     state = StudentState();
   }
 }

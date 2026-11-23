@@ -46,6 +46,7 @@ backend/backups/
 backups/
 
 # 5. Flutter & Dart
+*.apk
 .dart_tool/
 frontend/.dart_tool/
 .packages

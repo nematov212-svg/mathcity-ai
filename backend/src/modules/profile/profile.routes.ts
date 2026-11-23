@@ -45,8 +45,7 @@ profileRouter.get('/summary', authMiddleware, (req: AuthenticatedRequest, res: R
     return timeA - timeB;
   });
   const myIndex = sortedUsers.findIndex((u) => u.id === user.id);
-  const isEligible = (user.totalXP || 0) > 0 || (user.coinBalance || 0) > 0;
-  const rank = (isEligible && myIndex !== -1) ? myIndex + 1 : (isEligible ? sortedUsers.length + 1 : 1);
+  const rank = myIndex !== -1 ? myIndex + 1 : sortedUsers.length + 1;
 
   return res.json({
     success: true,

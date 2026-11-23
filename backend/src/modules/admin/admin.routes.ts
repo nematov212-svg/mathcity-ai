@@ -262,8 +262,8 @@ adminRouter.get('/dashboard', adminAuth, (req: Request, res: Response) => {
   const revenueTodayUzs = todayTransactions.reduce((sum, t) => sum + t.amountUzs, 0);
 
   const activeQuestions = mathQuestionBank.filter((q) => q.isPublished);
-  const kidsQuestions = activeQuestions.filter((q) => q.audience === 'KIDS' || (!q.audience && q.grade <= 4));
-  const teensQuestions = activeQuestions.filter((q) => q.audience === 'TEEN' || (!q.audience && q.grade >= 5));
+  const kidsQuestions = activeQuestions;
+  const teensQuestions: QuestionBankItem[] = [];
 
   const lessons = repository.getLessons(undefined, undefined, true);
   const completedLessonsCount = users.reduce((acc, u) => acc + (u.completedLessons ? u.completedLessons.length : 0), 0);
@@ -322,7 +322,7 @@ adminRouter.get('/students', adminAuth, (req: Request, res: Response) => {
         u.email.toLowerCase().includes(search)
     );
   }
-  if (mode && (mode === 'KIDS' || mode === 'TEEN')) {
+  if (mode && mode === 'KIDS') {
     filtered = filtered.filter((u) => u.mode === mode);
   }
   if (grade && grade >= 1 && grade <= 11) {
@@ -510,7 +510,7 @@ adminRouter.get('/subscriptions', adminAuth, (req: Request, res: Response) => {
 // Strict separation between Kids and Teens question banks
 // ---------------------------------------------------------------------------
 adminRouter.get('/questions', adminAuth, (req: Request, res: Response) => {
-  const audience = req.query.audience as 'KIDS' | 'TEEN' | undefined;
+  const audience = req.query.audience as 'KIDS' | undefined;
   const grade = req.query.grade ? parseInt(req.query.grade as string, 10) : undefined;
   const status = req.query.status as string | undefined;
   const search = req.query.search ? (req.query.search as string).toLowerCase().trim() : '';
@@ -527,7 +527,7 @@ adminRouter.get('/questions', adminAuth, (req: Request, res: Response) => {
 
   const allActive = mathQuestionBank;
   const kidsCount = allActive.filter((q) => q.audience === 'KIDS').length;
-  const teensCount = allActive.filter((q) => q.audience === 'TEEN').length;
+  const teensCount = 0;
 
   return res.json({
     success: true,
@@ -565,8 +565,7 @@ adminRouter.post('/questions', adminAuth, (req: AuthenticatedAdminRequest, res: 
     });
   }
 
-  const resolvedAudience: 'KIDS' | 'TEEN' =
-    audience === 'KIDS' || audience === 'TEEN' ? audience : Number(grade) <= 4 ? 'KIDS' : 'TEEN';
+  const resolvedAudience: 'KIDS' = 'KIDS';
 
   const isPublished = status !== 'DRAFT';
   const newQuestion: QuestionBankItem = {
@@ -687,7 +686,7 @@ adminRouter.post('/questions/import', adminAuth, (req: AuthenticatedAdminRequest
       if (!q.prompt || !Array.isArray(q.options) || q.options.length < 2 || !q.correctAnswer) continue;
       const created = addQuestionToBank({
         id: q.id || `q-imp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-        audience: q.audience || (Number(q.grade) <= 4 ? 'KIDS' : 'TEEN'),
+        audience: 'KIDS',
         grade: Number(q.grade) || 4,
         topic: q.topic || 'Misollar',
         difficulty: q.difficulty || 'MEDIUM',
@@ -751,7 +750,7 @@ adminRouter.post('/questions/import', adminAuth, (req: AuthenticatedAdminRequest
           const options = [optA, optB, optC || '', optD || ''].filter(Boolean);
           const created = addQuestionToBank({
             id: `q-csv-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-            audience: grade <= 4 ? 'KIDS' : 'TEEN',
+            audience: 'KIDS',
             grade,
             topic,
             difficulty: ['EASY', 'MEDIUM', 'HARD'].includes(difficulty) ? difficulty : 'MEDIUM',
@@ -793,7 +792,7 @@ adminRouter.post('/questions/import', adminAuth, (req: AuthenticatedAdminRequest
 // Create, edit, save draft, publish, worked examples, exercise questions
 // ---------------------------------------------------------------------------
 adminRouter.get('/lessons', adminAuth, (req: Request, res: Response) => {
-  const audience = req.query.audience as 'KIDS' | 'TEEN' | undefined;
+  const audience = req.query.audience as 'KIDS' | undefined;
   const grade = req.query.grade ? parseInt(req.query.grade as string, 10) : undefined;
   const search = req.query.search ? (req.query.search as string).toLowerCase().trim() : '';
 
@@ -873,8 +872,7 @@ adminRouter.post('/lessons', adminAuth, (req: AuthenticatedAdminRequest, res: Re
     return res.status(400).json({ success: false, error: 'Dars nomi va sinfi talab qilinadi.' });
   }
 
-  const resolvedAudience: 'KIDS' | 'TEEN' =
-    audience === 'KIDS' || audience === 'TEEN' ? audience : Number(grade) <= 4 ? 'KIDS' : 'TEEN';
+  const resolvedAudience: 'KIDS' = 'KIDS';
 
   const newLessonId = `lesson-${resolvedAudience.toLowerCase()}-${Date.now()}`;
   const now = new Date().toISOString();

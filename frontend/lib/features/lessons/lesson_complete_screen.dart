@@ -148,8 +148,7 @@ class LessonCompleteScreen extends ConsumerWidget {
                 backgroundColor: AppColors.kidsPrimary,
                 borderRadius: 20,
                 onPressed: () {
-                  ref.read(studentProvider.notifier).updateCoins(50);
-                  ref.read(studentProvider.notifier).updateXP(50);
+                  ref.read(studentProvider.notifier).refreshProfile();
                   context.go('/kids/home');
                 },
               ),

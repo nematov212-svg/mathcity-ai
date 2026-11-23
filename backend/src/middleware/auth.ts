@@ -39,24 +39,13 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
       });
     }
 
-    // Strict dynamic age verification only for completed profiles with dateOfBirth
+    // Dynamic age calculation for completed profiles with dateOfBirth
     if (user.dateOfBirth) {
       const dobDate = new Date(user.dateOfBirth);
       if (!isNaN(dobDate.getTime())) {
         const currentAge = calculateAge(dobDate);
-        if (currentAge >= 17) {
-          return res.status(403).json({
-            success: false,
-            errorCode: 'ELIGIBILITY_FAILED',
-            error:
-              'MathCity AI faqat 16 yoshgacha bo‘lgan o‘quvchilar uchun mo‘ljallangan. Afsuski, siz kira olmaysiz.',
-          });
-        }
-        // Auto-update age and mode if turned 13
-        if (currentAge >= 13 && user.mode === 'KIDS') {
-          user.mode = 'TEEN';
-        }
         user.age = currentAge;
+        user.mode = 'KIDS';
       }
     }
 

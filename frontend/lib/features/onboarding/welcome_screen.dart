@@ -29,16 +29,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
       if (result.isNewUser) {
         context.push('/onboarding/intro');
       } else {
-        final student = ref.read(studentProvider).student;
-        final age = student?.age ?? 10;
-
-        if (age >= 17) {
-          context.go('/access-denied');
-        } else if (age >= 13) {
-          context.go('/teen/home');
-        } else {
-          context.go('/kids/home');
-        }
+        context.go('/kids/home');
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -56,14 +47,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     // Automatically navigate when GIS button or silent login authenticates a student
     ref.listen<StudentState>(studentProvider, (prev, next) {
       if (next.student != null && prev?.student?.id != next.student?.id) {
-        final age = next.student?.age ?? 10;
-        if (age >= 17) {
-          context.go('/access-denied');
-        } else if (age >= 13) {
-          context.go('/teen/home');
-        } else {
-          context.go('/kids/home');
-        }
+        context.go('/kids/home');
       }
     });
 
