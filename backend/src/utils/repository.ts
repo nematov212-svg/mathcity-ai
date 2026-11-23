@@ -1565,18 +1565,20 @@ class DataRepository {
     const user = this.getUserById(userId);
     if (!user) throw new Error('Foydalanuvchi topilmadi');
 
-    const isPro = user.subscription.status === 'PRO_ACTIVE';
+    const isPro = user.subscription?.status === 'PRO_ACTIVE';
+    user.unlockedAchievements = user.unlockedAchievements || [];
     user.claimedAchievements = user.claimedAchievements || [];
+    user.completedLessons = user.completedLessons || [];
 
     const all = this.achievements.map((ach) => {
-      const isUnlocked = user.unlockedAchievements.includes(ach.key);
+      const isUnlocked = user.unlockedAchievements!.includes(ach.key);
       const isClaimed = user.claimedAchievements!.includes(ach.key);
 
       let progressText = isUnlocked ? 'Ochilgan' : '0/1';
       let progressRatio = isUnlocked ? 1.0 : 0.0;
 
       if (ach.key === 'ach_first_step') {
-        const count = user.completedLessons.length;
+        const count = user.completedLessons!.length;
         progressRatio = Math.min(1.0, count / 1);
         progressText = isUnlocked ? '1/1 dars' : `${count}/1 dars`;
       } else if (ach.key === 'ach_math_whiz') {
@@ -1625,7 +1627,7 @@ class DataRepository {
     const user = this.getUserById(userId);
     if (!user) throw new Error('Foydalanuvchi topilmadi');
 
-    if (user.subscription.status !== 'PRO_ACTIVE') {
+    if (user.subscription?.status !== 'PRO_ACTIVE') {
       return {
         success: false,
         coinsAwarded: 0,

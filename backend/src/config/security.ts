@@ -40,8 +40,8 @@ export const corsOptions: cors.CorsOptions = {
       return callback(null, true);
     }
 
-    // 4. Allow Render and cloud domains (*.onrender.com, *.mathcity.ai)
-    if (/^https?:\/\/([a-zA-Z0-9-]+\.)*(onrender\.com|mathcity\.ai)$/.test(origin)) {
+    // 4. Allow Render, Firebase, GitHub Pages, Vercel, Netlify, Surge and custom cloud domains
+    if (/^https?:\/\/([a-zA-Z0-9-]+\.)*(onrender\.com|mathcity\.ai|web\.app|firebaseapp\.com|github\.io|vercel\.app|netlify\.app|surge\.sh)$/.test(origin)) {
       return callback(null, true);
     }
 
@@ -49,6 +49,7 @@ export const corsOptions: cors.CorsOptions = {
     return callback(null, true);
   },
   credentials: true,
+  optionsSuccessStatus: 204,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
     'Content-Type',

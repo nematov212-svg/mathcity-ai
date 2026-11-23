@@ -360,16 +360,29 @@ class StudentNotifier extends StateNotifier<StudentState> {
     try {
       final res = await ApiClient().dio.get('/achievements');
       if (res.data['success'] == true) {
-        return {'success': true, 'isPro': true, 'data': res.data['data']};
+        return {
+          'success': true,
+          'isPro': res.data['isPro'] == true,
+          'data': res.data['data'],
+          'unlockedCount': res.data['unlockedCount'],
+        };
       }
-      return {'success': false, 'isPro': false, 'error': res.data['error']};
+      return {'success': false, 'isPro': false, 'error': res.data['error'] ?? 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring.'};
     } on DioException catch (dioErr) {
-      if (dioErr.response?.statusCode == 403) {
-        return {'success': false, 'isPro': false, 'isProRequired': true};
+      final statusCode = dioErr.response?.statusCode;
+      if (statusCode == 403) {
+        final data = dioErr.response?.data;
+        if (data is Map && data['isProRequired'] == true) {
+          return {'success': false, 'isPro': false, 'isProRequired': true};
+        }
+        return {'success': false, 'isPro': false, 'error': 'Ruxsat berilmadi (403). Profilingizni tekshiring.'};
       }
-      return {'success': false, 'isPro': false, 'error': 'Yutuqlarni yuklab bo‘lmadi.'};
+      if (statusCode == 401) {
+        return {'success': false, 'isPro': false, 'error': 'Avtorizatsiyadan o‘tilmagan. Iltimos, hisobingizga kiring.'};
+      }
+      return {'success': false, 'isPro': false, 'error': 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring.'};
     } catch (_) {
-      return {'success': false, 'isPro': false, 'error': 'Tarmoq xatosi.'};
+      return {'success': false, 'isPro': false, 'error': 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring.'};
     }
   }
 

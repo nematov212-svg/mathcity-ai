@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#2A1B7A">
+  <meta name="description" content="MathCity AI — Maktab o‘quvchilari uchun interaktiv va qiziqarli matematika ta’lim platformasi">
+  <meta name="google-signin-client_id"
+    content="608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="MathCity AI">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png" />
+
+  <title>MathCity AI — Interaktiv Matematika Platformasi</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Safe DOM guard, GSI duplicate suppressor & Clean Console logger -->
+  <script>
+    (function () {
+      // 0. Console Logger Filter for GSI internal telemetry, preloads & noisy third-party notices
+      ['log', 'info', 'warn', 'debug'].forEach(function (level) {
+        var orig = console[level];
+        if (!orig) return;
+        console[level] = function () {
+          var firstArg = arguments[0];
+          if (typeof firstArg === 'string' && (
+            firstArg.indexOf('[GSI_LOGGER') !== -1 ||
+            firstArg.indexOf('google.accounts.id.initialize') !== -1 ||
+            firstArg.indexOf('was preloaded using link preload') !== -1 ||
+            firstArg.indexOf('FedCM mode') !== -1 ||
+            firstArg.indexOf('Experiment enable_itp_optimization') !== -1
+          )) {
+            return;
+          }
+          return orig.apply(console, arguments);
+        };
+      });
+
+      // 1. Guard Node.prototype.removeChild against null/detached/mismatched parents
+      var origRemoveChild = Node.prototype.removeChild;
+      Node.prototype.removeChild = function (child) {
+        if (!child) return null;
+        if (!child.parentNode || child.parentNode !== this) {
+          if (child.parentNode && typeof child.remove === 'function') {
+            try { child.remove(); } catch (_) { }
+          }
+          return child;
+        }
+        try {
+          return origRemoveChild.apply(this, arguments);
+        } catch (_) {
+          return child;
+        }
+      };
+
+      // 2. Guard Element.prototype.remove
+      if (Element.prototype.remove) {
+        var origRemove = Element.prototype.remove;
+        Element.prototype.remove = function () {
+          if (!this || !this.parentNode) return;
+          try {
+            origRemove.apply(this, arguments);
+          } catch (_) { }
+        };
+      }
+
+      // 3. Single-use { once: true } listener for Flutter first frame splash removal
+      window.addEventListener('flutter-first-frame', function () {
+        var splash = document.querySelector('.loading') || document.querySelector('#loading') || document.querySelector('#splash');
+        if (splash && splash.parentNode) {
+          try {
+            if (typeof splash.remove === 'function') {
+              splash.remove();
+            } else {
+              splash.parentNode.removeChild(splash);
+            }
+          } catch (_) { }
+        }
+      }, { once: true });
+
+      // 4. Safe single initialization guard for Google Identity Services (GSI)
+      var isGsiInitialized = false;
+      function wrapGsi(idObj) {
+        if (!idObj || idObj._mathcityPatched) return;
+        var origInit = idObj.initialize;
+        idObj.initialize = function (config) {
+          if (isGsiInitialized) {
+            return;
+          }
+          isGsiInitialized = true;
+          return origInit.apply(this, arguments);
+        };
+        idObj._mathcityPatched = true;
+      }
+
+      var gsiTimer = setInterval(function () {
+        if (window.google && window.google.accounts && window.google.accounts.id) {
+          wrapGsi(window.google.accounts.id);
+        }
+      }, 25);
+      setTimeout(function () { clearInterval(gsiTimer); }, 20000);
+    })();
+  </script>
+</head>
+
+<body>
+
+  <!--
+    You can customize the "flutter_bootstrap.js" script.
+    This is useful to provide a custom configuration to the Flutter loader
+    or to give the user feedback during the initialization process.
+
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+
+</html>

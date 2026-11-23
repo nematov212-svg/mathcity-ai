@@ -134,16 +134,17 @@ describe('Profile, Missions, Achievements & Gamification Test Suite', () => {
     });
   });
 
-  describe('3. Achievements (Pro Gated, 403 for Free, Unlocked for Pro)', () => {
-    it('GET /api/achievements should return 403 with isProRequired for Free users', async () => {
+  describe('3. Achievements (Open for All Students, isPro Flag, Claim Pro Gated)', () => {
+    it('GET /api/achievements should return 200 with isPro: false for Free users', async () => {
       const res = await request(app)
         .get('/api/achievements')
         .set('Authorization', `Bearer ${freeUserToken}`);
 
-      expect(res.status).toBe(403);
-      expect(res.body.success).toBe(false);
-      expect(res.body.isProRequired).toBe(true);
-      expect(res.body.error).toContain('Pro');
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.isPro).toBe(false);
+      expect(Array.isArray(res.body.data)).toBe(true);
+      expect(res.body.data.length).toBeGreaterThanOrEqual(5);
     });
 
     it('GET /api/achievements should return achievements list with progress for Pro users', async () => {

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/auth/auth_service.dart';
+import '../../core/storage/storage_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../shared/providers/student_provider.dart';
@@ -17,6 +19,7 @@ class AchievementsScreen extends ConsumerStatefulWidget {
 class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
   bool _isLoading = true;
   bool _isPro = false;
+  String? _errorMessage;
   List<Map<String, dynamic>> _achievements = [];
 
   // Flying coin state
@@ -27,23 +30,51 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
   @override
   void initState() {
     super.initState();
-    _loadAchievements();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadAchievements();
+    });
   }
 
   Future<void> _loadAchievements() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    // Ensure session/token is restored before querying achievements
+    final savedToken = await StorageService.getAuthToken();
+    if (savedToken == null || savedToken.isEmpty) {
+      final restoreRes = await AuthService().restoreSession();
+      if (!restoreRes.success) {
+        if (!mounted) return;
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring';
+        });
+        return;
+      }
+    }
+
     final res = await ref.read(studentProvider.notifier).fetchAchievements();
     if (!mounted) return;
 
-    if (res['isPro'] == true && res['data'] != null) {
+    if (res['success'] == true) {
       setState(() {
-        _isPro = true;
-        _achievements = List<Map<String, dynamic>>.from(res['data']);
+        _isPro = res['isPro'] == true;
+        _achievements = res['data'] != null ? List<Map<String, dynamic>>.from(res['data']) : [];
         _isLoading = false;
+        _errorMessage = null;
       });
-    } else {
+    } else if (res['isProRequired'] == true) {
       setState(() {
         _isPro = false;
         _isLoading = false;
+        _errorMessage = null;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = (res['error'] as String?) ?? 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring';
       });
     }
   }
@@ -152,9 +183,11 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
         children: [
           _isLoading
               ? const Center(child: CircularProgressIndicator())
-              : _isPro
-                  ? _buildProAchievementsList(colors)
-                  : _buildFreeProGatedView(colors),
+              : _errorMessage != null
+                  ? _buildErrorView(colors)
+                  : _isPro
+                      ? _buildProAchievementsList(colors)
+                      : _buildFreeProGatedView(colors),
 
           // Flying Coin Overlay
           if (_showFlyingCoin)
@@ -189,6 +222,63 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
               },
             ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildErrorView(AppThemeColors colors) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 72,
+              height: 72,
+              decoration: BoxDecoration(
+                color: const Color(0xFFEF4444).withOpacity(0.12),
+                shape: BoxShape.circle,
+              ),
+              child: const Center(
+                child: Icon(
+                  Icons.error_outline_rounded,
+                  color: Color(0xFFEF4444),
+                  size: 38,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              _errorMessage ?? 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: colors.ink,
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                elevation: 2,
+              ),
+              onPressed: _loadAchievements,
+              icon: const Icon(Icons.refresh_rounded, size: 20),
+              label: const Text(
+                'Qayta urinish',
+                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

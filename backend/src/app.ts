@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
+import fs from 'fs';
 import { securityHeaders, corsMiddleware, requestTimeoutMiddleware } from './config/security.js';
 import { generalRateLimiter } from './middleware/rateLimit.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -27,6 +28,7 @@ import { exercisesRouter } from './modules/exercises/exercises.routes.js';
 import { isDatabaseHealthy, checkDatabaseConnection } from './db/client.js';
 
 const adminStaticPath = path.resolve(process.cwd(), 'public/admin');
+const webStaticPath = path.resolve(process.cwd(), 'public/web');
 
 export const app = express();
 
@@ -183,5 +185,33 @@ app.get('/admin/*', (req: Request, res: Response) => {
   res.sendFile(path.join(adminStaticPath, 'index.html'));
 });
 
-// 5. Centralized Production Error Handler (Phase 3)
+// 5. Main Flutter Web Application Static Portal
+if (fs.existsSync(webStaticPath)) {
+  app.use(express.static(webStaticPath, {
+    setHeaders: (res, filePath) => {
+      if (
+        filePath.endsWith('index.html') ||
+        filePath.endsWith('flutter_service_worker.js') ||
+        filePath.endsWith('version.json')
+      ) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      }
+    },
+  }));
+
+  // SPA fallback for non-API web navigation routes
+  app.get('*', (req: Request, res: Response, next) => {
+    if (
+      req.path.startsWith('/api') ||
+      req.path.startsWith('/admin') ||
+      req.path.startsWith('/health') ||
+      req.path.startsWith('/ready')
+    ) {
+      return next();
+    }
+    res.sendFile(path.join(webStaticPath, 'index.html'));
+  });
+}
+
+// 6. Centralized Production Error Handler (Phase 3)
 app.use(errorHandler);

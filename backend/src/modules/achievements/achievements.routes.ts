@@ -6,30 +6,20 @@ export const achievementsRouter = Router();
 
 /**
  * GET /api/achievements
- * Pro-gated endpoint.
- * Returns 403 Forbidden with isProRequired: true if free user.
- * Returns real achievements list with progress and claim states if Pro.
+ * Returns real achievements list with progress and claim states.
+ * Accessible to all authenticated students; includes `isPro` status.
  */
 achievementsRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
   const isPro = user.subscription?.status === 'PRO_ACTIVE';
-
-  if (!isPro) {
-    return res.status(403).json({
-      success: false,
-      error: 'Yutuqlar Pro tarifda ochiladi',
-      isProRequired: true,
-      isPro: false,
-      message: 'Yutuqlar bo‘limi faqat MathCity Pro foydalanuvchilari uchun ochiq.',
-    });
-  }
-
   const userAchievements = repository.getAchievementsForUser(user.id);
+
   return res.json({
     success: true,
     data: userAchievements.achievements,
     unlockedCount: userAchievements.unlockedCount,
-    isPro: true,
+    isPro,
+    message: isPro ? undefined : 'Yutuqlar mukofotini olish faqat MathCity Pro tarifida ochiq.',
   });
 });
 
