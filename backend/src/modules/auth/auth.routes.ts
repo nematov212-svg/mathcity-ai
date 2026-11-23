@@ -98,6 +98,35 @@ interface VerifiedGoogleUser {
 }
 
 /**
+ * Returns all recognized Google OAuth Client IDs across platforms and environment variables
+ */
+function getAllowedGoogleClients(): string[] {
+  const envVars = [
+    process.env.GOOGLE_ALLOWED_CLIENT_IDS,
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_WEB_CLIENT_ID,
+    process.env.GOOGLE_ANDROID_CLIENT_ID,
+    process.env.GOOGLE_IOS_CLIENT_ID,
+    config.googleClientId,
+    config.googleWebClientId,
+    config.googleAndroidClientId,
+    config.googleIosClientId,
+    config.googleAllowedClientIds,
+    '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
+  ];
+
+  const set = new Set<string>();
+  for (const val of envVars) {
+    if (!val) continue;
+    val.split(',').forEach((c) => {
+      const trimmed = c.trim();
+      if (trimmed) set.add(trimmed);
+    });
+  }
+  return Array.from(set);
+}
+
+/**
  * Verify Google ID Token with google-auth-library and fallback for test suites
  */
 async function verifyGoogleTokenPayload(idToken: string): Promise<VerifiedGoogleUser> {
@@ -117,16 +146,7 @@ async function verifyGoogleTokenPayload(idToken: string): Promise<VerifiedGoogle
     };
   }
 
-  const allowedClients = [
-    process.env.GOOGLE_WEB_CLIENT_ID,
-    process.env.GOOGLE_ANDROID_CLIENT_ID,
-    process.env.GOOGLE_IOS_CLIENT_ID,
-    config.googleWebClientId,
-    config.googleAndroidClientId,
-    config.googleIosClientId,
-    config.googleClientId,
-    '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
-  ].filter(Boolean) as string[];
+  const allowedClients = getAllowedGoogleClients();
 
   try {
     const ticket = await googleOAuthClient.verifyIdToken({
@@ -148,6 +168,10 @@ async function verifyGoogleTokenPayload(idToken: string): Promise<VerifiedGoogle
       picture: payload.picture,
     };
   } catch (err: any) {
+    console.warn(`⚠️ [Auth/Google] verifyIdToken xatosi: ${err?.message || err}`);
+    if (err?.message && err.message.includes('wrong audience')) {
+      console.warn(`⚠️ [Auth/Google] Audience mismatch: Kutilgan mijozlar: [${allowedClients.join(', ')}]`);
+    }
     // If running offline or in development environment without internet, decode and verify claims
     if (!config.isProduction) {
       try {
@@ -161,6 +185,7 @@ async function verifyGoogleTokenPayload(idToken: string): Promise<VerifiedGoogle
             return { success: false, error: 'Google tokenining issuer manzili noto‘g‘ri.', status: 401 };
           }
           if (allowedClients.length > 0 && decoded.aud && !allowedClients.includes(decoded.aud)) {
+            console.warn(`⚠️ [Auth/Google] Client ID mos kelmadi. Kutilgan: ${allowedClients.join(', ')} | Token aud: ${decoded.aud}`);
             return { success: false, error: 'Google tokeni boshqa mijozga (Client ID) tegishli.', status: 401 };
           }
           if (decoded.email_verified === false) {
@@ -211,16 +236,7 @@ export async function verifyGoogleAccessToken(
     };
   }
 
-  const allowedClients = [
-    process.env.GOOGLE_WEB_CLIENT_ID,
-    process.env.GOOGLE_ANDROID_CLIENT_ID,
-    process.env.GOOGLE_IOS_CLIENT_ID,
-    config.googleWebClientId,
-    config.googleAndroidClientId,
-    config.googleIosClientId,
-    config.googleClientId,
-    '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
-  ].filter(Boolean) as string[];
+  const allowedClients = getAllowedGoogleClients();
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 5000);

@@ -51,12 +51,24 @@ class AuthService {
   static Future<void> init() async {
     if (_isGoogleSignInInitialized && _sharedGoogleSignIn != null) return;
     try {
+      final String? effectiveClientId;
+      if (kIsWeb) {
+        effectiveClientId = webClientId.isNotEmpty ? webClientId : null;
+      } else if (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.macOS) {
+        effectiveClientId = iosClientId.isNotEmpty ? iosClientId : null;
+      } else {
+        // Android: MUST be null! Google Play Services uses package name + signing SHA-1 automatically.
+        effectiveClientId = null;
+      }
+
       _sharedGoogleSignIn = GoogleSignIn(
-        clientId: kIsWeb ? webClientId : iosClientId,
-        serverClientId: kIsWeb ? null : webClientId,
+        clientId: effectiveClientId,
+        serverClientId: webClientId.isNotEmpty ? webClientId : null,
         scopes: kIsWeb ? const [] : const ['email', 'profile'],
       );
       _isGoogleSignInInitialized = true;
+      _googleSignInInitFailed = false;
     } catch (e, stack) {
       debugPrint('⚠️ GoogleSignIn initsializatsiya xatosi: $e\n$stack');
       _googleSignInInitFailed = true;
@@ -67,20 +79,22 @@ class AuthService {
   static String webClientId = AppConfig.googleWebClientId;
 
   /// iOS OAuth Client ID from Google Cloud Console
-  static String iosClientId = const String.fromEnvironment(
-    'GOOGLE_IOS_CLIENT_ID',
-    defaultValue:
-        '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
-  );
+  static String iosClientId = AppConfig.googleIosClientId;
 
   /// Allows setting web client id at runtime if needed
   static void setWebClientId(String clientId) {
     webClientId = clientId;
+    _sharedGoogleSignIn = null;
+    _isGoogleSignInInitialized = false;
+    _googleSignInInitFailed = false;
   }
 
   /// Allows setting iOS client id at runtime if needed
   static void setIosClientId(String clientId) {
     iosClientId = clientId;
+    _sharedGoogleSignIn = null;
+    _isGoogleSignInInitialized = false;
+    _googleSignInInitFailed = false;
   }
   
   
@@ -240,10 +254,14 @@ class AuthService {
     } catch (e) {
       debugPrint('ℹ️ [AuthService/Google] Kirish xatoligi: $e');
       final errStr = e.toString().toLowerCase();
+
+      // 1. Foydalanuvchi bekor qildi yoki oynani yopdi
       if (errStr.contains('popup_closed') ||
           errStr.contains('popup_blocked') ||
           errStr.contains('cancel') ||
           errStr.contains('canceled') ||
+          errStr.contains('cancelled') ||
+          errStr.contains('sign_in_canceled') ||
           errStr.contains('closed') ||
           errStr.contains('access_denied')) {
         return const AuthResult(
@@ -251,6 +269,33 @@ class AuthService {
           errorMessage: null, // Bekor qilindi, qizil xatolik xabari ko'rsatilmaydi
         );
       }
+
+      // 2. Android: ApiException 10 (DEVELOPER_ERROR) — SHA-1 yoki Package Name mos emas
+      if (errStr.contains('10') || errStr.contains('developer_error')) {
+        debugPrint('❌ [Google Sign-In] ApiException 10 (DEVELOPER_ERROR) aniqlandi!');
+        debugPrint('📌 BUNI TUZATISH UCHUN Google Cloud Console ga quyidagilarni kiriting:');
+        debugPrint('   Package name: com.mathcityai.mathcity_ai');
+        debugPrint('   Debug SHA-1: 9D:02:97:60:C4:AE:DD:81:42:03:AE:70:F1:C7:E2:94:B0:EA:F3:8B');
+        debugPrint('   Release SHA-1: 43:3D:D9:C8:8A:D6:90:14:8B:DF:07:F4:0D:42:EB:70:3D:0F:10:E1');
+        debugPrint('   Play App Signing SHA-1: Google Play Console > Setup > App Integrity bo‘limidan oling.');
+        return const AuthResult(
+          success: false,
+          errorMessage:
+              'Google Sign-In sozlanmagan (ApiException 10: SHA-1 yoki paket nomi konsolda yo‘q). Iltimos, oddiy login orqali kiring.',
+        );
+      }
+
+      // 3. Android: ApiException 12500 (OAuth rozilik ekrani to‘liq emas yoki tizim xatosi)
+      if (errStr.contains('12500')) {
+        debugPrint('❌ [Google Sign-In] ApiException 12500 aniqlandi (OAuth rozilik ekrani sozlanmagan).');
+        return const AuthResult(
+          success: false,
+          errorMessage:
+              'Google tizimida xatolik (12500: OAuth rozilik ekrani to‘liq sozlanmagan). Iltimos, oddiy hisob bilan kiring.',
+        );
+      }
+
+      // 4. People API o'chiq
       if (errStr.contains('people.googleapis.com') ||
           errStr.contains('people api') ||
           errStr.contains('service_disabled')) {
@@ -260,16 +305,21 @@ class AuthService {
               'Google Cloud Console loyihangizda "People API" yoqilmagan. Iltimos, Google konsolidan People API ni faollashtiring yoki to‘g‘ridan-to‘g‘ri login orqali kiring.',
         );
       }
+
+      // 5. Web: Ruxsat etilmagan origin / domen
       if (errStr.contains('unregistered_origin') ||
           errStr.contains('origin_mismatch') ||
           errStr.contains('not allowed for the given client') ||
+          errStr.contains('idpiframe_initialization_failed') ||
           errStr.contains('403')) {
         return const AuthResult(
           success: false,
           errorMessage:
-              'Ushbu veb-manzil Google Cloud Console da ruxsat etilmagan. Iltimos, konsoldan Authorized JavaScript origins ga qo‘shing yoki login orqali kiring.',
+              'Ushbu veb-manzil Google Cloud Console da ruxsat etilmagan (Authorized JavaScript origins). Iltimos, konsoldan manzilni qo‘shing yoki login orqali kiring.',
         );
       }
+
+      // 6. Tarmoq xatoligi
       if (errStr.contains('network') || errStr.contains('socket') || errStr.contains('timeout')) {
         return const AuthResult(
           success: false,
@@ -277,6 +327,7 @@ class AuthService {
               'Internet aloqasi mavjud emas yoki server uyg‘onmoqda. Iltimos, birozdan so‘ng qayta urinib ko‘ring.',
         );
       }
+
       return const AuthResult(
         success: false,
         errorMessage:

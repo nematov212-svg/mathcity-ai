@@ -8,10 +8,18 @@ export const securityHeaders = helmet({
     ? {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", 'https://accounts.google.com'],
+        scriptSrc: ["'self'", "'unsafe-inline'", 'https://accounts.google.com', 'https://apis.google.com'],
         styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", 'data:', 'https:'],
-        connectSrc: ["'self'", ...config.allowedOrigins, 'https://accounts.google.com'],
+        connectSrc: [
+          "'self'",
+          ...config.allowedOrigins,
+          ...config.corsOrigins,
+          'https://accounts.google.com',
+          'https://oauth2.googleapis.com',
+          'https://www.googleapis.com',
+          'https://*.onrender.com',
+        ],
       },
     }
     : false,
@@ -25,7 +33,7 @@ export const corsOptions: cors.CorsOptions = {
     // 1. Allow non-browser requests (e.g. mobile apps, curl, tests) where origin is undefined
     if (!origin) return callback(null, true);
       
-    // 2. Allow all localhost/127.0.0.1 ports (Flutter web dev)
+    // 2. Allow all localhost/127.0.0.1 ports (Flutter web dev across any port)
     if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
       return callback(null, true);
     }
@@ -35,13 +43,14 @@ export const corsOptions: cors.CorsOptions = {
       ...config.corsOrigins,
       ...config.allowedOrigins,
       ...(process.env.CORS_ORIGINS || '').split(',').map((o) => o.trim()).filter(Boolean),
+      ...(process.env.ALLOWED_ORIGINS || '').split(',').map((o) => o.trim()).filter(Boolean),
     ];
     if (allowed.includes('*') || allowed.includes(origin)) {
       return callback(null, true);
     }
 
-    // 4. Allow Render, Firebase, GitHub Pages, Vercel, Netlify, Surge and custom cloud domains
-    if (/^https?:\/\/([a-zA-Z0-9-]+\.)*(onrender\.com|mathcity\.ai|web\.app|firebaseapp\.com|github\.io|vercel\.app|netlify\.app|surge\.sh)$/.test(origin)) {
+    // 4. Allow Render, Firebase, GitHub Pages, Vercel, Netlify, Surge, mathcity.uz, mathcity.ai domains
+    if (/^https?:\/\/([a-zA-Z0-9-]+\.)*(onrender\.com|mathcity\.uz|mathcity\.ai|web\.app|firebaseapp\.com|github\.io|vercel\.app|netlify\.app|surge\.sh)$/.test(origin)) {
       return callback(null, true);
     }
 

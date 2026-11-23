@@ -9,9 +9,22 @@ class AppConfig {
   /// Web OAuth Client ID from Google Cloud Console (Public ID, not a secret)
   static const String googleWebClientId = String.fromEnvironment(
     'GOOGLE_CLIENT_ID',
+    defaultValue: String.fromEnvironment(
+      'GOOGLE_WEB_CLIENT_ID',
+      defaultValue:
+          '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
+    ),
+  );
+
+  /// iOS OAuth Client ID from Google Cloud Console
+  static const String googleIosClientId = String.fromEnvironment(
+    'GOOGLE_IOS_CLIENT_ID',
     defaultValue:
         '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com',
   );
+
+  /// Android Application Package Name
+  static const String androidPackageName = 'com.mathcityai.mathcity_ai';
 
   /// Optional Environment-specific API URL (passed via --dart-define=API_BASE_URL=... or API_URL=...)
   static const String _envApiBase = String.fromEnvironment('API_BASE_URL');

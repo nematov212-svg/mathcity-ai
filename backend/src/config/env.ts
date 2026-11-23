@@ -15,17 +15,18 @@ const envSchema = z
     ALLOWED_ORIGINS: z
       .string()
       .default(
-        'http://localhost:8085,https://mathcity-ai-admin.onrender.com,https://mathcity-ai-web.onrender.com'
+        'http://localhost:8085,http://localhost:3000,http://localhost:5173,https://mathcity-ai-admin.onrender.com,https://mathcity-ai-web.onrender.com,https://mathcity.uz,https://mathcity.ai'
       ),
     ALLOW_LOCALHOST_ORIGINS: z
       .string()
       .optional()
-      .default('false')
+      .default('true')
       .transform((val) => val === 'true' || val === '1'),
     GOOGLE_CLIENT_ID: z.string().optional().default(''),
     GOOGLE_WEB_CLIENT_ID: z.string().optional(),
     GOOGLE_ANDROID_CLIENT_ID: z.string().optional(),
     GOOGLE_IOS_CLIENT_ID: z.string().optional(),
+    GOOGLE_ALLOWED_CLIENT_IDS: z.string().optional(),
     APP_BASE_URL: z.string().optional().default('https://mathcity-ai-web.onrender.com'),
     APP_NAME: z.string().default('MathCity AI'),
     APP_VERSION: z.string().default('1.0.0'),
@@ -85,6 +86,7 @@ export const config = {
   googleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID || env.GOOGLE_WEB_CLIENT_ID || env.GOOGLE_CLIENT_ID || '',
   googleAndroidClientId: process.env.GOOGLE_ANDROID_CLIENT_ID || env.GOOGLE_ANDROID_CLIENT_ID || '',
   googleIosClientId: process.env.GOOGLE_IOS_CLIENT_ID || env.GOOGLE_IOS_CLIENT_ID || '',
+  googleAllowedClientIds: process.env.GOOGLE_ALLOWED_CLIENT_IDS || env.GOOGLE_ALLOWED_CLIENT_IDS || '',
   appBaseUrl: process.env.APP_BASE_URL || env.APP_BASE_URL || 'https://mathcity-ai-web.onrender.com',
   appName: env.APP_NAME,
   appVersion: env.APP_VERSION,
