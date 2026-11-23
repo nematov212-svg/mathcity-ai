@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { authMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
 import { repository } from '../../utils/repository.js';
 import { getTashkentWeekDays } from '../../utils/tashkentTime.js';
+import { savePersistentAvatar } from '../../utils/cloudStorage.js';
 
 export const studentsRouter = Router();
 
@@ -250,12 +251,13 @@ const avatarSchema = z.object({
   avatarUrl: z.string().min(1, 'Avatar ma’lumoti kiritilishi shart.'),
 });
 
-studentsRouter.patch('/avatar', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+studentsRouter.patch('/avatar', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
   const parse = avatarSchema.safeParse(req.body);
   if (!parse.success) {
     return res.status(400).json({ success: false, error: parse.error.errors[0].message });
   }
-  const updated = repository.updateUser(req.user!.id, { avatarUrl: parse.data.avatarUrl });
+  const persistentUrl = await savePersistentAvatar(req.user!.id, parse.data.avatarUrl);
+  const updated = repository.updateUser(req.user!.id, { avatarUrl: persistentUrl });
   return res.json({
     success: true,
     data: { avatarUrl: updated.avatarUrl },

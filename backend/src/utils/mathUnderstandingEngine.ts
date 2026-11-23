@@ -33,7 +33,7 @@ export interface UnderstandingResult {
 }
 
 export class MathUnderstandingEngine {
-  // Numbers in Uzbek
+  // Numbers in Uzbek and Russian
   private static readonly ONES: Record<string, number> = {
     nol: 0,
     bir: 1,
@@ -47,6 +47,18 @@ export class MathUnderstandingEngine {
     sakkiz: 8,
     toqqiz: 9,
     "to'qqiz": 9,
+    ноль: 0,
+    один: 1,
+    одна: 1,
+    два: 2,
+    две: 2,
+    три: 3,
+    четыре: 4,
+    пять: 5,
+    шесть: 6,
+    семь: 7,
+    восемь: 8,
+    девять: 9,
   };
 
   private static readonly TENS: Record<string, number> = {
@@ -62,6 +74,24 @@ export class MathUnderstandingEngine {
     sakson: 80,
     toqson: 90,
     "to'qson": 90,
+    десять: 10,
+    одиннадцать: 11,
+    двенадцать: 12,
+    тринадцать: 13,
+    четырнадцать: 14,
+    пятнадцать: 15,
+    шестнадцать: 16,
+    семнадцать: 17,
+    восемнадцать: 18,
+    девятнадцать: 19,
+    двадцать: 20,
+    тридцать: 30,
+    сорок: 40,
+    пятьдесят: 50,
+    шестьдесят: 60,
+    семьдесят: 70,
+    восемьдесят: 80,
+    девяносто: 90,
   };
 
   private static readonly SCALES: Record<string, number> = {
@@ -69,6 +99,13 @@ export class MathUnderstandingEngine {
     ming: 1000,
     million: 1000000,
     milliard: 1000000000,
+    сто: 100,
+    двести: 200,
+    триста: 300,
+    четыреста: 400,
+    пятьсот: 500,
+    тысяча: 1000,
+    миллион: 1000000,
   };
 
   // --------------------------------------------------------------------------
@@ -118,6 +155,7 @@ export class MathUnderstandingEngine {
     text = text.replace(/\byigindi\b/gi, "yig'indi");
     text = text.replace(/\btogri\b/gi, "to'g'ri");
     text = text.replace(/\btortburchak\b/gi, "to'rtburchak");
+    text = text.replace(/\btort\b/gi, "to'rt");
     text = text.replace(/\btoqqiz\b/gi, "to'qqiz");
     text = text.replace(/\bottiz\b/gi, "o'ttiz");
     text = text.replace(/\btoqson\b/gi, "to'qson");
@@ -129,6 +167,16 @@ export class MathUnderstandingEngine {
     text = text.replace(/(\d+)\s*karra\s*(\d+)/gi, '$1 * $2');
     text = text.replace(/[÷:]/g, '/');
     text = text.replace(/·/g, '*');
+
+    // Russian math verbal operators:
+    text = text
+      .replace(/\bплюс\b/gi, '+')
+      .replace(/\bприбавить\b/gi, '+')
+      .replace(/\bминус\b/gi, '-')
+      .replace(/\bотнять\b/gi, '-')
+      .replace(/\bумножить\s*(?:на)?\b/gi, '*')
+      .replace(/\bразделить\s*(?:на)?\b/gi, '/')
+      .replace(/\bподелить\s*(?:на)?\b/gi, '/');
 
     // Remove polite words that don't affect math logic
     text = text
@@ -728,10 +776,12 @@ export class MathUnderstandingEngine {
       };
     }
 
-    // "16 ning kvadrat ildizi", "ildiz ostida 16"
-    const rootMatch = text.match(/(?:(\d+(?:\.\d+)?)\s*(?:ning)?\s*kvadrat\s+ildizi|ildiz\s+ostida\s+(\d+(?:\.\d+)?))/i);
+    // "16 ning kvadrat ildizi", "ildiz ostida 16", "kvadrat ildiz 64", "корень из 16"
+    const rootMatch = text.match(
+      /(?:(\d+(?:\.\d+)?)\s*(?:ning)?\s*kvadrat\s+ildizi|ildiz\s+ostida\s+(\d+(?:\.\d+)?)|kvadrat\s+ildiz\s+(\d+(?:\.\d+)?)|корень\s*(?:из)?\s*(\d+(?:\.\d+)?))/i
+    );
     if (rootMatch) {
-      const n = parseFloat(rootMatch[1] || rootMatch[2]);
+      const n = parseFloat(rootMatch[1] || rootMatch[2] || rootMatch[3] || rootMatch[4]);
       const res = Math.sqrt(n);
       return {
         success: true,

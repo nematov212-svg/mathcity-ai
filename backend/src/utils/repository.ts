@@ -507,20 +507,78 @@ class DataRepository {
       if (user.subscription) {
         const trialStart = user.subscription.trialStartedAt ? new Date(user.subscription.trialStartedAt) : new Date();
         const trialExpiry = user.subscription.trialExpiresAt ? new Date(user.subscription.trialExpiresAt) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        const proStart = user.subscription.proStartedAt ? new Date(user.subscription.proStartedAt) : null;
+        const proExpiry = user.subscription.proExpiresAt ? new Date(user.subscription.proExpiresAt) : null;
         await prisma.subscription.upsert({
           where: { userId: user.id },
           update: {
             status: user.subscription.status as any,
             trialStartedAt: isNaN(trialStart.getTime()) ? new Date() : trialStart,
             trialExpiresAt: isNaN(trialExpiry.getTime()) ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) : trialExpiry,
+            proStartedAt: proStart && !isNaN(proStart.getTime()) ? proStart : null,
+            proExpiresAt: proExpiry && !isNaN(proExpiry.getTime()) ? proExpiry : null,
           },
           create: {
             userId: user.id,
             status: user.subscription.status as any,
             trialStartedAt: isNaN(trialStart.getTime()) ? new Date() : trialStart,
             trialExpiresAt: isNaN(trialExpiry.getTime()) ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) : trialExpiry,
+            proStartedAt: proStart && !isNaN(proStart.getTime()) ? proStart : null,
+            proExpiresAt: proExpiry && !isNaN(proExpiry.getTime()) ? proExpiry : null,
           },
         });
+      }
+
+      // Persist completed lessons
+      if (user.completedLessons && user.completedLessons.length > 0) {
+        for (const lessonId of user.completedLessons) {
+          try {
+            await prisma.lessonProgress.upsert({
+              where: { userId_lessonId: { userId: user.id, lessonId } },
+              update: { isCompleted: true },
+              create: { userId: user.id, lessonId, isCompleted: true },
+            });
+          } catch (_) { }
+        }
+      }
+
+      // Persist placed buildings
+      if (user.placedBuildings && user.placedBuildings.length > 0) {
+        for (const b of user.placedBuildings) {
+          try {
+            await prisma.ownedBuilding.upsert({
+              where: { userId_gridX_gridY: { userId: user.id, gridX: b.gridX, gridY: b.gridY } },
+              update: { buildingKey: b.buildingKey },
+              create: { userId: user.id, buildingKey: b.buildingKey, gridX: b.gridX, gridY: b.gridY },
+            });
+          } catch (_) { }
+        }
+      }
+
+      // Persist unlocked achievements
+      if (user.unlockedAchievements && user.unlockedAchievements.length > 0) {
+        for (const achievementKey of user.unlockedAchievements) {
+          try {
+            await prisma.studentAchievement.upsert({
+              where: { userId_achievementKey: { userId: user.id, achievementKey } },
+              update: {},
+              create: { userId: user.id, achievementKey },
+            });
+          } catch (_) { }
+        }
+      }
+
+      // Persist rewarded questions
+      if (user.rewardedQuestionIds && user.rewardedQuestionIds.length > 0) {
+        for (const questionId of user.rewardedQuestionIds) {
+          try {
+            await prisma.rewardedQuestion.upsert({
+              where: { userId_questionId: { userId: user.id, questionId } },
+              update: {},
+              create: { userId: user.id, questionId },
+            });
+          } catch (_) { }
+        }
       }
     } catch (_) { }
   }
@@ -534,6 +592,11 @@ class DataRepository {
           subscription: true,
           coinWallet: true,
           studentXP: true,
+          lessonProgress: true,
+          rewardedQuestions: true,
+          ownedBuildings: true,
+          achievements: true,
+          dailyTasks: true,
         },
       });
 
@@ -542,6 +605,26 @@ class DataRepository {
         const sub = u.subscription;
         const wallet = u.coinWallet;
         const xp = u.studentXP;
+
+        const completedLessons = (u.lessonProgress || [])
+          .filter((lp) => lp.isCompleted)
+          .map((lp) => lp.lessonId);
+        const rewardedQuestionIds = (u.rewardedQuestions || []).map((rq) => rq.questionId);
+        const placedBuildings = (u.ownedBuildings || []).map((b) => ({
+          buildingKey: b.buildingKey,
+          gridX: b.gridX,
+          gridY: b.gridY,
+          constructedAt: b.constructedAt.toISOString(),
+        }));
+        const unlockedAchievements = (u.achievements || []).map((a) => a.achievementKey);
+        const dailyTaskProgress: Record<string, { currentCount: number; isCompleted: boolean; claimed: boolean }> = {};
+        for (const dt of u.dailyTasks || []) {
+          dailyTaskProgress[dt.taskId] = {
+            currentCount: dt.currentCount,
+            isCompleted: dt.isCompleted,
+            claimed: Boolean(dt.claimedAt),
+          };
+        }
 
         const userAccount: UserAccount = {
           id: u.id,
@@ -557,7 +640,7 @@ class DataRepository {
           mode: (prof?.mode as any) || 'KIDS',
           grade: prof?.grade || 4,
           avatarUrl: prof?.avatarUrl || 'assets/images/avatar_kid.png',
-          profileCompleted: true,
+          profileCompleted: Boolean(u.username && prof?.displayName),
           coinBalance: wallet?.balance ?? 0,
           totalXP: xp?.totalXP ?? 0,
           level: xp?.level ?? 1,
@@ -566,19 +649,21 @@ class DataRepository {
             status: (sub?.status as any) || 'FREE_TRIAL_ACTIVE',
             trialStartedAt: sub?.trialStartedAt ? sub.trialStartedAt.toISOString() : new Date().toISOString(),
             trialExpiresAt: sub?.trialExpiresAt ? sub.trialExpiresAt.toISOString() : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+            proStartedAt: sub?.proStartedAt ? sub.proStartedAt.toISOString() : undefined,
+            proExpiresAt: sub?.proExpiresAt ? sub.proExpiresAt.toISOString() : undefined,
             planName: 'MathCity Free Trial',
             priceMonthlyUzs: 29000,
           },
-          placedBuildings: [],
-          completedLessons: [],
+          placedBuildings,
+          completedLessons,
           completedSections: [],
-          solvedQuestions: [],
-          rewardedQuestionIds: [],
-          attemptedQuestionCount: 0,
-          correctQuestionCount: 0,
-          incorrectQuestionCount: 0,
-          dailyTaskProgress: {},
-          unlockedAchievements: [],
+          solvedQuestions: completedLessons.length > 0 ? [...completedLessons] : [],
+          rewardedQuestionIds,
+          attemptedQuestionCount: completedLessons.length * 4,
+          correctQuestionCount: completedLessons.length * 3,
+          incorrectQuestionCount: completedLessons.length,
+          dailyTaskProgress,
+          unlockedAchievements,
           createdAt: u.createdAt.toISOString(),
         };
 

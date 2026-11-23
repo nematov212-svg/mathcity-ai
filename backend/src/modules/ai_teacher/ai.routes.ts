@@ -94,6 +94,154 @@ O‘quvchining savoli: "${promptText}"`,
   return null;
 }
 
+export async function callGeminiMultimodal(options: {
+  promptText: string;
+  imageBase64?: string;
+  imageMime?: string;
+  audioBase64?: string;
+  audioMime?: string;
+}): Promise<string | null> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || !apiKey.trim()) return null;
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 7000);
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const parts: any[] = [
+      {
+        text: `Siz MathCity AI platformasida maktab o‘quvchilariga matematikani o‘rgatuvchi mehribon va dono AI Ustoz Ziyosiz. Barcha javoblaringizni sof o‘zbek tilida (lotin yozuvida), sodda va tushunarli qilib yozing.
+Javob formati:
+1. Qisqa javob (qalin qilib)
+2. Qadam-baqadam yechim (1-qadam, 2-qadam...)
+3. Oxirida tekshirish (Tekshirish: ...)
+
+O‘quvchining savoli / topshirig‘i: "${options.promptText || 'Ushbu matematik misolni yeching'}"`,
+      },
+    ];
+
+    if (options.imageBase64) {
+      const cleanImg = options.imageBase64.replace(/^data:image\/[a-zA-Z]+;base64,/, '');
+      parts.push({
+        inlineData: {
+          mimeType: options.imageMime || 'image/jpeg',
+          data: cleanImg,
+        },
+      });
+    }
+
+    if (options.audioBase64) {
+      const cleanAudio = options.audioBase64.replace(/^data:audio\/[a-zA-Z0-9]+;base64,/, '');
+      parts.push({
+        inlineData: {
+          mimeType: options.audioMime || 'audio/mp4',
+          data: cleanAudio,
+        },
+      });
+    }
+
+    const payload = {
+      contents: [{ role: 'user', parts }],
+      generationConfig: {
+        temperature: 0.2,
+        maxOutputTokens: 800,
+      },
+    };
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+
+    if (resp.ok) {
+      const data: any = await resp.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text && text.trim().length > 0) {
+        return text.trim();
+      }
+    }
+  } catch (_) { }
+  return null;
+}
+
+export async function callGeminiMultimodal(options: {
+  promptText: string;
+  imageBase64?: string;
+  imageMime?: string;
+  audioBase64?: string;
+  audioMime?: string;
+}): Promise<string | null> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || !apiKey.trim()) return null;
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 7000);
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const parts: any[] = [
+      {
+        text: `Siz MathCity AI platformasida maktab o‘quvchilariga matematikani o‘rgatuvchi mehribon va dono AI Ustoz Ziyosiz. Barcha javoblaringizni sof o‘zbek tilida (lotin yozuvida), sodda va tushunarli qilib yozing.
+Javob formati:
+1. Qisqa javob (qalin qilib)
+2. Qadam-baqadam yechim (1-qadam, 2-qadam...)
+3. Oxirida tekshirish (Tekshirish: ...)
+
+O‘quvchining savoli / topshirig‘i: "${options.promptText || 'Ushbu matematik misolni yeching'}"`,
+      },
+    ];
+
+    if (options.imageBase64) {
+      const cleanImg = options.imageBase64.replace(/^data:image\/[a-zA-Z]+;base64,/, '');
+      parts.push({
+        inlineData: {
+          mimeType: options.imageMime || 'image/jpeg',
+          data: cleanImg,
+        },
+      });
+    }
+
+    if (options.audioBase64) {
+      const cleanAudio = options.audioBase64.replace(/^data:audio\/[a-zA-Z0-9]+;base64,/, '');
+      parts.push({
+        inlineData: {
+          mimeType: options.audioMime || 'audio/mp4',
+          data: cleanAudio,
+        },
+      });
+    }
+
+    const payload = {
+      contents: [{ role: 'user', parts }],
+      generationConfig: {
+        temperature: 0.2,
+        maxOutputTokens: 800,
+      },
+    };
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+
+    if (resp.ok) {
+      const data: any = await resp.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text && text.trim().length > 0) {
+        return text.trim();
+      }
+    }
+  } catch (_) { }
+  return null;
+}
+
 // ============================================================================
 // 1. Quota Status Check Endpoint
 // ============================================================================
@@ -1099,6 +1247,312 @@ aiRouter.get('/history', authMiddleware, (req: AuthenticatedRequest, res: Respon
     data: {
       conversations,
       total: conversations.length,
+    },
+  });
+});
+
+// ============================================================================
+// 10. Unified Multimodal Ask Endpoint (POST /api/ai/ask)
+// Supports: text + optional imageBase64 + optional audioBase64
+// ============================================================================
+const askSchema = z.object({
+  message: z.string().optional(),
+  prompt: z.string().optional(),
+  query: z.string().optional(),
+  current_question: z.string().optional(),
+  imageBase64: z.string().optional(),
+  image: z.string().optional(),
+  audioBase64: z.string().optional(),
+  audio: z.string().optional(),
+  mimeType: z.string().optional(),
+  fileName: z.string().optional(),
+  conversationId: z.string().nullable().optional(),
+  gradeLevel: z.number().int().min(1).max(11).optional(),
+});
+
+aiRouter.post('/ask', authMiddleware, aiRateLimiter, async (req: AuthenticatedRequest, res: Response) => {
+  const parse = askSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: parse.error.errors[0].message });
+  }
+
+  const user = req.user!;
+  const isPaidPro = user.subscription.status === 'PRO_ACTIVE';
+  const quotaStatus = aiQuotaStore.checkQuota(user.id, isPaidPro);
+  if (!quotaStatus.allowed) {
+    return res.status(429).json({
+      success: false,
+      code: 'AI_QUOTA_EXCEEDED',
+      error: 'Bugungi 5 ta bepul AI so‘rovingiz tugadi.',
+      data: {
+        remaining: 0,
+        limit: 5,
+        resetAt: quotaStatus.resetAt,
+        upgradeMessage: 'Cheksiz savollar berish uchun MathCity Pro tarifiga obuna bo‘ling.',
+      },
+    });
+  }
+
+  const {
+    message,
+    prompt,
+    query,
+    current_question,
+    imageBase64,
+    image,
+    audioBase64,
+    audio,
+    mimeType,
+    conversationId,
+  } = parse.data;
+
+  const rawText = (message || prompt || query || current_question || '').trim();
+  const rawImage = imageBase64 || image;
+  const rawAudio = audioBase64 || audio;
+
+  if (!rawText && !rawImage && !rawAudio) {
+    return res.status(400).json({
+      success: false,
+      error: 'Savolingizni yozing yoki rasm/ovoz yuboring.',
+    });
+  }
+
+  aiQuotaStore.consumeQuota(user.id, isPaidPro, rawImage ? 'IMAGE' : rawAudio ? 'VOICE' : 'TEXT');
+
+  let activeConvId = conversationId;
+  if (!activeConvId) {
+    const conv = repository.createConversation(user.id, rawText ? rawText.slice(0, 30) : 'Matematika savoli');
+    activeConvId = conv.id;
+  }
+
+  // Save user message in conversation history
+  const userDisplayText = rawText || (rawImage ? '📷 Matematika surati yuborildi' : '🎙️ Ovozli savol yuborildi');
+  repository.saveAIMessage(user.id, activeConvId, 'user', userDisplayText, {
+    inputType: rawImage ? 'IMAGE' : rawAudio ? 'VOICE' : 'TEXT',
+  });
+
+  let replyText = '';
+  let solution: any = null;
+
+  if (rawImage) {
+    const geminiVision = await callGeminiMultimodal({
+      promptText: rawText || "Ushbu rasmdagi matematik masala yoki formulani o'zbek tilida, bolalarga mos qilib yechib bering.",
+      imageBase64: rawImage,
+      imageMime: mimeType || 'image/jpeg',
+    });
+    if (geminiVision) {
+      replyText = geminiVision;
+    } else {
+      const fallbackOcr = cleanOcrMathText(rawText || '2 + 2');
+      const under = MathUnderstandingEngine.solve(fallbackOcr);
+      replyText = under.reply;
+      solution = under;
+    }
+  } else if (rawAudio) {
+    const geminiAudio = await callGeminiMultimodal({
+      promptText: rawText || "Ovozli xabardagi matematik savolni aniqlab, o'zbek tilida bosqichma-bosqich yechib bering.",
+      audioBase64: rawAudio,
+      audioMime: mimeType || 'audio/mp4',
+    });
+    if (geminiAudio) {
+      replyText = geminiAudio;
+    } else {
+      const fallbackText = cleanOcrMathText(rawText || '5 + 5');
+      const under = MathUnderstandingEngine.solve(fallbackText);
+      replyText = under.reply;
+      solution = under;
+    }
+  } else {
+    // Pure text mathematical query
+    const under = MathUnderstandingEngine.solve(rawText);
+    if (under.success) {
+      replyText = under.reply;
+      solution = under;
+    } else {
+      const geminiText = await callGeminiIfAvailable(rawText);
+      if (geminiText) {
+        replyText = geminiText;
+      } else {
+        replyText = under.reply;
+        solution = under;
+      }
+    }
+  }
+
+  // Save assistant message in conversation history
+  repository.saveAIMessage(user.id, activeConvId, 'assistant', replyText, {
+    inputType: rawImage ? 'IMAGE' : rawAudio ? 'VOICE' : 'TEXT',
+    formulaLatex: solution?.formulaLatex,
+    finalAnswer: solution?.shortAnswer,
+  });
+
+  return res.json({
+    success: true,
+    data: {
+      reply: replyText,
+      conversationId: activeConvId,
+      solution: solution ? {
+        understood: solution.understoodQuery,
+        formulaLatex: solution.formulaLatex,
+        shortAnswer: solution.shortAnswer,
+        steps: solution.steps,
+      } : null,
+      shortAnswer: solution?.shortAnswer || null,
+      formulaLatex: solution?.formulaLatex || null,
+      steps: solution?.steps || [],
+    },
+  });
+});
+
+// ============================================================================
+// 10. Unified Multimodal Ask Endpoint (POST /api/ai/ask)
+// Supports: text + optional imageBase64 + optional audioBase64
+// ============================================================================
+const askSchema = z.object({
+  message: z.string().optional(),
+  prompt: z.string().optional(),
+  query: z.string().optional(),
+  current_question: z.string().optional(),
+  imageBase64: z.string().optional(),
+  image: z.string().optional(),
+  audioBase64: z.string().optional(),
+  audio: z.string().optional(),
+  mimeType: z.string().optional(),
+  fileName: z.string().optional(),
+  conversationId: z.string().nullable().optional(),
+  gradeLevel: z.number().int().min(1).max(11).optional(),
+});
+
+aiRouter.post('/ask', authMiddleware, aiRateLimiter, async (req: AuthenticatedRequest, res: Response) => {
+  const parse = askSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: parse.error.errors[0].message });
+  }
+
+  const user = req.user!;
+  const isPaidPro = user.subscription.status === 'PRO_ACTIVE';
+  const quotaStatus = aiQuotaStore.checkQuota(user.id, isPaidPro);
+  if (!quotaStatus.allowed) {
+    return res.status(429).json({
+      success: false,
+      code: 'AI_QUOTA_EXCEEDED',
+      error: 'Bugungi 5 ta bepul AI so‘rovingiz tugadi.',
+      data: {
+        remaining: 0,
+        limit: 5,
+        resetAt: quotaStatus.resetAt,
+        upgradeMessage: 'Cheksiz savollar berish uchun MathCity Pro tarifiga obuna bo‘ling.',
+      },
+    });
+  }
+
+  const {
+    message,
+    prompt,
+    query,
+    current_question,
+    imageBase64,
+    image,
+    audioBase64,
+    audio,
+    mimeType,
+    conversationId,
+  } = parse.data;
+
+  const rawText = (message || prompt || query || current_question || '').trim();
+  const rawImage = imageBase64 || image;
+  const rawAudio = audioBase64 || audio;
+
+  if (!rawText && !rawImage && !rawAudio) {
+    return res.status(400).json({
+      success: false,
+      error: 'Savolingizni yozing yoki rasm/ovoz yuboring.',
+    });
+  }
+
+  aiQuotaStore.consumeQuota(user.id, isPaidPro, rawImage ? 'IMAGE' : rawAudio ? 'VOICE' : 'TEXT');
+
+  let activeConvId = conversationId;
+  if (!activeConvId) {
+    const conv = repository.createConversation(user.id, rawText ? rawText.slice(0, 30) : 'Matematika savoli');
+    activeConvId = conv.id;
+  }
+
+  // Save user message in conversation history
+  const userDisplayText = rawText || (rawImage ? '📷 Matematika surati yuborildi' : '🎙️ Ovozli savol yuborildi');
+  repository.saveAIMessage(user.id, activeConvId, 'user', userDisplayText, {
+    inputType: rawImage ? 'IMAGE' : rawAudio ? 'VOICE' : 'TEXT',
+  });
+
+  let replyText = '';
+  let solution: any = null;
+
+  if (rawImage) {
+    const geminiVision = await callGeminiMultimodal({
+      promptText: rawText || "Ushbu rasmdagi matematik masala yoki formulani o'zbek tilida, bolalarga mos qilib yechib bering.",
+      imageBase64: rawImage,
+      imageMime: mimeType || 'image/jpeg',
+    });
+    if (geminiVision) {
+      replyText = geminiVision;
+    } else {
+      const fallbackOcr = cleanOcrMathText(rawText || '2 + 2');
+      const under = MathUnderstandingEngine.solve(fallbackOcr);
+      replyText = under.reply;
+      solution = under;
+    }
+  } else if (rawAudio) {
+    const geminiAudio = await callGeminiMultimodal({
+      promptText: rawText || "Ovozli xabardagi matematik savolni aniqlab, o'zbek tilida bosqichma-bosqich yechib bering.",
+      audioBase64: rawAudio,
+      audioMime: mimeType || 'audio/mp4',
+    });
+    if (geminiAudio) {
+      replyText = geminiAudio;
+    } else {
+      const fallbackText = cleanOcrMathText(rawText || '5 + 5');
+      const under = MathUnderstandingEngine.solve(fallbackText);
+      replyText = under.reply;
+      solution = under;
+    }
+  } else {
+    // Pure text mathematical query
+    const under = MathUnderstandingEngine.solve(rawText);
+    if (under.success) {
+      replyText = under.reply;
+      solution = under;
+    } else {
+      const geminiText = await callGeminiIfAvailable(rawText);
+      if (geminiText) {
+        replyText = geminiText;
+      } else {
+        replyText = under.reply;
+        solution = under;
+      }
+    }
+  }
+
+  // Save assistant message in conversation history
+  repository.saveAIMessage(user.id, activeConvId, 'assistant', replyText, {
+    inputType: rawImage ? 'IMAGE' : rawAudio ? 'VOICE' : 'TEXT',
+    formulaLatex: solution?.formulaLatex,
+    finalAnswer: solution?.shortAnswer,
+  });
+
+  return res.json({
+    success: true,
+    data: {
+      reply: replyText,
+      conversationId: activeConvId,
+      solution: solution ? {
+        understood: solution.understoodQuery,
+        formulaLatex: solution.formulaLatex,
+        shortAnswer: solution.shortAnswer,
+        steps: solution.steps,
+      } : null,
+      shortAnswer: solution?.shortAnswer || null,
+      formulaLatex: solution?.formulaLatex || null,
+      steps: solution?.steps || [],
     },
   });
 });

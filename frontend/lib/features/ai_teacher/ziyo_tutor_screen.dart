@@ -182,9 +182,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       if (_speechAvailable) {
         final locales = await _speech.locales();
         final uzLocale = locales.where((l) => l.localeId.startsWith('uz')).firstOrNull;
-        final ruLocale = locales.where((l) => l.localeId.startsWith('ru')).firstOrNull;
-        final enLocale = locales.where((l) => l.localeId.startsWith('en')).firstOrNull;
-        _speechLocale = uzLocale?.localeId ?? ruLocale?.localeId ?? enLocale?.localeId ?? 'uz_UZ';
+        // Never fallback to ru_RU or en_US when user speaks Uzbek. Keep uz_UZ or use server STT
+        _speechLocale = uzLocale?.localeId ?? 'uz_UZ';
       }
     } catch (e) {
       debugPrint('ℹ️ [Speech] Init exception: $e');
@@ -380,51 +379,123 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     } catch (_) {}
   }
 
-  void _pickGalleryImage() async {
+  void _showImageSourceDialog() {
+    final colors = AppThemeColors.of(context);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        decoration: BoxDecoration(
+          color: colors.card,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colors.muted.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 18),
+              Text(
+                'Matematika savolini rasmga olish',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: colors.ink),
+              ),
+              const SizedBox(height: 18),
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: colors.primary.withOpacity(0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.camera_alt_rounded, color: colors.primary),
+                ),
+                title: Text('Kamera orqali suratga olish', style: TextStyle(fontWeight: FontWeight.w700, color: colors.ink)),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: colors.primary.withOpacity(0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.photo_library_rounded, color: colors.primary),
+                ),
+                title: Text('Galereyadan tanlash', style: TextStyle(fontWeight: FontWeight.w700, color: colors.ink)),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
     try {
-      final result = await FilePicker.pickFiles(
-        type: FileType.image,
-        withData: true,
-      );
-      if (!mounted) return;
-      if (result == null || result.files.isEmpty) {
-        return;
-      }
-      final bytes = result.files.first.bytes;
-      if (bytes != null) {
-        setState(() {
-          _selectedImageBytes = bytes;
-        });
-        return;
-      }
-      // Native fallback (iOS / Android only)
-      if (!kIsWeb) {
-        final XFile? image = await _picker.pickImage(
-          source: ImageSource.gallery,
-          maxWidth: 1280,
-          maxHeight: 1280,
-          imageQuality: 85,
-        );
-        if (!mounted) return;
-        if (image != null) {
-          final fileBytes = await image.readAsBytes();
-          if (!mounted) return;
-          setState(() {
-            _selectedImageBytes = fileBytes;
-          });
+      if (kIsWeb && source == ImageSource.gallery) {
+        final result = await FilePicker.pickFiles(type: FileType.image, withData: true);
+        if (!mounted || result == null || result.files.isEmpty) return;
+        final bytes = result.files.first.bytes;
+        if (bytes != null) {
+          if (bytes.lengthInBytes > 2 * 1024 * 1024) {
+            _showImageSizeError();
+            return;
+          }
+          setState(() => _selectedImageBytes = bytes);
+          return;
         }
       }
+
+      final XFile? image = await _picker.pickImage(
+        source: source,
+        maxWidth: 1600,
+        maxHeight: 1600,
+        imageQuality: 85,
+      );
+      if (!mounted || image == null) return;
+      final fileBytes = await image.readAsBytes();
+      if (fileBytes.lengthInBytes > 2 * 1024 * 1024) {
+        _showImageSizeError();
+        return;
+      }
+      setState(() => _selectedImageBytes = fileBytes);
     } catch (e) {
       debugPrint('⚠️ Rasm tanlashda ogohlantirish: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Rasm tanlashda xatolik yuz berdi. Boshqa fayl tanlab ko‘ring.'),
+            content: Text('Rasm tanlashda xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.'),
             backgroundColor: Color(0xFFDC2626),
           ),
         );
       }
     }
+  }
+
+  void _showImageSizeError() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Rasm hajmi 2 MB dan oshmasligi kerak.'),
+        backgroundColor: Color(0xFFDC2626),
+      ),
+    );
   }
 
   void _clearSelectedImage() {
@@ -527,9 +598,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
 
     _recordingTimer?.cancel();
 
-    // Guard against double submission
-    if (_isSending) return;
-    _isSending = true;
+    _recordingTimer?.cancel();
 
     String? path;
     try {
@@ -547,9 +616,6 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
 
     final transcriptToSend = _liveTranscript.trim();
 
-    // Reset independent session state
-    _liveTranscript = '';
-    _textController.clear();
     try {
       await _speech.cancel();
     } catch (_) {}
@@ -558,9 +624,25 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     setState(() {
       _isRecording = false;
       _recordingSeconds = 0;
+      _liveTranscript = '';
+      if (transcriptToSend.isNotEmpty) {
+        _textController.text = transcriptToSend;
+      }
     });
 
-    _sendVoiceMessage(path: path ?? '', transcript: transcriptToSend);
+    if (transcriptToSend.isNotEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('🎙️ Ovoz matnga o‘girildi. Matnni tekshirib yoki tahrirlab, Yuborish tugmasini bosing.'),
+            backgroundColor: Color(0xFF6C47FF),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } else if (path != null && path.isNotEmpty) {
+      _sendVoiceMessage(path: path, transcript: '');
+    }
   }
 
   void _cancelRecording() async {
@@ -1903,12 +1985,12 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         top: false,
         child: Row(
           children: [
-            // Gallery image picker button
+            // Camera & Gallery image picker button
             _buildActionSquareButton(
-              icon: Icons.photo_library_rounded,
-              tooltip: 'Galereyadan rasm tanlash',
+              icon: Icons.add_a_photo_rounded,
+              tooltip: 'Rasm yuklash (Kamera / Galereya)',
               colors: colors,
-              onTap: (_isLoading || _isSending) ? null : _pickGalleryImage,
+              onTap: (_isLoading || _isSending) ? null : _showImageSourceDialog,
             ),
             const SizedBox(width: 6),
 

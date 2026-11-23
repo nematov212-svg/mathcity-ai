@@ -149,3 +149,94 @@ export async function uploadToStorage(
     createdAt: new Date().toISOString(),
   };
 }
+
+/**
+ * Handles persistent avatar saving.
+ * Priority:
+ * 1. Cloudinary CDN if credentials exist in .env
+ * 2. Supabase Storage S3 if credentials exist in .env
+ * 3. Base64 data URI stored directly in PostgreSQL database (guaranteed persistent across server reboots)
+ */
+export async function savePersistentAvatar(
+  userId: string,
+  avatarInput: string
+): Promise<string> {
+  if (!avatarInput || !avatarInput.trim()) {
+    return 'assets/images/avatar_kid.png';
+  }
+
+  // If already a remote CDN URL (https://res.cloudinary.com or https://...supabase.co)
+  if (avatarInput.startsWith('http://') || avatarInput.startsWith('https://')) {
+    return avatarInput;
+  }
+
+  // 1. Cloudinary Integration
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+  if (cloudName && apiKey && apiSecret && avatarInput.startsWith('data:image')) {
+    try {
+      const timestamp = Math.round(Date.now() / 1000);
+      const publicId = `avatars/user_${userId}_${timestamp}`;
+      const crypto = await import('crypto');
+      const toSign = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+      const signature = crypto.createHash('sha1').update(toSign).digest('hex');
+
+      const formData = new URLSearchParams();
+      formData.append('file', avatarInput);
+      formData.append('api_key', apiKey);
+      formData.append('timestamp', timestamp.toString());
+      formData.append('public_id', publicId);
+      formData.append('signature', signature);
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+      if (res.ok) {
+        const data = (await res.json()) as any;
+        if (data.secure_url) {
+          console.log(`✅ [Avatar CDN] Cloudinary muvaffaqiyatli yuklandi: ${data.secure_url}`);
+          return data.secure_url;
+        }
+      }
+    } catch (err) {
+      console.warn('⚠️ Cloudinary avatar yuklashda xatolik:', err);
+    }
+  }
+
+  // 2. Supabase Storage Integration
+  const supabaseUrl = process.env.SUPABASE_STORAGE_URL || process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+  const bucket = process.env.SUPABASE_STORAGE_BUCKET || 'avatars';
+  if (supabaseUrl && supabaseKey && avatarInput.startsWith('data:image')) {
+    try {
+      const commaIdx = avatarInput.indexOf(',');
+      const base64 = commaIdx !== -1 ? avatarInput.substring(commaIdx + 1) : avatarInput;
+      const buffer = Buffer.from(base64, 'base64');
+      const filename = `avatar_${userId}_${Date.now()}.jpg`;
+
+      const uploadUrl = `${supabaseUrl.replace(/\/$/, '')}/storage/v1/object/${bucket}/${filename}`;
+      const res = await fetch(uploadUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${supabaseKey}`,
+          'Content-Type': 'image/jpeg',
+          'x-upsert': 'true',
+        },
+        body: buffer,
+      });
+      if (res.ok) {
+        const publicUrl = `${supabaseUrl.replace(/\/$/, '')}/storage/v1/object/public/${bucket}/${filename}`;
+        console.log(`✅ [Avatar Supabase] Supabase Storage muvaffaqiyatli yuklandi: ${publicUrl}`);
+        return publicUrl;
+      }
+    } catch (err) {
+      console.warn('⚠️ Supabase Storage avatar yuklashda xatolik:', err);
+    }
+  }
+
+  // 3. Fallback: Base64 data URI directly stored in PostgreSQL student_profiles.avatar_url
+  return avatarInput;
+}

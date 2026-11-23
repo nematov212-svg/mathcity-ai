@@ -474,22 +474,30 @@ class AuthService {
             final student = StudentModel.fromJson(res.data['data']);
             return AuthResult(success: true, student: student, token: savedToken);
           }
-        } catch (_) {
-          // Token may be expired - attempt refresh
-          try {
-            final refreshRes = await ApiClient().dio.post('/auth/refresh');
-            if (refreshRes.data['success'] == true) {
-              final newToken = refreshRes.data['data']['token'] as String;
-              ApiClient().setAuthToken(newToken);
-              await StorageService.saveAuthToken(newToken);
-              final student = StudentModel.fromJson(refreshRes.data['data']['user']);
-              return AuthResult(success: true, student: student, token: newToken);
+        } catch (meError) {
+          final is401 = meError is DioException && meError.response?.statusCode == 401;
+          if (is401) {
+            // Token may be expired - attempt refresh
+            try {
+              final refreshRes = await ApiClient().dio.post('/auth/refresh');
+              if (refreshRes.data['success'] == true) {
+                final newToken = refreshRes.data['data']['token'] as String;
+                ApiClient().setAuthToken(newToken);
+                await StorageService.saveAuthToken(newToken);
+                final student = StudentModel.fromJson(refreshRes.data['data']['user']);
+                return AuthResult(success: true, student: student, token: newToken);
+              }
+            } catch (refreshError) {
+              if (refreshError is DioException &&
+                  (refreshError.response?.statusCode == 401 || refreshError.response?.statusCode == 403)) {
+                // Token definitely rejected by server
+                await StorageService.clear();
+                ApiClient().clearAuthToken();
+              }
             }
-          } catch (_) {
-            // Token refresh failed - invalid/expired session
-            await StorageService.clear();
-            ApiClient().clearAuthToken();
           }
+          // Server might be sleeping (Render spin-up) or network transient issue - do NOT clear tokens or demo fallback
+          return const AuthResult(success: false);
         }
       }
 

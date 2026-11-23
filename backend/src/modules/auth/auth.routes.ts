@@ -53,6 +53,40 @@ async function getAppleSigningKeyPem(kid: string): Promise<string | null> {
   }
 }
 
+export function formatAuthUser(user: UserAccount, rank?: number) {
+  const isProfileComplete = user.profileCompleted ?? Boolean(user.username && user.username.length >= 3 && user.dateOfBirth);
+  return {
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    displayName: user.displayName,
+    avatarUrl: user.avatarUrl || 'assets/images/avatar_kid.png',
+    dateOfBirth: user.dateOfBirth,
+    age: user.age,
+    mode: user.mode,
+    grade: user.grade,
+    profileCompleted: isProfileComplete,
+    parentalConsentRequired: user.parentalConsentRequired ?? (user.age > 0 && user.age < 13),
+    coinBalance: user.coinBalance,
+    coins: user.coinBalance,
+    totalXP: user.totalXP,
+    xp: user.totalXP,
+    level: user.level,
+    cityLevel: user.cityLevel,
+    currentStreak: user.currentStreak || 1,
+    longestStreak: user.longestStreak || 1,
+    completedLessons: user.completedLessons || [],
+    completedLessonsCount: (user.completedLessons || []).length,
+    solvedQuestionsCount: (user.solvedQuestions || []).length,
+    placedBuildingsCount: (user.placedBuildings || []).length,
+    attemptedQuestionCount: user.attemptedQuestionCount || 0,
+    correctQuestionCount: user.correctQuestionCount || 0,
+    createdAt: user.createdAt,
+    rank: rank ?? 1,
+    subscription: repository.getSubscription(user.id),
+  };
+}
+
 interface VerifiedGoogleUser {
   success: boolean;
   sub?: string;
@@ -519,21 +553,7 @@ authRouter.post('/register', authRateLimiter, (req: Request, res: Response) => {
       token,
       isNewUser: true,
       profileCompleted: true,
-      user: {
-        id: newUser.id,
-        email: newUser.email,
-        username: newUser.username,
-        displayName: newUser.displayName,
-        age: newUser.age,
-        mode: newUser.mode,
-        grade: newUser.grade,
-        profileCompleted: true,
-        coinBalance: newUser.coinBalance,
-        totalXP: newUser.totalXP,
-        level: newUser.level,
-        cityLevel: newUser.cityLevel,
-        subscription: repository.getSubscription(newUser.id),
-      },
+      user: formatAuthUser(newUser),
     },
   });
 });
@@ -591,21 +611,7 @@ authRouter.post('/login', authRateLimiter, (req: Request, res: Response) => {
       token,
       isNewUser: false,
       profileCompleted: isProfileComplete,
-      user: {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        displayName: user.displayName,
-        age: user.age,
-        mode: user.mode,
-        grade: user.grade,
-        profileCompleted: isProfileComplete,
-        coinBalance: user.coinBalance,
-        totalXP: user.totalXP,
-        level: user.level,
-        cityLevel: user.cityLevel,
-        subscription: repository.getSubscription(user.id),
-      },
+      user: formatAuthUser(user),
     },
   });
 });
@@ -623,21 +629,7 @@ authRouter.post('/refresh', authMiddleware, (req: AuthenticatedRequest, res: Res
     data: {
       token,
       profileCompleted: isProfileComplete,
-      user: {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        displayName: user.displayName,
-        age: user.age,
-        mode: user.mode,
-        grade: user.grade,
-        profileCompleted: isProfileComplete,
-        coinBalance: user.coinBalance,
-        totalXP: user.totalXP,
-        level: user.level,
-        cityLevel: user.cityLevel,
-        subscription: repository.getSubscription(user.id),
-      },
+      user: formatAuthUser(user),
     },
   });
 });
@@ -879,22 +871,7 @@ authRouter.post('/google', authRateLimiter, async (req: Request, res: Response) 
       isNewUser,
       needsProfile,
       profileCompleted: Boolean(user.profileCompleted),
-      user: {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        displayName: user.displayName,
-        avatarUrl: user.avatarUrl,
-        age: user.age,
-        mode: user.mode,
-        grade: user.grade,
-        profileCompleted: Boolean(user.profileCompleted),
-        coinBalance: user.coinBalance,
-        totalXP: user.totalXP,
-        level: user.level,
-        cityLevel: user.cityLevel,
-        subscription: repository.getSubscription(user.id),
-      },
+      user: formatAuthUser(user),
     },
   });
 });
@@ -956,27 +933,13 @@ authRouter.post('/demo', authRateLimiter, (req: Request, res: Response) => {
     data: {
       token,
       isNewUser: false,
-      user: {
-        id: demoUser.id,
-        email: demoUser.email,
-        displayName: demoUser.displayName,
-        age: demoUser.age,
-        mode: demoUser.mode,
-        grade: demoUser.grade,
-        coinBalance: demoUser.coinBalance,
-        totalXP: demoUser.totalXP,
-        level: demoUser.level,
-        cityLevel: demoUser.cityLevel,
-        subscription: repository.getSubscription(demoUser.id),
-      },
+      user: formatAuthUser(demoUser),
     },
   });
 });
 
 authRouter.get('/me', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
-  const isProfileComplete = user.profileCompleted ?? Boolean(user.username && user.username.length >= 3 && user.dateOfBirth);
-
   const allUsers = repository.getAllUsers();
   const sorted = [...allUsers].sort((a, b) => {
     const coinsA = a.coinBalance || 0;
@@ -994,30 +957,7 @@ authRouter.get('/me', authMiddleware, (req: AuthenticatedRequest, res: Response)
 
   return res.json({
     success: true,
-    data: {
-      id: user.id,
-      email: user.email,
-      username: user.username,
-      displayName: user.displayName,
-      age: user.age,
-      mode: user.mode,
-      grade: user.grade,
-      profileCompleted: isProfileComplete,
-      parentalConsentRequired: user.parentalConsentRequired ?? (user.age > 0 && user.age < 13),
-      coinBalance: user.coinBalance,
-      coins: user.coinBalance,
-      totalXP: user.totalXP,
-      xp: user.totalXP,
-      level: user.level,
-      cityLevel: user.cityLevel,
-      rank,
-      completedLessonsCount: user.completedLessons.length,
-      solvedQuestionsCount: user.solvedQuestions.length,
-      placedBuildingsCount: user.placedBuildings.length,
-      attemptedQuestionCount: user.attemptedQuestionCount,
-      correctQuestionCount: user.correctQuestionCount,
-      subscription: repository.getSubscription(user.id),
-    },
+    data: formatAuthUser(user, rank),
   });
 });
 

@@ -1,7 +1,8 @@
 import { app } from './app.js';
 import { config } from './config/env.js';
-import { checkDatabaseConnection, disconnectDatabase } from './db/client.js';
+import { checkDatabaseConnection, disconnectDatabase, onDatabaseConnected } from './db/client.js';
 import { repository } from './utils/repository.js';
+import { backupPostgresDatabase } from './db/backupPostgres.js';
 import { exec } from 'child_process';
 import util from 'util';
 
@@ -37,6 +38,15 @@ const server = app.listen(port, host, async () => {
       }
     }
   }
+
+  // Automatically load repository data whenever DB connects/reconnects
+  onDatabaseConnected(async () => {
+    try {
+      await repository.initFromDatabase();
+    } catch (e: any) {
+      console.error('Error syncing repository from database:', e?.message);
+    }
+  });
 
   // Verify PostgreSQL connection
   try {
@@ -74,6 +84,17 @@ const server = app.listen(port, host, async () => {
       console.error('Subscription scheduler error:', err?.message);
     }
   }, 60 * 1000); // 1 daqiqalik davriy tekshiruv
+
+  // Daily automated PostgreSQL backup (every 24 hours)
+  setInterval(async () => {
+    try {
+      if (process.env.DATABASE_URL) {
+        await backupPostgresDatabase();
+      }
+    } catch (bErr: any) {
+      console.warn('⚠️ Automated backup notice:', bErr.message);
+    }
+  }, 24 * 60 * 60 * 1000);
 });
 
 // Graceful shutdown
