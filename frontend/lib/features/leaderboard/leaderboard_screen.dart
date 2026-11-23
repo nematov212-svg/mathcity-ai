@@ -375,7 +375,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                       : _errorMessage != null
                           ? _buildErrorState(colors)
                           : _leaderboard.isEmpty
-                              ? _buildEmptyState(colors)
+                              ? _buildEmptyState(colors, isDark)
                               : RefreshIndicator(
                                   onRefresh: () => _loadLeaderboard(),
                                   color: colors.primary,
@@ -383,8 +383,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                                   child: ListView.builder(
                                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 130),
                                     physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                                    itemCount: _leaderboard.length,
+                                    itemCount: _leaderboard.length + (_leaderboard.length < 5 ? 1 : 0),
                                     itemBuilder: (context, index) {
+                                      if (index >= _leaderboard.length) {
+                                        return _buildFewUsersBanner(colors, isDark);
+                                      }
                                       final user = _leaderboard[index];
                                       final currentStudent = ref.watch(studentProvider).student;
                                       final isMyRow = (_myRank != null && (user.id == _myRank!.id || user.userId == _myRank!.userId)) ||
@@ -771,27 +774,103 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     );
   }
 
-  Widget _buildEmptyState(AppThemeColors colors) {
+  Widget _buildEmptyState(AppThemeColors colors, bool isDark) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(28),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.emoji_events_outlined, size: 56, color: colors.muted),
-            const SizedBox(height: 12),
-            Text(
-              'Hozircha reyting ma’lumoti yo‘q',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: colors.ink),
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: const Color(0xFF6C55E0).withOpacity(0.12),
+                shape: BoxShape.circle,
+              ),
+              child: const Center(
+                child: Text('🌱', style: TextStyle(fontSize: 40)),
+              ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 18),
             Text(
-              'Misollarni yechib, birinchi bo‘lib peshqadamga aylaning!',
+              'Yana o‘quvchilar qo‘shilishini kuting',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: colors.muted),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                color: colors.ink,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Hozircha yangi do‘stlaringiz safimizga qo‘shilmoqda. Misollarni yechib, birinchi bo‘lib peshqadamga aylaning!',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 13,
+                color: colors.muted,
+                height: 1.45,
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildFewUsersBanner(AppThemeColors colors, bool isDark) {
+    return Container(
+      margin: const EdgeInsets.only(top: 14, bottom: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF231C4D).withOpacity(0.65) : const Color(0xFFF4F0FF),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: const Color(0xFF6C55E0).withOpacity(0.25),
+          width: 1.2,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: const Color(0xFF6C55E0).withOpacity(0.15),
+              shape: BoxShape.circle,
+            ),
+            child: const Center(
+              child: Text('🌱', style: TextStyle(fontSize: 22)),
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Yana o‘quvchilar qo‘shilishini kuting',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: colors.ink,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  'Tez orada yangi do‘stlaringiz safimizga qo‘shiladi. Birgalikda mashq qilib, peshqadamlikka intiling!',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: colors.muted,
+                    height: 1.35,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
