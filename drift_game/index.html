@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MathCity 3D Drift & Poyga</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 3D WebGL Canvas Container -->
+  <div id="canvas-container"></div>
+
+  <!-- GARAGE / LOBBY OVERLAY -->
+  <div id="garage-overlay">
+    <!-- Top Bar -->
+    <div class="garage-top-bar">
+      <div class="logo-badge glass-panel">
+        <h1>🏎️ MATHCITY 3D DRIFT</h1>
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <div class="coins-badge glass-panel">
+          <span>🪙</span>
+          <span id="garage-coins-text">100 tanga</span>
+        </div>
+        <button class="btn-icon" onclick="openSettingsModal()" title="Sozlamalar">⚙️</button>
+        <button class="btn-icon" onclick="exitToMathCity()" title="Chiqish">✕</button>
+      </div>
+    </div>
+
+    <!-- Center Content: Car Specs on Left, Customizer on Right -->
+    <div class="garage-center-content">
+      <!-- Car Info Card -->
+      <div class="car-card glass-panel">
+        <h2 id="car-name">Samarkand GT</h2>
+        <div class="car-sub" id="car-cat">Supercar • 310 KM/H</div>
+        <p id="car-desc">Aerodinamik uglerod korpus va yuqori tezlanishga ega professional superkar.</p>
+
+        <div class="stat-row">
+          <span>Maks. Tezlik:</span>
+          <div class="stat-bar-bg"><div id="bar-speed" class="stat-bar-fill" style="width: 88%;"></div></div>
+        </div>
+        <div class="stat-row">
+          <span>Tezlanish:</span>
+          <div class="stat-bar-bg"><div id="bar-accel" class="stat-bar-fill" style="width: 92%;"></div></div>
+        </div>
+        <div class="stat-row">
+          <span>Boshqaruv:</span>
+          <div class="stat-bar-bg"><div id="bar-handling" class="stat-bar-fill" style="width: 88%;"></div></div>
+        </div>
+        <div class="stat-row">
+          <span>Drift Darajasi:</span>
+          <div class="stat-bar-bg"><div id="bar-drift" class="stat-bar-fill" style="width: 85%;"></div></div>
+        </div>
+
+        <button class="btn-wheel" style="margin-top: 12px; width: 100%; text-align: center;" onclick="window.mathCityGame.repairCar()">
+          🔧 Kuzovni Ta'mirlash (Tiklash)
+        </button>
+      </div>
+
+      <!-- Customization Panel -->
+      <div class="customizer-box glass-panel">
+        <h3>🎨 KUZOV RANGI (8 TA)</h3>
+        <div class="color-palette" id="color-palette"></div>
+
+        <h3>⚙️ DISK VARIANTI (3 XIL)</h3>
+        <div class="wheel-selector" id="wheel-selector"></div>
+      </div>
+    </div>
+
+    <!-- Bottom Action Bar -->
+    <div class="garage-bottom-bar">
+      <div class="carousel-nav">
+        <button class="btn-icon" onclick="window.mathCityGame.garageManager.prevCar()" style="width: 54px; height: 54px;">◀</button>
+        <button class="btn-icon" onclick="window.mathCityGame.garageManager.nextCar()" style="width: 54px; height: 54px;">▶</button>
+      </div>
+
+      <div style="display: flex; gap: 14px;">
+        <button id="btn-buy-car" class="btn-action-buy" style="display: none;" onclick="window.mathCityGame.buyCurrentCar()">
+          Sotib olish: 150 tanga
+        </button>
+        <button id="btn-play" class="btn-action-primary" onclick="openModeModal()">
+          O‘YNAWNI BOSHLASH
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- IN-GAME HUD OVERLAY -->
+  <div id="hud-overlay">
+    <div class="hud-top">
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <button class="btn-icon" onclick="window.mathCityGame.enterGarage()" title="Garajga qaytish">🏠</button>
+        <button class="btn-icon" onclick="window.mathCityGame.cycleCamera()" title="Kamerani almashtirish (C)">🎥</button>
+        <button class="btn-icon" onclick="window.mathCityGame.repairCar()" title="Ta'mirlash (R)">🔧</button>
+        <div class="coins-badge glass-panel">
+          <span>🪙</span>
+          <span id="hud-coins-text">100 tanga</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <div id="hud-timer-badge" class="coins-badge glass-panel" style="display: none; color: #f43f5e;">
+          ⏱ 90s
+        </div>
+        <div class="logo-badge glass-panel">
+          <span id="hud-total-score" style="font-size: 16px; font-weight: 900; color: #10b981;">BALL: 0</span>
+        </div>
+        <button class="btn-icon" onclick="window.mathCityGame.togglePause()" title="Pauza (ESC)">⏸</button>
+      </div>
+    </div>
+
+    <!-- Real-Time Drift Points & Combo Banner -->
+    <div id="hud-drift-banner" class="hud-drift-banner">
+      <div class="hud-drift-title">DRIFT!</div>
+      <div id="hud-drift-pts" class="hud-drift-pts">+120</div>
+      <div id="hud-combo-badge" class="hud-combo-badge">x2 COMBO</div>
+    </div>
+
+    <!-- Bottom-Right Speedometer & Condition Gauge -->
+    <div class="hud-bottom-right">
+      <div class="condition-box">
+        <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 800;">
+          <span id="hud-condition-text">Kuzov: 100%</span>
+        </div>
+        <div class="condition-bar-bg">
+          <div id="hud-condition-bar" class="condition-bar-fill"></div>
+        </div>
+      </div>
+
+      <div class="speedometer-dial">
+        <div class="speed-num" id="hud-speed-num">0</div>
+        <div class="speed-unit">KM / H</div>
+        <div class="gear-badge" id="hud-gear">GEAR: 1</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ON-SCREEN MOBILE TOUCH CONTROLS -->
+  <div id="touch-controls">
+    <div class="touch-left">
+      <button id="btn-left" class="touch-btn">◀</button>
+      <button id="btn-right" class="touch-btn">▶</button>
+    </div>
+
+    <div class="touch-right">
+      <button id="btn-handbrake" class="touch-btn touch-btn-handbrake">DRIFT</button>
+      <button id="btn-brake" class="touch-btn">S</button>
+      <button id="btn-gas" class="touch-btn" style="background: rgba(16, 185, 129, 0.75);">W</button>
+    </div>
+  </div>
+
+  <!-- MODE SELECTION MODAL -->
+  <div id="mode-modal" class="modal-overlay">
+    <div class="modal-content glass-panel">
+      <h2>O‘YIN REJIMINI TANLANG</h2>
+
+      <div class="mode-card" onclick="selectPlayMode('drift')">
+        <h3>🔥 Drift Rejimi (Ball & Tangalar)</h3>
+        <p>Burchak, tezlik va combo zanjiri yig'ib drift qiling. Har 400 ball uchun tangalar yutib oling!</p>
+      </div>
+
+      <div class="mode-card" onclick="selectPlayMode('free')">
+        <h3>🏙️ Erkin Shahar Sayri</h3>
+        <p>Cheklovlarsiz shahar bo'ylab erkin haydash, ko'prik va sakrash panduslarini sinash.</p>
+      </div>
+
+      <div class="mode-card" onclick="selectPlayMode('time_attack')">
+        <h3>⏱️ Vaqtga Qarshi Poyga</h3>
+        <p>90 soniya ichida shaharcha bo'ylab maksimal drift ballini to'plang va rekord o'rnating!</p>
+      </div>
+
+      <button class="btn-wheel" style="width: 100%; text-align: center; margin-top: 10px;" onclick="closeModeModal()">
+        Bekor qilish
+      </button>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div id="settings-modal" class="modal-overlay">
+    <div class="modal-content glass-panel">
+      <h2>SOZLAMALAR</h2>
+
+      <div style="margin-bottom: 16px;">
+        <h4 style="font-size: 13px; color: #94a3b8; margin-bottom: 6px;">GRAFIKA SIFATI</h4>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-wheel" style="flex: 1; text-align: center;" onclick="setGameQuality('low')">Past (30+ FPS)</button>
+          <button class="btn-wheel" style="flex: 1; text-align: center;" onclick="setGameQuality('med')">O‘rta</button>
+          <button class="btn-wheel" style="flex: 1; text-align: center;" onclick="setGameQuality('high')">Yuqori (60 FPS)</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <h4 style="font-size: 13px; color: #94a3b8; margin-bottom: 6px;">KUN VA OB-HAVO</h4>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <button class="btn-wheel" onclick="setEnvironment(12, false)">☀️ Kunduz</button>
+          <button class="btn-wheel" onclick="setEnvironment(18, false)">🌅 Shom</button>
+          <button class="btn-wheel" onclick="setEnvironment(23, false)">🌙 Tun</button>
+          <button class="btn-wheel" onclick="setEnvironment(14, true)">🌧️ Yomg‘ir</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <h4 style="font-size: 13px; color: #94a3b8; margin-bottom: 6px;">OVOZLAR</h4>
+        <button class="btn-wheel" style="width: 100%; text-align: center;" onclick="toggleAudioMute()">
+          🔊 Ovozni Yoqish / O‘chirish
+        </button>
+      </div>
+
+      <button class="btn-wheel" style="width: 100%; text-align: center;" onclick="closeSettingsModal()">
+        Yopish
+      </button>
+    </div>
+  </div>
+
+  <!-- PAUSE MENU -->
+  <div id="pause-menu" class="modal-overlay">
+    <div class="modal-content glass-panel" style="text-align: center;">
+      <h2>O‘YIN TO‘XTATILDI</h2>
+      <button class="btn-action-primary" style="width: 100%; margin-bottom: 10px;" onclick="window.mathCityGame.togglePause()">
+        DAVOM ETTIRISH
+      </button>
+      <button class="btn-wheel" style="width: 100%; text-align: center; margin-bottom: 8px;" onclick="window.mathCityGame.repairCar()">
+        🔧 Mashinani Ta'mirlash
+      </button>
+      <button class="btn-wheel" style="width: 100%; text-align: center; margin-bottom: 8px;" onclick="window.mathCityGame.enterGarage(); window.mathCityGame.togglePause();">
+        🏠 Garajga Qaytish
+      </button>
+      <button class="btn-wheel" style="width: 100%; text-align: center;" onclick="exitToMathCity()">
+        ✕ Chiqish (MathCity Hub)
+      </button>
+    </div>
+  </div>
+
+  <!-- Three.js and Game Scripts -->
+  <script src="libs/three.min.js"></script>
+  <script src="libs/OrbitControls.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/cars.js"></script>
+  <script src="js/city.js"></script>
+  <script src="js/physics.js"></script>
+  <script src="js/garage.js"></script>
+  <script src="js/game.js"></script>
+
+  <script>
+    function openModeModal() {
+      document.getElementById('mode-modal').style.display = 'flex';
+    }
+    function closeModeModal() {
+      document.getElementById('mode-modal').style.display = 'none';
+    }
+    function selectPlayMode(mode) {
+      closeModeModal();
+      window.mathCityGame.startPlayMode(mode);
+    }
+    function openSettingsModal() {
+      document.getElementById('settings-modal').style.display = 'flex';
+    }
+    function closeSettingsModal() {
+      document.getElementById('settings-modal').style.display = 'none';
+    }
+    function setGameQuality(q) {
+      window.mathCityGame.setQuality(q);
+      closeSettingsModal();
+    }
+    function setEnvironment(hour, isRain) {
+      window.mathCityGame.timeOfDay = hour;
+      window.mathCityGame.cityManager.setDayNightState(hour >= 19 || hour < 6);
+      window.mathCityGame.cityManager.setWeatherRain(isRain);
+      closeSettingsModal();
+    }
+    function toggleAudioMute() {
+      if (window.soundEngine) {
+        window.soundEngine.toggleMute();
+      }
+    }
+    function exitToMathCity() {
+      if (window.mathCityGame) {
+        window.mathCityGame.sendMessageToFlutter('EXIT_TO_HUB', {});
+      }
+    }
+  </script>
+</body>
+</html>
