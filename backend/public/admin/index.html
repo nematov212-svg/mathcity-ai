@@ -1636,14 +1636,6 @@
         }
       }
     }
-          errElem.textContent = json.error || 'Kirish taqiqlandi: Noto‘g‘ri login yoki parol.';
-          errElem.classList.remove('hidden');
-        }
-      } catch (err) {
-        errElem.textContent = 'Server bilan bog‘lanib bo‘lmadi: ' + (err.message || 'Tarmoq xatosi');
-        errElem.classList.remove('hidden');
-      }
-    }
 
     async function handlePasswordChangeSubmit() {
       const oldPassword = document.getElementById('cpOldPassword').value;
@@ -1897,7 +1889,7 @@
     }
 
     // --- 3. LESSONS DATA ---
-    async     let cachedLessons = [];
+    let cachedLessons = [];
 
     function renderLessonsTable(list) {
       const tbody = document.getElementById('lessonsTableBody');
