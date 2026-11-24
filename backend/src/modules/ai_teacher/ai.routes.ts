@@ -7,6 +7,8 @@ import { aiQuotaStore } from './aiQuotaStore.js';
 import { repository } from '../../utils/repository.js';
 import { formatFewShotContext, findBestMatches } from '../../utils/knowledgeMatcher.js';
 import { MathUnderstandingEngine } from '../../utils/mathUnderstandingEngine.js';
+import { aiAnalyticsStore } from '../admin/aiAnalyticsStore.js';
+import { ragKnowledgeStore } from '../admin/ragKnowledgeStore.js';
 
 export const aiRouter = Router();
 
@@ -300,8 +302,12 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
   }
 
   const { message, action, step, contextFormula, conversationId } = parse.data;
+  const queryStartTime = Date.now();
   const user = req.user!;
   const isPaidPro = user.subscription.status === 'PRO_ACTIVE';
+
+  // Check RAG knowledge repository first
+  const ragMatches = ragKnowledgeStore.search(message, 1);
 
   // Check rolling 24-hour quota for Free users
   const quotaStatus = aiQuotaStore.checkQuota(user.id, isPaidPro);
@@ -603,6 +609,17 @@ aiRouter.post('/chat', authMiddleware, aiRateLimiter, async (req: AuthenticatedR
       '2x + 6 = 16',
     ],
     inputType: 'TEXT',
+  });
+
+  aiAnalyticsStore.logQuery({
+    userId: user.id,
+    displayName: user.displayName || user.username || 'O‘quvchi',
+    username: user.username || '—',
+    prompt: message,
+    answer: finalFallbackReply,
+    latencySeconds: (Date.now() - queryStartTime) / 1000,
+    topic: ragMatches.length > 0 ? ragMatches[0].topic : 'Umumiy matematika',
+    status: 'SUCCESS',
   });
 
   return res.json({

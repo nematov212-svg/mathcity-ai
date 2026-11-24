@@ -99,18 +99,21 @@
         <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3.5 text-xs text-indigo-900">
           <div class="font-bold text-slate-800 mb-1.5 flex items-center justify-between">
             <span>Standart administrator hisoblari:</span>
-            <button type="button" onclick="fillAdminCredentials('admin', 'MathCity@Admin2026!Secure')" class="text-indigo-600 hover:text-indigo-800 font-bold underline cursor-pointer">
+            <button type="button" onclick="fillAdminCredentials('admin', 'MathCity@Admin2026!Secure')"
+              class="text-indigo-600 hover:text-indigo-800 font-bold underline cursor-pointer">
               To‘ldirish ⚡
             </button>
           </div>
           <div class="space-y-1 text-slate-700">
             <div class="flex items-center justify-between">
               <span>Asosiy login:</span>
-              <code class="font-bold text-indigo-700 bg-white px-1.5 py-0.5 rounded border border-indigo-100">admin</code>
+              <code
+                class="font-bold text-indigo-700 bg-white px-1.5 py-0.5 rounded border border-indigo-100">admin</code>
             </div>
             <div class="flex items-center justify-between">
               <span>Kuchli parol:</span>
-              <code class="font-bold text-indigo-700 bg-white px-1.5 py-0.5 rounded border border-indigo-100">MathCity@Admin2026!Secure</code>
+              <code
+                class="font-bold text-indigo-700 bg-white px-1.5 py-0.5 rounded border border-indigo-100">MathCity@Admin2026!Secure</code>
             </div>
             <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-indigo-100">
               <span>Lokal dev alternativa:</span>
@@ -705,35 +708,47 @@
              VIEW: MOLIYA VA KARTA (FINANCE)
              ===================================================================== -->
         <section id="view-finance" class="hidden space-y-6">
-          <div class="flex items-center justify-between">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h3 class="text-base font-extrabold text-slate-900">Moliya va To‘lovlar Monitoringi</h3>
               <p class="text-xs text-slate-500">MathCity Pro obuna xaridlari, komissiyalar va tranzaksiyalar</p>
             </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="exportFinanceCsv()"
+                class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center space-x-1.5 transition">
+                <span>📥 CSV / Excel Eksport</span>
+              </button>
+            </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
               <div class="text-xs text-slate-500 font-bold uppercase mb-1">Muvaffaqiyatli xaridlar</div>
               <div id="fin-success-count" class="text-2xl font-black text-slate-900">0</div>
               <div class="text-xs text-emerald-600 font-semibold mt-1">Tasdiqlangan to‘lovlar</div>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
               <div class="text-xs text-slate-500 font-bold uppercase mb-1">Sof daromad (Net)</div>
               <div id="fin-net-proceeds" class="text-2xl font-black text-slate-900">0 UZS</div>
               <div class="text-xs text-slate-500 font-semibold mt-1">2% Click/Bank komissiyasi chegirilgan</div>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200">
-              <div class="text-xs text-slate-500 font-bold uppercase mb-1">Eganing kartasi</div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="text-xs text-slate-500 font-bold uppercase mb-1">Eganing kartasi (Niqoblangan)</div>
               <div id="fin-owner-card" class="text-lg font-mono font-bold text-indigo-700">4916 •••• •••• ****</div>
-              <div class="text-xs text-emerald-600 font-semibold mt-1">Bank hisobi tasdiqlangan</div>
+              <div class="text-xs text-emerald-600 font-semibold mt-1">Bank hisobi tasdiqlangan (CVV yo‘q)</div>
             </div>
           </div>
 
           <!-- Transactions Table -->
           <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-            <div class="p-4 border-b border-slate-200 font-bold text-xs text-slate-800">
-              Tasdiqlangan Pro obuna tranzaksiyalari (29 000 UZS)
+            <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-bold text-xs text-slate-800">
+              <span>Tasdiqlangan Pro obuna tranzaksiyalari (29 000 UZS / 20 300 UZS)</span>
+              <div class="flex items-center space-x-2 text-xs font-semibold">
+                <button onclick="filterFinanceTable('ALL')" id="ff-all" class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 font-bold">Barchasi</button>
+                <button onclick="filterFinanceTable('TODAY')" id="ff-today" class="px-2.5 py-1 rounded-lg text-slate-500 hover:bg-slate-100">Bugun</button>
+                <button onclick="filterFinanceTable('WEEK')" id="ff-week" class="px-2.5 py-1 rounded-lg text-slate-500 hover:bg-slate-100">Shu hafta</button>
+                <button onclick="filterFinanceTable('MONTH')" id="ff-month" class="px-2.5 py-1 rounded-lg text-slate-500 hover:bg-slate-100">Shu oy</button>
+              </div>
             </div>
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs">
@@ -753,48 +768,183 @@
               </table>
             </div>
           </div>
-        </section>
 
-
-        <!-- =====================================================================
-             VIEW: AI USTOZ TAHLILI
-             ===================================================================== -->
-        <section id="view-ai" class="hidden space-y-6">
-          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 class="text-base font-extrabold text-slate-900 mb-1">AI Matematik Ustoz Statistikasi</h3>
-            <p class="text-xs text-slate-500 mb-6">O‘quvchilar tomonidan berilgan savollar va sun’iy intellekt tahlili
-            </p>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <div class="text-xs text-slate-500 font-bold mb-1">Javob berilgan savollar</div>
-                <div class="text-2xl font-black text-indigo-600">42 ta</div>
-                <div class="text-xs text-slate-400 mt-1">100% matematik aniqlik</div>
+          <!-- Admin Bonuses Section (Separated from Cash Revenue) -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="p-4 border-b border-slate-200 flex justify-between items-center font-bold text-xs text-slate-800">
+              <div>
+                <span class="text-sm font-extrabold text-slate-900">🎁 Admin tomonidan berilgan bonuslar</span>
+                <p class="text-[11px] text-slate-400 font-normal mt-0.5">Rag‘batlantirish uchun berilgan bonuslar tushumga qo‘shilmaydi (0 UZS)</p>
               </div>
-              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <div class="text-xs text-slate-500 font-bold mb-1">O‘rtacha yechish vaqti</div>
-                <div class="text-2xl font-black text-slate-900">1.2 soniya</div>
-                <div class="text-xs text-slate-400 mt-1">Gemini 1.5 Flash</div>
-              </div>
-              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <div class="text-xs text-slate-500 font-bold mb-1">Eng ko‘p so‘ralgan mavzu</div>
-                <div class="text-lg font-black text-purple-700">Tenglamalar va Kasrlar</div>
-                <div class="text-xs text-slate-400 mt-1">5–7 sinflar bo‘yicha</div>
-              </div>
+              <span id="badgeBonusCount" class="px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 font-bold text-[10px]">0 ta bonus</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-bold">
+                  <tr>
+                    <th class="px-5 py-3.5">O‘quvchi</th>
+                    <th class="px-5 py-3.5">Berilgan bonus</th>
+                    <th class="px-5 py-3.5">Sababi</th>
+                    <th class="px-5 py-3.5">Admin</th>
+                    <th class="px-5 py-3.5">Sana</th>
+                    <th class="px-5 py-3.5 text-right">Moliya turi</th>
+                  </tr>
+                </thead>
+                <tbody id="bonusTableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
 
 
         <!-- =====================================================================
-             VIEW: SOZLAMALAR (SETTINGS & AUDIT LOGS)
+             VIEW: AI USTOZ TAHLILI & RAG XOTIRASI
+             ===================================================================== -->
+        <section id="view-ai" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">AI Matematik Ustoz Tahlili va Xotirasi</h3>
+              <p class="text-xs text-slate-500">O‘quvchilar savollari, sun’iy intellekt javoblari va bilimlar bazasi (RAG)</p>
+            </div>
+            <button onclick="loadAiAnalytics()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center space-x-1.5 transition">
+              <span>🔄 Yangilash</span>
+            </button>
+          </div>
+
+          <!-- Real KPI Analytics Cards (Zero Fake Metrics) -->
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-3.5">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="text-[11px] text-slate-500 font-bold uppercase mb-1">Jami savollar</div>
+              <div id="ai-stat-total" class="text-2xl font-black text-indigo-600">0</div>
+              <div class="text-[10px] text-slate-400 mt-1">Haqiqiy foydalanuvchilar</div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="text-[11px] text-slate-500 font-bold uppercase mb-1">Bugungi savollar</div>
+              <div id="ai-stat-today" class="text-2xl font-black text-slate-900">0</div>
+              <div class="text-[10px] text-emerald-600 font-semibold mt-1">Bugun berilgan</div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="text-[11px] text-slate-500 font-bold uppercase mb-1">O‘rtacha tezlik</div>
+              <div id="ai-stat-latency" class="text-2xl font-black text-slate-900">0.0s</div>
+              <div class="text-[10px] text-slate-400 mt-1">Javob berish vaqti</div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="text-[11px] text-slate-500 font-bold uppercase mb-1">Xatoliklar</div>
+              <div id="ai-stat-errors" class="text-2xl font-black text-rose-600">0</div>
+              <div class="text-[10px] text-slate-400 mt-1">Ulanish / API xatosi</div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="text-[11px] text-slate-500 font-bold uppercase mb-1">Shubhali / Xavf</div>
+              <div id="ai-stat-suspicious" class="text-2xl font-black text-amber-600">0</div>
+              <div class="text-[10px] text-amber-700 font-semibold mt-1">Prompt injection</div>
+            </div>
+          </div>
+
+          <!-- RAG Knowledge Base Section ("Ma'lumotlar qo'shish") -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+              <div>
+                <h4 class="text-sm font-extrabold text-slate-900">🧠 AI Xotirasi (RAG Bilimlar Bazasi)</h4>
+                <p class="text-xs text-slate-500">AI Ustoz javob berishdan oldin birinchi navbatda shu qoidalar va formulalarni o‘rganadi</p>
+              </div>
+            </div>
+
+            <!-- Form to add new knowledge -->
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 mb-6 space-y-3">
+              <div class="text-xs font-bold text-slate-800">Yangi qoida, formula yoki darslik ma’lumotini kiritish:</div>
+              <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+                <div class="sm:col-span-2">
+                  <input id="ragTitle" type="text" placeholder="Sarlavha (masalan: Pifagor teoremasi yoki EKUB qoidasi)" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 font-medium">
+                </div>
+                <div>
+                  <select id="ragCategory" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 font-medium">
+                    <option value="RULE">📐 Qoida / Teorema</option>
+                    <option value="FORMULA">➗ Matematik formula</option>
+                    <option value="TEXTBOOK">📖 Darslik matni</option>
+                    <option value="QA">❓ Savol-javob namunasi</option>
+                  </select>
+                </div>
+                <div>
+                  <input id="ragTopic" type="text" placeholder="Mavzu (Geometriya, Kasrlar...)" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 font-medium">
+                </div>
+              </div>
+              <div>
+                <textarea id="ragContent" rows="3" placeholder="Batafsil tushuntirish, qoida yoki formula matni..." class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 font-medium"></textarea>
+              </div>
+              <div class="flex justify-end">
+                <button onclick="saveRagKnowledgeDoc()" class="brand-purple text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md shadow-indigo-500/20">
+                  + AI Xotirasiga saqlash
+                </button>
+              </div>
+            </div>
+
+            <!-- RAG Knowledge List Table -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-bold">
+                  <tr>
+                    <th class="px-4 py-3">Sarlavha & Mavzu</th>
+                    <th class="px-4 py-3">Kategoriya</th>
+                    <th class="px-4 py-3">Matn / Qoida mazmuni</th>
+                    <th class="px-4 py-3">Qo‘shgan</th>
+                    <th class="px-4 py-3 text-right">Amal</th>
+                  </tr>
+                </thead>
+                <tbody id="ragKnowledgeTableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                  <!-- Populated via loadRagKnowledge() -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- AI Ustoz Savollar Jurnali -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">AI Savollar Jurnali</h4>
+                <p class="text-[11px] text-slate-400">O‘quvchilar tomonidan berilgan haqiqiy so‘rovlar</p>
+              </div>
+              <div class="flex items-center space-x-2">
+                <input id="aiLogSearchInput" onkeyup="filterAiLogsTable()" type="text" placeholder="Savol yoki o‘quvchi qidirish..." class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs w-48 focus:bg-white">
+                <label class="flex items-center space-x-1.5 text-xs text-slate-600 font-semibold cursor-pointer">
+                  <input id="aiOnlySuspicious" onchange="loadAiAnalytics()" type="checkbox" class="rounded text-indigo-600">
+                  <span>Faqat shubhali</span>
+                </label>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-bold">
+                  <tr>
+                    <th class="px-5 py-3">Vaqt</th>
+                    <th class="px-5 py-3">O‘quvchi</th>
+                    <th class="px-5 py-3">Savol matni</th>
+                    <th class="px-5 py-3">AI Javobi</th>
+                    <th class="px-5 py-3">Mavzu</th>
+                    <th class="px-5 py-3">Tezlik</th>
+                    <th class="px-5 py-3 text-right">Holat</th>
+                  </tr>
+                </thead>
+                <tbody id="aiLogsTableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- =====================================================================
+             VIEW: SOZLAMALAR VA KIBER XAVFSIZLIK (SETTINGS & CYBER SECURITY)
              ===================================================================== -->
         <section id="view-settings" class="hidden space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Change Password Card -->
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
               <h3 class="text-sm font-extrabold text-slate-900 mb-1">Administrator Parolini O‘zgartirish</h3>
-              <p class="text-xs text-slate-500 mb-4">Shaxsiy xavfsizlik uchun kuchli yangi parol o‘rnating.</p>
+              <p class="text-xs text-slate-500 mb-4">Kuchli yangi parol o‘rnating (kamida 8 ta belgi, raqam va harflar).</p>
 
               <div class="space-y-3">
                 <div>
@@ -803,8 +953,8 @@
                     class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs focus:ring-2 focus:ring-indigo-500">
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-slate-700 mb-1">Yangi parol (kamida 8 ta belgi)</label>
-                  <input id="setNewPass" type="password" placeholder="Yangi parol"
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Yangi kuchli parol</label>
+                  <input id="setNewPass" type="password" placeholder="Yangi parol (8+ belgi)"
                     class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs focus:ring-2 focus:ring-indigo-500">
                 </div>
                 <button onclick="handleSettingsPasswordChange()"
@@ -814,24 +964,89 @@
               </div>
             </div>
 
-            <!-- Platform Information -->
+            <!-- 2FA & Brute Force Settings -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs space-y-4">
+              <h3 class="text-sm font-extrabold text-slate-900 mb-1">2-Bosqichli Himoya (2FA)</h3>
+              <p class="text-slate-500">Google Authenticator yoki Telegram orqali xavfsiz kirish.</p>
+
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+                <div>
+                  <div class="font-bold text-slate-800">2FA Holati:</div>
+                  <div id="status2FA" class="text-[11px] text-slate-500">O‘chirilgan</div>
+                </div>
+                <button onclick="toggle2FAState()" id="btn2FAToggle" class="px-3 py-1.5 rounded-xl font-bold bg-indigo-600 text-white">
+                  Yoqish
+                </button>
+              </div>
+
+              <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100">
+                <div class="font-bold text-indigo-900 mb-1">🛡️ Brute-force himoyasi:</div>
+                <p class="text-indigo-800 text-[11px]">5 marta ketma-ket xato parolda IP 15 daqiqaga avtomatik bloklanadi.</p>
+              </div>
+            </div>
+
+            <!-- Real-time Online Users -->
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs space-y-3">
-              <h3 class="text-sm font-extrabold text-slate-900 mb-1">Tizim holati va Versiya</h3>
-              <div class="flex justify-between py-2 border-b border-slate-100">
-                <span class="text-slate-500">Platforma</span>
-                <span class="font-bold text-slate-900">MathCity AI v2.0</span>
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-extrabold text-slate-900">🟢 Real-vaqt Kuzatuv</h3>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Jonli</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-slate-100">
-                <span class="text-slate-500">Database</span>
-                <span class="font-bold text-slate-900">PostgreSQL (Prisma ORM)</span>
+              <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-100 text-center">
+                <div class="text-[11px] text-emerald-800 font-bold uppercase mb-0.5">Hozirda ilovada onlayn</div>
+                <div id="sec-online-count" class="text-3xl font-black text-emerald-700">0 nafar</div>
+                <div class="text-[10px] text-emerald-600 mt-1">30 soniyalik faol signal</div>
               </div>
-              <div class="flex justify-between py-2 border-b border-slate-100">
-                <span class="text-slate-500">Backend API</span>
-                <span class="font-bold text-slate-900">Node.js / Express / TypeScript</span>
+              <div id="sec-online-list" class="max-h-24 overflow-y-auto space-y-1 font-mono text-[11px] text-slate-600">
+                <div class="text-slate-400 italic">Onlayn foydalanuvchilar qidirilmoqda...</div>
               </div>
-              <div class="flex justify-between py-2 border-b border-slate-100">
-                <span class="text-slate-500">Frontend Client</span>
-                <span class="font-bold text-slate-900">Flutter Web & Mobile</span>
+            </div>
+          </div>
+
+          <!-- IP Blocking & Security Incidents -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Blocked IPs Table -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+              <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">🚫 Bloklangan IP Manzillar</h4>
+                <button onclick="promptBlockIp()" class="px-3 py-1.5 text-xs font-bold rounded-xl border border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100 transition">
+                  + IP Bloklash
+                </button>
+              </div>
+              <div class="overflow-x-auto max-h-60">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold">
+                    <tr>
+                      <th class="px-3 py-2">IP Manzil</th>
+                      <th class="px-3 py-2">Sabab</th>
+                      <th class="px-3 py-2 text-right">Amal</th>
+                    </tr>
+                  </thead>
+                  <tbody id="blockedIpsTableBody" class="divide-y divide-slate-100">
+                    <!-- Populated via loadBlockedIps() -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- "Diqqat" Security Events Log -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+              <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">⚠️ "Diqqat" Xavfsizlik Jurnali</h4>
+                <span class="text-[11px] text-slate-400">Hodisalar monitoringi</span>
+              </div>
+              <div class="overflow-x-auto max-h-60">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold">
+                    <tr>
+                      <th class="px-3 py-2">Vaqt</th>
+                      <th class="px-3 py-2">Turi</th>
+                      <th class="px-3 py-2">Tavsif</th>
+                    </tr>
+                  </thead>
+                  <tbody id="securityLogsTableBody" class="divide-y divide-slate-100">
+                    <!-- Populated via loadSecurityEvents() -->
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -1454,6 +1669,172 @@
 
 
   <!-- =========================================================================
+       MODAL: STUDENT DETAILS (FULL PROFILE, ACTIONS, AUDIT LOGGED)
+       ========================================================================= -->
+  <div id="studentDetailModal" class="fixed inset-0 z-50 bg-slate-900/60 hidden items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white max-w-2xl w-full p-6 md:p-8 rounded-3xl shadow-2xl border border-slate-200 my-8 text-left relative">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+        <div class="flex items-center space-x-3">
+          <div id="sd-avatar" class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 font-extrabold flex items-center justify-center text-lg shadow-sm">
+            O
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 id="sd-name" class="text-lg font-black text-slate-900">O‘quvchi</h3>
+              <span id="sd-online-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">🟢 Onlayn</span>
+            </div>
+            <div id="sd-username" class="text-xs text-slate-400 font-mono">@username</div>
+          </div>
+        </div>
+        <button onclick="closeStudentDetailModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+      </div>
+
+      <div class="space-y-5 text-xs text-slate-700">
+        <!-- Private login info (Logged in Audit) -->
+        <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5">
+          <div class="flex justify-between">
+            <span class="text-slate-500 font-semibold">Login / Email (To‘liq):</span>
+            <span id="sd-email" class="font-mono font-bold text-indigo-700 select-all">—</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500 font-semibold">Tug‘ilgan sana va yosh:</span>
+            <span id="sd-dob" class="font-medium text-slate-800">—</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500 font-semibold">Sinf va Yo‘nalish:</span>
+            <span id="sd-grade-mode" class="font-bold text-slate-900">—</span>
+          </div>
+        </div>
+
+        <!-- Economy & Progression grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+          <div class="p-3 rounded-xl bg-amber-50 border border-amber-200">
+            <div class="text-[10px] text-amber-700 font-bold uppercase">Tangalar (Coin)</div>
+            <div id="sd-coins" class="text-lg font-black text-amber-600">0 π</div>
+          </div>
+          <div class="p-3 rounded-xl bg-purple-50 border border-purple-200">
+            <div class="text-[10px] text-purple-700 font-bold uppercase">Tajriba (XP)</div>
+            <div id="sd-xp" class="text-lg font-black text-purple-700">0 XP</div>
+          </div>
+          <div class="p-3 rounded-xl bg-indigo-50 border border-indigo-200">
+            <div class="text-[10px] text-indigo-700 font-bold uppercase">Daraja (Level)</div>
+            <div id="sd-level" class="text-lg font-black text-indigo-700">Lvl 1</div>
+          </div>
+          <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+            <div class="text-[10px] text-emerald-700 font-bold uppercase">Ketma-ketlik (Streak)</div>
+            <div id="sd-streak" class="text-lg font-black text-emerald-700">1 kun</div>
+          </div>
+        </div>
+
+        <!-- Subscription & Activity status -->
+        <div class="p-3.5 bg-white rounded-2xl border border-slate-200 space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-slate-500 font-semibold">Obuna tarifi:</span>
+            <span id="sd-plan" class="px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-slate-100 text-slate-700">Free Trial</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-500 font-semibold">Pro amal qilish muddati:</span>
+            <span id="sd-pro-expires" class="font-medium text-slate-800">—</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-500 font-semibold">Tugatilgan darslar:</span>
+            <span id="sd-completed-lessons" class="font-bold text-slate-900">0 ta dars</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-500 font-semibold">Yechilgan savollar va aniqlik:</span>
+            <span id="sd-solved-accuracy" class="font-bold text-slate-900">0 ta (100%)</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-500 font-semibold">AI Ustozga berilgan savollar:</span>
+            <span id="sd-ai-queries" class="font-bold text-indigo-600">0 ta savol</span>
+          </div>
+        </div>
+
+        <!-- Actions Toolbar -->
+        <div class="pt-2 border-t border-slate-100 flex flex-wrap gap-2 justify-end">
+          <button id="btn-sd-block" onclick="handleDetailToggleBlock()" class="px-3.5 py-2 text-xs font-bold rounded-xl border border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100 transition">
+            🚫 Bloklash
+          </button>
+          <button onclick="openGrantBonusModal()" class="px-3.5 py-2 text-xs font-bold rounded-xl brand-purple text-white hover:opacity-95 shadow-md shadow-indigo-500/20 transition">
+            🎁 Bonus berish
+          </button>
+          <button onclick="handleDetailResetPassword()" class="px-3.5 py-2 text-xs font-bold rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition">
+            🔑 Parolni tiklash
+          </button>
+          <button onclick="handleDetailDeleteUser()" class="px-3.5 py-2 text-xs font-bold rounded-xl border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition">
+            🗑️ O‘chirish
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: GRANT BONUS TO STUDENT
+       ========================================================================= -->
+  <div id="grantBonusModal" class="fixed inset-0 z-50 bg-slate-900/60 hidden items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white max-w-md w-full p-6 rounded-3xl shadow-2xl border border-slate-200 text-left">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+        <h4 class="text-base font-extrabold text-slate-900">O‘quvchiga bonus berish</h4>
+        <button onclick="closeGrantBonusModal()" class="text-slate-400 text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Coin (Oltin tangalar)</label>
+          <input id="bonusCoins" type="number" min="0" placeholder="0" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">XP (Tajriba ochkolari)</label>
+          <input id="bonusXP" type="number" min="0" placeholder="0" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Pro obuna qo‘shish (kun)</label>
+          <input id="bonusProDays" type="number" min="0" placeholder="0 (masalan 7 yoki 30)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Bonus berish sababi *</label>
+          <input id="bonusReason" type="text" placeholder="Masalan: Olimpiada g‘olibi yoki faol ishtirok uchun" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900">
+        </div>
+
+        <p id="bonusError" class="text-red-500 font-semibold hidden"></p>
+
+        <button onclick="submitGrantBonus()" class="w-full brand-purple text-white font-bold py-2.5 rounded-xl shadow-lg shadow-indigo-500/25">
+          Bonusni tasdiqlash va berish
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: RESET PASSWORD RESULT
+       ========================================================================= -->
+  <div id="resetPasswordModal" class="fixed inset-0 z-50 bg-slate-900/60 hidden items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white max-w-md w-full p-6 rounded-3xl shadow-2xl border border-slate-200 text-left">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+        <h4 class="text-base font-extrabold text-slate-900">Parolni tiklash ma’lumotlari</h4>
+        <button onclick="closeResetPasswordModal()" class="text-slate-400 text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <p class="text-slate-600">Foydalanuvchiga yuborish uchun 6 xonali tasdiqlash kodi va havola yaratildi:</p>
+        <div class="p-3 bg-indigo-50 border border-indigo-200 rounded-xl text-center">
+          <div class="text-[11px] text-indigo-700 font-bold uppercase mb-1">Vaqtinchalik kod:</div>
+          <div id="rp-code" class="text-2xl font-black font-mono text-indigo-900 tracking-wider">123456</div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Tiklash havolasi:</label>
+          <input id="rp-link" type="text" readonly class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 font-mono text-[11px] select-all">
+        </div>
+        <button onclick="copyResetInfo()" id="btnCopyReset" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition">
+          Ma’lumotlardan nusxa olish 📋
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
        JAVASCRIPT LOGIC
        ========================================================================= -->
   <script>
@@ -1551,6 +1932,17 @@
       }
     });
 
+    let realtimePollingInterval = null;
+    function startRealtimePolling() {
+      if (realtimePollingInterval) clearInterval(realtimePollingInterval);
+      realtimePollingInterval = setInterval(() => {
+        if (!currentToken) return;
+        if (currentView === 'overview') loadDashboardData(true);
+        if (currentView === 'settings') loadOnlineUsers();
+        if (currentView === 'students') loadStudents(true);
+      }, 15000);
+    }
+
     async function verifySession() {
       try {
         const res = await apiFetch('/api/admin/me', {
@@ -1570,6 +1962,7 @@
           }
 
           loadDashboardData();
+          startRealtimePolling();
         } else {
           localStorage.removeItem('mathcity_admin_token');
           showLoginModal();
@@ -1622,6 +2015,7 @@
           }
 
           loadDashboardData();
+          startRealtimePolling();
         } else {
           errElem.textContent = json.error || 'Kirish taqiqlandi: Noto‘g‘ri login yoki parol.';
           errElem.classList.remove('hidden');
@@ -1736,6 +2130,7 @@
       if (viewName === 'questions') loadQuestions();
       if (viewName === 'announcements') loadAnnouncements();
       if (viewName === 'finance') loadFinance();
+      if (viewName === 'ai') loadAiAnalytics();
       if (viewName === 'settings') loadSettings();
     }
 
@@ -1800,6 +2195,8 @@
       }
     }
 
+    let currentSelectedStudentId = null;
+
     function renderStudentsTable(list) {
       const tbody = document.getElementById('studentsTableBody');
       tbody.innerHTML = '';
@@ -1810,17 +2207,30 @@
 
       list.forEach(s => {
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50 transition';
+        tr.className = 'hover:bg-indigo-50/60 transition cursor-pointer';
+        tr.onclick = (e) => {
+          if (!e.target.closest('button')) {
+            openStudentDetailModal(s.id);
+          }
+        };
+
         const isPro = s.subscriptionStatus === 'PRO_ACTIVE';
         const isBlocked = !!s.isBlocked;
+        const onlineIndicator = s.isOnline
+          ? '<span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1.5 shadow-sm" title="Hozirda onlayn"></span>'
+          : '<span class="inline-block w-2.5 h-2.5 rounded-full bg-slate-300 mr-1.5" title="Oflayn"></span>';
+
         tr.innerHTML = `
           <td class="px-5 py-4">
             <div class="flex items-center space-x-3">
               <div class="w-8 h-8 rounded-full ${s.mode === 'KIDS' ? 'bg-amber-100 text-amber-700' : 'bg-purple-100 text-purple-700'} font-bold flex items-center justify-center text-xs">
-                ${s.displayName.charAt(0)}
+                ${(s.displayName || 'O').charAt(0)}
               </div>
               <div>
-                <div class="font-bold text-slate-900">${s.displayName}</div>
+                <div class="font-bold text-slate-900 flex items-center">
+                  ${onlineIndicator}
+                  <span>${s.displayName}</span>
+                </div>
                 <div class="text-[11px] text-slate-400 font-mono">@${s.username}</div>
               </div>
             </div>
@@ -1845,9 +2255,9 @@
           </td>
           <td class="px-5 py-4 text-right">
             <div class="flex items-center justify-end space-x-2">
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isBlocked ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'}">
-                ${isBlocked ? '🚫 Bloklangan' : '✓ Faol'}
-              </span>
+              <button onclick="openStudentDetailModal('${s.id}')" class="px-2.5 py-1 text-[11px] font-bold rounded-lg border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+                Batafsil 🔍
+              </button>
               <button onclick="toggleStudentBlock('${s.id}', ${!isBlocked})" class="px-2.5 py-1 text-[11px] font-bold rounded-lg border transition ${isBlocked ? 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100' : 'border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100'}">
                 ${isBlocked ? 'Ochish' : 'Bloklash'}
               </button>
@@ -1856,6 +2266,201 @@
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    async function openStudentDetailModal(id) {
+      currentSelectedStudentId = id;
+      try {
+        const res = await apiFetch(`/api/admin/students/${id}`, {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (!json.success || !json.data) {
+          alert(json.error || 'O‘quvchi ma’lumotlarini yuklab bo‘lmadi.');
+          return;
+        }
+        const s = json.data;
+        document.getElementById('sd-avatar').textContent = (s.displayName || 'O').charAt(0);
+        document.getElementById('sd-name').textContent = s.displayName;
+        document.getElementById('sd-username').textContent = `@${s.username || '—'}`;
+        document.getElementById('sd-email').textContent = s.email;
+        document.getElementById('sd-dob').textContent = `${s.dateOfBirth || 'Kiritilmagan'} (${s.age} yosh)`;
+        document.getElementById('sd-grade-mode').textContent = `${s.mode === 'KIDS' ? 'Bolalar (Kids)' : 'O‘smirlar'} • ${s.grade}-sinf`;
+        document.getElementById('sd-coins').textContent = `${s.coinBalance} π`;
+        document.getElementById('sd-xp').textContent = `${s.totalXP} XP`;
+        document.getElementById('sd-level').textContent = `Lvl ${s.level} (Shahar ${s.cityLevel})`;
+        document.getElementById('sd-streak').textContent = `${s.currentStreak || 1} kun (Eng uzun: ${s.longestStreak || 1})`;
+
+        const isPro = s.subscription && s.subscription.status === 'PRO_ACTIVE';
+        document.getElementById('sd-plan').textContent = s.subscription ? s.subscription.planName : 'Free';
+        document.getElementById('sd-plan').className = `px-2.5 py-1 rounded-full text-[11px] font-extrabold ${isPro ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-slate-100 text-slate-700'}`;
+        document.getElementById('sd-pro-expires').textContent = s.subscription && s.subscription.proExpiresAt ? new Date(s.subscription.proExpiresAt).toLocaleString('uz-UZ') : 'Mavjud emas';
+
+        document.getElementById('sd-completed-lessons').textContent = `${s.completedLessonsCount || 0} ta dars yakunlangan`;
+        document.getElementById('sd-solved-accuracy').textContent = `${s.solvedQuestionsCount || 0} ta savol (${s.attemptedQuestionCount > 0 ? Math.round((s.correctQuestionCount / s.attemptedQuestionCount) * 100) : 100}% aniqlik)`;
+        document.getElementById('sd-ai-queries').textContent = `${s.aiQuestionsCount || 0} ta savol berilgan`;
+
+        const badge = document.getElementById('sd-online-badge');
+        if (s.isOnline) {
+          badge.textContent = '🟢 Onlayn';
+          badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200';
+        } else {
+          badge.textContent = '⚪ Oflayn';
+          badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200';
+        }
+
+        const btnBlock = document.getElementById('btn-sd-block');
+        btnBlock.textContent = s.isBlocked ? '✓ Blokdan chiqarish' : '🚫 Bloklash';
+        btnBlock.className = `px-3.5 py-2 text-xs font-bold rounded-xl border transition ${s.isBlocked ? 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100' : 'border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100'}`;
+
+        const modal = document.getElementById('studentDetailModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        modal.style.display = 'flex';
+      } catch (err) {
+        alert(err.message || 'Xatolik yuz berdi');
+      }
+    }
+
+    function closeStudentDetailModal() {
+      const modal = document.getElementById('studentDetailModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      modal.style.display = 'none';
+      currentSelectedStudentId = null;
+    }
+
+    async function handleDetailToggleBlock() {
+      if (!currentSelectedStudentId) return;
+      const isBlocked = document.getElementById('btn-sd-block').textContent.includes('chiqarish');
+      await toggleStudentBlock(currentSelectedStudentId, !isBlocked);
+      openStudentDetailModal(currentSelectedStudentId);
+    }
+
+    function openGrantBonusModal() {
+      if (!currentSelectedStudentId) return;
+      document.getElementById('bonusCoins').value = '100';
+      document.getElementById('bonusXP').value = '250';
+      document.getElementById('bonusProDays').value = '7';
+      document.getElementById('bonusReason').value = '';
+      document.getElementById('bonusError').classList.add('hidden');
+
+      const modal = document.getElementById('grantBonusModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      modal.style.display = 'flex';
+    }
+
+    function closeGrantBonusModal() {
+      const modal = document.getElementById('grantBonusModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      modal.style.display = 'none';
+    }
+
+    async function submitGrantBonus() {
+      if (!currentSelectedStudentId) return;
+      const coins = Number(document.getElementById('bonusCoins').value) || 0;
+      const xp = Number(document.getElementById('bonusXP').value) || 0;
+      const proDays = Number(document.getElementById('bonusProDays').value) || 0;
+      const reason = document.getElementById('bonusReason').value.trim();
+      const errElem = document.getElementById('bonusError');
+      errElem.classList.add('hidden');
+
+      if (!reason) {
+        errElem.textContent = 'Bonus berish sababini kiritishingiz shart.';
+        errElem.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        const res = await apiFetch(`/api/admin/students/${currentSelectedStudentId}/bonus`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({ coins, xp, proDays, reason })
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert('Bonus muvaffaqiyatli berildi!');
+          closeGrantBonusModal();
+          openStudentDetailModal(currentSelectedStudentId);
+          loadStudents();
+        } else {
+          errElem.textContent = json.error || 'Bonus berishda xatolik';
+          errElem.classList.remove('hidden');
+        }
+      } catch (err) {
+        errElem.textContent = err.message || 'Tarmoq xatosi';
+        errElem.classList.remove('hidden');
+      }
+    }
+
+    async function handleDetailResetPassword() {
+      if (!currentSelectedStudentId) return;
+      try {
+        const res = await apiFetch(`/api/admin/students/${currentSelectedStudentId}/reset-password`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success && json.data) {
+          document.getElementById('rp-code').textContent = json.data.tempCode;
+          document.getElementById('rp-link').value = json.data.resetLink;
+
+          const modal = document.getElementById('resetPasswordModal');
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+          modal.style.display = 'flex';
+        } else {
+          alert(json.error || 'Parolni tiklashda xatolik');
+        }
+      } catch (err) {
+        alert(err.message || 'Ulanish xatosi');
+      }
+    }
+
+    function closeResetPasswordModal() {
+      const modal = document.getElementById('resetPasswordModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      modal.style.display = 'none';
+    }
+
+    function copyResetInfo() {
+      const code = document.getElementById('rp-code').textContent;
+      const link = document.getElementById('rp-link').value;
+      const text = `MathCity AI parolni tiklash kodi: ${code}\nYoki havola orqali kiring: ${link}`;
+      navigator.clipboard.writeText(text);
+      const btn = document.getElementById('btnCopyReset');
+      btn.textContent = 'Nusxalandi! ✓';
+      setTimeout(() => { btn.textContent = 'Ma’lumotlardan nusxa olish 📋'; }, 2000);
+    }
+
+    async function handleDetailDeleteUser() {
+      if (!currentSelectedStudentId) return;
+      if (!confirm('DIQQAT! Ushbu foydalanuvchini butunlay o‘chirishni tasdiqlaysizmi? Barcha ma’lumotlar bazadan o‘chiriladi.')) return;
+
+      try {
+        const res = await apiFetch(`/api/admin/students/${currentSelectedStudentId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert('O‘quvchi hisobi butunlay o‘chirildi!');
+          closeStudentDetailModal();
+          loadStudents();
+          loadDashboardData();
+          startRealtimePolling();
+        } else {
+          alert(json.error || 'O‘chirishda xatolik');
+        }
+      } catch (err) {
+        alert(err.message || 'Server xatosi');
+      }
     }
 
     async function toggleStudentBlock(id, willBlock) {
@@ -2239,6 +2844,7 @@
           closeCreateLessonModal();
           loadLessons();
           loadDashboardData();
+          startRealtimePolling();
         } else {
           alert(json.error || 'Dars saqlanmadi');
         }
@@ -2404,6 +3010,7 @@
           closeCreateQuestionModal();
           loadQuestions();
           loadDashboardData();
+          startRealtimePolling();
         } else {
           alert(json.error || 'Savol saqlanmadi');
         }
@@ -2513,6 +3120,7 @@
           closeCsvImportModal();
           loadQuestions();
           loadDashboardData();
+          startRealtimePolling();
         } else {
           alert(`Xatolik: ${json.error || 'Yuklashda xato'}`);
         }
@@ -2521,8 +3129,14 @@
       }
     }
 
-    // --- 5. FINANCE DATA ---
-    async function loadFinance() {
+    // =========================================================================
+    // 5. FINANCE DATA & REVENUE MANAGEMENT (Section 7)
+    // =========================================================================
+    let allFinanceTransactions = [];
+    let currentFinanceFilter = 'ALL';
+
+    async function loadFinance(filter = 'ALL') {
+      currentFinanceFilter = filter;
       try {
         const res = await apiFetch('/api/admin/finance/overview', {
           headers: { 'Authorization': `Bearer ${currentToken}` }
@@ -2530,8 +3144,8 @@
         const json = await res.json();
         if (json.success && json.data) {
           const d = json.data;
-          document.getElementById('fin-success-count').textContent = d.successfulTransactionsCount;
-          document.getElementById('fin-net-proceeds').textContent = `${d.netProceedsUzs.toLocaleString()} UZS`;
+          document.getElementById('fin-success-count').textContent = d.successfulTransactionsCount || 0;
+          document.getElementById('fin-net-proceeds').textContent = `${(d.netProceedsUzs || 0).toLocaleString()} UZS`;
           document.getElementById('fin-owner-card').textContent = d.ownerMaskedCard || '4916 •••• •••• ****';
         }
 
@@ -2539,39 +3153,334 @@
           headers: { 'Authorization': `Bearer ${currentToken}` }
         });
         const txJson = await txRes.json();
-        const tbody = document.getElementById('financeTableBody');
-        tbody.innerHTML = '';
         if (txJson.success && txJson.data && txJson.data.transactions) {
-          if (txJson.data.transactions.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="px-5 py-8 text-center text-slate-400">Hozircha to‘lov tranzaksiyalari yo‘q.</td></tr>`;
-            return;
-          }
-          txJson.data.transactions.forEach(t => {
-            const tr = document.createElement('tr');
-            tr.className = 'hover:bg-slate-50 transition';
-            tr.innerHTML = `
-              <td class="px-5 py-4 font-mono font-bold text-slate-700">${t.id}</td>
-              <td class="px-5 py-4 text-slate-900 font-medium">${t.userId}</td>
-              <td class="px-5 py-4 font-bold text-slate-900">${(t.amountUzs || 29000).toLocaleString()} UZS <span class="text-[10px] text-purple-600 block">Pro Tarif</span></td>
-              <td class="px-5 py-4 text-slate-600">${t.method || 'CLICK / UZCARD'}</td>
-              <td class="px-5 py-4">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${t.status === 'SUCCESS' ? 'badge-published' : 'badge-draft'}">
-                  ${t.status === 'SUCCESS' ? 'Muvaffaqiyatli' : 'Kutilmoqda'}
-                </span>
-              </td>
-              <td class="px-5 py-4 text-slate-400 text-[11px]">${new Date(t.createdAt || Date.now()).toLocaleDateString('uz-UZ')}</td>
-            `;
-            tbody.appendChild(tr);
-          });
+          allFinanceTransactions = txJson.data.transactions;
+          renderFinanceTable();
         }
+
+        loadBonusHistory();
       } catch (err) {
         console.error('loadFinance error:', err);
       }
     }
 
-    // --- 6. SETTINGS & AUDIT DATA ---
+    function filterFinanceTable(filter) {
+      ['all', 'today', 'week', 'month'].forEach(x => {
+        const btn = document.getElementById(`ff-${x}`);
+        if (btn) btn.className = 'px-2.5 py-1 rounded-lg text-slate-500 hover:bg-slate-100';
+      });
+      const activeBtn = document.getElementById(`ff-${filter.toLowerCase()}`);
+      if (activeBtn) activeBtn.className = 'px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 font-bold';
+
+      currentFinanceFilter = filter;
+      renderFinanceTable();
+    }
+
+    function renderFinanceTable() {
+      const tbody = document.getElementById('financeTableBody');
+      tbody.innerHTML = '';
+
+      const now = new Date();
+      const todayStr = new Date(now.getTime() + 5 * 3600000).toISOString().split('T')[0];
+      const oneWeekAgo = now.getTime() - 7 * 86400000;
+      const oneMonthAgo = now.getTime() - 30 * 86400000;
+
+      const filtered = allFinanceTransactions.filter(t => {
+        if (currentFinanceFilter === 'TODAY') {
+          return t.createdAt && t.createdAt.startsWith(todayStr);
+        }
+        if (currentFinanceFilter === 'WEEK') {
+          return new Date(t.createdAt).getTime() >= oneWeekAgo;
+        }
+        if (currentFinanceFilter === 'MONTH') {
+          return new Date(t.createdAt).getTime() >= oneMonthAgo;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="px-5 py-8 text-center text-slate-400">Ko‘rsatilgan oraliqda to‘lov tranzaksiyalari yo‘q.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(t => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition';
+        tr.innerHTML = `
+          <td class="px-5 py-4 font-mono font-bold text-slate-700">${t.id}</td>
+          <td class="px-5 py-4 text-slate-900 font-medium">${t.userId || t.userUsername || 'O‘quvchi'}</td>
+          <td class="px-5 py-4 font-bold text-slate-900">${(t.amountUzs || 29000).toLocaleString()} UZS <span class="text-[10px] text-purple-600 block">Pro Tarif</span></td>
+          <td class="px-5 py-4 text-slate-600">${t.method || 'CLICK / UZCARD'}</td>
+          <td class="px-5 py-4">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${t.status === 'SUCCESS' ? 'badge-published' : 'badge-draft'}">
+              ${t.status === 'SUCCESS' ? 'Muvaffaqiyatli' : 'Kutilmoqda'}
+            </span>
+          </td>
+          <td class="px-5 py-4 text-slate-400 text-[11px]">${new Date(t.createdAt || Date.now()).toLocaleDateString('uz-UZ')} ${new Date(t.createdAt || Date.now()).toLocaleTimeString('uz-UZ', {hour: '2-digit', minute: '2-digit'})}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function exportFinanceCsv() {
+      if (!allFinanceTransactions || allFinanceTransactions.length === 0) {
+        alert('Eksport qilish uchun tranzaksiyalar mavjud emas.');
+        return;
+      }
+      let csv = 'Tranzaksiya ID,Foydalanuvchi,Tarif,Summa,Valyuta,Tolov Usuli,Holat,Sana\n';
+      allFinanceTransactions.forEach(t => {
+        const row = [
+          `"${t.id}"`,
+          `"${t.userId || t.userUsername || ''}"`,
+          '"Pro Obuna"',
+          t.amountUzs || 29000,
+          '"UZS"',
+          `"${t.method || 'CLICK'}"`,
+          `"${t.status}"`,
+          `"${t.createdAt || ''}"`
+        ];
+        csv += row.join(',') + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `mathcity_moliya_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    async function loadBonusHistory() {
+      try {
+        const res = await apiFetch('/api/admin/finance/bonuses', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        const tbody = document.getElementById('bonusTableBody');
+        tbody.innerHTML = '';
+        if (json.success && Array.isArray(json.data)) {
+          const list = json.data;
+          const badge = document.getElementById('badgeBonusCount');
+          if (badge) badge.textContent = `${list.length} ta bonus`;
+          if (list.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="px-5 py-6 text-center text-slate-400">Hozircha admin bonuslari berilmagan.</td></tr>`;
+            return;
+          }
+          list.forEach(b => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-slate-50 transition';
+            const bonusParts = [];
+            if (b.coins) bonusParts.push(`🪙 +${b.coins} coin`);
+            if (b.xp) bonusParts.push(`⚡ +${b.xp} XP`);
+            if (b.proDays) bonusParts.push(`👑 ${b.proDays} kun Pro`);
+            tr.innerHTML = `
+              <td class="px-5 py-3 font-bold text-slate-900">${b.studentUsername || b.studentId}</td>
+              <td class="px-5 py-3 text-purple-700 font-bold">${bonusParts.join(', ') || 'Bonus'}</td>
+              <td class="px-5 py-3 text-slate-600">${b.reason || 'Rag‘batlantirish'}</td>
+              <td class="px-5 py-3 text-slate-500 font-medium">${b.grantedBy}</td>
+              <td class="px-5 py-3 text-slate-400 text-[11px]">${new Date(b.createdAt).toLocaleString('uz-UZ')}</td>
+              <td class="px-5 py-3 text-right">
+                <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold text-[10px]">0 UZS (Bonus tariqasida)</span>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch (err) {
+        console.error('loadBonusHistory error:', err);
+      }
+    }
+
+    // =========================================================================
+    // 6. AI USTOZ TAHLILI & RAG XOTIRASI (Section 8)
+    // =========================================================================
+    let aiLogsList = [];
+
+    async function loadAiAnalytics() {
+      try {
+        const res = await apiFetch('/api/admin/ai/analytics', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success && json.data) {
+          const s = json.data;
+          document.getElementById('ai-stat-total').textContent = s.totalQueries || 0;
+          document.getElementById('ai-stat-today').textContent = s.todayQueries || 0;
+          document.getElementById('ai-stat-latency').textContent = `${(s.avgLatencySeconds || 0).toFixed(1)}s`;
+          document.getElementById('ai-stat-errors').textContent = s.totalErrors || 0;
+          document.getElementById('ai-stat-suspicious').textContent = s.totalSuspicious || 0;
+        }
+
+        loadRagKnowledge();
+        loadAiLogs();
+      } catch (err) {
+        console.error('loadAiAnalytics error:', err);
+      }
+    }
+
+    async function loadRagKnowledge() {
+      try {
+        const res = await apiFetch('/api/admin/ai/knowledge', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        const tbody = document.getElementById('ragKnowledgeTableBody');
+        tbody.innerHTML = '';
+        if (json.success && Array.isArray(json.data)) {
+          if (json.data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-6 text-center text-slate-400">AI bilimlar bazasi bo‘sh. Yuqoridagi formadan yangi qoida yoki formula qo‘shing.</td></tr>`;
+            return;
+          }
+          json.data.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-slate-50 transition';
+            const catMap = {
+              'RULE': '📐 Qoida / Teorema',
+              'FORMULA': '➗ Matematik formula',
+              'TEXTBOOK': '📖 Darslik matni',
+              'QA': '❓ Savol-javob'
+            };
+            tr.innerHTML = `
+              <td class="px-4 py-3 font-bold text-slate-900">
+                <div>${item.title}</div>
+                <div class="text-[10px] text-indigo-600 font-semibold">${item.topic || 'Umumiy'}</div>
+              </td>
+              <td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-medium text-[10px]">${catMap[item.category] || item.category}</span></td>
+              <td class="px-4 py-3 text-slate-600 max-w-xs truncate" title="${item.content}">${item.content}</td>
+              <td class="px-4 py-3 text-slate-400 text-[11px]">${item.createdBy || 'admin'}</td>
+              <td class="px-4 py-3 text-right">
+                <button onclick="deleteRagKnowledgeDoc('${item.id}')" class="text-rose-600 hover:text-rose-800 font-bold px-2 py-1 rounded hover:bg-rose-50 text-[11px]">O‘chirish</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch (err) {
+        console.error('loadRagKnowledge error:', err);
+      }
+    }
+
+    async function saveRagKnowledgeDoc() {
+      const title = document.getElementById('ragTitle').value.trim();
+      const category = document.getElementById('ragCategory').value;
+      const topic = document.getElementById('ragTopic').value.trim();
+      const content = document.getElementById('ragContent').value.trim();
+
+      if (!title || !content) {
+        alert('Iltimos, sarlavha va qoida/formula mazmunini kiriting.');
+        return;
+      }
+
+      try {
+        const res = await apiFetch('/api/admin/ai/knowledge', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({ title, category, topic, content })
+        });
+        const json = await res.json();
+        if (json.success) {
+          document.getElementById('ragTitle').value = '';
+          document.getElementById('ragTopic').value = '';
+          document.getElementById('ragContent').value = '';
+          alert('Muvaffaqiyatli saqlandi! AI Ustoz ushbu qoidani biladi.');
+          loadRagKnowledge();
+        } else {
+          alert(json.error || 'Saqlashda xatolik yuz berdi');
+        }
+      } catch (err) {
+        alert(err.message || 'Xatolik');
+      }
+    }
+
+    async function deleteRagKnowledgeDoc(id) {
+      if (!confirm('Ushbu ma’lumotni AI xotirasidan o‘chirishni xohlaysizmi?')) return;
+      try {
+        const res = await apiFetch(`/api/admin/ai/knowledge/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success) {
+          loadRagKnowledge();
+        } else {
+          alert(json.error || 'O‘chirishda xatolik');
+        }
+      } catch (err) {
+        alert(err.message || 'Xatolik');
+      }
+    }
+
+    async function loadAiLogs() {
+      try {
+        const onlySuspicious = document.getElementById('aiOnlySuspicious') ? document.getElementById('aiOnlySuspicious').checked : false;
+        const res = await apiFetch(`/api/admin/ai/logs?onlySuspicious=${onlySuspicious}`, {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          aiLogsList = json.data;
+          renderAiLogsTable(aiLogsList);
+        }
+      } catch (err) {
+        console.error('loadAiLogs error:', err);
+      }
+    }
+
+    function renderAiLogsTable(list) {
+      const tbody = document.getElementById('aiLogsTableBody');
+      tbody.innerHTML = '';
+      if (!list || list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="px-5 py-8 text-center text-slate-400">Hozircha AI so‘rovlari jurnali bo‘sh.</td></tr>`;
+        return;
+      }
+      list.forEach(log => {
+        const tr = document.createElement('tr');
+        tr.className = `hover:bg-slate-50 transition ${log.isSuspicious ? 'bg-amber-50/50' : ''}`;
+        tr.innerHTML = `
+          <td class="px-5 py-3 text-slate-400 text-[11px] whitespace-nowrap">${new Date(log.timestamp).toLocaleTimeString('uz-UZ', {hour:'2-digit', minute:'2-digit', second:'2-digit'})}</td>
+          <td class="px-5 py-3 font-bold text-slate-900">${log.studentUsername || 'Mehmon'}</td>
+          <td class="px-5 py-3 text-slate-700 max-w-xs truncate" title="${log.prompt}">${log.prompt}</td>
+          <td class="px-5 py-3 text-slate-600 max-w-xs truncate" title="${log.answer}">${log.answer}</td>
+          <td class="px-5 py-3 text-indigo-700 font-semibold text-[11px]">${log.topic || 'Matematika'}</td>
+          <td class="px-5 py-3 text-slate-500 font-mono text-[11px]">${((log.latencyMs || 0) / 1000).toFixed(2)}s</td>
+          <td class="px-5 py-3 text-right">
+            ${log.isSuspicious ? '<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px]">⚠️ Shubhali</span>' :
+              log.isError ? '<span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold text-[10px]">❌ Xatolik</span>' :
+              '<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">To‘g‘ri</span>'}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterAiLogsTable() {
+      const q = (document.getElementById('aiLogSearchInput').value || '').toLowerCase().trim();
+      if (!q) {
+        renderAiLogsTable(aiLogsList);
+        return;
+      }
+      const filtered = aiLogsList.filter(l =>
+        (l.prompt && l.prompt.toLowerCase().includes(q)) ||
+        (l.answer && l.answer.toLowerCase().includes(q)) ||
+        (l.studentUsername && l.studentUsername.toLowerCase().includes(q)) ||
+        (l.topic && l.topic.toLowerCase().includes(q))
+      );
+      renderAiLogsTable(filtered);
+    }
+
+    // =========================================================================
+    // 7. SOZLAMALAR VA KIBER XAVFSIZLIK (Section 9)
+    // =========================================================================
+    let is2FAActive = false;
+
     async function loadSettings() {
       try {
+        // 1. Audit logs
         const res = await apiFetch('/api/admin/audit-logs', {
           headers: { 'Authorization': `Bearer ${currentToken}` }
         });
@@ -2591,8 +3500,207 @@
             tbody.appendChild(tr);
           });
         }
+
+        // 2. Security status & 2FA
+        const statusRes = await apiFetch('/api/admin/security/status', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const statusJson = await statusRes.json();
+        if (statusJson.success && statusJson.data) {
+          is2FAActive = !!statusJson.data.is2FAEnabled;
+          update2FAUi(is2FAActive);
+        }
+
+        // 3. Online users
+        loadOnlineUsers();
+
+        // 4. Blocked IPs
+        loadBlockedIps();
+
+        // 5. Security events
+        loadSecurityEvents();
       } catch (err) {
         console.error('loadSettings error:', err);
+      }
+    }
+
+    function update2FAUi(enabled) {
+      const statusElem = document.getElementById('status2FA');
+      const btnElem = document.getElementById('btn2FAToggle');
+      if (statusElem) {
+        statusElem.textContent = enabled ? 'Faol (Himoyalangan)' : 'O‘chirilgan';
+        statusElem.className = enabled ? 'text-[11px] text-emerald-600 font-bold' : 'text-[11px] text-slate-500';
+      }
+      if (btnElem) {
+        btnElem.textContent = enabled ? 'O‘chirish' : 'Yoqish';
+        btnElem.className = enabled ? 'px-3 py-1.5 rounded-xl font-bold bg-slate-200 text-slate-700 hover:bg-slate-300' : 'px-3 py-1.5 rounded-xl font-bold bg-indigo-600 text-white hover:bg-indigo-700';
+      }
+    }
+
+    async function toggle2FAState() {
+      try {
+        const nextState = !is2FAActive;
+        const res = await apiFetch('/api/admin/security/2fa/toggle', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({ enable: nextState })
+        });
+        const json = await res.json();
+        if (json.success) {
+          is2FAActive = json.data.is2FAEnabled;
+          update2FAUi(is2FAActive);
+          alert(json.message);
+        } else {
+          alert(json.error || 'Xatolik yuz berdi');
+        }
+      } catch (err) {
+        alert(err.message || 'Xatolik');
+      }
+    }
+
+    async function loadOnlineUsers() {
+      try {
+        const res = await apiFetch('/api/admin/security/online-users', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success && json.data) {
+          const { count, users } = json.data;
+          const countElem = document.getElementById('sec-online-count');
+          if (countElem) countElem.textContent = `${count} nafar`;
+
+          const listElem = document.getElementById('sec-online-list');
+          if (listElem) {
+            if (!users || users.length === 0) {
+              listElem.innerHTML = '<div class="text-slate-400 italic">Hozirda faol foydalanuvchi yo‘q</div>';
+            } else {
+              listElem.innerHTML = users.map(u => `
+                <div class="flex items-center justify-between py-0.5">
+                  <span class="flex items-center space-x-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                    <span class="font-bold text-slate-800">${u.username || u.id}</span>
+                    ${u.isPro ? '<span class="text-[9px] text-amber-600 font-bold">PRO</span>' : ''}
+                  </span>
+                  <span class="text-[10px] text-slate-400">${new Date(u.lastHeartbeat || Date.now()).toLocaleTimeString('uz-UZ', {hour:'2-digit', minute:'2-digit', second:'2-digit'})}</span>
+                </div>
+              `).join('');
+            }
+          }
+        }
+      } catch (err) {
+        console.error('loadOnlineUsers error:', err);
+      }
+    }
+
+    async function loadBlockedIps() {
+      try {
+        const res = await apiFetch('/api/admin/security/blocked-ips', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        const tbody = document.getElementById('blockedIpsTableBody');
+        tbody.innerHTML = '';
+        if (json.success && Array.isArray(json.data)) {
+          if (json.data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="px-3 py-4 text-center text-slate-400">Bloklangan IP manzillar mavjud emas.</td></tr>`;
+            return;
+          }
+          json.data.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-slate-50 transition';
+            tr.innerHTML = `
+              <td class="px-3 py-2 font-mono font-bold text-rose-700">${item.ip}</td>
+              <td class="px-3 py-2 text-slate-600 text-[11px]">${item.reason}</td>
+              <td class="px-3 py-2 text-right">
+                <button onclick="unblockIpAddress('${item.ip}')" class="px-2 py-0.5 rounded text-indigo-600 hover:text-indigo-800 font-bold text-[11px] hover:bg-indigo-50">Blokdan chiqarish</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch (err) {
+        console.error('loadBlockedIps error:', err);
+      }
+    }
+
+    async function promptBlockIp() {
+      const ip = prompt('Bloklamoqchi bo‘lgan IP manzilni kiriting (masalan: 192.168.1.50):');
+      if (!ip) return;
+      const reason = prompt('Bloklash sababi (ixtiyoriy):', 'Administrator tomonidan xavfsizlik chorasi sifatida bloklandi');
+      try {
+        const res = await apiFetch('/api/admin/security/block-ip', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({ ip: ip.trim(), reason })
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert(json.message);
+          loadBlockedIps();
+        } else {
+          alert(json.error || 'IP bloklashda xatolik');
+        }
+      } catch (err) {
+        alert(err.message || 'Xatolik');
+      }
+    }
+
+    async function unblockIpAddress(ip) {
+      if (!confirm(`Haqiqatan ham ${ip} manzilini blokdan chiqarmoqchimisiz?`)) return;
+      try {
+        const res = await apiFetch('/api/admin/security/unblock-ip', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({ ip })
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert(json.message);
+          loadBlockedIps();
+        } else {
+          alert(json.error || 'Blokdan chiqarishda xatolik');
+        }
+      } catch (err) {
+        alert(err.message || 'Xatolik');
+      }
+    }
+
+    async function loadSecurityEvents() {
+      try {
+        const res = await apiFetch('/api/admin/security/events', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        const tbody = document.getElementById('securityLogsTableBody');
+        tbody.innerHTML = '';
+        if (json.success && Array.isArray(json.data)) {
+          if (json.data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="px-3 py-4 text-center text-slate-400">Xavfsizlik hodisalari qayd etilmagan.</td></tr>`;
+            return;
+          }
+          json.data.slice(0, 30).forEach(ev => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-slate-50 transition';
+            const sevBadge = ev.severity === 'CRITICAL' || ev.severity === 'HIGH' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800';
+            tr.innerHTML = `
+              <td class="px-3 py-2 text-slate-400 font-mono text-[11px] whitespace-nowrap">${new Date(ev.createdAt).toLocaleTimeString('uz-UZ', {hour:'2-digit', minute:'2-digit'})}</td>
+              <td class="px-3 py-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${sevBadge}">${ev.type}</span></td>
+              <td class="px-3 py-2 text-slate-700 text-[11px]">${ev.description}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch (err) {
+        console.error('loadSecurityEvents error:', err);
       }
     }
 

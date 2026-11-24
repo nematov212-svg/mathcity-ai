@@ -98,118 +98,131 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
               // ==============================================================
               // 1. IBRAT AKADEMIYA STYLE HEADER
               // ==============================================================
-              // Row 1: Bayroq / PRO / XP / Coin status pills
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Country/Language Flag Pill
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: colors.card,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: colors.border.withOpacity(0.5)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
-                            blurRadius: 6,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text('🇺🇿', style: TextStyle(fontSize: 14)),
-                          const SizedBox(width: 4),
-                          Text(
-                            'O‘zbek',
-                            style: TextStyle(
-                              fontFamily: 'Nunito',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: colors.ink,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    // PRO Status Pill
-                    GestureDetector(
-                      onTap: () => context.push('/kids/pricing'),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFFFB800), Color(0xFFFF8A00)],
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFFFFB800).withOpacity(0.35),
-                              blurRadius: 6,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              student?.isPro == true ? Icons.workspace_premium_rounded : Icons.star_rounded,
-                              color: Colors.white,
-                              size: 14,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              student?.isPro == true ? 'PRO' : 'PRO',
-                              style: const TextStyle(
-                                fontFamily: 'Nunito',
-                                fontSize: 11,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
-                                letterSpacing: 0.5,
+              // Row 1: Username (+ server-confirmed PRO badge) on left, XP & Coin on right
+              Row(
+                children: [
+                  // Left: Username + PRO badge (only when server confirms isPro)
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: colors.card,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: colors.border.withOpacity(0.5)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                student?.username != null && student!.username!.trim().isNotEmpty
+                                    ? (student.username!.startsWith('@') ? student.username! : '@${student.username}')
+                                    : (name.startsWith('@') ? name : '@$name'),
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800,
+                                  color: colors.ink,
+                                ),
+                              ),
+                              // PRO status badge ONLY shown if server confirms active PRO subscription
+                              if (student?.isPro == true) ...[
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [Color(0xFFFFB800), Color(0xFFFF8A00)],
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xFFFFB800).withOpacity(0.4),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.workspace_premium_rounded,
+                                        color: Colors.white,
+                                        size: 11,
+                                      ),
+                                      SizedBox(width: 2),
+                                      Text(
+                                        'PRO',
+                                        style: TextStyle(
+                                          fontFamily: 'Nunito',
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    // XP Pill
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEDE9FE),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: const Color(0xFFDDD6FE)),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.bolt_rounded, color: Color(0xFF7C3AED), size: 15),
-                          const SizedBox(width: 3),
-                          Text(
-                            '$xp XP',
-                            style: const TextStyle(
-                              fontFamily: 'Nunito',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFF6D28D9),
-                            ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Right: XP and Coin capsules
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // XP Pill
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEDE9FE),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: const Color(0xFFDDD6FE)),
                           ),
-                        ],
-                      ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.bolt_rounded, color: Color(0xFF7C3AED), size: 15),
+                              const SizedBox(width: 3),
+                              Text(
+                                '$xp XP',
+                                style: const TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
+                                  color: Color(0xFF6D28D9),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        // Coin Badge
+                        CoinBadge(count: coins, size: 26),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    // Coin Badge
-                    CoinBadge(count: coins, size: 26),
-                  ],
-                ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
 

@@ -15,6 +15,10 @@ import {
 } from '../../utils/questionBank.js';
 import { adminStore } from './adminStore.js';
 import { config } from '../../config/env.js';
+import { bonusStore } from './bonusStore.js';
+import { aiAnalyticsStore } from './aiAnalyticsStore.js';
+import { ragKnowledgeStore } from './ragKnowledgeStore.js';
+import { securityStore } from './securityStore.js';
 
 export const adminRouter = Router();
 
@@ -88,7 +92,15 @@ export function adminAuth(req: AuthenticatedAdminRequest, res: Response, next: F
 // Default development login: mirzobek / mirzobek
 // ---------------------------------------------------------------------------
 adminRouter.post('/login', (req: Request, res: Response) => {
-  const { username, login, email, password, apiKey } = req.body;
+  const clientIp = ((req.headers['x-forwarded-for'] as string) || req.ip || '127.0.0.1').split(',')[0].trim();
+  if (securityStore.isIpBlocked(clientIp)) {
+    return res.status(403).json({
+      success: false,
+      error: 'Xavfsizlik tizimi: Sizning IP manzilingiz bloklangan. 15 daqiqadan so‘ng qayta urinib ko‘ring yoki bosh administratorga murojaat qiling.',
+    });
+  }
+
+  const { username, login, email, password, apiKey, twoFactorCode } = req.body;
   const identifier = username || login || email;
 
   // Legacy API Key direct login
@@ -123,11 +135,24 @@ adminRouter.post('/login', (req: Request, res: Response) => {
 
   const result = adminStore.verifyCredentials(identifier.toString().trim(), password.toString().trim());
   if (!result.success || !result.admin) {
+    const failStatus = securityStore.recordFailedLogin(clientIp, identifier.toString().trim());
     return res.status(401).json({
       success: false,
-      error: result.error || 'Kirish taqiqlandi: Noto‘g‘ri login yoki parol.',
+      error: failStatus.isNowBlocked
+        ? 'Ketma-ket 5 marta xato kiritildi. Xavfsizlik yuzasidan IP manzilingiz 15 daqiqaga bloklandi!'
+        : `${result.error || 'Kirish taqiqlandi: Noto‘g‘ri login yoki parol.'} (Qolgan urinishlar: ${failStatus.remainingAttempts})`,
     });
   }
+
+  if (securityStore.is2FAEnabled && (!twoFactorCode || twoFactorCode.trim().length < 6)) {
+    return res.status(403).json({
+      success: false,
+      require2FA: true,
+      error: '2-bosqichli autentifikatsiya (2FA) kodi talab qilinadi.',
+    });
+  }
+
+  securityStore.resetFailedAttempts(clientIp);
 
   const admin = result.admin;
   const token = jwt.sign(
@@ -298,7 +323,7 @@ adminRouter.get('/dashboard', adminAuth, (req: Request, res: Response) => {
         settlementSchedule: 'Avtomatik haftalik / talab bo‘yicha to‘lov',
         status: 'ACTIVE_VERIFIED',
       },
-      aiTutorQueriesAnswered: 42,
+      aiTutorQueriesAnswered: aiAnalyticsStore.getAnalyticsSummary().totalQueries,
       platformStatus: 'HEALTHY',
     },
   });
@@ -329,6 +354,9 @@ adminRouter.get('/students', adminAuth, (req: Request, res: Response) => {
     filtered = filtered.filter((u) => u.grade === grade);
   }
 
+  const onlineData = repository.getOnlineUsers(30);
+  const onlineIds = new Set(onlineData.users.map((u) => u.id));
+
   const list = filtered.map((u) => {
     const parts = u.email.split('@');
     const maskedEmail = parts.length === 2 ? `${parts[0].slice(0, 2)}***@${parts[1]}` : u.email;
@@ -339,15 +367,19 @@ adminRouter.get('/students', adminAuth, (req: Request, res: Response) => {
       username: u.username || '—',
       maskedEmail,
       age: u.age,
+      dateOfBirth: u.dateOfBirth,
       mode: u.mode,
       grade: u.grade,
       coinBalance: u.coinBalance,
       totalXP: u.totalXP,
       level: u.level,
       cityLevel: u.cityLevel,
+      currentStreak: u.currentStreak || 1,
       subscriptionPlan: u.subscription.planName,
       subscriptionStatus: u.subscription.status,
+      proExpiresAt: u.subscription.proExpiresAt,
       isBlocked: !!u.isBlocked,
+      isOnline: onlineIds.has(u.id),
       completedLessonsCount: u.completedLessons ? u.completedLessons.length : 0,
       solvedQuestionsCount: u.solvedQuestions ? u.solvedQuestions.length : 0,
       createdAt: u.createdAt,
@@ -359,6 +391,237 @@ adminRouter.get('/students', adminAuth, (req: Request, res: Response) => {
     success: true,
     total: list.length,
     data: list,
+  });
+});
+
+adminRouter.get('/students/stats', adminAuth, (req: Request, res: Response) => {
+  const users = repository.getAllUsers();
+  const now = new Date();
+  const todayStr = new Date(now.getTime() + 5 * 3600000).toISOString().split('T')[0];
+  const weekAgo = new Date(now.getTime() - 7 * 86400000).toISOString();
+
+  let newToday = 0;
+  let newThisWeek = 0;
+  let kidsCount = 0;
+  let teensCount = 0;
+  let proCount = 0;
+
+  for (const u of users) {
+    if (u.mode === 'KIDS') kidsCount++;
+    else teensCount++;
+
+    if (u.subscription.status === 'PRO_ACTIVE') proCount++;
+    if (u.createdAt && u.createdAt.startsWith(todayStr)) newToday++;
+    if (u.createdAt && u.createdAt >= weekAgo) newThisWeek++;
+  }
+
+  return res.json({
+    success: true,
+    data: {
+      totalRegistered: users.length,
+      newToday,
+      newThisWeek,
+      activeToday: users.length,
+      activeThisMonth: users.length,
+      kidsCount,
+      teensCount,
+      proCount,
+    },
+  });
+});
+
+adminRouter.get('/students/:id', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const studentId = String(req.params.id);
+  const user = repository.getUserById(studentId);
+  if (!user) {
+    return res.status(404).json({ success: false, error: 'O‘quvchi hisobi topilmadi.' });
+  }
+
+  // Audit logging: Viewing sensitive personal information
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'VIEW_STUDENT_PRIVATE_DATA',
+    targetType: 'STUDENT',
+    targetId: user.id,
+    details: {
+      displayName: user.displayName,
+      username: user.username,
+      email: user.email,
+    },
+  });
+
+  const isOnline = repository.getOnlineUsers(30).users.some((u) => u.id === user.id);
+  const aiLogs = aiAnalyticsStore.getAllLogs({ search: user.username || user.displayName });
+  const payments = paymentDataStore.getAllTransactions().filter((t) => t.userId === user.id);
+  const bonuses = bonusStore.getRecordsByUserId(user.id);
+
+  return res.json({
+    success: true,
+    data: {
+      id: user.id,
+      displayName: user.displayName,
+      username: user.username || '—',
+      email: user.email, // Unmasked for admin detail view
+      avatarUrl: user.avatarUrl,
+      dateOfBirth: user.dateOfBirth,
+      age: user.age,
+      mode: user.mode,
+      grade: user.grade,
+      coinBalance: user.coinBalance,
+      totalXP: user.totalXP,
+      level: user.level,
+      cityLevel: user.cityLevel,
+      currentStreak: user.currentStreak || 1,
+      longestStreak: user.longestStreak || 1,
+      subscription: user.subscription,
+      isBlocked: !!user.isBlocked,
+      isOnline,
+      completedLessonsCount: user.completedLessons ? user.completedLessons.length : 0,
+      completedLessons: user.completedLessons || [],
+      solvedQuestionsCount: user.solvedQuestions ? user.solvedQuestions.length : 0,
+      attemptedQuestionCount: user.attemptedQuestionCount || 0,
+      correctQuestionCount: user.correctQuestionCount || 0,
+      aiQuestionsCount: aiLogs.length,
+      payments,
+      bonuses,
+      createdAt: user.createdAt,
+    },
+  });
+});
+
+adminRouter.post('/students/:id/bonus', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const studentId = String(req.params.id);
+  const user = repository.getUserById(studentId);
+  if (!user) {
+    return res.status(404).json({ success: false, error: 'O‘quvchi hisobi topilmadi.' });
+  }
+
+  const { coins, xp, proDays, reason } = req.body;
+  if (!reason || !reason.trim()) {
+    return res.status(400).json({ success: false, error: 'Bonus berish sababi kiritilishi shart.' });
+  }
+
+  const coinsAdded = Number(coins) || 0;
+  const xpAdded = Number(xp) || 0;
+  const daysAdded = Number(proDays) || 0;
+
+  if (coinsAdded <= 0 && xpAdded <= 0 && daysAdded <= 0) {
+    return res.status(400).json({ success: false, error: 'Kamida bitta bonus turi (Coin, XP yoki Pro kun) kiritilishi shart.' });
+  }
+
+  if (coinsAdded > 0) {
+    repository.creditCoins(user.id, coinsAdded, reason);
+  }
+  if (xpAdded > 0) {
+    repository.addXP(user.id, xpAdded);
+  }
+  if (daysAdded > 0) {
+    const now = Date.now();
+    let currentExpiry = now;
+    if (user.subscription.status === 'PRO_ACTIVE' && user.subscription.proExpiresAt) {
+      currentExpiry = Math.max(now, new Date(user.subscription.proExpiresAt).getTime());
+    }
+    const newExpiry = new Date(currentExpiry + daysAdded * 24 * 3600 * 1000).toISOString();
+    user.subscription.status = 'PRO_ACTIVE';
+    user.subscription.proExpiresAt = newExpiry;
+    user.subscription.planName = 'Admin Bonus PRO';
+    user.subscription.priceMonthlyUzs = 0;
+  }
+
+  bonusStore.recordBonus({
+    userId: user.id,
+    studentName: user.displayName,
+    studentUsername: user.username || '—',
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    coinsGranted: coinsAdded,
+    xpGranted: xpAdded,
+    proDaysGranted: daysAdded,
+    reason: reason.trim(),
+  });
+
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'GRANT_STUDENT_BONUS',
+    targetType: 'STUDENT',
+    targetId: user.id,
+    details: { coinsAdded, xpAdded, daysAdded, reason },
+  });
+
+  return res.json({
+    success: true,
+    message: 'O‘quvchiga bonus muvaffaqiyatli berildi.',
+    data: {
+      id: user.id,
+      coinBalance: user.coinBalance,
+      totalXP: user.totalXP,
+      subscription: user.subscription,
+    },
+  });
+});
+
+adminRouter.post('/students/:id/reset-password', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const studentId = String(req.params.id);
+  const user = repository.getUserById(studentId);
+  if (!user) {
+    return res.status(404).json({ success: false, error: 'O‘quvchi hisobi topilmadi.' });
+  }
+
+  const resetToken = `rst-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const tempCode = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiresAt = new Date(Date.now() + 24 * 3600 * 1000).toISOString();
+
+  repository.setResetToken(user.email, resetToken, expiresAt);
+
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'RESET_STUDENT_PASSWORD',
+    targetType: 'STUDENT',
+    targetId: user.id,
+    details: { username: user.username, email: user.email, tempCode },
+  });
+
+  return res.json({
+    success: true,
+    message: 'Parolni tiklash kodi va havolasi yaratildi.',
+    data: {
+      tempCode,
+      resetToken,
+      resetLink: `https://mathcity.ai/reset-password?token=${resetToken}`,
+      expiresAt,
+    },
+  });
+});
+
+adminRouter.delete('/students/:id', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const studentId = String(req.params.id);
+  const user = repository.getUserById(studentId);
+  if (!user) {
+    return res.status(404).json({ success: false, error: 'O‘quvchi hisobi topilmadi.' });
+  }
+
+  const username = user.username || user.email;
+  const deleted = repository.deleteUser(studentId);
+  if (!deleted) {
+    return res.status(500).json({ success: false, error: 'Foydalanuvchini o‘chirishda xatolik yuz berdi.' });
+  }
+
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'DELETE_STUDENT',
+    targetType: 'STUDENT',
+    targetId: studentId,
+    details: { username },
+  });
+
+  return res.json({
+    success: true,
+    message: 'O‘quvchi hisobi butunlay o‘chirildi.',
+    data: { id: studentId },
   });
 });
 
@@ -403,42 +666,6 @@ adminRouter.patch('/students/:id/unblock', adminAuth, (req: AuthenticatedAdminRe
     success: true,
     message: 'O‘quvchi hisobi blokdan chiqarildi.',
     data: { id: user.id, isBlocked: false },
-  });
-});
-
-adminRouter.get('/students/stats', adminAuth, (req: Request, res: Response) => {
-  const users = repository.getAllUsers();
-  const now = new Date();
-  const todayStr = new Date(now.getTime() + 5 * 3600000).toISOString().split('T')[0];
-  const weekAgo = new Date(now.getTime() - 7 * 86400000).toISOString();
-
-  let newToday = 0;
-  let newThisWeek = 0;
-  let kidsCount = 0;
-  let teensCount = 0;
-  let proCount = 0;
-
-  for (const u of users) {
-    if (u.mode === 'KIDS') kidsCount++;
-    else teensCount++;
-
-    if (u.subscription.status === 'PRO_ACTIVE') proCount++;
-    if (u.createdAt && u.createdAt.startsWith(todayStr)) newToday++;
-    if (u.createdAt && u.createdAt >= weekAgo) newThisWeek++;
-  }
-
-  return res.json({
-    success: true,
-    data: {
-      totalRegistered: users.length,
-      newToday,
-      newThisWeek,
-      activeToday: users.length,
-      activeThisMonth: users.length,
-      kidsCount,
-      teensCount,
-      proCount,
-    },
   });
 });
 
@@ -673,17 +900,43 @@ adminRouter.delete('/questions/:id', adminAuth, (req: AuthenticatedAdminRequest,
 });
 
 // ---------------------------------------------------------------------------
-// 4.5. BULK QUESTION IMPORT (CSV / Excel text import)
+// 4.5. BULK QUESTION IMPORT & TEMPLATE DOWNLOAD (CSV / Excel text import)
 // Format: prompt, optionA, optionB, optionC, optionD, correctAnswer, difficulty, explanation, topic, grade
 // ---------------------------------------------------------------------------
+adminRouter.get('/questions/template.csv', adminAuth, (_req: Request, res: Response) => {
+  const csvContent =
+    'savol,variantA,variantB,variantC,variantD,togriJavob,qiyinlik,tushuntirish,mavzu,sinf\n' +
+    '"2x + 6 = 16 tenglamada x ni toping","4","5","6","7","5","EASY","2x = 10, demak x = 5","Chiziqli tenglamalar",6\n' +
+    '"3/4 va 2/4 kasrlar yig‘indisini toping","5/4","5/8","1/4","6/8","5/4","EASY","Maxraj bir xil bo‘lsa suratlar qo‘shiladi: (3+2)/4 = 5/4","Kasrlar",5\n' +
+    '"Katetlari 3 va 4 bo‘lgan to‘g‘ri burchakli uchburchak gipotenuzasini toping","5","6","7","25","5","MEDIUM","Pifagor teoremasi: 3² + 4² = 9 + 16 = 25, √25 = 5","Geometriya",8\n';
+
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+  res.setHeader('Content-Disposition', 'attachment; filename="mathcity_savollar_shabloni.csv"');
+  return res.send(csvContent);
+});
+
 adminRouter.post('/questions/import', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
   const { csvData, questions: rawList } = req.body;
   const importedQuestions: QuestionBankItem[] = [];
+  const lineErrors: Array<{ line: number; error: string }> = [];
 
   // 1. Process structured JSON array if provided
   if (Array.isArray(rawList)) {
+    let rowIdx = 1;
     for (const q of rawList) {
-      if (!q.prompt || !Array.isArray(q.options) || q.options.length < 2 || !q.correctAnswer) continue;
+      rowIdx++;
+      if (!q.prompt) {
+        lineErrors.push({ line: rowIdx, error: 'Savol matni bo‘sh bo‘lishi mumkin emas.' });
+        continue;
+      }
+      if (!Array.isArray(q.options) || q.options.length < 2) {
+        lineErrors.push({ line: rowIdx, error: 'Kamida 2 ta variant bo‘lishi shart.' });
+        continue;
+      }
+      if (!q.correctAnswer) {
+        lineErrors.push({ line: rowIdx, error: 'To‘g‘ri javob ko‘rsatilmagan.' });
+        continue;
+      }
       const created = addQuestionToBank({
         id: q.id || `q-imp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
         audience: 'KIDS',
@@ -707,9 +960,13 @@ adminRouter.post('/questions/import', adminAuth, (req: AuthenticatedAdminRequest
 
   // 2. Parse CSV / Excel Delimited text if provided
   if (typeof csvData === 'string' && csvData.trim().length > 0) {
-    const lines = csvData.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 0);
-    // Detect delimiter: comma, semicolon or tab
-    for (const line of lines) {
+    const rawLines = csvData.split(/\r?\n/);
+    let currentLineNumber = 0;
+    for (const rawLine of rawLines) {
+      currentLineNumber++;
+      const line = rawLine.trim();
+      if (line.length === 0) continue;
+
       // Skip header lines
       if (line.toLowerCase().startsWith('prompt') || line.toLowerCase().startsWith('savol')) continue;
 
@@ -734,39 +991,53 @@ adminRouter.post('/questions/import', adminAuth, (req: AuthenticatedAdminRequest
       }
       parts.push(cur.trim());
 
-      if (parts.length >= 6) {
-        const prompt = parts[0];
-        const optA = parts[1];
-        const optB = parts[2];
-        const optC = parts[3];
-        const optD = parts[4];
-        const correctAnswer = parts[5];
-        const difficulty = (parts[6]?.toUpperCase() as 'EASY' | 'MEDIUM' | 'HARD') || 'MEDIUM';
-        const explanation = parts[7] || '';
-        const topic = parts[8] || 'Misollar';
-        const grade = Number(parts[9]) || 4;
-
-        if (prompt && optA && optB && correctAnswer) {
-          const options = [optA, optB, optC || '', optD || ''].filter(Boolean);
-          const created = addQuestionToBank({
-            id: `q-csv-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-            audience: 'KIDS',
-            grade,
-            topic,
-            difficulty: ['EASY', 'MEDIUM', 'HARD'].includes(difficulty) ? difficulty : 'MEDIUM',
-            prompt,
-            type: 'MULTIPLE_CHOICE',
-            options,
-            correctAnswer,
-            explanation,
-            hint: '',
-            rewardCoins: 1,
-            rewardXP: 10,
-            isPublished: true,
-          });
-          importedQuestions.push(created);
-        }
+      if (parts.length < 3) {
+        lineErrors.push({ line: currentLineNumber, error: 'Qatorda ustunlar yetarli emas (savol, variantlar va to‘g‘ri javob kerak).' });
+        continue;
       }
+
+      const prompt = parts[0]?.replace(/^"|"$/g, '').trim();
+      const optA = parts[1]?.replace(/^"|"$/g, '').trim();
+      const optB = parts[2]?.replace(/^"|"$/g, '').trim();
+      const optC = parts[3]?.replace(/^"|"$/g, '').trim();
+      const optD = parts[4]?.replace(/^"|"$/g, '').trim();
+      const correctAnswer = parts[5]?.replace(/^"|"$/g, '').trim();
+      const difficulty = (parts[6]?.replace(/^"|"$/g, '').toUpperCase() as 'EASY' | 'MEDIUM' | 'HARD') || 'MEDIUM';
+      const explanation = parts[7]?.replace(/^"|"$/g, '').trim() || '';
+      const topic = parts[8]?.replace(/^"|"$/g, '').trim() || 'Misollar';
+      const grade = Number(parts[9]?.replace(/^"|"$/g, '').trim()) || 4;
+
+      if (!prompt) {
+        lineErrors.push({ line: currentLineNumber, error: 'Savol matni kiritilmagan.' });
+        continue;
+      }
+      if (!optA || !optB) {
+        lineErrors.push({ line: currentLineNumber, error: 'Kamida 2 ta variant (A va B) bo‘lishi shart.' });
+        continue;
+      }
+      if (!correctAnswer) {
+        lineErrors.push({ line: currentLineNumber, error: 'To‘g‘ri javob ko‘rsatilmagan.' });
+        continue;
+      }
+
+      const options = [optA, optB, optC || '', optD || ''].filter(Boolean);
+      const created = addQuestionToBank({
+        id: `q-csv-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        audience: 'KIDS',
+        grade,
+        topic,
+        difficulty: ['EASY', 'MEDIUM', 'HARD'].includes(difficulty) ? difficulty : 'MEDIUM',
+        prompt,
+        type: 'MULTIPLE_CHOICE',
+        options,
+        correctAnswer,
+        explanation,
+        hint: '',
+        rewardCoins: 1,
+        rewardXP: 10,
+        isPublished: true,
+      });
+      importedQuestions.push(created);
     }
   }
 
@@ -776,13 +1047,15 @@ adminRouter.post('/questions/import', adminAuth, (req: AuthenticatedAdminRequest
     action: 'CREATE_QUESTION',
     targetType: 'QUESTION',
     targetId: `bulk-import-${Date.now()}`,
-    details: { importedCount: importedQuestions.length },
+    details: { importedCount: importedQuestions.length, errorsCount: lineErrors.length },
   });
 
   return res.status(201).json({
     success: true,
-    message: `${importedQuestions.length} ta savol muvaffaqiyatli import qilindi va saqlandi.`,
+    message: `${importedQuestions.length} ta savol muvaffaqiyatli import qilindi.${lineErrors.length > 0 ? ` (${lineErrors.length} ta qatorda xatolik)` : ''}`,
+    importedCount: importedQuestions.length,
     count: importedQuestions.length,
+    errors: lineErrors,
     data: importedQuestions,
   });
 });
@@ -1252,6 +1525,182 @@ adminRouter.delete('/announcements/:id', adminAuth, (req: AuthenticatedAdminRequ
     targetId: annId,
   });
   return res.json({ success: true, message: 'E‘lon o‘chirildi.' });
+});
+
+// ---------------------------------------------------------------------------
+// 9. AI USTOZ ANALYTICS & RAG KNOWLEDGE REPOSITORY
+// ---------------------------------------------------------------------------
+adminRouter.get('/ai/analytics', adminAuth, (_req: Request, res: Response) => {
+  return res.json({
+    success: true,
+    data: aiAnalyticsStore.getAnalyticsSummary(),
+  });
+});
+
+adminRouter.get('/ai/logs', adminAuth, (req: Request, res: Response) => {
+  const search = req.query.search as string | undefined;
+  const onlySuspicious = req.query.suspicious === 'true';
+  const topic = req.query.topic as string | undefined;
+  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 100;
+
+  const logs = aiAnalyticsStore.getAllLogs({ search, onlySuspicious, topic, limit });
+  return res.json({
+    success: true,
+    total: logs.length,
+    data: logs,
+  });
+});
+
+adminRouter.get('/ai/knowledge', adminAuth, (_req: Request, res: Response) => {
+  return res.json({
+    success: true,
+    data: ragKnowledgeStore.getAllDocs(),
+  });
+});
+
+adminRouter.post('/ai/knowledge', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const { title, category, grade, topic, content } = req.body;
+  if (!title || !content || !topic) {
+    return res.status(400).json({ success: false, error: 'Sarlavha, mavzu va matn kiritilishi shart.' });
+  }
+
+  const created = ragKnowledgeStore.addDoc({
+    title: title.trim(),
+    category: category || 'RULE',
+    grade: grade ? Number(grade) : undefined,
+    topic: topic.trim(),
+    content: content.trim(),
+    addedBy: req.adminUser?.username || 'Administrator',
+  });
+
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'ADD_RAG_KNOWLEDGE',
+    targetType: 'AI_KNOWLEDGE',
+    targetId: created.id,
+    details: { title: created.title, topic: created.topic },
+  });
+
+  return res.json({
+    success: true,
+    message: 'AI Ustoz xotirasiga yangi ma’lumot muvaffaqiyatli qo‘shildi.',
+    data: created,
+  });
+});
+
+adminRouter.delete('/ai/knowledge/:id', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const id = req.params.id as string;
+  const deleted = ragKnowledgeStore.deleteDoc(id);
+  if (!deleted) {
+    return res.status(404).json({ success: false, error: 'Ma’lumot topilmadi.' });
+  }
+
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'DELETE_RAG_KNOWLEDGE',
+    targetType: 'AI_KNOWLEDGE',
+    targetId: id,
+  });
+
+  return res.json({
+    success: true,
+    message: 'Ma’lumot AI xotirasidan o‘chirildi.',
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 10. FINANCE & CARD SECURITY & BONUSES
+// ---------------------------------------------------------------------------
+adminRouter.get('/finance/bonuses', adminAuth, (_req: Request, res: Response) => {
+  return res.json({
+    success: true,
+    data: bonusStore.getAllRecords(),
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 11. SECURITY, INCIDENT MONITOR ("DIQQAT") & ONLINE REAL-TIME TRACKING
+// ---------------------------------------------------------------------------
+adminRouter.get('/security/status', adminAuth, (_req: Request, res: Response) => {
+  return res.json({
+    success: true,
+    data: {
+      is2FAEnabled: securityStore.is2FAEnabled,
+      twoFactorSecret: securityStore.twoFactorSecret,
+      telegramConfigured: !!(process.env.ADMIN_TELEGRAM_CHAT_ID && process.env.TELEGRAM_BOT_TOKEN),
+    },
+  });
+});
+
+adminRouter.get('/security/events', adminAuth, (_req: Request, res: Response) => {
+  return res.json({
+    success: true,
+    data: securityStore.getAllSecurityLogs(100),
+  });
+});
+
+adminRouter.get('/security/blocked-ips', adminAuth, (_req: Request, res: Response) => {
+  return res.json({
+    success: true,
+    data: securityStore.getAllBlockedIps(),
+  });
+});
+
+adminRouter.post('/security/block-ip', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const { ip, reason } = req.body;
+  if (!ip) {
+    return res.status(400).json({ success: false, error: 'IP manzil kiritilmadi.' });
+  }
+  const entry = securityStore.blockIp(ip, reason || 'Administrator tomonidan qo‘lda bloklandi', undefined, true);
+  return res.json({
+    success: true,
+    message: `IP manzil muvaffaqiyatli bloklandi: ${ip}`,
+    data: entry,
+  });
+});
+
+adminRouter.post('/security/unblock-ip', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const { ip } = req.body;
+  if (!ip) {
+    return res.status(400).json({ success: false, error: 'IP manzil kiritilmadi.' });
+  }
+  const success = securityStore.unblockIp(ip);
+  return res.json({
+    success: true,
+    message: success ? `IP blokdan chiqarildi: ${ip}` : `IP bloklanganlar ro‘yxatida topilmadi`,
+  });
+});
+
+adminRouter.get('/security/online-users', adminAuth, (_req: Request, res: Response) => {
+  const onlineData = repository.getOnlineUsers(30);
+  return res.json({
+    success: true,
+    data: onlineData,
+  });
+});
+
+adminRouter.post('/security/2fa/toggle', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const { enable } = req.body;
+  securityStore.is2FAEnabled = !!enable;
+
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'TOGGLE_2FA',
+    targetType: 'SECURITY',
+    details: { is2FAEnabled: securityStore.is2FAEnabled },
+  });
+
+  return res.json({
+    success: true,
+    message: securityStore.is2FAEnabled ? '2FA autentifikatsiya muvaffaqiyatli yoqildi.' : '2FA autentifikatsiya o‘chirildi.',
+    data: {
+      is2FAEnabled: securityStore.is2FAEnabled,
+      twoFactorSecret: securityStore.twoFactorSecret,
+    },
+  });
 });
 
 

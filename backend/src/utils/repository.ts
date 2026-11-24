@@ -1429,6 +1429,41 @@ class DataRepository {
     return { todayMinutes, totalMinutes };
   }
 
+  getOnlineUsers(withinSeconds = 30): {
+    count: number;
+    users: Array<{ id: string; name: string; username: string; grade: number; mode: string; lastSeenSecondsAgo: number }>;
+  } {
+    const now = Date.now();
+    const thresholdMs = withinSeconds * 1000;
+    const onlineMap = new Map<string, number>();
+
+    for (const act of this.dailyActivities.values()) {
+      if (act.lastHeartbeat && now - act.lastHeartbeat <= thresholdMs) {
+        onlineMap.set(act.userId, Math.round((now - act.lastHeartbeat) / 1000));
+      }
+    }
+
+    const resultUsers: Array<{ id: string; name: string; username: string; grade: number; mode: string; lastSeenSecondsAgo: number }> = [];
+    for (const [userId, lastSeenSecondsAgo] of onlineMap.entries()) {
+      const u = this.getUserById(userId);
+      if (u) {
+        resultUsers.push({
+          id: u.id,
+          name: u.displayName,
+          username: u.username || '—',
+          grade: u.grade,
+          mode: u.mode,
+          lastSeenSecondsAgo,
+        });
+      }
+    }
+
+    return {
+      count: resultUsers.length,
+      users: resultUsers,
+    };
+  }
+
   getWeeklyActivity(userId: string): {
     week: Array<{
       dayKey: string;
