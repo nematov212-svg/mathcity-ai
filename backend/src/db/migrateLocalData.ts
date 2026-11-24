@@ -150,19 +150,18 @@ export async function runLocalDataMigration(): Promise<{
       migratedLessons++;
     }
 
-    // 4. Foydalanuvchi hisoblarini ko'chirish (Demo & mavjud profillar)
-    const demoUser = repository.getUserById('demo-student-id');
-    if (demoUser) {
+    // 4. Foydalanuvchi hisoblarini ko'chirish
+    for (const repoUser of repository.getAllUsers()) {
       const user = await prisma.user.upsert({
-        where: { email: demoUser.email },
+        where: { email: repoUser.email },
         update: {
-          username: demoUser.username || 'ali',
+          username: repoUser.username || repoUser.displayName.toLowerCase().replace(/\s+/g, '_'),
         },
         create: {
-          id: demoUser.id,
-          email: demoUser.email,
-          username: demoUser.username || 'ali',
-          passwordHash: demoUser.passwordHash,
+          id: repoUser.id,
+          email: repoUser.email,
+          username: repoUser.username || repoUser.displayName.toLowerCase().replace(/\s+/g, '_'),
+          passwordHash: repoUser.passwordHash,
           isActive: true,
         },
       });
@@ -170,38 +169,38 @@ export async function runLocalDataMigration(): Promise<{
       await prisma.studentProfile.upsert({
         where: { userId: user.id },
         update: {
-          displayName: demoUser.displayName,
-          grade: demoUser.grade,
-          age: demoUser.age,
+          displayName: repoUser.displayName,
+          grade: repoUser.grade,
+          age: repoUser.age,
         },
         create: {
           userId: user.id,
-          displayName: demoUser.displayName,
-          dateOfBirth: new Date(demoUser.dateOfBirth),
-          age: demoUser.age,
-          mode: demoUser.mode as Mode,
-          grade: demoUser.grade,
-          avatarUrl: demoUser.avatarUrl,
-          cityLevel: demoUser.cityLevel,
+          displayName: repoUser.displayName,
+          dateOfBirth: new Date(repoUser.dateOfBirth),
+          age: repoUser.age,
+          mode: repoUser.mode as Mode,
+          grade: repoUser.grade,
+          avatarUrl: repoUser.avatarUrl,
+          cityLevel: repoUser.cityLevel,
         },
       });
 
       await prisma.coinWallet.upsert({
         where: { userId: user.id },
-        update: { balance: demoUser.coinBalance },
+        update: { balance: repoUser.coinBalance },
         create: {
           userId: user.id,
-          balance: demoUser.coinBalance,
+          balance: repoUser.coinBalance,
         },
       });
 
       await prisma.studentXP.upsert({
         where: { userId: user.id },
-        update: { totalXP: demoUser.totalXP, level: demoUser.level },
+        update: { totalXP: repoUser.totalXP, level: repoUser.level },
         create: {
           userId: user.id,
-          totalXP: demoUser.totalXP,
-          level: demoUser.level,
+          totalXP: repoUser.totalXP,
+          level: repoUser.level,
         },
       });
 

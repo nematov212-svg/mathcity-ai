@@ -85,8 +85,20 @@ describe('Google, Apple & Complete Profile Comprehensive Test Suite', () => {
     const resEmail = await request(app).get('/api/auth/username-available?username=test@user');
     expect(resEmail.status).toBe(400);
 
-    // Taken by demo user
-    const resTaken = await request(app).get('/api/auth/username-available?username=ali');
+    // Register a user to test taken username
+    repository.createUser({
+      id: 'existing-test-user-id',
+      email: 'existing_taken@mathcity.ai',
+      username: 'taken_student',
+      displayName: 'Test User',
+      age: 10,
+      mode: 'KIDS',
+      coinBalance: 0,
+      totalXP: 0,
+    } as any);
+
+    // Taken username
+    const resTaken = await request(app).get('/api/auth/username-available?username=taken_student');
     expect(resTaken.status).toBe(200);
     expect(resTaken.body.data.available).toBe(false);
 

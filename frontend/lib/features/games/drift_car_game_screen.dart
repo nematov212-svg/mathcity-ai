@@ -48,8 +48,8 @@ class _DriftCarGameScreenState extends ConsumerState<DriftCarGameScreen> {
   void _syncUserToGame() {
     final student = ref.read(studentProvider).student;
     postMessageToDriftGame('INIT_USER', {
-      'userId': student?.id ?? 'demo-student-id',
-      'coins': student?.coinBalance ?? 100,
+      'userId': student?.id ?? 'guest-student',
+      'coins': student?.coinBalance ?? 0,
       'token': '',
       'ownedCars': _ownedCars,
     });

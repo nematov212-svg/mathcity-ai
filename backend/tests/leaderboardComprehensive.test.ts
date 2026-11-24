@@ -8,8 +8,24 @@ describe('Task 1 — Comprehensive Leaderboard & Single-Source Coins/XP Tests', 
   let u3Token: string, u3Id: string;
   let u4Token: string, u4Id: string;
   let u5Token: string, u5Id: string;
+  let u0Token: string, u0Id: string;
 
   beforeAll(async () => {
+    // 0. Create Top User: 200 coins, 800 XP
+    const res0 = await request(app).post('/api/auth/register').send({
+      email: 'leader_u0@mathcity.ai',
+      username: 'leader_u0',
+      password: 'Password123!',
+      displayName: 'Top Leader',
+      dateOfBirth: '2013-12-12',
+      grade: 6,
+    });
+    u0Token = res0.body.data.token;
+    u0Id = res0.body.data.user.id;
+    const user0 = repository.getUserById(u0Id)!;
+    user0.coinBalance = 200;
+    user0.totalXP = 800;
+
     // 1. Create User 1: 50 coins, 200 XP
     const res1 = await request(app).post('/api/auth/register').send({
       email: 'leader_u1@mathcity.ai',

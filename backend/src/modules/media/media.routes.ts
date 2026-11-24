@@ -159,7 +159,7 @@ mediaRouter.post('/upload', authMiddleware, async (req: AuthenticatedRequest, re
     return res.status(400).json({ success: false, error: validation.error });
   }
 
-  const userId = req.user?.id || 'demo-student-id';
+  const userId = req.user?.id || 'guest-user';
   const fileKey = `attachments/${userId}/${randomUUID()}-${fileName}`;
   const storageUrl = `/api/media/files/${fileKey}`;
 

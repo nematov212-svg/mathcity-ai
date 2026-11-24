@@ -411,43 +411,6 @@ class AuthService {
     return login(identifier: email, password: password);
   }
 
-  /// Instant Demo Student Login (Ali) without needing external OAuth or credentials
-  Future<AuthResult> loginWithDemo() async {
-    try {
-      final res = await ApiClient().dio.post('/auth/demo');
-      if (res.data['success'] == true) {
-        final data = res.data['data'];
-        final token = data['token'] as String;
-        final userData = (data['user'] as Map<String, dynamic>?) ?? {};
-        final bool isNewUser = data['isNewUser'] == true;
-        final bool profileCompleted =
-            data['profileCompleted'] == true || userData['profileCompleted'] == true;
-
-        ApiClient().setAuthToken(token);
-        await StorageService.saveAuthToken(token);
-        final student = StudentModel.fromJson(userData);
-        await StorageService.saveCachedStudent(student.toJson());
-
-        return AuthResult(
-          success: true,
-          student: student,
-          token: token,
-          isNewUser: isNewUser,
-          profileCompleted: profileCompleted,
-        );
-      }
-      return AuthResult(
-        success: false,
-        errorMessage: res.data['error'] ?? 'Demo hisobga ulanishda xatolik.',
-      );
-    } catch (e) {
-      return AuthResult(
-        success: false,
-        errorMessage: ApiClient.getErrorMessage(e),
-      );
-    }
-  }
-
   /// Register new student with name, loginOrEmail, password and confirmation
   Future<AuthResult> register({
     required String name,

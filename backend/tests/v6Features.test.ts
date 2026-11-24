@@ -263,10 +263,19 @@ describe('MathCity AI — Master Test Suite: Payments, Pro Rewards, Ziyo AI & Qu
     });
 
     it('Check-username endpoint validates uniqueness and format', async () => {
+      // Register user to test taken username
+      await request(app).post('/api/auth/register').send({
+        displayName: 'Hero',
+        loginOrEmail: 'existinghero',
+        password: 'Password123!',
+        dateOfBirth: '2015-05-10',
+        grade: 4,
+      });
+
       // Existing username taken
       const takenRes = await request(app)
         .get('/api/auth/check-username')
-        .query({ username: 'Ali' });
+        .query({ username: 'existinghero' });
       expect(takenRes.status).toBe(200);
       expect(takenRes.body.data.available).toBe(false);
 
