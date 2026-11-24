@@ -278,6 +278,13 @@ class StudentNotifier extends StateNotifier<StudentState> {
     _heartbeatTimer?.cancel();
     _heartbeatTimer = Timer.periodic(const Duration(seconds: 15), (timer) async {
       if (DateTime.now().difference(_lastInteractionTime).inSeconds > 60) return;
+
+      final token = ApiClient().authToken ?? await StorageService.getAuthToken();
+      if (token == null || token.isEmpty || state.student == null) {
+        stopHeartbeat();
+        return;
+      }
+
       try {
         final res = await ApiClient().dio.post('/activity/heartbeat', data: {'seconds': 15});
         if (res.data['success'] == true && res.data['data'] != null) {
@@ -289,7 +296,11 @@ class StudentNotifier extends StateNotifier<StudentState> {
           }
         }
       } catch (e) {
-        debugPrint('ℹ️ [StudentNotifier] Heartbeat xatoligi: $e');
+        if (e is DioException && e.response?.statusCode == 401) {
+          stopHeartbeat();
+        } else {
+          debugPrint('ℹ️ [StudentNotifier] Heartbeat xatoligi: $e');
+        }
       }
     });
   }

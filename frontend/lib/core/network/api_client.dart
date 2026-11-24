@@ -166,6 +166,15 @@ class ApiClient {
     try {
       final refreshToken = await StorageService.getRefreshToken();
       final currentToken = _authToken ?? await StorageService.getAuthToken();
+
+      // Guard: Do not attempt refresh if no tokens are stored
+      if ((refreshToken == null || refreshToken.trim().isEmpty) &&
+          (currentToken == null || currentToken.trim().isEmpty)) {
+        _refreshCompleter!.complete(false);
+        _refreshCompleter = null;
+        return false;
+      }
+
       final refreshDio = Dio(
         BaseOptions(
           baseUrl: AppConfig.baseUrl,
@@ -173,13 +182,13 @@ class ApiClient {
           receiveTimeout: const Duration(seconds: 15),
           headers: {
             'Content-Type': 'application/json',
-            if (currentToken != null) 'Authorization': 'Bearer $currentToken',
+            if (currentToken != null && currentToken.isNotEmpty) 'Authorization': 'Bearer $currentToken',
           },
         ),
       );
 
       final res = await refreshDio.post('/auth/refresh', data: {
-        if (refreshToken != null) 'refreshToken': refreshToken,
+        if (refreshToken != null && refreshToken.isNotEmpty) 'refreshToken': refreshToken,
       });
 
       if (res.data['success'] == true && res.data['data'] != null) {
@@ -195,7 +204,11 @@ class ApiClient {
         return true;
       }
     } catch (e) {
-      debugPrint('ℹ️ [API Client] Avtomatik token yangilash muvaffaqiyatsiz bo‘ldi: $e');
+      _authToken = null;
+      await StorageService.clearAuthToken();
+      if (e is! DioException || e.response?.statusCode != 401) {
+        debugPrint('ℹ️ [API Client] Avtomatik token yangilash muvaffaqiyatsiz bo‘ldi: $e');
+      }
     }
 
     _refreshCompleter!.complete(false);
