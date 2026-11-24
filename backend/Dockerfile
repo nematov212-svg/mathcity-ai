@@ -16,6 +16,7 @@ RUN npm ci
 
 # Copy source code and build
 COPY src ./src
+COPY public ./public
 RUN npx prisma generate
 RUN npm run build
 
@@ -37,6 +38,7 @@ COPY prisma ./prisma/
 RUN npm ci --only=production && npx prisma generate
 
 COPY --from=builder /app/dist ./dist
+COPY public ./public
 
 # Set user permissions
 RUN chown -R appuser:appgroup /app

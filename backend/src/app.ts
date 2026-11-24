@@ -28,8 +28,27 @@ import { exercisesRouter } from './modules/exercises/exercises.routes.js';
 import { announcementsRouter } from './modules/announcements/announcements.routes.js';
 import { isDatabaseHealthy, checkDatabaseConnection } from './db/client.js';
 
-const adminStaticPath = path.resolve(process.cwd(), 'public/admin');
-const webStaticPath = path.resolve(process.cwd(), 'public/web');
+function resolveStaticDirectory(...candidates: string[]): string {
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return candidates[0];
+}
+
+const adminStaticPath = resolveStaticDirectory(
+  path.resolve(process.cwd(), 'public/admin'),
+  path.resolve(process.cwd(), 'backend/public/admin'),
+  path.resolve(__dirname, '../public/admin'),
+  path.resolve(__dirname, '../../public/admin')
+);
+const webStaticPath = resolveStaticDirectory(
+  path.resolve(process.cwd(), 'public/web'),
+  path.resolve(process.cwd(), 'backend/public/web'),
+  path.resolve(__dirname, '../public/web'),
+  path.resolve(__dirname, '../../public/web')
+);
 
 export const app = express();
 
@@ -183,8 +202,15 @@ app.delete(['/api/me', '/api/users/me'], (req, res, next) => {
 
 // 4. Standalone Admin Dashboard Static Portal
 app.use('/admin', express.static(adminStaticPath));
-app.get('/admin/*', (req: Request, res: Response) => {
-  res.sendFile(path.join(adminStaticPath, 'index.html'));
+app.get(['/admin', '/admin/*'], (req: Request, res: Response) => {
+  const adminIndex = path.join(adminStaticPath, 'index.html');
+  if (fs.existsSync(adminIndex)) {
+    return res.sendFile(adminIndex);
+  }
+  return res.status(404).json({
+    success: false,
+    error: `ENOENT: no such file or directory, stat '${adminIndex}'`,
+  });
 });
 
 // 5. Main Flutter Web Application Static Portal

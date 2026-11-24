@@ -31,8 +31,10 @@ services:
         value: mathcity_admin_master_secret_2026
       - key: ADMIN_EMAIL
         value: admin@mathcity.ai
+      - key: ADMIN_USERNAME
+        value: admin
       - key: ADMIN_PASSWORD
-        sync: false
+        value: MathCity@Admin2026!Secure
       - key: ALLOWED_ORIGINS
         value: https://mathcity-ai-web.onrender.com,https://mathcity-ai-admin.onrender.com,http://localhost:8085
       - key: CORS_ORIGINS
