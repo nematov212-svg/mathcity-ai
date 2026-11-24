@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import { z } from 'zod';
-import { authMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
+import { authMiddleware, optionalAuthMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
 import { repository } from '../../utils/repository.js';
 import { getTashkentWeekDays } from '../../utils/tashkentTime.js';
 import { savePersistentAvatar } from '../../utils/cloudStorage.js';
@@ -86,8 +86,14 @@ studentsRouter.get('/me', authMiddleware, (req: AuthenticatedRequest, res: Respo
  * GET /api/students/leaderboard/me
  * User's own real-time rank, stats, distance to ranks, and status message
  */
-studentsRouter.get('/leaderboard/me', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const user = req.user!;
+studentsRouter.get('/leaderboard/me', optionalAuthMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    return res.json({
+      success: true,
+      data: null,
+    });
+  }
   const allUsers = repository.getAllUsers();
 
   // Active ranked users sorted by coinBalance DESC -> totalXP DESC -> createdAt ASC
@@ -154,7 +160,7 @@ studentsRouter.get('/leaderboard/me', authMiddleware, (req: AuthenticatedRequest
  * Global leaderboard sorted by: coinBalance DESC -> totalXP DESC -> createdAt ASC
  * Scopes: top100 (default), top50, top10, top5, or custom ?limit=N&offset=M
  */
-studentsRouter.get('/leaderboard', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+studentsRouter.get('/leaderboard', optionalAuthMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const authUser = req.user;
 
   const scope = (req.query.scope as string) || 'top100';

@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { authMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
+import { authMiddleware, optionalAuthMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
 import { repository } from '../../utils/repository.js';
 import { getTashkentDateString } from '../../utils/tashkentTime.js';
 
@@ -42,8 +42,9 @@ lessonsRouter.get('/stream', (req, res: Response) => {
 /**
  * GET /api/lessons
  */
-lessonsRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const user = req.user!;
+lessonsRouter.get('/', optionalAuthMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user;
+  const completedLessons = user?.completedLessons || [];
   const modeQuery = (req.query.mode as string | undefined)?.toUpperCase();
   const modeParam: 'KIDS' | undefined = undefined; // Return curriculum openly across all grades
 
@@ -84,7 +85,7 @@ lessonsRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response
   const paginated = lessons.slice(startIndex, startIndex + limit);
 
   const mapped = paginated.map((l, idx) => {
-    const isCompleted = user.completedLessons.includes(l.id);
+    const isCompleted = completedLessons.includes(l.id);
     // Determine default icon based on topic/content
     const defaultIcon = l.icon || (
       l.topicKey.includes('fraction') || l.title.toLowerCase().includes('kasr') ? '½' :
@@ -105,7 +106,7 @@ lessonsRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response
     );
 
     // Locking logic: first lesson is unlocked; subsequent lessons are unlocked if previous is completed
-    const isLocked = l.orderIndex > 1 && !isCompleted && idx > 0 && !user.completedLessons.includes(lessons[idx - 1]?.id);
+    const isLocked = l.orderIndex > 1 && !isCompleted && idx > 0 && !completedLessons.includes(lessons[idx - 1]?.id);
 
     return {
       id: l.id,

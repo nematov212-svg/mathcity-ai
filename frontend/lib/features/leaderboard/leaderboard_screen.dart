@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io' show Platform;
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -163,8 +164,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
       final res = await ApiClient().dio.get(
         '/students/leaderboard',
         queryParameters: {'scope': _selectedScope},
+        options: Options(
+          validateStatus: (status) => true,
+        ),
       );
-      if (res.data['success'] == true) {
+      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
         final data = res.data['data'];
         final list = (data['leaderboard'] as List<dynamic>?)
                 ?.map((item) => LeaderboardUser.fromJson(item))
@@ -183,8 +187,13 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
         // Fetch detailed me stats
         try {
-          final meRes = await ApiClient().dio.get('/students/leaderboard/me');
-          if (meRes.data['success'] == true && meRes.data['data'] != null) {
+          final meRes = await ApiClient().dio.get(
+            '/students/leaderboard/me',
+            options: Options(
+              validateStatus: (status) => true,
+            ),
+          );
+          if (meRes.statusCode == 200 && meRes.data != null && meRes.data['success'] == true && meRes.data['data'] != null) {
             final meData = meRes.data['data'];
             _coinsToTop100 = meData['coinsToTop100'] ?? 0;
             _coinsToNextRank = meData['coinsToNextRank'] ?? 0;

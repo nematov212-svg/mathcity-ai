@@ -399,8 +399,13 @@ class StudentNotifier extends StateNotifier<StudentState> {
 
   Future<Map<String, dynamic>?> fetchDailyMissions() async {
     try {
-      final res = await ApiClient().dio.get('/daily-tasks/today');
-      if (res.data['success'] == true) {
+      final res = await ApiClient().dio.get(
+        '/daily-tasks/today',
+        options: Options(
+          validateStatus: (status) => true,
+        ),
+      );
+      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
         return res.data['data'];
       }
     } catch (_) {}

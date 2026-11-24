@@ -1604,9 +1604,62 @@ class DataRepository {
     todayDateStr: string;
   } {
     const user = this.getUserById(userId);
-    if (!user) throw new Error('Foydalanuvchi topilmadi');
-
     const today = getTashkentDateString();
+    const secondsUntilMidnight = getTashkentSecondsUntilMidnight();
+
+    if (!user) {
+      const templates = [
+        {
+          templateId: 'misol_5',
+          title: '5 ta misolni to‘g‘ri yeching',
+          description: 'Dars yoki mashqlardan 5 ta to‘g‘ri javob toping.',
+          targetCount: 5,
+          rewardCoins: 1,
+          rewardXP: 10,
+        },
+        {
+          templateId: 'dars_1',
+          title: '1 ta darsni tugating',
+          description: 'O‘quv mavzusidan kamida 1 ta darsni muvaffaqiyatli yakunlang.',
+          targetCount: 1,
+          rewardCoins: 2,
+          rewardXP: 20,
+        },
+        {
+          templateId: 'kosmik_1',
+          title: 'Kosmik hisob o‘yinini o‘ynang',
+          description: 'Fazoviy arifmetika o‘yinida kamida 1 raund o‘ynang.',
+          targetCount: 1,
+          rewardCoins: 1,
+          rewardXP: 10,
+        },
+      ];
+
+      const guestMissions = templates.map((tmpl) => ({
+        id: `mission_guest_${today}_${tmpl.templateId}`,
+        userId: 'guest',
+        date: today,
+        templateId: tmpl.templateId,
+        title: tmpl.title,
+        description: tmpl.description,
+        targetCount: tmpl.targetCount,
+        currentCount: 0,
+        rewardCoins: tmpl.rewardCoins,
+        rewardXP: tmpl.rewardXP,
+        status: 'ACTIVE' as MissionStatus,
+        isCompleted: false,
+        claimed: false,
+      }));
+
+      return {
+        missions: guestMissions,
+        secondsUntilMidnight,
+        completedCount: 0,
+        claimedCount: 0,
+        todayDateStr: today,
+      };
+    }
+
     const userMissions = this.dailyMissions.get(userId) || [];
 
     // Expire older uncompleted missions
@@ -1668,7 +1721,6 @@ class DataRepository {
 
     const completedCount = todayMissions.filter((m) => m.isCompleted || m.status === 'COMPLETED' || m.status === 'CLAIMED').length;
     const claimedCount = todayMissions.filter((m) => m.claimed || m.status === 'CLAIMED').length;
-    const secondsUntilMidnight = getTashkentSecondsUntilMidnight();
 
     return {
       missions: todayMissions,

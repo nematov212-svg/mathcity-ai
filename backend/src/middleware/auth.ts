@@ -60,6 +60,54 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
 }
 
 /**
+ * Optional Authentication Middleware:
+ * If a valid Bearer token is provided, populates req.user.
+ * If missing, invalid, or expired, safely sets req.user = undefined and continues with next().
+ * Never sends 401 Unauthorized so public/guest screens can load without console errors.
+ */
+export function optionalAuthMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    req.user = undefined;
+    return next();
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, config.jwtSecret) as { userId: string };
+    const user = repository.getUserById(decoded.userId);
+
+    if (user) {
+      if (user.isBlocked) {
+        return res.status(403).json({
+          success: false,
+          errorCode: 'ACCOUNT_BLOCKED',
+          error: 'Hisobingiz administrator tomonidan bloklangan.',
+        });
+      }
+
+      if (user.dateOfBirth) {
+        const dobDate = new Date(user.dateOfBirth);
+        if (!isNaN(dobDate.getTime())) {
+          const currentAge = calculateAge(dobDate);
+          user.age = currentAge;
+          user.mode = 'KIDS';
+        }
+      }
+      req.user = user;
+    } else {
+      req.user = undefined;
+    }
+  } catch (_) {
+    req.user = undefined;
+  }
+
+  next();
+}
+
+/**
  * Middleware: Blocks access to core features if user profile (username & birthdate) is incomplete
  */
 export function requireCompletedProfile(req: AuthenticatedRequest, res: Response, next: NextFunction) {
