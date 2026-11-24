@@ -218,10 +218,9 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
         body: SafeArea(
         child: ResponsiveAuthCard(
           maxCardWidth: 500,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
                 const SizedBox(height: 12),
                 Center(
                   child: Hero(
@@ -690,8 +689,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
           ),
         ),
       ),
-    ),
-  );
+    );
 }
 
   InputDecoration _dropdownDecoration(String label) {

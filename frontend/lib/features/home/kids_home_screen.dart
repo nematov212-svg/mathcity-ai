@@ -9,7 +9,6 @@ import '../../core/widgets/announcement_popup.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/user_avatar.dart';
-import '../../core/widgets/xp_bar.dart';
 import '../../shared/providers/student_provider.dart';
 
 class KidsHomeScreen extends ConsumerStatefulWidget {
@@ -97,69 +96,209 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ==============================================================
-              // 1. TOP HEADER (Student Avatar, Greeting, Gold Pill Coin Badge)
+              // 1. IBRAT AKADEMIYA STYLE HEADER
               // ==============================================================
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        // Real Student Avatar with elegant purple outline
-                        GestureDetector(
-                          onTap: () => context.push('/kids/profile'),
-                          child: UserAvatar(
-                            avatarUrl: student?.avatarUrl,
-                            displayName: name,
-                            size: 48,
-                            borderColor: colors.primary,
-                            borderWidth: 2.2,
+              // Row 1: Bayroq / PRO / XP / Coin status pills
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Country/Language Flag Pill
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: colors.card,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: colors.border.withOpacity(0.5)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
                           ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('🇺🇿', style: TextStyle(fontSize: 14)),
+                          const SizedBox(width: 4),
+                          Text(
+                            'O‘zbek',
+                            style: TextStyle(
+                              fontFamily: 'Nunito',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: colors.ink,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // PRO Status Pill
+                    GestureDetector(
+                      onTap: () => context.push('/kids/pricing'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFFFB800), Color(0xFFFF8A00)],
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFFFB800).withOpacity(0.35),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Salom, $name! 👋',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w900,
-                                  color: colors.ink,
-                                  letterSpacing: -0.2,
-                                ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              student?.isPro == true ? Icons.workspace_premium_rounded : Icons.star_rounded,
+                              color: Colors.white,
+                              size: 14,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              student?.isPro == true ? 'PRO' : 'PRO',
+                              style: const TextStyle(
+                                fontFamily: 'Nunito',
+                                fontSize: 11,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                'Bugun nima o‘rganamiz?',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: colors.muted,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // XP Pill
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEDE9FE),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: const Color(0xFFDDD6FE)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.bolt_rounded, color: Color(0xFF7C3AED), size: 15),
+                          const SizedBox(width: 3),
+                          Text(
+                            '$xp XP',
+                            style: const TextStyle(
+                              fontFamily: 'Nunito',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF6D28D9),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Coin Badge
+                    CoinBadge(count: coins, size: 26),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Row 2: Avatar with Level Badge Overlay + Greeting
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => context.push('/kids/profile'),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        UserAvatar(
+                          avatarUrl: student?.avatarUrl,
+                          displayName: name,
+                          size: 52,
+                          borderColor: colors.primary,
+                          borderWidth: 2.2,
+                        ),
+                        Positioned(
+                          bottom: -4,
+                          right: -4,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF6A4CFF),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.white, width: 1.5),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.18),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
                                 ),
+                              ],
+                            ),
+                            child: Text(
+                              'Lvl $level',
+                              style: const TextStyle(
+                                fontFamily: 'Nunito',
+                                fontSize: 10,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.white,
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  // Real-time Gold Coin Pill Badge
-                  CoinBadge(count: coins, size: 28),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Salom, $name! 👋',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
+                            color: colors.ink,
+                            letterSpacing: -0.3,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          'Bugun yangi marralarni zabt etamiz!',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: colors.muted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
 
-              // ==============================================================
-              // 2. XP PROGRESS CARD (Full width, rounded container)
-              // ==============================================================
-              XPBar(currentXP: xp, level: level),
+              // Row 3: Weekly Streak tracker (7 days: D, S, Ch, P, J, Sh, Ya)
+              _buildWeeklyStreakCard(student?.currentStreak ?? 1, colors),
+              const SizedBox(height: 12),
+
+              // Row 4: Milestone Pill (Next level progress)
+              _buildMilestonePill(xp, level, colors),
               const SizedBox(height: 18),
 
               // ==============================================================
@@ -716,6 +855,212 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
       // 8. UNIFIED 5-TAB FLOATING GLASS BOTTOM NAVIGATION BAR
       // ==============================================================
       bottomNavigationBar: const MathCityBottomNav(currentIndex: 0),
+    );
+  }
+
+  Widget _buildWeeklyStreakCard(int streak, AppThemeColors colors) {
+    final now = DateTime.now();
+    final todayWeekday = now.weekday; // 1 = Monday, 7 = Sunday
+    final dayNames = ['D', 'S', 'Ch', 'P', 'J', 'Sh', 'Ya'];
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: colors.border.withOpacity(0.5)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Text('🔥', style: TextStyle(fontSize: 18)),
+                  const SizedBox(width: 6),
+                  Text(
+                    '$streak kunlik seriya',
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: colors.ink,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  'Har kuni shug‘ullaning',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: 'Nunito',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: colors.muted,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: List.generate(7, (index) {
+              final dayIndex = index + 1; // 1 to 7
+              final isToday = dayIndex == todayWeekday;
+              final isPastOrToday = dayIndex <= todayWeekday;
+              final isActive = isPastOrToday && (todayWeekday - dayIndex < (streak > 0 ? streak : 1));
+
+              return Expanded(
+                child: Column(
+                  children: [
+                    Container(
+                      constraints: const BoxConstraints(maxWidth: 36, maxHeight: 36),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: isActive
+                            ? const LinearGradient(
+                                colors: [Color(0xFFFF7A00), Color(0xFFFF4800)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              )
+                            : null,
+                        color: isActive ? null : (isToday ? const Color(0xFFEDE9FE) : const Color(0xFFF1F5F9)),
+                        border: isToday && !isActive
+                            ? Border.all(color: const Color(0xFF6A4CFF), width: 1.5)
+                            : null,
+                        boxShadow: isActive
+                            ? [
+                                BoxShadow(
+                                  color: const Color(0xFFFF7A00).withOpacity(0.35),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ]
+                            : null,
+                      ),
+                      child: Center(
+                        child: isActive
+                            ? const Icon(Icons.local_fire_department_rounded, color: Colors.white, size: 20)
+                            : Text(
+                                dayNames[index],
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontSize: 12,
+                                  fontWeight: isToday ? FontWeight.w900 : FontWeight.w700,
+                                  color: isToday ? const Color(0xFF6A4CFF) : const Color(0xFF94A3B8),
+                                ),
+                              ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      dayNames[index],
+                      style: TextStyle(
+                        fontFamily: 'Nunito',
+                        fontSize: 10,
+                        fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
+                        color: isToday ? const Color(0xFF6A4CFF) : colors.muted,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMilestonePill(int xp, int level, AppThemeColors colors) {
+    final xpInCurrentLevel = xp % 100;
+    final remainingXP = 100 - xpInCurrentLevel;
+    final progress = (xpInCurrentLevel / 100.0).clamp(0.0, 1.0);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFDDD6FE)),
+        gradient: LinearGradient(
+          colors: [
+            const Color(0xFFF5F3FF),
+            colors.card,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: const BoxDecoration(
+              color: Color(0xFFEDE9FE),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.track_changes_rounded, color: Color(0xFF7C3AED), size: 16),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        '🎯 Keyingi darajaga $remainingXP XP qoldi',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF5B21B6),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      '$xpInCurrentLevel / 100 XP',
+                      style: const TextStyle(
+                        fontFamily: 'Nunito',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF7C3AED),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(999),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 6,
+                    backgroundColor: const Color(0xFFDDD6FE),
+                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF7C3AED)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

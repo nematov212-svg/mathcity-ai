@@ -15,6 +15,7 @@ import 'package:uuid/uuid.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_tts/flutter_tts.dart';
 import '../../core/network/api_client.dart';
+import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/responsive_layout.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/providers/student_provider.dart';
@@ -1243,6 +1244,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         return Scaffold(
           backgroundColor: colors.bg,
           appBar: _buildAppBar(isDesktop, colors, isDark),
+          bottomNavigationBar: (isDesktop || MediaQuery.of(context).viewInsets.bottom > 0)
+              ? null
+              : const MathCityBottomNav(currentIndex: 2),
           body: Row(
             children: [
               // Desktop History Sidebar
