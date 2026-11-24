@@ -184,6 +184,12 @@ class PaymentDataStore {
     );
   }
 
+  getUserTransactions(userId: string): PaymentTransaction[] {
+    return Array.from(this.transactions.values())
+      .filter((t) => t.userId === userId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
   getAllPayouts(): PayoutRecord[] {
     return [...this.payouts].sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()

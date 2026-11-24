@@ -39,7 +39,12 @@ void main() {
 
       // Divider & Social logins
       expect(find.text('yoki davom eting'), findsOneWidget);
-      expect(find.text('Continue with Google'), findsOneWidget);
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is Text && (w.data == 'Continue with Google' || w.data == 'Google orqali kirish'),
+        ),
+        findsOneWidget,
+      );
       expect(find.text('Apple orqali davom etish'), findsNothing);
 
       // Bottom link

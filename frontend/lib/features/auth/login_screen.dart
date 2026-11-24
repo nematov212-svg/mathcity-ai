@@ -25,7 +25,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   bool _isPasswordVisible = false;
   bool _isLoading = false;
   bool _isGoogleLoading = false;
-  bool _isDemoLoading = false;
   bool _isSuccess = false;
   String? _errorMessage;
 
@@ -162,36 +161,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       _triggerShake();
     } finally {
       if (mounted) setState(() => _isGoogleLoading = false);
-    }
-  }
-
-  Future<void> _handleDemoLogin() async {
-    if (_isLoading || _isGoogleLoading || _isDemoLoading) return;
-    setState(() {
-      _isDemoLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final result = await ref.read(studentProvider.notifier).loginWithDemo();
-      if (!mounted) return;
-      if (result.success && result.student != null) {
-        setState(() => _isSuccess = true);
-        await Future.delayed(const Duration(milliseconds: 500));
-        if (!mounted) return;
-        _navigateToDashboard(result.student);
-      } else {
-        setState(() {
-          _errorMessage = result.errorMessage ?? 'Demo hisobga kirib bo‘lmadi.';
-        });
-        _triggerShake();
-      }
-    } catch (_) {
-      if (!mounted) return;
-      setState(() => _errorMessage = 'Demo hisobga kirishda xatolik yuz berdi.');
-      _triggerShake();
-    } finally {
-      if (mounted) setState(() => _isDemoLoading = false);
     }
   }
 
@@ -570,49 +539,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
               GoogleSignInButton(
                 onFallbackPressed: _handleGoogleSignIn,
                 isLoading: _isGoogleLoading,
-                text: 'Continue with Google',
-              ),
-
-              const SizedBox(height: 14),
-
-              // Demo Login Button (Quick 1-click test with Ali account)
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: TextButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: AuthTokens.card(context),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(
-                        color: AuthTokens.brand(context).withOpacity(0.35),
-                        width: 1.5,
-                      ),
-                    ),
-                  ),
-                  onPressed: (_isLoading || _isGoogleLoading || _isDemoLoading)
-                      ? null
-                      : _handleDemoLogin,
-                  icon: _isDemoLoading
-                      ? SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(AuthTokens.brand(context)),
-                          ),
-                        )
-                      : Icon(Icons.flash_on_rounded, color: AuthTokens.brand(context), size: 20),
-                  label: Text(
-                    '⚡ Demo hisob bilan sinash (Ali: 100 coin)',
-                    style: TextStyle(
-                      fontFamily: 'Nunito',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                      color: AuthTokens.brand(context),
-                    ),
-                  ),
-                ),
+                text: 'Google orqali kirish',
               ),
             ],
           ),

@@ -17,26 +17,6 @@ class WelcomeScreen extends ConsumerStatefulWidget {
 
 class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   bool _isGoogleLoading = false;
-  bool _isDemoLoading = false;
-
-  void _handleDemoLogin() async {
-    setState(() => _isDemoLoading = true);
-    final result = await ref.read(studentProvider.notifier).loginWithDemo();
-    setState(() => _isDemoLoading = false);
-
-    if (!mounted) return;
-    if (result.success) {
-      context.go('/kids/home');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            result.errorMessage ?? 'Demo hisob bilan kirishda xatolik yuz berdi.',
-          ),
-        ),
-      );
-    }
-  }
 
   void _handleGoogleSignIn() async {
     setState(() => _isGoogleLoading = true);
@@ -129,45 +109,6 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
               GoogleSignInButton(
                 isLoading: _isGoogleLoading,
                 onFallbackPressed: _handleGoogleSignIn,
-              ),
-              const SizedBox(height: 12),
-
-              // Demo Account Button
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: TextButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.white.withOpacity(0.9),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: const BorderSide(
-                        color: AppColors.kidsPrimary,
-                        width: 1.5,
-                      ),
-                    ),
-                  ),
-                  onPressed: (_isGoogleLoading || _isDemoLoading) ? null : _handleDemoLogin,
-                  icon: _isDemoLoading
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.kidsPrimary),
-                          ),
-                        )
-                      : const Icon(Icons.flash_on_rounded, color: AppColors.kidsPrimary, size: 20),
-                  label: const Text(
-                    '⚡ Demo hisob bilan kirish (Ali)',
-                    style: TextStyle(
-                      fontFamily: 'Nunito',
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.kidsPrimary,
-                    ),
-                  ),
-                ),
               ),
               const SizedBox(height: 20),
 

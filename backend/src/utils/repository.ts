@@ -131,6 +131,33 @@ export type MissionStatus = 'ACTIVE' | 'COMPLETED' | 'CLAIMED' | 'EXPIRED';
 
 export type AnnouncementType = 'URGENT_ANNOUNCEMENT' | 'SPECIAL_OFFER' | 'ANNOUNCEMENT' | 'AD';
 
+export interface AnnouncementButtonConfig {
+  text: string;
+  color?: string;
+  style?: 'filled' | 'outlined' | 'gradient';
+  action?: 'navigate' | 'dismiss' | 'url';
+  route?: string;
+}
+
+export interface AnnouncementDesign {
+  layout?: 'popup' | 'bottom_sheet' | 'full_screen' | 'top_banner';
+  background?: {
+    type?: 'solid' | 'gradient' | 'theme' | 'image';
+    value?: string;
+    textColor?: string;
+    accentColor?: string;
+  };
+  showTimer?: boolean;
+  livePricing?: boolean;
+  buttons?: AnnouncementButtonConfig[];
+  dismissOptions?: {
+    autoCloseSeconds?: number;
+    allowDismiss?: boolean;
+    frequency?: 'once_per_session' | 'once_per_day' | 'always';
+  };
+  audience?: 'all' | 'new_users' | 'free_users' | 'pro_users';
+}
+
 export interface AnnouncementModel {
   id: string;
   title: string;
@@ -149,6 +176,7 @@ export interface AnnouncementModel {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  design?: AnnouncementDesign;
 }
 
 export interface DailyMissionRecord {
@@ -1294,6 +1322,7 @@ class DataRepository {
       isActive: data.isActive !== false,
       createdAt: now,
       updatedAt: now,
+      design: data.design,
     };
     this.announcements.unshift(item);
     return item;

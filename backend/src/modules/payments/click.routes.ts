@@ -5,6 +5,7 @@ import { authMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
 import { repository } from '../../utils/repository.js';
 import { paymentDataStore } from './paymentStore.js';
 import { config } from '../../config/env.js';
+import { calculatePricing } from '../pricing/discountStore.js';
 
 export const paymentsRouter = Router();
 
@@ -33,6 +34,9 @@ const createOrderSchema = z.object({
   provider: z.enum(['CLICK', 'PAYME', 'CLICK_BUSINESS', 'UZCARD_HUMO_CLICK', 'VISA_MASTERCARD_CLICK', 'CLICK_APP']).default('CLICK'),
   planType: z.enum(['MONTHLY', 'YEARLY']).default('MONTHLY'),
   paymentMethod: z.string().optional(),
+  applyDiscount: z.boolean().optional(),
+  amount: z.number().optional(),
+  requestedPrice: z.number().optional(),
 });
 
 paymentsRouter.post('/create-order', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
@@ -43,8 +47,28 @@ paymentsRouter.post('/create-order', authMiddleware, (req: AuthenticatedRequest,
   const isPayme = providerReq === 'PAYME';
   const provider = isPayme ? 'PAYME' : 'CLICK_BUSINESS';
 
-  // Strict server-side prices: 29,000 UZS / month; 250,000 UZS / year
-  const amountUzs = planType === 'YEARLY' ? 250000 : 29000;
+  // Calculate authoritative pricing for user
+  const pricing = calculatePricing(user);
+  const targetPlan = pricing.plans.find((p) => p.planId.toUpperCase() === planType.toUpperCase()) || pricing.plans[0];
+
+  const requestedDiscount = parse.success ? parse.data.applyDiscount : undefined;
+  const rawRequestedPrice = parse.success ? (parse.data.requestedPrice || parse.data.amount) : undefined;
+
+  // Strict rule: if client specifically claimed a discount or discounted price when NOT eligible, reject with 400
+  const isClaimingDiscount = requestedDiscount === true || (rawRequestedPrice !== undefined && rawRequestedPrice < targetPlan.basePrice);
+  if (isClaimingDiscount && !targetPlan.isDiscounted) {
+    return res.status(400).json({
+      success: false,
+      error: 'Chegirma muddati tugagan yoki ushbu hisob uchun amal qilmaydi.',
+      details: pricing.eligibility.reason,
+    });
+  }
+
+  // Server authoritative price calculation:
+  // If targetPlan has active discount and client did not explicitly decline it, apply finalPrice
+  const amountUzs = (targetPlan.isDiscounted && requestedDiscount !== false)
+    ? targetPlan.finalPrice
+    : targetPlan.basePrice;
 
   const appBase = process.env.APP_BASE_URL || (config.isProduction ? 'https://mathcity-ai-web.onrender.com' : 'http://localhost:8085');
   const returnUrl = `${appBase}/#/kids/profile`;

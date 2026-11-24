@@ -26,6 +26,7 @@ import { paymentsRouter } from './modules/payments/click.routes.js';
 import { mediaRouter } from './modules/media/media.routes.js';
 import { exercisesRouter } from './modules/exercises/exercises.routes.js';
 import { announcementsRouter } from './modules/announcements/announcements.routes.js';
+import { pricingRouter } from './modules/pricing/pricing.routes.js';
 import { isDatabaseHealthy, checkDatabaseConnection } from './db/client.js';
 
 function resolveStaticDirectory(...candidates: string[]): string {
@@ -160,6 +161,7 @@ app.use('/api/payments', paymentsRouter);
 app.use('/api/media', mediaRouter);
 app.use('/api/exercises', exercisesRouter);
 app.use('/api/announcements', announcementsRouter);
+app.use('/api/pricing', pricingRouter);
 
 // Global aliases for /me, /leaderboard, and /users/me/avatar
 app.get(['/api/me', '/me', '/api/users/me'], (req, res, next) => {

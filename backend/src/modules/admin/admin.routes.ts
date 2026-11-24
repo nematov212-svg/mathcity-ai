@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { z } from 'zod';
 import { repository } from '../../utils/repository.js';
 import { paymentDataStore } from '../payments/paymentStore.js';
 import { LessonModel } from '../../utils/dataStore.js';
@@ -19,6 +20,7 @@ import { bonusStore } from './bonusStore.js';
 import { aiAnalyticsStore } from './aiAnalyticsStore.js';
 import { ragKnowledgeStore } from './ragKnowledgeStore.js';
 import { securityStore } from './securityStore.js';
+import { discountStore } from '../pricing/discountStore.js';
 
 export const adminRouter = Router();
 
@@ -1455,6 +1457,7 @@ adminRouter.post('/announcements', adminAuth, (req: AuthenticatedAdminRequest, r
     discountPrice,
     originalPrice,
     isActive,
+    design,
   } = req.body;
 
   if (!title || !text) {
@@ -1479,6 +1482,7 @@ adminRouter.post('/announcements', adminAuth, (req: AuthenticatedAdminRequest, r
     discountPrice: discountPrice ? Number(discountPrice) : undefined,
     originalPrice: originalPrice ? Number(originalPrice) : undefined,
     isActive: isActive !== false && isActive !== 'false',
+    design: design || undefined,
   });
 
   adminStore.logAction({
@@ -1705,5 +1709,48 @@ adminRouter.post('/security/2fa/toggle', adminAuth, (req: AuthenticatedAdminRequ
     },
   });
 });
+
+// --- Discount System Settings (Stage 1) ---
+adminRouter.get('/settings/discount', adminAuth, (_req: Request, res: Response) => {
+  return res.json({
+    success: true,
+    data: discountStore.getSettings(),
+  });
+});
+
+const updateDiscountSchema = z.object({
+  enabled: z.boolean().optional(),
+  discountPercent: z.number().min(0).max(100).optional(),
+  durationDays: z.number().min(1).max(365).optional(),
+  applicablePlans: z.array(z.enum(['monthly', 'yearly'])).optional(),
+});
+
+adminRouter.put('/settings/discount', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const parse = updateDiscountSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({
+      success: false,
+      error: 'Noto‘g‘ri ma’lumotlar kiritildi.',
+      details: parse.error.format(),
+    });
+  }
+
+  const updated = discountStore.updateSettings(parse.data, req.adminUser?.username || 'admin');
+
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'admin',
+    action: 'UPDATE_DISCOUNT_SETTINGS',
+    targetType: 'SYSTEM_SETTINGS',
+    details: updated,
+  });
+
+  return res.json({
+    success: true,
+    message: 'Chegirma sozlamalari muvaffaqiyatli saqlandi.',
+    data: updated,
+  });
+});
+
 
 

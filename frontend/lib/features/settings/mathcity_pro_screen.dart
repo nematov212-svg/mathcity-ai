@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../core/network/api_client.dart';
+import '../../core/pricing/pricing_provider.dart';
+import '../../core/pricing/pricing_model.dart';
 import '../../shared/providers/student_provider.dart';
 
 class MathCityProScreen extends ConsumerStatefulWidget {
@@ -64,13 +66,13 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
   void _showPaymentSheet(BuildContext context) {
     final isYearly = _selectedPlanIndex == 1;
     final planType = isYearly ? 'YEARLY' : 'MONTHLY';
-    final sub = ref.read(studentProvider).student?.subscription;
-    final hasDiscount = !isYearly && (sub?.hasNewUserDiscount == true);
-    final monthlyPrice = hasDiscount ? (sub?.discountPriceUzs ?? 20300) : 29000;
-    final amountUzs = isYearly ? 250000 : monthlyPrice;
+    final pricing = ref.read(pricingProvider).data;
+    final hasDiscount = !isYearly && pricing.hasActiveDiscount;
+    final monthlyPrice = hasDiscount ? pricing.monthlyPlan.finalPrice : pricing.monthlyPlan.basePrice;
+    final amountUzs = isYearly ? pricing.yearlyPlan.finalPrice : monthlyPrice;
     final amountFormatted = isYearly
         ? '250 000 so‘m'
-        : (hasDiscount ? '${sub?.discountPriceUzs ?? 20300} so‘m' : '29 000 so‘m');
+        : (hasDiscount ? '${pricing.monthlyPlan.finalPrice} so‘m' : '29 000 so‘m');
 
     String selectedProvider = 'PAYME';
     bool isProcessing = false;
@@ -583,6 +585,7 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
 
         if (confirmRes.data['success'] == true) {
           await ref.read(studentProvider.notifier).refreshProfile();
+          await ref.read(pricingProvider.notifier).refreshPricing();
           if (!mounted) return true;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -623,6 +626,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     final student = ref.watch(studentProvider).student;
     final isPro = student?.subscription.isProActive == true;
     final disableAnim = MediaQuery.of(context).disableAnimations;
+    final pricing = ref.watch(pricingProvider).data;
+    final hasActiveDiscount = !isPro && pricing.hasActiveDiscount;
 
     return Scaffold(
       body: Container(
@@ -934,6 +939,10 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                           ),
                         )
                       else ...[
+                        if (hasActiveDiscount) ...[
+                          _buildDiscountHeaderRibbon(pricing),
+                          const SizedBox(height: 14),
+                        ],
                         // Tariffs 2 columns (Flexible, responsive, zero RenderFlex overflow)
                         Row(
                           children: [
@@ -995,26 +1004,81 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                                         ],
                                       ),
                                       const SizedBox(height: 8),
-                                      const FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: Text(
-                                          '29 000 so‘m',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 19,
-                                            fontWeight: FontWeight.w900,
+                                      if (hasActiveDiscount) ...[
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '${pricing.monthlyPlan.basePrice} so‘m',
+                                              style: TextStyle(
+                                                color: Colors.white.withOpacity(0.45),
+                                                fontSize: 11.5,
+                                                fontWeight: FontWeight.w600,
+                                                decoration: TextDecoration.lineThrough,
+                                                decorationColor: const Color(0xFFEF4444),
+                                                decorationThickness: 2,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFFFFD700),
+                                                borderRadius: BorderRadius.circular(4),
+                                              ),
+                                              child: const Text(
+                                                '-30%',
+                                                style: TextStyle(
+                                                  color: Color(0xFF3B1700),
+                                                  fontSize: 8.5,
+                                                  fontWeight: FontWeight.w900,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 2),
+                                        FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            '${pricing.monthlyPlan.finalPrice} so‘m',
+                                            style: const TextStyle(
+                                              color: Color(0xFFFFD700),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w900,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      const Text(
-                                        'Har oyda to‘lanadi',
-                                        style: TextStyle(
-                                          color: Color(0xFFA9A4CF),
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
+                                        const SizedBox(height: 3),
+                                        const Text(
+                                          'Har oy (Tejov: 8 700 so‘m)',
+                                          style: TextStyle(
+                                            color: Color(0xFFA9A4CF),
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
-                                      ),
+                                      ] else ...[
+                                        const FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            '29 000 so‘m',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 19,
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        const Text(
+                                          'Har oyda to‘lanadi',
+                                          style: TextStyle(
+                                            color: Color(0xFFA9A4CF),
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
                                     ],
                                   ),
                                 ),
@@ -1252,9 +1316,15 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                                   ),
                                 )
                               : Text(
-                                  isPro ? 'Boshqarish' : 'Sotib olish',
+                                  isPro
+                                      ? 'Boshqarish'
+                                      : (_selectedPlanIndex == 1
+                                          ? 'Sotib olish — 250 000 so‘m'
+                                          : (hasActiveDiscount
+                                              ? 'Sotib olish — ${pricing.monthlyPlan.finalPrice} so‘m'
+                                              : 'Sotib olish — 29 000 so‘m')),
                                   style: const TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16.5,
                                     fontWeight: FontWeight.w900,
                                     color: Color(0xFF1C1450),
                                   ),
@@ -1268,6 +1338,95 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDiscountHeaderRibbon(PricingData pricing) {
+    final remaining = pricing.remainingDiscountDuration;
+    final days = remaining.inDays;
+    final hours = (remaining.inHours % 24).toString().padLeft(2, '0');
+    final mins = (remaining.inMinutes % 60).toString().padLeft(2, '0');
+    final secs = (remaining.inSeconds % 60).toString().padLeft(2, '0');
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF381566), Color(0xFF220E42)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFFFD700).withOpacity(0.5), width: 1.2),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFFFD700).withOpacity(0.15),
+            blurRadius: 14,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFFFD700), Color(0xFFF59E0B)],
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                  '-30%',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF3B1700),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Expanded(
+                child: Text(
+                  'Yangi o‘quvchilar uchun 30% chegirma!',
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.28),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.timer_outlined, color: Color(0xFFFFD700), size: 13),
+                const SizedBox(width: 6),
+                Text(
+                  'Tugashiga: $days kun $hours:$mins:$secs',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFFFFD700),
+                    fontFeatures: [FontFeature.tabularFigures()],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
