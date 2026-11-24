@@ -240,13 +240,19 @@ class AuthService {
     }
 
     try {
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn
+          .signIn()
+          .timeout(const Duration(seconds: 25), onTimeout: () {
+        debugPrint('⚠️ [AuthService/Google] signIn() so‘rovi 25 soniyada javob bermadi.');
+        return null;
+      });
 
       if (googleUser == null) {
-        // Foydalanuvchi oynani yopdi yoki bekor qildi
+        // Foydalanuvchi oynani yopdi, bekor qildi yoki vaqt tugadi
         return const AuthResult(
           success: false,
-          errorMessage: null,
+          errorMessage:
+              'Google oynasi yopildi yoki javob berilmadi. Iltimos, qaytadan urinib ko‘ring yoki login/parol orqali kiring.',
         );
       }
 
@@ -403,6 +409,43 @@ class AuthService {
     required String password,
   }) async {
     return login(identifier: email, password: password);
+  }
+
+  /// Instant Demo Student Login (Ali) without needing external OAuth or credentials
+  Future<AuthResult> loginWithDemo() async {
+    try {
+      final res = await ApiClient().dio.post('/auth/demo');
+      if (res.data['success'] == true) {
+        final data = res.data['data'];
+        final token = data['token'] as String;
+        final userData = (data['user'] as Map<String, dynamic>?) ?? {};
+        final bool isNewUser = data['isNewUser'] == true;
+        final bool profileCompleted =
+            data['profileCompleted'] == true || userData['profileCompleted'] == true;
+
+        ApiClient().setAuthToken(token);
+        await StorageService.saveAuthToken(token);
+        final student = StudentModel.fromJson(userData);
+        await StorageService.saveCachedStudent(student.toJson());
+
+        return AuthResult(
+          success: true,
+          student: student,
+          token: token,
+          isNewUser: isNewUser,
+          profileCompleted: profileCompleted,
+        );
+      }
+      return AuthResult(
+        success: false,
+        errorMessage: res.data['error'] ?? 'Demo hisobga ulanishda xatolik.',
+      );
+    } catch (e) {
+      return AuthResult(
+        success: false,
+        errorMessage: ApiClient.getErrorMessage(e),
+      );
+    }
   }
 
   /// Register new student with name, loginOrEmail, password and confirmation

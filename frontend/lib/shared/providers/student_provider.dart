@@ -948,6 +948,22 @@ class StudentNotifier extends StateNotifier<StudentState> {
     return result;
   }
 
+  /// Instant Demo Login (Ali)
+  Future<AuthResult> loginWithDemo() async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+    final result = await _authService.loginWithDemo();
+    if (result.success && result.student != null) {
+      state = state.copyWith(student: result.student, isLoading: false, errorMessage: null);
+      unawaited(_persistToCache(result.student!));
+    } else {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: result.errorMessage,
+      );
+    }
+    return result;
+  }
+
   // --- Email/Username/Password Login ---
   Future<AuthResult> loginWithCredentials({
     required String identifier,
