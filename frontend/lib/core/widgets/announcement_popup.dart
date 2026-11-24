@@ -57,21 +57,44 @@ class AnnouncementItem {
 }
 
 class AnnouncementManager {
+  static final Set<String> _dismissedAnnouncementIds = {};
   static bool _urgentShownThisSession = false;
   static bool _specialOfferScheduled = false;
+  static Timer? _pollingTimer;
 
-  /// Call once when home screen is initialized
+  static void markDismissed(String id) {
+    _dismissedAnnouncementIds.add(id);
+  }
+
+  static void startLivePolling(BuildContext context, WidgetRef ref) {
+    _pollingTimer?.cancel();
+    _pollingTimer = Timer.periodic(const Duration(seconds: 60), (_) {
+      if (context.mounted) {
+        checkAndShowAnnouncements(context, ref);
+      }
+    });
+  }
+
+  static void stopLivePolling() {
+    _pollingTimer?.cancel();
+    _pollingTimer = null;
+  }
+
+  /// Call once when home screen is initialized, on app resume, or every 60s
   static Future<void> checkAndShowAnnouncements(BuildContext context, WidgetRef ref) async {
     if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) return;
     try {
-      final res = await ApiClient().dio.get('/api/announcements/active');
+      final res = await ApiClient().dio.get('/announcements/active');
       if (res.statusCode != 200 || res.data == null) return;
 
       final data = res.data;
       if (data['success'] != true || data['data'] is! List) return;
 
       final rawList = data['data'] as List;
-      final announcements = rawList.map((e) => AnnouncementItem.fromJson(e)).toList();
+      final announcements = rawList
+          .map((e) => AnnouncementItem.fromJson(e))
+          .where((a) => !_dismissedAnnouncementIds.contains(a.id))
+          .toList();
 
       final meta = data['meta'] as Map<String, dynamic>? ?? {};
       final hasNewUserDiscount = meta['hasNewUserDiscount'] == true;
@@ -79,15 +102,16 @@ class AnnouncementManager {
       // 1. Check Urgent Announcement (Show on open if not shown this session)
       if (!_urgentShownThisSession) {
         final urgentItem = announcements.cast<AnnouncementItem?>().firstWhere(
-              (a) => a?.type == 'URGENT_ANNOUNCEMENT',
+              (a) => a?.type == 'URGENT_ANNOUNCEMENT' || a?.type == 'ANNOUNCEMENT',
               orElse: () => null,
             );
 
         if (urgentItem != null && context.mounted) {
           _urgentShownThisSession = true;
           // Show with small delay so the initial screen renders smoothly
-          Future.delayed(const Duration(milliseconds: 700), () {
-            if (context.mounted) {
+          final delayMs = urgentItem.delaySeconds > 0 ? (urgentItem.delaySeconds * 1000) : 700;
+          Future.delayed(Duration(milliseconds: delayMs), () {
+            if (context.mounted && !_dismissedAnnouncementIds.contains(urgentItem.id)) {
               showUrgentAnnouncementDialog(context, urgentItem);
             }
           });
@@ -118,6 +142,7 @@ class AnnouncementManager {
 
           Timer(Duration(seconds: delaySec), () async {
             if (!context.mounted) return;
+            if (_dismissedAnnouncementIds.contains(specialOfferItem.id)) return;
             final currentStudent = ref.read(studentProvider).student;
             if (currentStudent != null && currentStudent.isPro) return;
 
@@ -159,6 +184,13 @@ class _UrgentAnnouncementDialogState extends State<_UrgentAnnouncementDialog>
   late AnimationController _progressController;
   Timer? _autoCloseTimer;
 
+  void _dismissDialog() {
+    AnnouncementManager.markDismissed(widget.item.id);
+    if (mounted) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -172,9 +204,7 @@ class _UrgentAnnouncementDialogState extends State<_UrgentAnnouncementDialog>
     _progressController.forward();
 
     _autoCloseTimer = Timer(Duration(seconds: autoCloseSec), () {
-      if (mounted) {
-        Navigator.of(context, rootNavigator: true).pop();
-      }
+      _dismissDialog();
     });
   }
 
@@ -245,7 +275,7 @@ class _UrgentAnnouncementDialogState extends State<_UrgentAnnouncementDialog>
                         ),
                         IconButton(
                           icon: const Icon(Icons.close_rounded, color: Colors.white70, size: 22),
-                          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                          onPressed: _dismissDialog,
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                         ),
@@ -312,7 +342,7 @@ class _UrgentAnnouncementDialogState extends State<_UrgentAnnouncementDialog>
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(16),
                                 onTap: () {
-                                  Navigator.of(context, rootNavigator: true).pop();
+                                  _dismissDialog();
                                   context.push(route);
                                 },
                                 child: Center(
@@ -423,6 +453,13 @@ class _SpecialOfferDialog extends StatefulWidget {
 class _SpecialOfferDialogState extends State<_SpecialOfferDialog> {
   Timer? _timer;
   late int _remainingSeconds;
+
+  void _dismissDialog() {
+    AnnouncementManager.markDismissed(widget.item.id);
+    if (mounted) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+  }
 
   @override
   void initState() {
@@ -687,7 +724,7 @@ class _SpecialOfferDialogState extends State<_SpecialOfferDialog> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(16),
                               onTap: () {
-                                Navigator.of(context, rootNavigator: true).pop();
+                                _dismissDialog();
                                 context.push(route);
                               },
                               child: Center(
@@ -714,7 +751,7 @@ class _SpecialOfferDialogState extends State<_SpecialOfferDialog> {
                   right: 12,
                   child: IconButton(
                     icon: const Icon(Icons.close_rounded, color: Colors.white60, size: 22),
-                    onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                    onPressed: _dismissDialog,
                   ),
                 ),
               ],

@@ -102,15 +102,24 @@ class ApiClient {
           }
 
           // Cold Start Retry Logic:
-          // Faqat timeout yoki 5xx server xatolarida qayta uriniladi.
-          // CORS yoki 4xx xatolarida (400, 401, 403, 404, 422) QAYTA URILMAYDI!
+          // Faqat timeout yoki haqiqiy Render gateway HTML/empty 5xx xatolarida qayta uriniladi.
+          // Agar server structured JSON qaytargan bo'lsa (masalan: {"success":false,"error":...}) yoki bu to'lov bo'lsa,
+          // server uyg'oq hisoblanadi va "Server uyg'onmoqda" deb kutmasdan darhol xato foydalanuvchiga uzatiladi!
           final is4xxClientError = statusCode != null && statusCode >= 400 && statusCode < 500;
           final is5xxServerError = statusCode != null && statusCode >= 500 && statusCode < 600;
           final isTimeout = error.type == DioExceptionType.connectionTimeout ||
               error.type == DioExceptionType.receiveTimeout ||
               error.type == DioExceptionType.sendTimeout;
 
-          final isColdStartError = !is4xxClientError && (is5xxServerError || isTimeout);
+          final hasStructuredJsonBody = error.response?.data is Map<String, dynamic>;
+          final isPaymentEndpoint = reqOptions.path.contains('payment') ||
+              reqOptions.path.contains('click') ||
+              reqOptions.path.contains('payme');
+
+          final isColdStartError = !is4xxClientError &&
+              !hasStructuredJsonBody &&
+              !isPaymentEndpoint &&
+              (is5xxServerError || isTimeout);
           final retryCount = (reqOptions.extra['retryCount'] as int?) ?? 0;
 
           if (isColdStartError && retryCount < 3) {
@@ -231,6 +240,10 @@ class ApiClient {
           if (status == 403) return 'Ushbu amalni bajarishga ruxsat yo‘q.';
           if (status == 404) return 'So‘ralgan ma’lumot topilmadi.';
           if (status == 502 || status == 503 || status == 504) {
+            final reqPath = error.requestOptions.path;
+            if (reqPath.contains('payment') || reqPath.contains('click') || reqPath.contains('payme')) {
+              return 'To‘lov tizimi hozircha ishlamayapti, keyinroq urinib ko‘ring.';
+            }
             return 'Server vaqtincha band yoki uyg‘onmoqda. Birozdan so‘ng qayta urinib ko‘ring.';
           }
           return 'Server xatoligi yuz berdi (HTTP $status).';

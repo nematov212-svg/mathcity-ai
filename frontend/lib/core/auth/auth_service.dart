@@ -64,7 +64,7 @@ class AuthService {
 
       _sharedGoogleSignIn = GoogleSignIn(
         clientId: effectiveClientId,
-        serverClientId: webClientId.isNotEmpty ? webClientId : null,
+        serverClientId: kIsWeb ? null : (webClientId.isNotEmpty ? webClientId : null),
         scopes: kIsWeb ? const [] : const ['email', 'profile'],
       );
       _isGoogleSignInInitialized = true;

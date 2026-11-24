@@ -106,6 +106,13 @@ class StudentNotifier extends StateNotifier<StudentState> {
     } catch (_) {}
   }
 
+  void setCachedStudent(Map<String, dynamic> json) {
+    try {
+      final student = StudentModel.fromJson(json);
+      state = state.copyWith(student: student);
+    } catch (_) {}
+  }
+
   void _initGoogleAuthListener() {
     if (!kIsWeb) return;
     try {

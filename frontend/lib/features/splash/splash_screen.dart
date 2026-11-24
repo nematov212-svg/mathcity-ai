@@ -1,19 +1,21 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/auth/auth_service.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/storage/storage_service.dart';
 import '../../core/widgets/mathcity_logo.dart';
+import '../../shared/providers/student_provider.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
@@ -47,9 +49,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       final cachedCheck = StorageService.getCachedStudent();
       final minDelay = Future.delayed(const Duration(milliseconds: 1200));
 
-      // Trigger background session warm-up / restore without blocking splash screen
-      unawaited(AuthService().restoreSession(allowDemoFallback: false));
-
       final results = await Future.wait([tokenCheck, cachedCheck, minDelay]);
       if (!mounted) return;
 
@@ -57,8 +56,23 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       final Map<String, dynamic>? cachedStudent = results[1] as Map<String, dynamic>?;
 
       if (hasToken) {
-        // Authenticated user: go straight to dashboard (or complete-profile if profile incomplete)
-        if (cachedStudent != null && cachedStudent['profileCompleted'] == false) {
+        // Feed cached profile into Riverpod immediately to prevent 0 coin / 0 XP / blank avatar flash
+        if (cachedStudent != null) {
+          ref.read(studentProvider.notifier).setCachedStudent(cachedStudent);
+        }
+
+        // Wait up to 3.5 seconds for fresh server profile
+        try {
+          await AuthService().restoreSession(allowDemoFallback: false).timeout(const Duration(milliseconds: 3500));
+        } catch (_) {}
+
+        if (!mounted) return;
+
+        final currentStudent = ref.read(studentProvider).student;
+        if (currentStudent != null && !currentStudent.profileCompleted) {
+          context.go('/complete-profile');
+          return;
+        } else if (cachedStudent != null && cachedStudent['profileCompleted'] == false) {
           context.go('/complete-profile');
           return;
         }

@@ -4,7 +4,7 @@ class AppConfig {
 
   /// Primary Production API Base URL on Render (Authoritative Default)
   static const String productionApiUrl = 'https://mathcity-ai-api.onrender.com';
-  static const String apiBaseUrl = productionApiUrl;
+  static String get apiBaseUrl => baseUrl;
 
   /// Web OAuth Client ID from Google Cloud Console (Public ID, not a secret)
   static const String googleWebClientId = String.fromEnvironment(

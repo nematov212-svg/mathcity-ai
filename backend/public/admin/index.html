@@ -87,12 +87,14 @@
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Login yoki email</label>
           <input id="loginUsername" type="text" placeholder="admin yoki mirzobek" value="admin"
+            onkeydown="if(event.key === 'Enter') handleAdminLogin()"
             class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white font-medium">
         </div>
 
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Parol</label>
           <input id="loginPassword" type="password" placeholder="••••••••" value="MathCity@Admin2026!Secure"
+            onkeydown="if(event.key === 'Enter') handleAdminLogin()"
             class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white">
         </div>
 
@@ -117,7 +119,9 @@
             </div>
             <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-indigo-100">
               <span>Lokal dev alternativa:</span>
-              <span class="font-mono">mirzobek / mirzobek</span>
+              <button type="button" onclick="fillAdminCredentials('mirzobek', 'mirzobek')" class="font-mono text-indigo-700 hover:underline font-bold">
+                mirzobek / mirzobek ⚡
+              </button>
             </div>
           </div>
         </div>

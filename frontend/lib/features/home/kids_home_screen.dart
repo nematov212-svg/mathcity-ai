@@ -18,7 +18,8 @@ class KidsHomeScreen extends ConsumerStatefulWidget {
   ConsumerState<KidsHomeScreen> createState() => _KidsHomeScreenState();
 }
 
-class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTickerProviderStateMixin {
+class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late AnimationController _mathAnimController;
   int _completedTasksCount = 0;
   int _totalTasksCount = 4;
@@ -27,6 +28,7 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _mathAnimController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 6),
@@ -35,8 +37,16 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         AnnouncementManager.checkAndShowAnnouncements(context, ref);
+        AnnouncementManager.startLivePolling(context, ref);
       }
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      AnnouncementManager.checkAndShowAnnouncements(context, ref);
+    }
   }
 
   Future<void> _loadDailyTasks() async {
@@ -68,6 +78,8 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen> with SingleTick
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    AnnouncementManager.stopLivePolling();
     _mathAnimController.dispose();
     super.dispose();
   }

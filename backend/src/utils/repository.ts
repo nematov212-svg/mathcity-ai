@@ -1013,6 +1013,8 @@ class DataRepository {
         ? Math.round((user.correctQuestionCount / user.attemptedQuestionCount) * 100)
         : 100;
 
+    this.persistUserToDatabase(user).catch(() => {});
+
     return {
       coinsAwarded,
       xpAwarded,
