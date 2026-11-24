@@ -86,26 +86,43 @@
       <div class="space-y-4 text-left">
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Login yoki email</label>
-          <input id="loginUsername" type="text" placeholder="admin@mathcity.ai yoki mirzobek"
+          <input id="loginUsername" type="text" placeholder="admin yoki mirzobek" value="admin"
             class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white font-medium">
         </div>
 
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Parol</label>
-          <input id="loginPassword" type="password" placeholder="••••••••"
+          <input id="loginPassword" type="password" placeholder="••••••••" value="MathCity@Admin2026!Secure"
             class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white">
         </div>
 
-        <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-xs text-indigo-900">
-          <span class="font-bold">Kirish:</span> Standart login: <code
-            class="font-bold text-indigo-700">admin@mathcity.ai</code> (yoki <code
-            class="font-bold text-indigo-700">mirzobek</code>).
+        <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3.5 text-xs text-indigo-900">
+          <div class="font-bold text-slate-800 mb-1.5 flex items-center justify-between">
+            <span>Standart administrator hisoblari:</span>
+            <button type="button" onclick="fillAdminCredentials('admin', 'MathCity@Admin2026!Secure')" class="text-indigo-600 hover:text-indigo-800 font-bold underline cursor-pointer">
+              To‘ldirish ⚡
+            </button>
+          </div>
+          <div class="space-y-1 text-slate-700">
+            <div class="flex items-center justify-between">
+              <span>Asosiy login:</span>
+              <code class="font-bold text-indigo-700 bg-white px-1.5 py-0.5 rounded border border-indigo-100">admin</code>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Kuchli parol:</span>
+              <code class="font-bold text-indigo-700 bg-white px-1.5 py-0.5 rounded border border-indigo-100">MathCity@Admin2026!Secure</code>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-indigo-100">
+              <span>Lokal dev alternativa:</span>
+              <span class="font-mono">mirzobek / mirzobek</span>
+            </div>
+          </div>
         </div>
 
         <p id="loginError" class="text-red-500 text-xs font-semibold hidden"></p>
 
         <button onclick="handleAdminLogin()" id="btnLoginSubmit"
-          class="w-full brand-purple hover:opacity-95 text-white font-bold py-3.5 rounded-xl transition duration-200 shadow-lg shadow-indigo-500/25 flex items-center justify-center space-x-2">
+          class="w-full brand-purple hover:opacity-95 text-white font-bold py-3.5 rounded-xl transition duration-200 shadow-lg shadow-indigo-500/25 flex items-center justify-center space-x-2 cursor-pointer">
           <span>Tizimga kirish</span>
         </button>
       </div>
@@ -1444,32 +1461,34 @@
     const PROD_API_BASE = 'https://mathcity-ai-api.onrender.com';
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-    async function apiFetch(endpoint, options = {}) {
-      // In production (e.g. Render static site or remote domain), strictly use Render backend.
-      // In local development, check local server first.
-      const primaryBase = isLocalhost ? (window.location.port === '4000' ? '' : 'http://localhost:4000') : PROD_API_BASE;
-      const fallbackBases = isLocalhost
-        ? ['', 'http://127.0.0.1:4000', PROD_API_BASE]
-        : [PROD_API_BASE];
+    function fillAdminCredentials(u, p) {
+      const uField = document.getElementById('loginUsername');
+      const pField = document.getElementById('loginPassword');
+      if (uField) uField.value = u;
+      if (pField) pField.value = p;
+    }
 
-      const bases = [primaryBase, ...fallbackBases];
-      const uniqueBases = [...new Set(bases.filter(b => b !== undefined))];
-      let lastErr = null;
-      for (const base of uniqueBases) {
+    async function apiFetch(endpoint, options = {}) {
+      if (endpoint.startsWith('http')) {
+        return fetch(endpoint, options);
+      }
+
+      // If served directly from local backend (e.g. port 4000)
+      if (window.location.port === '4000' || window.location.origin.includes('4000')) {
+        return fetch(endpoint, options);
+      }
+
+      // If running on local dev static server, connect to local port 4000
+      if (isLocalhost) {
         try {
-          const url = endpoint.startsWith('http') ? endpoint : `${base}${endpoint}`;
-          const res = await fetch(url, options);
-          // If a static site returned 404 or index.html for an API route, retry with other base
-          const contentType = res.headers.get('content-type') || '';
-          if (endpoint.startsWith('/api/') && (!res.ok || contentType.includes('text/html'))) {
-            if (base !== PROD_API_BASE) continue;
-          }
+          const res = await fetch(`http://localhost:4000${endpoint}`, options);
           return res;
-        } catch (e) {
-          lastErr = e;
+        } catch (_) {
+          // fallback below
         }
       }
-      throw lastErr || new Error('Barcha ulanish yo‘llari muvaffaqiyatsiz bo‘ldi.');
+
+      return fetch(`${PROD_API_BASE}${endpoint}`, options);
     }
 
     let currentToken = localStorage.getItem('mathcity_admin_token') || '';
@@ -1479,9 +1498,54 @@
     let lessonAudienceFilter = 'ALL';
     let cachedStudents = [];
 
+    function showAdminApp() {
+      const loginModal = document.getElementById('loginModal');
+      if (loginModal) {
+        loginModal.classList.remove('flex');
+        loginModal.classList.add('hidden');
+        loginModal.style.display = 'none';
+      }
+      const adminApp = document.getElementById('adminApp');
+      if (adminApp) {
+        adminApp.classList.remove('hidden');
+        adminApp.classList.add('flex');
+        adminApp.style.display = 'flex';
+      }
+    }
+
+    function showLoginModal() {
+      const adminApp = document.getElementById('adminApp');
+      if (adminApp) {
+        adminApp.classList.remove('flex');
+        adminApp.classList.add('hidden');
+        adminApp.style.display = 'none';
+      }
+      const loginModal = document.getElementById('loginModal');
+      if (loginModal) {
+        loginModal.classList.remove('hidden');
+        loginModal.classList.add('flex');
+        loginModal.style.display = 'flex';
+      }
+    }
+
     // Initialization
     window.addEventListener('DOMContentLoaded', () => {
       updateGradeOptionsForQuestion();
+
+      // Enter key listeners
+      const uField = document.getElementById('loginUsername');
+      const pField = document.getElementById('loginPassword');
+      if (uField) {
+        uField.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') handleAdminLogin();
+        });
+      }
+      if (pField) {
+        pField.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') handleAdminLogin();
+        });
+      }
+
       if (currentToken) {
         verifySession();
       }
@@ -1496,18 +1560,19 @@
           const json = await res.json();
           currentAdminUser = json.data;
           document.getElementById('adminUserDisplayName').textContent = currentAdminUser.name || currentAdminUser.username;
-          document.getElementById('loginModal').classList.add('hidden');
-          document.getElementById('adminApp').classList.remove('hidden');
+          showAdminApp();
 
           if (currentAdminUser.mustChangePassword) {
-            document.getElementById('changePasswordModal').classList.remove('hidden');
-            document.getElementById('changePasswordModal').classList.add('flex');
+            const cpModal = document.getElementById('changePasswordModal');
+            cpModal.classList.remove('hidden');
+            cpModal.classList.add('flex');
+            cpModal.style.display = 'flex';
           }
 
           loadDashboardData();
         } else {
           localStorage.removeItem('mathcity_admin_token');
-          document.getElementById('loginModal').classList.remove('hidden');
+          showLoginModal();
         }
       } catch (err) {
         console.error('Session verify error:', err);
@@ -1517,6 +1582,7 @@
     async function handleAdminLogin() {
       const username = document.getElementById('loginUsername').value.trim();
       const password = document.getElementById('loginPassword').value;
+      const btn = document.getElementById('btnLoginSubmit');
       const errElem = document.getElementById('loginError');
       errElem.classList.add('hidden');
 
@@ -1524,6 +1590,12 @@
         errElem.textContent = 'Login va parolni kiriting.';
         errElem.classList.remove('hidden');
         return;
+      }
+
+      const origText = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>Tekshirilmoqda...</span>';
       }
 
       try {
@@ -1540,16 +1612,30 @@
           localStorage.setItem('mathcity_admin_token', currentToken);
 
           document.getElementById('adminUserDisplayName').textContent = currentAdminUser.name || currentAdminUser.username;
-          document.getElementById('loginModal').classList.add('hidden');
-          document.getElementById('adminApp').classList.remove('hidden');
+          showAdminApp();
 
           if (currentAdminUser.mustChangePassword) {
-            document.getElementById('changePasswordModal').classList.remove('hidden');
-            document.getElementById('changePasswordModal').classList.add('flex');
+            const cpModal = document.getElementById('changePasswordModal');
+            cpModal.classList.remove('hidden');
+            cpModal.classList.add('flex');
+            cpModal.style.display = 'flex';
           }
 
           loadDashboardData();
         } else {
+          errElem.textContent = json.error || 'Kirish taqiqlandi: Noto‘g‘ri login yoki parol.';
+          errElem.classList.remove('hidden');
+        }
+      } catch (err) {
+        errElem.textContent = 'Server bilan bog‘lanib bo‘lmadi: ' + (err.message || 'Tarmoq xatosi');
+        errElem.classList.remove('hidden');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origText;
+        }
+      }
+    }
           errElem.textContent = json.error || 'Kirish taqiqlandi: Noto‘g‘ri login yoki parol.';
           errElem.classList.remove('hidden');
         }
@@ -1612,8 +1698,7 @@
       }).catch(() => { });
       localStorage.removeItem('mathcity_admin_token');
       currentToken = '';
-      document.getElementById('adminApp').classList.add('hidden');
-      document.getElementById('loginModal').classList.remove('hidden');
+      showLoginModal();
     }
 
     // Navigation Dispatcher
