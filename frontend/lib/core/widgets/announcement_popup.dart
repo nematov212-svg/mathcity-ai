@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io' show Platform;
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -84,19 +85,50 @@ class AnnouncementManager {
   static Future<void> checkAndShowAnnouncements(BuildContext context, WidgetRef ref) async {
     if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) return;
     try {
-      final res = await ApiClient().dio.get('/announcements/active');
-      if (res.statusCode != 200 || res.data == null) return;
+      dynamic responseData;
 
-      final data = res.data;
-      if (data['success'] != true || data['data'] is! List) return;
+      try {
+        final res = await ApiClient().dio.get(
+          '/announcements/active',
+          options: Options(
+            validateStatus: (status) => true,
+          ),
+        );
+        if (res.statusCode == 200 && res.data != null) {
+          responseData = res.data;
+        }
+      } catch (_) {
+        // Silently catch transport/timeout errors without throwing DioException
+      }
 
-      final rawList = data['data'] as List;
+      // Local development fallback: If primary endpoint is updating (404/503) and testing on localhost Web
+      if (responseData == null && kDebugMode && kIsWeb) {
+        try {
+          final localRes = await Dio().get(
+            'http://localhost:4000/api/announcements/active',
+            options: Options(
+              validateStatus: (status) => true,
+              sendTimeout: const Duration(seconds: 2),
+              receiveTimeout: const Duration(seconds: 2),
+            ),
+          );
+          if (localRes.statusCode == 200 && localRes.data != null) {
+            responseData = localRes.data;
+          }
+        } catch (_) {}
+      }
+
+      if (responseData == null || responseData['success'] != true || responseData['data'] is! List) {
+        return;
+      }
+
+      final rawList = responseData['data'] as List;
       final announcements = rawList
           .map((e) => AnnouncementItem.fromJson(e))
           .where((a) => !_dismissedAnnouncementIds.contains(a.id))
           .toList();
 
-      final meta = data['meta'] as Map<String, dynamic>? ?? {};
+      final meta = responseData['meta'] as Map<String, dynamic>? ?? {};
       final hasNewUserDiscount = meta['hasNewUserDiscount'] == true;
 
       // 1. Check Urgent Announcement (Show on open if not shown this session)
@@ -153,8 +185,8 @@ class AnnouncementManager {
           });
         }
       }
-    } catch (e) {
-      debugPrint('AnnouncementManager error: $e');
+    } catch (_) {
+      // Graceful fallback for offline, network timeouts, or cloud cold starts
     }
   }
 }
