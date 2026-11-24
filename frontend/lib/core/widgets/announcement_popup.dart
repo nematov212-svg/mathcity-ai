@@ -135,6 +135,7 @@ class AnnouncementManager {
   static bool _urgentShownThisSession = false;
   static bool _specialOfferScheduled = false;
   static Timer? _pollingTimer;
+  static DateTime? _lastFailedCheckAt;
 
   static void markDismissed(String id) {
     _dismissedAnnouncementIds.add(id);
@@ -157,6 +158,10 @@ class AnnouncementManager {
   /// Call once when home screen is initialized, on app resume, or every 60s
   static Future<void> checkAndShowAnnouncements(BuildContext context, WidgetRef ref) async {
     if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) return;
+    if (_lastFailedCheckAt != null &&
+        DateTime.now().difference(_lastFailedCheckAt!) < const Duration(minutes: 5)) {
+      return;
+    }
     try {
       dynamic responseData;
 
@@ -169,8 +174,12 @@ class AnnouncementManager {
         );
         if (res.statusCode == 200 && res.data != null) {
           responseData = res.data;
+          _lastFailedCheckAt = null;
+        } else {
+          _lastFailedCheckAt = DateTime.now();
         }
       } catch (_) {
+        _lastFailedCheckAt = DateTime.now();
         // Silently catch transport/timeout errors without throwing DioException
       }
 
