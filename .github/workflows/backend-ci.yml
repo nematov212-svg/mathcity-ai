@@ -36,6 +36,8 @@ jobs:
 
       - name: Validate Prisma Schema
         run: npx prisma validate
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/mathcity_test?schema=public"
 
       - name: Compile TypeScript
         run: npm run build

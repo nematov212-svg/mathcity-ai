@@ -1,5 +1,41 @@
 [
   {
+    "title": "Mirzo",
+    "category": "QA",
+    "topic": "Mirzo lega",
+    "content": "legenda",
+    "addedBy": "admin",
+    "id": "rag-1795532459571-n1on",
+    "createdAt": "2026-11-24T15:00:59.571Z"
+  },
+  {
+    "title": "Mirzo",
+    "category": "QA",
+    "topic": "Mirzo",
+    "content": "mirzo",
+    "addedBy": "admin",
+    "id": "rag-1795532439303-arwd",
+    "createdAt": "2026-11-24T15:00:39.303Z"
+  },
+  {
+    "title": "5 ga 6 ni qoshib javoblarni chiqarib ber",
+    "category": "FORMULA",
+    "topic": "5ga 6 qoshsa nechi chiqadi",
+    "content": "javobi 11 chiqadi nimaga 5 ga 6 ni qoshsa 11 chiqadida kaneshna",
+    "addedBy": "admin",
+    "id": "rag-1795531829320-zlsh",
+    "createdAt": "2026-11-24T14:50:29.320Z"
+  },
+  {
+    "title": "Salom",
+    "category": "QA",
+    "topic": "Salom",
+    "content": "Salom yaxshimisiz Nima savol berasiz man javob berishga tayyorman",
+    "addedBy": "admin",
+    "id": "rag-1795531766172-imx2",
+    "createdAt": "2026-11-24T14:49:26.172Z"
+  },
+  {
     "id": "rag-1",
     "title": "Kvadrat tenglama ildizlari (Viyet va Diskriminant)",
     "category": "FORMULA",

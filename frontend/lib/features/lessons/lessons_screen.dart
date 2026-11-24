@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/network/api_client.dart';
+import '../../core/responsive/app_responsive_scaffold.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
@@ -22,8 +23,9 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  int? _selectedGrade; // null = Barchasi
+  int? _selectedGrade; 
 
+  
   bool _isLoading = false;
   List<Map<String, dynamic>> _apiLessons = [];
   Timer? _autoSyncTimer;
@@ -312,6 +314,60 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
     final student = studentState.student;
     final coins = student?.coinBalance ?? 0;
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    if (screenWidth < 600) {
+      return _buildPhoneScaffold(colors, isDark, student, coins);
+    }
+
+    final wideBody = Column(
+      children: [
+        Container(
+          color: colors.card,
+          child: TabBar(
+            controller: _tabController,
+            labelColor: colors.primary,
+            unselectedLabelColor: colors.muted,
+            indicatorColor: colors.primary,
+            indicatorWeight: 3,
+            labelStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+            unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+            tabs: const [
+              Tab(text: 'Mavzular ro‘yxati'),
+              Tab(text: 'Darslar xaritasi'),
+            ],
+          ),
+        ),
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              RefreshIndicator(
+                onRefresh: _fetchLessons,
+                color: colors.primary,
+                child: _buildTopicsList(colors, isDark, student?.completedLessons ?? []),
+              ),
+              const LessonMapContent(),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    return AppResponsiveScaffold(
+      currentNavIndex: 1,
+      title: 'Matematika darslari',
+      phoneBody: _buildPhoneScaffold(colors, isDark, student, coins),
+      tabletBody: wideBody,
+      desktopBody: wideBody,
+    );
+  }
+
+  Widget _buildPhoneScaffold(
+    AppThemeColors colors,
+    bool isDark,
+    dynamic student,
+    int coins,
+  ) {
     return Scaffold(
       backgroundColor: colors.bg,
       appBar: AppBar(
@@ -605,12 +661,16 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          categoryName,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
-                            color: colors.ink,
+                        Expanded(
+                          child: Text(
+                            categoryName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                              color: colors.ink,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -634,20 +694,35 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                   ),
                 ),
 
-                // Full-width cards list
+                // Full-width cards list (Grid on wide screens, List on phone)
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: _buildFullWidthLessonCard(lessons[index], colors, isDark, catColor),
-                        );
-                      },
-                      childCount: lessons.length,
-                    ),
-                  ),
+                  sliver: MediaQuery.of(context).size.width >= 600
+                      ? SliverGrid(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: MediaQuery.of(context).size.width >= 1280 ? 3 : 2,
+                            mainAxisSpacing: 14,
+                            crossAxisSpacing: 14,
+                            mainAxisExtent: 280,
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              return _buildFullWidthLessonCard(lessons[index], colors, isDark, catColor);
+                            },
+                            childCount: lessons.length,
+                          ),
+                        )
+                      : SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: _buildFullWidthLessonCard(lessons[index], colors, isDark, catColor),
+                              );
+                            },
+                            childCount: lessons.length,
+                          ),
+                        ),
                 ),
               ],
             );
@@ -757,68 +832,73 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
 
                     // Badges row
                     Expanded(
-                      child: Wrap(
-                        spacing: 6,
-                        runSpacing: 4,
-                        children: [
-                          // Grade badge
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: catColor.withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              '$grade-sinf',
-                              style: TextStyle(
-                                color: catColor,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w800,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Grade badge
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: catColor.withOpacity(0.12),
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                            ),
-                          ),
-
-                          // Difficulty badge
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: colors.primary.withOpacity(0.08),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              difficulty,
-                              style: TextStyle(
-                                color: colors.primary,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-
-                          // Estimated time badge
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: colors.border.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.access_time_rounded, size: 12, color: colors.muted),
-                                const SizedBox(width: 4),
-                                Text(
-                                  estTime,
-                                  style: TextStyle(
-                                    color: colors.muted,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                              child: Text(
+                                '$grade-sinf',
+                                style: TextStyle(
+                                  color: catColor,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800,
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 6),
+
+                            // Difficulty badge
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: colors.primary.withOpacity(0.08),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                difficulty,
+                                style: TextStyle(
+                                  color: colors.primary,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+
+                            // Estimated time badge
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: colors.border.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.access_time_rounded, size: 12, color: colors.muted),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    estTime,
+                                    style: TextStyle(
+                                      color: colors.muted,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
@@ -889,8 +969,13 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                 const SizedBox(height: 14),
 
                 // Bottom Row: Rewards (XP + Coin) + Progress + Action Button
-                Row(
-                  children: [
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                    width: 480,
+                    child: Row(
+                      children: [
                     // XP Reward Pill
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -1017,7 +1102,9 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
                     ),
                   ],
                 ),
-              ],
+              ),
+            ),
+          ],
             ),
           ),
         ),

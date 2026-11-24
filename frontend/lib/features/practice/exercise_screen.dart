@@ -69,6 +69,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
   late Animation<Offset> _cardSlideAnimation;
 
   late AnimationController _particlesController;
+  late FocusNode _focusNode;
 
   Timer? _autoAdvanceTimer;
   DateTime _questionStartTime = DateTime.now();
@@ -76,6 +77,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
   @override
   void initState() {
     super.initState();
+    _focusNode = FocusNode();
     _questions = [];
 
     // Shake animation for incorrect answer
@@ -118,6 +120,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _autoAdvanceTimer?.cancel();
     _shakeController.dispose();
     _cardTransitionController.dispose();
@@ -442,6 +445,52 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
     );
   }
 
+  void _handleKeyEvent(KeyEvent event) {
+    if (event is! KeyDownEvent) return;
+    final key = event.logicalKey;
+
+    if (key == LogicalKeyboardKey.escape) {
+      _confirmExit();
+      return;
+    }
+
+    if (key == LogicalKeyboardKey.enter ||
+        key == LogicalKeyboardKey.numpadEnter ||
+        key == LogicalKeyboardKey.space) {
+      if (_isAnswerChecked) {
+        _advanceToNext();
+      } else if (_selectedOption != null && !_isSubmitting) {
+        _checkAnswer();
+      }
+      return;
+    }
+
+    if (!_isAnswerChecked && !_isSubmitting && _questions.isNotEmpty) {
+      final opts = _questions[_currentIndex].options;
+      int? targetIdx;
+      if (key == LogicalKeyboardKey.digit1 ||
+          key == LogicalKeyboardKey.numpad1 ||
+          key == LogicalKeyboardKey.keyA) {
+        targetIdx = 0;
+      } else if (key == LogicalKeyboardKey.digit2 ||
+          key == LogicalKeyboardKey.numpad2 ||
+          key == LogicalKeyboardKey.keyB) {
+        targetIdx = 1;
+      } else if (key == LogicalKeyboardKey.digit3 ||
+          key == LogicalKeyboardKey.numpad3 ||
+          key == LogicalKeyboardKey.keyC) {
+        targetIdx = 2;
+      } else if (key == LogicalKeyboardKey.digit4 ||
+          key == LogicalKeyboardKey.numpad4 ||
+          key == LogicalKeyboardKey.keyD) {
+        targetIdx = 3;
+      }
+      if (targetIdx != null && targetIdx < opts.length) {
+        _onOptionSelected(opts[targetIdx]);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
@@ -463,166 +512,186 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
     final totalQ = _questions.length;
     final progress = (totalQ > 0) ? (_currentIndex + 1) / totalQ : 0.0;
     final optionList = currentQ.options;
+    final screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      backgroundColor: colors.bg,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // ==============================================================
-            // 1. TOP BAR: X (exit), Real Coin Counter, Animated Progress Bar
-            // ==============================================================
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Exit Button X
-                  InkWell(
-                    onTap: _confirmExit,
-                    borderRadius: BorderRadius.circular(16),
-                    child: Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: colors.card,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: colors.border),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Icon(Icons.close_rounded, color: colors.ink, size: 22),
-                    ),
-                  ),
-
-                  // Coin Badge Target
-                  CoinBadge(
-                    key: _coinBadgeKey,
-                    count: totalCoins,
-                    size: 26,
-                  ),
-                ],
-              ),
-            ),
-
-            // Progress Header: "Misol X / 20" & Animated Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Misol ${_currentIndex + 1} / $totalQ',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                          color: colors.muted,
+    Widget content = Column(
+      children: [
+        // ==============================================================
+        // 1. TOP BAR: X (exit), Real Coin Counter, Animated Progress Bar
+        // ==============================================================
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Exit Button X
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: InkWell(
+                  onTap: _confirmExit,
+                  borderRadius: BorderRadius.circular(16),
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: colors.card,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: colors.border),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.04),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
                         ),
-                      ),
-                      Text(
-                        '${(progress * 100).round()}%',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF6C55E0),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
+                    child: Icon(Icons.close_rounded, color: colors.ink, size: 22),
                   ),
-                  const SizedBox(height: 8),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: SizedBox(
-                      height: 8,
-                      child: TweenAnimationBuilder<double>(
-                        tween: Tween<double>(begin: 0.0, end: progress),
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeOutCubic,
-                        builder: (context, val, child) {
-                          return LinearProgressIndicator(
-                            value: val,
-                            backgroundColor: colors.border,
-                            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF6C55E0)),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // ==============================================================
-            // 2. SCROLLABLE QUESTION CARD & OPTIONS
-            // ==============================================================
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: Column(
-                  children: [
-                    // Question Card with entrance animation & shake on error
-                    AnimatedBuilder(
-                      animation: _shakeAnimation,
-                      builder: (context, child) {
-                        return Transform.translate(
-                          offset: Offset(_shakeAnimation.value, 0),
-                          child: child,
-                        );
-                      },
-                      child: SlideTransition(
-                        position: _cardSlideAnimation,
-                        child: FadeTransition(
-                          opacity: _cardFadeAnimation,
-                          child: ScaleTransition(
-                            scale: _cardScaleAnimation,
-                            child: _buildQuestionCard(currentQ, colors),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // Options A, B, C, D
-                    Column(
-                      children: List.generate(optionList.length, (idx) {
-                        final option = optionList[idx];
-                        final letter = String.fromCharCode(65 + idx); // A, B, C, D
-                        return _buildOptionCard(
-                          key: _optionKeys[idx],
-                          letter: letter,
-                          optionText: option,
-                          isSelected: _selectedOption == option,
-                          colors: colors,
-                          currentQ: currentQ,
-                        );
-                      }),
-                    ),
-
-                    const SizedBox(height: 24),
-                  ],
                 ),
               ),
-            ),
 
-            // ==============================================================
-            // 3. BOTTOM ACTION BAR ("Javobni tekshirish" / "Keyingi")
-            // ==============================================================
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-              child: _buildBottomButton(colors),
+              // Coin Badge Target
+              CoinBadge(
+                key: _coinBadgeKey,
+                count: totalCoins,
+                size: 26,
+              ),
+            ],
+          ),
+        ),
+
+        // Progress Header: "Misol X / 20" & Animated Bar
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Misol ${_currentIndex + 1} / $totalQ',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                      color: colors.muted,
+                    ),
+                  ),
+                  Text(
+                    '${(progress * 100).round()}%',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF6C55E0),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: SizedBox(
+                  height: 8,
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0.0, end: progress),
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, val, child) {
+                      return LinearProgressIndicator(
+                        value: val,
+                        backgroundColor: colors.border,
+                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF6C55E0)),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        // ==============================================================
+        // 2. SCROLLABLE QUESTION CARD & OPTIONS
+        // ==============================================================
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Column(
+              children: [
+                // Question Card with entrance animation & shake on error
+                AnimatedBuilder(
+                  animation: _shakeAnimation,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(_shakeAnimation.value, 0),
+                      child: child,
+                    );
+                  },
+                  child: SlideTransition(
+                    position: _cardSlideAnimation,
+                    child: FadeTransition(
+                      opacity: _cardFadeAnimation,
+                      child: ScaleTransition(
+                        scale: _cardScaleAnimation,
+                        child: _buildQuestionCard(currentQ, colors),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Options A, B, C, D
+                Column(
+                  children: List.generate(optionList.length, (idx) {
+                    final option = optionList[idx];
+                    final letter = String.fromCharCode(65 + idx); // A, B, C, D
+                    return _buildOptionCard(
+                      key: _optionKeys[idx],
+                      letter: letter,
+                      optionText: option,
+                      isSelected: _selectedOption == option,
+                      colors: colors,
+                      currentQ: currentQ,
+                    );
+                  }),
+                ),
+
+                const SizedBox(height: 24),
+              ],
             ),
-          ],
+          ),
+        ),
+
+        // ==============================================================
+        // 3. BOTTOM ACTION BAR ("Javobni tekshirish" / "Keyingi")
+        // ==============================================================
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+          child: _buildBottomButton(colors),
+        ),
+      ],
+    );
+
+    if (screenWidth >= 600) {
+      content = Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 720),
+          child: content,
+        ),
+      );
+    }
+
+    return KeyboardListener(
+      focusNode: _focusNode,
+      autofocus: true,
+      onKeyEvent: _handleKeyEvent,
+      child: Scaffold(
+        backgroundColor: colors.bg,
+        body: SafeArea(
+          child: content,
         ),
       ),
     );
@@ -766,48 +835,51 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
       child: AnimatedScale(
         scale: isSelected ? 1.0 : 0.985,
         duration: const Duration(milliseconds: 150),
-        child: InkWell(
-          onTap: () => _onOptionSelected(optionText),
-          borderRadius: BorderRadius.circular(20),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: borderColor, width: isSelected || _isAnswerChecked ? 2.0 : 1.2),
-              boxShadow: [
-                BoxShadow(
-                  color: isSelected ? const Color(0x226C55E0) : Colors.black.withOpacity(0.02),
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                // Letter badge
-                Container(
-                  width: 38,
-                  height: 38,
-                  decoration: BoxDecoration(
-                    color: letterBgColor,
-                    shape: BoxShape.circle,
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: InkWell(
+            onTap: () => _onOptionSelected(optionText),
+            borderRadius: BorderRadius.circular(20),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: borderColor, width: isSelected || _isAnswerChecked ? 2.0 : 1.2),
+                boxShadow: [
+                  BoxShadow(
+                    color: isSelected ? const Color(0x226C55E0) : Colors.black.withOpacity(0.02),
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
                   ),
-                  child: Center(child: letterChild),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    optionText,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
-                      color: optionTextColor,
+                ],
+              ),
+              child: Row(
+                children: [
+                  // Letter badge
+                  Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: letterBgColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(child: letterChild),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      optionText,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
+                        color: optionTextColor,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -844,50 +916,53 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
 
     final isEnabled = _selectedOption != null && !_isSubmitting;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      width: double.infinity,
-      height: 56,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: isEnabled
-            ? const LinearGradient(
-                colors: [Color(0xFF6C55E0), Color(0xFF8B6BFF)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
-            : null,
-        color: isEnabled ? null : colors.inactive.withOpacity(0.35),
-        boxShadow: isEnabled
-            ? [
-                BoxShadow(
-                  color: const Color(0xFF6C55E0).withOpacity(0.35),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
-                ),
-              ]
-            : null,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: isEnabled ? _checkAnswer : null,
+    return MouseRegion(
+      cursor: isEnabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        width: double.infinity,
+        height: 56,
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          child: Center(
-            child: _isSubmitting
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
-                  )
-                : Text(
-                    'Javobni tekshirish',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                      color: isEnabled ? Colors.white : colors.muted.withOpacity(0.7),
-                    ),
+          gradient: isEnabled
+              ? const LinearGradient(
+                  colors: [Color(0xFF6C55E0), Color(0xFF8B6BFF)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: isEnabled ? null : colors.inactive.withOpacity(0.35),
+          boxShadow: isEnabled
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF6C55E0).withOpacity(0.35),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
                   ),
+                ]
+              : null,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: isEnabled ? _checkAnswer : null,
+            borderRadius: BorderRadius.circular(20),
+            child: Center(
+              child: _isSubmitting
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                    )
+                  : Text(
+                      'Javobni tekshirish',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: isEnabled ? Colors.white : colors.muted.withOpacity(0.7),
+                      ),
+                    ),
+            ),
           ),
         ),
       ),
@@ -903,9 +978,11 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
       backgroundColor: colors.bg,
       body: SafeArea(
         child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-            child: Column(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+              child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Big celebration trophy badge
@@ -1088,8 +1165,9 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildResultStat({required String title, required String value, required Color color}) {
     return Column(

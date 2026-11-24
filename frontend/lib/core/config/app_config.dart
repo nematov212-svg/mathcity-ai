@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class AppConfig {
   static const String appName = 'MathCity AI';
   static const String appVersion = '1.0.1';
@@ -50,17 +48,7 @@ class AppConfig {
       return _formatApiUrl(_overrideBaseUrl!);
     }
 
-    // 2. Local Web Development: Default to local backend if running in debug mode on localhost
-    if (kIsWeb && kDebugMode) {
-      try {
-        final host = Uri.base.host;
-        if (host == 'localhost' || host == '127.0.0.1') {
-          return 'http://localhost:4000/api';
-        }
-      } catch (_) {}
-    }
-
-    // 3. Default: Strictly Render Production
+    // 2. Default: Strictly Render Production Cloud API (24/7 active)
     return _formatApiUrl(productionApiUrl);
   }
 

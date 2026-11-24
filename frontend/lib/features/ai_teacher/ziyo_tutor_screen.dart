@@ -15,8 +15,8 @@ import 'package:uuid/uuid.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_tts/flutter_tts.dart';
 import '../../core/network/api_client.dart';
+import '../../core/responsive/app_responsive_scaffold.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
-import '../../core/widgets/responsive_layout.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/providers/student_provider.dart';
 import '../../shared/repositories/exercise_repository.dart';
@@ -1238,51 +1238,73 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final screenType = getScreenType(constraints.maxWidth);
-        final isDesktop = screenType == ScreenType.expanded;
-
-        return Scaffold(
-          backgroundColor: colors.bg,
-          appBar: _buildAppBar(isDesktop, colors, isDark),
-          bottomNavigationBar: (isDesktop || MediaQuery.of(context).viewInsets.bottom > 0)
-              ? null
-              : const MathCityBottomNav(currentIndex: 2),
-          body: Row(
-            children: [
-              // Desktop History Sidebar
-              if (isDesktop && _showDesktopSidebar)
-                _buildDesktopSidebar(colors, isDark),
-
-              // Main Chat Area
-              Expanded(
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 860),
-                    child: Column(
-                      children: [
-                        // Messages or Welcoming Greeting
-                        Expanded(
-                          child: _messages.isEmpty
-                              ? _buildWelcomingState(displayName, colors, isDark)
-                              : _buildMessageList(colors, isDark),
-                        ),
-
-                        // Selected Image Preview Banner
-                        if (_selectedImageBytes != null)
-                          _buildSelectedImageBanner(colors, isDark),
-
-                        // Voice Recording Bar or Input Composer
-                        if (_isRecording)
-                          _buildVoiceRecordingBar(colors, isDark)
-                        else
-                          _buildInputComposer(colors, isDark),
-                      ],
+        final screenWidth = constraints.maxWidth;
+        if (screenWidth < 600) {
+          return Scaffold(
+            backgroundColor: colors.bg,
+            appBar: _buildAppBar(false, colors, isDark),
+            bottomNavigationBar: (MediaQuery.of(context).viewInsets.bottom > 0)
+                ? null
+                : const MathCityBottomNav(currentIndex: 2),
+            body: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 860),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: _messages.isEmpty
+                          ? _buildWelcomingState(displayName, colors, isDark)
+                          : _buildMessageList(colors, isDark),
                     ),
+                    if (_selectedImageBytes != null)
+                      _buildSelectedImageBanner(colors, isDark),
+                    if (_isRecording)
+                      _buildVoiceRecordingBar(colors, isDark)
+                    else
+                      _buildInputComposer(colors, isDark),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        final isDesktop = screenWidth >= 1024;
+        final wideBody = Row(
+          children: [
+            if (isDesktop && _showDesktopSidebar)
+              _buildDesktopSidebar(colors, isDark),
+            Expanded(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 860),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: _messages.isEmpty
+                            ? _buildWelcomingState(displayName, colors, isDark)
+                            : _buildMessageList(colors, isDark),
+                      ),
+                      if (_selectedImageBytes != null)
+                        _buildSelectedImageBanner(colors, isDark),
+                      if (_isRecording)
+                        _buildVoiceRecordingBar(colors, isDark)
+                      else
+                        _buildInputComposer(colors, isDark),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
+        );
+
+        return AppResponsiveScaffold(
+          currentNavIndex: 2,
+          title: 'Ziyo — AI Ustoz',
+          phoneBody: const SizedBox.shrink(),
+          tabletBody: wideBody,
+          desktopBody: wideBody,
         );
       },
     );
@@ -1417,9 +1439,13 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'So‘nggi suhbatlar',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: colors.ink),
+                Expanded(
+                  child: Text(
+                    'So‘nggi suhbatlar',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: colors.ink),
+                  ),
                 ),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline_rounded, color: colors.primary, size: 22),
@@ -1552,12 +1578,14 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                     children: [
                       Icon(Icons.help_outline_rounded, size: 16, color: colors.primary),
                       const SizedBox(width: 8),
-                      Text(
-                        prompt,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: colors.ink,
+                      Flexible(
+                        child: Text(
+                          prompt,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: colors.ink,
+                          ),
                         ),
                       ),
                     ],

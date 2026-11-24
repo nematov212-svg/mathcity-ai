@@ -110,28 +110,6 @@ class PricingNotifier extends StateNotifier<PricingState> {
         return;
       }
     } catch (e) {
-      // Local dev fallback if remote backend is unreachable during localhost web debug
-      if (kDebugMode && kIsWeb) {
-        try {
-          final localRes = await Dio().get(
-            'http://localhost:4000/api/pricing',
-            options: Options(
-              validateStatus: (status) => true,
-              sendTimeout: const Duration(seconds: 2),
-              receiveTimeout: const Duration(seconds: 2),
-            ),
-          );
-          if (localRes.statusCode == 200 && localRes.data != null && localRes.data['success'] == true) {
-            final parsed = PricingData.fromJson(
-              localRes.data['data'] as Map<String, dynamic>,
-              DateTime.now(),
-            );
-            state = state.copyWith(data: parsed, isLoading: false);
-            _startCountdownTicker();
-            return;
-          }
-        } catch (_) {}
-      }
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }

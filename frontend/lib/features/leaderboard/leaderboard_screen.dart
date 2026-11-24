@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
+import '../../core/responsive/app_responsive_scaffold.dart';
 import '../../core/widgets/coin_icon.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/user_avatar.dart';
@@ -239,16 +240,43 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      backgroundColor: colors.bg,
-      extendBody: true,
-      bottomNavigationBar: const MathCityBottomNav(currentIndex: 3),
-      body: SafeArea(
-        bottom: false,
-        child: Stack(
-          children: [
-            Column(
+    if (screenWidth < 600) {
+      return Scaffold(
+        backgroundColor: colors.bg,
+        extendBody: true,
+        bottomNavigationBar: const MathCityBottomNav(currentIndex: 3),
+        body: SafeArea(
+          bottom: false,
+          child: _buildLeaderboardStack(colors, isDark, isPhone: true),
+        ),
+      );
+    }
+
+    final wideBody = Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 880),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: _buildLeaderboardStack(colors, isDark, isPhone: false),
+        ),
+      ),
+    );
+
+    return AppResponsiveScaffold(
+      currentNavIndex: 3,
+      title: 'Haftalik yetakchilar reytingi',
+      phoneBody: const SizedBox.shrink(),
+      tabletBody: wideBody,
+      desktopBody: wideBody,
+    );
+  }
+
+  Widget _buildLeaderboardStack(AppThemeColors colors, bool isDark, {required bool isPhone}) {
+    return Stack(
+      children: [
+        Column(
               children: [
                 // Top Header Bar
                 Padding(
@@ -453,7 +481,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                   return Positioned(
                     left: 16,
                     right: 16,
-                    bottom: 92,
+                    bottom: isPhone ? 92 : 20,
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
@@ -472,8 +500,13 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                           ),
                         ],
                       ),
-                      child: Row(
-                        children: [
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: SizedBox(
+                          width: 290,
+                          child: Row(
+                            children: [
                           // Rank number badge
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
@@ -536,54 +569,62 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                           const SizedBox(width: 8),
 
                           // Coin & XP badges
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.18),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const CoinIcon(size: 14),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '$realCoins',
-                                  style: const TextStyle(
-                                    fontSize: 12.5,
-                                    fontWeight: FontWeight.w900,
-                                    color: Color(0xFFFFD66B),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.18),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const CoinIcon(size: 14),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '$realCoins',
+                                        style: const TextStyle(
+                                          fontSize: 12.5,
+                                          fontWeight: FontWeight.w900,
+                                          color: Color(0xFFFFD66B),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    '$realXP XP',
+                                    style: const TextStyle(
+                                      fontSize: 11.5,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(width: 6),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              '$realXP XP',
-                              style: const TextStyle(
-                                fontSize: 11.5,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     ),
-                  );
+                  ),
+                ),
+              );
                 },
               ),
           ],
-        ),
-      ),
-    );
+        );
   }
 
   Widget _buildLeaderboardCard({
@@ -1178,41 +1219,45 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
               ),
             ],
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: 8),
-              Text(
-                badgeIcon,
-                style: const TextStyle(fontSize: 20),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                '$rank',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w900,
-                  color: isDark ? Colors.white.withOpacity(0.85) : Colors.black.withOpacity(0.65),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.topCenter,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                Text(
+                  badgeIcon,
+                  style: const TextStyle(fontSize: 20),
                 ),
-              ),
-              if (isMe)
-                Container(
-                  margin: const EdgeInsets.only(top: 2),
-                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1.5),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF6C55E0),
-                    borderRadius: BorderRadius.circular(8),
+                const SizedBox(height: 2),
+                Text(
+                  '$rank',
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w900,
+                    color: isDark ? Colors.white.withOpacity(0.85) : Colors.black.withOpacity(0.65),
                   ),
-                  child: const Text(
-                    'SIZ',
-                    style: TextStyle(
-                      fontSize: 8.5,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
+                ),
+                if (isMe)
+                  Container(
+                    margin: const EdgeInsets.only(top: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1.5),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF6C55E0),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'SIZ',
+                      style: TextStyle(
+                        fontSize: 8.5,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

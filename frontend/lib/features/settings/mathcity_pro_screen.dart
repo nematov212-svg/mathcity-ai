@@ -628,6 +628,19 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     final disableAnim = MediaQuery.of(context).disableAnimations;
     final pricing = ref.watch(pricingProvider).data;
     final hasActiveDiscount = !isPro && pricing.hasActiveDiscount;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    if (screenWidth >= 600) {
+      return _buildWideProScreen(
+        context,
+        student: student,
+        isPro: isPro,
+        disableAnim: disableAnim,
+        pricing: pricing,
+        hasActiveDiscount: hasActiveDiscount,
+        screenWidth: screenWidth,
+      );
+    }
 
     return Scaffold(
       body: Container(
@@ -984,57 +997,68 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text(
-                                            '1 oylik',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w800,
+                                      FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        alignment: Alignment.centerLeft,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text(
+                                              '1 oylik',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w800,
+                                              ),
                                             ),
-                                          ),
-                                          if (_selectedPlanIndex == 0)
-                                            const Icon(
-                                              Icons.check_circle_rounded,
-                                              color: Color(0xFFFFD66B),
-                                              size: 18,
-                                            ),
-                                        ],
+                                            if (_selectedPlanIndex == 0) ...[
+                                              const SizedBox(width: 8),
+                                              const Icon(
+                                                Icons.check_circle_rounded,
+                                                color: Color(0xFFFFD66B),
+                                                size: 18,
+                                              ),
+                                            ],
+                                          ],
+                                        ),
                                       ),
                                       const SizedBox(height: 8),
                                       if (hasActiveDiscount) ...[
-                                        Row(
-                                          children: [
-                                            Text(
-                                              '${pricing.monthlyPlan.basePrice} so‘m',
-                                              style: TextStyle(
-                                                color: Colors.white.withOpacity(0.45),
-                                                fontSize: 11.5,
-                                                fontWeight: FontWeight.w600,
-                                                decoration: TextDecoration.lineThrough,
-                                                decorationColor: const Color(0xFFEF4444),
-                                                decorationThickness: 2,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xFFFFD700),
-                                                borderRadius: BorderRadius.circular(4),
-                                              ),
-                                              child: const Text(
-                                                '-30%',
+                                        FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          alignment: Alignment.centerLeft,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                '${pricing.monthlyPlan.basePrice} so‘m',
                                                 style: TextStyle(
-                                                  color: Color(0xFF3B1700),
-                                                  fontSize: 8.5,
-                                                  fontWeight: FontWeight.w900,
+                                                  color: Colors.white.withOpacity(0.45),
+                                                  fontSize: 11.5,
+                                                  fontWeight: FontWeight.w600,
+                                                  decoration: TextDecoration.lineThrough,
+                                                  decorationColor: const Color(0xFFEF4444),
+                                                  decorationThickness: 2,
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                              const SizedBox(width: 4),
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                                                decoration: BoxDecoration(
+                                                  color: const Color(0xFFFFD700),
+                                                  borderRadius: BorderRadius.circular(4),
+                                                ),
+                                                child: const Text(
+                                                  '-30%',
+                                                  style: TextStyle(
+                                                    color: Color(0xFF3B1700),
+                                                    fontSize: 8.5,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         const SizedBox(height: 2),
                                         FittedBox(
@@ -1125,31 +1149,37 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFFFFD66B),
-                                              borderRadius: BorderRadius.circular(6),
-                                            ),
-                                            child: const Text(
-                                              'Eng tejamkor',
-                                              style: TextStyle(
-                                                color: Color(0xFF1C1450),
-                                                fontSize: 9,
-                                                fontWeight: FontWeight.w900,
+                                      FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        alignment: Alignment.centerLeft,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFFFFD66B),
+                                                borderRadius: BorderRadius.circular(6),
+                                              ),
+                                              child: const Text(
+                                                'Eng tejamkor',
+                                                style: TextStyle(
+                                                  color: Color(0xFF1C1450),
+                                                  fontSize: 9,
+                                                  fontWeight: FontWeight.w900,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          if (_selectedPlanIndex == 1)
-                                            const Icon(
-                                              Icons.check_circle_rounded,
-                                              color: Color(0xFFFFD66B),
-                                              size: 18,
-                                            ),
-                                        ],
+                                            if (_selectedPlanIndex == 1) ...[
+                                              const SizedBox(width: 8),
+                                              const Icon(
+                                                Icons.check_circle_rounded,
+                                                color: Color(0xFFFFD66B),
+                                                size: 18,
+                                              ),
+                                            ],
+                                          ],
+                                        ),
                                       ),
                                       const SizedBox(height: 6),
                                       const Text(
@@ -1409,21 +1439,25 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
               color: Colors.black.withOpacity(0.28),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.timer_outlined, color: Color(0xFFFFD700), size: 13),
-                const SizedBox(width: 6),
-                Text(
-                  'Tugashiga: $days kun $hours:$mins:$secs',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFFFFD700),
-                    fontFeatures: [FontFeature.tabularFigures()],
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.timer_outlined, color: Color(0xFFFFD700), size: 13),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Tugashiga: $days kun $hours:$mins:$secs',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFFFFD700),
+                      fontFeatures: [FontFeature.tabularFigures()],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -1460,21 +1494,27 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          top,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w800,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            top,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ),
         const SizedBox(height: 2),
-        Text(
-          bottom,
-          style: const TextStyle(
-            color: Color(0xFFA9A4CF),
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            bottom,
+            style: const TextStyle(
+              color: Color(0xFFA9A4CF),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],
@@ -1549,5 +1589,892 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     } catch (_) {
       return '30 kun';
     }
+  }
+
+  Widget _buildWideProScreen(
+    BuildContext context, {
+    required dynamic student,
+    required bool isPro,
+    required bool disableAnim,
+    required PricingData pricing,
+    required bool hasActiveDiscount,
+    required double screenWidth,
+  }) {
+    final isDesktop = screenWidth >= 1024;
+    final isYearly = _selectedPlanIndex == 1;
+    final planPrice = isYearly
+        ? '250 000 so‘m'
+        : (hasActiveDiscount ? '${pricing.monthlyPlan.finalPrice} so‘m' : '29 000 so‘m');
+
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment(0.0, -0.4),
+            radius: 1.4,
+            colors: [
+              Color(0xFF4A2BD6),
+              Color(0xFF1C1450),
+              Color(0xFF0C0A22),
+            ],
+            stops: [0.0, 0.55, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Top Bar with Close button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Semantics(
+                      label: 'Yopish',
+                      button: true,
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: InkWell(
+                          onTap: () => context.pop(),
+                          borderRadius: BorderRadius.circular(22),
+                          child: Container(
+                            width: 44,
+                            height: 44,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.12),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.18),
+                                width: 1.2,
+                              ),
+                            ),
+                            child: const Icon(
+                              Icons.close_rounded,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Row(
+                      children: [
+                        Icon(Icons.star_rounded, color: Color(0xFFFFD66B), size: 22),
+                        SizedBox(width: 8),
+                        Text(
+                          'MathCity PRO',
+                          style: TextStyle(
+                            color: Color(0xFFFFD66B),
+                            fontSize: 17,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 44),
+                  ],
+                ),
+              ),
+
+              // Main content
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: isDesktop ? 1080 : 680,
+                      ),
+                      child: isDesktop
+                          ? _buildDesktopProLayout(
+                              student: student,
+                              isPro: isPro,
+                              disableAnim: disableAnim,
+                              pricing: pricing,
+                              hasActiveDiscount: hasActiveDiscount,
+                              planPrice: planPrice,
+                            )
+                          : _buildTabletProLayout(
+                              student: student,
+                              isPro: isPro,
+                              disableAnim: disableAnim,
+                              pricing: pricing,
+                              hasActiveDiscount: hasActiveDiscount,
+                              planPrice: planPrice,
+                            ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDesktopProLayout({
+    required dynamic student,
+    required bool isPro,
+    required bool disableAnim,
+    required PricingData pricing,
+    required bool hasActiveDiscount,
+    required String planPrice,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Left Column: Hero, Features, Metrics, Guarantee
+        Expanded(
+          flex: 6,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/logo.png',
+                    width: 88,
+                    height: 88,
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => Image.asset(
+                      'assets/images/mathcity_logo.png',
+                      width: 88,
+                      height: 88,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RichText(
+                          text: const TextSpan(
+                            text: 'MathCity ',
+                            style: TextStyle(
+                              fontFamily: 'Nunito',
+                              fontSize: 28,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: 'Pro',
+                                style: TextStyle(
+                                  color: Color(0xFFFFD66B),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Matematikani o‘ynab va tushunib o‘rganing — barcha cheklovlarsiz',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFFA9A4CF),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Metrics Panel
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.06),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.12),
+                    width: 1.2,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(child: _buildMetricCol('AI Ustoz', '24/7 yordam')),
+                    Container(width: 1, height: 36, color: Colors.white.withOpacity(0.12)),
+                    Expanded(child: _buildMetricCol('Full', 'darsliklar')),
+                    Container(width: 1, height: 36, color: Colors.white.withOpacity(0.12)),
+                    Expanded(child: _buildMetricCol('0', 'reklama')),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Benefits
+              _buildBenefitItem(
+                icon: Icons.menu_book_rounded,
+                tileColor: const Color(0x2BFFD66B),
+                iconColor: const Color(0xFFFFD66B),
+                title: 'Cheksiz AI Ustoz',
+                description: 'Istalgan mavzuda savol bering, qadam-baqadam tushuntirib beradi.',
+              ),
+              const SizedBox(height: 16),
+              _buildBenefitItem(
+                icon: Icons.star_rounded,
+                tileColor: const Color(0x338B6BFF),
+                iconColor: const Color(0xFFB8A6FF),
+                title: 'Matematika: to‘liq darsliklar',
+                description: 'Sinflar bo‘yicha barcha mavzular, misol va nazorat testlari bir joyda.',
+              ),
+              const SizedBox(height: 16),
+              _buildBenefitItem(
+                icon: Icons.calculate_rounded,
+                tileColor: const Color(0x333B82F6),
+                iconColor: const Color(0xFF60A5FA),
+                title: 'Cheksiz mashqlar',
+                description: 'Kunlik cheklovlarsiz mashq qiling va o‘z tempingizda rivojlaning.',
+              ),
+              const SizedBox(height: 16),
+              _buildBenefitItem(
+                icon: Icons.check_circle_rounded,
+                tileColor: const Color(0x3310B981),
+                iconColor: const Color(0xFF34D399),
+                title: 'Reklamasiz muhit',
+                description: 'Hech qanday reklama va to‘xtatishlarsiz, faqat o‘qish.',
+              ),
+              const SizedBox(height: 24),
+
+              // Guarantee Card
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: Colors.white.withOpacity(0.1)),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.shield_outlined, color: Color(0xFFFFD66B), size: 30),
+                    SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '100% Xavfsiz to‘lov kafolati',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 3),
+                          Text(
+                            'Payme va Click rasmiy shlyuzlari orqali xavfsiz himoyalangan to‘lov.',
+                            style: TextStyle(
+                              color: Color(0xFFA9A4CF),
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(width: 36),
+
+        // Right Column: Tariffs, Checkout & Status
+        Expanded(
+          flex: 5,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF261868), Color(0xFF160E42)],
+              ),
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(color: Colors.white.withOpacity(0.14), width: 1.4),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.35),
+                  blurRadius: 24,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: isPro
+                ? Column(
+                    children: [
+                      const Icon(Icons.verified_rounded, color: Color(0xFF10B981), size: 48),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'MathCity Pro faol',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Tugash sanasi: ${_formatDate(student?.subscription.proExpiresAt)} (${_calculateRemainingDays(student?.subscription.proExpiresAt)} kun qoldi)',
+                        style: const TextStyle(
+                          color: Color(0xFFFFD66B),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Siz barcha Pro imkoniyatlaridan to‘liq foydalanmoqdasiz.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Color(0xFFA9A4CF), fontSize: 13),
+                      ),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Obuna rejasini tanlang',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      if (hasActiveDiscount) ...[
+                        _buildDiscountHeaderRibbon(pricing),
+                        const SizedBox(height: 16),
+                      ],
+
+                      // Tariff 0: Monthly
+                      _buildWideTariffCard(
+                        index: 0,
+                        title: '1 oylik obuna',
+                        price: hasActiveDiscount
+                            ? '${pricing.monthlyPlan.finalPrice} so‘m'
+                            : '29 000 so‘m',
+                        originalPrice: hasActiveDiscount ? '${pricing.monthlyPlan.basePrice} so‘m' : null,
+                        subtitle: hasActiveDiscount ? 'Har oy (Tejov: 8 700 so‘m)' : 'Har oyda to‘lanadi',
+                        badge: hasActiveDiscount ? '-30%' : null,
+                      ),
+                      const SizedBox(height: 14),
+
+                      // Tariff 1: Yearly
+                      _buildWideTariffCard(
+                        index: 1,
+                        title: '1 yillik obuna',
+                        price: '250 000 so‘m',
+                        subtitle: '≈20 833 so‘m/oy (-28% tejash)',
+                        badge: 'Eng tejamkor',
+                      ),
+                      const SizedBox(height: 24),
+
+                      // CTA Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFFD66B),
+                            foregroundColor: const Color(0xFF1C1450),
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(28),
+                            ),
+                          ),
+                          onPressed: _isLoading ? null : _handlePurchase,
+                          child: _isLoading
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Color(0xFF1C1450),
+                                    strokeWidth: 2.6,
+                                  ),
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.bolt_rounded, size: 22),
+                                    const SizedBox(width: 8),
+                                    Flexible(
+                                      child: Text(
+                                        'Pro obunaga o‘tish ($planPrice)',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      // Providers info
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.lock_outline_rounded, color: Color(0xFF9C96C8), size: 14),
+                            const SizedBox(width: 6),
+                            const Text(
+                              'Payme va Click orqali xavfsiz to‘lov',
+                              style: TextStyle(
+                                color: Color(0xFF9C96C8),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Terms
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Istalgan vaqtda bekor qilish mumkin · ',
+                              style: TextStyle(fontSize: 11, color: Color(0xFF9C96C8)),
+                            ),
+                            GestureDetector(
+                              onTap: () => context.push('/privacy-policy'),
+                              child: const Text(
+                                'Maxfiylik',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.white,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTabletProLayout({
+    required dynamic student,
+    required bool isPro,
+    required bool disableAnim,
+    required PricingData pricing,
+    required bool hasActiveDiscount,
+    required String planPrice,
+  }) {
+    return Column(
+      children: [
+        // Mascot
+        Image.asset(
+          'assets/logo.png',
+          width: 140,
+          height: 140,
+          fit: BoxFit.contain,
+          errorBuilder: (_, __, ___) => Image.asset(
+            'assets/images/mathcity_logo.png',
+            width: 140,
+            height: 140,
+            fit: BoxFit.contain,
+          ),
+        ),
+        const SizedBox(height: 10),
+        RichText(
+          textAlign: TextAlign.center,
+          text: const TextSpan(
+            text: 'MathCity ',
+            style: TextStyle(
+              fontFamily: 'Nunito',
+              fontSize: 26,
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+            ),
+            children: [
+              TextSpan(
+                text: 'Pro',
+                style: TextStyle(color: Color(0xFFFFD66B)),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 6),
+        const Text(
+          'Matematikani o‘ynab va tushunib o‘rganing',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFFA9A4CF),
+          ),
+        ),
+        const SizedBox(height: 20),
+
+        // Metrics
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.06),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white.withOpacity(0.1), width: 1.2),
+          ),
+          child: Row(
+            children: [
+              Expanded(child: _buildMetricCol('AI Ustoz', '24/7 yordam')),
+              Container(width: 1, height: 32, color: Colors.white.withOpacity(0.12)),
+              Expanded(child: _buildMetricCol('Full', 'darsliklar')),
+              Container(width: 1, height: 32, color: Colors.white.withOpacity(0.12)),
+              Expanded(child: _buildMetricCol('0', 'reklama')),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+
+        // Benefits
+        _buildBenefitItem(
+          icon: Icons.menu_book_rounded,
+          tileColor: const Color(0x2BFFD66B),
+          iconColor: const Color(0xFFFFD66B),
+          title: 'Cheksiz AI Ustoz',
+          description: 'Istalgan mavzuda savol bering, qadam-baqadam tushuntirib beradi.',
+        ),
+        const SizedBox(height: 12),
+        _buildBenefitItem(
+          icon: Icons.star_rounded,
+          tileColor: const Color(0x338B6BFF),
+          iconColor: const Color(0xFFB8A6FF),
+          title: 'Matematika: to‘liq darsliklar',
+          description: 'Sinflar bo‘yicha barcha mavzular, misol va nazorat testlari bir joyda.',
+        ),
+        const SizedBox(height: 12),
+        _buildBenefitItem(
+          icon: Icons.calculate_rounded,
+          tileColor: const Color(0x333B82F6),
+          iconColor: const Color(0xFF60A5FA),
+          title: 'Cheksiz mashqlar',
+          description: 'Kunlik cheklovlarsiz mashq qiling va o‘z tempingizda rivojlaning.',
+        ),
+        const SizedBox(height: 12),
+        _buildBenefitItem(
+          icon: Icons.check_circle_rounded,
+          tileColor: const Color(0x3310B981),
+          iconColor: const Color(0xFF34D399),
+          title: 'Reklamasiz muhit',
+          description: 'Hech qanday reklama va to‘xtatishlarsiz, faqat o‘qish.',
+        ),
+        const SizedBox(height: 24),
+
+        if (isPro)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: const Color(0xFF10B981).withOpacity(0.15),
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: const Color(0xFF10B981), width: 1.5),
+            ),
+            child: Column(
+              children: [
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.verified_rounded, color: Color(0xFF10B981), size: 24),
+                    SizedBox(width: 8),
+                    Text(
+                      'MathCity Pro faol',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Tugash sanasi: ${_formatDate(student?.subscription.proExpiresAt)} (${_calculateRemainingDays(student?.subscription.proExpiresAt)} kun qoldi)',
+                  style: const TextStyle(
+                    color: Color(0xFFFFD66B),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          )
+        else ...[
+          if (hasActiveDiscount) ...[
+            _buildDiscountHeaderRibbon(pricing),
+            const SizedBox(height: 16),
+          ],
+
+          Row(
+            children: [
+              Expanded(
+                child: _buildWideTariffCard(
+                  index: 0,
+                  title: '1 oylik',
+                  price: hasActiveDiscount
+                      ? '${pricing.monthlyPlan.finalPrice} so‘m'
+                      : '29 000 so‘m',
+                  originalPrice: hasActiveDiscount ? '${pricing.monthlyPlan.basePrice} so‘m' : null,
+                  subtitle: hasActiveDiscount ? 'Har oy (Tejov: 8 700 so‘m)' : 'Har oyda to‘lanadi',
+                  badge: hasActiveDiscount ? '-30%' : null,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: _buildWideTariffCard(
+                  index: 1,
+                  title: '1 yillik',
+                  price: '250 000 so‘m',
+                  subtitle: '≈20 833 so‘m/oy (-28%)',
+                  badge: 'Eng tejamkor',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          // Action button
+          SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFFD66B),
+                foregroundColor: const Color(0xFF1C1450),
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(28),
+                ),
+              ),
+              onPressed: _isLoading ? null : _handlePurchase,
+              child: _isLoading
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        color: Color(0xFF1C1450),
+                        strokeWidth: 2.6,
+                      ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.bolt_rounded, size: 22),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Pro obunaga o‘tish ($planPrice)',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Istalgan vaqtda bekor qilish mumkin · ',
+                  style: TextStyle(fontSize: 12, color: Color(0xFF9C96C8)),
+                ),
+                GestureDetector(
+                  onTap: () => context.push('/privacy-policy'),
+                  child: const Text(
+                    'Maxfiylik',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildWideTariffCard({
+    required int index,
+    required String title,
+    required String price,
+    String? originalPrice,
+    required String subtitle,
+    String? badge,
+  }) {
+    final isSelected = _selectedPlanIndex == index;
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedPlanIndex = index),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+          decoration: BoxDecoration(
+            gradient: isSelected
+                ? const LinearGradient(
+                    colors: [Color(0xFF2E1C7A), Color(0xFF1E1452)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )
+                : null,
+            color: isSelected ? null : Colors.white.withOpacity(0.04),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isSelected ? const Color(0xFFFFD66B) : Colors.white.withOpacity(0.2),
+              width: isSelected ? 2.0 : 1.2,
+            ),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: const Color(0xFFFFD66B).withOpacity(0.22),
+                      blurRadius: 14,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Radio selection indicator
+              Container(
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isSelected ? const Color(0xFFFFD66B) : Colors.white38,
+                    width: 2,
+                  ),
+                  color: isSelected ? const Color(0xFFFFD66B) : Colors.transparent,
+                ),
+                child: isSelected
+                    ? const Icon(Icons.check, size: 14, color: Color(0xFF1C1450))
+                    : null,
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          if (badge != null) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFD66B),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                badge,
+                                style: const TextStyle(
+                                  color: Color(0xFF1C1450),
+                                  fontSize: 9.5,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (originalPrice != null) ...[
+                            Text(
+                              originalPrice,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.4),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.lineThrough,
+                                decorationColor: const Color(0xFFEF4444),
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                          ],
+                          Text(
+                            price,
+                            style: TextStyle(
+                              color: isSelected ? const Color(0xFFFFD66B) : Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: Color(0xFFA9A4CF),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -174,23 +174,6 @@ class AnnouncementManager {
         // Silently catch transport/timeout errors without throwing DioException
       }
 
-      // Local development fallback: If primary endpoint is updating (404/503) and testing on localhost Web
-      if (responseData == null && kDebugMode && kIsWeb) {
-        try {
-          final localRes = await Dio().get(
-            'http://localhost:4000/api/announcements/active',
-            options: Options(
-              validateStatus: (status) => true,
-              sendTimeout: const Duration(seconds: 2),
-              receiveTimeout: const Duration(seconds: 2),
-            ),
-          );
-          if (localRes.statusCode == 200 && localRes.data != null) {
-            responseData = localRes.data;
-          }
-        } catch (_) {}
-      }
-
       if (responseData == null || responseData['success'] != true || responseData['data'] is! List) {
         return;
       }

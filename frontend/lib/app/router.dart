@@ -9,6 +9,7 @@ import '../features/onboarding/welcome_screen.dart';
 import '../features/onboarding/intro_screen.dart';
 import '../features/age_eligibility/access_denied_screen.dart';
 import '../features/home/kids_home_screen.dart';
+import '../features/home/kids_tablet_screen.dart';
 import '../features/home/kids_desktop_screen.dart';
 import '../features/home/teen_home_screen.dart';
 import '../features/home/teen_desktop_screen.dart';
@@ -82,6 +83,7 @@ final GoRouter appRouter = GoRouter(
       path: '/kids/home',
       builder: (context, state) => const ResponsiveLayout(
         mobile: KidsHomeScreen(),
+        tablet: KidsTabletScreen(),
         desktop: KidsDesktopScreen(),
       ),
     ),

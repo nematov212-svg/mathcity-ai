@@ -211,14 +211,24 @@ app.use('/admin', express.static(adminStaticPath, {
   }
 }));
 app.get(['/admin', '/admin/*'], (req: Request, res: Response) => {
-  const adminIndex = path.join(adminStaticPath, 'index.html');
-  if (fs.existsSync(adminIndex)) {
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    return res.sendFile(adminIndex);
+  const candidates = [
+    path.join(adminStaticPath, 'index.html'),
+    path.resolve(process.cwd(), 'public/admin/index.html'),
+    path.resolve(process.cwd(), 'backend/public/admin/index.html'),
+    path.resolve(process.cwd(), 'dist/public/admin/index.html'),
+    path.resolve(__dirname, '../public/admin/index.html'),
+    path.resolve(__dirname, '../../public/admin/index.html'),
+    path.resolve(__dirname, '../../../public/admin/index.html'),
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c)) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      return res.sendFile(c);
+    }
   }
   return res.status(404).json({
     success: false,
-    error: `ENOENT: no such file or directory, stat '${adminIndex}'`,
+    error: `ENOENT: no such file or directory, stat '${candidates[0]}'`,
   });
 });
 

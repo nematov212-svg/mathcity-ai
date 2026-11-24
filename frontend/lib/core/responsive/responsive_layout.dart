@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'responsive.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   final Widget mobile;
@@ -13,22 +14,24 @@ class ResponsiveLayout extends StatelessWidget {
   });
 
   static bool isMobile(BuildContext context) =>
-      MediaQuery.of(context).size.width < 768;
+      MediaQuery.of(context).size.width < ResponsiveBreakpoints.tabletMin;
 
   static bool isTablet(BuildContext context) =>
-      MediaQuery.of(context).size.width >= 768 &&
-      MediaQuery.of(context).size.width < 1024;
+      MediaQuery.of(context).size.width >= ResponsiveBreakpoints.tabletMin &&
+      MediaQuery.of(context).size.width < ResponsiveBreakpoints.desktopMin;
 
   static bool isDesktop(BuildContext context) =>
-      MediaQuery.of(context).size.width >= 1024;
+      MediaQuery.of(context).size.width >= ResponsiveBreakpoints.desktopMin;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth >= 1024 && desktop != null) {
+        if (constraints.maxWidth >= ResponsiveBreakpoints.desktopMin && desktop != null) {
           return desktop!;
-        } else if (constraints.maxWidth >= 768 && tablet != null) {
+        } else if (constraints.maxWidth >= ResponsiveBreakpoints.tabletMin && tablet != null) {
+          return tablet!;
+        } else if (constraints.maxWidth >= ResponsiveBreakpoints.desktopMin && tablet != null) {
           return tablet!;
         } else {
           return mobile;

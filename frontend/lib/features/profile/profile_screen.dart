@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../core/responsive/app_responsive_scaffold.dart';
+import '../../core/responsive/responsive.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../shared/models/student_model.dart';
@@ -571,6 +573,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
 
     final joinedText = _formatJoinDate(student?.createdAt);
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    if (screenWidth >= 600) {
+      return _buildWideProfile(
+        colors: colors,
+        isDark: isDark,
+        disableAnim: disableAnim,
+        student: student,
+        name: name,
+        username: username,
+        grade: grade,
+        joinedText: joinedText,
+        level: level,
+        xp: xp,
+        nextLevelXP: nextLevelXP,
+        isPro: isPro,
+        coins: coins,
+      );
+    }
+
     return Scaffold(
       backgroundColor: colors.bg,
       body: SafeArea(
@@ -797,32 +818,39 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                               const SizedBox(height: 16),
 
                               // XP Progress Bar
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  AnimatedBuilder(
-                                    animation: _xpController,
-                                    builder: (context, child) {
-                                      final animatedXP = (xp * (disableAnim ? 1.0 : _xpController.value)).round();
-                                      return Text(
-                                        '$animatedXP XP',
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: SizedBox(
+                                  width: 380,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      AnimatedBuilder(
+                                        animation: _xpController,
+                                        builder: (context, child) {
+                                          final animatedXP = (xp * (disableAnim ? 1.0 : _xpController.value)).round();
+                                          return Text(
+                                            '$animatedXP XP',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w800,
+                                              color: colors.ink,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      Text(
+                                        'Keyingi daraja: $nextLevelXP XP',
                                         style: TextStyle(
                                           fontSize: 13,
-                                          fontWeight: FontWeight.w800,
-                                          color: colors.ink,
+                                          fontWeight: FontWeight.w700,
+                                          color: colors.muted,
                                         ),
-                                      );
-                                    },
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    'Keyingi daraja: $nextLevelXP XP',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700,
-                                      color: colors.muted,
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                               const SizedBox(height: 6),
                               Container(
@@ -1014,48 +1042,56 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Haftalik faollik',
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w800,
-                                      color: colors.ink,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFFFE9DB),
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        AnimatedBuilder(
-                                          animation: _flameController,
-                                          builder: (context, child) {
-                                            final scale = disableAnim ? 1.0 : 1.0 + _flameController.value * 0.14;
-                                            return Transform.scale(
-                                              scale: scale,
-                                              child: const Icon(Icons.local_fire_department_rounded, color: Color(0xFFE5611B), size: 16),
-                                            );
-                                          },
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: SizedBox(
+                                  width: 540,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Haftalik faollik',
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w800,
+                                          color: colors.ink,
                                         ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          '${student?.currentStreak ?? 1} kunlik seriya',
-                                          style: const TextStyle(
-                                            color: Color(0xFFC2500F),
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w800,
-                                          ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFFFE9DB),
+                                          borderRadius: BorderRadius.circular(16),
                                         ),
-                                      ],
-                                    ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            AnimatedBuilder(
+                                              animation: _flameController,
+                                              builder: (context, child) {
+                                                final scale = disableAnim ? 1.0 : 1.0 + _flameController.value * 0.14;
+                                                return Transform.scale(
+                                                  scale: scale,
+                                                  child: const Icon(Icons.local_fire_department_rounded, color: Color(0xFFE5611B), size: 16),
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              '${student?.currentStreak ?? 1} kunlik seriya',
+                                              style: const TextStyle(
+                                                color: Color(0xFFC2500F),
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
 
                               const SizedBox(height: 24),
@@ -1263,6 +1299,703 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildWideProfile({
+    required AppThemeColors colors,
+    required bool isDark,
+    required bool disableAnim,
+    required dynamic student,
+    required String name,
+    required String username,
+    required int grade,
+    required String joinedText,
+    required int level,
+    required int xp,
+    required int nextLevelXP,
+    required bool isPro,
+    required int coins,
+  }) {
+    return ResponsiveBuilder(
+      builder: (context, screenType, constraints) {
+        final isDesktop = screenType == ScreenType.desktop;
+
+        final profileCard = _buildProfileCardContent(
+          colors: colors,
+          isDark: isDark,
+          disableAnim: disableAnim,
+          student: student,
+          name: name,
+          username: username,
+          grade: grade,
+          joinedText: joinedText,
+          level: level,
+          xp: xp,
+          nextLevelXP: nextLevelXP,
+        );
+
+        final proCard = _buildProCard(colors, isPro, disableAnim);
+
+        final statsCard = _buildStatsSectionContent(
+          colors: colors,
+          student: student,
+          coins: coins,
+          xp: xp,
+        );
+
+        final weeklyCard = _buildWeeklyActivityContent(
+          colors: colors,
+          isDark: isDark,
+          disableAnim: disableAnim,
+          student: student,
+        );
+
+        final menuCard = _buildMenuCardContent(
+          colors: colors,
+          isDark: isDark,
+          isPro: isPro,
+          student: student,
+        );
+
+        final Widget bodyWidget;
+        if (isDesktop) {
+          bodyWidget = SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1040),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Column(
+                        children: [
+                          profileCard,
+                          const SizedBox(height: 16),
+                          statsCard,
+                          const SizedBox(height: 16),
+                          proCard,
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(
+                      flex: 5,
+                      child: Column(
+                        children: [
+                          weeklyCard,
+                          const SizedBox(height: 16),
+                          menuCard,
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        } else {
+          bodyWidget = SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 720),
+                child: Column(
+                  children: [
+                    profileCard,
+                    const SizedBox(height: 16),
+                    proCard,
+                    const SizedBox(height: 16),
+                    statsCard,
+                    const SizedBox(height: 16),
+                    weeklyCard,
+                    const SizedBox(height: 16),
+                    menuCard,
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        return AppResponsiveScaffold(
+          currentNavIndex: 4,
+          title: 'Mening profilim',
+          phoneBody: const SizedBox.shrink(),
+          tabletBody: bodyWidget,
+          desktopBody: bodyWidget,
+        );
+      },
+    );
+  }
+
+  Widget _buildProfileCardContent({
+    required AppThemeColors colors,
+    required bool isDark,
+    required bool disableAnim,
+    required dynamic student,
+    required String name,
+    required String username,
+    required int grade,
+    required String joinedText,
+    required int level,
+    required int xp,
+    required int nextLevelXP,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: colors.border, width: 1.2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 96,
+                  height: 96,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: colors.primary, width: 3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colors.primary.withOpacity(0.25),
+                        blurRadius: 16,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: ClipOval(
+                    child: _buildAvatarImage(student?.avatarUrl, colors),
+                  ),
+                ),
+                if (_isUploadingAvatar)
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.black.withOpacity(0.45),
+                      ),
+                      child: const Center(
+                        child: SizedBox(
+                          width: 28,
+                          height: 28,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                        ),
+                      ),
+                    ),
+                  ),
+                Positioned(
+                  right: -2,
+                  bottom: -2,
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: Semantics(
+                      button: true,
+                      label: 'Rasmni o‘zgartirish',
+                      child: InkWell(
+                        onTap: _showAvatarOptions,
+                        borderRadius: BorderRadius.circular(22),
+                        child: Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: colors.primary,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: colors.card, width: 2.5),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x336C47FF),
+                                blurRadius: 8,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(Icons.camera_alt_rounded, size: 20, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            name,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: colors.ink),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '@$username · $grade-sinf o‘quvchisi',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: colors.muted),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF281F5E) : const Color(0xFFEDE8FF),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '$level-daraja',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? const Color(0xFFC7B3FF) : const Color(0xFF6C47FF),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF231E48) : const Color(0xFFF3F2F8),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  'Qo‘shilgan: $joinedText',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: colors.muted),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: 380,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AnimatedBuilder(
+                    animation: _xpController,
+                    builder: (context, child) {
+                      return Text(
+                        '$xp XP',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: colors.primary,
+                        ),
+                      );
+                    },
+                  ),
+                  Text(
+                    'Keyingi daraja: $nextLevelXP XP',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: colors.muted),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Container(
+            width: double.infinity,
+            height: 8,
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF2B2456) : const Color(0xFFEBE7F7),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: AnimatedBuilder(
+              animation: _xpController,
+              builder: (context, child) {
+                final progress = (xp / nextLevelXP).clamp(0.05, 1.0);
+                final animatedWidth = progress * (disableAnim ? 1.0 : _xpController.value);
+                return FractionallySizedBox(
+                  alignment: Alignment.centerLeft,
+                  widthFactor: animatedWidth,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF6C47FF), Color(0xFF8B6BFF)],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 18),
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: SizedBox(
+              width: double.infinity,
+              height: 44,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: colors.primary, width: 1.5),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+                ),
+                onPressed: student != null ? () => _showEditProfileDialog(student) : null,
+                child: Text(
+                  'Profilni tahrirlash',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: colors.primary),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatsSectionContent({
+    required AppThemeColors colors,
+    required dynamic student,
+    required int coins,
+    required int xp,
+  }) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _buildStatCard(
+                icon: Icons.monetization_on_rounded,
+                iconBg: const Color(0xFFFFF1D6),
+                iconColor: const Color(0xFFF5A623),
+                value: '$coins',
+                label: 'Tangalar',
+                colors: colors,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _buildStatCard(
+                icon: Icons.bolt_rounded,
+                iconBg: const Color(0xFFEDE8FF),
+                iconColor: const Color(0xFF6C47FF),
+                value: '$xp',
+                label: 'XP',
+                colors: colors,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _buildStatCard(
+                icon: Icons.people_alt_rounded,
+                iconBg: const Color(0xFFE1F6EC),
+                iconColor: const Color(0xFF10B981),
+                value: '${student?.friendsCount ?? 0}',
+                label: 'Do‘stlar',
+                colors: colors,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: _showStudyHistorySheet,
+                    child: _buildDetailStatTile(
+                      icon: Icons.access_time_rounded,
+                      iconBg: const Color(0xFFE5EEFF),
+                      iconColor: const Color(0xFF3B82F6),
+                      value: _formatStudyMinutes(student?.studyMinutes ?? 0),
+                      label: 'Bugun · Tarix >',
+                      colors: colors,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildDetailStatTile(
+                    icon: Icons.menu_book_rounded,
+                    iconBg: const Color(0xFFFFF1D6),
+                    iconColor: const Color(0xFFF59E0B),
+                    value: '${student?.completedLessonsCount ?? 0} dars · ${student?.completedTopicsCount ?? 0} mavzu',
+                    label: 'Darslar',
+                    colors: colors,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildDetailStatTile(
+                    icon: Icons.local_fire_department_rounded,
+                    iconBg: const Color(0xFFFFE9DB),
+                    iconColor: const Color(0xFFE5611B),
+                    value: '${student?.currentStreak ?? 1} kun',
+                    label: 'Joriy seriya',
+                    colors: colors,
+                    isPulsing: true,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildDetailStatTile(
+                    icon: Icons.emoji_events_rounded,
+                    iconBg: const Color(0xFFEDE8FF),
+                    iconColor: const Color(0xFF6C47FF),
+                    value: '${student?.longestStreak ?? 1} kun',
+                    label: 'Eng uzun seriya',
+                    colors: colors,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWeeklyActivityContent({
+    required AppThemeColors colors,
+    required bool isDark,
+    required bool disableAnim,
+    required dynamic student,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: colors.border, width: 1.2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: 540,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Haftalik faollik',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w800,
+                      color: colors.ink,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFE9DB),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AnimatedBuilder(
+                          animation: _flameController,
+                          builder: (context, child) {
+                            final scale = disableAnim ? 1.0 : 1.0 + _flameController.value * 0.14;
+                            return Transform.scale(
+                              scale: scale,
+                              child: const Icon(Icons.local_fire_department_rounded, color: Color(0xFFE5611B), size: 16),
+                            );
+                          },
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${student?.currentStreak ?? 1} kunlik seriya',
+                          style: const TextStyle(
+                            color: Color(0xFFC2500F),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: List.generate(_weeklyActivity.length, (index) {
+              final dayData = _weeklyActivity[index];
+              final minutes = (dayData['minutes'] ?? 0) as int;
+              final hasActivity = minutes > 0;
+              final isToday = dayData['isToday'] == true;
+              final dayLabel = (dayData['dayKey'] ?? dayData['day'] ?? '') as String;
+
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (isToday)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          margin: const EdgeInsets.only(bottom: 6),
+                          decoration: BoxDecoration(
+                            color: colors.primaryDark,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            '$minutes min',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        )
+                      else
+                        const SizedBox(height: 23),
+                      AnimatedBuilder(
+                        animation: _columnGrowthController,
+                        builder: (context, child) {
+                          final animVal = disableAnim ? 1.0 : _columnGrowthController.value;
+                          const maxMinutes = 15;
+                          final calculatedHeight = minutes == 0
+                              ? 10.0
+                              : (minutes / maxMinutes * 84.0).clamp(10.0, 84.0);
+                          final barHeight = calculatedHeight * animVal;
+
+                          return Container(
+                            width: 24,
+                            height: barHeight,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              gradient: isToday
+                                  ? const LinearGradient(
+                                      colors: [Color(0xFF8B6BFF), Color(0xFF5232D9)],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    )
+                                  : null,
+                              color: isToday
+                                  ? null
+                                  : (hasActivity
+                                      ? (isDark ? const Color(0xFF4A3B8C) : const Color(0xFFC9BBFF))
+                                      : (isDark ? const Color(0xFF2A2352) : const Color(0xFFEDEBF7))),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        dayLabel,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
+                          color: isToday ? colors.primaryDark : colors.muted,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMenuCardContent({
+    required AppThemeColors colors,
+    required bool isDark,
+    required bool isPro,
+    required dynamic student,
+  }) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: colors.border, width: 1.2),
+      ),
+      child: Column(
+        children: [
+          _buildMenuItem(
+            icon: Icons.emoji_events_rounded,
+            tileColor: const Color(0xFFFFF1D6),
+            iconColor: const Color(0xFFF59E0B),
+            title: 'Yutuqlarim',
+            subtitle: isPro
+                ? '${student?.achievementsCount ?? 0} ta yutuq ochilgan'
+                : 'Pro tarifda ochiladi',
+            isLocked: !isPro,
+            trailingBadge: isPro ? null : 'PRO',
+            colors: colors,
+            onTap: () => context.push('/kids/achievements'),
+          ),
+          _buildDivider(colors),
+          _buildMenuItem(
+            icon: Icons.checklist_rounded,
+            tileColor: const Color(0xFFE1F6EC),
+            iconColor: const Color(0xFF10B981),
+            title: 'Kunlik vazifalar',
+            subtitle: '3 ta vazifa · Tangalar yuting',
+            colors: colors,
+            onTap: () => context.push('/kids/daily-tasks'),
+          ),
+          _buildDivider(colors),
+          _buildMenuItem(
+            icon: Icons.bar_chart_rounded,
+            tileColor: const Color(0xFFE5EEFF),
+            iconColor: const Color(0xFF3B82F6),
+            title: 'O‘quv statistikasi',
+            subtitle: 'O‘zlashtirish va aniqlik',
+            colors: colors,
+            onTap: () => context.push('/kids/analytics'),
+          ),
+          _buildDivider(colors),
+          _buildMenuItem(
+            icon: isDark ? Icons.dark_mode_rounded : Icons.wb_sunny_rounded,
+            tileColor: isDark ? const Color(0xFF2E2660) : const Color(0xFFEDE9FE),
+            iconColor: colors.primary,
+            title: 'Tungi rejim',
+            subtitle: () {
+              final mode = ref.watch(themeModeProvider);
+              if (mode == ThemeMode.dark) return 'Tungi rejim (Faol)';
+              if (mode == ThemeMode.light) return 'Kunduzgi rejim (Faol)';
+              return 'Tizim bo‘yicha (Avtomatik)';
+            }(),
+            colors: colors,
+            onTap: () => _showThemeModeDialog(context, colors),
+          ),
+          _buildDivider(colors),
+          _buildMenuItem(
+            icon: Icons.settings_rounded,
+            tileColor: isDark ? const Color(0xFF2A2452) : const Color(0xFFECEBF3),
+            iconColor: isDark ? const Color(0xFFA9A4CF) : const Color(0xFF6B6785),
+            title: 'Sozlamalar',
+            subtitle: 'Mavzu, tovush va xavfsizlik',
+            colors: colors,
+            onTap: () => context.push('/settings'),
+          ),
+        ],
       ),
     );
   }
@@ -1542,29 +2275,32 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                 onPressed: () {
                   context.push('/tariflar');
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      isPro ? 'Pro obunani boshqarish' : 'Pro tarifga o‘tish',
-                      style: const TextStyle(
-                        color: Color(0xFF2A1B7A),
-                        fontSize: 15,
-                        fontWeight: FontWeight.w800,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        isPro ? 'Pro obunani boshqarish' : 'Pro tarifga o‘tish',
+                        style: const TextStyle(
+                          color: Color(0xFF2A1B7A),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    AnimatedBuilder(
-                      animation: _arrowController,
-                      builder: (context, child) {
-                        final shift = disableAnim ? 0.0 : _arrowController.value * 5.0;
-                        return Transform.translate(
-                          offset: Offset(shift, 0),
-                          child: const Icon(Icons.arrow_forward_rounded, color: Color(0xFF2A1B7A), size: 18),
-                        );
-                      },
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      AnimatedBuilder(
+                        animation: _arrowController,
+                        builder: (context, child) {
+                          final shift = disableAnim ? 0.0 : _arrowController.value * 5.0;
+                          return Transform.translate(
+                            offset: Offset(shift, 0),
+                            child: const Icon(Icons.arrow_forward_rounded, color: Color(0xFF2A1B7A), size: 18),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -1772,12 +2508,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                 children: [
                   Row(
                     children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: colors.ink,
+                      Flexible(
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                            color: colors.ink,
+                          ),
                         ),
                       ),
                       if (trailingBadge != null) ...[

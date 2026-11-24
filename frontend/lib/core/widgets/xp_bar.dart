@@ -40,26 +40,31 @@ class XPBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '$level-daraja',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 14,
-                  color: isDark ? const Color(0xFFC7FA74) : const Color(0xFF4F39CE),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '$level-daraja',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14,
+                    color: isDark ? const Color(0xFFC7FA74) : const Color(0xFF4F39CE),
+                  ),
                 ),
-              ),
-              Text(
-                '$currentXP XP',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
-                  color: isDark ? const Color(0xFF8B9BB4) : const Color(0xFF8C8CA8),
+                const SizedBox(width: 8),
+                Text(
+                  '$currentXP XP',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                    color: isDark ? const Color(0xFF8B9BB4) : const Color(0xFF8C8CA8),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 10),
           ClipRRect(

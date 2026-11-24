@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/constants/app_strings.dart';
@@ -31,34 +30,7 @@ class MathCityApp extends ConsumerWidget {
           insets.bottom < 0 ? 0 : insets.bottom,
         );
 
-        Widget content = child ?? const SizedBox.shrink();
-        final isWideDesktop = kIsWeb && mediaQuery.size.width > 600;
-
-        if (isWideDesktop) {
-          content = Container(
-            color: const Color(0xFF130E30),
-            alignment: Alignment.center,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 500),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.4),
-                        blurRadius: 36,
-                        spreadRadius: 2,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: child,
-                ),
-              ),
-            ),
-          );
-        }
+        final content = child ?? const SizedBox.shrink();
 
         return MediaQuery(
           data: mediaQuery.copyWith(viewInsets: safeInsets),
