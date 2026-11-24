@@ -201,10 +201,17 @@ app.delete(['/api/me', '/api/users/me'], (req, res, next) => {
 });
 
 // 4. Standalone Admin Dashboard Static Portal
-app.use('/admin', express.static(adminStaticPath));
+app.use('/admin', express.static(adminStaticPath, {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html') || filePath.endsWith('index.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+  }
+}));
 app.get(['/admin', '/admin/*'], (req: Request, res: Response) => {
   const adminIndex = path.join(adminStaticPath, 'index.html');
   if (fs.existsSync(adminIndex)) {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     return res.sendFile(adminIndex);
   }
   return res.status(404).json({

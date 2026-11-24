@@ -387,6 +387,9 @@ adminRouter.get('/students', adminAuth, (req: Request, res: Response) => {
     };
   });
 
+  // Sort descending by createdAt so newly registered students appear at the top in real-time
+  list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
   return res.json({
     success: true,
     total: list.length,

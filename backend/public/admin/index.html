@@ -101,9 +101,9 @@
         <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3.5 text-xs text-indigo-900">
           <div class="font-bold text-slate-800 mb-1.5 flex items-center justify-between">
             <span>Standart administrator hisoblari:</span>
-            <button type="button" onclick="fillAdminCredentials('admin', 'MathCity@Admin2026!Secure')"
+            <button type="button" onclick="quickLogin('admin', 'MathCity@Admin2026!Secure')"
               class="text-indigo-600 hover:text-indigo-800 font-bold underline cursor-pointer">
-              To‘ldirish ⚡
+              Bir bosishda kirish ⚡
             </button>
           </div>
           <div class="space-y-1 text-slate-700">
@@ -117,10 +117,10 @@
               <code
                 class="font-bold text-indigo-700 bg-white px-1.5 py-0.5 rounded border border-indigo-100">MathCity@Admin2026!Secure</code>
             </div>
-            <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-indigo-100">
+            <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1.5 border-t border-indigo-100">
               <span>Lokal dev alternativa:</span>
-              <button type="button" onclick="fillAdminCredentials('mirzobek', 'mirzobek')" class="font-mono text-indigo-700 hover:underline font-bold">
-                mirzobek / mirzobek ⚡
+              <button type="button" onclick="quickLogin('mirzobek', 'mirzobek')" class="font-mono text-indigo-700 hover:underline font-bold cursor-pointer">
+                mirzobek / mirzobek (Kirish ⚡)
               </button>
             </div>
           </div>
@@ -1853,6 +1853,11 @@
       if (pField) pField.value = p;
     }
 
+    async function quickLogin(u, p) {
+      fillAdminCredentials(u, p);
+      await handleAdminLogin();
+    }
+
     async function apiFetch(endpoint, options = {}) {
       if (endpoint.startsWith('http')) {
         return fetch(endpoint, options);
@@ -1944,7 +1949,7 @@
         if (currentView === 'overview') loadDashboardData(true);
         if (currentView === 'settings') loadOnlineUsers();
         if (currentView === 'students') loadStudents(true);
-      }, 15000);
+      }, 3000);
     }
 
     async function verifySession() {
@@ -2182,20 +2187,18 @@
     }
 
     // --- 2. STUDENTS DATA ---
-    async function loadStudents() {
+    async function loadStudents(isSilent = false) {
       try {
         const res = await apiFetch('/api/admin/students', {
           headers: { 'Authorization': `Bearer ${currentToken}` }
         });
         const json = await res.json();
-        const tbody = document.getElementById('studentsTableBody');
-        tbody.innerHTML = '';
         if (json.success && json.data) {
           cachedStudents = json.data;
-          renderStudentsTable(cachedStudents);
+          filterStudentsTable();
         }
       } catch (err) {
-        console.error('loadStudents error:', err);
+        if (!isSilent) console.error('loadStudents error:', err);
       }
     }
 

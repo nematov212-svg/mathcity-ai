@@ -11,6 +11,8 @@
     "test": "npm --prefix backend test",
     "db:migrate": "npm --prefix backend run prisma:migrate",
     "db:seed": "npm --prefix backend run prisma:seed",
+    "render:build": "cd backend && npm install --include=dev && npx prisma generate && npm run build && mkdir -p dist/public && cp -R public/* dist/public/ 2>/dev/null || true",
+    "render:start": "cd backend && node scripts/render-start.js",
     "postinstall": "cd backend && npm install"
   }
 }
