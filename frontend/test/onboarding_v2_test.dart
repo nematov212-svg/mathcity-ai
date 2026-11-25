@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mathcity_ai/features/onboarding/intro_screen.dart';
 import 'package:mathcity_ai/features/onboarding/widgets/primary_button.dart';
 
 void main() {
+  setUpAll(() {
+    GoogleFonts.config.allowRuntimeFetching = false;
+  });
   group('MathCity AI Onboarding Flow v2 Tests (Figma Match)', () {
     testWidgets('Screen 1 renders # badge, title, chips, suggestions, and input', (WidgetTester tester) async {
       tester.view.physicalSize = const Size(1080, 2400);
