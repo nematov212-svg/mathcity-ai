@@ -1485,9 +1485,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                     onTap: isDesktop
                         ? () => setState(() => _showDesktopSidebar = !_showDesktopSidebar)
                         : _openHistoryBottomSheet,
-                    child: const Icon(
+                    child: Icon(
                       Icons.history_rounded,
-                      color: Colors.white,
+                      color: isDark ? Colors.white : colors.ink,
                       size: 20,
                     ),
                   ),
@@ -1541,7 +1541,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
               fontFamily: 'Nunito',
               fontSize: 11,
               fontWeight: FontWeight.w800,
-              color: _isPro ? const Color(0xFF6EE7B7) : Colors.white,
+              color: _isPro
+                  ? const Color(0xFF10B981)
+                  : (colors.isDark ? Colors.white : colors.primary),
             ),
           ),
         ],
@@ -1674,11 +1676,11 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
             Text(
               'Salom, $displayName! 👋',
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Nunito',
                 fontSize: 26,
                 fontWeight: FontWeight.w900,
-                color: Colors.white,
+                color: colors.ink,
                 letterSpacing: -0.3,
               ),
             ),
@@ -1687,14 +1689,14 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
             // Subtitle
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 480),
-              child: const Text(
+              child: Text(
                 'Men sizning AI matematik ustozingizman.\nBugun sizga qanday yordam bera olaman?',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Nunito',
                   fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFFC7D2FE),
+                  fontWeight: FontWeight.w600,
+                  color: colors.muted,
                   height: 1.5,
                 ),
               ),
@@ -1889,13 +1891,13 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                       children: [
                         CircleAvatar(
                           radius: 11,
-                          backgroundColor: const Color(0xFF2E1C6A),
+                          backgroundColor: isDark ? const Color(0xFF2E1C6A) : colors.primaryLight,
                           child: Text(
                             '${step.stepNumber}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFFA78BFA),
+                              color: isDark ? const Color(0xFFA78BFA) : colors.primary,
                             ),
                           ),
                         ),
@@ -1906,17 +1908,17 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                             children: [
                               Text(
                                 step.explanation,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontFamily: 'Nunito',
                                   fontSize: 13,
-                                  color: Color(0xFFC7D2FE),
+                                  color: isDark ? const Color(0xFFC7D2FE) : colors.ink,
                                 ),
                               ),
                               if (step.latex.isNotEmpty) ...[
                                 const SizedBox(height: 4),
                                 Math.tex(
                                   step.latex,
-                                  textStyle: const TextStyle(fontSize: 14, color: Colors.white),
+                                  textStyle: TextStyle(fontSize: 14, color: isDark ? Colors.white : colors.ink),
                                 ),
                               ],
                             ],
@@ -1963,45 +1965,45 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
               runSpacing: 6,
               children: [
                 ActionChip(
-                  backgroundColor: Colors.white.withOpacity(0.08),
-                  side: BorderSide(color: Colors.white.withOpacity(0.14)),
+                  backgroundColor: isDark ? Colors.white.withOpacity(0.08) : colors.field,
+                  side: BorderSide(color: isDark ? Colors.white.withOpacity(0.14) : colors.border),
                   avatar: const Icon(Icons.copy_rounded, size: 14, color: Color(0xFFA78BFA)),
-                  label: const Text(
+                  label: Text(
                     'Nusxalash',
                     style: TextStyle(
                       fontFamily: 'Nunito',
                       fontSize: 12,
-                      color: Colors.white,
+                      color: isDark ? Colors.white : colors.ink,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   onPressed: () => _copySolution(msg),
                 ),
                 ActionChip(
-                  backgroundColor: Colors.white.withOpacity(0.08),
-                  side: BorderSide(color: Colors.white.withOpacity(0.14)),
+                  backgroundColor: isDark ? Colors.white.withOpacity(0.08) : colors.field,
+                  side: BorderSide(color: isDark ? Colors.white.withOpacity(0.14) : colors.border),
                   avatar: const Icon(Icons.lightbulb_outline_rounded, size: 14, color: Color(0xFFFBBF24)),
-                  label: const Text(
+                  label: Text(
                     'Tushunmadim, soddaroq tushuntir',
                     style: TextStyle(
                       fontFamily: 'Nunito',
                       fontSize: 12,
-                      color: Colors.white,
+                      color: isDark ? Colors.white : colors.ink,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   onPressed: () => _sendMessage(customText: 'Tushunmadim, soddaroq tushuntir', action: 'explain_more'),
                 ),
                 ActionChip(
-                  backgroundColor: Colors.white.withOpacity(0.08),
-                  side: BorderSide(color: Colors.white.withOpacity(0.14)),
+                  backgroundColor: isDark ? Colors.white.withOpacity(0.08) : colors.field,
+                  side: BorderSide(color: isDark ? Colors.white.withOpacity(0.14) : colors.border),
                   avatar: const Icon(Icons.refresh_rounded, size: 14, color: Color(0xFF60A5FA)),
-                  label: const Text(
+                  label: Text(
                     'Yana bir misol ber',
                     style: TextStyle(
                       fontFamily: 'Nunito',
                       fontSize: 12,
-                      color: Colors.white,
+                      color: isDark ? Colors.white : colors.ink,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -2045,12 +2047,12 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: const Color(0xE017103B),
+          color: isDark ? const Color(0xE017103B) : colors.card,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withOpacity(0.12)),
+          border: Border.all(color: isDark ? Colors.white.withOpacity(0.12) : colors.border),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.25),
+              color: isDark ? Colors.black.withOpacity(0.25) : Colors.black.withOpacity(0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -2082,14 +2084,14 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                 ),
               ),
             ),
-            const _BouncingDotsIndicator(color: Color(0xFFA78BFA)),
+            _BouncingDotsIndicator(color: colors.primary),
             const SizedBox(width: 10),
-            const Text(
+            Text(
               'AI Ustoz yozmoqda...',
               style: TextStyle(
                 fontFamily: 'Nunito',
                 fontSize: 13,
-                color: Color(0xFFC7D2FE),
+                color: isDark ? const Color(0xFFC7D2FE) : colors.muted,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -2314,9 +2316,12 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
     bool isPrimary = false,
   }) {
     final isDisabled = onTap == null;
+    final isDark = colors.isDark;
     final bgColor = isPrimary
-        ? (isDisabled ? const Color(0xFF7C3AED).withOpacity(0.35) : const Color(0xFF7C3AED))
-        : (isDisabled ? Colors.white.withOpacity(0.04) : Colors.white.withOpacity(0.09));
+        ? (isDisabled ? colors.primary.withOpacity(0.4) : colors.primary)
+        : (isDisabled
+            ? (isDark ? Colors.white.withOpacity(0.04) : colors.field)
+            : (isDark ? Colors.white.withOpacity(0.09) : colors.field));
 
     return Material(
       color: bgColor,
@@ -2333,7 +2338,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
             border: Border.all(
               color: isPrimary
                   ? (isDisabled ? const Color(0xFF8B5CF6).withOpacity(0.3) : const Color(0xFFA78BFA))
-                  : Colors.white.withOpacity(0.14),
+                  : (isDark ? Colors.white.withOpacity(0.14) : colors.border),
             ),
             boxShadow: isPrimary && !isDisabled
                 ? [
@@ -2350,7 +2355,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
             size: 20,
             color: isPrimary
                 ? Colors.white
-                : (isDisabled ? Colors.white24 : const Color(0xFFDDD6FE)),
+                : (isDisabled
+                    ? (isDark ? Colors.white24 : colors.muted.withOpacity(0.4))
+                    : (isDark ? const Color(0xFFDDD6FE) : colors.primary)),
           ),
         ),
       ),

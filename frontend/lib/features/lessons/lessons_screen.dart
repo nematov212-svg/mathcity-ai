@@ -655,19 +655,19 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                       child: const Icon(Icons.search_off_rounded, color: Color(0xFFA855F7), size: 36),
                     ),
                     const SizedBox(height: 18),
-                    const Text(
+                    Text(
                       'Mos darslar topilmadi',
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w900,
-                        color: Colors.white,
+                        color: colors.ink,
                       ),
                     ),
                     const SizedBox(height: 6),
-                    const Text(
+                    Text(
                       'Qidiruv so‘zini o‘zgartiring yoki boshqa sinfni tanlab ko‘ring.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 13, color: Colors.white60),
+                      style: TextStyle(fontSize: 13, color: colors.muted),
                     ),
                   ],
                 ),
@@ -907,13 +907,14 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.08),
+                                color: isDark ? Colors.white.withValues(alpha: 0.08) : colors.field,
                                 borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: isDark ? Colors.transparent : colors.border),
                               ),
                               child: Text(
                                 difficulty,
-                                style: const TextStyle(
-                                  color: Colors.white70,
+                                style: TextStyle(
+                                  color: isDark ? Colors.white70 : colors.muted,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -923,18 +924,19 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.08),
+                                color: isDark ? Colors.white.withValues(alpha: 0.08) : colors.field,
                                 borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: isDark ? Colors.transparent : colors.border),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.access_time_rounded, size: 12, color: Colors.white54),
+                                  Icon(Icons.access_time_rounded, size: 12, color: isDark ? Colors.white54 : colors.muted),
                                   const SizedBox(width: 4),
                                   Text(
                                     estTime,
-                                    style: const TextStyle(
-                                      color: Colors.white54,
+                                    style: TextStyle(
+                                      color: isDark ? Colors.white54 : colors.muted,
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -1022,10 +1024,14 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF7C3AED).withValues(alpha: 0.2),
+                          color: isDark
+                              ? const Color(0xFF7C3AED).withValues(alpha: 0.2)
+                              : colors.primaryLight.withValues(alpha: 0.6),
                           borderRadius: BorderRadius.circular(999),
                           border: Border.all(
-                            color: const Color(0xFFA855F7).withValues(alpha: 0.4),
+                            color: isDark
+                                ? const Color(0xFFA855F7).withValues(alpha: 0.4)
+                                : colors.primary.withValues(alpha: 0.35),
                             width: 1,
                           ),
                         ),
@@ -1036,8 +1042,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             const SizedBox(width: 4),
                             Text(
                               '+$xp XP',
-                              style: const TextStyle(
-                                color: Color(0xFFE9D5FF),
+                              style: TextStyle(
+                                color: isDark ? const Color(0xFFE9D5FF) : colors.primary,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w900,
                               ),
@@ -1051,9 +1057,12 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.amber.withValues(alpha: 0.15),
+                          color: Colors.amber.withValues(alpha: isDark ? 0.15 : 0.2),
                           borderRadius: BorderRadius.circular(999),
-                          border: Border.all(color: Colors.amber.withValues(alpha: 0.3), width: 1),
+                          border: Border.all(
+                            color: Colors.amber.withValues(alpha: isDark ? 0.3 : 0.5),
+                            width: 1,
+                          ),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -1062,8 +1071,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             const SizedBox(width: 4),
                             Text(
                               '+$coins',
-                              style: const TextStyle(
-                                color: Colors.amber,
+                              style: TextStyle(
+                                color: isDark ? Colors.amber : const Color(0xFFD97706),
                                 fontSize: 11,
                                 fontWeight: FontWeight.w900,
                               ),
@@ -1091,7 +1100,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             borderRadius: BorderRadius.circular(999),
                             child: LinearProgressIndicator(
                               value: progress,
-                              backgroundColor: Colors.white12,
+                              backgroundColor: isDark ? Colors.white12 : colors.border,
                               valueColor: AlwaysStoppedAnimation<Color>(catColor),
                               minHeight: 6,
                             ),

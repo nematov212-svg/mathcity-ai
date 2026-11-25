@@ -10,15 +10,15 @@ import 'package:mathcity_ai/shared/providers/student_provider.dart';
 
 void main() {
   group('Theme System & ThemeModeNotifier Tests', () {
-    test('Default theme mode is system and toggles correctly', () {
+    test('Default theme mode is light and toggles correctly', () {
       final notifier = ThemeModeNotifier();
-      expect(notifier.state, ThemeMode.system);
-
-      notifier.setThemeMode(ThemeMode.light);
       expect(notifier.state, ThemeMode.light);
 
       notifier.setThemeMode(ThemeMode.dark);
       expect(notifier.state, ThemeMode.dark);
+
+      notifier.setThemeMode(ThemeMode.light);
+      expect(notifier.state, ThemeMode.light);
     });
 
     test('AppTheme defines consistent Light and Dark palettes', () {
@@ -33,8 +33,8 @@ void main() {
 
       expect(lightExt, isNotNull);
       expect(darkExt, isNotNull);
-      expect(lightExt!.bg, const Color(0xFFF6F5FD));
-      expect(darkExt!.bg, const Color(0xFF0A061E));
+      expect(lightExt!.bg, const Color(0xFFF7F8FC));
+      expect(darkExt!.bg, const Color(0xFF0D0B18));
     });
   });
 

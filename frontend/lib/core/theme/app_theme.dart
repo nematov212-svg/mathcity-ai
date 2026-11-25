@@ -52,17 +52,17 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   });
 
   static const light = AppThemeColors(
-    primary: Color(0xFF6C47FF),
-    primaryDark: Color(0xFF5232D9),
+    primary: Color(0xFF7C3AED), // Primary Accent #7C3AED
+    primaryDark: Color(0xFF6D28D9),
     primaryLight: Color(0xFFEDE9FE),
-    ink: Color(0xFF1E1B3A),
-    muted: Color(0xFF6B6785),
-    inactive: Color(0xFF9A97B0),
-    bg: Color(0xFFF6F5FD),
-    card: Color(0xFFFFFFFF),
+    ink: Color(0xFF17152B), // Primary Text #17152B
+    muted: Color(0xFF626579), // Secondary Text #626579
+    inactive: Color(0xFF9497A8),
+    bg: Color(0xFFF7F8FC), // Background #F7F8FC
+    card: Color(0xFFFFFFFF), // Card #FFFFFF
     cardGlass: Color(0xEEFFFFFF),
-    field: Color(0xFFF3F0FC),
-    border: Color(0xFFE5E0FA),
+    field: Color(0xFFFFFFFF),
+    border: Color(0xFFE2E5EF), // Border #E2E5EF
     gold: Color(0xFFFFD66B),
     proDark: Color(0xFF2A1B7A),
     flame: Color(0xFFE5611B),
@@ -80,7 +80,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
       end: Alignment(0.7, 0.7),
     ),
     cosmicGradient: LinearGradient(
-      colors: [Color(0xFFF6F5FD), Color(0xFFEDE8FE)],
+      colors: [Color(0xFFF7F8FC), Color(0xFFECEFF8)],
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
     ),
@@ -88,17 +88,17 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   );
 
   static const dark = AppThemeColors(
-    primary: Color(0xFF8B6BFF),
-    primaryDark: Color(0xFFB8A6FF),
+    primary: Color(0xFFA78BFA), // Primary Accent #A78BFA
+    primaryDark: Color(0xFFC4B5FD),
     primaryLight: Color(0xFF2E1E6B),
-    ink: Color(0xFFF8F7FF),
-    muted: Color(0xFFA9A4CF),
-    inactive: Color(0xFF6E69A0),
-    bg: Color(0xFF0A061E),
-    card: Color(0xFF160E36),
-    cardGlass: Color(0xD9160E36),
-    field: Color(0xFF221648),
-    border: Color(0xFF2E1E5C),
+    ink: Color(0xFFFFFFFF), // Primary Text #FFFFFF
+    muted: Color(0xFFB5B2C7), // Secondary Text #B5B2C7
+    inactive: Color(0xFF75718E),
+    bg: Color(0xFF0D0B18), // Background #0D0B18
+    card: Color(0xFF1B182C), // Card #1B182C
+    cardGlass: Color(0xD91B182C),
+    field: Color(0xFF241F3A),
+    border: Color(0xFF302A46), // Border #302A46
     gold: Color(0xFFFFD66B),
     proDark: Color(0xFF2A1B7A),
     flame: Color(0xFFE5611B),
@@ -116,7 +116,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
       end: Alignment(0.7, 0.7),
     ),
     cosmicGradient: LinearGradient(
-      colors: [Color(0xFF0A061E), Color(0xFF140B32)],
+      colors: [Color(0xFF0D0B18), Color(0xFF18132C)],
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
     ),
@@ -402,7 +402,7 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
   static const _prefKey = 'app_theme_mode';
   static const _legacyPrefKey = 'mc_theme_mode';
 
-  ThemeModeNotifier() : super(ThemeMode.system) {
+  ThemeModeNotifier() : super(ThemeMode.light) {
     _loadThemeMode();
   }
 
@@ -410,14 +410,17 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
     try {
       final prefs = await SharedPreferences.getInstance();
       final saved = prefs.getString(_prefKey) ?? prefs.getString(_legacyPrefKey);
-      if (saved == 'light') {
-        state = ThemeMode.light;
-      } else if (saved == 'dark') {
+      if (saved == 'dark') {
         state = ThemeMode.dark;
-      } else {
+      } else if (saved == 'system') {
         state = ThemeMode.system;
+      } else {
+        // Default is Light Mode strictly
+        state = ThemeMode.light;
       }
-    } catch (_) {}
+    } catch (_) {
+      state = ThemeMode.light;
+    }
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {

@@ -252,7 +252,7 @@ class DataRepository {
     },
   ];
 
-  constructor() {}
+  constructor() { }
 
   // --- User Accounts ---
   getUserById(id: string): UserAccount | undefined {
@@ -840,7 +840,7 @@ class DataRepository {
     const user = this.getUserById(userId);
     if (!user) throw new Error('Foydalanuvchi topilmadi');
     user.coinBalance += amount;
-    this.persistUserToDatabase(user).catch(() => {});
+    this.persistUserToDatabase(user).catch(() => { });
     return { newBalance: user.coinBalance };
   }
 
@@ -851,7 +851,7 @@ class DataRepository {
       throw new Error('Yetarli oltin tanga mavjud emas');
     }
     user.coinBalance -= amount;
-    this.persistUserToDatabase(user).catch(() => {});
+    this.persistUserToDatabase(user).catch(() => { });
     return { newBalance: user.coinBalance };
   }
 
@@ -951,7 +951,7 @@ class DataRepository {
         ? Math.round((user.correctQuestionCount / user.attemptedQuestionCount) * 100)
         : 100;
 
-    this.persistUserToDatabase(user).catch(() => {});
+    this.persistUserToDatabase(user).catch(() => { });
 
     return {
       coinsAwarded,
@@ -973,7 +973,7 @@ class DataRepository {
     user.totalXP += amount;
     user.level = Math.floor(user.totalXP / 200) + 1;
     const leveledUp = user.level > oldLevel;
-    this.persistUserToDatabase(user).catch(() => {});
+    this.persistUserToDatabase(user).catch(() => { });
     return { totalXP: user.totalXP, level: user.level, leveledUp };
   }
 
@@ -2176,12 +2176,12 @@ class DataRepository {
       };
     }
     const stages = [
-      { stage: 1, title: 'Poydevor', cost: 10, xp: 40, description: 'Mustahkam beton poydevor' },
-      { stage: 2, title: 'Devorlar', cost: 15, xp: 60, description: 'G‘ishtli mustahkam devorlar' },
-      { stage: 3, title: 'Tom', cost: 20, xp: 80, description: 'Qizil shiferli chiroyli tom' },
-      { stage: 4, title: 'Deraza va eshiklar', cost: 25, xp: 100, description: 'Katta oynali derazalar va yog‘och eshik' },
-      { stage: 5, title: 'Bog‘ va hovli', cost: 30, xp: 120, description: 'Yashil maysazor va manzarali daraxtlar' },
-      { stage: 6, title: 'Gullar va bezaklar', cost: 40, xp: 280, description: 'Rang-barang gullar, chiroqlar va bayroqcha (+100 XP bonus!)' },
+      { stage: 1, title: 'Poydevor', cost: 50, xp: 50, description: 'Mustahkam beton poydevor va yer maydoni' },
+      { stage: 2, title: 'Uy devorlari', cost: 150, xp: 150, description: 'Zamonaviy arxitektura va g‘ishtli devorlar' },
+      { stage: 3, title: 'Uy tomi', cost: 100, xp: 100, description: 'Zamonaviy terassali tekis tom' },
+      { stage: 4, title: 'Derazalar', cost: 50, xp: 80, description: 'Panoramali shaffof oynali derazalar' },
+      { stage: 5, title: 'Eshiklar', cost: 90, xp: 100, description: 'Yog‘och kirish eshigi va garaj darvozasi' },
+      { stage: 6, title: 'Mashina', cost: 300, xp: 300, description: 'Hovlida zamonaviy sport avtomobili va landshaft' },
     ];
     return {
       currentStage: user.houseBuildingProgress.currentStage,
@@ -2219,12 +2219,12 @@ class DataRepository {
     }
 
     const stages = [
-      { stage: 1, title: 'Poydevor', cost: 10, xp: 40 },
-      { stage: 2, title: 'Devorlar', cost: 15, xp: 60 },
-      { stage: 3, title: 'Tom', cost: 20, xp: 80 },
-      { stage: 4, title: 'Deraza va eshiklar', cost: 25, xp: 100 },
-      { stage: 5, title: 'Bog‘ va hovli', cost: 30, xp: 120 },
-      { stage: 6, title: 'Gullar va bezaklar', cost: 40, xp: 280 },
+      { stage: 1, title: 'Poydevor', cost: 50, xp: 50 },
+      { stage: 2, title: 'Uy devorlari', cost: 150, xp: 150 },
+      { stage: 3, title: 'Uy tomi', cost: 100, xp: 100 },
+      { stage: 4, title: 'Derazalar', cost: 50, xp: 80 },
+      { stage: 5, title: 'Eshiklar', cost: 90, xp: 100 },
+      { stage: 6, title: 'Mashina', cost: 300, xp: 300 },
     ];
     const stageConfig = stages.find((s) => s.stage === stage);
     if (!stageConfig) {
@@ -2255,7 +2255,7 @@ class DataRepository {
       user.unlockedAchievements.push('ach_master_builder');
     }
 
-    this.persistUserToDatabase(user).catch(() => {});
+    this.persistUserToDatabase(user).catch(() => { });
 
     return {
       success: true,
