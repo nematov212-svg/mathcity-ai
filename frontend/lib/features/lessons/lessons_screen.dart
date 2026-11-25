@@ -8,7 +8,7 @@ import '../../core/network/api_client.dart';
 import '../../core/responsive/app_responsive_scaffold.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
-import '../../core/widgets/cosmic_background.dart';
+import '../../core/widgets/animated_math_background.dart';
 import '../../core/widgets/kids_shell_layout.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/xp_coin.dart';
@@ -320,10 +320,10 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
 
     final wideBody = Stack(
       children: [
-        const CosmicBackground(),
+        AnimatedMathBackground(isDark: isDark),
         Column(
           children: [
-            _buildGlassHeader(coins, xp),
+            _buildGlassHeader(coins, xp, colors, isDark),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: _fetchLessons,
@@ -345,21 +345,25 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     );
   }
 
-  Widget _buildGlassHeader(int coins, int xp) {
+  Widget _buildGlassHeader(int coins, int xp, AppThemeColors colors, bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF130A2A).withValues(alpha: 0.85),
+        color: isDark
+            ? const Color(0xFF130A2A).withValues(alpha: 0.85)
+            : colors.card.withValues(alpha: 0.90),
         border: Border(
           bottom: BorderSide(
-            color: const Color(0xFF8B5CF6).withValues(alpha: 0.25),
+            color: isDark
+                ? const Color(0xFF8B5CF6).withValues(alpha: 0.25)
+                : colors.border,
             width: 1,
           ),
         ),
       ),
       child: Row(
         children: [
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -369,17 +373,17 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 22,
-                    color: Colors.white,
+                    color: colors.ink,
                     letterSpacing: -0.3,
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
                   'Bugun nimani o‘rganamiz?',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: Colors.white60,
+                    color: colors.muted,
                   ),
                 ),
               ],
@@ -401,14 +405,14 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     int xp,
   ) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A061E),
+      backgroundColor: colors.bg,
       body: Stack(
         children: [
-          const CosmicBackground(),
+          AnimatedMathBackground(isDark: isDark),
           SafeArea(
             child: Column(
               children: [
-                _buildGlassHeader(coins, xp),
+                _buildGlassHeader(coins, xp, colors, isDark),
                 Expanded(
                   child: RefreshIndicator(
                     onRefresh: _fetchLessons,
@@ -493,15 +497,21 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                 // Modern Glass Search Bar
                 Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFF160E36).withValues(alpha: 0.85),
+                    color: isDark
+                        ? const Color(0xFF160E36).withValues(alpha: 0.85)
+                        : colors.card,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+                      color: isDark
+                          ? const Color(0xFF8B5CF6).withValues(alpha: 0.3)
+                          : colors.border,
                       width: 1.2,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
+                        color: isDark
+                            ? const Color(0xFF7C3AED).withValues(alpha: 0.1)
+                            : Colors.black.withValues(alpha: 0.04),
                         blurRadius: 10,
                         offset: const Offset(0, 3),
                       ),
@@ -514,22 +524,22 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                         _searchQuery = val.trim();
                       });
                     },
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: colors.ink,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                     decoration: InputDecoration(
                       hintText: 'Dars yoki mavzuni qidirish (masalan: kasr, tenglama)...',
-                      hintStyle: const TextStyle(
-                        color: Colors.white38,
+                      hintStyle: TextStyle(
+                        color: colors.muted,
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
                       prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFFA855F7), size: 22),
                       suffixIcon: _searchQuery.isNotEmpty
                           ? IconButton(
-                              icon: const Icon(Icons.clear_rounded, color: Colors.white60, size: 18),
+                              icon: Icon(Icons.clear_rounded, color: colors.muted, size: 18),
                               onPressed: () {
                                 _searchController.clear();
                                 setState(() => _searchQuery = '');
@@ -570,12 +580,18 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                                     colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
                                   )
                                 : null,
-                            color: isSelected ? null : const Color(0xFF160E36).withValues(alpha: 0.8),
+                            color: isSelected
+                                ? null
+                                : (isDark
+                                    ? const Color(0xFF160E36).withValues(alpha: 0.8)
+                                    : colors.card),
                             borderRadius: BorderRadius.circular(999),
                             border: Border.all(
                               color: isSelected
                                   ? const Color(0xFFA855F7)
-                                  : const Color(0xFF8B5CF6).withValues(alpha: 0.25),
+                                  : (isDark
+                                      ? const Color(0xFF8B5CF6).withValues(alpha: 0.25)
+                                      : colors.border),
                               width: 1.2,
                             ),
                             boxShadow: isSelected
@@ -594,7 +610,9 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
-                              color: isSelected ? Colors.white : Colors.white70,
+                              color: isSelected
+                                  ? Colors.white
+                                  : (isDark ? Colors.white70 : colors.muted),
                             ),
                           ),
                         ),
@@ -692,10 +710,10 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             categoryName,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w900,
-                              color: Colors.white,
+                              color: colors.ink,
                             ),
                           ),
                         ),
@@ -784,21 +802,25 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF160E36).withValues(alpha: 0.88),
+        color: isDark
+            ? const Color(0xFF160E36).withValues(alpha: 0.88)
+            : colors.card,
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
           color: isCompleted
               ? const Color(0xFF10B981).withValues(alpha: 0.45)
               : isLocked
-                  ? Colors.white10
-                  : catColor.withValues(alpha: 0.35),
+                  ? (isDark ? Colors.white10 : colors.border)
+                  : (isDark ? catColor.withValues(alpha: 0.35) : colors.border),
           width: 1.3,
         ),
         boxShadow: [
           BoxShadow(
             color: isCompleted
                 ? const Color(0xFF10B981).withValues(alpha: 0.08)
-                : const Color(0xFF7C3AED).withValues(alpha: 0.08),
+                : (isDark
+                    ? const Color(0xFF7C3AED).withValues(alpha: 0.08)
+                    : Colors.black.withValues(alpha: 0.04)),
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -967,10 +989,10 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                   title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
-                    color: Colors.white,
+                    color: colors.ink,
                     height: 1.3,
                   ),
                 ),
@@ -981,10 +1003,10 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                   description,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
-                    color: Colors.white60,
+                    color: colors.muted,
                     height: 1.4,
                   ),
                 ),

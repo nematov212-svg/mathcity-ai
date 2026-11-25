@@ -80,10 +80,35 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
         ? 0.0
         : -1.0 + (_activeTab / (_items.length - 1)) * 2.0;
 
-    // Brand purple semi-transparent background (rgba(25, 22, 60, 0.55))
+    // Adaptive frosted glass background
     final Color glassBgColor = isDark
-        ? const Color(0xFF19163C).withValues(alpha: 0.58)
-        : const Color(0xFF2A1B7A).withValues(alpha: 0.48);
+        ? const Color(0xFF19163C).withValues(alpha: 0.65)
+        : colors.cardGlass;
+
+    final Color glassBorderColor = isDark
+        ? Colors.white.withValues(alpha: 0.12)
+        : const Color(0xFF6C47FF).withValues(alpha: 0.16);
+
+    final Color pillBorderColor = isDark
+        ? const Color(0xFF8B6BFF).withValues(alpha: 0.38)
+        : const Color(0xFF6C47FF).withValues(alpha: 0.32);
+
+    final List<Color> pillGradient = isDark
+        ? [
+            const Color(0xFF6C47FF).withValues(alpha: 0.35),
+            const Color(0xFF5232D9).withValues(alpha: 0.22),
+          ]
+        : [
+            const Color(0xFFEDE9FE),
+            const Color(0xFFDDD6FE),
+          ];
+
+    final Color activeColor = isDark
+        ? const Color(0xFFFFFFFF)
+        : const Color(0xFF6C47FF);
+    final Color inactiveColor = isDark
+        ? const Color(0xFFA9A4CF).withValues(alpha: 0.72)
+        : const Color(0xFF6B6785);
 
     // Spring curve matching cubic-bezier(0.34, 1.35, 0.64, 1)
     const springCurve = Cubic(0.34, 1.35, 0.64, 1.0);
@@ -136,7 +161,7 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
                 color: glassBgColor,
                 borderRadius: BorderRadius.circular(26),
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: isDark ? 0.12 : 0.20),
+                  color: glassBorderColor,
                   width: 1.0,
                 ),
               ),
@@ -157,21 +182,18 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
                         margin: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [
-                              const Color(0xFF6C47FF).withValues(alpha: 0.35),
-                              const Color(0xFF5232D9).withValues(alpha: 0.22),
-                            ],
+                            colors: pillGradient,
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: const Color(0xFF8B6BFF).withValues(alpha: 0.38),
+                            color: pillBorderColor,
                             width: 1.0,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF6C47FF).withValues(alpha: 0.24),
+                              color: const Color(0xFF6C47FF).withValues(alpha: isDark ? 0.24 : 0.12),
                               blurRadius: 12,
                               offset: const Offset(0, 2),
                             ),
@@ -187,14 +209,6 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
                       final item = _items[index];
                       final isSelected = index == _activeTab;
                       final isPressed = _pressedIndex == index;
-
-                      // Colors
-                      final activeColor = isDark
-                          ? const Color(0xFFFFFFFF)
-                          : const Color(0xFFFFFFFF);
-                      final inactiveColor = isDark
-                          ? const Color(0xFFA9A4CF).withValues(alpha: 0.72)
-                          : colors.inactive.withValues(alpha: 0.75);
 
                       return Expanded(
                         child: GestureDetector(
@@ -263,9 +277,9 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
                                     margin: const EdgeInsets.only(top: 2),
                                     width: 4,
                                     height: 4,
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Color(0xFF8B6BFF),
+                                      color: activeColor,
                                     ),
                                   ),
                                 ),

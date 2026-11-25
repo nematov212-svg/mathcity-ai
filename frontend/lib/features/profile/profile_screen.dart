@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/responsive/app_responsive_scaffold.dart';
 import '../../core/responsive/responsive.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/animated_math_background.dart';
 import '../../core/widgets/kids_shell_layout.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/xp_coin.dart';
@@ -602,6 +603,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
         bottom: false,
         child: Stack(
           children: [
+            Positioned.fill(
+              child: AnimatedMathBackground(isDark: isDark),
+            ),
             // Scrollable Content
             Positioned.fill(
               child: RefreshIndicator(

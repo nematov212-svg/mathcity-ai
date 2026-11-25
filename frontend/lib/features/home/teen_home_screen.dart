@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/widgets/announcement_popup.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/xp_bar.dart';
@@ -35,8 +36,11 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
     final level = student?.level ?? 1;
     final name = (student != null && student.displayName.trim().isNotEmpty) ? student.displayName.trim() : 'O‘quvchi';
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = AppThemeColors.of(context);
+
     return Scaffold(
-      backgroundColor: AppColors.teenBackground, // Deep space navy #101526 (Figma 2:70)
+      backgroundColor: isDark ? AppColors.teenBackground : colors.bg,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),

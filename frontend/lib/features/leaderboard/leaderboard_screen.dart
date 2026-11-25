@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/responsive/app_responsive_scaffold.dart';
+import '../../core/widgets/animated_math_background.dart';
 import '../../core/widgets/coin_icon.dart';
 import '../../core/widgets/xp_coin.dart';
 import '../../core/widgets/kids_shell_layout.dart';
@@ -271,6 +272,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   Widget _buildLeaderboardStack(AppThemeColors colors, bool isDark, {required bool isPhone}) {
     return Stack(
       children: [
+        Positioned.fill(
+          child: AnimatedMathBackground(isDark: isDark, isLeaderboard: true),
+        ),
         Column(
               children: [
                 // Top Header Bar

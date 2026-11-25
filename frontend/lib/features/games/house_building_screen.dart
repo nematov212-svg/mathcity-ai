@@ -405,8 +405,10 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     final coins = student?.coinBalance ?? 0;
     final xp = student?.totalXP ?? 0;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF090518),
+      backgroundColor: isDark ? const Color(0xFF090518) : const Color(0xFFF6F5FD),
       body: Stack(
         children: [
           const CosmicBackground(),

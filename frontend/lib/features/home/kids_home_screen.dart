@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/network/api_client.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/announcement_popup.dart';
+import '../../core/widgets/animated_math_background.dart';
 import '../../core/widgets/coin_badge.dart';
-import '../../core/widgets/cosmic_background.dart';
 import '../../core/widgets/kids_shell_layout.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/user_avatar.dart';
@@ -135,11 +135,13 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
         ? student.displayName.trim()
         : 'O‘quvchi';
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0A061E),
+      backgroundColor: colors.bg,
       body: Stack(
         children: [
-          const CosmicBackground(),
+          AnimatedMathBackground(isDark: isDark),
           SafeArea(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -162,15 +164,21 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF160E36).withValues(alpha: 0.85),
+                                color: isDark
+                                    ? const Color(0xFF160E36).withValues(alpha: 0.85)
+                                    : colors.card,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
-                                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.35),
+                                  color: isDark
+                                      ? const Color(0xFF8B5CF6).withValues(alpha: 0.35)
+                                      : colors.border,
                                   width: 1.2,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFF7C3AED).withValues(alpha: 0.15),
+                                    color: isDark
+                                        ? const Color(0xFF7C3AED).withValues(alpha: 0.15)
+                                        : Colors.black.withValues(alpha: 0.04),
                                     blurRadius: 8,
                                     offset: const Offset(0, 2),
                                   ),
@@ -183,11 +191,11 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                     student?.username != null && student!.username!.trim().isNotEmpty
                                         ? (student.username!.startsWith('@') ? student.username! : '@${student.username}')
                                         : (name.startsWith('@') ? name : '@$name'),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontFamily: 'Nunito',
                                       fontSize: 13,
                                       fontWeight: FontWeight.w800,
-                                      color: Colors.white,
+                                      color: colors.ink,
                                     ),
                                   ),
                                   if (student?.isPro == true) ...[
@@ -496,15 +504,21 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF160E36).withValues(alpha: 0.85),
+                              color: isDark
+                                  ? const Color(0xFF160E36).withValues(alpha: 0.85)
+                                  : colors.card,
                               borderRadius: BorderRadius.circular(24),
                               border: Border.all(
-                                color: const Color(0xFFFFD66B).withValues(alpha: 0.4),
+                                color: isDark
+                                    ? const Color(0xFFFFD66B).withValues(alpha: 0.4)
+                                    : colors.border,
                                 width: 1.3,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFFF59E0B).withValues(alpha: 0.08),
+                                  color: isDark
+                                      ? const Color(0xFFF59E0B).withValues(alpha: 0.08)
+                                      : Colors.black.withValues(alpha: 0.04),
                                   blurRadius: 14,
                                   offset: const Offset(0, 4),
                                 ),
@@ -540,12 +554,12 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                   ),
                                 ),
                                 const SizedBox(height: 12),
-                                const Text(
+                                Text(
                                   'Reyting',
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w900,
-                                    color: Colors.white,
+                                    color: colors.ink,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -574,15 +588,21 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF160E36).withValues(alpha: 0.85),
+                              color: isDark
+                                  ? const Color(0xFF160E36).withValues(alpha: 0.85)
+                                  : colors.card,
                               borderRadius: BorderRadius.circular(24),
                               border: Border.all(
-                                color: const Color(0xFFA855F7).withValues(alpha: 0.4),
+                                color: isDark
+                                    ? const Color(0xFFA855F7).withValues(alpha: 0.4)
+                                    : colors.border,
                                 width: 1.3,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFF7C3AED).withValues(alpha: 0.12),
+                                  color: isDark
+                                      ? const Color(0xFF7C3AED).withValues(alpha: 0.12)
+                                      : Colors.black.withValues(alpha: 0.04),
                                   blurRadius: 14,
                                   offset: const Offset(0, 4),
                                 ),
@@ -618,21 +638,21 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                   ),
                                 ),
                                 const SizedBox(height: 12),
-                                const Text(
+                                Text(
                                   'Uy qurish',
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w900,
-                                    color: Colors.white,
+                                    color: colors.ink,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   _houseStage >= 6 ? 'Uy to‘liq tayyor! 🏆' : '$_houseStage/6 bosqich',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w800,
-                                    color: Color(0xFFC084FC),
+                                    color: isDark ? const Color(0xFFC084FC) : colors.primary,
                                   ),
                                 ),
                               ],
@@ -653,15 +673,21 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF160E36).withValues(alpha: 0.85),
+                        color: isDark
+                            ? const Color(0xFF160E36).withValues(alpha: 0.85)
+                            : colors.card,
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(
-                          color: const Color(0xFFA855F7).withValues(alpha: 0.35),
+                          color: isDark
+                              ? const Color(0xFFA855F7).withValues(alpha: 0.35)
+                              : colors.border,
                           width: 1.3,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
+                            color: isDark
+                                ? const Color(0xFF7C3AED).withValues(alpha: 0.1)
+                                : Colors.black.withValues(alpha: 0.04),
                             blurRadius: 14,
                             offset: const Offset(0, 4),
                           ),
@@ -701,12 +727,12 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                               children: [
                                 Row(
                                   children: [
-                                    const Text(
+                                    Text(
                                       'AI Ustoz',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w900,
-                                        color: Colors.white,
+                                        color: colors.ink,
                                       ),
                                     ),
                                     const SizedBox(width: 6),
@@ -721,14 +747,14 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                   ],
                                 ),
                                 const SizedBox(height: 2),
-                                const Text(
+                                Text(
                                   'Matematika ustozing • Har qanday misolni so‘rang',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
-                                    color: Colors.white60,
+                                    color: colors.muted,
                                   ),
                                 ),
                               ],
@@ -754,15 +780,21 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF160E36).withValues(alpha: 0.85),
+                        color: isDark
+                            ? const Color(0xFF160E36).withValues(alpha: 0.85)
+                            : colors.card,
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(
-                          color: const Color(0xFF8B5CF6).withValues(alpha: 0.25),
+                          color: isDark
+                              ? const Color(0xFF8B5CF6).withValues(alpha: 0.25)
+                              : colors.border,
                           width: 1.2,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF7C3AED).withValues(alpha: 0.08),
+                            color: isDark
+                                ? const Color(0xFF7C3AED).withValues(alpha: 0.08)
+                                : Colors.black.withValues(alpha: 0.04),
                             blurRadius: 14,
                             offset: const Offset(0, 4),
                           ),
@@ -774,15 +806,15 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: Row(
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.checklist_rounded,
                                       color: Color(0xFF34D399),
                                       size: 22,
                                     ),
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
                                         'Bugungi vazifalar',
@@ -791,7 +823,7 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                         style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w900,
-                                          color: Colors.white,
+                                          color: colors.ink,
                                         ),
                                       ),
                                     ),
@@ -819,10 +851,10 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                           const SizedBox(height: 8),
                           Text(
                             _taskProgressText,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: Colors.white60,
+                              color: colors.muted,
                             ),
                           ),
                         ],
@@ -847,19 +879,26 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
     final now = DateTime.now();
     final todayWeekday = now.weekday; // 1 = Monday, 7 = Sunday
     final dayNames = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'];
+    final isDark = colors.isDark;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFF160E36).withValues(alpha: 0.85),
+        color: isDark
+            ? const Color(0xFF160E36).withValues(alpha: 0.85)
+            : colors.card,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+          color: isDark
+              ? const Color(0xFF8B5CF6).withValues(alpha: 0.3)
+              : colors.border,
           width: 1.2,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
+            color: isDark
+                ? const Color(0xFF7C3AED).withValues(alpha: 0.1)
+                : Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -882,11 +921,11 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                         '$streak kunlik seriya',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
-                          color: Colors.white,
+                          color: colors.ink,
                         ),
                       ),
                     ),
@@ -894,13 +933,13 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                 ),
               ),
               const SizedBox(width: 4),
-              const Text(
+              Text(
                 'Har kuni',
                 style: TextStyle(
                   fontFamily: 'Nunito',
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white54,
+                  color: colors.muted,
                 ),
               ),
             ],
@@ -923,7 +962,7 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                         fontFamily: 'Nunito',
                         fontSize: 9,
                         fontWeight: isToday ? FontWeight.w900 : FontWeight.w700,
-                        color: isToday ? const Color(0xFFFBBF24) : Colors.white60,
+                        color: isToday ? const Color(0xFFFBBF24) : colors.muted,
                       ),
                     ),
                     const SizedBox(height: 3),
@@ -945,10 +984,21 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                     end: Alignment.bottomRight,
                                   )
                                 : null),
-                        color: (isToday || isActive) ? null : Colors.white.withValues(alpha: 0.08),
+                        color: (isToday || isActive)
+                            ? null
+                            : (isDark
+                                ? Colors.white.withValues(alpha: 0.08)
+                                : colors.field),
                         border: isToday
                             ? Border.all(color: Colors.amber, width: 1.2)
-                            : null,
+                            : (isActive
+                                ? null
+                                : Border.all(
+                                    color: isDark
+                                        ? Colors.white12
+                                        : colors.border,
+                                    width: 1.0,
+                                  )),
                         boxShadow: isToday
                             ? [
                                 BoxShadow(
@@ -981,13 +1031,29 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
     final xpInCurrentLevel = xp % 100;
     final remainingXP = 100 - xpInCurrentLevel;
     final progress = (xpInCurrentLevel / 100.0).clamp(0.0, 1.0);
+    final isDark = colors.isDark;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFF160E36).withValues(alpha: 0.85),
+        color: isDark
+            ? const Color(0xFF160E36).withValues(alpha: 0.85)
+            : colors.card,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF8B5CF6).withValues(alpha: 0.25)),
+        border: Border.all(
+          color: isDark
+              ? const Color(0xFF8B5CF6).withValues(alpha: 0.25)
+              : colors.border,
+        ),
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
       child: Row(
         children: [
@@ -1005,22 +1071,22 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                         'Keyingi darajaga $remainingXP XP qoldi',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
-                          color: Color(0xFFE9D5FF),
+                          color: isDark ? const Color(0xFFE9D5FF) : colors.ink,
                         ),
                       ),
                     ),
                     const SizedBox(width: 6),
                     Text(
                       '$xpInCurrentLevel / 100 XP',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Nunito',
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFFC084FC),
+                        color: isDark ? const Color(0xFFC084FC) : colors.primary,
                       ),
                     ),
                   ],

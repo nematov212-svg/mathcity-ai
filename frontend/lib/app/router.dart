@@ -33,6 +33,7 @@ import '../features/analytics/analytics_screen.dart';
 import '../features/analytics/teen_analytics_screen.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/settings/settings_screen.dart';
+import '../features/settings/certificate_screen.dart';
 import '../features/settings/mathcity_pro_screen.dart';
 import '../features/payment/add_payment_screen.dart';
 import '../features/leaderboard/leaderboard_screen.dart';
@@ -203,6 +204,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/settings',
       builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: '/settings/certificate',
+      builder: (context, state) => const CertificateScreen(),
     ),
     GoRoute(
       path: '/tariflar',

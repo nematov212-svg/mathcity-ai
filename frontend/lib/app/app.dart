@@ -34,10 +34,14 @@ class MathCityApp extends ConsumerWidget {
 
         return MediaQuery(
           data: mediaQuery.copyWith(viewInsets: safeInsets),
-          child: Stack(
-            children: [
-              content,
-              ValueListenableBuilder<bool>(
+          child: AnimatedTheme(
+            data: Theme.of(context),
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            child: Stack(
+              children: [
+                content,
+                ValueListenableBuilder<bool>(
                 valueListenable: ApiClient().isServerWakingUp,
                 builder: (context, wakingUp, _) {
                   if (!wakingUp) return const SizedBox.shrink();
@@ -89,7 +93,8 @@ class MathCityApp extends ConsumerWidget {
               ),
             ],
           ),
-        );
+        ),
+      );
       },
     );
   }

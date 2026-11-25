@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 /// - Top-left specular glint/highlight
 /// - Optional soft violet outer glow
 /// - Smooth micro-animations (optional floating, bounce, or sparkle)
+
 class XpCoin extends StatefulWidget {
   final double size;
   final bool showGlow;

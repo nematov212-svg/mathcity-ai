@@ -19,6 +19,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import '../../core/network/api_client.dart';
 import '../../core/responsive/app_responsive_scaffold.dart';
 import '../../core/widgets/kids_shell_layout.dart';
+import '../../core/widgets/animated_math_background.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/providers/student_provider.dart';
@@ -1264,7 +1265,6 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
       builder: (context, constraints) {
         final screenWidth = constraints.maxWidth;
         final isDesktop = screenWidth >= 1024;
-        final disableAnim = MediaQuery.of(context).disableAnimations;
 
         Widget buildBodyContent({required bool wideMode}) {
           return Row(
@@ -1306,23 +1306,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
 
         final stackWithBackground = Stack(
           children: [
-            // Full-screen Cosmic Star & Floating 3D Coin Background
             Positioned.fill(
-              child: IgnorePointer(
-                child: RepaintBoundary(
-                  child: AnimatedBuilder(
-                    animation: _cosmicController,
-                    builder: (context, _) {
-                      return CustomPaint(
-                        painter: CosmicBackgroundPainter(
-                          progress: disableAnim ? 0.0 : _cosmicController.value,
-                          hasMessages: _messages.isNotEmpty,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
+              child: AnimatedMathBackground(isDark: isDark),
             ),
             mainForeground,
           ],
@@ -1330,7 +1315,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
 
         if (screenWidth < 600) {
           return Scaffold(
-            backgroundColor: const Color(0xFF0F0A2A),
+            backgroundColor: colors.bg,
             bottomNavigationBar: (KidsNavShellScope.of(context) || MediaQuery.of(context).viewInsets.bottom > 0)
                 ? null
                 : const MathCityBottomNav(currentIndex: 2),
@@ -1341,7 +1326,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         return AppResponsiveScaffold(
           currentNavIndex: 2,
           title: 'Ziyo — AI Ustoz',
-          backgroundColor: const Color(0xFF0F0A2A),
+          backgroundColor: colors.bg,
           phoneBody: const SizedBox.shrink(),
           tabletBody: stackWithBackground,
           desktopBody: stackWithBackground,
@@ -1351,25 +1336,31 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
   }
 
   Widget _buildGlassHeader(bool isDesktop, AppThemeColors colors) {
+    final isDark = colors.isDark;
     return Container(
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-            Color(0xDD0D0726), // Translucent deep indigo
-            Color(0xB81A0D3D), // Translucent royal violet
-          ],
+        gradient: LinearGradient(
+          colors: isDark
+              ? const [
+                  Color(0xDD0D0726), // Translucent deep indigo
+                  Color(0xB81A0D3D), // Translucent royal violet
+                ]
+              : [
+                  Color(0xEEFFFFFF),
+                  Color(0xEEF8F7FF),
+                ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         border: Border(
           bottom: BorderSide(
-            color: Colors.white.withOpacity(0.12),
+            color: isDark ? Colors.white.withOpacity(0.12) : colors.border,
             width: 1.0,
           ),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.35),
+            color: isDark ? Colors.black.withOpacity(0.35) : Colors.black.withOpacity(0.04),
             blurRadius: 18,
             offset: const Offset(0, 4),
           ),
@@ -1394,9 +1385,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                         context.go('/kids/home');
                       }
                     },
-                    child: const Icon(
+                    child: Icon(
                       Icons.arrow_back_ios_new_rounded,
-                      color: Colors.white,
+                      color: isDark ? Colors.white : colors.ink,
                       size: 18,
                     ),
                   ),
@@ -1434,14 +1425,14 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
+                        Text(
                           'AI Ustoz',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontFamily: 'Nunito',
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
-                            color: Colors.white,
+                            color: colors.ink,
                             letterSpacing: -0.2,
                           ),
                         ),
@@ -1465,7 +1456,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                               ),
                             ),
                             const SizedBox(width: 5),
-                            const Flexible(
+                            Flexible(
                               child: Text(
                                 'Matematika ustozing',
                                 overflow: TextOverflow.ellipsis,
@@ -1474,7 +1465,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                                   fontFamily: 'Nunito',
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFFC7D2FE),
+                                  color: colors.muted,
                                 ),
                               ),
                             ),
@@ -1788,12 +1779,12 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         constraints: const BoxConstraints(maxWidth: 620),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: const Color(0xE017103B),
+          color: isDark ? const Color(0xE017103B) : colors.card,
           borderRadius: BorderRadius.circular(24).copyWith(topLeft: const Radius.circular(4)),
-          border: Border.all(color: Colors.white.withOpacity(0.12)),
+          border: Border.all(color: isDark ? Colors.white.withOpacity(0.12) : colors.border),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.35),
+              color: isDark ? Colors.black.withOpacity(0.35) : Colors.black.withOpacity(0.04),
               blurRadius: 18,
               offset: const Offset(0, 4),
             ),
@@ -1856,11 +1847,11 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
             // Text message
             Text(
               msg.text,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Nunito',
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
-                color: Colors.white,
+                color: isDark ? Colors.white : colors.ink,
                 height: 1.45,
               ),
             ),
@@ -1872,16 +1863,16 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.06),
+                  color: isDark ? Colors.white.withOpacity(0.06) : colors.field,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: Colors.white.withOpacity(0.12)),
+                  border: Border.all(color: isDark ? Colors.white.withOpacity(0.12) : colors.border),
                 ),
                 child: Center(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Math.tex(
                       msg.formulaLatex!,
-                      textStyle: const TextStyle(fontSize: 18, color: Colors.white),
+                      textStyle: TextStyle(fontSize: 18, color: colors.ink),
                     ),
                   ),
                 ),
@@ -2230,11 +2221,11 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: const Color(0xF00D0726),
-        border: Border(top: BorderSide(color: Colors.white.withOpacity(0.12), width: 1.0)),
+        color: isDark ? const Color(0xF00D0726) : colors.card.withValues(alpha: 0.95),
+        border: Border(top: BorderSide(color: isDark ? Colors.white.withOpacity(0.12) : colors.border, width: 1.0)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.35),
+            color: isDark ? Colors.black.withOpacity(0.35) : Colors.black.withOpacity(0.04),
             blurRadius: 16,
             offset: const Offset(0, -4),
           ),
@@ -2267,17 +2258,17 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.08),
+                  color: isDark ? Colors.white.withOpacity(0.08) : colors.field,
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white.withOpacity(0.14)),
+                  border: Border.all(color: isDark ? Colors.white.withOpacity(0.14) : colors.border),
                 ),
                 child: TextField(
                   controller: _textController,
                   enabled: !_isLoading && !_isSending,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 14,
-                    color: Colors.white,
+                    color: colors.ink,
                     fontWeight: FontWeight.w500,
                   ),
                   onSubmitted: (_) {
@@ -2290,7 +2281,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                     hintStyle: TextStyle(
                       fontFamily: 'Nunito',
                       fontSize: 13,
-                      color: Colors.white.withOpacity(0.40),
+                      color: colors.muted,
                     ),
                     border: InputBorder.none,
                     isDense: true,
@@ -2387,6 +2378,8 @@ class _GlassActionButtonState extends State<_GlassActionButton> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = AppThemeColors.of(context);
     Widget content = GestureDetector(
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) => setState(() => _pressed = false),
@@ -2400,12 +2393,15 @@ class _GlassActionButtonState extends State<_GlassActionButton> {
           width: 38,
           height: 38,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.08),
+            color: isDark ? Colors.white.withOpacity(0.08) : colors.field,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white.withOpacity(0.14), width: 1),
+            border: Border.all(
+              color: isDark ? Colors.white.withOpacity(0.14) : colors.border,
+              width: 1,
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.15),
+                color: Colors.black.withOpacity(isDark ? 0.15 : 0.04),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
