@@ -478,10 +478,10 @@ authRouter.post('/register', authRateLimiter, (req: Request, res: Response) => {
     }
   } else {
     // Validate username format
-    if (!/^[a-zA-Z0-9_]{3,30}$/.test(identifier)) {
+    if (!/^[a-zA-Z0-9_.-]{3,30}$/.test(identifier)) {
       return res.status(400).json({
         success: false,
-        error: 'Login faqat lotin harflari, raqamlar va pastki chiziqdan iborat bo‘lishi kerak (3-30 belgi).',
+        error: 'Login faqat lotin harflari, raqamlar, pastki chiziq va nuqtadan iborat bo‘lishi kerak (3-30 belgi).',
       });
     }
     username = identifier;

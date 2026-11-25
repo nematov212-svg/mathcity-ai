@@ -381,24 +381,10 @@ class AuthService {
         );
       }
     } catch (e) {
-      if (e is DioException) {
-        if (e.response?.statusCode == 401) {
-          final serverMsg = e.response?.data is Map ? e.response?.data['error'] : null;
-          return AuthResult(
-            success: false,
-            errorMessage: serverMsg ?? 'Login yoki parol noto‘g‘ri.',
-          );
-        }
-        if (e.response?.data != null && e.response?.data['error'] != null) {
-          return AuthResult(
-            success: false,
-            errorMessage: e.response!.data['error'].toString(),
-          );
-        }
-      }
-      return const AuthResult(
+      final serverMsg = _parseDioErrorMessage(e);
+      return AuthResult(
         success: false,
-        errorMessage: 'Login yoki parol noto‘g‘ri.',
+        errorMessage: serverMsg ?? 'Login yoki parol noto‘g‘ri.',
       );
     }
   }
@@ -500,10 +486,11 @@ class AuthService {
         );
       }
     } catch (e) {
-      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
+      final serverMsg = _parseDioErrorMessage(e);
+      if (serverMsg != null) {
         return AuthResult(
           success: false,
-          errorMessage: e.response!.data['error'].toString(),
+          errorMessage: serverMsg,
         );
       }
       return const AuthResult(
@@ -612,15 +599,10 @@ class AuthService {
         'debugCode': res.data['debugCode'],
       };
     } catch (e) {
-      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
-        return {
-          'success': false,
-          'message': e.response!.data['error'].toString(),
-        };
-      }
+      final serverMsg = _parseDioErrorMessage(e);
       return {
         'success': false,
-        'message': 'Server bilan aloqa uzildi. Qayta urinib ko‘ring.',
+        'message': serverMsg ?? 'Server bilan aloqa uzildi. Qayta urinib ko‘ring.',
       };
     }
   }
@@ -642,15 +624,10 @@ class AuthService {
         'message': res.data['message'] ?? 'Parol yangilandi.',
       };
     } catch (e) {
-      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
-        return {
-          'success': false,
-          'message': e.response!.data['error'].toString(),
-        };
-      }
+      final serverMsg = _parseDioErrorMessage(e);
       return {
         'success': false,
-        'message': 'Parolni yangilashda xatolik yuz berdi.',
+        'message': serverMsg ?? 'Parolni yangilashda xatolik yuz berdi.',
       };
     }
   }
@@ -825,17 +802,54 @@ class AuthService {
         );
       }
     } catch (e) {
-      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
-        return AuthResult(
-          success: false,
-          errorMessage: e.response!.data['error'].toString(),
-        );
-      }
-      return const AuthResult(
+      final serverMsg = _parseDioErrorMessage(e);
+      return AuthResult(
         success: false,
-        errorMessage: 'Profilni saqlashda server bilan aloqa uzildi.',
+        errorMessage: serverMsg ?? 'Profilni saqlashda server bilan aloqa uzildi.',
       );
     }
+  }
+
+  /// Helper to safely extract error message from DioException across web & mobile
+  static String? _parseDioErrorMessage(dynamic e) {
+    if (e is! DioException) return null;
+    final res = e.response;
+    if (res != null && res.data != null) {
+      final data = res.data;
+      if (data is Map) {
+        if (data['error'] != null && data['error'].toString().isNotEmpty) {
+          return data['error'].toString();
+        }
+        if (data['message'] != null && data['message'].toString().isNotEmpty) {
+          return data['message'].toString();
+        }
+      } else if (data is String) {
+        try {
+          final decoded = jsonDecode(data);
+          if (decoded is Map) {
+            if (decoded['error'] != null && decoded['error'].toString().isNotEmpty) {
+              return decoded['error'].toString();
+            }
+            if (decoded['message'] != null && decoded['message'].toString().isNotEmpty) {
+              return decoded['message'].toString();
+            }
+          }
+        } catch (_) {
+          if (data.isNotEmpty && data.length < 150 && !data.contains('<html')) {
+            return data;
+          }
+        }
+      }
+    }
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.sendTimeout ||
+        e.type == DioExceptionType.receiveTimeout) {
+      return 'Server javob berish vaqti tugadi. Internet aloqasini tekshiring.';
+    }
+    if (e.type == DioExceptionType.connectionError) {
+      return 'Server bilan aloqa o‘rnatib bo‘lmadi. Internet aloqasini tekshiring.';
+    }
+    return null;
   }
 
   /// Backwards-compatibility wrapper for completeOnboarding

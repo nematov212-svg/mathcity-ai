@@ -133,14 +133,47 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
       return;
     }
 
+    if (name.length < 2) {
+      setState(() => _errorMessage = 'Ism kamida 2 ta harfdan iborat bo‘lishi kerak.');
+      _triggerShake();
+      return;
+    }
+
     if (loginOrEmail.isEmpty) {
       setState(() => _errorMessage = 'Login yoki emailingizni kiriting.');
       _triggerShake();
       return;
     }
 
+    if (loginOrEmail.contains('@')) {
+      final emailRegex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+      if (!emailRegex.hasMatch(loginOrEmail)) {
+        setState(() => _errorMessage = 'Email manzili noto‘g‘ri kiritildi (masalan: foydalanuvchi@mail.uz).');
+        _triggerShake();
+        return;
+      }
+    } else {
+      if (loginOrEmail.length < 3) {
+        setState(() => _errorMessage = 'Login kamida 3 ta belgidan iborat bo‘lishi kerak.');
+        _triggerShake();
+        return;
+      }
+      final loginRegex = RegExp(r'^[a-zA-Z0-9_.-]{3,30}$');
+      if (!loginRegex.hasMatch(loginOrEmail)) {
+        setState(() => _errorMessage = 'Login faqat lotin harflari, raqamlar, pastki chiziq va nuqtadan iborat bo‘lsin (3-30 belgi).');
+        _triggerShake();
+        return;
+      }
+    }
+
     if (password.isEmpty) {
       setState(() => _errorMessage = 'Yangi parol kiriting.');
+      _triggerShake();
+      return;
+    }
+
+    if (password.length < 8) {
+      setState(() => _errorMessage = 'Parol kamida 8 ta belgidan iborat bo‘lsin.');
       _triggerShake();
       return;
     }
