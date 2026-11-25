@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
+import '../../core/widgets/xp_coin.dart';
 import '../../core/services/sound_service.dart';
 import '../../shared/models/lesson_model.dart';
 import '../../shared/repositories/exercise_repository.dart';
@@ -1085,18 +1086,25 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
                             ],
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                             decoration: BoxDecoration(
                               color: const Color(0xFFEDE8FF),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Text(
-                              '+$_sessionXpEarned XP',
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xFF6C55E0),
-                              ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const XpCoin(size: 16, showGlow: false),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '+$_sessionXpEarned XP',
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w900,
+                                    color: Color(0xFF6C55E0),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],

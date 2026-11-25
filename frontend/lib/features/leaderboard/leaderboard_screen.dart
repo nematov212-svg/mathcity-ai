@@ -10,6 +10,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/responsive/app_responsive_scaffold.dart';
 import '../../core/widgets/coin_icon.dart';
+import '../../core/widgets/xp_coin.dart';
 import '../../core/widgets/kids_shell_layout.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/user_avatar.dart';
@@ -597,13 +598,20 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                                     color: Colors.white.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Text(
-                                    '$realXP XP',
-                                    style: const TextStyle(
-                                      fontSize: 11.5,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.white,
-                                    ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const XpCoin(size: 13, showGlow: false),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '$realXP XP',
+                                        style: const TextStyle(
+                                          fontSize: 11.5,
+                                          fontWeight: FontWeight.w800,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -834,13 +842,20 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                       : (isDark ? const Color(0xFF281F5E) : const Color(0xFFEDE8FF)),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Text(
-                  '${user.totalXP} XP',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                    color: user.rank == 1 ? const Color(0xFF78350F) : const Color(0xFF6C55E0),
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const XpCoin(size: 13, showGlow: false),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${user.totalXP} XP',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: user.rank == 1 ? const Color(0xFF78350F) : const Color(0xFF6C55E0),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

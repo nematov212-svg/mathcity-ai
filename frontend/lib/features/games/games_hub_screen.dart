@@ -69,19 +69,19 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
     if (_games.isEmpty) {
       return [
         {
-          'key': 'kosmik_hisob',
-          'title': 'Kosmik hisob',
-          'description': 'Fazoviy kema bilan arifmetik savollarga tezkor javob bering va tangalar yuting!',
-          'difficulty': 'Oson - O‘rta',
-          'duration': '3 daqiqa',
-          'rewardBadge': '+30 oltin tanga',
-          'rewardCoins': 12,
-          'rewardXP': 40,
+          'key': 'uy_qurish',
+          'title': 'Uy qurish',
+          'description': 'Misollar yechib tanga to‘plang va orzuingizdagi uyni 6 bosqichda quring!',
+          'difficulty': 'Oson - Maroqli',
+          'duration': 'Cheksiz',
+          'rewardBadge': '+680 XP',
+          'rewardCoins': 0,
+          'rewardXP': 680,
           'highScore': 0,
           'timesPlayed': 0,
-          'route': '/kids/games/space-math',
-          'icon': Icons.rocket_launch_rounded,
-          'gradient': const [Color(0xFF6C47FF), Color(0xFF8B6BFF)],
+          'route': '/kids/house-building',
+          'icon': Icons.home_work_rounded,
+          'gradient': const [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
         },
         {
           'key': 'kasrlar_jangi',
@@ -427,7 +427,7 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
     final key = game['key'] ?? '';
     final route = key == 'kasrlar_jangi'
         ? '/kids/games/fraction-battle'
-        : (key == 'mathcity_drift' ? '/kids/games/drift-car' : '/kids/games/space-math');
+        : (key == 'mathcity_drift' ? '/kids/games/drift-car' : '/kids/house-building');
     final isLocked = game['isLocked'] == true;
 
     return Container(

@@ -10,6 +10,7 @@ import '../../core/responsive/responsive.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/kids_shell_layout.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
+import '../../core/widgets/xp_coin.dart';
 import '../../shared/models/student_model.dart';
 import '../../shared/providers/student_provider.dart';
 
@@ -939,7 +940,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                             const SizedBox(width: 10),
                             Expanded(
                               child: _buildStatCard(
-                                icon: Icons.bolt_rounded,
+                                customIcon: const XpCoin(size: 22, showGlow: false),
                                 iconBg: const Color(0xFFEDE8FF),
                                 iconColor: const Color(0xFF6C47FF),
                                 value: '$xp',
@@ -1687,7 +1688,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
             const SizedBox(width: 10),
             Expanded(
               child: _buildStatCard(
-                icon: Icons.bolt_rounded,
+                customIcon: const XpCoin(size: 22, showGlow: false),
                 iconBg: const Color(0xFFEDE8FF),
                 iconColor: const Color(0xFF6C47FF),
                 value: '$xp',
@@ -2348,7 +2349,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   }
 
   Widget _buildStatCard({
-    required IconData icon,
+    IconData? icon,
+    Widget? customIcon,
     required Color iconBg,
     required Color iconColor,
     required String value,
@@ -2371,7 +2373,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
               color: iconBg,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: iconColor, size: 20),
+            child: customIcon != null
+                ? Center(child: customIcon)
+                : Icon(icon, color: iconColor, size: 20),
           ),
           const SizedBox(height: 10),
           Text(

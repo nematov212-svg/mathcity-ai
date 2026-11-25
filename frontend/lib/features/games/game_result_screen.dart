@@ -207,7 +207,7 @@ class GameResultScreen extends ConsumerWidget {
                         if (isFraction) {
                           context.pushReplacement('/kids/games/fraction-battle');
                         } else {
-                          context.pushReplacement('/kids/games/space-math');
+                          context.pushReplacement('/kids/house-building');
                         }
                       },
                       style: ElevatedButton.styleFrom(

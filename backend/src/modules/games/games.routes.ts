@@ -21,16 +21,16 @@ gamesRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response) 
 
   const games = [
     {
-      key: 'kosmik_hisob',
-      title: 'Kosmik hisob',
-      description: 'Fazoviy kema bilan arifmetik savollarga tezkor javob bering va tangalar yuting!',
-      category: 'speed_math',
-      iconName: 'rocket_launch',
-      difficulty: 'Oson - O‘rta',
-      rewardCoins: 12,
-      rewardXP: 40,
-      highScore: getHighScore('kosmik_hisob'),
-      timesPlayed: getTimesPlayed('kosmik_hisob'),
+      key: 'uy_qurish',
+      title: 'Uy qurish',
+      description: 'Misollar yechib tanga to‘plang va orzuingizdagi uyni 6 bosqichda quring!',
+      category: 'building_simulation',
+      iconName: 'home_work',
+      difficulty: 'Oson - Maroqli',
+      rewardCoins: 0,
+      rewardXP: 680,
+      highScore: user.houseBuildingProgress?.currentStage || 0,
+      timesPlayed: user.houseBuildingProgress?.completedStages?.length || 0,
       isLocked: false,
     },
     {
@@ -72,6 +72,39 @@ gamesRouter.get('/results/recent', authMiddleware, (req: AuthenticatedRequest, r
   const user = req.user!;
   const recent = repository.getRecentGameResults(user.id);
   return res.json({ success: true, data: recent });
+});
+
+/**
+ * GET /api/games/house-building
+ * Returns current house building state for authenticated user.
+ */
+gamesRouter.get('/house-building', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const progress = repository.getHouseBuildingProgress(user.id);
+  return res.json({ success: true, data: progress });
+});
+
+const buildHouseSchema = z.object({
+  stage: z.number().int().min(1).max(6),
+});
+
+/**
+ * POST /api/games/house-building/build
+ * Build a house stage with server-authoritative coin deduction and XP award.
+ */
+gamesRouter.post('/house-building/build', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const parse = buildHouseSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: 'Bosqich raqami (1-6) noto‘g‘ri kiritildi.' });
+  }
+
+  const result = repository.buildHouseStage(user.id, parse.data.stage);
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+
+  return res.json({ success: true, data: result });
 });
 
 const finishGameSchema = z.object({

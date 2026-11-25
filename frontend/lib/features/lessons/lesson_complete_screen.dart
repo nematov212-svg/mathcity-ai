@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/custom_button.dart';
+import '../../core/widgets/xp_coin.dart';
 import '../../shared/providers/student_provider.dart';
 
 class LessonCompleteScreen extends ConsumerWidget {
@@ -109,19 +110,26 @@ class LessonCompleteScreen extends ConsumerWidget {
                         Column(
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF0EDFF),
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(color: const Color(0xFFDED6FF)),
                               ),
-                              child: const Text(
-                                '+50 XP',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.kidsPrimary,
-                                ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  XpCoin(size: 18, showGlow: false),
+                                  SizedBox(width: 6),
+                                  Text(
+                                    '+50 XP',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.kidsPrimary,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             const SizedBox(height: 8),

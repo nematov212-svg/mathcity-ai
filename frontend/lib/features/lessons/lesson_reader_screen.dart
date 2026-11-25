@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
+import '../../core/widgets/xp_coin.dart';
 import '../../core/network/api_client.dart';
 import '../../shared/models/lesson_model.dart';
 import '../../shared/providers/student_provider.dart';
@@ -234,7 +235,7 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.bolt_rounded, color: Color(0xFFD97706), size: 16),
+                          const XpCoin(size: 16, showGlow: false),
                           const SizedBox(width: 4),
                           Text('+$xp XP', style: const TextStyle(color: Color(0xFFD97706), fontWeight: FontWeight.w900)),
                         ],

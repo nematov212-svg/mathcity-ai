@@ -79,7 +79,11 @@ void main() {
         await tester.pump(const Duration(milliseconds: 300));
 
         expect(find.byType(TeenHomeScreen), findsOneWidget);
-        expect(tester.takeException(), isNull);
+        final exc = tester.takeException();
+        if (exc is FlutterError) {
+          debugPrint(exc.toStringDeep());
+        }
+        expect(exc, isNull);
       });
 
       testWidgets('CityScreen does NOT overflow at width: $width', (tester) async {
@@ -97,7 +101,11 @@ void main() {
         await tester.pump(const Duration(milliseconds: 300));
 
         expect(find.byType(CityScreen), findsOneWidget);
-        expect(tester.takeException(), isNull);
+        final exc = tester.takeException();
+        if (exc is FlutterError) {
+          debugPrint(exc.toStringDeep());
+        }
+        expect(exc, isNull);
       });
     }
   });

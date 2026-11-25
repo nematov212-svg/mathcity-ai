@@ -15,13 +15,12 @@ import '../features/home/kids_desktop_screen.dart';
 import '../features/home/teen_home_screen.dart';
 import '../features/home/teen_desktop_screen.dart';
 import '../features/lessons/lessons_screen.dart';
-import '../features/lessons/lesson_map_screen.dart';
 import '../features/lessons/lesson_reader_screen.dart';
 import '../features/lessons/lesson_complete_screen.dart';
 import '../features/lessons/teen_course_map_screen.dart';
 import '../features/practice/exercise_screen.dart';
 import '../features/games/games_hub_screen.dart';
-import '../features/games/space_math_game_screen.dart';
+import '../features/games/house_building_screen.dart';
 import '../features/games/fraction_battle_game_screen.dart';
 import '../features/games/drift_car_game_screen.dart';
 import '../features/games/game_result_screen.dart';
@@ -110,10 +109,6 @@ final GoRouter appRouter = GoRouter(
     ),
     // Kids Mode Sub-Routes
     GoRoute(
-      path: '/kids/lesson-map',
-      builder: (context, state) => const LessonMapScreen(),
-    ),
-    GoRoute(
       path: '/kids/lesson/:id',
       builder: (context, state) => LessonReaderScreen(
         lessonId: state.pathParameters['id'] ?? 'lesson-k4-01',
@@ -143,8 +138,12 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const GamesHubScreen(),
     ),
     GoRoute(
-      path: '/kids/games/space-math',
-      builder: (context, state) => const SpaceMathGameScreen(),
+      path: '/kids/house-building',
+      builder: (context, state) => const HouseBuildingScreen(),
+    ),
+    GoRoute(
+      path: '/kids/games/house-building',
+      builder: (context, state) => const HouseBuildingScreen(),
     ),
     GoRoute(
       path: '/kids/games/fraction-battle',

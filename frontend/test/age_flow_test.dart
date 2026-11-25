@@ -47,7 +47,7 @@ void main() {
 
     expect(find.text('Misollar ishlash'), findsOneWidget);
     expect(find.text('Reyting'), findsAtLeastNWidgets(1));
-    expect(find.text('Kosmik hisob'), findsOneWidget);
+    expect(find.text('Uy qurish'), findsOneWidget);
     expect(find.text('AI Ustoz'), findsAtLeastNWidgets(1));
   });
 

@@ -99,6 +99,12 @@ export interface UserAccount {
   isBlocked?: boolean;
   friendsCount?: number;
   isTestUser?: boolean;
+  houseBuildingProgress?: {
+    currentStage: number;
+    completedStages: number[];
+    isFinished: boolean;
+    lastBuiltAt?: string;
+  };
   settings?: {
     soundEnabled: boolean;
     animationsEnabled: boolean;
@@ -2154,8 +2160,113 @@ class DataRepository {
     if (!user) return [];
     return (user.gameResults || []).slice(0, 3).map((g) => ({
       ...g,
-      title: g.gameKey === 'kosmik_hisob' ? 'Kosmik hisob' : 'Kasrlar jangi',
+      title: g.gameKey === 'uy_qurish' ? 'Uy qurish' : g.gameKey === 'kosmik_hisob' ? 'Kosmik hisob' : 'Kasrlar jangi',
     }));
+  }
+
+  // --- House Building Game ---
+  getHouseBuildingProgress(userId: string) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+    if (!user.houseBuildingProgress) {
+      user.houseBuildingProgress = {
+        currentStage: 0,
+        completedStages: [],
+        isFinished: false,
+      };
+    }
+    const stages = [
+      { stage: 1, title: 'Poydevor', cost: 10, xp: 40, description: 'Mustahkam beton poydevor' },
+      { stage: 2, title: 'Devorlar', cost: 15, xp: 60, description: 'G‘ishtli mustahkam devorlar' },
+      { stage: 3, title: 'Tom', cost: 20, xp: 80, description: 'Qizil shiferli chiroyli tom' },
+      { stage: 4, title: 'Deraza va eshiklar', cost: 25, xp: 100, description: 'Katta oynali derazalar va yog‘och eshik' },
+      { stage: 5, title: 'Bog‘ va hovli', cost: 30, xp: 120, description: 'Yashil maysazor va manzarali daraxtlar' },
+      { stage: 6, title: 'Gullar va bezaklar', cost: 40, xp: 280, description: 'Rang-barang gullar, chiroqlar va bayroqcha (+100 XP bonus!)' },
+    ];
+    return {
+      currentStage: user.houseBuildingProgress.currentStage,
+      completedStages: user.houseBuildingProgress.completedStages,
+      isFinished: user.houseBuildingProgress.isFinished,
+      stages,
+      userCoins: user.coinBalance,
+      userXP: user.totalXP,
+    };
+  }
+
+  buildHouseStage(userId: string, stage: number) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+    if (!user.houseBuildingProgress) {
+      user.houseBuildingProgress = {
+        currentStage: 0,
+        completedStages: [],
+        isFinished: false,
+      };
+    }
+
+    const currentStage = user.houseBuildingProgress.currentStage;
+    if (user.houseBuildingProgress.completedStages.includes(stage)) {
+      return {
+        success: false,
+        error: `${stage}-bosqich allaqachon qurilgan!`,
+      };
+    }
+    if (stage !== currentStage + 1) {
+      return {
+        success: false,
+        error: `Avval ${currentStage + 1}-bosqichni qurishingiz kerak!`,
+      };
+    }
+
+    const stages = [
+      { stage: 1, title: 'Poydevor', cost: 10, xp: 40 },
+      { stage: 2, title: 'Devorlar', cost: 15, xp: 60 },
+      { stage: 3, title: 'Tom', cost: 20, xp: 80 },
+      { stage: 4, title: 'Deraza va eshiklar', cost: 25, xp: 100 },
+      { stage: 5, title: 'Bog‘ va hovli', cost: 30, xp: 120 },
+      { stage: 6, title: 'Gullar va bezaklar', cost: 40, xp: 280 },
+    ];
+    const stageConfig = stages.find((s) => s.stage === stage);
+    if (!stageConfig) {
+      return {
+        success: false,
+        error: 'Bunday bosqich mavjud emas.',
+      };
+    }
+
+    if (user.coinBalance < stageConfig.cost) {
+      return {
+        success: false,
+        error: 'Tangalar yetarli emas! Misol yechib tanga ishlab ol',
+        neededCoins: stageConfig.cost,
+        userCoins: user.coinBalance,
+      };
+    }
+
+    this.debitCoins(userId, stageConfig.cost, `Uy qurish: ${stageConfig.title}`);
+    this.addXP(userId, stageConfig.xp);
+
+    user.houseBuildingProgress.completedStages.push(stage);
+    user.houseBuildingProgress.currentStage = stage;
+    user.houseBuildingProgress.isFinished = stage >= 6;
+    user.houseBuildingProgress.lastBuiltAt = new Date().toISOString();
+
+    if (user.houseBuildingProgress.isFinished && !user.unlockedAchievements.includes('ach_master_builder')) {
+      user.unlockedAchievements.push('ach_master_builder');
+    }
+
+    this.persistUserToDatabase(user).catch(() => {});
+
+    return {
+      success: true,
+      stage,
+      progress: user.houseBuildingProgress,
+      coinBalance: user.coinBalance,
+      totalXP: user.totalXP,
+      xpEarned: stageConfig.xp,
+      coinsSpent: stageConfig.cost,
+      isFinished: user.houseBuildingProgress.isFinished,
+    };
   }
 
   // --- Subscriptions ---
