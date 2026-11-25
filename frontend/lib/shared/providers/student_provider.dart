@@ -97,7 +97,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
           state = state.copyWith(student: student);
         } catch (_) {}
       }
-    });
+    }).catchError((_) {});
   }
 
   Future<void> _persistToCache(StudentModel student) async {

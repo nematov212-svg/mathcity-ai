@@ -2157,46 +2157,48 @@ class _MascotAvatarState extends State<_MascotAvatar>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        final floatOffset = _controller.value * 6.0;
-        final scale = 1.0 + (_controller.value * 0.04);
-        return Transform.translate(
-          offset: Offset(0, -floatOffset),
-          child: Transform.scale(
-            scale: scale,
-            child: Container(
-              width: 96,
-              height: 96,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: widget.isDark
-                      ? [const Color(0xFF382B7D), const Color(0xFF1E1742)]
-                      : [const Color(0xFFEDE9FE), const Color(0xFFDDD6FE)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: widget.primaryColor.withOpacity(widget.isDark ? 0.3 : 0.2),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          final floatOffset = _controller.value * 6.0;
+          final scale = 1.0 + (_controller.value * 0.04);
+          return Transform.translate(
+            offset: Offset(0, -floatOffset),
+            child: Transform.scale(
+              scale: scale,
+              child: Container(
+                width: 96,
+                height: 96,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: widget.isDark
+                        ? [const Color(0xFF382B7D), const Color(0xFF1E1742)]
+                        : [const Color(0xFFEDE9FE), const Color(0xFFDDD6FE)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                ],
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.smart_toy_rounded,
-                  size: 54,
-                  color: widget.primaryColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: widget.primaryColor.withOpacity(widget.isDark ? 0.3 : 0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.smart_toy_rounded,
+                    size: 54,
+                    color: widget.primaryColor,
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
@@ -2230,10 +2232,11 @@ class _BouncingDotsIndicatorState extends State<_BouncingDotsIndicator>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animController,
-      builder: (context, child) {
-        return Row(
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: _animController,
+        builder: (context, child) {
+          return Row(
           mainAxisSize: MainAxisSize.min,
           children: List.generate(3, (index) {
             final delay = index * 0.2;
@@ -2251,6 +2254,7 @@ class _BouncingDotsIndicatorState extends State<_BouncingDotsIndicator>
           }),
         );
       },
-    );
+    ),
+  );
   }
 }

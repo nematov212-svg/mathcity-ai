@@ -30,12 +30,13 @@ class ResponsiveAuthShell extends StatefulWidget {
 }
 
 class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController _animCtrl;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _animCtrl = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 4),
@@ -45,6 +46,19 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
       // Keep static for test harness
     } else {
       _animCtrl.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (!_animCtrl.isAnimating && !(!kIsWeb && kDebugMode && _isTesting())) {
+        _animCtrl.repeat(reverse: true);
+      }
+    } else {
+      if (_animCtrl.isAnimating) {
+        _animCtrl.stop();
+      }
     }
   }
 
@@ -58,6 +72,7 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _animCtrl.dispose();
     super.dispose();
   }
@@ -145,16 +160,17 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           // 220px Logo inside crisp white circular plate
-                          AnimatedBuilder(
-                            animation: _animCtrl,
-                            builder: (context, child) {
-                              final offset = math.sin(_animCtrl.value * math.pi * 2) * 4;
-                              return Transform.translate(
-                                offset: Offset(0, offset),
-                                child: child,
-                              );
-                            },
-                            child: Container(
+                          RepaintBoundary(
+                            child: AnimatedBuilder(
+                              animation: _animCtrl,
+                              builder: (context, child) {
+                                final offset = math.sin(_animCtrl.value * math.pi * 2) * 4;
+                                return Transform.translate(
+                                  offset: Offset(0, offset),
+                                  child: child,
+                                );
+                              },
+                              child: Container(
                               width: 240,
                               height: 240,
                               decoration: BoxDecoration(
@@ -176,6 +192,7 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
                               ),
                             ),
                           ),
+                        ),
 
                           const SizedBox(height: 32),
 
@@ -392,16 +409,17 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
                     children: [
                       // Top Mascot Logo Container
                       Center(
-                        child: AnimatedBuilder(
-                          animation: _animCtrl,
-                          builder: (context, child) {
-                            final floatY = math.sin(_animCtrl.value * math.pi * 2) * (isMobileLandscape ? 2 : 4);
-                            return Transform.translate(
-                              offset: Offset(0, floatY),
-                              child: child,
-                            );
-                          },
-                          child: Stack(
+                        child: RepaintBoundary(
+                          child: AnimatedBuilder(
+                            animation: _animCtrl,
+                            builder: (context, child) {
+                              final floatY = math.sin(_animCtrl.value * math.pi * 2) * (isMobileLandscape ? 2 : 4);
+                              return Transform.translate(
+                                offset: Offset(0, floatY),
+                                child: child,
+                              );
+                            },
+                            child: Stack(
                             alignment: Alignment.center,
                             children: [
                               // Pulse ring behind emblem
@@ -440,6 +458,7 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
                           ),
                         ),
                       ),
+                    ),
 
                       SizedBox(height: isMobileLandscape ? 8 : 16),
 
@@ -528,25 +547,27 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
       left: left,
       right: right,
       child: IgnorePointer(
-        child: AnimatedBuilder(
-          animation: _animCtrl,
-          builder: (context, child) {
-            final dy = math.sin((_animCtrl.value + rotation.abs()) * math.pi * 2) * 5;
-            return Transform.translate(
-              offset: Offset(0, dy),
-              child: Transform.rotate(
-                angle: rotation,
-                child: child,
+        child: RepaintBoundary(
+          child: AnimatedBuilder(
+            animation: _animCtrl,
+            builder: (context, child) {
+              final dy = math.sin((_animCtrl.value + rotation.abs()) * math.pi * 2) * 5;
+              return Transform.translate(
+                offset: Offset(0, dy),
+                child: Transform.rotate(
+                  angle: rotation,
+                  child: child,
+                ),
+              );
+            },
+            child: Text(
+              symbol,
+              style: TextStyle(
+                fontFamily: 'Nunito',
+                fontSize: size,
+                fontWeight: FontWeight.w800,
+                color: AuthTokens.brandLight.withOpacity(0.14),
               ),
-            );
-          },
-          child: Text(
-            symbol,
-            style: TextStyle(
-              fontFamily: 'Nunito',
-              fontSize: size,
-              fontWeight: FontWeight.w800,
-              color: AuthTokens.brandLight.withOpacity(0.14),
             ),
           ),
         ),

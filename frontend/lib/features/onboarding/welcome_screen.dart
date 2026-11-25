@@ -21,9 +21,8 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   void _handleGoogleSignIn() async {
     setState(() => _isGoogleLoading = true);
     final result = await ref.read(studentProvider.notifier).signInWithGoogle();
-    setState(() => _isGoogleLoading = false);
-
     if (!mounted) return;
+    setState(() => _isGoogleLoading = false);
 
     if (result.success) {
       if (result.isNewUser) {

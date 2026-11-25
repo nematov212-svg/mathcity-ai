@@ -139,24 +139,26 @@ class _CoinIconState extends State<CoinIcon> with SingleTickerProviderStateMixin
             Positioned(
               top: -widget.size * 0.1,
               right: -widget.size * 0.1,
-              child: AnimatedBuilder(
-                animation: _sparkleAnimation!,
-                builder: (context, child) {
-                  final progress = _sparkleAnimation!.value;
-                  final scale = 0.5 + 0.5 * math.sin(progress * math.pi);
-                  final opacity = (math.sin(progress * math.pi)).clamp(0.0, 1.0);
-                  return Opacity(
-                    opacity: opacity,
-                    child: Transform.scale(
-                      scale: scale,
-                      child: Icon(
-                        Icons.auto_awesome,
-                        size: widget.size * 0.45,
-                        color: const Color(0xFFFFFBEB),
+              child: RepaintBoundary(
+                child: AnimatedBuilder(
+                  animation: _sparkleAnimation!,
+                  builder: (context, child) {
+                    final progress = _sparkleAnimation!.value;
+                    final scale = 0.5 + 0.5 * math.sin(progress * math.pi);
+                    final opacity = (math.sin(progress * math.pi)).clamp(0.0, 1.0);
+                    return Opacity(
+                      opacity: opacity,
+                      child: Transform.scale(
+                        scale: scale,
+                        child: Icon(
+                          Icons.auto_awesome,
+                          size: widget.size * 0.45,
+                          color: const Color(0xFFFFFBEB),
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
         ],
@@ -172,22 +174,26 @@ class _CoinIconState extends State<CoinIcon> with SingleTickerProviderStateMixin
     }
 
     if (widget.floating && _floatAnimation != null) {
-      return AnimatedBuilder(
-        animation: _floatAnimation!,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(0, _floatAnimation!.value),
-            child: child,
-          );
-        },
-        child: coinImage,
+      return RepaintBoundary(
+        child: AnimatedBuilder(
+          animation: _floatAnimation!,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(0, _floatAnimation!.value),
+              child: child,
+            );
+          },
+          child: coinImage,
+        ),
       );
     }
 
     if (widget.popOnAppear && _scaleAnimation != null) {
-      return ScaleTransition(
-        scale: _scaleAnimation!,
-        child: coinImage,
+      return RepaintBoundary(
+        child: ScaleTransition(
+          scale: _scaleAnimation!,
+          child: coinImage,
+        ),
       );
     }
 

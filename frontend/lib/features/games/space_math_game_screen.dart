@@ -170,6 +170,8 @@ class _SpaceMathGameScreenState extends ConsumerState<SpaceMathGameScreen> {
       await ApiClient().dio.post('/games/hint');
       ref.read(studentProvider.notifier).updateCoins(-5);
 
+      if (!mounted) return;
+
       final currentQ = _questions[_currentQuestionIndex];
       final wrongs = currentQ.options.where((o) => o != currentQ.correctAnswer).toList();
       wrongs.shuffle();

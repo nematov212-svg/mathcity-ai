@@ -62,8 +62,7 @@ class LeaderboardScreen extends ConsumerStatefulWidget {
   ConsumerState<LeaderboardScreen> createState() => _LeaderboardScreenState();
 }
 
-class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
-    with SingleTickerProviderStateMixin {
+class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   List<LeaderboardUser> _leaderboard = [];
   LeaderboardUser? _myRank;
   bool _isLoading = true;
@@ -85,16 +84,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   final Map<String, int> _previousRanks = {};
   Set<String> _highlightedUserIds = {};
 
-  late AnimationController _shimmerController;
-
   @override
   void initState() {
     super.initState();
-    _shimmerController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    )..repeat();
-
     _loadLeaderboard();
 
     // Live background polling every 12 seconds while screen is open
@@ -107,7 +99,6 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   void dispose() {
     _pollingTimer?.cancel();
     _highlightClearTimer?.cancel();
-    _shimmerController.dispose();
     super.dispose();
   }
 

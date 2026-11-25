@@ -155,7 +155,29 @@ class AnnouncementManager {
     _pollingTimer = null;
   }
 
-  /// Call once when home screen is initialized, on app resume, or every 60s
+  /// Call once when home screen is initialized, on app resume, or every 60s.
+  /// Backend endpoint: GET /api/announcements/active
+  /// Expected response format:
+  /// {
+  ///   "success": true,
+  ///   "data": [
+  ///     {
+  ///       "id": "announcement-urgent-01",
+  ///       "title": "...",
+  ///       "text": "...",
+  ///       "buttonText": "...",
+  ///       "buttonRoute": "...",
+  ///       "type": "URGENT_ANNOUNCEMENT" | "SPECIAL_OFFER" | "ANNOUNCEMENT",
+  ///       "delaySeconds": 0,
+  ///       "autoCloseSeconds": 5,
+  ///       "isActive": true
+  ///     }
+  ///   ],
+  ///   "meta": {
+  ///     "total": 1,
+  ///     "hasNewUserDiscount": true
+  ///   }
+  /// }
   static Future<void> checkAndShowAnnouncements(BuildContext context, WidgetRef ref) async {
     if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) return;
     if (_lastFailedCheckAt != null &&
@@ -170,6 +192,8 @@ class AnnouncementManager {
           '/announcements/active',
           options: Options(
             validateStatus: (status) => true,
+            sendTimeout: const Duration(seconds: 6),
+            receiveTimeout: const Duration(seconds: 6),
           ),
         );
         if (res.statusCode == 200 && res.data != null) {
@@ -177,10 +201,11 @@ class AnnouncementManager {
           _lastFailedCheckAt = null;
         } else {
           _lastFailedCheckAt = DateTime.now();
+          debugPrint('ℹ️ [Announcements] Faol e‘lonlar topilmadi (HTTP ${res.statusCode}).');
         }
-      } catch (_) {
+      } catch (e) {
         _lastFailedCheckAt = DateTime.now();
-        // Silently catch transport/timeout errors without throwing DioException
+        debugPrint('ℹ️ [Announcements] E‘lonlar serveriga ulanib bo‘lmadi: $e');
       }
 
       if (responseData == null || responseData['success'] != true || responseData['data'] is! List) {

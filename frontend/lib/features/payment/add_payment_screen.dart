@@ -151,17 +151,18 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
         // Refresh authenticated student profile
         await ref.read(studentProvider.notifier).refreshProfile();
 
-        setState(() => _isLoading = false);
-
         if (!mounted) return;
+        setState(() => _isLoading = false);
         _showSuccessDialog();
       } else {
+        if (!mounted) return;
         setState(() {
           _isLoading = false;
           _errorMessage = purchaseRes.data['error'] ?? 'To‘lov tasdiqlanmadi.';
         });
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
         _errorMessage = 'To‘lov natijasini tekshirishda xatolik yuz berdi.';

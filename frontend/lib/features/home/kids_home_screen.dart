@@ -45,8 +45,17 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && mounted) {
-      AnnouncementManager.checkAndShowAnnouncements(context, ref);
+    if (state == AppLifecycleState.resumed) {
+      if (!_mathAnimController.isAnimating) {
+        _mathAnimController.repeat();
+      }
+      if (mounted) {
+        AnnouncementManager.checkAndShowAnnouncements(context, ref);
+      }
+    } else {
+      if (_mathAnimController.isAnimating) {
+        _mathAnimController.stop();
+      }
     }
   }
 
@@ -357,14 +366,16 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                     children: [
                       // Floating Animated Math Expressions
                       Positioned.fill(
-                        child: AnimatedBuilder(
-                          animation: _mathAnimController,
-                          builder: (context, _) {
-                            final progress = disableAnim ? 0.0 : _mathAnimController.value;
-                            return CustomPaint(
-                              painter: _FloatingMathSymbolsPainter(progress: progress),
-                            );
-                          },
+                        child: RepaintBoundary(
+                          child: AnimatedBuilder(
+                            animation: _mathAnimController,
+                            builder: (context, _) {
+                              final progress = disableAnim ? 0.0 : _mathAnimController.value;
+                              return CustomPaint(
+                                painter: _FloatingMathSymbolsPainter(progress: progress),
+                              );
+                            },
+                          ),
                         ),
                       ),
                       Padding(

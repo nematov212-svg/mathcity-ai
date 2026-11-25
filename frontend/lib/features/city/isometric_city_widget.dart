@@ -36,7 +36,7 @@ class IsometricCityWidget extends StatefulWidget {
 }
 
 class _IsometricCityWidgetState extends State<IsometricCityWidget>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   final TransformationController _transformController = TransformationController();
   double _zoomLevel = 1.0;
   late AnimationController _ambientController;
@@ -45,6 +45,7 @@ class _IsometricCityWidgetState extends State<IsometricCityWidget>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _ambientController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 4),
@@ -54,6 +55,17 @@ class _IsometricCityWidgetState extends State<IsometricCityWidget>
       vsync: this,
       duration: Duration(milliseconds: (7000 / widget.carSpeed).clamp(2500, 10000).round()),
     )..repeat();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (!_ambientController.isAnimating) _ambientController.repeat();
+      if (!_carController.isAnimating) _carController.repeat();
+    } else {
+      if (_ambientController.isAnimating) _ambientController.stop();
+      if (_carController.isAnimating) _carController.stop();
+    }
   }
 
   @override
@@ -70,6 +82,7 @@ class _IsometricCityWidgetState extends State<IsometricCityWidget>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _ambientController.dispose();
     _carController.dispose();
     super.dispose();
@@ -101,24 +114,26 @@ class _IsometricCityWidgetState extends State<IsometricCityWidget>
     return Stack(
       children: [
         // Sky, Clouds & 7-Color Rainbow Background
-        AnimatedBuilder(
-          animation: _ambientController,
-          builder: (context, child) {
-            return Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFFE5DEFF), Color(0xFFF3F0FF), Color(0xFFE8F6FE)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+        RepaintBoundary(
+          child: AnimatedBuilder(
+            animation: _ambientController,
+            builder: (context, child) {
+              return Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFFE5DEFF), Color(0xFFF3F0FF), Color(0xFFE8F6FE)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
                 ),
-              ),
-              child: CustomPaint(
-                painter: SkyAndRainbowPainter(ambientOffset: _ambientController.value),
-              ),
-            );
-          },
+                child: CustomPaint(
+                  painter: SkyAndRainbowPainter(ambientOffset: _ambientController.value),
+                ),
+              );
+            },
+          ),
         ),
 
         // Interactive 3D Isometric Island Canvas (Pan & Zoom, 60fps Cars & Citizens)
@@ -135,10 +150,11 @@ class _IsometricCityWidgetState extends State<IsometricCityWidget>
                 onTapUp: (details) {
                   _handleTap(details.localPosition);
                 },
-                child: AnimatedBuilder(
-                  animation: Listenable.merge([_ambientController, _carController]),
-                  builder: (context, _) {
-                    return CustomPaint(
+                child: RepaintBoundary(
+                  child: AnimatedBuilder(
+                    animation: Listenable.merge([_ambientController, _carController]),
+                    builder: (context, _) {
+                      return CustomPaint(
                       size: const Size(540, 540),
                       painter: IsometricIslandPainter(
                         placedBuildings: widget.placedBuildings,
@@ -159,6 +175,7 @@ class _IsometricCityWidgetState extends State<IsometricCityWidget>
             ),
           ),
         ),
+      ),
 
         // Floating Zoom Controls
         Positioned(

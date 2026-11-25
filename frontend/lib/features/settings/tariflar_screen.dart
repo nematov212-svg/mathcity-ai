@@ -53,7 +53,7 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
       ),
     );
 
-    if (confirm != true) return;
+    if (confirm != true || !mounted) return;
 
     setState(() => _isLoading = true);
     try {

@@ -20,7 +20,6 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
   late AnimationController _mascotController;
   late AnimationController _starController;
   late AnimationController _pulseController;
-  late AnimationController _badgeController;
 
   bool _isLoading = false;
   int _selectedPlanIndex = 0; // 0 = 1 oylik, 1 = 1 yillik
@@ -43,11 +42,6 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
       vsync: this,
       duration: const Duration(milliseconds: 2200),
     )..repeat();
-
-    _badgeController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2400),
-    )..repeat(reverse: true);
   }
 
   @override
@@ -55,7 +49,6 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     _mascotController.dispose();
     _starController.dispose();
     _pulseController.dispose();
-    _badgeController.dispose();
     super.dispose();
   }
 
@@ -724,34 +717,36 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                           alignment: Alignment.center,
                           children: [
                             // Radial Halo Glow behind robot
-                            AnimatedBuilder(
-                              animation: _mascotController,
-                              builder: (context, child) {
-                                final scale = disableAnim
-                                    ? 1.0
-                                    : (1.0 + _mascotController.value * 0.08);
-                                final opacity = disableAnim
-                                    ? 0.7
-                                    : (0.55 + _mascotController.value * 0.45);
-                                return Transform.scale(
-                                  scale: scale,
-                                  child: Container(
-                                    width: 220,
-                                    height: 220,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      gradient: RadialGradient(
-                                        colors: [
-                                          const Color(0xFFFFD66B).withOpacity(opacity * 0.4),
-                                          const Color(0xFF6C47FF).withOpacity(opacity * 0.25),
-                                          Colors.transparent,
-                                        ],
-                                        stops: const [0.0, 0.45, 1.0],
+                            RepaintBoundary(
+                              child: AnimatedBuilder(
+                                animation: _mascotController,
+                                builder: (context, child) {
+                                  final scale = disableAnim
+                                      ? 1.0
+                                      : (1.0 + _mascotController.value * 0.08);
+                                  final opacity = disableAnim
+                                      ? 0.7
+                                      : (0.55 + _mascotController.value * 0.45);
+                                  return Transform.scale(
+                                    scale: scale,
+                                    child: Container(
+                                      width: 220,
+                                      height: 220,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: RadialGradient(
+                                          colors: [
+                                            const Color(0xFFFFD66B).withOpacity(opacity * 0.4),
+                                            const Color(0xFF6C47FF).withOpacity(opacity * 0.25),
+                                            Colors.transparent,
+                                          ],
+                                          stops: const [0.0, 0.45, 1.0],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
 
                             // Sparkling Star 1 (Top-Left, Large)
@@ -783,33 +778,35 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                             ),
 
                             // Robot Mascot Image
-                            AnimatedBuilder(
-                              animation: _mascotController,
-                              builder: (context, child) {
-                                final floatOffset = disableAnim
-                                    ? 0.0
-                                    : math.sin(_mascotController.value * math.pi) * 8.0;
-                                final tiltAngle = disableAnim
-                                    ? 0.0
-                                    : (math.sin(_mascotController.value * math.pi) * 0.035);
-                                return Transform.translate(
-                                  offset: Offset(0, -floatOffset),
-                                  child: Transform.rotate(
-                                    angle: tiltAngle,
-                                    child: child,
-                                  ),
-                                );
-                              },
-                              child: Image.asset(
-                                'assets/logo.png',
-                                width: 190,
-                                height: 190,
-                                fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) => Image.asset(
-                                  'assets/images/mathcity_logo.png',
+                            RepaintBoundary(
+                              child: AnimatedBuilder(
+                                animation: _mascotController,
+                                builder: (context, child) {
+                                  final floatOffset = disableAnim
+                                      ? 0.0
+                                      : math.sin(_mascotController.value * math.pi) * 8.0;
+                                  final tiltAngle = disableAnim
+                                      ? 0.0
+                                      : (math.sin(_mascotController.value * math.pi) * 0.035);
+                                  return Transform.translate(
+                                    offset: Offset(0, -floatOffset),
+                                    child: Transform.rotate(
+                                      angle: tiltAngle,
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                                child: Image.asset(
+                                  'assets/logo.png',
                                   width: 190,
                                   height: 190,
                                   fit: BoxFit.contain,
+                                  errorBuilder: (_, __, ___) => Image.asset(
+                                    'assets/images/mathcity_logo.png',
+                                    width: 190,
+                                    height: 190,
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             ),
@@ -1469,24 +1466,26 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     if (disableAnim) {
       return Icon(Icons.auto_awesome, color: const Color(0xFFFFD66B).withOpacity(0.85), size: size);
     }
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (context, child) {
-        final val = (controller.value + offset) % 1.0;
-        final scale = 0.7 + (math.sin(val * math.pi * 2) + 1.0) * 0.22;
-        final opacity = 0.25 + (math.sin(val * math.pi * 2) + 1.0) * 0.35;
-        return Transform.scale(
-          scale: scale,
-          child: Opacity(
-            opacity: opacity.clamp(0.0, 1.0),
-            child: Icon(
-              Icons.auto_awesome,
-              color: const Color(0xFFFFD66B),
-              size: size,
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (context, child) {
+          final val = (controller.value + offset) % 1.0;
+          final scale = 0.7 + (math.sin(val * math.pi * 2) + 1.0) * 0.22;
+          final opacity = 0.25 + (math.sin(val * math.pi * 2) + 1.0) * 0.35;
+          return Transform.scale(
+            scale: scale,
+            child: Opacity(
+              opacity: opacity.clamp(0.0, 1.0),
+              child: Icon(
+                Icons.auto_awesome,
+                color: const Color(0xFFFFD66B),
+                size: size,
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

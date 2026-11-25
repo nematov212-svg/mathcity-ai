@@ -20,14 +20,13 @@ class ProfileScreen extends ConsumerStatefulWidget {
   ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProviderStateMixin {
+class _ProfileScreenState extends ConsumerState<ProfileScreen>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   // Animation Controllers
   late AnimationController _entranceController;
   late AnimationController _crownController;
-  late AnimationController _starController;
   late AnimationController _arrowController;
   late AnimationController _flameController;
-  late AnimationController _shimmerController;
   late AnimationController _xpController;
   late AnimationController _columnGrowthController;
 
@@ -47,6 +46,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadWeeklyActivity();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(studentProvider.notifier).startHeartbeat();
@@ -62,11 +62,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
       duration: const Duration(milliseconds: 3000),
     )..repeat(reverse: true);
 
-    _starController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2200),
-    )..repeat(reverse: true);
-
     _arrowController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1400),
@@ -76,11 +71,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
       vsync: this,
       duration: const Duration(milliseconds: 1600),
     )..repeat(reverse: true);
-
-    _shimmerController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 3600),
-    )..repeat();
 
     _xpController = AnimationController(
       vsync: this,
@@ -100,14 +90,26 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (!_crownController.isAnimating) _crownController.repeat(reverse: true);
+      if (!_arrowController.isAnimating) _arrowController.repeat(reverse: true);
+      if (!_flameController.isAnimating) _flameController.repeat(reverse: true);
+    } else {
+      if (_crownController.isAnimating) _crownController.stop();
+      if (_arrowController.isAnimating) _arrowController.stop();
+      if (_flameController.isAnimating) _flameController.stop();
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _studentNotifier?.stopHeartbeat();
     _entranceController.dispose();
     _crownController.dispose();
-    _starController.dispose();
     _arrowController.dispose();
     _flameController.dispose();
-    _shimmerController.dispose();
     _xpController.dispose();
     _columnGrowthController.dispose();
     super.dispose();
@@ -1068,15 +1070,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            AnimatedBuilder(
-                                              animation: _flameController,
-                                              builder: (context, child) {
-                                                final scale = disableAnim ? 1.0 : 1.0 + _flameController.value * 0.14;
-                                                return Transform.scale(
-                                                  scale: scale,
-                                                  child: const Icon(Icons.local_fire_department_rounded, color: Color(0xFFE5611B), size: 16),
-                                                );
-                                              },
+                                            RepaintBoundary(
+                                              child: AnimatedBuilder(
+                                                animation: _flameController,
+                                                builder: (context, child) {
+                                                  final scale = disableAnim ? 1.0 : 1.0 + _flameController.value * 0.14;
+                                                  return Transform.scale(
+                                                    scale: scale,
+                                                    child: const Icon(Icons.local_fire_department_rounded, color: Color(0xFFE5611B), size: 16),
+                                                  );
+                                                },
+                                              ),
                                             ),
                                             const SizedBox(width: 4),
                                             Text(
@@ -1811,15 +1815,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        AnimatedBuilder(
-                          animation: _flameController,
-                          builder: (context, child) {
-                            final scale = disableAnim ? 1.0 : 1.0 + _flameController.value * 0.14;
-                            return Transform.scale(
-                              scale: scale,
-                              child: const Icon(Icons.local_fire_department_rounded, color: Color(0xFFE5611B), size: 16),
-                            );
-                          },
+                        RepaintBoundary(
+                          child: AnimatedBuilder(
+                            animation: _flameController,
+                            builder: (context, child) {
+                              final scale = disableAnim ? 1.0 : 1.0 + _flameController.value * 0.14;
+                              return Transform.scale(
+                                scale: scale,
+                                child: const Icon(Icons.local_fire_department_rounded, color: Color(0xFFE5611B), size: 16),
+                              );
+                            },
+                          ),
                         ),
                         const SizedBox(width: 4),
                         Text(
@@ -2109,20 +2115,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Gold Crown Tile with float & wobble
-              AnimatedBuilder(
-                animation: _crownController,
-                builder: (context, child) {
-                  final floatVal = disableAnim ? 0.0 : math.sin(_crownController.value * math.pi * 2) * 4.0;
-                  final angle = disableAnim ? 0.0 : (math.sin(_crownController.value * math.pi * 2) * 0.06);
-                  return Transform.translate(
-                    offset: Offset(0, floatVal),
-                    child: Transform.rotate(
-                      angle: angle,
-                      child: child,
-                    ),
-                  );
-                },
-                child: Container(
+              RepaintBoundary(
+                child: AnimatedBuilder(
+                  animation: _crownController,
+                  builder: (context, child) {
+                    final floatVal = disableAnim ? 0.0 : math.sin(_crownController.value * math.pi * 2) * 4.0;
+                    final angle = disableAnim ? 0.0 : (math.sin(_crownController.value * math.pi * 2) * 0.06);
+                    return Transform.translate(
+                      offset: Offset(0, floatVal),
+                      child: Transform.rotate(
+                        angle: angle,
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: Container(
                   width: 68,
                   height: 68,
                   decoration: BoxDecoration(
@@ -2149,6 +2156,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                   ),
                 ),
               ),
+            ),
 
               const SizedBox(width: 16),
 
@@ -2291,15 +2299,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
                         ),
                       ),
                       const SizedBox(width: 8),
-                      AnimatedBuilder(
-                        animation: _arrowController,
-                        builder: (context, child) {
-                          final shift = disableAnim ? 0.0 : _arrowController.value * 5.0;
-                          return Transform.translate(
-                            offset: Offset(shift, 0),
-                            child: const Icon(Icons.arrow_forward_rounded, color: Color(0xFF2A1B7A), size: 18),
-                          );
-                        },
+                      RepaintBoundary(
+                        child: AnimatedBuilder(
+                          animation: _arrowController,
+                          builder: (context, child) {
+                            final shift = disableAnim ? 0.0 : _arrowController.value * 5.0;
+                            return Transform.translate(
+                              offset: Offset(shift, 0),
+                              child: const Icon(Icons.arrow_forward_rounded, color: Color(0xFF2A1B7A), size: 18),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -2404,25 +2414,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
       ),
       child: Row(
         children: [
-          AnimatedBuilder(
-            animation: _flameController,
-            builder: (context, child) {
-              final scale = (isPulsing && !MediaQuery.of(context).disableAnimations)
-                  ? 1.0 + _flameController.value * 0.14
-                  : 1.0;
-              return Transform.scale(
-                scale: scale,
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: iconBg,
-                    borderRadius: BorderRadius.circular(14),
+          RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: _flameController,
+              builder: (context, child) {
+                final scale = (isPulsing && !MediaQuery.of(context).disableAnimations)
+                    ? 1.0 + _flameController.value * 0.14
+                    : 1.0;
+                return Transform.scale(
+                  scale: scale,
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: iconBg,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Icon(icon, color: iconColor, size: 22),
                   ),
-                  child: Icon(icon, color: iconColor, size: 22),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
