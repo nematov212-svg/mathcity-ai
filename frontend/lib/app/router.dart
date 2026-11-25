@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import '../core/responsive/responsive_layout.dart';
+import '../core/widgets/kids_shell_layout.dart';
 import '../features/splash/splash_screen.dart';
 import '../features/auth/login_screen.dart';
 import '../features/auth/register_screen.dart';
@@ -77,20 +78,37 @@ final GoRouter appRouter = GoRouter(
       path: '/access-denied',
       builder: (context, state) => const AccessDeniedScreen(),
     ),
-    // Kids Mode Routes
-    
-    GoRoute(
-      path: '/kids/home',
-      builder: (context, state) => const ResponsiveLayout(
-        mobile: KidsHomeScreen(),
-        tablet: KidsTabletScreen(),
-        desktop: KidsDesktopScreen(),
-      ),
+    // Kids Primary 5-Tab Persistent Navigation Shell (No-flicker glassmorphic bottom bar)
+    ShellRoute(
+      builder: (context, state, child) => KidsShellLayout(child: child),
+      routes: [
+        GoRoute(
+          path: '/kids/home',
+          builder: (context, state) => const ResponsiveLayout(
+            mobile: KidsHomeScreen(),
+            tablet: KidsTabletScreen(),
+            desktop: KidsDesktopScreen(),
+          ),
+        ),
+        GoRoute(
+          path: '/kids/lessons',
+          builder: (context, state) => const LessonsScreen(),
+        ),
+        GoRoute(
+          path: '/kids/ai-tutor',
+          builder: (context, state) => const ZiyoTutorScreen(),
+        ),
+        GoRoute(
+          path: '/kids/leaderboard',
+          builder: (context, state) => const LeaderboardScreen(),
+        ),
+        GoRoute(
+          path: '/kids/profile',
+          builder: (context, state) => const ProfileScreen(),
+        ),
+      ],
     ),
-    GoRoute(
-      path: '/kids/lessons',
-      builder: (context, state) => const LessonsScreen(),
-    ),
+    // Kids Mode Sub-Routes
     GoRoute(
       path: '/kids/lesson-map',
       builder: (context, state) => const LessonMapScreen(),
@@ -121,10 +139,6 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const LessonCompleteScreen(),
     ),
     GoRoute(
-      path: '/kids/leaderboard',
-      builder: (context, state) => const LeaderboardScreen(),
-    ),
-    GoRoute(
       path: '/kids/games',
       builder: (context, state) => const GamesHubScreen(),
     ),
@@ -147,10 +161,6 @@ final GoRouter appRouter = GoRouter(
       ),
     ),
     GoRoute(
-      path: '/kids/ai-tutor',
-      builder: (context, state) => const ZiyoTutorScreen(),
-    ),
-    GoRoute(
       path: '/kids/city',
       redirect: (context, state) => '/kids/home',
     ),
@@ -165,10 +175,6 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/kids/analytics',
       builder: (context, state) => const AnalyticsScreen(),
-    ),
-    GoRoute(
-      path: '/kids/profile',
-      builder: (context, state) => const ProfileScreen(),
     ),
     // Teen Mode Routes
     GoRoute(

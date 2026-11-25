@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/announcement_popup.dart';
 import '../../core/widgets/coin_badge.dart';
+import '../../core/widgets/kids_shell_layout.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/user_avatar.dart';
 import '../../shared/providers/student_provider.dart';
@@ -879,7 +880,9 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
       // ==============================================================
       // 8. UNIFIED 5-TAB FLOATING GLASS BOTTOM NAVIGATION BAR
       // ==============================================================
-      bottomNavigationBar: const MathCityBottomNav(currentIndex: 0),
+      bottomNavigationBar: KidsNavShellScope.of(context)
+          ? null
+          : const MathCityBottomNav(currentIndex: 0),
     );
   }
 

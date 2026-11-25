@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/network/api_client.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
+import '../../core/widgets/kids_shell_layout.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../shared/providers/student_provider.dart';
 
@@ -260,13 +261,14 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
               ],
             ),
 
-            // Glass Bottom Navigation Bar (Tab 3: O'yinlar)
-            const Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: MathCityBottomNav(currentIndex: 3),
-            ),
+            // Glass Bottom Navigation Bar (Fallback for standalone render)
+            if (!KidsNavShellScope.of(context))
+              const Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: MathCityBottomNav(currentIndex: 3),
+              ),
           ],
         ),
       ),

@@ -10,6 +10,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/responsive/app_responsive_scaffold.dart';
 import '../../core/widgets/coin_icon.dart';
+import '../../core/widgets/kids_shell_layout.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/user_avatar.dart';
 import '../../shared/models/student_model.dart';
@@ -246,7 +247,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
       return Scaffold(
         backgroundColor: colors.bg,
         extendBody: true,
-        bottomNavigationBar: const MathCityBottomNav(currentIndex: 3),
+        bottomNavigationBar: KidsNavShellScope.of(context)
+            ? null
+            : const MathCityBottomNav(currentIndex: 3),
         body: SafeArea(
           bottom: false,
           child: _buildLeaderboardStack(colors, isDark, isPhone: true),

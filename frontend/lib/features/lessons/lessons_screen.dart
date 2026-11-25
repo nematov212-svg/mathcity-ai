@@ -8,6 +8,7 @@ import '../../core/network/api_client.dart';
 import '../../core/responsive/app_responsive_scaffold.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
+import '../../core/widgets/kids_shell_layout.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../shared/providers/student_provider.dart';
 import 'lesson_map_screen.dart';
@@ -414,7 +415,9 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> with SingleTicker
           const LessonMapContent(),
         ],
       ),
-      bottomNavigationBar: const MathCityBottomNav(currentIndex: 1),
+      bottomNavigationBar: KidsNavShellScope.of(context)
+          ? null
+          : const MathCityBottomNav(currentIndex: 1),
     );
   }
 

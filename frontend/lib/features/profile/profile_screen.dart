@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/responsive/app_responsive_scaffold.dart';
 import '../../core/responsive/responsive.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/kids_shell_layout.dart';
 import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../shared/models/student_model.dart';
 import '../../shared/providers/student_provider.dart';
@@ -1290,13 +1291,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with TickerProvid
               ),
             ),
 
-            // h) Floating Bottom Navigation Bar
-            const Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: MathCityBottomNav(currentIndex: 4),
-            ),
+            // h) Floating Bottom Navigation Bar (Fallback for standalone render)
+            if (!KidsNavShellScope.of(context))
+              const Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: MathCityBottomNav(currentIndex: 4),
+              ),
           ],
         ),
       ),
