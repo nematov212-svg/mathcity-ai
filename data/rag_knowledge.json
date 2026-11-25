@@ -1,0 +1,32 @@
+[
+  {
+    "id": "rag-1",
+    "title": "Kvadrat tenglama ildizlari (Viyet va Diskriminant)",
+    "category": "FORMULA",
+    "grade": 8,
+    "topic": "Algebra / Kvadrat tenglamalar",
+    "content": "ax² + bx + c = 0 tenglamada Diskriminant D = b² - 4ac. Agar D > 0 bo‘lsa, ikkita haqiqiy ildiz: x1,2 = (-b ± √D) / (2a). Agar D = 0 bo‘lsa, yagona ildiz: x = -b / (2a). Agar D < 0 bo‘lsa, haqiqiy ildizlar yo‘q. Viyet teoremasi: x1 + x2 = -b/a, x1 * x2 = c/a.",
+    "addedBy": "Bosh administrator",
+    "createdAt": "2026-11-24T17:04:20.996Z"
+  },
+  {
+    "id": "rag-2",
+    "title": "Pifagor teoremasi",
+    "category": "FORMULA",
+    "grade": 7,
+    "topic": "Geometriya / To‘g‘ri burchakli uchburchak",
+    "content": "To‘g‘ri burchakli uchburchakda gipotenuzaning kvadrati katetlarning kvadratlari yig‘indisiga teng: c² = a² + b². Gipotenuzani topish: c = √(a² + b²). Katetni topish: a = √(c² - b²).",
+    "addedBy": "Bosh administrator",
+    "createdAt": "2026-11-24T17:04:20.996Z"
+  },
+  {
+    "id": "rag-3",
+    "title": "Kasrlarni qo‘shish va ayirish qoidasi",
+    "category": "RULE",
+    "grade": 5,
+    "topic": "Kasrlar",
+    "content": "Maxrajlari har xil bo‘lgan kasrlarni qo‘shish yoki ayirish uchun avval ularni eng kichik umumiy maxrajga (EKUK) keltirish lozim, so‘ngra maxrajni o‘zgarishsiz qoldirib, suratlar qo‘shiladi yoki ayriladi: a/b + c/d = (a*d + b*c) / (b*d).",
+    "addedBy": "Bosh administrator",
+    "createdAt": "2026-11-24T17:04:20.996Z"
+  }
+]

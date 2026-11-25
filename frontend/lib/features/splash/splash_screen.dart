@@ -63,7 +63,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
 
         // Wait up to 3.5 seconds for fresh server profile
         try {
-          await AuthService().restoreSession(allowDemoFallback: false).timeout(const Duration(milliseconds: 3500));
+          await AuthService().restoreSession().timeout(const Duration(milliseconds: 3500));
         } catch (_) {}
 
         if (!mounted) return;

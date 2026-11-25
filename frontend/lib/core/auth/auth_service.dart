@@ -521,17 +521,17 @@ class AuthService {
   Future<AuthResult>? _ongoingRestore;
 
   /// Check and restore existing session or attempt token refresh
-  Future<AuthResult> restoreSession({bool allowDemoFallback = false}) {
+  Future<AuthResult> restoreSession() {
     if (_ongoingRestore != null) {
       return _ongoingRestore!;
     }
-    _ongoingRestore = _doRestoreSession(allowDemoFallback: allowDemoFallback).whenComplete(() {
+    _ongoingRestore = _doRestoreSession().whenComplete(() {
       _ongoingRestore = null;
     });
     return _ongoingRestore!;
   }
 
-  Future<AuthResult> _doRestoreSession({bool allowDemoFallback = false}) async {
+  Future<AuthResult> _doRestoreSession() async {
     try {
       final savedToken = await StorageService.getAuthToken();
       if (savedToken != null && savedToken.isNotEmpty) {
@@ -591,17 +591,6 @@ class AuthService {
           }
           // If we had a token, treat as temporary offline success even without full profile
           return AuthResult(success: true, token: savedToken);
-        }
-      }
-
-      if (allowDemoFallback) {
-        final demoRes = await ApiClient().dio.post('/auth/demo');
-        if (demoRes.data['success'] == true) {
-          final token = demoRes.data['data']['token'] as String;
-          ApiClient().setAuthToken(token);
-          await StorageService.saveAuthToken(token);
-          final student = StudentModel.fromJson(demoRes.data['data']['user']);
-          return AuthResult(success: true, student: student, token: token);
         }
       }
     } catch (e) {

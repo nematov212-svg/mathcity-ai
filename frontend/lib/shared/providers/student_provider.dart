@@ -255,7 +255,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
     return false;
   }
 
-  /// Initialize authenticated session from storage or backend demo endpoint
+  /// Initialize authenticated session from storage or backend session
   Future<void> initializeSession() async {
     final result = await _authService.restoreSession();
     if (!mounted) return;

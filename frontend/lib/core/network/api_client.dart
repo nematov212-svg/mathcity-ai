@@ -43,7 +43,6 @@ class ApiClient {
             '/auth/google',
             '/auth/forgot-password',
             '/auth/reset-password',
-            '/auth/demo',
             '/health',
           ];
           final isPublicAuth = publicAuthPaths.any((p) => options.path.contains(p));
