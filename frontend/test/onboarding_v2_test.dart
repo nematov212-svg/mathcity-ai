@@ -42,6 +42,11 @@ void main() {
 
       // Action button
       expect(find.text('Davom etish'), findsOneWidget);
+
+      // Flush pending font relayout/animation frame callbacks before teardown (Flutter 3.50+ CI)
+      await tester.pumpAndSettle();
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
     });
 
     testWidgets('Step navigation 1 -> 2 -> 3 works seamlessly', (WidgetTester tester) async {
