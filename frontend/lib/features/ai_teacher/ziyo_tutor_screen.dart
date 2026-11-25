@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' show File;
+import 'dart:io' show File, Platform;
+import 'dart:math' as math;
+import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -105,7 +107,9 @@ class ZiyoTutorScreen extends ConsumerStatefulWidget {
   ConsumerState<ZiyoTutorScreen> createState() => _ZiyoTutorScreenState();
 }
 
-class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
+class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  late AnimationController _cosmicController;
   final _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final ImagePicker _picker = ImagePicker();
@@ -143,16 +147,19 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
 
   final List<MessageItem> _messages = [];
 
-  final List<String> _starterPrompts = [
-    '2 × 5 nechchi bo‘ladi?',
-    'Kasrlarni qanday qo‘shamiz?',
-    'Foizlarni tushuntirib ber.',
-    'Tenglamalarni yechishni o‘rgat.',
-  ];
-
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _cosmicController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 16),
+    );
+    if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) {
+      _cosmicController.value = 0.5;
+    } else {
+      _cosmicController.repeat();
+    }
     _fetchQuotaStatus();
     _fetchConversations();
     _initSpeech();
@@ -160,7 +167,23 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (!_cosmicController.isAnimating &&
+          !(kDebugMode && !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST'))) {
+        _cosmicController.repeat();
+      }
+    } else {
+      if (_cosmicController.isAnimating) {
+        _cosmicController.stop();
+      }
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _cosmicController.dispose();
     _textController.dispose();
     _scrollController.dispose();
     _recordingTimer?.cancel();
@@ -1240,188 +1263,298 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final screenWidth = constraints.maxWidth;
-        if (screenWidth < 600) {
-          return Scaffold(
-            backgroundColor: colors.bg,
-            appBar: _buildAppBar(false, colors, isDark),
-            bottomNavigationBar: (KidsNavShellScope.of(context) || MediaQuery.of(context).viewInsets.bottom > 0)
-                ? null
-                : const MathCityBottomNav(currentIndex: 2),
-            body: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 860),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: _messages.isEmpty
-                          ? _buildWelcomingState(displayName, colors, isDark)
-                          : _buildMessageList(colors, isDark),
-                    ),
-                    if (_selectedImageBytes != null)
-                      _buildSelectedImageBanner(colors, isDark),
-                    if (_isRecording)
-                      _buildVoiceRecordingBar(colors, isDark)
-                    else
-                      _buildInputComposer(colors, isDark),
-                  ],
+        final isDesktop = screenWidth >= 1024;
+        final disableAnim = MediaQuery.of(context).disableAnimations;
+
+        Widget buildBodyContent({required bool wideMode}) {
+          return Row(
+            children: [
+              if (wideMode && isDesktop && _showDesktopSidebar)
+                _buildDesktopSidebar(colors, isDark),
+              Expanded(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 860),
+                    child: _messages.isEmpty
+                        ? _buildWelcomingState(displayName, colors, isDark)
+                        : _buildMessageList(colors, isDark),
+                  ),
                 ),
               ),
-            ),
+            ],
           );
         }
 
-        final isDesktop = screenWidth >= 1024;
-        final wideBody = Row(
+        final mainForeground = SafeArea(
+          top: false,
+          bottom: false,
+          child: Column(
+            children: [
+              _buildGlassHeader(isDesktop, colors),
+              Expanded(
+                child: buildBodyContent(wideMode: screenWidth >= 600),
+              ),
+              if (_selectedImageBytes != null)
+                _buildSelectedImageBanner(colors, isDark),
+              if (_isRecording)
+                _buildVoiceRecordingBar(colors, isDark)
+              else
+                _buildInputComposer(colors, isDark),
+            ],
+          ),
+        );
+
+        final stackWithBackground = Stack(
           children: [
-            if (isDesktop && _showDesktopSidebar)
-              _buildDesktopSidebar(colors, isDark),
-            Expanded(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 860),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: _messages.isEmpty
-                            ? _buildWelcomingState(displayName, colors, isDark)
-                            : _buildMessageList(colors, isDark),
-                      ),
-                      if (_selectedImageBytes != null)
-                        _buildSelectedImageBanner(colors, isDark),
-                      if (_isRecording)
-                        _buildVoiceRecordingBar(colors, isDark)
-                      else
-                        _buildInputComposer(colors, isDark),
-                    ],
+            // Full-screen Cosmic Star & Floating 3D Coin Background
+            Positioned.fill(
+              child: IgnorePointer(
+                child: RepaintBoundary(
+                  child: AnimatedBuilder(
+                    animation: _cosmicController,
+                    builder: (context, _) {
+                      return CustomPaint(
+                        painter: CosmicBackgroundPainter(
+                          progress: disableAnim ? 0.0 : _cosmicController.value,
+                          hasMessages: _messages.isNotEmpty,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
             ),
+            mainForeground,
           ],
         );
+
+        if (screenWidth < 600) {
+          return Scaffold(
+            backgroundColor: const Color(0xFF0F0A2A),
+            bottomNavigationBar: (KidsNavShellScope.of(context) || MediaQuery.of(context).viewInsets.bottom > 0)
+                ? null
+                : const MathCityBottomNav(currentIndex: 2),
+            body: stackWithBackground,
+          );
+        }
 
         return AppResponsiveScaffold(
           currentNavIndex: 2,
           title: 'Ziyo — AI Ustoz',
+          backgroundColor: const Color(0xFF0F0A2A),
           phoneBody: const SizedBox.shrink(),
-          tabletBody: wideBody,
-          desktopBody: wideBody,
+          tabletBody: stackWithBackground,
+          desktopBody: stackWithBackground,
         );
       },
     );
   }
 
-  PreferredSizeWidget _buildAppBar(bool isDesktop, AppThemeColors colors, bool isDark) {
-    return AppBar(
-      backgroundColor: colors.card,
-      elevation: 0,
-      titleSpacing: 0,
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios_new_rounded, color: colors.ink),
-        onPressed: () {
-          if (context.canPop()) {
-            context.pop();
-          } else {
-            context.go('/kids/home');
-          }
-        },
+  Widget _buildGlassHeader(bool isDesktop, AppThemeColors colors) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xDD0D0726), // Translucent deep indigo
+            Color(0xB81A0D3D), // Translucent royal violet
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.white.withOpacity(0.12),
+            width: 1.0,
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.35),
+            blurRadius: 18,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      title: Row(
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+          child: SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              child: Row(
+                children: [
+                  // Back button with tactile scale feedback
+                  _GlassActionButton(
+                    tooltip: 'Orqaga',
+                    onTap: () {
+                      if (context.canPop()) {
+                        context.pop();
+                      } else {
+                        context.go('/kids/home');
+                      }
+                    },
+                    child: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // 40x40 AI Ustoz Logo with subtle violet glow
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF7C3AED).withOpacity(0.45),
+                          blurRadius: 10,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        'assets/images/ai_ustoz_logo.png',
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // Title & Subtitle with glowing green online dot
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'AI Ustoz',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontFamily: 'Nunito',
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16,
+                            color: Colors.white,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 7,
+                              height: 7,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: const Color(0xFF10B981),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF10B981).withOpacity(0.7),
+                                    blurRadius: 4,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            const Flexible(
+                              child: Text(
+                                'Matematika ustozing',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFFC7D2FE),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // 5/5 Energy Quota Pill with shiny border and glow
+                  _buildQuotaBadge(isDesktop, colors),
+                  const SizedBox(width: 8),
+
+                  // History Button
+                  _GlassActionButton(
+                    tooltip: 'Tarix',
+                    onTap: isDesktop
+                        ? () => setState(() => _showDesktopSidebar = !_showDesktopSidebar)
+                        : _openHistoryBottomSheet,
+                    child: const Icon(
+                      Icons.history_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuotaBadge(bool isDesktop, AppThemeColors colors) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 2),
+      padding: EdgeInsets.symmetric(horizontal: isDesktop ? 10 : 8, vertical: 5),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: _isPro
+              ? [const Color(0x3310B981), const Color(0x22059669)]
+              : [const Color(0x337C3AED), const Color(0x224F46E5)],
+        ),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: _isPro
+              ? const Color(0xFF34D399).withOpacity(0.6)
+              : const Color(0xFFA78BFA).withOpacity(0.5),
+          width: 1.2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: (_isPro ? const Color(0xFF10B981) : const Color(0xFF8B5CF6)).withOpacity(0.2),
+            blurRadius: 8,
+          ),
+        ],
+      ),
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF282055) : const Color(0xFFEDE9FE),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(Icons.auto_awesome_rounded, color: colors.primary, size: 18),
+          Icon(
+            _isPro ? Icons.stars_rounded : Icons.bolt_rounded,
+            color: _isPro ? const Color(0xFF34D399) : const Color(0xFFFBBF24),
+            size: 13,
           ),
-          const SizedBox(width: 8),
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'AI Ustoz',
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16,
-                    color: colors.ink,
-                  ),
-                ),
-                if (isDesktop)
-                  Text(
-                    'Shaxsiy matematika repetitori',
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 11, color: colors.muted, fontWeight: FontWeight.w500),
-                  ),
-              ],
+          const SizedBox(width: 4),
+          Text(
+            _isPro
+                ? (isDesktop ? 'Pro — Cheksiz' : 'Pro')
+                : (isDesktop ? '$_remainingQuota/5 bepul' : '$_remainingQuota/5'),
+            style: TextStyle(
+              fontFamily: 'Nunito',
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
+              color: _isPro ? const Color(0xFF6EE7B7) : Colors.white,
             ),
           ),
         ],
       ),
-      actions: [
-        // Quota Badge
-        Center(
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-            padding: EdgeInsets.symmetric(horizontal: isDesktop ? 10 : 7, vertical: 4),
-            decoration: BoxDecoration(
-              color: _isPro
-                  ? (isDark ? const Color(0xFF143828) : const Color(0xFFE8F8EE))
-                  : colors.field,
-              borderRadius: BorderRadius.circular(999),
-              border: Border.all(
-                color: _isPro ? const Color(0xFF10B981) : colors.border,
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  _isPro ? Icons.stars_rounded : Icons.bolt_rounded,
-                  color: _isPro ? const Color(0xFF10B981) : colors.primary,
-                  size: 13,
-                ),
-                const SizedBox(width: 3),
-                Text(
-                  _isPro
-                      ? (isDesktop ? 'Pro — Cheksiz' : 'Pro')
-                      : (isDesktop ? '$_remainingQuota/5 bepul' : '$_remainingQuota/5'),
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: _isPro ? const Color(0xFF10B981) : colors.muted,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        // History Button ("Tarix")
-        if (isDesktop)
-          TextButton.icon(
-            onPressed: () => setState(() => _showDesktopSidebar = !_showDesktopSidebar),
-            icon: Icon(Icons.history_rounded, size: 18, color: colors.primary),
-            label: Text(
-              'Tarix',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: colors.primary),
-            ),
-          )
-        else
-          IconButton(
-            tooltip: 'Tarix',
-            padding: const EdgeInsets.symmetric(horizontal: 6),
-            constraints: const BoxConstraints(),
-            onPressed: _openHistoryBottomSheet,
-            icon: Icon(Icons.history_rounded, size: 20, color: colors.primary),
-          ),
-        const SizedBox(width: 4),
-      ],
     );
   }
 
@@ -1429,8 +1562,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     return Container(
       width: 290,
       decoration: BoxDecoration(
-        color: colors.card,
-        border: Border(right: BorderSide(color: colors.border)),
+        color: const Color(0xEE10082E),
+        border: Border(right: BorderSide(color: Colors.white.withOpacity(0.12))),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1440,29 +1573,34 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
+                const Expanded(
                   child: Text(
                     'So‘nggi suhbatlar',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: colors.ink),
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.add_circle_outline_rounded, color: colors.primary, size: 22),
+                  icon: const Icon(Icons.add_circle_outline_rounded, color: Color(0xFFA78BFA), size: 22),
                   tooltip: 'Yangi suhbat boshlash',
                   onPressed: _startNewConversation,
                 ),
               ],
             ),
           ),
-          Divider(height: 1, color: colors.border),
+          Divider(height: 1, color: Colors.white.withOpacity(0.10)),
           Expanded(
             child: _conversations.isEmpty
-                ? Center(
+                ? const Center(
                     child: Text(
                       'Saqlangan suhbatlar yo‘q',
-                      style: TextStyle(color: colors.muted, fontSize: 12),
+                      style: TextStyle(color: Color(0xFFC7D2FE), fontSize: 12),
                     ),
                   )
                 : ListView.builder(
@@ -1474,10 +1612,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                       return Container(
                         margin: const EdgeInsets.only(bottom: 6),
                         decoration: BoxDecoration(
-                          color: isSelected ? colors.primary.withOpacity(0.12) : Colors.transparent,
+                          color: isSelected ? const Color(0x337C3AED) : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: isSelected ? colors.primary : Colors.transparent,
+                            color: isSelected ? const Color(0xFFA78BFA) : Colors.transparent,
                           ),
                         ),
                         child: ListTile(
@@ -1486,26 +1624,31 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                           leading: Icon(
                             Icons.chat_bubble_outline_rounded,
                             size: 16,
-                            color: isSelected ? colors.primary : colors.muted,
+                            color: isSelected ? const Color(0xFFA78BFA) : const Color(0xFF94A3B8),
                           ),
                           title: Text(
                             conv.title,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
+                              fontFamily: 'Nunito',
                               fontSize: 13,
                               fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                              color: isSelected ? colors.primary : colors.ink,
+                              color: isSelected ? Colors.white : const Color(0xFFE2E8F0),
                             ),
                           ),
                           subtitle: Text(
                             conv.preview,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 11, color: colors.muted),
+                            style: const TextStyle(
+                              fontFamily: 'Nunito',
+                              fontSize: 11,
+                              color: Color(0xFF94A3B8),
+                            ),
                           ),
                           trailing: IconButton(
-                            icon: Icon(Icons.delete_outline_rounded, size: 16, color: colors.muted),
+                            icon: const Icon(Icons.delete_outline_rounded, size: 16, color: Color(0xFF94A3B8)),
                             onPressed: () => _deleteConversation(conv.id),
                           ),
                           onTap: () => _loadConversation(conv.id),
@@ -1520,82 +1663,53 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   }
 
   Widget _buildWelcomingState(String displayName, AppThemeColors colors, bool isDark) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      child: Column(
-        children: [
-          // Animated Mascot Avatar
-          _MascotAvatar(isDark: isDark, primaryColor: colors.primary),
-          const SizedBox(height: 20),
-
-          // Greeting
-          Text(
-            'Salom, $displayName! 👋',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
-              color: colors.ink,
+    final disableAnim = MediaQuery.of(context).disableAnimations;
+    return Center(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Animated Hero AI Ustoz Logo with Orbiting Stars & Halo
+            _AIUstozHeroLogo(
+              animation: _cosmicController,
+              disableAnim: disableAnim,
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Men sizning AI matematik ustozingizman.\nBugun sizga qanday yordam bera olaman?',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-              color: colors.muted,
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 28),
+            const SizedBox(height: 26),
 
-          // Starter Prompts
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            alignment: WrapAlignment.center,
-            children: _starterPrompts.map((prompt) {
-              return InkWell(
-                onTap: () => _sendMessage(customText: prompt),
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: colors.card,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: colors.border),
-                    boxShadow: [
-                      BoxShadow(
-                        color: isDark ? Colors.black26 : const Color(0x04000000),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.help_outline_rounded, size: 16, color: colors.primary),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: Text(
-                          prompt,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: colors.ink,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+            // Greeting: "Salom, <Student Name>! 👋"
+            Text(
+              'Salom, $displayName! 👋',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: 'Nunito',
+                fontSize: 26,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+                letterSpacing: -0.3,
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // Subtitle
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: const Text(
+                'Men sizning AI matematik ustozingizman.\nBugun sizga qanday yordam bera olaman?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Nunito',
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFFC7D2FE),
+                  height: 1.5,
                 ),
-              );
-            }).toList(),
-          ),
-        ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1674,13 +1788,13 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         constraints: const BoxConstraints(maxWidth: 620),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: colors.card,
+          color: const Color(0xE017103B),
           borderRadius: BorderRadius.circular(24).copyWith(topLeft: const Radius.circular(4)),
-          border: Border.all(color: colors.border),
+          border: Border.all(color: Colors.white.withOpacity(0.12)),
           boxShadow: [
             BoxShadow(
-              color: isDark ? Colors.black26 : const Color(0x06000000),
-              blurRadius: 16,
+              color: Colors.black.withOpacity(0.35),
+              blurRadius: 18,
               offset: const Offset(0, 4),
             ),
           ],
@@ -1688,28 +1802,47 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // AI Header
+            // AI Header with Official AI Ustoz Logo
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(5),
+                  width: 26,
+                  height: 26,
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF282055) : const Color(0xFFEDE9FE),
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF7C3AED).withOpacity(0.4),
+                        blurRadius: 8,
+                      ),
+                    ],
                   ),
-                  child: Icon(Icons.smart_toy_rounded, size: 16, color: colors.primary),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(
+                      'assets/images/ai_ustoz_logo.png',
+                      width: 26,
+                      height: 26,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 8),
-                Text(
+                const Text(
                   'AI Ustoz',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: colors.primary),
+                  style: TextStyle(
+                    fontFamily: 'Nunito',
+                    fontWeight: FontWeight.w800,
+                    fontSize: 13,
+                    color: Color(0xFFA78BFA),
+                  ),
                 ),
                 const Spacer(),
                 IconButton(
                   icon: Icon(
                     _isSpeaking ? Icons.stop_circle_rounded : Icons.volume_up_rounded,
                     size: 20,
-                    color: _isSpeaking ? const Color(0xFFEF4444) : colors.primary,
+                    color: _isSpeaking ? const Color(0xFFEF4444) : const Color(0xFFA78BFA),
                   ),
                   tooltip: _isSpeaking ? 'To‘xtatish' : 'Ovozli eshitish',
                   padding: EdgeInsets.zero,
@@ -1723,10 +1856,11 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             // Text message
             Text(
               msg.text,
-              style: TextStyle(
+              style: const TextStyle(
+                fontFamily: 'Nunito',
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
-                color: colors.ink,
+                color: Colors.white,
                 height: 1.45,
               ),
             ),
@@ -1738,16 +1872,16 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: colors.field,
+                  color: Colors.white.withOpacity(0.06),
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: colors.border),
+                  border: Border.all(color: Colors.white.withOpacity(0.12)),
                 ),
                 child: Center(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Math.tex(
                       msg.formulaLatex!,
-                      textStyle: TextStyle(fontSize: 18, color: colors.ink),
+                      textStyle: const TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
                 ),
@@ -1764,10 +1898,14 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                       children: [
                         CircleAvatar(
                           radius: 11,
-                          backgroundColor: isDark ? const Color(0xFF282055) : const Color(0xFFEDE9FE),
+                          backgroundColor: const Color(0xFF2E1C6A),
                           child: Text(
                             '${step.stepNumber}',
-                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: colors.primary),
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFA78BFA),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -1775,10 +1913,20 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(step.explanation, style: TextStyle(fontSize: 13, color: colors.muted)),
+                              Text(
+                                step.explanation,
+                                style: const TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontSize: 13,
+                                  color: Color(0xFFC7D2FE),
+                                ),
+                              ),
                               if (step.latex.isNotEmpty) ...[
                                 const SizedBox(height: 4),
-                                Math.tex(step.latex, textStyle: TextStyle(fontSize: 14, color: colors.ink)),
+                                Math.tex(
+                                  step.latex,
+                                  textStyle: const TextStyle(fontSize: 14, color: Colors.white),
+                                ),
                               ],
                             ],
                           ),
@@ -1794,7 +1942,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF143828) : const Color(0xFFE8F8EE),
+                  color: const Color(0x3310B981),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: const Color(0xFF10B981), width: 1.2),
                 ),
@@ -1805,9 +1953,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                     const SizedBox(width: 8),
                     Text(
                       'Javob: ${msg.finalAnswer}',
-                      style: TextStyle(
+                      style: const TextStyle(
+                        fontFamily: 'Nunito',
                         fontWeight: FontWeight.w800,
-                        color: isDark ? const Color(0xFF34D399) : const Color(0xFF047857),
+                        color: Color(0xFF34D399),
                         fontSize: 14,
                       ),
                     ),
@@ -1823,32 +1972,64 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               runSpacing: 6,
               children: [
                 ActionChip(
-                  backgroundColor: colors.field,
-                  side: BorderSide(color: colors.border),
-                  avatar: Icon(Icons.copy_rounded, size: 14, color: colors.primary),
-                  label: Text('Nusxalash', style: TextStyle(fontSize: 12, color: colors.ink, fontWeight: FontWeight.w600)),
+                  backgroundColor: Colors.white.withOpacity(0.08),
+                  side: BorderSide(color: Colors.white.withOpacity(0.14)),
+                  avatar: const Icon(Icons.copy_rounded, size: 14, color: Color(0xFFA78BFA)),
+                  label: const Text(
+                    'Nusxalash',
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 12,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   onPressed: () => _copySolution(msg),
                 ),
                 ActionChip(
-                  backgroundColor: colors.field,
-                  side: BorderSide(color: colors.border),
-                  avatar: Icon(Icons.lightbulb_outline_rounded, size: 14, color: const Color(0xFFF59E0B)),
-                  label: Text('Tushunmadim, soddaroq tushuntir', style: TextStyle(fontSize: 12, color: colors.ink, fontWeight: FontWeight.w600)),
+                  backgroundColor: Colors.white.withOpacity(0.08),
+                  side: BorderSide(color: Colors.white.withOpacity(0.14)),
+                  avatar: const Icon(Icons.lightbulb_outline_rounded, size: 14, color: Color(0xFFFBBF24)),
+                  label: const Text(
+                    'Tushunmadim, soddaroq tushuntir',
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 12,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   onPressed: () => _sendMessage(customText: 'Tushunmadim, soddaroq tushuntir', action: 'explain_more'),
                 ),
                 ActionChip(
-                  backgroundColor: colors.field,
-                  side: BorderSide(color: colors.border),
-                  avatar: Icon(Icons.refresh_rounded, size: 14, color: const Color(0xFF3B82F6)),
-                  label: Text('Yana bir misol ber', style: TextStyle(fontSize: 12, color: colors.ink, fontWeight: FontWeight.w600)),
+                  backgroundColor: Colors.white.withOpacity(0.08),
+                  side: BorderSide(color: Colors.white.withOpacity(0.14)),
+                  avatar: const Icon(Icons.refresh_rounded, size: 14, color: Color(0xFF60A5FA)),
+                  label: const Text(
+                    'Yana bir misol ber',
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 12,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   onPressed: () => _sendMessage(customText: 'Yana bir shunga o‘xshash misol ber', action: 'similar_example'),
                 ),
                 if (msg.suggestedActions != null)
                   ...msg.suggestedActions!.map((act) {
                     return ActionChip(
-                      backgroundColor: colors.field,
-                      side: BorderSide(color: colors.border),
-                      label: Text(act, style: TextStyle(fontSize: 12, color: colors.muted, fontWeight: FontWeight.w600)),
+                      backgroundColor: Colors.white.withOpacity(0.08),
+                      side: BorderSide(color: Colors.white.withOpacity(0.14)),
+                      label: Text(
+                        act,
+                        style: const TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 12,
+                          color: Color(0xFFC7D2FE),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       onPressed: () {
                         if (act.contains('Pro')) {
                           context.push('/payment/add');
@@ -1871,14 +2052,14 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       alignment: Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: colors.card,
+          color: const Color(0xE017103B),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: colors.border),
+          border: Border.all(color: Colors.white.withOpacity(0.12)),
           boxShadow: [
             BoxShadow(
-              color: isDark ? Colors.black26 : const Color(0x06000000),
+              color: Colors.black.withOpacity(0.25),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -1887,13 +2068,37 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _BouncingDotsIndicator(color: colors.primary),
-            const SizedBox(width: 12),
-            Text(
+            Container(
+              width: 22,
+              height: 22,
+              margin: const EdgeInsets.only(right: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF7C3AED).withOpacity(0.35),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Image.asset(
+                  'assets/images/ai_ustoz_logo.png',
+                  width: 22,
+                  height: 22,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const _BouncingDotsIndicator(color: Color(0xFFA78BFA)),
+            const SizedBox(width: 10),
+            const Text(
               'AI Ustoz yozmoqda...',
               style: TextStyle(
+                fontFamily: 'Nunito',
                 fontSize: 13,
-                color: colors.muted,
+                color: Color(0xFFC7D2FE),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -1908,9 +2113,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: colors.card,
+        color: const Color(0xEB1A0D3D),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colors.primary),
+        border: Border.all(color: const Color(0xFFA78BFA).withOpacity(0.6)),
       ),
       child: Row(
         children: [
@@ -1928,14 +2133,23 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
-              children: [
+              children: const [
                 Text(
                   'Galereyadan surat tanlandi',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: colors.ink),
+                  style: TextStyle(
+                    fontFamily: 'Nunito',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
                 ),
                 Text(
                   'Savol yozing yoki darhol yechish uchun yuboring',
-                  style: TextStyle(fontSize: 11, color: colors.muted),
+                  style: TextStyle(
+                    fontFamily: 'Nunito',
+                    fontSize: 11,
+                    color: Color(0xFFC7D2FE),
+                  ),
                 ),
               ],
             ),
@@ -1957,11 +2171,11 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
       margin: const EdgeInsets.all(12),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: colors.card,
+        color: const Color(0xF01A0614),
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: const Color(0xFFEF4444), width: 1.5),
         boxShadow: const [
-          BoxShadow(color: Color(0x1AEF4444), blurRadius: 16, offset: Offset(0, 4)),
+          BoxShadow(color: Color(0x33EF4444), blurRadius: 16, offset: Offset(0, 4)),
         ],
       ),
       child: Row(
@@ -1982,7 +2196,12 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                   : 'Ovoz yozilmoqda: $minutes:$seconds',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFFEF4444), fontSize: 13),
+              style: const TextStyle(
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.w700,
+                color: Color(0xFFEF4444),
+                fontSize: 13,
+              ),
             ),
           ),
           const SizedBox(width: 8),
@@ -1993,7 +2212,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             onPressed: _cancelRecording,
-            child: Text('Bekor qilish', style: TextStyle(color: colors.muted, fontSize: 12)),
+            child: const Text('Bekor qilish', style: TextStyle(color: Color(0xFFC7D2FE), fontSize: 12)),
           ),
           const SizedBox(width: 4),
           IconButton(
@@ -2011,8 +2230,15 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: colors.card,
-        border: Border(top: BorderSide(color: colors.border)),
+        color: const Color(0xF00D0726),
+        border: Border(top: BorderSide(color: Colors.white.withOpacity(0.12), width: 1.0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.35),
+            blurRadius: 16,
+            offset: const Offset(0, -4),
+          ),
+        ],
       ),
       child: SafeArea(
         top: false,
@@ -2041,16 +2267,17 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
-                  color: colors.field,
+                  color: Colors.white.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: colors.border),
+                  border: Border.all(color: Colors.white.withOpacity(0.14)),
                 ),
                 child: TextField(
                   controller: _textController,
                   enabled: !_isLoading && !_isSending,
-                  style: TextStyle(
+                  style: const TextStyle(
+                    fontFamily: 'Nunito',
                     fontSize: 14,
-                    color: colors.ink,
+                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
                   onSubmitted: (_) {
@@ -2060,7 +2287,11 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
                     hintText: (_isLoading || _isSending)
                         ? 'Ustoz javob bermoqda...'
                         : 'Savol, misol yoki tenglamani yozing...',
-                    hintStyle: TextStyle(fontSize: 13, color: colors.inactive),
+                    hintStyle: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 13,
+                      color: Colors.white.withOpacity(0.40),
+                    ),
                     border: InputBorder.none,
                     isDense: true,
                     contentPadding: const EdgeInsets.symmetric(vertical: 10),
@@ -2093,8 +2324,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   }) {
     final isDisabled = onTap == null;
     final bgColor = isPrimary
-        ? (isDisabled ? colors.primary.withOpacity(0.4) : colors.primary)
-        : (isDisabled ? colors.field.withOpacity(0.4) : colors.field);
+        ? (isDisabled ? const Color(0xFF7C3AED).withOpacity(0.35) : const Color(0xFF7C3AED))
+        : (isDisabled ? Colors.white.withOpacity(0.04) : Colors.white.withOpacity(0.09));
 
     return Material(
       color: bgColor,
@@ -2110,16 +2341,25 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: isPrimary
-                  ? (isDisabled ? colors.primary.withOpacity(0.3) : colors.primary)
-                  : colors.border,
+                  ? (isDisabled ? const Color(0xFF8B5CF6).withOpacity(0.3) : const Color(0xFFA78BFA))
+                  : Colors.white.withOpacity(0.14),
             ),
+            boxShadow: isPrimary && !isDisabled
+                ? [
+                    BoxShadow(
+                      color: const Color(0xFF7C3AED).withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
           ),
           child: Icon(
             icon,
             size: 20,
             color: isPrimary
                 ? Colors.white
-                : (isDisabled ? colors.inactive : colors.primary),
+                : (isDisabled ? Colors.white24 : const Color(0xFFDDD6FE)),
           ),
         ),
       ),
@@ -2127,79 +2367,476 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen> {
   }
 }
 
-class _MascotAvatar extends StatefulWidget {
-  final bool isDark;
-  final Color primaryColor;
-  const _MascotAvatar({required this.isDark, required this.primaryColor});
+class _GlassActionButton extends StatefulWidget {
+  final Widget child;
+  final VoidCallback? onTap;
+  final String? tooltip;
+
+  const _GlassActionButton({
+    required this.child,
+    this.onTap,
+    this.tooltip,
+  });
 
   @override
-  State<_MascotAvatar> createState() => _MascotAvatarState();
+  State<_GlassActionButton> createState() => _GlassActionButtonState();
 }
 
-class _MascotAvatarState extends State<_MascotAvatar>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2400),
-    )..repeat(reverse: true);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+class _GlassActionButtonState extends State<_GlassActionButton> {
+  bool _pressed = false;
 
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          final floatOffset = _controller.value * 6.0;
-          final scale = 1.0 + (_controller.value * 0.04);
-          return Transform.translate(
-            offset: Offset(0, -floatOffset),
-            child: Transform.scale(
-              scale: scale,
-              child: Container(
-                width: 96,
-                height: 96,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: widget.isDark
-                        ? [const Color(0xFF382B7D), const Color(0xFF1E1742)]
-                        : [const Color(0xFFEDE9FE), const Color(0xFFDDD6FE)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: widget.primaryColor.withOpacity(widget.isDark ? 0.3 : 0.2),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.smart_toy_rounded,
-                    size: 54,
-                    color: widget.primaryColor,
-                  ),
-                ),
+    Widget content = GestureDetector(
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTapCancel: () => setState(() => _pressed = false),
+      onTap: widget.onTap,
+      child: AnimatedScale(
+        scale: _pressed ? 0.90 : 1.0,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOutCubic,
+        child: Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withOpacity(0.14), width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
               ),
-            ),
-          );
-        },
+            ],
+          ),
+          child: Center(child: widget.child),
+        ),
       ),
     );
+
+    if (widget.tooltip != null) {
+      return Tooltip(message: widget.tooltip!, child: content);
+    }
+    return content;
+  }
+}
+
+class _AIUstozHeroLogo extends StatelessWidget {
+  final Animation<double> animation;
+  final bool disableAnim;
+
+  const _AIUstozHeroLogo({
+    required this.animation,
+    required this.disableAnim,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        final val = disableAnim ? 0.0 : animation.value;
+        final breathCycle = (val * 3.5) % 1.0;
+        final scale = disableAnim ? 1.0 : (1.0 + math.sin(breathCycle * math.pi * 2) * 0.035);
+        final floatY = disableAnim ? 0.0 : (math.sin(breathCycle * math.pi * 2) * 6.0);
+
+        return RepaintBoundary(
+          child: SizedBox(
+            width: 220,
+            height: 200,
+            child: Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none,
+              children: [
+                // Soft glowing halo behind the logo
+                Transform.translate(
+                  offset: Offset(0, floatY),
+                  child: Container(
+                    width: 170,
+                    height: 170,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          Color(0x757C3AED), // bright violet glow
+                          Color(0x352563EB), // soft blue glow
+                          Colors.transparent,
+                        ],
+                        stops: [0.0, 0.55, 1.0],
+                      ),
+                    ),
+                  ),
+                ),
+
+                // 4 Orbiting twinkling stars
+                ...List.generate(4, (index) {
+                  final double baseAngle = (val * 2 * math.pi) + (index * math.pi / 2);
+                  const double orbitRadius = 78.0;
+                  final double ox = math.cos(baseAngle) * orbitRadius;
+                  final double oy = math.sin(baseAngle) * orbitRadius + floatY;
+
+                  final starData = [
+                    (Icons.auto_awesome, const Color(0xFFFBBF24), 18.0), // Gold
+                    (Icons.star_rounded, const Color(0xFF60A5FA), 14.0), // Electric Blue
+                    (Icons.auto_awesome, Colors.white, 16.0),            // Crisp White
+                    (Icons.star_rounded, const Color(0xFFF59E0B), 12.0), // Amber
+                  ][index];
+
+                  return Transform.translate(
+                    offset: Offset(ox, oy),
+                    child: Icon(
+                      starData.$1,
+                      color: starData.$2,
+                      size: starData.$3,
+                    ),
+                  );
+                }),
+
+                // Central AI Ustoz Logo (120x120) with smooth breathing & float
+                Transform.translate(
+                  offset: Offset(0, floatY),
+                  child: Transform.scale(
+                    scale: scale,
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(32),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF6D28D9).withOpacity(0.45),
+                            blurRadius: 28,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(32),
+                        child: Image.asset(
+                          'assets/images/ai_ustoz_logo.png',
+                          width: 120,
+                          height: 120,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _CosmicStar {
+  final double x;
+  final double y;
+  final double size;
+  final double twinkleSpeed;
+  final double phase;
+  final bool isSparkle;
+  final bool isGold;
+
+  const _CosmicStar({
+    required this.x,
+    required this.y,
+    required this.size,
+    required this.twinkleSpeed,
+    required this.phase,
+    required this.isSparkle,
+    required this.isGold,
+  });
+}
+
+class _CosmicCoin {
+  final double x;
+  final double initialY;
+  final double speed;
+  final double size;
+  final double flipSpeed;
+  final double phase;
+  final double opacity;
+
+  const _CosmicCoin({
+    required this.x,
+    required this.initialY,
+    required this.speed,
+    required this.size,
+    required this.flipSpeed,
+    required this.phase,
+    required this.opacity,
+  });
+}
+
+class CosmicBackgroundPainter extends CustomPainter {
+  final double progress;
+  final bool hasMessages;
+
+  CosmicBackgroundPainter({
+    required this.progress,
+    required this.hasMessages,
+  });
+
+  static const List<_CosmicStar> _stars = [
+    _CosmicStar(x: 0.12, y: 0.08, size: 3.5, twinkleSpeed: 2.2, phase: 0.0, isSparkle: true, isGold: true),
+    _CosmicStar(x: 0.85, y: 0.12, size: 4.2, twinkleSpeed: 1.8, phase: 1.2, isSparkle: true, isGold: false),
+    _CosmicStar(x: 0.28, y: 0.19, size: 2.0, twinkleSpeed: 3.1, phase: 2.4, isSparkle: false, isGold: false),
+    _CosmicStar(x: 0.72, y: 0.24, size: 3.8, twinkleSpeed: 2.5, phase: 0.7, isSparkle: true, isGold: true),
+    _CosmicStar(x: 0.06, y: 0.32, size: 2.2, twinkleSpeed: 1.9, phase: 3.1, isSparkle: false, isGold: true),
+    _CosmicStar(x: 0.92, y: 0.36, size: 3.0, twinkleSpeed: 2.8, phase: 1.9, isSparkle: true, isGold: false),
+    _CosmicStar(x: 0.44, y: 0.14, size: 1.8, twinkleSpeed: 3.4, phase: 0.3, isSparkle: false, isGold: false),
+    _CosmicStar(x: 0.61, y: 0.42, size: 2.4, twinkleSpeed: 2.1, phase: 2.8, isSparkle: false, isGold: true),
+    _CosmicStar(x: 0.18, y: 0.48, size: 4.0, twinkleSpeed: 1.7, phase: 1.5, isSparkle: true, isGold: false),
+    _CosmicStar(x: 0.79, y: 0.52, size: 2.0, twinkleSpeed: 3.2, phase: 0.9, isSparkle: false, isGold: false),
+    _CosmicStar(x: 0.35, y: 0.58, size: 3.4, twinkleSpeed: 2.6, phase: 2.1, isSparkle: true, isGold: true),
+    _CosmicStar(x: 0.90, y: 0.63, size: 2.2, twinkleSpeed: 1.6, phase: 3.5, isSparkle: false, isGold: false),
+    _CosmicStar(x: 0.08, y: 0.69, size: 3.6, twinkleSpeed: 2.3, phase: 0.4, isSparkle: true, isGold: true),
+    _CosmicStar(x: 0.53, y: 0.67, size: 1.9, twinkleSpeed: 3.0, phase: 1.8, isSparkle: false, isGold: false),
+    _CosmicStar(x: 0.25, y: 0.76, size: 2.5, twinkleSpeed: 2.4, phase: 2.9, isSparkle: false, isGold: true),
+    _CosmicStar(x: 0.82, y: 0.79, size: 3.8, twinkleSpeed: 1.9, phase: 0.6, isSparkle: true, isGold: false),
+    _CosmicStar(x: 0.40, y: 0.83, size: 2.1, twinkleSpeed: 3.3, phase: 1.3, isSparkle: false, isGold: false),
+    _CosmicStar(x: 0.68, y: 0.88, size: 3.2, twinkleSpeed: 2.0, phase: 2.6, isSparkle: true, isGold: true),
+    _CosmicStar(x: 0.14, y: 0.91, size: 2.2, twinkleSpeed: 2.7, phase: 0.8, isSparkle: false, isGold: true),
+    _CosmicStar(x: 0.94, y: 0.93, size: 3.5, twinkleSpeed: 2.2, phase: 1.7, isSparkle: true, isGold: false),
+    _CosmicStar(x: 0.48, y: 0.96, size: 1.8, twinkleSpeed: 3.5, phase: 3.2, isSparkle: false, isGold: false),
+    _CosmicStar(x: 0.31, y: 0.05, size: 2.2, twinkleSpeed: 2.5, phase: 0.2, isSparkle: false, isGold: true),
+    _CosmicStar(x: 0.65, y: 0.09, size: 3.0, twinkleSpeed: 2.9, phase: 1.6, isSparkle: true, isGold: true),
+    _CosmicStar(x: 0.04, y: 0.16, size: 1.7, twinkleSpeed: 3.6, phase: 2.5, isSparkle: false, isGold: false),
+    _CosmicStar(x: 0.96, y: 0.21, size: 3.2, twinkleSpeed: 1.8, phase: 0.5, isSparkle: true, isGold: false),
+    _CosmicStar(x: 0.50, y: 0.29, size: 2.0, twinkleSpeed: 2.3, phase: 1.1, isSparkle: false, isGold: true),
+    _CosmicStar(x: 0.22, y: 0.39, size: 3.1, twinkleSpeed: 2.7, phase: 2.7, isSparkle: true, isGold: true),
+    _CosmicStar(x: 0.76, y: 0.45, size: 1.9, twinkleSpeed: 3.1, phase: 0.1, isSparkle: false, isGold: false),
+    _CosmicStar(x: 0.38, y: 0.47, size: 2.6, twinkleSpeed: 2.0, phase: 3.3, isSparkle: false, isGold: true),
+    _CosmicStar(x: 0.60, y: 0.55, size: 3.3, twinkleSpeed: 2.4, phase: 1.4, isSparkle: true, isGold: false),
+    _CosmicStar(x: 0.10, y: 0.59, size: 1.8, twinkleSpeed: 3.4, phase: 2.0, isSparkle: false, isGold: false),
+    _CosmicStar(x: 0.86, y: 0.71, size: 3.0, twinkleSpeed: 2.1, phase: 0.8, isSparkle: true, isGold: true),
+  ];
+
+  static const List<_CosmicCoin> _coins = [
+    _CosmicCoin(x: 0.08, initialY: 0.04, speed: 0.20, size: 22.0, flipSpeed: 1.4, phase: 0.3, opacity: 0.65),
+    _CosmicCoin(x: 0.88, initialY: 0.14, speed: 0.17, size: 26.0, flipSpeed: 1.8, phase: 1.7, opacity: 0.75),
+    _CosmicCoin(x: 0.22, initialY: 0.28, speed: 0.24, size: 18.0, flipSpeed: 2.1, phase: 2.8, opacity: 0.45),
+    _CosmicCoin(x: 0.75, initialY: 0.38, speed: 0.19, size: 24.0, flipSpeed: 1.6, phase: 0.9, opacity: 0.70),
+    _CosmicCoin(x: 0.14, initialY: 0.52, speed: 0.23, size: 20.0, flipSpeed: 1.9, phase: 3.2, opacity: 0.50),
+    _CosmicCoin(x: 0.82, initialY: 0.62, speed: 0.16, size: 28.0, flipSpeed: 1.3, phase: 1.4, opacity: 0.80),
+    _CosmicCoin(x: 0.30, initialY: 0.72, speed: 0.21, size: 22.0, flipSpeed: 2.0, phase: 2.2, opacity: 0.55),
+    _CosmicCoin(x: 0.66, initialY: 0.82, speed: 0.22, size: 19.0, flipSpeed: 1.7, phase: 0.5, opacity: 0.48),
+    _CosmicCoin(x: 0.06, initialY: 0.90, speed: 0.18, size: 25.0, flipSpeed: 1.5, phase: 1.9, opacity: 0.68),
+    _CosmicCoin(x: 0.93, initialY: 0.46, speed: 0.25, size: 17.0, flipSpeed: 2.2, phase: 3.0, opacity: 0.42),
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final globalAlpha = hasMessages ? 0.40 : 1.0;
+
+    // 1. Deep Celestial Gradient (matching AI Ustoz Logo)
+    final bgRect = Offset.zero & size;
+    final bgPaint = Paint()
+      ..shader = ui.Gradient.linear(
+        Offset.zero,
+        Offset(0, size.height),
+        const [
+          Color(0xFF0F0A2A), // Deep indigo night sky
+          Color(0xFF1E104A), // Rich royal violet
+          Color(0xFF121B4C), // Midnight cosmic blue
+          Color(0xFF090D24), // Deep space footer
+        ],
+        const [0.0, 0.38, 0.75, 1.0],
+      );
+    canvas.drawRect(bgRect, bgPaint);
+
+    // 2. Soft Aurora Glows (gentle Lissajous drifting)
+    final aurora1Center = Offset(
+      size.width * (0.35 + 0.15 * math.sin(progress * 2 * math.pi * 0.5)),
+      size.height * (0.25 + 0.08 * math.cos(progress * 2 * math.pi * 0.7)),
+    );
+    final aurora1Paint = Paint()
+      ..shader = ui.Gradient.radial(
+        aurora1Center,
+        size.width * 0.55,
+        const [
+          Color(0x357C3AED), // bright violet
+          Color(0x153B82F6), // soft electric blue
+          Colors.transparent,
+        ],
+        const [0.0, 0.5, 1.0],
+      );
+    canvas.drawCircle(aurora1Center, size.width * 0.55, aurora1Paint);
+
+    final aurora2Center = Offset(
+      size.width * (0.70 + 0.12 * math.cos(progress * 2 * math.pi * 0.6)),
+      size.height * (0.65 + 0.10 * math.sin(progress * 2 * math.pi * 0.4)),
+    );
+    final aurora2Paint = Paint()
+      ..shader = ui.Gradient.radial(
+        aurora2Center,
+        size.width * 0.50,
+        const [
+          Color(0x280284C7), // electric cyan
+          Color(0x146D28D9), // purple
+          Colors.transparent,
+        ],
+        const [0.0, 0.5, 1.0],
+      );
+    canvas.drawCircle(aurora2Center, size.width * 0.50, aurora2Paint);
+
+    // 3. 25-35 Stars (Sparkles and round dots with varying twinkle)
+    for (final star in _stars) {
+      final sx = star.x * size.width;
+      final sy = star.y * size.height;
+      final wave = math.sin((progress * 2 * math.pi * star.twinkleSpeed) + star.phase).abs();
+      final alpha = (0.30 + 0.70 * wave).clamp(0.0, 1.0) * globalAlpha;
+
+      final color = star.isGold
+          ? Color.fromRGBO(251, 191, 36, alpha)
+          : Color.fromRGBO(255, 255, 255, alpha);
+
+      final starPaint = Paint()..color = color;
+
+      if (star.isSparkle) {
+        _drawSparkle(canvas, Offset(sx, sy), star.size * (0.85 + 0.3 * wave), starPaint);
+      } else {
+        canvas.drawCircle(Offset(sx, sy), (star.size / 2) * (0.8 + 0.3 * wave), starPaint);
+      }
+    }
+
+    // 4. Shooting Star across upper sky
+    final shootCycle = (progress * 2.6) % 1.0;
+    if (shootCycle < 0.25) {
+      final t = shootCycle / 0.25;
+      final startX = size.width * 0.82;
+      final startY = size.height * 0.08;
+      final endX = size.width * 0.14;
+      final endY = size.height * 0.36;
+
+      final currX = startX + (endX - startX) * t;
+      final currY = startY + (endY - startY) * t;
+      const tailLen = 65.0;
+      final dx = (endX - startX);
+      final dy = (endY - startY);
+      final len = math.sqrt(dx * dx + dy * dy);
+      final ux = dx / len;
+      final uy = dy / len;
+
+      final tailX = currX - ux * tailLen * (1.0 - t * 0.25);
+      final tailY = currY - uy * tailLen * (1.0 - t * 0.25);
+
+      final streakPaint = Paint()
+        ..shader = ui.Gradient.linear(
+          Offset(tailX, tailY),
+          Offset(currX, currY),
+          [
+            Colors.transparent,
+            const Color(0x60FBBF24),
+            Colors.white.withOpacity(0.9 * globalAlpha),
+          ],
+          const [0.0, 0.5, 1.0],
+        )
+        ..strokeWidth = 2.0
+        ..style = PaintingStyle.stroke;
+
+      canvas.drawLine(Offset(tailX, tailY), Offset(currX, currY), streakPaint);
+      canvas.drawCircle(Offset(currX, currY), 2.5, Paint()..color = Colors.white.withOpacity(globalAlpha));
+    }
+
+    // 5. 8-12 Gold Coins (Gently drifting downwards with 3D horizontal flip)
+    for (final coin in _coins) {
+      final coinX = coin.x * size.width;
+      final coinY = ((coin.initialY + progress * coin.speed * 4) % 1.0) * size.height;
+
+      // 3D flip factor scaleX (-1.0 to 1.0)
+      final flip = math.cos((progress * 2 * math.pi * coin.flipSpeed) + coin.phase);
+      final widthFactor = flip.abs().clamp(0.08, 1.0);
+      final isBack = flip < 0;
+
+      canvas.save();
+      canvas.translate(coinX, coinY);
+      canvas.rotate(0.12 * math.sin(progress * 2 * math.pi + coin.phase));
+
+      final r = coin.size / 2;
+      final w = r * widthFactor;
+      final h = r;
+
+      // Outer rim
+      final rimRect = Rect.fromCenter(center: Offset.zero, width: w * 2, height: h * 2);
+      final coinPaint = Paint()
+        ..shader = ui.Gradient.linear(
+          Offset(-w, -h),
+          Offset(w, h),
+          isBack
+              ? const [Color(0xFFD97706), Color(0xFFFBBF24), Color(0xFF92400E)]
+              : const [Color(0xFFFFFBEB), Color(0xFFFBBF24), Color(0xFFD97706)],
+          const [0.0, 0.5, 1.0],
+        )
+        ..color = Colors.white.withOpacity(coin.opacity * globalAlpha);
+
+      canvas.drawOval(rimRect, coinPaint);
+
+      // Inner face
+      if (w > 5) {
+        final innerRect = Rect.fromCenter(center: Offset.zero, width: (w - 2.2) * 2, height: (h - 2.2) * 2);
+        final innerPaint = Paint()
+          ..shader = ui.Gradient.linear(
+            Offset(-w, -h),
+            Offset(w, h),
+            const [Color(0xFFF59E0B), Color(0xFFB45309)],
+          )
+          ..color = Colors.white.withOpacity(coin.opacity * globalAlpha);
+        canvas.drawOval(innerRect, innerPaint);
+
+        // Center engraved Star
+        if (w > 8) {
+          final insigniaPaint = Paint()
+            ..color = const Color(0xFFFFFBEB).withOpacity(0.9 * coin.opacity * globalAlpha);
+          _drawEmbossedStar(canvas, Offset.zero, (w * 0.42).clamp(2.0, 7.0), insigniaPaint);
+        }
+      }
+
+      canvas.restore();
+    }
+  }
+
+  void _drawSparkle(Canvas canvas, Offset center, double size, Paint paint) {
+    final path = Path();
+    final half = size / 2;
+    path.moveTo(center.dx, center.dy - half);
+    path.quadraticBezierTo(center.dx, center.dy, center.dx + half, center.dy);
+    path.quadraticBezierTo(center.dx, center.dy, center.dx, center.dy + half);
+    path.quadraticBezierTo(center.dx, center.dy, center.dx - half, center.dy);
+    path.quadraticBezierTo(center.dx, center.dy, center.dx, center.dy - half);
+    path.close();
+    canvas.drawPath(path, paint);
+  }
+
+  void _drawEmbossedStar(Canvas canvas, Offset center, double radius, Paint paint) {
+    final path = Path();
+    for (int i = 0; i < 5; i++) {
+      final double outerAngle = -math.pi / 2 + i * 2 * math.pi / 5;
+      final double innerAngle = outerAngle + math.pi / 5;
+      final double ox = center.dx + radius * math.cos(outerAngle);
+      final double oy = center.dy + radius * math.sin(outerAngle);
+      final double ix = center.dx + (radius * 0.45) * math.cos(innerAngle);
+      final double iy = center.dy + (radius * 0.45) * math.sin(innerAngle);
+      if (i == 0) {
+        path.moveTo(ox, oy);
+      } else {
+        path.lineTo(ox, oy);
+      }
+      path.lineTo(ix, iy);
+    }
+    path.close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CosmicBackgroundPainter oldDelegate) {
+    return oldDelegate.progress != progress || oldDelegate.hasMessages != hasMessages;
   }
 }
 
