@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/network/api_client.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/announcement_popup.dart';
+import '../../core/widgets/popup_manager.dart';
 import '../../core/widgets/animated_math_background.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/kids_shell_layout.dart';
@@ -47,8 +48,8 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
     _loadHouseProgress();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        AnnouncementManager.checkAndShowAnnouncements(context, ref);
-        AnnouncementManager.startLivePolling(context, ref);
+        PopupManager.onDashboardLoaded(context, ref);
+        PopupManager.startLivePolling(context, ref);
       }
     });
   }
@@ -60,7 +61,7 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
         _mathAnimController.repeat();
       }
       if (mounted) {
-        AnnouncementManager.checkAndShowAnnouncements(context, ref);
+        PopupManager.onDashboardLoaded(context, ref);
         _loadHouseProgress();
         ref.read(weeklyActivityProvider.notifier).refresh();
       }

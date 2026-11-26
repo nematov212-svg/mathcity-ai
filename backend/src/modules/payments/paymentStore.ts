@@ -15,6 +15,7 @@ export interface PaymentOrder {
   provider: PaymentProvider;
   status: PaymentOrderStatus;
   checkoutUrl: string;
+  isDiscountApplied?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -95,7 +96,8 @@ class PaymentDataStore {
     amountUzs: number = 29000,
     checkoutUrl: string,
     provider: PaymentProvider = 'CLICK_BUSINESS',
-    planType: PlanType = 'MONTHLY'
+    planType: PlanType = 'MONTHLY',
+    isDiscountApplied: boolean = false
   ): PaymentOrder {
     const id = `order_${randomUUID().slice(0, 8)}_${Date.now()}`;
     const now = new Date().toISOString();
@@ -109,6 +111,7 @@ class PaymentDataStore {
       provider,
       status: 'PENDING',
       checkoutUrl,
+      isDiscountApplied,
       createdAt: now,
       updatedAt: now,
     };

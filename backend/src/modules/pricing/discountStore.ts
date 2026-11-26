@@ -1,4 +1,4 @@
-import { UserAccount } from '../../utils/repository.js';
+import type { UserAccount } from '../../utils/repository.js';
 import { paymentDataStore, PaymentTransaction } from '../payments/paymentStore.js';
 
 export interface DiscountSettings {
@@ -14,8 +14,8 @@ class DiscountStore {
   private settings: DiscountSettings = {
     enabled: true,
     discountPercent: 30,
-    durationDays: 7,
-    applicablePlans: ['monthly'],
+    durationDays: 1, // Strictly 24 hours (1 day) for new users
+    applicablePlans: ['monthly', 'yearly'],
     updatedAt: new Date().toISOString(),
     updatedBy: 'system',
   };
@@ -79,7 +79,7 @@ export function calculatePricing(user?: UserAccount, nowMs: number = Date.now())
         .some((t: PaymentTransaction) => t.status === 'SUCCESS' || (t.status as string) === 'COMPLETED' || (t.status as string) === 'PAID');
       const hasPriorPro = !!user.subscription?.proStartedAt;
 
-      if (hasPriorPaidOrder || hasPriorPro) {
+      if (hasPriorPaidOrder || hasPriorPro || user.newUserDiscountUsedAt) {
         isEligible = false;
         reason = 'Chegirma bitta foydalanuvchi uchun faqat bir marta amal qiladi.';
       } else {

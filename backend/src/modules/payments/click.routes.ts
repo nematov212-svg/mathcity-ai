@@ -54,21 +54,27 @@ paymentsRouter.post('/create-order', authMiddleware, (req: AuthenticatedRequest,
   const requestedDiscount = parse.success ? parse.data.applyDiscount : undefined;
   const rawRequestedPrice = parse.success ? (parse.data.requestedPrice || parse.data.amount) : undefined;
 
+  const newUserElig = repository.isNewUserDiscountEligible(user);
+  const isEligibleForDiscount = newUserElig.eligible;
+
   // Strict rule: if client specifically claimed a discount or discounted price when NOT eligible, reject with 400
   const isClaimingDiscount = requestedDiscount === true || (rawRequestedPrice !== undefined && rawRequestedPrice < targetPlan.basePrice);
-  if (isClaimingDiscount && !targetPlan.isDiscounted) {
+  if (isClaimingDiscount && !isEligibleForDiscount) {
     return res.status(400).json({
       success: false,
       error: 'Chegirma muddati tugagan yoki ushbu hisob uchun amal qilmaydi.',
-      details: pricing.eligibility.reason,
+      details: newUserElig.reason || pricing.eligibility.reason,
     });
   }
 
   // Server authoritative price calculation:
-  // If targetPlan has active discount and client did not explicitly decline it, apply finalPrice
-  const amountUzs = (targetPlan.isDiscounted && requestedDiscount !== false)
-    ? targetPlan.finalPrice
-    : targetPlan.basePrice;
+  let amountUzs = targetPlan.basePrice;
+  let isDiscountApplied = false;
+  if (isEligibleForDiscount && requestedDiscount !== false) {
+    const discountPct = newUserElig.eligible ? newUserElig.discountPercent : (targetPlan.discountPercent || 30);
+    amountUzs = Math.round(targetPlan.basePrice * (1 - discountPct / 100));
+    isDiscountApplied = true;
+  }
 
   const appBase = process.env.APP_BASE_URL || (config.isProduction ? 'https://mathcity-ai-web.onrender.com' : 'http://localhost:8085');
   const returnUrl = `${appBase}/#/kids/profile`;
@@ -87,7 +93,7 @@ paymentsRouter.post('/create-order', authMiddleware, (req: AuthenticatedRequest,
     checkoutUrl = `https://my.click.uz/services/pay?service_id=${serviceId}&merchant_id=${merchantId}&amount=${amountUzs}&transaction_param=${orderId}&return_url=${encodeURIComponent(returnUrl)}`;
   }
 
-  const order = paymentDataStore.createOrder(user.id, amountUzs, checkoutUrl, provider, planType);
+  const order = paymentDataStore.createOrder(user.id, amountUzs, checkoutUrl, provider, planType, isDiscountApplied);
 
   return res.json({
     success: true,
@@ -300,6 +306,9 @@ paymentsRouter.post('/click/complete', (req: Request, res: Response) => {
 
   // Authoritatively activate Pro subscription for 30 days
   repository.activatePro(user.id, 'web', click_trans_id?.toString());
+  if (repository.isNewUserDiscountEligible(user).eligible || amountUzs < 29000) {
+    repository.markNewUserDiscountUsed(user.id);
+  }
 
   return res.json({
     click_trans_id,
@@ -361,6 +370,9 @@ paymentsRouter.post('/confirm-order', authMiddleware, (req: AuthenticatedRequest
 
   // Activate Pro on user account
   const result = repository.activatePro(user.id, 'web', order.id, undefined, order.planType || 'MONTHLY');
+  if (order.isDiscountApplied || repository.isNewUserDiscountEligible(user).eligible) {
+    repository.markNewUserDiscountUsed(user.id);
+  }
 
   return res.json({
     success: true,

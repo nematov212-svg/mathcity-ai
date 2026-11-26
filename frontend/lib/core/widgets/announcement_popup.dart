@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../network/api_client.dart';
 import '../pricing/pricing_provider.dart';
 import '../../shared/providers/student_provider.dart';
+import 'urgent_announcement_dialog.dart';
 
 class AnnouncementButtonConfig {
   final String text;
@@ -96,6 +97,10 @@ class AnnouncementItem {
   final int? discountPrice;
   final int? originalPrice;
   final AnnouncementDesign? design;
+  final List<Map<String, dynamic>>? rewards;
+  final String? competitionStartDate;
+  final int? competitionTotalDays;
+  final int? daysElapsed;
 
   AnnouncementItem({
     required this.id,
@@ -115,11 +120,20 @@ class AnnouncementItem {
     this.discountPrice,
     this.originalPrice,
     this.design,
+    this.rewards,
+    this.competitionStartDate,
+    this.competitionTotalDays,
+    this.daysElapsed,
   });
 
   factory AnnouncementItem.fromJson(Map<String, dynamic> json) {
     final act = (json['buttonAction'] ?? json['buttonRoute']) as String?;
     final delay = (json['showDelaySeconds'] ?? json['delaySeconds'] as num?)?.toInt() ?? 0;
+    final rewardsRaw = json['rewards'] as List?;
+    final parsedRewards = rewardsRaw
+        ?.map((r) => Map<String, dynamic>.from(r as Map))
+        .toList();
+
     return AnnouncementItem(
       id: (json['id'] ?? '').toString(),
       type: (json['type'] ?? 'ANNOUNCEMENT').toString(),
@@ -140,6 +154,10 @@ class AnnouncementItem {
       design: json['design'] != null
           ? AnnouncementDesign.fromJson(json['design'] as Map<String, dynamic>)
           : null,
+      rewards: parsedRewards,
+      competitionStartDate: json['competitionStartDate'] as String?,
+      competitionTotalDays: (json['competitionTotalDays'] as num?)?.toInt(),
+      daysElapsed: (json['daysElapsed'] as num?)?.toInt(),
     );
   }
 }
@@ -316,11 +334,7 @@ class AnnouncementManager {
 /// 1. SHOSHILINCH E'LON POPUP DIALOG
 /// ---------------------------------------------------------------------------
 void showUrgentAnnouncementDialog(BuildContext context, AnnouncementItem item) {
-  showDialog(
-    context: context,
-    barrierDismissible: true,
-    builder: (ctx) => _UrgentAnnouncementDialog(item: item),
-  );
+  UrgentAnnouncementDialog.show(context, item);
 }
 
 class _UrgentAnnouncementDialog extends StatefulWidget {

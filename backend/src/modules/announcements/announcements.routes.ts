@@ -29,7 +29,8 @@ function getOptionalUser(req: Request) {
 announcementsRouter.get('/active', (req: Request, res: Response) => {
   const user = getOptionalUser(req);
   const userCreatedAt = user?.createdAt;
-  const list = repository.getActiveAnnouncements(userCreatedAt);
+  const list = repository.getActiveAnnouncements(user || undefined, userCreatedAt);
+  const contest = repository.getLeaderboardContest();
 
   return res.json({
     success: true,
@@ -38,8 +39,33 @@ announcementsRouter.get('/active', (req: Request, res: Response) => {
       total: list.length,
       serverTime: new Date().toISOString(),
       userCreatedAt: userCreatedAt || null,
-      hasNewUserDiscount: user ? repository.getSubscription(user.id).hasNewUserDiscount : true,
+      hasNewUserDiscount: user ? repository.isNewUserDiscountEligible(user).eligible : false,
+      competition: {
+        id: contest.id,
+        title: contest.name,
+        startDate: contest.startDate,
+        endDate: contest.endDate,
+        durationDays: contest.durationDays,
+        rewards: contest.prizes,
+      },
     },
+  });
+});
+
+/**
+ * POST /api/announcements/:id/dismiss
+ * User dismissed this popup: hide it for 24 hours on the server
+ */
+announcementsRouter.post('/:id/dismiss', (req: Request, res: Response) => {
+  const user = getOptionalUser(req);
+  const id = String(req.params.id);
+  if (user) {
+    repository.dismissAnnouncement(user.id, id);
+  }
+  return res.json({
+    success: true,
+    message: 'E‘lon 24 soatga yopildi.',
+    announcementId: id,
   });
 });
 

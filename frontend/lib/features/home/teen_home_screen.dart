@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/announcement_popup.dart';
+import '../../core/widgets/popup_manager.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/xp_bar.dart';
 import '../../shared/providers/student_provider.dart';
@@ -21,7 +21,7 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        AnnouncementManager.checkAndShowAnnouncements(context, ref);
+        PopupManager.onDashboardLoaded(context, ref);
       }
     });
   }

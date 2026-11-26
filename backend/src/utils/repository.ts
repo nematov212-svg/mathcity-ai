@@ -155,6 +155,8 @@ export interface UserAccount {
     playedAt: string;
   }>;
   createdAt: string;
+  newUserDiscountUsedAt?: string | null;
+  dismissedAnnouncements?: { [announcementId: string]: string };
 }
 
 export interface DailyActivityRecord {
@@ -226,6 +228,10 @@ export interface AnnouncementModel {
   createdAt: string;
   updatedAt: string;
   design?: any;
+  rewards?: Array<{ rank: number; coins: number; label?: string }>;
+  competitionStartDate?: string;
+  competitionTotalDays?: number;
+  daysElapsed?: number;
 }
 
 export interface DailyMissionRecord {
@@ -1379,11 +1385,26 @@ class DataRepository {
     return [...this.announcements];
   }
 
-  getActiveAnnouncements(userCreatedAt?: string): AnnouncementModel[] {
+  getActiveAnnouncements(userOrCreatedAt?: UserAccount | string, userCreatedAt?: string): AnnouncementModel[] {
     const now = Date.now();
+    const user = typeof userOrCreatedAt === 'object' && userOrCreatedAt !== null ? userOrCreatedAt : undefined;
+    const effectiveCreatedAt = user?.createdAt || (typeof userOrCreatedAt === 'string' ? userOrCreatedAt : userCreatedAt);
+    const contest = this.getLeaderboardContest();
+    const contestStartMs = new Date(contest.startDate).getTime();
+    const contestDaysElapsed = Math.min(
+      contest.durationDays,
+      Math.max(1, Math.floor((now - (isNaN(contestStartMs) ? now : contestStartMs)) / (24 * 3600 * 1000)) + 1)
+    );
+
     return this.announcements
       .filter((a) => {
         if (!a.isActive) return false;
+
+        // Hide if dismissed by user within the last 24 hours
+        if (user && this.isAnnouncementDismissedByUser(user.id, a.id, now)) {
+          return false;
+        }
+
         const startStr = a.startAt || a.startDate;
         if (startStr) {
           const start = new Date(startStr).getTime();
@@ -1395,26 +1416,128 @@ class DataRepository {
           if (!isNaN(end) && now > end) return false;
         }
 
-        // Audience check
-        const audience = a.audience || 'all';
-        if (audience.startsWith('new_users_within_days:')) {
-          const days = parseInt(audience.split(':')[1], 10) || 7;
-          if (!userCreatedAt) return false;
-          const regTime = new Date(userCreatedAt).getTime();
-          if (isNaN(regTime) || now - regTime > days * 24 * 3600 * 1000) {
-            return false;
-          }
-        } else if (a.type === 'SPECIAL_OFFER' || a.type === 'special_offer') {
-          if (userCreatedAt) {
-            const regTime = new Date(userCreatedAt).getTime();
-            if (!isNaN(regTime) && now - regTime > 7 * 24 * 3600 * 1000) {
+        // Special offer announcement check
+        if (a.type === 'SPECIAL_OFFER' || a.type === 'special_offer') {
+          if (user) {
+            const elig = this.isNewUserDiscountEligible(user, now);
+            if (!elig.eligible) return false;
+          } else if (effectiveCreatedAt) {
+            const regTime = new Date(effectiveCreatedAt).getTime();
+            if (isNaN(regTime) || now - regTime > 24 * 3600 * 1000) {
               return false;
             }
           }
         }
+
         return true;
       })
+      .map((a) => {
+        if (a.type === 'urgent' || a.type === 'URGENT_ANNOUNCEMENT') {
+          return {
+            ...a,
+            rewards: contest.prizes,
+            competitionStartDate: contest.startDate,
+            competitionTotalDays: contest.durationDays,
+            daysElapsed: contestDaysElapsed,
+          };
+        }
+        if (a.type === 'special_offer' || a.type === 'SPECIAL_OFFER') {
+          return {
+            ...a,
+            discountPercent: 30,
+            discountPrice: 20300,
+            originalPrice: 29000,
+          };
+        }
+        return a;
+      })
       .sort((a, b) => (b.priority || 0) - (a.priority || 0));
+  }
+
+  async dismissAnnouncement(userId: string, announcementId: string): Promise<void> {
+    const user = this.getUserById(userId);
+    const nowIso = new Date().toISOString();
+    if (user) {
+      if (!user.dismissedAnnouncements) {
+        user.dismissedAnnouncements = {};
+      }
+      user.dismissedAnnouncements[announcementId] = nowIso;
+    }
+    if (isDatabaseHealthy()) {
+      try {
+        await (prisma as any).userAnnouncementDismissal.upsert({
+          where: {
+            userId_announcementId: { userId, announcementId },
+          },
+          update: { dismissedAt: new Date() },
+          create: { userId, announcementId, dismissedAt: new Date() },
+        });
+      } catch (err) {
+        console.warn(`[Repository] Failed to persist announcement dismissal in DB: ${err}`);
+      }
+    }
+  }
+
+  isAnnouncementDismissedByUser(userId: string, announcementId: string, nowMs: number = Date.now()): boolean {
+    const user = this.getUserById(userId);
+    if (!user || !user.dismissedAnnouncements) return false;
+    const dismissedAtStr = user.dismissedAnnouncements[announcementId];
+    if (!dismissedAtStr) return false;
+    const dismissedAt = new Date(dismissedAtStr).getTime();
+    if (isNaN(dismissedAt)) return false;
+    return (nowMs - dismissedAt) < 24 * 3600 * 1000;
+  }
+
+  isNewUserDiscountEligible(
+    user?: UserAccount,
+    nowMs: number = Date.now()
+  ): { eligible: boolean; expiresAt: string | null; discountPercent: number; reason: string } {
+    const discountPercent = 30;
+
+    if (!user) {
+      return { eligible: false, expiresAt: null, discountPercent, reason: 'Foydalanuvchi tizimga kirmagan.' };
+    }
+    if (user.newUserDiscountUsedAt) {
+      return { eligible: false, expiresAt: null, discountPercent, reason: 'Chegirma allaqachon ishlatilgan.' };
+    }
+    if (user.subscription && user.subscription.status === 'PRO_ACTIVE') {
+      return { eligible: false, expiresAt: null, discountPercent, reason: 'MathCity Pro allaqachon faol.' };
+    }
+
+    const createdAtMs = new Date(user.createdAt).getTime();
+    if (isNaN(createdAtMs)) {
+      return { eligible: false, expiresAt: null, discountPercent, reason: 'Foydalanuvchi yaratilgan sana noto‘g‘ri.' };
+    }
+
+    const expiryMs = createdAtMs + 24 * 3600 * 1000;
+    if (nowMs >= expiryMs) {
+      return { eligible: false, expiresAt: null, discountPercent, reason: '24 soatlik muddat tugagan.' };
+    }
+
+    return {
+      eligible: true,
+      expiresAt: new Date(expiryMs).toISOString(),
+      discountPercent,
+      reason: 'Yangi foydalanuvchi uchun 30% chegirma faol.',
+    };
+  }
+
+  async markNewUserDiscountUsed(userId: string): Promise<void> {
+    const user = this.getUserById(userId);
+    const nowIso = new Date().toISOString();
+    if (user) {
+      user.newUserDiscountUsedAt = nowIso;
+    }
+    if (isDatabaseHealthy()) {
+      try {
+        await (prisma as any).user.update({
+          where: { id: userId },
+          data: { newUserDiscountUsedAt: new Date() },
+        });
+      } catch (err) {
+        console.warn(`[Repository] Failed to update newUserDiscountUsedAt in DB: ${err}`);
+      }
+    }
   }
 
   getAnnouncementById(id: string): AnnouncementModel | undefined {

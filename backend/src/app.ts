@@ -27,6 +27,7 @@ import { mediaRouter } from './modules/media/media.routes.js';
 import { exercisesRouter } from './modules/exercises/exercises.routes.js';
 import { announcementsRouter } from './modules/announcements/announcements.routes.js';
 import { pricingRouter } from './modules/pricing/pricing.routes.js';
+import { promotionsRouter } from './modules/promotions/promotions.routes.js';
 import { activityRouter } from './modules/activity/activity.routes.js';
 import { isDatabaseHealthy, checkDatabaseConnection } from './db/client.js';
 
@@ -163,6 +164,7 @@ app.use('/api/media', mediaRouter);
 app.use('/api/exercises', exercisesRouter);
 app.use('/api/announcements', announcementsRouter);
 app.use('/api/pricing', pricingRouter);
+app.use('/api/promotions', promotionsRouter);
 
 // Global aliases for /me, /leaderboard, and /users/me/avatar
 app.get(['/api/me', '/me', '/api/users/me'], (req, res, next) => {

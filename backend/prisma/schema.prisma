@@ -85,6 +85,8 @@ model User {
   ownedGameCars      UserGameCar[]
   gameDriftScores    GameDriftScore[]
   dailyActivities    DailyActivity[]
+  newUserDiscountUsedAt DateTime? @map("new_user_discount_used_at")
+  announcementDismissals UserAnnouncementDismissal[]
 
   @@map("users")
 }
@@ -575,4 +577,16 @@ model DailyActivity {
   @@unique([userId, date])
   @@index([userId])
   @@map("daily_activities")
+}
+
+model UserAnnouncementDismissal {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  announcementId String   @map("announcement_id")
+  dismissedAt    DateTime @default(now()) @map("dismissed_at")
+
+  @@unique([userId, announcementId])
+  @@index([userId])
+  @@map("user_announcement_dismissals")
 }
