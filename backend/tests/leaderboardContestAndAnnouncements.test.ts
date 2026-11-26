@@ -64,14 +64,14 @@ describe('Leaderboard Contest & Announcements System Tests', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
-    expect(Array.isArray(res.body.data)).toBe(true);
+    const data = Array.isArray(res.body.data) ? res.body.data : res.body.data.leaderboard;
+    expect(Array.isArray(data)).toBe(true);
     expect(res.body.me).toBeDefined();
     expect(res.body.contest).toBeDefined();
     expect(Array.isArray(res.body.contest.prizes)).toBe(true);
     expect(res.body.contest.prizes[0].coins).toBe(500);
 
     // Verify ordering by coins descending
-    const data = res.body.data;
     for (let i = 0; i < data.length - 1; i++) {
       if (data[i].coins === data[i + 1].coins) {
         expect(data[i].xp).toBeGreaterThanOrEqual(data[i + 1].xp);

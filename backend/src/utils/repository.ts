@@ -25,6 +25,12 @@ import {
   getTashkentSecondsUntilMidnight,
   getTashkentDayOfWeek,
 } from './tashkentTime.js';
+import {
+  ActivityLevel,
+  calculateActivityScore,
+  calculateActivityLevel,
+  ACTIVITY_THRESHOLDS,
+} from '../config/activityConfig.js';
 
 export type SubscriptionStatus =
   | 'FREE_TRIAL_ACTIVE'
@@ -95,6 +101,7 @@ export interface UserAccount {
   consecutiveCorrectAnswers?: number;
   currentStreak?: number;
   longestStreak?: number;
+  maxStreak?: number;
   lastActiveDate?: string; // YYYY-MM-DD
   isBlocked?: boolean;
   friendsCount?: number;
@@ -125,12 +132,21 @@ export interface UserAccount {
 }
 
 export interface DailyActivityRecord {
+  id?: string;
   userId: string;
   date: string; // YYYY-MM-DD
+  correctAnswers: number;
+  lessonsCompleted: number;
+  score: number;
+  level: ActivityLevel;
+  answeredQuestionIds?: string[];
+  completedLessonIds?: string[];
   seconds: number;
   lessonsDone: number;
   problemsSolved: number;
   lastHeartbeat: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export type MissionStatus = 'ACTIVE' | 'COMPLETED' | 'CLAIMED' | 'EXPIRED';
@@ -965,15 +981,7 @@ class DataRepository {
 
       // Advance daily mission & record activity
       this.advanceMissionProgress(userId, 'SOLVE_PROBLEM', 1);
-      const todayStr = getTashkentDateString();
-      const actKey = `${userId}:${todayStr}`;
-      let act = this.dailyActivities.get(actKey);
-      if (!act) {
-        act = { userId, date: todayStr, seconds: 60, lessonsDone: 0, problemsSolved: 0, lastHeartbeat: Date.now() };
-        this.dailyActivities.set(actKey, act);
-      }
-      act.problemsSolved++;
-      this.calculateStreak(userId);
+      this.recordDailyCorrectAnswer(userId, questionId);
     } else {
       user.incorrectQuestionCount++;
       user.consecutiveCorrectAnswers = 0;
@@ -1507,10 +1515,17 @@ class DataRepository {
       activity = {
         userId,
         date: todayStr,
+        correctAnswers: 0,
+        lessonsCompleted: 0,
+        score: 0,
+        level: 'NONE',
+        answeredQuestionIds: [],
+        completedLessonIds: [],
         seconds: 0,
         lessonsDone: 0,
         problemsSolved: 0,
         lastHeartbeat: Date.now(),
+        updatedAt: new Date().toISOString(),
       };
       this.dailyActivities.set(key, activity);
     }
@@ -1573,47 +1588,8 @@ class DataRepository {
     };
   }
 
-  getWeeklyActivity(userId: string): {
-    week: Array<{
-      dayKey: string;
-      dayName: string;
-      dateStr: string;
-      minutes: number;
-      lessonsDone: number;
-      problemsSolved: number;
-      isToday: boolean;
-      dayIndex: number;
-    }>;
-    currentDayIndex: number;
-    todayDateStr: string;
-    currentStreak: number;
-  } {
-    const weekDays = getTashkentWeekDays();
-    const currentDayIndex = getTashkentDayOfWeek();
-    const todayDateStr = getTashkentDateString();
-    const streak = this.calculateStreak(userId);
-
-    const week = weekDays.map((w) => {
-      const key = `${userId}:${w.dateStr}`;
-      const act = this.dailyActivities.get(key);
-      return {
-        dayKey: w.dayKey,
-        dayName: w.dayName,
-        dateStr: w.dateStr,
-        minutes: act ? Math.floor(act.seconds / 60) : 0,
-        lessonsDone: act ? act.lessonsDone : 0,
-        problemsSolved: act ? act.problemsSolved : 0,
-        isToday: w.isToday,
-        dayIndex: w.dayIndex,
-      };
-    });
-
-    return {
-      week,
-      currentDayIndex,
-      todayDateStr,
-      currentStreak: streak.currentStreak,
-    };
+  recordDailyActivityHeartbeat(userId: string, seconds = 15): { todayMinutes: number; totalMinutes: number } {
+    return this.recordHeartbeat(userId, seconds);
   }
 
   getStudyHistory7Days(userId: string): {
@@ -1661,45 +1637,312 @@ class DataRepository {
     return { history, totalMinutes, todayMinutes };
   }
 
-  // --- Streak Calculation ---
-  calculateStreak(userId: string): { currentStreak: number; longestStreak: number } {
+  // --- Daily Activity & Streak Management ---
+  recordDailyCorrectAnswer(userId: string, questionId?: string, referenceDate: Date = new Date()): { activity: DailyActivityRecord; isNew: boolean } {
     const user = this.getUserById(userId);
-    if (!user) return { currentStreak: 0, longestStreak: 0 };
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
 
-    if (user.currentStreak === undefined) user.currentStreak = 1;
-    if (user.longestStreak === undefined) user.longestStreak = Math.max(1, user.currentStreak);
+    const todayStr = getTashkentDateString(referenceDate);
+    const key = `${userId}:${todayStr}`;
+    let act = this.dailyActivities.get(key);
 
-    const todayStr = getTashkentDateString();
+    if (!act) {
+      act = {
+        userId,
+        date: todayStr,
+        correctAnswers: 0,
+        lessonsCompleted: 0,
+        score: 0,
+        level: 'NONE',
+        answeredQuestionIds: [],
+        completedLessonIds: [],
+        seconds: 60,
+        lessonsDone: 0,
+        problemsSolved: 0,
+        lastHeartbeat: Date.now(),
+        updatedAt: new Date().toISOString(),
+      };
+      this.dailyActivities.set(key, act);
+    }
+
+    act.answeredQuestionIds = act.answeredQuestionIds || [];
+    if (questionId && act.answeredQuestionIds.includes(questionId)) {
+      return { activity: act, isNew: false };
+    }
+
+    if (questionId) {
+      act.answeredQuestionIds.push(questionId);
+    }
+
+    act.correctAnswers = (act.correctAnswers || 0) + 1;
+    act.problemsSolved = act.correctAnswers;
+    act.score = calculateActivityScore(act.correctAnswers, act.lessonsCompleted || 0);
+    act.level = calculateActivityLevel(act.score);
+    act.updatedAt = new Date().toISOString();
+
+    this.calculateStreak(userId, referenceDate);
+    this.persistDailyActivity(act).catch(() => {});
+
+    return { activity: act, isNew: true };
+  }
+
+  recordDailyLessonCompleted(userId: string, lessonId?: string, referenceDate: Date = new Date()): { activity: DailyActivityRecord; isNew: boolean } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    const todayStr = getTashkentDateString(referenceDate);
+    const key = `${userId}:${todayStr}`;
+    let act = this.dailyActivities.get(key);
+
+    if (!act) {
+      act = {
+        userId,
+        date: todayStr,
+        correctAnswers: 0,
+        lessonsCompleted: 0,
+        score: 0,
+        level: 'NONE',
+        answeredQuestionIds: [],
+        completedLessonIds: [],
+        seconds: 180,
+        lessonsDone: 0,
+        problemsSolved: 0,
+        lastHeartbeat: Date.now(),
+        updatedAt: new Date().toISOString(),
+      };
+      this.dailyActivities.set(key, act);
+    }
+
+    act.completedLessonIds = act.completedLessonIds || [];
+    if (lessonId && act.completedLessonIds.includes(lessonId)) {
+      return { activity: act, isNew: false };
+    }
+
+    if (lessonId) {
+      act.completedLessonIds.push(lessonId);
+    }
+
+    act.lessonsCompleted = (act.lessonsCompleted || 0) + 1;
+    act.lessonsDone = act.lessonsCompleted;
+    act.score = calculateActivityScore(act.correctAnswers || 0, act.lessonsCompleted);
+    act.level = calculateActivityLevel(act.score);
+    act.updatedAt = new Date().toISOString();
+
+    this.calculateStreak(userId, referenceDate);
+    this.persistDailyActivity(act).catch(() => {});
+
+    return { activity: act, isNew: true };
+  }
+
+  setDailyActivityForTesting(
+    userId: string,
+    dateStr: string,
+    correctAnswers: number,
+    lessonsCompleted: number
+  ): DailyActivityRecord {
+    const key = `${userId}:${dateStr}`;
+    const score = calculateActivityScore(correctAnswers, lessonsCompleted);
+    const level = calculateActivityLevel(score);
+    const act: DailyActivityRecord = {
+      userId,
+      date: dateStr,
+      correctAnswers,
+      lessonsCompleted,
+      score,
+      level,
+      answeredQuestionIds: [],
+      completedLessonIds: [],
+      seconds: 120,
+      lessonsDone: lessonsCompleted,
+      problemsSolved: correctAnswers,
+      lastHeartbeat: Date.now(),
+      updatedAt: new Date().toISOString(),
+    };
+    this.dailyActivities.set(key, act);
+    return act;
+  }
+
+  // --- Streak Calculation ---
+  calculateStreak(
+    userId: string,
+    referenceDate: Date = new Date()
+  ): { currentStreak: number; longestStreak: number; todayNeedSave: boolean } {
+    const user = this.getUserById(userId);
+    if (!user) return { currentStreak: 0, longestStreak: 0, todayNeedSave: false };
+
+    const todayStr = getTashkentDateString(referenceDate);
     const [y, m, d] = todayStr.split('-').map(Number);
-    const todayDate = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+    const baseDate = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+
+    const checkQualifies = (dateStr: string): boolean => {
+      const act = this.dailyActivities.get(`${userId}:${dateStr}`);
+      if (!act) return false;
+      const score =
+        act.score !== undefined
+          ? act.score
+          : calculateActivityScore(
+              act.correctAnswers || act.problemsSolved || 0,
+              act.lessonsCompleted || act.lessonsDone || 0
+            );
+      return score >= 1;
+    };
+
+    const todayQualifies = checkQualifies(todayStr);
 
     let streak = 0;
-    for (let i = 0; i < 365; i++) {
-      const checkDate = new Date(todayDate.getTime() - i * 24 * 3600 * 1000);
-      const dateStr = getTashkentDateString(checkDate);
-      const key = `${userId}:${dateStr}`;
-      const act = this.dailyActivities.get(key);
+    let todayNeedSave = false;
 
-      const hadActivity =
-        (act && (act.lessonsDone > 0 || act.problemsSolved > 0 || act.seconds >= 60)) ||
-        (i === 0 && (user.completedLessons.length > 0 || user.solvedQuestions.length > 0));
-
-      if (hadActivity) {
-        streak++;
+    if (todayQualifies) {
+      streak = 1;
+      for (let i = 1; i < 365; i++) {
+        const checkDate = new Date(baseDate.getTime() - i * 24 * 3600 * 1000);
+        const dateStr = getTashkentDateString(checkDate);
+        if (checkQualifies(dateStr)) {
+          streak++;
+        } else {
+          break;
+        }
+      }
+    } else {
+      // Today is not qualified yet. Check yesterday.
+      const yesterdayDate = new Date(baseDate.getTime() - 24 * 3600 * 1000);
+      const yesterdayStr = getTashkentDateString(yesterdayDate);
+      if (checkQualifies(yesterdayStr)) {
+        todayNeedSave = true;
+        streak = 1;
+        for (let i = 2; i < 365; i++) {
+          const checkDate = new Date(baseDate.getTime() - i * 24 * 3600 * 1000);
+          const dateStr = getTashkentDateString(checkDate);
+          if (checkQualifies(dateStr)) {
+            streak++;
+          } else {
+            break;
+          }
+        }
       } else {
-        if (i === 0) continue; // if today is just starting, streak from yesterday still counts
-        break;
+        streak = 0;
       }
     }
 
-    user.currentStreak = Math.max(user.currentStreak, streak);
-    user.longestStreak = Math.max(user.longestStreak, user.currentStreak);
+    user.currentStreak = streak;
+    user.longestStreak = Math.max(user.longestStreak || 0, user.maxStreak || 0, streak);
+    user.maxStreak = user.longestStreak;
 
     if (user.currentStreak >= 7 && !user.unlockedAchievements.includes('ach_streak_hero')) {
       user.unlockedAchievements.push('ach_streak_hero');
     }
 
-    return { currentStreak: user.currentStreak, longestStreak: user.longestStreak };
+    return { currentStreak: user.currentStreak, longestStreak: user.longestStreak, todayNeedSave };
+  }
+
+  getWeeklyActivity(
+    userId: string,
+    referenceDate: Date = new Date()
+  ): {
+    days: Array<{
+      date: string;
+      weekday: string;
+      weekdayName: string;
+      correctAnswers: number;
+      lessonsCompleted: number;
+      score: number;
+      level: ActivityLevel;
+      isToday: boolean;
+      isFuture: boolean;
+    }>;
+    week: any[];
+    currentStreak: number;
+    maxStreak: number;
+    todayLevel: ActivityLevel;
+    todayScore: number;
+    todayNeedSave: boolean;
+    serverDate: string;
+    secondsUntilMidnight: number;
+  } {
+    const user = this.getUserById(userId);
+    const todayStr = getTashkentDateString(referenceDate);
+    const weekDays = getTashkentWeekDays(referenceDate);
+    const streakInfo = this.calculateStreak(userId, referenceDate);
+    const secondsUntilMidnight = getTashkentSecondsUntilMidnight(referenceDate);
+
+    const todayAct = this.dailyActivities.get(`${userId}:${todayStr}`);
+    const todayScore = todayAct ? todayAct.score || 0 : 0;
+    const todayLevel: ActivityLevel = todayAct ? todayAct.level || calculateActivityLevel(todayScore) : 'NONE';
+
+    const days = weekDays.map((w) => {
+      const isToday = w.dateStr === todayStr;
+      const isFuture = w.dateStr > todayStr;
+      const act = this.dailyActivities.get(`${userId}:${w.dateStr}`);
+
+      let correctAnswers = 0;
+      let lessonsCompleted = 0;
+      let score = 0;
+      let level: ActivityLevel = 'NONE';
+
+      if (!isFuture && act) {
+        correctAnswers = act.correctAnswers || act.problemsSolved || 0;
+        lessonsCompleted = act.lessonsCompleted || act.lessonsDone || 0;
+        score =
+          act.score !== undefined
+            ? act.score
+            : calculateActivityScore(correctAnswers, lessonsCompleted);
+        level = act.level || calculateActivityLevel(score);
+      }
+
+      return {
+        date: w.dateStr,
+        weekday: w.dayKey,
+        weekdayName: w.dayName,
+        correctAnswers,
+        lessonsCompleted,
+        score,
+        level,
+        isToday,
+        isFuture,
+      };
+    });
+
+    return {
+      days,
+      week: days,
+      currentStreak: streakInfo.currentStreak,
+      maxStreak: streakInfo.longestStreak,
+      todayLevel,
+      todayScore,
+      todayNeedSave: streakInfo.todayNeedSave,
+      serverDate: todayStr,
+      secondsUntilMidnight,
+    };
+  }
+
+  async persistDailyActivity(record: DailyActivityRecord): Promise<void> {
+    try {
+      if (!isDatabaseHealthy()) return;
+      await (prisma as any).dailyActivity.upsert({
+        where: {
+          userId_date: {
+            userId: record.userId,
+            date: record.date,
+          },
+        },
+        update: {
+          correctAnswers: record.correctAnswers,
+          lessonsCompleted: record.lessonsCompleted,
+          score: record.score,
+          level: record.level,
+        },
+        create: {
+          userId: record.userId,
+          date: record.date,
+          correctAnswers: record.correctAnswers,
+          lessonsCompleted: record.lessonsCompleted,
+          score: record.score,
+          level: record.level,
+        },
+      });
+    } catch {
+      // Non-fatal if database is offline or not migrated yet
+    }
   }
 
   // --- Daily Missions (Strictly 3 per day, Asia/Tashkent 00:00 midnight reset) ---

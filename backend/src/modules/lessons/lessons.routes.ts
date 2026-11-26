@@ -293,17 +293,7 @@ lessonsRouter.post('/:id/complete', authMiddleware, (req: AuthenticatedRequest, 
       user.unlockedAchievements.push('ach_first_step');
     }
 
-    const todayStr = getTashkentDateString();
-    const actKey = `${user.id}:${todayStr}`;
-    let act = (repository as any).dailyActivities?.get(actKey);
-    if (!act) {
-      act = { userId: user.id, date: todayStr, seconds: 180, lessonsDone: 1, problemsSolved: 5, lastHeartbeat: Date.now() };
-      (repository as any).dailyActivities?.set(actKey, act);
-    } else {
-      act.lessonsDone++;
-      act.problemsSolved += 5;
-    }
-    repository.calculateStreak(user.id);
+    repository.recordDailyLessonCompleted(user.id, lessonId);
     repository.persistUserToDatabase(user).catch(() => {});
   }
 

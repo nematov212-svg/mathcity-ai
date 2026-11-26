@@ -15,6 +15,8 @@ import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../core/widgets/user_avatar.dart';
 import '../../core/widgets/xp_coin.dart';
 import '../../shared/providers/student_provider.dart';
+import '../../shared/providers/weekly_activity_provider.dart';
+import 'widgets/weekly_streak_card.dart';
 
 class KidsHomeScreen extends ConsumerStatefulWidget {
   const KidsHomeScreen({super.key});
@@ -59,6 +61,7 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
       if (mounted) {
         AnnouncementManager.checkAndShowAnnouncements(context, ref);
         _loadHouseProgress();
+        ref.read(weeklyActivityProvider.notifier).refresh();
       }
     } else {
       if (_mathAnimController.isAnimating) {
@@ -303,7 +306,7 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                       ),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: _buildWeeklyStreakCard(student?.currentStreak ?? 1, colors),
+                        child: WeeklyStreakCard(colors: colors),
                       ),
                     ],
                   ),
@@ -878,158 +881,6 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
       bottomNavigationBar: KidsNavShellScope.of(context)
           ? null
           : const MathCityBottomNav(currentIndex: 0),
-    );
-  }
-
-  Widget _buildWeeklyStreakCard(int streak, AppThemeColors colors) {
-    final now = DateTime.now();
-    final todayWeekday = now.weekday; // 1 = Monday, 7 = Sunday
-    final dayNames = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'];
-    final isDark = colors.isDark;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF160E36).withValues(alpha: 0.85)
-            : colors.card,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isDark
-              ? const Color(0xFF8B5CF6).withValues(alpha: 0.3)
-              : colors.border,
-          width: 1.2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark
-                ? const Color(0xFF7C3AED).withValues(alpha: 0.1)
-                : Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text('🔥', style: TextStyle(fontSize: 14)),
-                    const SizedBox(width: 4),
-                    Flexible(
-                      child: Text(
-                        '$streak kunlik seriya',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontFamily: 'Nunito',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w800,
-                          color: colors.ink,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                'Har kuni',
-                style: TextStyle(
-                  fontFamily: 'Nunito',
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: colors.muted,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Row(
-            children: List.generate(7, (index) {
-              final dayIndex = index + 1; // 1 to 7
-              final isToday = dayIndex == todayWeekday;
-              final isPastOrToday = dayIndex <= todayWeekday;
-              final isActive = isPastOrToday && (todayWeekday - dayIndex < (streak > 0 ? streak : 1));
-
-              return Expanded(
-                child: Column(
-                  children: [
-                    // Day name ONLY ONCE at the top
-                    Text(
-                      dayNames[index],
-                      style: TextStyle(
-                        fontFamily: 'Nunito',
-                        fontSize: 9,
-                        fontWeight: isToday ? FontWeight.w900 : FontWeight.w700,
-                        color: isToday ? const Color(0xFFFBBF24) : colors.muted,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Container(
-                      height: 22,
-                      width: 22,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: isToday
-                            ? const LinearGradient(
-                                colors: [Color(0xFFFF7A00), Color(0xFFFF4800)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              )
-                            : (isActive
-                                ? const LinearGradient(
-                                    colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  )
-                                : null),
-                        color: (isToday || isActive)
-                            ? null
-                            : (isDark
-                                ? Colors.white.withValues(alpha: 0.08)
-                                : colors.field),
-                        border: isToday
-                            ? Border.all(color: Colors.amber, width: 1.2)
-                            : (isActive
-                                ? null
-                                : Border.all(
-                                    color: isDark
-                                        ? Colors.white12
-                                        : colors.border,
-                                    width: 1.0,
-                                  )),
-                        boxShadow: isToday
-                            ? [
-                                BoxShadow(
-                                  color: const Color(0xFFFF7A00).withValues(alpha: 0.5),
-                                  blurRadius: 6,
-                                  spreadRadius: 1,
-                                ),
-                              ]
-                            : null,
-                      ),
-                      child: Center(
-                        child: isToday
-                            ? const Icon(Icons.local_fire_department_rounded, color: Colors.white, size: 13)
-                            : (isActive
-                                ? const Icon(Icons.check_rounded, color: Colors.white, size: 13)
-                                : null),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
-          ),
-        ],
-      ),
     );
   }
 

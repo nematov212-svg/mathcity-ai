@@ -9,6 +9,7 @@ import '../../core/auth/auth_service.dart';
 import '../../core/network/api_client.dart';
 import '../../core/storage/storage_service.dart';
 import '../models/student_model.dart';
+import 'weekly_activity_provider.dart';
 
 class StudentState {
   final StudentModel? student;
@@ -45,10 +46,11 @@ class StudentState {
 }
 
 class StudentNotifier extends StateNotifier<StudentState> {
+  final Ref? _ref;
   final AuthService _authService = AuthService();
   StreamSubscription? _googleAccountSub;
 
-  StudentNotifier() : super(StudentState()) {
+  StudentNotifier([this._ref]) : super(StudentState()) {
     _loadFromCacheFirst();
     initializeSession();
     _initGoogleAuthListener();
@@ -363,7 +365,15 @@ class StudentNotifier extends StateNotifier<StudentState> {
     if (state.student == null) return;
     final isNew = !state.student!.completedLessons.contains(lessonId);
     final updatedList = List<String>.from(state.student!.completedLessons);
-    if (isNew) updatedList.add(lessonId);
+    if (isNew) {
+      updatedList.add(lessonId);
+      final ref = _ref;
+      if (ref != null) {
+        try {
+          ref.read(weeklyActivityProvider.notifier).optimisticRecordLesson();
+        } catch (_) {}
+      }
+    }
     final newCoins = state.student!.coinBalance + (isNew ? rewardCoins : 0);
     final newXP = state.student!.totalXP + (isNew ? rewardXP : 0);
     state = state.copyWith(
@@ -379,8 +389,8 @@ class StudentNotifier extends StateNotifier<StudentState> {
 
   Future<Map<String, dynamic>?> fetchWeeklyActivity() async {
     try {
-      final res = await ApiClient().dio.get('/profile/weekly');
-      if (res.data['success'] == true) {
+      final res = await ApiClient().dio.get('/activity/week');
+      if (res.data != null && res.data['success'] == true) {
         return res.data['data'];
       }
     } catch (_) {}
@@ -644,6 +654,13 @@ class StudentNotifier extends StateNotifier<StudentState> {
       // Persist to local storage
       unawaited(_persistLocalCoinsAndXP(newCoins, newXP));
       unawaited(_persistToCache(state.student!));
+
+      final ref = _ref;
+      if (isCorrectLocally && ref != null) {
+        try {
+          ref.read(weeklyActivityProvider.notifier).optimisticRecordAnswer();
+        } catch (_) {}
+      }
     }
 
     // Background resilient sync to server (skipped in flutter_test to avoid pending FakeAsync timers)
@@ -1086,5 +1103,5 @@ class StudentNotifier extends StateNotifier<StudentState> {
 }
 
 final studentProvider = StateNotifierProvider<StudentNotifier, StudentState>((ref) {
-  return StudentNotifier();
+  return StudentNotifier(ref);
 });

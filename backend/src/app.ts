@@ -27,6 +27,7 @@ import { mediaRouter } from './modules/media/media.routes.js';
 import { exercisesRouter } from './modules/exercises/exercises.routes.js';
 import { announcementsRouter } from './modules/announcements/announcements.routes.js';
 import { pricingRouter } from './modules/pricing/pricing.routes.js';
+import { activityRouter } from './modules/activity/activity.routes.js';
 import { isDatabaseHealthy, checkDatabaseConnection } from './db/client.js';
 
 function resolveStaticDirectory(...candidates: string[]): string {
@@ -152,7 +153,7 @@ app.use('/api/achievements', achievementsRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/stats', analyticsRouter);
 app.use('/api/profile', profileRouter);
-app.use('/api/activity', profileRouter);
+app.use('/api/activity', activityRouter);
 app.use('/api/settings', settingsRouter);
 app.use('/api/students', studentsRouter);
 app.use('/api/subscriptions', subscriptionsRouter);

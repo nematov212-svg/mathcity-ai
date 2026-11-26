@@ -84,6 +84,7 @@ model User {
   auditLogs          AdminAuditLog[]
   ownedGameCars      UserGameCar[]
   gameDriftScores    GameDriftScore[]
+  dailyActivities    DailyActivity[]
 
   @@map("users")
 }
@@ -557,4 +558,21 @@ model GameDriftScore {
   createdAt       DateTime  @default(now())
 
   @@map("game_drift_scores")
+}
+
+model DailyActivity {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date             String   // "YYYY-MM-DD" Asia/Tashkent
+  correctAnswers   Int      @default(0)
+  lessonsCompleted Int      @default(0)
+  score            Int      @default(0)
+  level            String   @default("NONE") // NONE, LOW, MEDIUM, HIGH
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@map("daily_activities")
 }

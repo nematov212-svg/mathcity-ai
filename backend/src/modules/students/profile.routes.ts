@@ -225,10 +225,23 @@ studentsRouter.get('/leaderboard', optionalAuthMiddleware, (req: AuthenticatedRe
 
   const slicedList = fullLeaderboard.slice(offset, offset + limit);
 
+  const responseData = {
+    leaderboard: slicedList,
+    me: meObject,
+    myRank: meObject,
+    contest,
+    totalCount: fullLeaderboard.length,
+    scope,
+    period,
+    limit,
+    offset,
+  };
+
   return res.json({
     success: true,
-    data: slicedList,
+    data: responseData,
     me: meObject,
+    myRank: meObject,
     contest,
     // Extended properties for backward compatibility
     leaderboard: slicedList,
