@@ -153,14 +153,24 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
         return;
       }
     } else {
-      if (loginOrEmail.length < 3) {
-        setState(() => _errorMessage = 'Login kamida 3 ta belgidan iborat bo‘lishi kerak.');
+      if (loginOrEmail.length < 4) {
+        setState(() => _errorMessage = 'Kamida 4 ta belgi kiriting.');
         _triggerShake();
         return;
       }
-      final loginRegex = RegExp(r'^[a-zA-Z0-9_.-]{3,30}$');
+      if (loginOrEmail.length > 20) {
+        setState(() => _errorMessage = 'Foydalanuvchi nomi 20 ta belgidan oshmasligi kerak.');
+        _triggerShake();
+        return;
+      }
+      final loginRegex = RegExp(r'^[a-zA-Z0-9_.]+$');
       if (!loginRegex.hasMatch(loginOrEmail)) {
-        setState(() => _errorMessage = 'Login faqat lotin harflari, raqamlar, pastki chiziq va nuqtadan iborat bo‘lsin (3-30 belgi).');
+        setState(() => _errorMessage = 'Login faqat lotin harflari, raqamlar, pastki chiziq va nuqtadan iborat bo‘lsin.');
+        _triggerShake();
+        return;
+      }
+      if (!RegExp(r'[a-zA-Z]').hasMatch(loginOrEmail)) {
+        setState(() => _errorMessage = 'Loginda kamida bitta harf bo‘lishi kerak.');
         _triggerShake();
         return;
       }

@@ -142,7 +142,7 @@ lessonsRouter.get('/', optionalAuthMiddleware, (req: AuthenticatedRequest, res: 
 /**
  * GET /api/lessons/:id
  */
-lessonsRouter.get('/:id', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+lessonsRouter.get('/:id', optionalAuthMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
   const lessonId = String(req.params.id);
   const lesson = repository.getLessonById(lessonId);
@@ -160,13 +160,13 @@ lessonsRouter.get('/:id', authMiddleware, (req: AuthenticatedRequest, res: Respo
       videoUrl: lesson.videoUrl || null,
       audioUrl: lesson.audioUrl || null,
       textExplanation: lesson.textExplanation || lesson.contentMd || '',
-      isCompleted: user.completedLessons.includes(lesson.id),
+      isCompleted: (user?.completedLessons || []).includes(lesson.id) || (user?.completedLessons || []).includes(lessonId),
       sections: (lesson.sections || []).map((s) => ({
         id: s.id,
         title: s.title,
         orderIndex: s.orderIndex,
         questionCount: s.questions ? s.questions.length : 0,
-        isCompleted: user.completedSections.includes(s.id),
+        isCompleted: (user?.completedSections || []).includes(s.id),
       })),
     },
   });

@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 import 'dart:math' as math;
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,6 +26,7 @@ class LessonReaderScreen extends ConsumerStatefulWidget {
 class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
   LessonModel? _lesson;
   bool _isLoading = true;
+  String? _errorMessage;
   int _currentStep = 0; // 0: Kirish, 1: Tushuntirish, 2: Misollar, 3: Mashq, 4: Mini-test
 
   // Quiz state
@@ -55,9 +57,23 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
       return;
     }
 
+    if (!mounted) return;
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
     try {
-      final res = await ApiClient().dio.get('/lessons/${widget.lessonId}');
-      if (res.data['success'] == true) {
+      final res = await ApiClient().dio.get(
+        '/lessons/${widget.lessonId}',
+        options: Options(
+          validateStatus: (status) => true,
+          sendTimeout: const Duration(seconds: 6),
+          receiveTimeout: const Duration(seconds: 6),
+        ),
+      );
+
+      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
         final data = res.data['data'];
         final lesson = LessonModel.fromJson(data);
 
@@ -88,13 +104,26 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
             _lesson = lesson;
             _quizQuestions = questions;
             _isLoading = false;
+            _errorMessage = null;
           });
           return;
         }
+      } else if (res.statusCode == 404) {
+        // Safe graceful fallback for offline / unseeded lesson IDs
+        if (mounted) {
+          _loadFallbackLesson();
+          return;
+        }
       }
-    } catch (_) {}
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('ℹ️ [LessonReader] Darsni yuklashda ogohlantirish: $e');
+      }
+    }
 
-    _loadFallbackLesson();
+    if (mounted) {
+      _loadFallbackLesson();
+    }
   }
 
   void _loadFallbackLesson() {
@@ -294,6 +323,50 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
         backgroundColor: colors.bg,
         body: Center(
           child: CircularProgressIndicator(color: colors.primary),
+        ),
+      );
+    }
+
+    if (_lesson == null) {
+      return Scaffold(
+        backgroundColor: colors.bg,
+        appBar: AppBar(
+          backgroundColor: colors.card,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_rounded, color: colors.ink),
+            onPressed: () => context.pop(),
+          ),
+          title: Text('Dars', style: TextStyle(color: colors.ink, fontWeight: FontWeight.bold)),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.menu_book_rounded, size: 64, color: colors.primary),
+                const SizedBox(height: 16),
+                Text(
+                  _errorMessage ?? 'Dars topilmadi yoki vaqtincha ochilmadi.',
+                  style: TextStyle(color: colors.ink, fontSize: 16, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton.icon(
+                  onPressed: _fetchLesson,
+                  icon: const Icon(Icons.refresh_rounded),
+                  label: const Text('Qayta urinish'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colors.primary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       );
     }

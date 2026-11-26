@@ -413,6 +413,18 @@ class DataRepository {
     return false;
   }
 
+  getTakenUsernamesBatch(rawUsernames: string[]): Set<string> {
+    const set = new Set(rawUsernames.map((u) => u.trim().toLowerCase()).filter(Boolean));
+    const taken = new Set<string>();
+    for (const user of this.getAllUsers()) {
+      const lower = (user.usernameLower || user.username || '').trim().toLowerCase();
+      if (set.has(lower)) {
+        taken.add(lower);
+      }
+    }
+    return taken;
+  }
+
   createUser(user: UserAccount): UserAccount {
     if (user.username) {
       user.usernameLower = user.username.trim().toLowerCase();
@@ -773,10 +785,43 @@ class DataRepository {
   }
 
   getLessonById(id: string): LessonModel | undefined {
+    if (!id) return undefined;
     const direct = this.lessons.find((l) => l.id === id);
     if (direct) return direct;
-    // Alias fallback for known legacy ID
-    if (id === 'lesson-k3-01') return this.lessons.find((l) => l.id === 'lesson-g3-addsub');
+
+    // 1. Direct prefix translation: lesson-k{grade}-{index} -> lesson-g{grade}-{index}
+    // e.g. lesson-k2-01 -> lesson-g2-01, lesson-k1-01 -> lesson-g1-01
+    const kidMatch = id.match(/^lesson-k(\d+)-(\d+)$/i);
+    if (kidMatch) {
+      const grade = parseInt(kidMatch[1], 10);
+      const idx = kidMatch[2];
+      const gId = `lesson-g${grade}-${idx}`;
+      const foundG = this.lessons.find((l) => l.id === gId);
+      if (foundG) return foundG;
+    }
+
+    // 2. Specific known aliases
+    if (id === 'lesson-k3-01') {
+      const g3 = this.lessons.find((l) => l.id === 'lesson-g3-addsub' || l.id === 'lesson-g3-01');
+      if (g3) return g3;
+    }
+    if (id === 'lesson-k2-01') {
+      const g2 = this.lessons.find((l) => l.id === 'lesson-g2-01');
+      if (g2) return g2;
+    }
+    if (id === 'lesson-k1-01') {
+      const g1 = this.lessons.find((l) => l.id === 'lesson-g1-01');
+      if (g1) return g1;
+    }
+    if (id === 'lesson-k4-01') {
+      const g4 = this.lessons.find((l) => l.id === 'lesson-g4-01');
+      if (g4) return g4;
+    }
+
+    // 3. Match by case-insensitive ID
+    const ci = this.lessons.find((l) => l.id.toLowerCase() === id.toLowerCase());
+    if (ci) return ci;
+
     return undefined;
   }
 

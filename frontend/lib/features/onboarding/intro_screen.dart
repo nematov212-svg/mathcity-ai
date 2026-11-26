@@ -37,7 +37,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   String? _usernameMessage;
   bool _isUsernameError = false;
   bool _isShakeField = false;
-  List<String> _suggestions = ['MathNinja', 'AlgebraStar', 'NumberKing'];
+  List<String> _suggestions = ['MathHero2026', 'SuperMath123', 'ZehnliBola88'];
+  final List<String> _shownSuggestions = [];
+  bool _isLoadingSuggestions = false;
 
   // ─── Step 2 State ─────────────────────────────────────────────────────────
   DateTime? _selectedDate;
@@ -64,32 +66,32 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   Future<void> _initSuggestions() async {
     final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
     if (isTest) return;
-    final baseNames = ['MathNinja', 'AlgebraStar', 'NumberKing'];
-    final updated = <String>[];
-    for (final base in baseNames) {
-      String candidate = base;
-      int suffix = 1;
-      bool available = false;
-      while (!available && suffix <= 99) {
-        try {
-          final res = await AuthService().checkUsername(candidate);
-          if (res['available'] == true) {
-            available = true;
-            break;
-          }
-        } catch (_) {
-          available = true;
-          break;
-        }
-        suffix++;
-        candidate = '$base$suffix';
+    await _refreshSuggestions();
+  }
+
+  Future<void> _refreshSuggestions() async {
+    if (_isLoadingSuggestions) return;
+    setState(() => _isLoadingSuggestions = true);
+    try {
+      final seed = _usernameController.text.trim().isNotEmpty
+          ? _usernameController.text.trim()
+          : 'MathHero';
+      final list = await AuthService().getUsernameSuggestions(
+        seed: seed,
+        count: 3,
+        excluded: _shownSuggestions,
+      );
+      if (mounted) {
+        setState(() {
+          _suggestions = list;
+          _shownSuggestions.addAll(list);
+          _isLoadingSuggestions = false;
+        });
       }
-      updated.add(candidate);
-    }
-    if (mounted) {
-      setState(() {
-        _suggestions = updated;
-      });
+    } catch (_) {
+      if (mounted) {
+        setState(() => _isLoadingSuggestions = false);
+      }
     }
   }
 
@@ -130,22 +132,42 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       return;
     }
 
-    if (username.length < 3 || username.length > 20) {
+    if (username.length < 4) {
       setState(() {
         _isCheckingUsername = false;
         _isUsernameValid = false;
         _isUsernameError = true;
-        _usernameMessage = 'Format noto‘g‘ri (3–20 belgi, faqat lotin harflari va raqamlar)';
+        _usernameMessage = 'Kamida 4 ta belgi kiriting';
       });
       return;
     }
 
-    if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(username)) {
+    if (username.length > 20) {
       setState(() {
         _isCheckingUsername = false;
         _isUsernameValid = false;
         _isUsernameError = true;
-        _usernameMessage = 'Format noto‘g‘ri (3–20 belgi, faqat lotin harflari va raqamlar)';
+        _usernameMessage = 'Foydalanuvchi nomi 20 ta belgidan oshmasligi kerak';
+      });
+      return;
+    }
+
+    if (!RegExp(r'^[a-zA-Z0-9_.]+$').hasMatch(username)) {
+      setState(() {
+        _isCheckingUsername = false;
+        _isUsernameValid = false;
+        _isUsernameError = true;
+        _usernameMessage = 'Faqat lotin harflari, raqamlar, _ va . ruxsat etiladi';
+      });
+      return;
+    }
+
+    if (!RegExp(r'[a-zA-Z]').hasMatch(username)) {
+      setState(() {
+        _isCheckingUsername = false;
+        _isUsernameValid = false;
+        _isUsernameError = true;
+        _usernameMessage = 'Kamida bitta harf bo‘lishi kerak';
       });
       return;
     }
@@ -203,12 +225,12 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
 
   void _handleStep1Continue() {
     final username = _usernameController.text.trim();
-    if (username.isEmpty || !_isUsernameValid) {
+    if (username.length < 4 || !_isUsernameValid) {
       setState(() {
         _isShakeField = true;
         _isUsernameError = true;
-        if (username.isEmpty) {
-          _usernameMessage = 'Foydalanuvchi nomini kiriting.';
+        if (username.length < 4) {
+          _usernameMessage = 'Kamida 4 ta belgi kiriting';
         }
       });
       Future.delayed(const Duration(milliseconds: 350), () {
@@ -662,21 +684,54 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
           spacing: 8,
           runSpacing: 8,
           children: [
-            ChipTag(label: '3–20 belgi'),
+            ChipTag(label: 'Kamida 4 ta belgi'),
             ChipTag(label: 'Lotin harflari'),
-            ChipTag(label: 'Raqamlar'),
+            ChipTag(label: 'Raqamlar va _ .'),
           ],
         ),
 
         const SizedBox(height: 20),
 
-        // Suggestions section
-        Text(
-          'Tavsiyalar',
-          style: OnboardingTheme.labelStyle(
-            color: OnboardingTheme.muted,
-            fontSize: 14,
-          ).copyWith(fontWeight: FontWeight.w700),
+        // Suggestions section with "Boshqa variantlar"
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Tavsiyalar',
+              style: OnboardingTheme.labelStyle(
+                color: OnboardingTheme.muted,
+                fontSize: 14,
+              ).copyWith(fontWeight: FontWeight.w700),
+            ),
+            InkWell(
+              onTap: _isLoadingSuggestions ? null : _refreshSuggestions,
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _isLoadingSuggestions
+                        ? const SizedBox(
+                            width: 13,
+                            height: 13,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.refresh_rounded, size: 16, color: Color(0xFF6C47FF)),
+                    const SizedBox(width: 4),
+                    const Text(
+                      'Boshqa variantlar',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF6C47FF),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
 
         const SizedBox(height: 10),
@@ -695,11 +750,13 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
 
         const SizedBox(height: 32),
 
-        // CTA Button
+        // CTA Button (blocked if length < 4 or invalid or checking)
         PrimaryButton(
           text: 'Davom etish',
           trailing: const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
-          onPressed: (_isUsernameValid && !_isCheckingUsername && _usernameController.text.trim().isNotEmpty)
+          onPressed: (_isUsernameValid &&
+                  !_isCheckingUsername &&
+                  _usernameController.text.trim().length >= 4)
               ? _handleStep1Continue
               : null,
         ),

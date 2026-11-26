@@ -741,35 +741,73 @@ class AuthService {
   /// Check username availability and uniqueness
   Future<Map<String, dynamic>> checkUsername(String username) async {
     final clean = username.trim();
-    try {
-      final res = await ApiClient().dio.get('/users/check-username', queryParameters: {
-        'u': clean,
-      });
-      if (res.data['success'] == true) {
-        return res.data['data'] as Map<String, dynamic>;
-      }
-      return {'available': false, 'message': res.data['error'] ?? '✕ Bu nom band, boshqasini tanlang'};
-    } catch (e) {
-      try {
-        final fallbackRes = await ApiClient().dio.get('/auth/username-available', queryParameters: {
-          'username': clean,
-        });
-        if (fallbackRes.data['success'] == true) {
-          return fallbackRes.data['data'] as Map<String, dynamic>;
-        }
-      } catch (_) {}
-
-      if (e is DioException && e.response?.data != null) {
-        final data = e.response!.data;
-        if (data is Map && data['data'] != null && data['data']['message'] != null) {
-          return {'available': false, 'message': data['data']['message'].toString()};
-        }
-        if (data is Map && data['error'] != null) {
-          return {'available': false, 'message': data['error'].toString()};
-        }
-      }
-      return {'available': false, 'message': 'Foydalanuvchi nomini tekshirishda xatolik yuz berdi.'};
+    if (clean.length < 4) {
+      return {
+        'available': false,
+        'formatValid': false,
+        'message': 'Kamida 4 ta belgi kiriting',
+      };
     }
+    try {
+      final res = await ApiClient().dio.get(
+        '/auth/username-available',
+        queryParameters: {'username': clean},
+        options: Options(
+          validateStatus: (status) => true,
+          sendTimeout: const Duration(seconds: 4),
+          receiveTimeout: const Duration(seconds: 4),
+        ),
+      );
+      if (res.statusCode == 200 && res.data != null) {
+        final available = res.data['available'] == true ||
+            (res.data['data'] is Map && res.data['data']['available'] == true);
+        final message = (res.data['data'] is Map && res.data['data']['message'] != null)
+            ? res.data['data']['message']
+            : (res.data['message'] ?? (available ? '✓ Bu nom bo‘sh' : 'Bu username band. Boshqasini tanlang.'));
+        return {
+          'available': available,
+          'message': message,
+        };
+      }
+      if (res.data != null && res.data is Map) {
+        return {
+          'available': false,
+          'message': res.data['message'] ?? res.data['error'] ?? 'Bu username band. Boshqasini tanlang.',
+        };
+      }
+    } catch (_) {}
+    return {'available': true, 'message': '✓ Bu nom bo‘sh'};
+  }
+
+  /// Get 3 automatic available username suggestions with optional excluded list
+  Future<List<String>> getUsernameSuggestions({
+    String seed = 'MathHero',
+    int count = 3,
+    List<String> excluded = const [],
+  }) async {
+    try {
+      final res = await ApiClient().dio.get(
+        '/auth/username-suggestions',
+        queryParameters: {
+          'seed': seed,
+          'count': count,
+          if (excluded.isNotEmpty) 'excluded': excluded.join(','),
+        },
+        options: Options(
+          validateStatus: (status) => true,
+          sendTimeout: const Duration(seconds: 4),
+          receiveTimeout: const Duration(seconds: 4),
+        ),
+      );
+      if (res.statusCode == 200 && res.data != null) {
+        final raw = res.data['data'] ?? res.data['suggestions'];
+        if (raw is List) {
+          final list = raw.map((e) => e.toString()).toList();
+          if (list.isNotEmpty) return list;
+        }
+      }
+    } catch (_) {}
+    return ['MathHero2026', 'SuperMath123', 'ZehnliBola88'];
   }
 
   /// Complete student profile with unique username and verified birth date
@@ -819,11 +857,14 @@ class AuthService {
     if (res != null && res.data != null) {
       final data = res.data;
       if (data is Map) {
+        if (data['error'] == 'USERNAME_TAKEN' && data['message'] != null) {
+          return data['message'].toString();
+        }
+        if (data['message'] != null && data['message'].toString().isNotEmpty && data['message'] != data['error']) {
+          return data['message'].toString();
+        }
         if (data['error'] != null && data['error'].toString().isNotEmpty) {
           return data['error'].toString();
-        }
-        if (data['message'] != null && data['message'].toString().isNotEmpty) {
-          return data['message'].toString();
         }
       } else if (data is String) {
         try {

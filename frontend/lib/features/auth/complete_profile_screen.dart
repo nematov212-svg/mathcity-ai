@@ -74,22 +74,42 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
       return;
     }
 
-    if (clean.length < 3 || clean.length > 20) {
+    if (clean.length < 4) {
       setState(() {
         _isCheckingUsername = false;
         _isUsernameAvailable = false;
         _hasCheckedUsername = true;
-        _usernameStatusMessage = 'Foydalanuvchi nomi 3 dan 20 tagacha belgidan iborat bo‘lishi kerak.';
+        _usernameStatusMessage = 'Kamida 4 ta belgi kiriting.';
       });
       return;
     }
 
-    if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(clean)) {
+    if (clean.length > 20) {
       setState(() {
         _isCheckingUsername = false;
         _isUsernameAvailable = false;
         _hasCheckedUsername = true;
-        _usernameStatusMessage = 'Faqat lotin harflari, raqamlar va pastki chiziq ruxsat etiladi.';
+        _usernameStatusMessage = 'Foydalanuvchi nomi 20 ta belgidan oshmasligi kerak.';
+      });
+      return;
+    }
+
+    if (!RegExp(r'^[a-zA-Z0-9_.]+$').hasMatch(clean)) {
+      setState(() {
+        _isCheckingUsername = false;
+        _isUsernameAvailable = false;
+        _hasCheckedUsername = true;
+        _usernameStatusMessage = 'Faqat lotin harflari, raqamlar, pastki chiziq va nuqta ruxsat etiladi.';
+      });
+      return;
+    }
+
+    if (!RegExp(r'[a-zA-Z]').hasMatch(clean)) {
+      setState(() {
+        _isCheckingUsername = false;
+        _isUsernameAvailable = false;
+        _hasCheckedUsername = true;
+        _usernameStatusMessage = 'Kamida bitta harf bo‘lishi kerak.';
       });
       return;
     }

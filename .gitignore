@@ -40,6 +40,8 @@ coverage/
 # 4. Database & Backups
 *.sql.gz
 *.sql
+!backend/prisma/migrations/**/*.sql
+!prisma/migrations/**/*.sql
 backend/prisma/*.db
 backend/prisma/*.db-journal
 backend/backups/

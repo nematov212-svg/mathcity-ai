@@ -7,7 +7,7 @@ import { config } from '../../config/env.js';
 import { repository, UserAccount } from '../../utils/repository.js';
 import { checkAgeEligibility } from '../../utils/age.js';
 import { authMiddleware, AuthenticatedRequest } from '../../middleware/auth.js';
-import { authRateLimiter } from '../../middleware/rateLimit.js';
+import { authRateLimiter, createRateLimiter } from '../../middleware/rateLimit.js';
 
 export const authRouter = Router();
 
@@ -417,7 +417,7 @@ async function verifyAppleTokenPayload(
 
 const registerSchema = z.object({
   displayName: z.string().min(2, 'Ism kamida 2 ta harfdan iborat bo‘lishi kerak.'),
-  loginOrEmail: z.string().min(3, 'Login yoki email kamida 3 ta belgidan iborat bo‘lishi kerak.').optional(),
+  loginOrEmail: z.string().min(4, 'Login yoki email kamida 4 ta belgidan iborat bo‘lishi kerak.').optional(),
   email: z.string().optional(),
   password: z.string().min(8, 'Parol kamida 8 ta belgidan iborat bo‘lishi kerak.'),
   confirmPassword: z.string().optional(),
@@ -477,22 +477,26 @@ authRouter.post('/register', authRateLimiter, (req: Request, res: Response) => {
       });
     }
   } else {
-    // Validate username format
-    if (!/^[a-zA-Z0-9_.-]{3,30}$/.test(identifier)) {
+    username = identifier.trim();
+    // Strict username rules: 4-20 chars, letters, digits, _, ., at least one letter, no spaces
+    const uVal = validateUsernameInput(username);
+    if (!uVal.valid) {
       return res.status(400).json({
         success: false,
-        error: 'Login faqat lotin harflari, raqamlar, pastki chiziq va nuqtadan iborat bo‘lishi kerak (3-30 belgi).',
+        error: uVal.error,
+        message: uVal.error,
       });
     }
-    username = identifier;
+
     userEmail = `${username.toLowerCase()}@student.mathcity.ai`;
 
-    // Check if username already taken
+    // Case-insensitive uniqueness check
     const existing = repository.getUserByUsernameOrEmail(username) || repository.isUsernameTaken(username);
     if (existing) {
       return res.status(409).json({
         success: false,
-        error: 'Bu login allaqachon band.',
+        error: 'USERNAME_TAKEN',
+        message: 'Bu username band. Boshqasini tanlang.',
       });
     }
   }
@@ -556,7 +560,18 @@ authRouter.post('/register', authRateLimiter, (req: Request, res: Response) => {
     createdAt: now.toISOString(),
   };
 
-  repository.createUser(newUser);
+  try {
+    repository.createUser(newUser);
+  } catch (err: any) {
+    if (err?.code === 'P2002' || err?.message?.includes('USERNAME_TAKEN') || err?.message?.includes('band')) {
+      return res.status(409).json({
+        success: false,
+        error: 'USERNAME_TAKEN',
+        message: 'Bu username band. Boshqasini tanlang.',
+      });
+    }
+    throw err;
+  }
 
   // 4. Issue JWT (90-day session with 180-day refresh)
   const token = jwt.sign({ userId: newUser.id }, config.jwtSecret, {
@@ -1241,19 +1256,37 @@ const OFFENSIVE_WORDS = [
   'bastard',
 ];
 
+// ─── Shared username validation constants (must match Flutter USERNAME_* consts) ─
+export const USERNAME_MIN_LENGTH = 4;
+export const USERNAME_MAX_LENGTH = 20;
+
+// username-available endpoint rate limiter (60 req/min per IP, blocks scraping)
+export const usernameCheckRateLimiter = createRateLimiter({
+  windowMs: 60 * 1000,
+  maxRequests: 60,
+  message: 'Username tekshiruvi limiti oshdi. Iltimos, biroz kuting.',
+  keyGenerator: (req: Request) => req.ip || 'anon',
+});
+
 function validateUsernameInput(rawUsername: string): { valid: boolean; error?: string } {
   const clean = rawUsername.trim();
-  if (clean.length < 3 || clean.length > 20) {
-    return { valid: false, error: 'Foydalanuvchi nomi 3 dan 20 tagacha belgidan iborat bo‘lishi kerak.' };
+  if (clean.length < USERNAME_MIN_LENGTH) {
+    return { valid: false, error: `Foydalanuvchi nomi kamida ${USERNAME_MIN_LENGTH} ta belgidan iborat bo\'lishi kerak.` };
   }
-  if (!/^[a-zA-Z0-9_]+$/.test(clean)) {
+  if (clean.length > USERNAME_MAX_LENGTH) {
+    return { valid: false, error: `Foydalanuvchi nomi ${USERNAME_MAX_LENGTH} ta belgidan oshmasligi kerak.` };
+  }
+  if (!/^[a-zA-Z0-9_.]+$/.test(clean)) {
     return {
       valid: false,
-      error: 'Foydalanuvchi nomi faqat lotin harflari, raqamlar va pastki chiziqdan iborat bo‘lishi kerak.',
+      error: 'Foydalanuvchi nomi faqat lotin harflari, raqamlar, pastki chiziq va nuqtadan iborat bo\'lishi kerak.',
     };
   }
+  if (!/[a-zA-Z]/.test(clean)) {
+    return { valid: false, error: 'Foydalanuvchi nomida kamida bitta harf bo\'lishi kerak.' };
+  }
   if (clean.includes('@')) {
-    return { valid: false, error: 'Email manzilini foydalanuvchi nomi sifatida ishlatib bo‘lmaydi.' };
+    return { valid: false, error: 'Email manzilini foydalanuvchi nomi sifatida ishlatib bo\'lmaydi.' };
   }
   const lower = clean.toLowerCase();
   if (RESERVED_USERNAMES.has(lower)) {
@@ -1261,10 +1294,57 @@ function validateUsernameInput(rawUsername: string): { valid: boolean; error?: s
   }
   for (const bad of OFFENSIVE_WORDS) {
     if (lower.includes(bad)) {
-      return { valid: false, error: 'Foydalanuvchi nomida nomaqbul so‘zlar ishlatilishi taqiqlangan.' };
+      return { valid: false, error: 'Foydalanuvchi nomida nomaqbul so\'zlar ishlatilishi taqiqlangan.' };
     }
   }
   return { valid: true };
+}
+
+// Helper: generate candidate usernames from seed and ensure they are available (batch check)
+function generateAvailableSuggestions(seed: string, count: number, excluded: string[] = []): string[] {
+  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9_.]/g, '').slice(0, USERNAME_MAX_LENGTH) || 'user';
+  const cleanSeed = normalize(seed) || 'mathuser';
+  const excludedLower = new Set(excluded.map((x) => x.toLowerCase()));
+  const candidates: string[] = [];
+  const tried = new Set<string>();
+  const maxAttempts = 60;
+
+  const templates = [
+    cleanSeed,
+    `${cleanSeed}2026`,
+    `super${cleanSeed}`,
+    `${cleanSeed}_uz`,
+    `${cleanSeed}123`,
+    `math_${cleanSeed}`,
+    `${cleanSeed}_pro`,
+    `zehnli${cleanSeed}`,
+    `champ_${cleanSeed}`,
+    `star${cleanSeed}`,
+  ];
+
+  let attempt = 0;
+  for (let ti = 0; candidates.length < count && ti < templates.length; ti++) {
+    const tmpl = templates[ti].slice(0, USERNAME_MAX_LENGTH);
+    if (tried.has(tmpl) || excludedLower.has(tmpl)) continue;
+    tried.add(tmpl);
+    const v = validateUsernameInput(tmpl);
+    if (v.valid && !repository.isUsernameTaken(tmpl) && !excludedLower.has(tmpl)) {
+      candidates.push(tmpl);
+    }
+  }
+
+  while (candidates.length < count && attempt < maxAttempts) {
+    attempt++;
+    const suffix = attempt < 10 ? `_${attempt}` : `${Math.floor(Math.random() * 9000) + 1000}`;
+    const candidate = (cleanSeed + suffix).slice(0, USERNAME_MAX_LENGTH);
+    if (tried.has(candidate)) continue;
+    tried.add(candidate);
+    const v = validateUsernameInput(candidate);
+    if (v.valid && !repository.isUsernameTaken(candidate) && !excludedLower.has(candidate)) {
+      candidates.push(candidate);
+    }
+  }
+  return candidates.slice(0, count);
 }
 
 function validateCalendarBirthDate(day: number, month: number, year: number): { valid: boolean; error?: string; age?: number } {
@@ -1305,13 +1385,15 @@ function validateCalendarBirthDate(day: number, month: number, year: number): { 
   return { valid: true, age };
 }
 
-// GET /api/auth/username-available and GET /api/auth/check-username and GET /api/users/check-username
-authRouter.get(['/username-available', '/check-username'], (req: Request, res: Response) => {
-  const username = ((req.query.u as string) || (req.query.username as string) || '').trim();
+// GET /api/auth/username-available (with rate limiting and clear response)
+authRouter.get(['/username-available', '/check-username'], usernameCheckRateLimiter, (req: Request, res: Response) => {
+  const username = ((req.query.username as string) || (req.query.u as string) || '').trim();
   if (!username) {
     return res.status(400).json({
       success: false,
+      available: false,
       error: 'Foydalanuvchi nomi kiritilmagan.',
+      message: 'Foydalanuvchi nomini kiriting.',
       data: { available: false, message: 'Foydalanuvchi nomini kiriting.' },
     });
   }
@@ -1320,11 +1402,13 @@ authRouter.get(['/username-available', '/check-username'], (req: Request, res: R
   if (!val.valid) {
     return res.status(400).json({
       success: false,
+      available: false,
       error: val.error,
+      message: val.error,
       data: {
         available: false,
         formatValid: false,
-        message: val.error || 'Format noto‘g‘ri (3–20 belgi, faqat lotin harflari va raqamlar)',
+        message: val.error,
       },
     });
   }
@@ -1334,21 +1418,42 @@ authRouter.get(['/username-available', '/check-username'], (req: Request, res: R
   if (taken) {
     return res.json({
       success: true,
+      available: false,
+      error: 'USERNAME_TAKEN',
+      message: 'Bu username band. Boshqasini tanlang.',
       data: {
         available: false,
         username,
-        message: '✕ Bu nom band, boshqasini tanlang',
+        message: 'Bu username band. Boshqasini tanlang.',
       },
     });
   }
 
   return res.json({
     success: true,
+    available: true,
+    message: '✓ Bu nom bo‘sh',
     data: {
       available: true,
       username,
       message: '✓ Bu nom bo‘sh',
     },
+  });
+});
+
+// GET /api/auth/username-suggestions?seed=XXX&count=3&excluded=a,b,c
+authRouter.get('/username-suggestions', usernameCheckRateLimiter, (req: Request, res: Response) => {
+  const seed = ((req.query.seed as string) || (req.query.name as string) || 'MathHero').trim();
+  const count = Math.min(10, Math.max(1, parseInt((req.query.count as string) || '3', 10) || 3));
+  const excludedParam = (req.query.excluded as string) || '';
+  const excluded = excludedParam ? excludedParam.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean) : [];
+
+  const suggestions = generateAvailableSuggestions(seed, count, excluded);
+
+  return res.json({
+    success: true,
+    data: suggestions,
+    suggestions,
   });
 });
 
@@ -1375,7 +1480,11 @@ authRouter.post(['/complete-profile', '/complete-onboarding'], authMiddleware, (
   // Ensure case-insensitive uniqueness across all other users
   const conflict = repository.isUsernameTaken(rawUsername, user.id);
   if (conflict) {
-    return res.status(409).json({ success: false, error: 'Bu foydalanuvchi nomi band. Boshqasini tanlang.' });
+    return res.status(409).json({
+      success: false,
+      error: 'USERNAME_TAKEN',
+      message: 'Bu username band. Boshqasini tanlang.',
+    });
   }
 
   const age = dVal.age;
