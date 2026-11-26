@@ -1,5 +1,6 @@
 /**
- * MathCity AI — 3D House Game Scene, Grid, Lighting, Camera, & Interactive Sandbox Engine
+ * MathCity AI — 3D House Game Scene, Floating Diorama Island, Lighting, Camera, & Interactive Sandbox Engine
+ * High-fidelity architectural diorama matching modern luxury villa design and construction stages.
  */
 
 class HouseGameScene {
@@ -19,14 +20,13 @@ class HouseGameScene {
     this.gridOffset = (this.gridSize * this.cellSize) / 2; // 9.0
 
     // Lighting & Environment
-    
     this.dirLight = null;
     this.hemiLight = null;
     this.moonLight = null;
     this.isDark = false;
     this.clouds = [];
-    this.smokeParticles = [];
     this.placedMeshMap = new Map(); // instanceId -> Group
+    this.baseLedMesh = null;
 
     // Interaction & Ghost Placement
     this.raycaster = new THREE.Raycaster();
@@ -38,7 +38,6 @@ class HouseGameScene {
     this.currentRotation = 0; // 0, 90, 180, 270
     this.selectedInstanceId = null;
     this.isInteriorMode = false;
-    this.isLowPerformance = false;
 
     this.init();
   }
@@ -50,16 +49,16 @@ class HouseGameScene {
       return;
     }
 
-    // 2. Scene
+    // 2. Scene with elegant sky gradient
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xBAE6FD);
-    this.scene.fog = new THREE.FogExp2(0xBAE6FD, 0.015);
+    this.scene.background = new THREE.Color(0xDCEEFF);
+    this.scene.fog = new THREE.FogExp2(0xDCEEFF, 0.012);
 
-    // 3. Camera
-    this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.5, 150);
+    // 3. Camera (Isometric ~45 deg angle, elevation ~36 deg)
+    this.camera = new THREE.PerspectiveCamera(42, this.width / this.height, 0.5, 160);
     this.setCameraInitialPosition();
 
-    // 4. Renderer
+    // 4. Renderer with soft shadows
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
     this.renderer.setSize(this.width, this.height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -67,20 +66,20 @@ class HouseGameScene {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.container.appendChild(this.renderer.domElement);
 
-    // 5. Controls
+    // 5. OrbitControls
     this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.06;
     this.controls.minDistance = 6.0;
-    this.controls.maxDistance = 32.0;
+    this.controls.maxDistance = 34.0;
     this.controls.minPolarAngle = 0.1;
-    this.controls.maxPolarAngle = Math.PI / 2 - 0.06; // Prevent diving under ground
-    this.controls.target.set(0, 1.2, 0);
+    this.controls.maxPolarAngle = Math.PI / 2 - 0.04;
+    this.controls.target.set(0, 0.8, 0);
 
-    // 6. Environment & Ground
+    // 6. Setup Lighting, Diorama Ground, & Environment
     this.setupLighting();
+    this.createFloatingDiorama();
     this.createEnvironment();
-    this.createGridGround();
 
     // 7. Event listeners
     window.addEventListener('resize', () => this.onWindowResize());
@@ -101,9 +100,9 @@ class HouseGameScene {
   }
 
   setCameraInitialPosition() {
-    const dist = 18.0;
+    const dist = 21.0;
     const angle = Math.PI / 4; // 45 deg isometric
-    const elev = 0.65; // ~37 deg
+    const elev = 0.62; // ~35.5 deg
     this.camera.position.set(
       Math.cos(angle) * dist,
       dist * Math.sin(elev),
@@ -113,52 +112,223 @@ class HouseGameScene {
 
   resetCamera() {
     this.setCameraInitialPosition();
-    this.controls.target.set(0, 1.2, 0);
+    this.controls.target.set(0, 0.8, 0);
     this.controls.update();
   }
 
   setupLighting() {
     // Hemisphere ambient light
-    this.hemiLight = new THREE.HemisphereLight(0xFFFFFF, 0x475569, 0.75);
-    this.hemiLight.position.set(0, 30, 0);
+    this.hemiLight = new THREE.HemisphereLight(0xFFFFFF, 0x64748B, 0.85);
+    this.hemiLight.position.set(0, 35, 0);
     this.scene.add(this.hemiLight);
 
-    // Sun directional light
-    this.dirLight = new THREE.DirectionalLight(0xFFFBEB, 1.15);
-    this.dirLight.position.set(16, 25, 14);
+    // Sun directional light with soft shadows
+    this.dirLight = new THREE.DirectionalLight(0xFFFBEB, 1.35);
+    this.dirLight.position.set(18, 28, 16);
     this.dirLight.castShadow = true;
     this.dirLight.shadow.mapSize.width = 1024;
     this.dirLight.shadow.mapSize.height = 1024;
     this.dirLight.shadow.camera.near = 0.5;
-    this.dirLight.shadow.camera.far = 60;
-    const d = 15;
+    this.dirLight.shadow.camera.far = 70;
+    const d = 16;
     this.dirLight.shadow.camera.left = -d;
     this.dirLight.shadow.camera.right = d;
     this.dirLight.shadow.camera.top = d;
     this.dirLight.shadow.camera.bottom = -d;
-    this.dirLight.shadow.bias = -0.0005;
+    this.dirLight.shadow.bias = -0.0004;
     this.scene.add(this.dirLight);
 
     // Moon directional light for night mode
     this.moonLight = new THREE.DirectionalLight(0x60A5FA, 0.0);
-    this.moonLight.position.set(-16, 22, -14);
+    this.moonLight.position.set(-18, 24, -16);
     this.scene.add(this.moonLight);
   }
 
-  createEnvironment() {
-    // Distant low-poly perimeter mountains
-    const mountainMat = new THREE.MeshLambertMaterial({ color: 0x64748B, flatShading: true });
-    for (let i = 0; i < 12; i++) {
-      const angle = (i / 12) * Math.PI * 2;
-      const r = 38 + (i % 3) * 6;
-      const h = 8 + (i % 4) * 4;
-      const mountain = new THREE.Mesh(new THREE.ConeGeometry(8 + (i % 2) * 4, h, 6), mountainMat);
-      mountain.position.set(Math.cos(angle) * r, h / 2 - 1, Math.sin(angle) * r);
-      this.scene.add(mountain);
+  createFloatingDiorama() {
+    const dioramaGroup = new THREE.Group();
+    dioramaGroup.name = 'diorama_island';
+
+    // 1. Invisible raycast ground plane at y = 0
+    const planeGeom = new THREE.PlaneGeometry(120, 120);
+    const planeMat = new THREE.MeshBasicMaterial({ visible: false });
+    this.groundPlane = new THREE.Mesh(planeGeom, planeMat);
+    this.groundPlane.rotation.x = -Math.PI / 2;
+    this.scene.add(this.groundPlane);
+
+    // 2. Soft Drop Shadow Disc beneath floating island at y = -2.1
+    const shadowCanvas = document.createElement('canvas');
+    shadowCanvas.width = 256;
+    shadowCanvas.height = 256;
+    const sCtx = shadowCanvas.getContext('2d');
+    const grad = sCtx.createRadialGradient(128, 128, 20, 128, 128, 120);
+    grad.addColorStop(0, 'rgba(15, 23, 42, 0.38)');
+    grad.addColorStop(0.7, 'rgba(15, 23, 42, 0.16)');
+    grad.addColorStop(1, 'rgba(15, 23, 42, 0.0)');
+    sCtx.fillStyle = grad;
+    sCtx.fillRect(0, 0, 256, 256);
+    const shadowTex = new THREE.CanvasTexture(shadowCanvas);
+    const shadowPlane = new THREE.Mesh(
+      new THREE.PlaneGeometry(32, 32),
+      new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, opacity: 0.85 })
+    );
+    shadowPlane.rotation.x = -Math.PI / 2;
+    shadowPlane.position.y = -2.05;
+    this.scene.add(shadowPlane);
+
+    // 3. Main Floating Diorama Pedestal Slice (height: 1.4, width: 22.4, depth: 22.4)
+    // Multi-material box: top=grass, sides=earth/stone cross-section, bottom=chamfer base
+    const grassMat = new THREE.MeshLambertMaterial({ color: 0x65A30D, flatShading: true });
+    const sideMat = new THREE.MeshLambertMaterial({ color: 0x57534E, flatShading: true }); // Textured earthy-stone
+    const bottomMat = new THREE.MeshLambertMaterial({ color: 0x292524, flatShading: true });
+
+    const pedestalBox = new THREE.Mesh(
+      new THREE.BoxGeometry(22.4, 1.4, 22.4),
+      [sideMat, sideMat, grassMat, bottomMat, sideMat, sideMat]
+    );
+    pedestalBox.position.y = -0.7;
+    pedestalBox.receiveShadow = true;
+    dioramaGroup.add(pedestalBox);
+
+    // 4. White chamfered foundation rim on bottom edge of pedestal
+    const rimMat = new THREE.MeshLambertMaterial({ color: 0xE2E8F0 });
+    const rimMesh = new THREE.Mesh(new THREE.BoxGeometry(22.8, 0.12, 22.8), rimMat);
+    rimMesh.position.y = -1.35;
+    dioramaGroup.add(rimMesh);
+
+    // 5. LED Ambient Light Strip around the diorama base (glows in night mode)
+    const ledMat = new THREE.MeshLambertMaterial({
+      color: 0xE0E7FF,
+      emissive: 0x38BDF8,
+      emissiveIntensity: 0.25,
+    });
+    this.baseLedMesh = new THREE.Mesh(new THREE.BoxGeometry(22.9, 0.08, 22.9), ledMat);
+    this.baseLedMesh.position.y = -1.32;
+    dioramaGroup.add(this.baseLedMesh);
+
+    // 6. Corner Intersection Roadway (Matching Image 1)
+    // Front road along Z = 7.0 to 10.4
+    const roadMat = new THREE.MeshLambertMaterial({ color: 0x1E293B, flatShading: true });
+    const roadFront = new THREE.Mesh(new THREE.BoxGeometry(22.4, 0.04, 3.4), roadMat);
+    roadFront.position.set(0, 0.02, 8.7);
+    roadFront.receiveShadow = true;
+    dioramaGroup.add(roadFront);
+
+    // Left road along X = -10.4 to -7.0
+    const roadLeft = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.04, 22.4), roadMat);
+    roadLeft.position.set(-8.7, 0.02, 0);
+    roadLeft.receiveShadow = true;
+    dioramaGroup.add(roadLeft);
+
+    // White dashed lane markings
+    const lineMat = new THREE.MeshLambertMaterial({ color: 0xF8FAFC });
+    // Front road dashed stripes
+    for (let x = -6.0; x <= 10.0; x += 2.4) {
+      const stripe = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.05, 0.14), lineMat);
+      stripe.position.set(x, 0.03, 8.7);
+      dioramaGroup.add(stripe);
+    }
+    // Left road dashed stripes
+    for (let z = -10.0; z <= 6.0; z += 2.4) {
+      const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.05, 1.2), lineMat);
+      stripe.position.set(-8.7, 0.03, z);
+      dioramaGroup.add(stripe);
     }
 
+    // Road painted turn direction arrow (Matching Image 1: "→" marking near corner)
+    const arrowShaft = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.05, 0.16), lineMat);
+    arrowShaft.position.set(-6.2, 0.035, 7.6);
+    const arrowHead = new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.45, 3), lineMat);
+    arrowHead.rotation.z = -Math.PI / 2;
+    arrowHead.rotation.x = -Math.PI / 2;
+    arrowHead.position.set(-5.6, 0.035, 7.6);
+    dioramaGroup.add(arrowShaft, arrowHead);
+
+    // 7. Raised concrete sidewalk curb separating road and grass lawn
+    const curbMat = new THREE.MeshLambertMaterial({ color: 0xE2E8F0 });
+    // Front curb
+    const curbFront = new THREE.Mesh(new THREE.BoxGeometry(15.6, 0.1, 0.24), curbMat);
+    curbFront.position.set(1.0, 0.05, 6.9);
+    curbFront.castShadow = true;
+    curbFront.receiveShadow = true;
+    // Left curb
+    const curbLeft = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.1, 15.6), curbMat);
+    curbLeft.position.set(-6.9, 0.05, -1.0);
+    curbLeft.castShadow = true;
+    curbLeft.receiveShadow = true;
+    dioramaGroup.add(curbFront, curbLeft);
+
+    // 8. Low perimeter hedge along the curb (Image 1)
+    const hedgeMat = new THREE.MeshLambertMaterial({ color: 0x15803D, flatShading: true });
+    for (let x = -5.8; x <= 9.6; x += 1.4) {
+      const bush = new THREE.Mesh(new THREE.SphereGeometry(0.35, 6, 6), hedgeMat);
+      bush.scale.set(1.3, 0.85, 1.1);
+      bush.position.set(x, 0.28, 6.5);
+      bush.castShadow = true;
+      dioramaGroup.add(bush);
+    }
+    for (let z = -9.6; z <= 5.8; z += 1.4) {
+      const bush = new THREE.Mesh(new THREE.SphereGeometry(0.35, 6, 6), hedgeMat);
+      bush.scale.set(1.1, 0.85, 1.3);
+      bush.position.set(-6.5, 0.28, z);
+      bush.castShadow = true;
+      dioramaGroup.add(bush);
+    }
+
+    // 9. Miniature Perimeter Trees (Matching Image 1: perimeter landscape)
+    const treeMatTrunk = new THREE.MeshLambertMaterial({ color: 0x78350F });
+    const treeMatLeaves = new THREE.MeshLambertMaterial({ color: 0x16A34A, flatShading: true });
+    const perimeterTreePositions = [
+      { x: 9.2, z: -9.2, scale: 0.9 },
+      { x: 9.4, z: -6.4, scale: 1.05 },
+      { x: 8.8, z: -3.8, scale: 0.85 },
+      { x: 9.5, z: 4.8, scale: 0.95 },
+      { x: -9.5, z: -9.5, scale: 1.1 },
+      { x: -4.5, z: -9.8, scale: 0.8 },
+      { x: 2.5, z: -9.8, scale: 1.0 },
+    ];
+    perimeterTreePositions.forEach((pos) => {
+      const pTree = new THREE.Group();
+      const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.14, 1.4, 5), treeMatTrunk);
+      trunk.position.y = 0.7;
+      trunk.castShadow = true;
+      const canopy1 = new THREE.Mesh(new THREE.SphereGeometry(0.7, 6, 6), treeMatLeaves);
+      canopy1.position.y = 1.6;
+      canopy1.castShadow = true;
+      const canopy2 = new THREE.Mesh(new THREE.SphereGeometry(0.5, 5, 5), treeMatLeaves);
+      canopy2.position.set(0, 2.1, 0);
+      canopy2.castShadow = true;
+      pTree.add(trunk, canopy1, canopy2);
+      pTree.position.set(pos.x, 0, pos.z);
+      pTree.scale.set(pos.scale, pos.scale, pos.scale);
+      dioramaGroup.add(pTree);
+    });
+
+    // 10. Central Building Parcel Boundary (9x9 central house plot)
+    const housePlotBorder = new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.BoxGeometry(9.05, 0.05, 9.05)),
+      new THREE.LineBasicMaterial({ color: 0x8B5CF6, linewidth: 2 })
+    );
+    housePlotBorder.position.set(0, 0.03, 0);
+    dioramaGroup.add(housePlotBorder);
+
+    // Subtle 12x12 cell grid helper
+    const grid = new THREE.GridHelper(18, 12, 0x8B5CF6, 0xCBD5E1);
+    grid.position.y = 0.025;
+    grid.material.opacity = 0.22;
+    grid.material.transparent = true;
+    dioramaGroup.add(grid);
+
+    this.scene.add(dioramaGroup);
+  }
+
+  createEnvironment() {
     // Drifting clouds
-    const cloudMat = new THREE.MeshLambertMaterial({ color: 0xFFFFFF, flatShading: true, transparent: true, opacity: 0.88 });
+    const cloudMat = new THREE.MeshLambertMaterial({
+      color: 0xFFFFFF,
+      flatShading: true,
+      transparent: true,
+      opacity: 0.88,
+    });
     for (let c = 0; c < 6; c++) {
       const cloud = new THREE.Group();
       for (let p = 0; p < 4; p++) {
@@ -166,83 +336,45 @@ class HouseGameScene {
         puff.position.set((p - 1.5) * 1.4, Math.random() * 0.4, (Math.random() - 0.5) * 1.2);
         cloud.add(puff);
       }
-      cloud.position.set((Math.random() - 0.5) * 50, 14 + Math.random() * 4, (Math.random() - 0.5) * 50);
-      cloud.userData.speed = 0.015 + Math.random() * 0.015;
+      cloud.position.set((Math.random() - 0.5) * 55, 14 + Math.random() * 4, (Math.random() - 0.5) * 55);
+      cloud.userData.speed = 0.014 + Math.random() * 0.012;
       this.clouds.push(cloud);
       this.scene.add(cloud);
     }
   }
 
-  createGridGround() {
-    // Invisible raycast ground plane
-    const planeGeom = new THREE.PlaneGeometry(100, 100);
-    const planeMat = new THREE.MeshBasicMaterial({ visible: false });
-    this.groundPlane = new THREE.Mesh(planeGeom, planeMat);
-    this.groundPlane.rotation.x = -Math.PI / 2;
-    this.scene.add(this.groundPlane);
-
-    // 12x12 Yard Grass Base
-    const yardBase = new THREE.Mesh(
-      new THREE.BoxGeometry(18.2, 0.4, 18.2),
-      new THREE.MeshLambertMaterial({ color: 0x4ADE80, flatShading: true })
-    );
-    yardBase.position.y = -0.2;
-    yardBase.receiveShadow = true;
-    this.scene.add(yardBase);
-
-    // Driveway / Road along front edge (Z = 7 to 9)
-    const road = new THREE.Mesh(
-      new THREE.BoxGeometry(18.4, 0.04, 3.2),
-      new THREE.MeshLambertMaterial({ color: 0x334155, flatShading: true })
-    );
-    road.position.set(0, 0.02, 7.4);
-    road.receiveShadow = true;
-    this.scene.add(road);
-
-    // Road white dashed lines
-    const lineMat = new THREE.MeshLambertMaterial({ color: 0xF8FAFC });
-    for (let x = -8; x <= 8; x += 2.5) {
-      const stripe = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.05, 0.15), lineMat);
-      stripe.position.set(x, 0.03, 7.4);
-      this.scene.add(stripe);
-    }
-
-    // Central 6x6 house building area boundary
-    const housePlotBorder = new THREE.LineSegments(
-      new THREE.EdgesGeometry(new THREE.BoxGeometry(9.05, 0.05, 9.05)),
-      new THREE.LineBasicMaterial({ color: 0x8B5CF6, linewidth: 2 })
-    );
-    housePlotBorder.position.set(0, 0.03, 0);
-    this.scene.add(housePlotBorder);
-
-    // Subtle 12x12 cell grid lines
-    const grid = new THREE.GridHelper(18, 12, 0x8B5CF6, 0xCBD5E1);
-    grid.position.y = 0.02;
-    grid.material.opacity = 0.25;
-    grid.material.transparent = true;
-    this.scene.add(grid);
-  }
-
   setTheme(isDark) {
     this.isDark = !!isDark;
     if (this.isDark) {
-      // Night
-      this.scene.background.setHex(0x0A0F24);
-      this.scene.fog.color.setHex(0x0A0F24);
+      // Night Mode (Matching Images 3 & 4)
+      this.scene.background.setHex(0x0A0F1D);
+      this.scene.fog.color.setHex(0x0A0F1D);
       this.hemiLight.color.setHex(0x1E1B4B);
       this.hemiLight.groundColor.setHex(0x0F172A);
       this.hemiLight.intensity = 0.45;
       this.dirLight.intensity = 0.15;
-      this.moonLight.intensity = 0.9;
+      this.moonLight.intensity = 0.85;
+
+      // Base LED strip glowing blue
+      if (this.baseLedMesh) {
+        this.baseLedMesh.material.emissive.setHex(0x38BDF8);
+        this.baseLedMesh.material.emissiveIntensity = 1.6;
+      }
     } else {
-      // Day
-      this.scene.background.setHex(0xBAE6FD);
-      this.scene.fog.color.setHex(0xBAE6FD);
+      // Day Mode (Matching Image 1 & 3)
+      this.scene.background.setHex(0xDCEEFF);
+      this.scene.fog.color.setHex(0xDCEEFF);
       this.hemiLight.color.setHex(0xFFFFFF);
-      this.hemiLight.groundColor.setHex(0x475569);
-      this.hemiLight.intensity = 0.75;
-      this.dirLight.intensity = 1.15;
+      this.hemiLight.groundColor.setHex(0x64748B);
+      this.hemiLight.intensity = 0.85;
+      this.dirLight.intensity = 1.35;
       this.moonLight.intensity = 0.0;
+
+      // Base LED strip subtle
+      if (this.baseLedMesh) {
+        this.baseLedMesh.material.emissive.setHex(0x38BDF8);
+        this.baseLedMesh.material.emissiveIntensity = 0.25;
+      }
     }
 
     // Toggle window glass and lantern glowing emissions
@@ -251,9 +383,16 @@ class HouseGameScene {
         if (node.isMesh && node.userData) {
           if (meshGroup.userData.isWindow) {
             node.material.emissive = new THREE.Color(this.isDark ? 0xFDE047 : 0x000000);
+            node.material.emissiveIntensity = this.isDark ? 1.4 : 0.0;
           }
           if (meshGroup.userData.isLantern && node === meshGroup.userData.bulbMesh) {
-            node.material.emissiveIntensity = this.isDark ? 1.5 : 0.4;
+            node.material.emissiveIntensity = this.isDark ? 1.6 : 0.4;
+          }
+          if (node.userData.isLedGroundSpot) {
+            node.material.emissiveIntensity = this.isDark ? 1.8 : 0.5;
+          }
+          if (node.userData.isCarHeadlight) {
+            node.material.emissiveIntensity = this.isDark ? 2.0 : 0.6;
           }
         }
       });
@@ -458,7 +597,6 @@ class HouseGameScene {
 
   // Load all placed items received from server
   loadPlacedItems(placedList) {
-    // Clear old items
     this.placedMeshMap.forEach((mesh) => this.scene.remove(mesh));
     this.placedMeshMap.clear();
 

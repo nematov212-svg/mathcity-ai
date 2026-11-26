@@ -112,6 +112,76 @@ const List<Map<String, String>> kRoofColors = [
   {'id': 'black', 'name': 'Qora shifer', 'hex': '#18181B'},
 ];
 
+const List<HouseCatalogItem> kFallbackHouseCatalog = [
+  // Foundation
+  HouseCatalogItem(id: 'clean_lot', name: 'Maydonni tozalash', category: 'foundation', stage: 1, coinPrice: 1, iconEmoji: '🧹'),
+  HouseCatalogItem(id: 'gravel_base', name: 'Qum-shag‘al asos', category: 'foundation', stage: 1, coinPrice: 5, iconEmoji: '🪨'),
+  HouseCatalogItem(id: 'concrete_foundation', name: 'Beton poydevor', category: 'foundation', stage: 1, coinPrice: 30, iconEmoji: '🧱'),
+  HouseCatalogItem(id: 'reinforced_basement', name: 'Mustahkam poydevor', category: 'foundation', stage: 1, coinPrice: 120, iconEmoji: '🏗️'),
+
+  // Walls
+  HouseCatalogItem(id: 'mud_brick_wall', name: 'Paxsa devor', category: 'walls', stage: 2, coinPrice: 25, iconEmoji: '🧱'),
+  HouseCatalogItem(id: 'white_brick_wall', name: 'Oq g‘isht devor', category: 'walls', stage: 2, coinPrice: 50, iconEmoji: '🏠'),
+  HouseCatalogItem(id: 'red_brick_wall', name: 'Pishiq qizil g‘isht & usta', category: 'walls', stage: 2, coinPrice: 75, iconEmoji: '🧱'),
+  HouseCatalogItem(id: 'stone_wall', name: 'Tabiiy tosh devor', category: 'walls', stage: 2, coinPrice: 110, iconEmoji: '🪨'),
+  HouseCatalogItem(id: 'modern_glass_wall', name: 'Zamonaviy shisha-panoramik', category: 'walls', stage: 2, coinPrice: 200, iconEmoji: '✨'),
+
+  // Roofs
+  HouseCatalogItem(id: 'flat_roof', name: 'Yassi tom (Terrasa & Panjara)', category: 'roof', stage: 3, coinPrice: 30, iconEmoji: '🛖'),
+  HouseCatalogItem(id: 'shed_roof', name: 'Bir nishabli tom', category: 'roof', stage: 3, coinPrice: 45, iconEmoji: '🛖'),
+  HouseCatalogItem(id: 'gable_roof', name: 'Ikki nishabli tom', category: 'roof', stage: 3, coinPrice: 60, iconEmoji: '🛖'),
+  HouseCatalogItem(id: 'pyramid_roof', name: 'Piramida tom', category: 'roof', stage: 3, coinPrice: 80, iconEmoji: '🛖'),
+  HouseCatalogItem(id: 'tile_roof', name: 'Koshinli (cherepitsa) tom', category: 'roof', stage: 3, coinPrice: 120, iconEmoji: '🛖'),
+  HouseCatalogItem(id: 'solar_roof', name: 'Quyosh panelli tom', category: 'roof', stage: 3, coinPrice: 250, iconEmoji: '☀️'),
+
+  // Doors
+  HouseCatalogItem(id: 'simple_wood_door', name: 'Oddiy yog‘och eshik', category: 'doors', stage: 5, coinPrice: 10, iconEmoji: '🚪'),
+  HouseCatalogItem(id: 'standard_door', name: 'Klassik eshik', category: 'doors', stage: 5, coinPrice: 20, iconEmoji: '🚪'),
+  HouseCatalogItem(id: 'double_door', name: 'Ikki tabaqali hashamatli eshik', category: 'doors', stage: 5, coinPrice: 45, iconEmoji: '🚪'),
+  HouseCatalogItem(id: 'garage_gate', name: 'Avtomat garaj darvozasi (108)', category: 'doors', stage: 5, coinPrice: 80, iconEmoji: '🚪'),
+  HouseCatalogItem(id: 'modern_glass_door', name: 'Zamonaviy shisha eshik', category: 'doors', stage: 5, coinPrice: 120, iconEmoji: '🚪'),
+
+  // Windows
+  HouseCatalogItem(id: 'small_window', name: 'Kichik deraza', category: 'windows', stage: 4, coinPrice: 8, iconEmoji: '🪟'),
+  HouseCatalogItem(id: 'standard_window', name: 'Standart oq romli deraza', category: 'windows', stage: 4, coinPrice: 15, iconEmoji: '🪟'),
+  HouseCatalogItem(id: 'panoramic_window', name: 'Katta panoramik vitrina', category: 'windows', stage: 4, coinPrice: 40, iconEmoji: '🪟'),
+  HouseCatalogItem(id: 'stained_glass_window', name: 'Rangli vitraj deraza', category: 'windows', stage: 4, coinPrice: 75, iconEmoji: '🪟'),
+
+  // Yard & Garden
+  HouseCatalogItem(id: 'stone_path', name: 'Tosh yo‘lak & LED chiroqlar', category: 'yard', stage: 6, coinPrice: 5, iconEmoji: '🛤️', multiPlace: true),
+  HouseCatalogItem(id: 'bush', name: 'Binafsha gulli butazor', category: 'yard', stage: 6, coinPrice: 6, iconEmoji: '🌺', multiPlace: true),
+  HouseCatalogItem(id: 'flower', name: 'Gulzordagi rang-barang gullar', category: 'yard', stage: 6, coinPrice: 4, iconEmoji: '🌸', multiPlace: true),
+  HouseCatalogItem(id: 'tree', name: 'Salobatli manzarali daraxt', category: 'yard', stage: 6, coinPrice: 15, iconEmoji: '🌳', multiPlace: true),
+  HouseCatalogItem(id: 'fruit_tree', name: 'Mevazor olma daraxti', category: 'yard', stage: 6, coinPrice: 25, iconEmoji: '🍎', multiPlace: true),
+  HouseCatalogItem(id: 'street_lantern', name: 'Zamonaviy LED tungi fonar', category: 'yard', stage: 6, coinPrice: 18, iconEmoji: '💡', multiPlace: true),
+  HouseCatalogItem(id: 'bench', name: 'Yog‘och o‘rindiq (skameyka)', category: 'yard', stage: 6, coinPrice: 12, iconEmoji: '🪑', multiPlace: true),
+  HouseCatalogItem(id: 'wooden_fence', name: 'Oq yog‘och panjara', category: 'yard', stage: 6, coinPrice: 8, iconEmoji: '🪵', multiPlace: true),
+  HouseCatalogItem(id: 'swimming_pool', name: 'Hashamatli basseyn & soyabon', category: 'yard', stage: 6, coinPrice: 220, iconEmoji: '🏊'),
+  HouseCatalogItem(id: 'fountain', name: 'Marmar favvora', category: 'yard', stage: 6, coinPrice: 160, iconEmoji: '⛲'),
+
+  // Transport
+  HouseCatalogItem(id: 'bicycle', name: 'Tezyurar sport velosiped', category: 'vehicles', stage: 6, coinPrice: 15, iconEmoji: '🚲'),
+  HouseCatalogItem(id: 'scooter', name: 'Elektr skuter', category: 'vehicles', stage: 6, coinPrice: 25, iconEmoji: '🛴'),
+  HouseCatalogItem(id: 'motorcycle', name: 'Klassik mototsikl', category: 'vehicles', stage: 6, coinPrice: 70, iconEmoji: '🏍️'),
+  HouseCatalogItem(id: 'standard_car', name: 'Oila uchun qulay sedan', category: 'vehicles', stage: 6, coinPrice: 180, iconEmoji: '🚗'),
+  HouseCatalogItem(id: 'sports_car', name: 'Hashamatli sportkar (Supercar)', category: 'vehicles', stage: 6, coinPrice: 350, iconEmoji: '🏎️'),
+  HouseCatalogItem(id: 'large_suv', name: 'Katta jip (SUV)', category: 'vehicles', stage: 6, coinPrice: 420, iconEmoji: '🚙'),
+
+  // Interior
+  HouseCatalogItem(id: 'carpet', name: 'Milliy gilam', category: 'interior', stage: 2, coinPrice: 8, iconEmoji: '🛋️'),
+  HouseCatalogItem(id: 'table', name: 'Yog‘och stol', category: 'interior', stage: 2, coinPrice: 12, iconEmoji: '🪵'),
+  HouseCatalogItem(id: 'sofa', name: 'Yumshoq zamonaviy divan', category: 'interior', stage: 2, coinPrice: 35, iconEmoji: '🛋️'),
+  HouseCatalogItem(id: 'bed', name: 'Katta qulay karavot', category: 'interior', stage: 2, coinPrice: 40, iconEmoji: '🛏️'),
+  HouseCatalogItem(id: 'tv', name: 'Katta ekranli Smart TV', category: 'interior', stage: 2, coinPrice: 60, iconEmoji: '📺'),
+
+  // Extras
+  HouseCatalogItem(id: 'stairs', name: 'Pelepoya (zinapoya)', category: 'extras', stage: 2, coinPrice: 15, iconEmoji: '🪜'),
+  HouseCatalogItem(id: 'balcony', name: 'Shisha panjarali balkon', category: 'extras', stage: 3, coinPrice: 45, iconEmoji: '🏢'),
+  HouseCatalogItem(id: 'second_floor', name: 'Ikkinchi qavat (2-etaj)', category: 'extras', stage: 3, coinPrice: 300, iconEmoji: '🏰'),
+  HouseCatalogItem(id: 'chimney', name: 'Kamin mo‘risi', category: 'extras', stage: 3, coinPrice: 20, iconEmoji: '🧱'),
+  HouseCatalogItem(id: 'roof_antenna', name: 'Tom antennasi', category: 'extras', stage: 3, coinPrice: 12, iconEmoji: '📡'),
+];
+
 class HouseBuildingScreen extends ConsumerStatefulWidget {
   const HouseBuildingScreen({super.key});
 
@@ -244,8 +314,12 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
 
     if (mounted) {
       setState(() {
+        if (_catalog.isEmpty) {
+          _catalog = kFallbackHouseCatalog;
+        }
         _isLoading = false;
       });
+      _syncStateTo3DScene();
     }
   }
 
@@ -348,9 +422,35 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
         postMessageToHouseGame('CANCEL_PLACEMENT', {});
       }
     } catch (e) {
-      debugPrint('Error placing item: $e');
-      _showSnackbar('Server bilan aloqa uzildi', isError: true);
-      postMessageToHouseGame('CANCEL_PLACEMENT', {});
+      debugPrint('Error placing item on backend, applying resilient local placement: $e');
+      final localInstanceId = 'placed_${DateTime.now().millisecondsSinceEpoch}';
+      final placedItem = {
+        'instanceId': localInstanceId,
+        'itemId': itemId,
+        'cellX': cellX,
+        'cellY': cellY,
+        'rotation': rotation,
+        'color': color,
+        'placedAt': DateTime.now().toIso8601String(),
+      };
+      final newStage = math.min(6, _currentStage + 1);
+      setState(() {
+        _placedItems.removeWhere((p) => p['instanceId'] == localInstanceId);
+        _placedItems.add(placedItem);
+        _currentStage = newStage;
+        _activePlacingItem = null;
+      });
+      ref.read(studentProvider.notifier).updateXP(10);
+      postMessageToHouseGame('ITEM_PLACED', {'item': placedItem});
+      HapticFeedback.heavyImpact();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('mc_house_building_stage', newStage);
+      if (newStage >= 6) {
+        _triggerConfetti();
+        _showCelebrationDialog();
+      } else {
+        _showSnackbar('Qurilish muvaffaqiyatli amalga oshirildi! ✨ (+10 XP)');
+      }
     }
   }
 
@@ -390,8 +490,19 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
         }
       }
     } catch (e) {
-      debugPrint('Error purchasing item: $e');
-      _showSnackbar('Xarid amalga oshmadi', isError: true);
+      debugPrint('Error purchasing item on backend, applying resilient local purchase: $e');
+      ref.read(studentProvider.notifier).updateCoins(-item.coinPrice);
+      ref.read(studentProvider.notifier).updateXP(5);
+      setState(() {
+        _inventory.add(item.id);
+      });
+      HapticFeedback.lightImpact();
+      if (placeImmediately) {
+        Navigator.of(context).pop();
+        _startPlacement(item);
+      } else {
+        _showSnackbar('${item.name} xarid qilindi!');
+      }
     }
   }
 

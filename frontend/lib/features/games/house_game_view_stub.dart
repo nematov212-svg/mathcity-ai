@@ -100,6 +100,7 @@ class _HouseGameMobileWebViewState extends State<_HouseGameMobileWebView> {
     _globalHouseWebViewController = _controller;
   }
 
+
   @override
   void dispose() {
     if (_globalHouseWebViewController == _controller) {
