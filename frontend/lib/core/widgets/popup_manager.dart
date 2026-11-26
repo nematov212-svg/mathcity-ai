@@ -7,7 +7,7 @@ import '../network/api_client.dart';
 import '../../shared/providers/student_provider.dart';
 import 'announcement_popup.dart';
 import 'urgent_announcement_dialog.dart';
-import 'new_user_discount_dialog.dart';
+import 'promo_dialog_controller.dart';
 
 /// Centralized PopupManager for MathCity AI
 /// - Enforces strictly ONE popup visible at a time
@@ -20,6 +20,7 @@ class PopupManager {
   static DateTime? _lastPopupClosedAt;
   static bool _hasScheduledDashboardCheck = false;
   static Timer? _pollingTimer;
+  static Timer? _dashboardTimer;
 
   static bool get isShowing => _isPopupShowing;
 
@@ -28,7 +29,8 @@ class PopupManager {
     if (_hasScheduledDashboardCheck) return;
     _hasScheduledDashboardCheck = true;
 
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    _dashboardTimer?.cancel();
+    _dashboardTimer = Timer(const Duration(milliseconds: 1500), () {
       _hasScheduledDashboardCheck = false;
       if (context.mounted) {
         checkAndShowPopups(context, ref);
@@ -49,10 +51,14 @@ class PopupManager {
   static void stopLivePolling() {
     _pollingTimer?.cancel();
     _pollingTimer = null;
+    _dashboardTimer?.cancel();
+    _dashboardTimer = null;
+    _hasScheduledDashboardCheck = false;
   }
 
   /// Core arbitration logic
-  static Future<void> checkAndShowPopups(BuildContext context, WidgetRef ref) async {
+  static Future<void> checkAndShowPopups(
+      BuildContext context, WidgetRef ref) async {
     // 1. Check if a popup is already showing
     if (_isPopupShowing || !context.mounted) return;
 
@@ -68,58 +74,16 @@ class PopupManager {
     final isPro = student?.isPro ?? false;
 
     // =========================================================================
-    // PRIORITY 1: New User 30% Discount Popup (Only for new accounts within 24h)
+    // PRIORITY 1: New User 30% Discount Popup (Controlled by PromoDialogController)
     // =========================================================================
-    if (!isPro) {
-      try {
-        final promoRes = await ApiClient().dio.get(
-          '/promotions/new-user',
-          options: Options(
-            validateStatus: (status) => true,
-            sendTimeout: const Duration(seconds: 4),
-            receiveTimeout: const Duration(seconds: 4),
-          ),
-        );
-
-        if (promoRes.statusCode == 200 && promoRes.data != null) {
-          final pData = promoRes.data;
-          final isEligible = pData['eligible'] == true;
-          final expiresAtStr = pData['expiresAt'] as String?;
-
-          if (isEligible && expiresAtStr != null && context.mounted) {
-            final expiresAt = DateTime.tryParse(expiresAtStr);
-            if (expiresAt != null && expiresAt.isAfter(DateTime.now())) {
-              final prices = pData['prices'] as Map<String, dynamic>? ?? {};
-              final monthly = prices['monthly'] as Map<String, dynamic>? ?? {};
-              final yearly = prices['yearly'] as Map<String, dynamic>? ?? {};
-
-              _isPopupShowing = true;
-              await showDialog<void>(
-                context: context,
-                barrierDismissible: true,
-                barrierColor: const Color(0x990A0618),
-                builder: (ctx) => NewUserDiscountDialog(
-                  expiresAt: expiresAt,
-                  discountPercent: (pData['discountPercent'] as num?)?.toInt() ?? 30,
-                  monthlyOriginalPrice: (monthly['original'] as num?)?.toInt() ?? 29000,
-                  monthlyDiscountedPrice: (monthly['discounted'] as num?)?.toInt() ?? 20300,
-                  yearlyOriginalPrice: (yearly['original'] as num?)?.toInt() ?? 250000,
-                  yearlyDiscountedPrice: (yearly['discounted'] as num?)?.toInt() ?? 175000,
-                  onDismiss: () {
-                    _isPopupShowing = false;
-                    _lastPopupClosedAt = DateTime.now();
-                  },
-                ),
-              );
-              _isPopupShowing = false;
-              _lastPopupClosedAt = DateTime.now();
-              return; // Shown Priority 1; do NOT show Priority 2 at the same time
-            }
-          }
-        }
-      } catch (_) {
-        // Fallback gracefully
-      }
+    if (!isPro &&
+        PromoDialogController.instance.sessionShowCount < 2 &&
+        !PromoDialogController.instance.isCancelled) {
+      _isPopupShowing = true;
+      await PromoDialogController.instance.onHomeEntered(context, ref);
+      _isPopupShowing = false;
+      _lastPopupClosedAt = DateTime.now();
+      return;
     }
 
     if (!context.mounted || _isPopupShowing) return;
@@ -129,15 +93,17 @@ class PopupManager {
     // =========================================================================
     try {
       final res = await ApiClient().dio.get(
-        '/announcements/active',
-        options: Options(
-          validateStatus: (status) => true,
-          sendTimeout: const Duration(seconds: 4),
-          receiveTimeout: const Duration(seconds: 4),
-        ),
-      );
+            '/announcements/active',
+            options: Options(
+              validateStatus: (status) => true,
+              sendTimeout: const Duration(seconds: 4),
+              receiveTimeout: const Duration(seconds: 4),
+            ),
+          );
 
-      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
+      if (res.statusCode == 200 &&
+          res.data != null &&
+          res.data['success'] == true) {
         final rawList = res.data['data'] as List? ?? [];
         if (rawList.isEmpty) return;
 
@@ -145,21 +111,21 @@ class PopupManager {
         final nowMs = DateTime.now().millisecondsSinceEpoch;
 
         final urgentMap = rawList.cast<Map<String, dynamic>>().firstWhere(
-              (m) {
-                final type = (m['type'] ?? '').toString();
-                final id = (m['id'] ?? '').toString();
+          (m) {
+            final type = (m['type'] ?? '').toString();
+            final id = (m['id'] ?? '').toString();
 
-                // 24 hour client-side check
-                final dismissedUntil = prefs.getInt('dismissed_until_$id') ?? 0;
-                if (nowMs < dismissedUntil) return false;
+            // 24 hour client-side check
+            final dismissedUntil = prefs.getInt('dismissed_until_$id') ?? 0;
+            if (nowMs < dismissedUntil) return false;
 
-                return type == 'urgent' ||
-                    type == 'URGENT_ANNOUNCEMENT' ||
-                    type == 'ANNOUNCEMENT' ||
-                    type == 'info';
-              },
-              orElse: () => {},
-            );
+            return type == 'urgent' ||
+                type == 'URGENT_ANNOUNCEMENT' ||
+                type == 'ANNOUNCEMENT' ||
+                type == 'info';
+          },
+          orElse: () => {},
+        );
 
         if (urgentMap.isNotEmpty && context.mounted) {
           final item = AnnouncementItem.fromJson(urgentMap);

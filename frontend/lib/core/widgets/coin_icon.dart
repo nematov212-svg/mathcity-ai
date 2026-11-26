@@ -46,7 +46,8 @@ class CoinIcon extends StatefulWidget {
   State<CoinIcon> createState() => _CoinIconState();
 }
 
-class _CoinIconState extends State<CoinIcon> with SingleTickerProviderStateMixin {
+class _CoinIconState extends State<CoinIcon>
+    with SingleTickerProviderStateMixin {
   AnimationController? _controller;
   Animation<double>? _floatAnimation;
   Animation<double>? _scaleAnimation;
@@ -74,7 +75,8 @@ class _CoinIconState extends State<CoinIcon> with SingleTickerProviderStateMixin
         vsync: this,
         duration: const Duration(milliseconds: 1600),
       )..repeat();
-      _sparkleAnimation = CurvedAnimation(parent: _controller!, curve: Curves.easeInOut);
+      _sparkleAnimation =
+          CurvedAnimation(parent: _controller!, curve: Curves.easeInOut);
     } else if (widget.popOnAppear) {
       _controller = AnimationController(
         vsync: this,
@@ -82,11 +84,13 @@ class _CoinIconState extends State<CoinIcon> with SingleTickerProviderStateMixin
       )..forward();
       _scaleAnimation = TweenSequence<double>([
         TweenSequenceItem(
-          tween: Tween<double>(begin: 0.8, end: 1.15).chain(CurveTween(curve: Curves.easeOutQuad)),
+          tween: Tween<double>(begin: 0.8, end: 1.15)
+              .chain(CurveTween(curve: Curves.easeOutQuad)),
           weight: 60,
         ),
         TweenSequenceItem(
-          tween: Tween<double>(begin: 1.15, end: 1.0).chain(CurveTween(curve: Curves.easeInOutQuad)),
+          tween: Tween<double>(begin: 1.15, end: 1.0)
+              .chain(CurveTween(curve: Curves.easeInOutQuad)),
           weight: 40,
         ),
       ]).animate(_controller!);
@@ -145,7 +149,8 @@ class _CoinIconState extends State<CoinIcon> with SingleTickerProviderStateMixin
                   builder: (context, child) {
                     final progress = _sparkleAnimation!.value;
                     final scale = 0.5 + 0.5 * math.sin(progress * math.pi);
-                    final opacity = (math.sin(progress * math.pi)).clamp(0.0, 1.0);
+                    final opacity =
+                        (math.sin(progress * math.pi)).clamp(0.0, 1.0);
                     return Opacity(
                       opacity: opacity,
                       child: Transform.scale(

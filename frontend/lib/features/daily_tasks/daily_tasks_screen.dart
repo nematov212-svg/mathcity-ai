@@ -14,7 +14,8 @@ class DailyTasksScreen extends ConsumerStatefulWidget {
   ConsumerState<DailyTasksScreen> createState() => _DailyTasksScreenState();
 }
 
-class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with SingleTickerProviderStateMixin {
+class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen>
+    with SingleTickerProviderStateMixin {
   List<Map<String, dynamic>> _missions = [];
   bool _isLoading = true;
   int _secondsUntilMidnight = 0;
@@ -88,14 +89,16 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
     return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
-  Future<void> _claimReward(Map<String, dynamic> mission, GlobalKey cardKey) async {
+  Future<void> _claimReward(
+      Map<String, dynamic> mission, GlobalKey cardKey) async {
     HapticFeedback.mediumImpact();
     final missionId = mission['id'] ?? mission['templateId'];
 
     // Capture render position for flying coin animation
     final renderBox = cardKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox != null) {
-      final startPos = renderBox.localToGlobal(Offset(renderBox.size.width - 60, renderBox.size.height / 2));
+      final startPos = renderBox.localToGlobal(
+          Offset(renderBox.size.width - 60, renderBox.size.height / 2));
       setState(() {
         _flyingCoinStart = startPos;
         _flyingCoinEnd = const Offset(320, 48); // Top right coin badge area
@@ -106,7 +109,8 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
       });
     }
 
-    final res = await ref.read(studentProvider.notifier).claimDailyMission(missionId);
+    final res =
+        await ref.read(studentProvider.notifier).claimDailyMission(missionId);
     if (!mounted) return;
 
     if (res['success'] == true) {
@@ -115,7 +119,8 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
         SnackBar(
           behavior: SnackBarBehavior.floating,
           backgroundColor: const Color(0xFF10B981),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           content: Row(
             children: [
               const Icon(Icons.stars_rounded, color: Colors.white, size: 24),
@@ -123,7 +128,8 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
               Expanded(
                 child: Text(
                   'Tabriklaymiz! +$coins oltin tanga hisobingizga qo‘shildi!',
-                  style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w700, color: Colors.white),
                 ),
               ),
             ],
@@ -148,7 +154,12 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
     final studentState = ref.watch(studentProvider);
     final coinBalance = studentState.student?.coinBalance ?? 0;
 
-    final completedCount = _missions.where((m) => m['isCompleted'] == true || m['status'] == 'COMPLETED' || m['status'] == 'CLAIMED').length;
+    final completedCount = _missions
+        .where((m) =>
+            m['isCompleted'] == true ||
+            m['status'] == 'COMPLETED' ||
+            m['status'] == 'CLAIMED')
+        .length;
 
     return Scaffold(
       backgroundColor: colors.bg,
@@ -183,7 +194,8 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
               : RefreshIndicator(
                   onRefresh: _loadMissions,
                   child: ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 20),
                     children: [
                       // Top Progress & Live Countdown Card
                       Container(
@@ -231,14 +243,16 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
                                   ],
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 6),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(0.18),
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Row(
                                     children: [
-                                      const Icon(Icons.timer_outlined, color: Colors.white, size: 16),
+                                      const Icon(Icons.timer_outlined,
+                                          color: Colors.white, size: 16),
                                       const SizedBox(width: 6),
                                       Text(
                                         _formatCountdown(_secondsUntilMidnight),
@@ -246,7 +260,9 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
                                           color: Colors.white,
                                           fontWeight: FontWeight.w800,
                                           fontSize: 13,
-                                          fontFeatures: [FontFeature.tabularFigures()],
+                                          fontFeatures: [
+                                            FontFeature.tabularFigures()
+                                          ],
                                         ),
                                       ),
                                     ],
@@ -272,25 +288,33 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
                                             ? const Color(0xFF10B981)
                                             : isCurrent
                                                 ? Colors.white
-                                                : Colors.white.withOpacity(0.22),
+                                                : Colors.white
+                                                    .withOpacity(0.22),
                                         shape: BoxShape.circle,
                                         boxShadow: isDone || isCurrent
-                                            ? const [BoxShadow(color: Colors.black26, blurRadius: 6)]
+                                            ? const [
+                                                BoxShadow(
+                                                    color: Colors.black26,
+                                                    blurRadius: 6)
+                                              ]
                                             : null,
                                       ),
                                       child: Center(
                                         child: isDone
-                                            ? const Icon(Icons.check_rounded, color: Colors.white, size: 22)
+                                            ? const Icon(Icons.check_rounded,
+                                                color: Colors.white, size: 22)
                                             : isCurrent
                                                 ? const Text(
                                                     '⏳',
-                                                    style: TextStyle(fontSize: 18),
+                                                    style:
+                                                        TextStyle(fontSize: 18),
                                                   )
                                                 : Text(
                                                     '${idx + 1}',
                                                     style: const TextStyle(
                                                       color: Colors.white,
-                                                      fontWeight: FontWeight.w800,
+                                                      fontWeight:
+                                                          FontWeight.w800,
                                                       fontSize: 16,
                                                     ),
                                                   ),
@@ -300,10 +324,14 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
                                       Container(
                                         width: 50,
                                         height: 4,
-                                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 8),
                                         decoration: BoxDecoration(
-                                          color: idx < completedCount ? const Color(0xFF10B981) : Colors.white.withOpacity(0.25),
-                                          borderRadius: BorderRadius.circular(2),
+                                          color: idx < completedCount
+                                              ? const Color(0xFF10B981)
+                                              : Colors.white.withOpacity(0.25),
+                                          borderRadius:
+                                              BorderRadius.circular(2),
                                         ),
                                       ),
                                   ],
@@ -330,10 +358,14 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
                         final cardKey = GlobalKey();
                         final current = (mission['currentCount'] ?? 0) as int;
                         final target = (mission['targetCount'] ?? 1) as int;
-                        final rewardCoins = (mission['rewardCoins'] ?? 1) as int;
-                        final isCompleted = mission['isCompleted'] == true || current >= target;
-                        final isClaimed = mission['claimed'] == true || mission['status'] == 'CLAIMED';
-                        final double progress = (current / target).clamp(0.0, 1.0);
+                        final rewardCoins =
+                            (mission['rewardCoins'] ?? 1) as int;
+                        final isCompleted =
+                            mission['isCompleted'] == true || current >= target;
+                        final isClaimed = mission['claimed'] == true ||
+                            mission['status'] == 'CLAIMED';
+                        final double progress =
+                            (current / target).clamp(0.0, 1.0);
 
                         return Container(
                           key: cardKey,
@@ -390,7 +422,8 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
                                   const SizedBox(width: 14),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           mission['title'] ?? 'Kunlik vazifa',
@@ -414,16 +447,21 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
                                   ),
                                   const SizedBox(width: 8),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFFFFF7ED),
                                       borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: const Color(0xFFFFEDD5)),
+                                      border: Border.all(
+                                          color: const Color(0xFFFFEDD5)),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(Icons.monetization_on_rounded, color: Color(0xFFF59E0B), size: 14),
+                                        const Icon(
+                                            Icons.monetization_on_rounded,
+                                            color: Color(0xFFF59E0B),
+                                            size: 14),
                                         const SizedBox(width: 4),
                                         Text(
                                           '+$rewardCoins',
@@ -479,15 +517,19 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
                                 alignment: Alignment.centerRight,
                                 child: isClaimed
                                     ? Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 8),
                                         decoration: BoxDecoration(
                                           color: const Color(0xFFE1F6EC),
-                                          borderRadius: BorderRadius.circular(14),
+                                          borderRadius:
+                                              BorderRadius.circular(14),
                                         ),
                                         child: const Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Icon(Icons.check_rounded, color: Color(0xFF10B981), size: 16),
+                                            Icon(Icons.check_rounded,
+                                                color: Color(0xFF10B981),
+                                                size: 16),
                                             SizedBox(width: 4),
                                             Text(
                                               'Olingan ✓',
@@ -504,28 +546,46 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
                                         ? AnimatedBuilder(
                                             animation: _pulseController,
                                             builder: (context, child) {
-                                              final scale = 1.0 + _pulseController.value * 0.04;
+                                              final scale = 1.0 +
+                                                  _pulseController.value * 0.04;
                                               return Transform.scale(
                                                 scale: scale,
                                                 child: ElevatedButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                    backgroundColor: const Color(0xFF10B981),
-                                                    foregroundColor: Colors.white,
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        const Color(0xFF10B981),
+                                                    foregroundColor:
+                                                        Colors.white,
                                                     elevation: 2,
-                                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(14),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 10),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              14),
                                                     ),
                                                   ),
-                                                  onPressed: () => _claimReward(mission, cardKey),
+                                                  onPressed: () => _claimReward(
+                                                      mission, cardKey),
                                                   child: const Row(
-                                                    mainAxisSize: MainAxisSize.min,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
                                                     children: [
-                                                      Icon(Icons.card_giftcard_rounded, size: 18),
+                                                      Icon(
+                                                          Icons
+                                                              .card_giftcard_rounded,
+                                                          size: 18),
                                                       SizedBox(width: 6),
                                                       Text(
                                                         'Mukofotni olish',
-                                                        style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w800,
+                                                            fontSize: 13),
                                                       ),
                                                     ],
                                                   ),
@@ -534,11 +594,14 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
                                             },
                                           )
                                         : Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 8),
                                             decoration: BoxDecoration(
                                               color: colors.field,
-                                              borderRadius: BorderRadius.circular(14),
-                                              border: Border.all(color: colors.border),
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              border: Border.all(
+                                                  color: colors.border),
                                             ),
                                             child: Text(
                                               'Bajarilmoqda',
@@ -565,7 +628,8 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
               duration: const Duration(milliseconds: 650),
               curve: Curves.easeInOutCubic,
               builder: (context, anim, child) {
-                final currentOffset = Offset.lerp(_flyingCoinStart, _flyingCoinEnd, anim)!;
+                final currentOffset =
+                    Offset.lerp(_flyingCoinStart, _flyingCoinEnd, anim)!;
                 final scale = 1.0 + 0.4 * (1.0 - (anim - 0.5).abs() * 2);
                 return Positioned(
                   left: currentOffset.dx,
@@ -579,11 +643,15 @@ class _DailyTasksScreenState extends ConsumerState<DailyTasksScreen> with Single
                         color: Color(0xFFFFD66B),
                         shape: BoxShape.circle,
                         boxShadow: [
-                          BoxShadow(color: Color(0x66F5A623), blurRadius: 10, offset: Offset(0, 2)),
+                          BoxShadow(
+                              color: Color(0x66F5A623),
+                              blurRadius: 10,
+                              offset: Offset(0, 2)),
                         ],
                       ),
                       child: const Center(
-                        child: Icon(Icons.monetization_on_rounded, color: Color(0xFFD97706), size: 22),
+                        child: Icon(Icons.monetization_on_rounded,
+                            color: Color(0xFFD97706), size: 22),
                       ),
                     ),
                   ),

@@ -37,7 +37,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   String? _usernameMessage;
   bool _isUsernameError = false;
   bool _isShakeField = false;
-  List<String> _suggestions = ['MathHero2026', 'SuperMath123', 'ZehnliBola88'];
+  List<String> _suggestions = ['MathNinja', 'AlgebraStar', 'NumberKing'];
   final List<String> _shownSuggestions = [];
   bool _isLoadingSuggestions = false;
 
@@ -53,8 +53,18 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   bool _isSubmitSuccess = false;
 
   final List<String> _monthNames = const [
-    'Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun',
-    'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'
+    'Yanvar',
+    'Fevral',
+    'Mart',
+    'Aprel',
+    'May',
+    'Iyun',
+    'Iyul',
+    'Avgust',
+    'Sentabr',
+    'Oktabr',
+    'Noyabr',
+    'Dekabr'
   ];
 
   @override
@@ -105,7 +115,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   int _calculateAge(DateTime dob) {
     final now = DateTime.now();
     int age = now.year - dob.year;
-    if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) {
+    if (now.month < dob.month ||
+        (now.month == dob.month && now.day < dob.day)) {
       age--;
     }
     return age;
@@ -157,7 +168,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         _isCheckingUsername = false;
         _isUsernameValid = false;
         _isUsernameError = true;
-        _usernameMessage = 'Faqat lotin harflari, raqamlar, _ va . ruxsat etiladi';
+        _usernameMessage =
+            'Faqat lotin harflari, raqamlar, _ va . ruxsat etiladi';
       });
       return;
     }
@@ -204,7 +216,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
           _isCheckingUsername = false;
           _isUsernameValid = false;
           _isUsernameError = true;
-          _usernameMessage = res['message'] ?? '✕ Bu nom band, boshqasini tanlang';
+          _usernameMessage =
+              res['message'] ?? '✕ Bu nom band, boshqasini tanlang';
         });
       }
     } catch (_) {
@@ -272,81 +285,82 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-              // Sheet Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Tug‘ilgan sanani tanlang',
-                    style: OnboardingTheme.labelStyle(fontSize: 17),
-                  ),
-                  Row(
-                    children: [
-                      // Material DatePicker fallback for web / accessibility
-                      IconButton(
-                        tooltip: 'Taqvim orqali tanlash',
-                        icon: const Icon(Icons.calendar_month_rounded, color: OnboardingTheme.primary),
-                        onPressed: () async {
-                          final picked = await showDatePicker(
-                            context: sheetContext,
-                            initialDate: tempDate,
-                            firstDate: minDate,
-                            lastDate: maxDate,
-                          );
-                          if (picked != null) {
-                            if (mounted) {
-                              Navigator.of(sheetContext).pop();
-                              _onDatePicked(picked);
+                // Sheet Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Tug‘ilgan sanani tanlang',
+                      style: OnboardingTheme.labelStyle(fontSize: 17),
+                    ),
+                    Row(
+                      children: [
+                        // Material DatePicker fallback for web / accessibility
+                        IconButton(
+                          tooltip: 'Taqvim orqali tanlash',
+                          icon: const Icon(Icons.calendar_month_rounded,
+                              color: OnboardingTheme.primary),
+                          onPressed: () async {
+                            final picked = await showDatePicker(
+                              context: sheetContext,
+                              initialDate: tempDate,
+                              firstDate: minDate,
+                              lastDate: maxDate,
+                            );
+                            if (picked != null) {
+                              if (mounted) {
+                                Navigator.of(sheetContext).pop();
+                                _onDatePicked(picked);
+                              }
                             }
-                          }
-                        },
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(sheetContext).pop();
-                          _onDatePicked(tempDate);
-                        },
-                        child: Text(
-                          'Tayyor',
-                          style: OnboardingTheme.labelStyle(
-                            color: OnboardingTheme.primary,
-                            fontSize: 16,
-                          ).copyWith(fontWeight: FontWeight.w800),
+                          },
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const Divider(color: OnboardingTheme.border),
-              SizedBox(
-                height: 280,
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(sheetContext).copyWith(
-                    dragDevices: {
-                      PointerDeviceKind.touch,
-                      PointerDeviceKind.mouse,
-                      PointerDeviceKind.trackpad,
-                      PointerDeviceKind.stylus,
-                    },
-                  ),
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    initialDateTime: tempDate,
-                    minimumDate: minDate,
-                    maximumDate: maxDate,
-                    onDateTimeChanged: (DateTime newDate) {
-                      tempDate = newDate;
-                    },
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(sheetContext).pop();
+                            _onDatePicked(tempDate);
+                          },
+                          child: Text(
+                            'Tayyor',
+                            style: OnboardingTheme.labelStyle(
+                              color: OnboardingTheme.primary,
+                              fontSize: 16,
+                            ).copyWith(fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const Divider(color: OnboardingTheme.border),
+                SizedBox(
+                  height: 280,
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(sheetContext).copyWith(
+                      dragDevices: {
+                        PointerDeviceKind.touch,
+                        PointerDeviceKind.mouse,
+                        PointerDeviceKind.trackpad,
+                        PointerDeviceKind.stylus,
+                      },
+                    ),
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.date,
+                      initialDateTime: tempDate,
+                      minimumDate: minDate,
+                      maximumDate: maxDate,
+                      onDateTimeChanged: (DateTime newDate) {
+                        tempDate = newDate;
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
   }
 
   void _onDatePicked(DateTime date) {
@@ -405,14 +419,18 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
     bool success = false;
     bool conflictOccurred = false;
     try {
-      success = await ref.read(studentProvider.notifier).completeOnboarding(
-        username: username,
-        day: chosenDate.day,
-        month: chosenDate.month,
-        year: chosenDate.year,
-      ).timeout(const Duration(seconds: 5));
+      success = await ref
+          .read(studentProvider.notifier)
+          .completeOnboarding(
+            username: username,
+            day: chosenDate.day,
+            month: chosenDate.month,
+            year: chosenDate.year,
+          )
+          .timeout(const Duration(seconds: 5));
     } catch (e) {
-      if (e.toString().contains('409') || e.toString().toLowerCase().contains('band')) {
+      if (e.toString().contains('409') ||
+          e.toString().toLowerCase().contains('band')) {
         conflictOccurred = true;
       }
       success = false;
@@ -420,15 +438,19 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
 
     if (!success && !conflictOccurred) {
       try {
-        await ref.read(studentProvider.notifier).register(
-          name: username,
-          dob: chosenDate,
-          email: '${username.toLowerCase()}@mathcity.ai',
-          password: 'securepassword123',
-        ).timeout(const Duration(seconds: 5));
+        await ref
+            .read(studentProvider.notifier)
+            .register(
+              name: username,
+              dob: chosenDate,
+              email: '${username.toLowerCase()}@mathcity.ai',
+              password: 'securepassword123',
+            )
+            .timeout(const Duration(seconds: 5));
         success = true;
       } catch (e) {
-        if (e.toString().contains('409') || e.toString().toLowerCase().contains('band')) {
+        if (e.toString().contains('409') ||
+            e.toString().toLowerCase().contains('band')) {
           conflictOccurred = true;
         } else {
           success = true; // Optimistic flow progression for offline/local
@@ -475,7 +497,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       setState(() => _isSubmitting = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Ro‘yxatdan o‘tishda xatolik yuz berdi. Qayta urinib ko‘ring.'),
+          content: const Text(
+              'Ro‘yxatdan o‘tishda xatolik yuz berdi. Qayta urinib ko‘ring.'),
           action: SnackBarAction(
             label: 'Qayta urinish',
             onPressed: _handleFinishRegistration,
@@ -523,7 +546,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
                   final slide = Tween<Offset>(
                     begin: const Offset(0.06, 0.0),
                     end: Offset.zero,
-                  ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutBack));
+                  ).animate(CurvedAnimation(
+                      parent: animation, curve: Curves.easeOutBack));
                   return FadeTransition(
                     opacity: animation,
                     child: SlideTransition(position: slide, child: child),
@@ -633,7 +657,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
                   height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.2,
-                    valueColor: AlwaysStoppedAnimation<Color>(OnboardingTheme.primary),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(OnboardingTheme.primary),
                   ),
                 )
               : (_isUsernameValid
@@ -662,17 +687,25 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
           Row(
             children: [
               Icon(
-                _isUsernameError ? Icons.error_outline_rounded : Icons.check_rounded,
-                color: _isUsernameError ? OnboardingTheme.error : OnboardingTheme.success,
+                _isUsernameError
+                    ? Icons.error_outline_rounded
+                    : Icons.check_rounded,
+                color: _isUsernameError
+                    ? OnboardingTheme.error
+                    : OnboardingTheme.success,
                 size: 16,
               ),
               const SizedBox(width: 6),
-              Text(
-                _usernameMessage!.replaceAll('✓ ', ''),
-                style: OnboardingTheme.subStyle(
-                  color: _isUsernameError ? OnboardingTheme.error : OnboardingTheme.success,
-                  fontSize: 13.5,
-                ).copyWith(fontWeight: FontWeight.w700),
+              Expanded(
+                child: Text(
+                  _usernameMessage!.replaceAll('✓ ', ''),
+                  style: OnboardingTheme.subStyle(
+                    color: _isUsernameError
+                        ? OnboardingTheme.error
+                        : OnboardingTheme.success,
+                    fontSize: 13.5,
+                  ).copyWith(fontWeight: FontWeight.w700),
+                ),
               ),
             ],
           ),
@@ -684,54 +717,61 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
           spacing: 8,
           runSpacing: 8,
           children: [
-            ChipTag(label: 'Kamida 4 ta belgi'),
+            ChipTag(label: '3–20 belgi'),
             ChipTag(label: 'Lotin harflari'),
-            ChipTag(label: 'Raqamlar va _ .'),
+            ChipTag(label: 'Raqamlar'),
           ],
         ),
 
         const SizedBox(height: 20),
 
         // Suggestions section with "Boshqa variantlar"
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Tavsiyalar',
-              style: OnboardingTheme.labelStyle(
-                color: OnboardingTheme.muted,
-                fontSize: 14,
-              ).copyWith(fontWeight: FontWeight.w700),
-            ),
-            InkWell(
-              onTap: _isLoadingSuggestions ? null : _refreshSuggestions,
-              borderRadius: BorderRadius.circular(8),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _isLoadingSuggestions
-                        ? const SizedBox(
-                            width: 13,
-                            height: 13,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.refresh_rounded, size: 16, color: Color(0xFF6C47FF)),
-                    const SizedBox(width: 4),
-                    const Text(
-                      'Boshqa variantlar',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF6C47FF),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Tavsiyalar',
+                style: OnboardingTheme.labelStyle(
+                  color: OnboardingTheme.muted,
+                  fontSize: 14,
+                ).copyWith(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(width: 16),
+              InkWell(
+                onTap: _isLoadingSuggestions ? null : _refreshSuggestions,
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _isLoadingSuggestions
+                          ? const SizedBox(
+                              width: 13,
+                              height: 13,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.refresh_rounded,
+                              size: 16, color: Color(0xFF6C47FF)),
+                      const SizedBox(width: 4),
+                      const Text(
+                        'Boshqa variantlar',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF6C47FF),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
 
         const SizedBox(height: 10),
@@ -753,7 +793,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         // CTA Button (blocked if length < 4 or invalid or checking)
         PrimaryButton(
           text: 'Davom etish',
-          trailing: const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
+          trailing: const Icon(Icons.arrow_forward_rounded,
+              color: Colors.white, size: 20),
           onPressed: (_isUsernameValid &&
                   !_isCheckingUsername &&
                   _usernameController.text.trim().length >= 4)
@@ -888,7 +929,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
           duration: const Duration(milliseconds: 300),
           transitionBuilder: (child, animation) {
             return SlideTransition(
-              position: Tween<Offset>(begin: const Offset(0, 0.4), end: Offset.zero).animate(animation),
+              position:
+                  Tween<Offset>(begin: const Offset(0, 0.4), end: Offset.zero)
+                      .animate(animation),
               child: FadeTransition(opacity: animation, child: child),
             );
           },
@@ -902,7 +945,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             child: Text(
               age != null ? '$age yosh' : '— yosh',
               style: OnboardingTheme.labelStyle(
-                color: hasDate ? OnboardingTheme.primary : OnboardingTheme.muted,
+                color:
+                    hasDate ? OnboardingTheme.primary : OnboardingTheme.muted,
                 fontSize: 14,
               ).copyWith(fontWeight: FontWeight.w800),
             ),
@@ -926,7 +970,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             child: ModeCard(
               title: 'Matematika rejimi',
               subtitle: 'Interaktiv va qiziqarli ta’lim dasturi',
-              icon: const Icon(Icons.smart_toy_rounded, color: OnboardingTheme.primary, size: 28),
+              icon: const Icon(Icons.smart_toy_rounded,
+                  color: OnboardingTheme.primary, size: 28),
               isSelected: true,
               onTap: () {},
             ),
@@ -961,7 +1006,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
 
         PrimaryButton(
           text: 'Davom etish',
-          trailing: const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
+          trailing: const Icon(Icons.arrow_forward_rounded,
+              color: Colors.white, size: 20),
           onPressed: _handleStep2Continue,
         ),
       ],
@@ -1032,7 +1078,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   Widget _buildStep3Summary() {
     final age = _selectedDate != null ? _calculateAge(_selectedDate!) : 10;
     final username = _usernameController.text.trim();
-    final modeLabel = _selectedMode == 'KIDS' ? 'Bolalar rejimi' : 'O‘smirlar rejimi';
+    final modeLabel =
+        _selectedMode == 'KIDS' ? 'Bolalar rejimi' : 'O‘smirlar rejimi';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1105,7 +1152,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: const Color(0xFFECE8FF),
-                    boxShadow: OnboardingTheme.primaryShadow(opacity: 0.12, blur: 24),
+                    boxShadow:
+                        OnboardingTheme.primaryShadow(opacity: 0.12, blur: 24),
                   ),
                   child: Center(
                     child: Container(
@@ -1158,18 +1206,22 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
           child: Column(
             children: [
               SummaryRow(
-                icon: const Icon(Icons.person_outline_rounded, color: OnboardingTheme.primary, size: 20),
+                icon: const Icon(Icons.person_outline_rounded,
+                    color: OnboardingTheme.primary, size: 20),
                 label: 'Foydalanuvchi',
                 value: username,
               ),
               SummaryRow(
-                icon: const Icon(Icons.calendar_today_rounded, color: OnboardingTheme.primary, size: 18),
+                icon: const Icon(Icons.calendar_today_rounded,
+                    color: OnboardingTheme.primary, size: 18),
                 label: 'Yosh',
                 value: '$age yosh',
               ),
               SummaryRow(
                 icon: Icon(
-                  _selectedMode == 'KIDS' ? Icons.smart_toy_rounded : Icons.rocket_launch_rounded,
+                  _selectedMode == 'KIDS'
+                      ? Icons.smart_toy_rounded
+                      : Icons.rocket_launch_rounded,
                   color: OnboardingTheme.primary,
                   size: 20,
                 ),
@@ -1177,7 +1229,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
                 value: modeLabel,
               ),
               SummaryRow(
-                icon: const Icon(Icons.monetization_on_rounded, color: Color(0xFFB45309), size: 22),
+                icon: const Icon(Icons.monetization_on_rounded,
+                    color: Color(0xFFB45309), size: 22),
                 label: 'Boshlang‘ich balans',
                 value: '0 oltin tanga',
                 isGold: true,
@@ -1222,7 +1275,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
 
         PrimaryButton(
           text: 'Ro‘yxatdan o‘tish',
-          trailing: const Icon(Icons.check_rounded, color: Colors.white, size: 20),
+          trailing:
+              const Icon(Icons.check_rounded, color: Colors.white, size: 20),
           isLoading: _isSubmitting,
           isSuccess: _isSubmitSuccess,
           onPressed: _handleFinishRegistration,

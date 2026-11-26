@@ -7,7 +7,9 @@ import 'package:mathcity_ai/core/widgets/kids_shell_layout.dart';
 
 void main() {
   group('MathCity AI — Glassmorphic Bottom Navigation & Shell Tests', () {
-    testWidgets('1. MathCityBottomNav renders all 5 primary tabs with equal width', (WidgetTester tester) async {
+    testWidgets(
+        '1. MathCityBottomNav renders all 5 primary tabs with equal width',
+        (WidgetTester tester) async {
       tester.view.physicalSize = const Size(390, 844);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -39,7 +41,9 @@ void main() {
       expect(find.byType(BackdropFilter), findsOneWidget);
     });
 
-    testWidgets('2. Tab switching in persistent KidsShellLayout keeps MathCityBottomNav mounted', (WidgetTester tester) async {
+    testWidgets(
+        '2. Tab switching in persistent KidsShellLayout keeps MathCityBottomNav mounted',
+        (WidgetTester tester) async {
       tester.view.physicalSize = const Size(390, 844);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -119,7 +123,9 @@ void main() {
       expect(find.byType(MathCityBottomNav), findsOneWidget);
     });
 
-    testWidgets('3. Responsive behavior: 360px and 390px widths render without overflow', (WidgetTester tester) async {
+    testWidgets(
+        '3. Responsive behavior: 360px and 390px widths render without overflow',
+        (WidgetTester tester) async {
       for (final width in [360.0, 390.0, 430.0]) {
         tester.view.physicalSize = Size(width, 700);
         tester.view.devicePixelRatio = 1.0;

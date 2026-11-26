@@ -16,7 +16,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
   final Widget phoneBody;
   final Widget? tabletBody;
   final Widget? desktopBody;
-  final int currentNavIndex; // 0: Home, 1: Lessons, 2: AI Tutor, 3: Leaderboard, 4: Profile, -1: none
+  final int
+      currentNavIndex; // 0: Home, 1: Lessons, 2: AI Tutor, 3: Leaderboard, 4: Profile, -1: none
   final String? title;
   final List<Widget>? topBarActions;
   final bool hideNavOnWide;
@@ -40,7 +41,11 @@ class AppResponsiveScaffold extends ConsumerWidget {
     (label: 'Asosiy', icon: Icons.home_rounded, route: '/kids/home'),
     (label: 'Darslar', icon: Icons.menu_book_rounded, route: '/kids/lessons'),
     (label: 'AI Ustoz', icon: Icons.smart_toy_rounded, route: '/kids/ai-tutor'),
-    (label: 'Reyting', icon: Icons.leaderboard_rounded, route: '/kids/leaderboard'),
+    (
+      label: 'Reyting',
+      icon: Icons.leaderboard_rounded,
+      route: '/kids/leaderboard'
+    ),
     (label: 'Profil', icon: Icons.person_rounded, route: '/kids/profile'),
   ];
 
@@ -61,7 +66,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
         final name = student?.displayName ?? 'O‘quvchi';
 
         final effectiveBg = backgroundColor ?? AppColors.kidsBackground;
-        final effectiveMaxWidth = maxContentWidth ?? ResponsiveBreakpoints.maxContentWidth;
+        final effectiveMaxWidth =
+            maxContentWidth ?? ResponsiveBreakpoints.maxContentWidth;
 
         final contentWidget = screenType == ScreenType.desktop
             ? (desktopBody ?? tabletBody ?? phoneBody)
@@ -88,11 +94,13 @@ class AppResponsiveScaffold extends ConsumerWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      _buildTopBar(context, name, coins, xp, level, isPro, isCompact: true),
+                      _buildTopBar(context, name, coins, xp, level, isPro,
+                          isCompact: true),
                       Expanded(
                         child: Center(
                           child: ConstrainedBox(
-                            constraints: BoxConstraints(maxWidth: effectiveMaxWidth),
+                            constraints:
+                                BoxConstraints(maxWidth: effectiveMaxWidth),
                             child: contentWidget,
                           ),
                         ),
@@ -110,15 +118,18 @@ class AppResponsiveScaffold extends ConsumerWidget {
           backgroundColor: effectiveBg,
           body: Row(
             children: [
-              _buildDesktopSidebar(context, student, name, coins, xp, level, isPro),
+              _buildDesktopSidebar(
+                  context, student, name, coins, xp, level, isPro),
               Expanded(
                 child: Column(
                   children: [
-                    _buildTopBar(context, name, coins, xp, level, isPro, isCompact: false),
+                    _buildTopBar(context, name, coins, xp, level, isPro,
+                        isCompact: false),
                     Expanded(
                       child: Center(
                         child: ConstrainedBox(
-                          constraints: BoxConstraints(maxWidth: effectiveMaxWidth),
+                          constraints:
+                              BoxConstraints(maxWidth: effectiveMaxWidth),
                           child: contentWidget,
                         ),
                       ),
@@ -148,7 +159,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
-          bottom: BorderSide(color: AppColors.kidsBorder.withValues(alpha: 0.6), width: 1),
+          bottom: BorderSide(
+              color: AppColors.kidsBorder.withValues(alpha: 0.6), width: 1),
         ),
       ),
       child: Row(
@@ -193,7 +205,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.workspace_premium_rounded, color: Colors.white, size: 14),
+                  Icon(Icons.workspace_premium_rounded,
+                      color: Colors.white, size: 14),
                   SizedBox(width: 4),
                   Text(
                     'PRO',
@@ -213,7 +226,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
               child: GestureDetector(
                 onTap: () => context.push('/pro'),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF3E8FF),
                     borderRadius: BorderRadius.circular(12),
@@ -222,7 +236,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.star_rounded, color: Color(0xFF9333EA), size: 16),
+                      Icon(Icons.star_rounded,
+                          color: Color(0xFF9333EA), size: 16),
                       SizedBox(width: 6),
                       Text(
                         'PRO olish',
@@ -252,7 +267,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
-          right: BorderSide(color: AppColors.kidsBorder.withValues(alpha: 0.6), width: 1),
+          right: BorderSide(
+              color: AppColors.kidsBorder.withValues(alpha: 0.6), width: 1),
         ),
       ),
       child: Column(
@@ -306,16 +322,22 @@ class AppResponsiveScaffold extends ConsumerWidget {
                       child: Container(
                         height: 52,
                         decoration: BoxDecoration(
-                          color: isSelected ? const Color(0xFFF3F0FF) : Colors.transparent,
+                          color: isSelected
+                              ? const Color(0xFFF3F0FF)
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(16),
                           border: isSelected
-                              ? Border.all(color: AppColors.kidsPrimary.withValues(alpha: 0.3))
+                              ? Border.all(
+                                  color: AppColors.kidsPrimary
+                                      .withValues(alpha: 0.3))
                               : null,
                         ),
                         child: Center(
                           child: Icon(
                             item.icon,
-                            color: isSelected ? AppColors.kidsPrimary : AppColors.kidsSecondaryText,
+                            color: isSelected
+                                ? AppColors.kidsPrimary
+                                : AppColors.kidsSecondaryText,
                             size: 26,
                           ),
                         ),
@@ -332,7 +354,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
               child: IconButton(
-                icon: const Icon(Icons.settings_outlined, color: AppColors.kidsSecondaryText),
+                icon: const Icon(Icons.settings_outlined,
+                    color: AppColors.kidsSecondaryText),
                 onPressed: () => context.push('/settings'),
               ),
             ),
@@ -357,7 +380,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
-          right: BorderSide(color: AppColors.kidsBorder.withValues(alpha: 0.6), width: 1),
+          right: BorderSide(
+              color: AppColors.kidsBorder.withValues(alpha: 0.6), width: 1),
         ),
       ),
       child: Column(
@@ -379,7 +403,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(14),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.kidsPrimary.withValues(alpha: 0.25),
+                            color:
+                                AppColors.kidsPrimary.withValues(alpha: 0.25),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -506,7 +531,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
                   children: [
                     CircleAvatar(
                       radius: 18,
-                      backgroundColor: AppColors.kidsPrimary.withValues(alpha: 0.15),
+                      backgroundColor:
+                          AppColors.kidsPrimary.withValues(alpha: 0.15),
                       child: Text(
                         name.isNotEmpty ? name[0].toUpperCase() : 'O',
                         style: const TextStyle(
@@ -543,7 +569,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
                     ),
                     if (isPro)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFFB800),
                           borderRadius: BorderRadius.circular(8),
@@ -573,7 +600,8 @@ class AppResponsiveScaffold extends ConsumerWidget {
                     ),
                     Row(
                       children: [
-                        const Icon(Icons.monetization_on_rounded, size: 14, color: Color(0xFFFFB800)),
+                        const Icon(Icons.monetization_on_rounded,
+                            size: 14, color: Color(0xFFFFB800)),
                         const SizedBox(width: 4),
                         Text(
                           '$coins',
@@ -618,7 +646,9 @@ class AppResponsiveScaffold extends ConsumerWidget {
                 children: [
                   Icon(
                     icon,
-                    color: active ? AppColors.kidsPrimary : AppColors.kidsSecondaryText,
+                    color: active
+                        ? AppColors.kidsPrimary
+                        : AppColors.kidsSecondaryText,
                     size: 22,
                   ),
                   const SizedBox(width: 12),
@@ -628,7 +658,9 @@ class AppResponsiveScaffold extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: active ? FontWeight.w800 : FontWeight.w600,
-                        color: active ? AppColors.kidsPrimary : AppColors.kidsDarkText,
+                        color: active
+                            ? AppColors.kidsPrimary
+                            : AppColors.kidsDarkText,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

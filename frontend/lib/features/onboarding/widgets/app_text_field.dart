@@ -27,7 +27,8 @@ class AppTextField extends StatefulWidget {
   State<AppTextField> createState() => _AppTextFieldState();
 }
 
-class _AppTextFieldState extends State<AppTextField> with SingleTickerProviderStateMixin {
+class _AppTextFieldState extends State<AppTextField>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _shakeCtrl;
   late final Animation<double> _shakeAnimation;
   final FocusNode _focusNode = FocusNode();
@@ -135,7 +136,8 @@ class _AppTextFieldState extends State<AppTextField> with SingleTickerProviderSt
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: widget.placeholder,
-                  hintStyle: OnboardingTheme.inputStyle(color: OnboardingTheme.muted.withOpacity(0.65)),
+                  hintStyle: OnboardingTheme.inputStyle(
+                      color: OnboardingTheme.muted.withOpacity(0.65)),
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
                 ),

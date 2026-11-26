@@ -22,7 +22,8 @@ class ModeCard extends StatefulWidget {
   State<ModeCard> createState() => _ModeCardState();
 }
 
-class _ModeCardState extends State<ModeCard> with SingleTickerProviderStateMixin {
+class _ModeCardState extends State<ModeCard>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _bounceCtrl;
   late final Animation<double> _bounceAnimation;
 
@@ -97,7 +98,9 @@ class _ModeCardState extends State<ModeCard> with SingleTickerProviderStateMixin
                 height: 54,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: isSelected ? OnboardingTheme.lilac : const Color(0xFFEAE8F2),
+                  color: isSelected
+                      ? OnboardingTheme.lilac
+                      : const Color(0xFFEAE8F2),
                 ),
                 child: Center(
                   child: widget.icon,

@@ -210,12 +210,34 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const CertificateScreen(),
     ),
     GoRoute(
+      path: '/kids/pro',
+      builder: (context, state) {
+        final plan = state.uri.queryParameters['plan'] ??
+            (state.extra is Map
+                ? (state.extra as Map)['selectedPlan']?.toString()
+                : null);
+        return MathCityProScreen(initialPlan: plan);
+      },
+    ),
+    GoRoute(
       path: '/tariflar',
-      builder: (context, state) => const MathCityProScreen(),
+      builder: (context, state) {
+        final plan = state.uri.queryParameters['plan'] ??
+            (state.extra is Map
+                ? (state.extra as Map)['selectedPlan']?.toString()
+                : null);
+        return MathCityProScreen(initialPlan: plan);
+      },
     ),
     GoRoute(
       path: '/pro',
-      builder: (context, state) => const MathCityProScreen(),
+      builder: (context, state) {
+        final plan = state.uri.queryParameters['plan'] ??
+            (state.extra is Map
+                ? (state.extra as Map)['selectedPlan']?.toString()
+                : null);
+        return MathCityProScreen(initialPlan: plan);
+      },
     ),
     GoRoute(
       path: '/payment/add',

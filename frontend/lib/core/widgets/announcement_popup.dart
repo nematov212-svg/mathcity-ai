@@ -62,7 +62,8 @@ class AnnouncementDesign {
 
   factory AnnouncementDesign.fromJson(Map<String, dynamic> json) {
     final btns = (json['buttons'] as List?)
-            ?.map((b) => AnnouncementButtonConfig.fromJson(b as Map<String, dynamic>))
+            ?.map((b) =>
+                AnnouncementButtonConfig.fromJson(b as Map<String, dynamic>))
             .toList() ??
         [];
     final bg = json['background'] as Map<String, dynamic>?;
@@ -81,7 +82,8 @@ class AnnouncementDesign {
 
 class AnnouncementItem {
   final String id;
-  final String type; // urgent, special_offer, info, URGENT_ANNOUNCEMENT, SPECIAL_OFFER, ANNOUNCEMENT, AD
+  final String
+      type; // urgent, special_offer, info, URGENT_ANNOUNCEMENT, SPECIAL_OFFER, ANNOUNCEMENT, AD
   final String title;
   final String text;
   final String? imageUrl;
@@ -128,11 +130,12 @@ class AnnouncementItem {
 
   factory AnnouncementItem.fromJson(Map<String, dynamic> json) {
     final act = (json['buttonAction'] ?? json['buttonRoute']) as String?;
-    final delay = (json['showDelaySeconds'] ?? json['delaySeconds'] as num?)?.toInt() ?? 0;
+    final delay =
+        (json['showDelaySeconds'] ?? json['delaySeconds'] as num?)?.toInt() ??
+            0;
     final rewardsRaw = json['rewards'] as List?;
-    final parsedRewards = rewardsRaw
-        ?.map((r) => Map<String, dynamic>.from(r as Map))
-        .toList();
+    final parsedRewards =
+        rewardsRaw?.map((r) => Map<String, dynamic>.from(r as Map)).toList();
 
     return AnnouncementItem(
       id: (json['id'] ?? '').toString(),
@@ -201,9 +204,11 @@ class AnnouncementManager {
 
   /// Call once when home screen is initialized, on app resume, or periodically.
   /// Backend endpoint: GET /api/announcements/active
-  static Future<void> checkAndShowAnnouncements(BuildContext context, WidgetRef ref) async {
+  static Future<void> checkAndShowAnnouncements(
+      BuildContext context, WidgetRef ref) async {
     if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) return;
-    if (_lastFailedCheckAt != null && DateTime.now().isBefore(_lastFailedCheckAt!)) {
+    if (_lastFailedCheckAt != null &&
+        DateTime.now().isBefore(_lastFailedCheckAt!)) {
       return;
     }
     try {
@@ -211,13 +216,13 @@ class AnnouncementManager {
 
       try {
         final res = await ApiClient().dio.get(
-          '/announcements/active',
-          options: Options(
-            validateStatus: (status) => true,
-            sendTimeout: const Duration(seconds: 5),
-            receiveTimeout: const Duration(seconds: 5),
-          ),
-        );
+              '/announcements/active',
+              options: Options(
+                validateStatus: (status) => true,
+                sendTimeout: const Duration(seconds: 5),
+                receiveTimeout: const Duration(seconds: 5),
+              ),
+            );
         if (res.statusCode == 200 && res.data != null) {
           responseData = res.data;
           _lastFailedCheckAt = null;
@@ -231,7 +236,9 @@ class AnnouncementManager {
         _lastFailedCheckAt = DateTime.now().add(const Duration(minutes: 5));
       }
 
-      if (responseData == null || responseData['success'] != true || responseData['data'] is! List) {
+      if (responseData == null ||
+          responseData['success'] != true ||
+          responseData['data'] is! List) {
         return;
       }
 
@@ -242,17 +249,17 @@ class AnnouncementManager {
       final announcements = rawList
           .map((e) => AnnouncementItem.fromJson(e as Map<String, dynamic>))
           .where((a) {
-            if (_dismissedAnnouncementIds.contains(a.id)) return false;
-            if (a.frequency == 'once') {
-              final viewed = prefs.getBool('announcement_viewed_${a.id}') ?? false;
-              if (viewed) return false;
-            } else if (a.frequency == 'once_per_day') {
-              final lastDate = prefs.getString('announcement_last_viewed_date_${a.id}');
-              if (lastDate == todayStr) return false;
-            }
-            return true;
-          })
-          .toList();
+        if (_dismissedAnnouncementIds.contains(a.id)) return false;
+        if (a.frequency == 'once') {
+          final viewed = prefs.getBool('announcement_viewed_${a.id}') ?? false;
+          if (viewed) return false;
+        } else if (a.frequency == 'once_per_day') {
+          final lastDate =
+              prefs.getString('announcement_last_viewed_date_${a.id}');
+          if (lastDate == todayStr) return false;
+        }
+        return true;
+      }).toList();
 
       final meta = responseData['meta'] as Map<String, dynamic>? ?? {};
       final hasNewUserDiscount = meta['hasNewUserDiscount'] == true;
@@ -270,13 +277,18 @@ class AnnouncementManager {
 
         if (urgentItem != null && context.mounted) {
           _urgentShownThisSession = true;
-          final delayMs = urgentItem.delaySeconds > 0 ? (urgentItem.delaySeconds * 1000) : 700;
+          final delayMs = urgentItem.delaySeconds > 0
+              ? (urgentItem.delaySeconds * 1000)
+              : 700;
           Future.delayed(Duration(milliseconds: delayMs), () async {
-            if (context.mounted && !_dismissedAnnouncementIds.contains(urgentItem.id)) {
+            if (context.mounted &&
+                !_dismissedAnnouncementIds.contains(urgentItem.id)) {
               if (urgentItem.frequency == 'once') {
-                await prefs.setBool('announcement_viewed_${urgentItem.id}', true);
+                await prefs.setBool(
+                    'announcement_viewed_${urgentItem.id}', true);
               } else if (urgentItem.frequency == 'once_per_day') {
-                await prefs.setString('announcement_last_viewed_date_${urgentItem.id}', todayStr);
+                await prefs.setString(
+                    'announcement_last_viewed_date_${urgentItem.id}', todayStr);
               }
               recordView(urgentItem.id);
               showUrgentAnnouncementDialog(context, urgentItem);
@@ -292,10 +304,12 @@ class AnnouncementManager {
           return;
         }
 
-        final specialOfferItem = announcements.cast<AnnouncementItem?>().firstWhere(
-              (a) => a?.type == 'special_offer' || a?.type == 'SPECIAL_OFFER',
-              orElse: () => null,
-            );
+        final specialOfferItem =
+            announcements.cast<AnnouncementItem?>().firstWhere(
+                  (a) =>
+                      a?.type == 'special_offer' || a?.type == 'SPECIAL_OFFER',
+                  orElse: () => null,
+                );
 
         if (specialOfferItem != null) {
           final todayKey = 'offer_shown_$todayStr';
@@ -303,7 +317,9 @@ class AnnouncementManager {
           if (shownToday >= 3) return;
 
           _specialOfferScheduled = true;
-          final delaySec = specialOfferItem.delaySeconds > 0 ? specialOfferItem.delaySeconds : 2;
+          final delaySec = specialOfferItem.delaySeconds > 0
+              ? specialOfferItem.delaySeconds
+              : 2;
 
           Timer(Duration(seconds: delaySec), () async {
             if (!context.mounted) return;
@@ -312,9 +328,12 @@ class AnnouncementManager {
             if (currentStudent != null && currentStudent.isPro) return;
 
             if (specialOfferItem.frequency == 'once') {
-              await prefs.setBool('announcement_viewed_${specialOfferItem.id}', true);
+              await prefs.setBool(
+                  'announcement_viewed_${specialOfferItem.id}', true);
             } else if (specialOfferItem.frequency == 'once_per_day') {
-              await prefs.setString('announcement_last_viewed_date_${specialOfferItem.id}', todayStr);
+              await prefs.setString(
+                  'announcement_last_viewed_date_${specialOfferItem.id}',
+                  todayStr);
             }
             await prefs.setInt(todayKey, shownToday + 1);
             recordView(specialOfferItem.id);
@@ -343,7 +362,8 @@ class _UrgentAnnouncementDialog extends StatefulWidget {
   const _UrgentAnnouncementDialog({required this.item});
 
   @override
-  State<_UrgentAnnouncementDialog> createState() => _UrgentAnnouncementDialogState();
+  State<_UrgentAnnouncementDialog> createState() =>
+      _UrgentAnnouncementDialogState();
 }
 
 class _UrgentAnnouncementDialogState extends State<_UrgentAnnouncementDialog>
@@ -403,7 +423,9 @@ class _UrgentAnnouncementDialogState extends State<_UrgentAnnouncementDialog>
                   end: Alignment.bottomCenter,
                 ),
                 borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: const Color(0xFFEF4444).withOpacity(0.4), width: 1.5),
+                border: Border.all(
+                    color: const Color(0xFFEF4444).withOpacity(0.4),
+                    width: 1.5),
                 boxShadow: [
                   BoxShadow(
                     color: const Color(0xFFEF4444).withOpacity(0.3),
@@ -421,7 +443,8 @@ class _UrgentAnnouncementDialogState extends State<_UrgentAnnouncementDialog>
                       children: [
                         // Badge
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 5),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
                               colors: [Color(0xFFEF4444), Color(0xFFDC2626)],
@@ -486,7 +509,8 @@ class _UrgentAnnouncementDialogState extends State<_UrgentAnnouncementDialog>
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFFEF4444).withOpacity(0.35),
+                                  color:
+                                      const Color(0xFFEF4444).withOpacity(0.35),
                                   blurRadius: 14,
                                   offset: const Offset(0, 4),
                                 ),
@@ -498,7 +522,8 @@ class _UrgentAnnouncementDialogState extends State<_UrgentAnnouncementDialog>
                                 borderRadius: BorderRadius.circular(16),
                                 onTap: () {
                                   HapticFeedback.lightImpact();
-                                  AnnouncementManager.recordClick(widget.item.id);
+                                  AnnouncementManager.recordClick(
+                                      widget.item.id);
                                   _dismissDialog();
                                   context.push(route);
                                 },
@@ -527,8 +552,10 @@ class _UrgentAnnouncementDialogState extends State<_UrgentAnnouncementDialog>
                     top: 10,
                     right: 10,
                     child: IconButton(
-                      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                      icon: const Icon(Icons.close_rounded, color: Colors.white60, size: 22),
+                      constraints:
+                          const BoxConstraints(minWidth: 44, minHeight: 44),
+                      icon: const Icon(Icons.close_rounded,
+                          color: Colors.white60, size: 22),
                       onPressed: _dismissDialog,
                     ),
                   ),
@@ -539,14 +566,16 @@ class _UrgentAnnouncementDialogState extends State<_UrgentAnnouncementDialog>
                     right: 0,
                     bottom: 0,
                     child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28)),
+                      borderRadius: const BorderRadius.vertical(
+                          bottom: Radius.circular(28)),
                       child: AnimatedBuilder(
                         animation: _progressController,
                         builder: (context, child) {
                           return LinearProgressIndicator(
                             value: 1.0 - _progressController.value,
                             backgroundColor: Colors.white.withOpacity(0.08),
-                            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFEF4444)),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Color(0xFFEF4444)),
                             minHeight: 4,
                           );
                         },
@@ -580,7 +609,8 @@ class _SpecialOfferDialog extends ConsumerStatefulWidget {
   const _SpecialOfferDialog({required this.item});
 
   @override
-  ConsumerState<_SpecialOfferDialog> createState() => _SpecialOfferDialogState();
+  ConsumerState<_SpecialOfferDialog> createState() =>
+      _SpecialOfferDialogState();
 }
 
 class _SpecialOfferDialogState extends ConsumerState<_SpecialOfferDialog>
@@ -651,7 +681,8 @@ class _SpecialOfferDialogState extends ConsumerState<_SpecialOfferDialog>
 
     // Remaining duration based on authoritative server clock offset
     final remaining = pricing.remainingDiscountDuration;
-    final totalSec = remaining.inSeconds > 0 ? remaining.inSeconds : (6 * 86400 + 7200);
+    final totalSec =
+        remaining.inSeconds > 0 ? remaining.inSeconds : (6 * 86400 + 7200);
 
     final days = (totalSec ~/ 86400).toString().padLeft(2, '0');
     final hours = ((totalSec % 86400) ~/ 3600).toString().padLeft(2, '0');
@@ -711,17 +742,22 @@ class _SpecialOfferDialogState extends ConsumerState<_SpecialOfferDialog>
 
                             // 2. Badge: -30% Chegirma
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 6),
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
-                                  colors: [Color(0xFFFFD700), Color(0xFFF59E0B)],
+                                  colors: [
+                                    Color(0xFFFFD700),
+                                    Color(0xFFF59E0B)
+                                  ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFFFFD700).withOpacity(0.4),
+                                    color: const Color(0xFFFFD700)
+                                        .withOpacity(0.4),
                                     blurRadius: 12,
                                     offset: const Offset(0, 2),
                                   ),
@@ -779,7 +815,8 @@ class _SpecialOfferDialogState extends ConsumerState<_SpecialOfferDialog>
                             const SizedBox(height: 16),
 
                             // 5. Price Block with Strikethrough & Savings
-                            _buildPriceBlock(originalPrice, discountPrice, savings),
+                            _buildPriceBlock(
+                                originalPrice, discountPrice, savings),
                             const SizedBox(height: 18),
 
                             // 6. Primary Action CTA Button
@@ -789,14 +826,18 @@ class _SpecialOfferDialogState extends ConsumerState<_SpecialOfferDialog>
                               child: Container(
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
-                                    colors: [Color(0xFF8B5CF6), Color(0xFF6366F1)],
+                                    colors: [
+                                      Color(0xFF8B5CF6),
+                                      Color(0xFF6366F1)
+                                    ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
                                   borderRadius: BorderRadius.circular(18),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFF8B5CF6).withOpacity(0.45),
+                                      color: const Color(0xFF8B5CF6)
+                                          .withOpacity(0.45),
                                       blurRadius: 18,
                                       offset: const Offset(0, 6),
                                     ),
@@ -808,18 +849,23 @@ class _SpecialOfferDialogState extends ConsumerState<_SpecialOfferDialog>
                                     borderRadius: BorderRadius.circular(18),
                                     onTap: () {
                                       HapticFeedback.mediumImpact();
-                                      AnnouncementManager.recordClick(widget.item.id);
+                                      AnnouncementManager.recordClick(
+                                          widget.item.id);
                                       _dismissDialog();
                                       context.push(route);
                                     },
                                     child: Center(
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          const Icon(Icons.stars_rounded, color: Color(0xFFFFD700), size: 20),
+                                          const Icon(Icons.stars_rounded,
+                                              color: Color(0xFFFFD700),
+                                              size: 20),
                                           const SizedBox(width: 8),
                                           Text(
-                                            widget.item.buttonText ?? 'PRO sotib olish',
+                                            widget.item.buttonText ??
+                                                'PRO sotib olish',
                                             style: const TextStyle(
                                               fontSize: 15.5,
                                               fontWeight: FontWeight.w900,
@@ -975,7 +1021,8 @@ class _SpecialOfferDialogState extends ConsumerState<_SpecialOfferDialog>
   }
 
   /// Clean Tabular Figure Countdown with separate tiles
-  Widget _buildCountdownBox(String days, String hours, String mins, String secs) {
+  Widget _buildCountdownBox(
+      String days, String hours, String mins, String secs) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
@@ -989,7 +1036,8 @@ class _SpecialOfferDialogState extends ConsumerState<_SpecialOfferDialog>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.timer_outlined, size: 14, color: Colors.white.withOpacity(0.7)),
+              Icon(Icons.timer_outlined,
+                  size: 14, color: Colors.white.withOpacity(0.7)),
               const SizedBox(width: 5),
               Text(
                 'Taklif tugashiga qoldi:',
@@ -1028,7 +1076,8 @@ class _SpecialOfferDialogState extends ConsumerState<_SpecialOfferDialog>
           decoration: BoxDecoration(
             color: const Color(0xFF28144E),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFFFFD700).withOpacity(0.35)),
+            border:
+                Border.all(color: const Color(0xFFFFD700).withOpacity(0.35)),
           ),
           child: Text(
             value,
@@ -1116,7 +1165,8 @@ class _SpecialOfferDialogState extends ConsumerState<_SpecialOfferDialog>
             decoration: BoxDecoration(
               color: const Color(0xFF10B981).withOpacity(0.15),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF10B981).withOpacity(0.4)),
+              border:
+                  Border.all(color: const Color(0xFF10B981).withOpacity(0.4)),
             ),
             child: Text(
               'Siz $savings so‘m tejaysiz • Faqat 1-to‘lov uchun',

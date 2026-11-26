@@ -62,7 +62,7 @@ class PricingNotifier extends StateNotifier<PricingState> {
     return PricingData(
       serverNow: now,
       serverOffset: Duration.zero,
-      discountEndsAt: now.add(const Duration(days: 7)),
+      discountEndsAt: now.add(const Duration(hours: 24)),
       isEligible: true,
       eligibilityReason: 'Yangi foydalanuvchilar uchun 30% chegirma',
       monthlyPlan: const PricingPlan(
@@ -75,12 +75,22 @@ class PricingNotifier extends StateNotifier<PricingState> {
         savings: 8700,
         billingCycle: 'month',
       ),
-      yearlyPlan: PricingPlan.yearlyDefault,
+      yearlyPlan: const PricingPlan(
+        id: 'yearly',
+        name: '1 yillik',
+        basePrice: 250000,
+        finalPrice: 175000,
+        discountPercent: 30,
+        isDiscounted: true,
+        savings: 75000,
+        billingCycle: 'year',
+      ),
     );
   }
 
   Future<void> refreshPricing() async {
-    final isTestEnv = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    final isTestEnv =
+        !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
     if (isTestEnv) {
       // In tests, provide mock 30% discount data
       final now = DateTime.now();
@@ -88,7 +98,7 @@ class PricingNotifier extends StateNotifier<PricingState> {
         data: PricingData(
           serverNow: now,
           serverOffset: Duration.zero,
-          discountEndsAt: now.add(const Duration(days: 6, hours: 23)),
+          discountEndsAt: now.add(const Duration(hours: 23, minutes: 59)),
           isEligible: true,
           eligibilityReason: 'TEST_OK',
           monthlyPlan: const PricingPlan(
@@ -101,7 +111,16 @@ class PricingNotifier extends StateNotifier<PricingState> {
             savings: 8700,
             billingCycle: 'month',
           ),
-          yearlyPlan: PricingPlan.yearlyDefault,
+          yearlyPlan: const PricingPlan(
+            id: 'yearly',
+            name: '1 yillik',
+            basePrice: 250000,
+            finalPrice: 175000,
+            discountPercent: 30,
+            isDiscounted: true,
+            savings: 75000,
+            billingCycle: 'year',
+          ),
         ),
       );
       _startCountdownTicker();
@@ -112,17 +131,19 @@ class PricingNotifier extends StateNotifier<PricingState> {
 
     try {
       final res = await ApiClient().dio.get(
-        '/pricing',
-        options: Options(
-          validateStatus: (status) => true,
-          sendTimeout: const Duration(seconds: 5),
-          receiveTimeout: const Duration(seconds: 5),
-        ),
-      );
+            '/pricing',
+            options: Options(
+              validateStatus: (status) => true,
+              sendTimeout: const Duration(seconds: 5),
+              receiveTimeout: const Duration(seconds: 5),
+            ),
+          );
 
       final receivedAt = DateTime.now();
 
-      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
+      if (res.statusCode == 200 &&
+          res.data != null &&
+          res.data['success'] == true) {
         final parsed = PricingData.fromJson(
           res.data['data'] as Map<String, dynamic>,
           receivedAt,
@@ -132,16 +153,19 @@ class PricingNotifier extends StateNotifier<PricingState> {
         return;
       } else {
         // Safe fallback pricing so UI always displays smoothly without hanging
-        state = state.copyWith(data: createFallbackData(), isLoading: false, error: null);
+        state = state.copyWith(
+            data: createFallbackData(), isLoading: false, error: null);
         _startCountdownTicker();
       }
     } catch (_) {
-      state = state.copyWith(data: createFallbackData(), isLoading: false, error: null);
+      state = state.copyWith(
+          data: createFallbackData(), isLoading: false, error: null);
       _startCountdownTicker();
     }
   }
 }
 
-final pricingProvider = StateNotifierProvider<PricingNotifier, PricingState>((ref) {
+final pricingProvider =
+    StateNotifierProvider<PricingNotifier, PricingState>((ref) {
   return PricingNotifier();
 });

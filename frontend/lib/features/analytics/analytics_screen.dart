@@ -46,10 +46,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     final colors = AppThemeColors.of(context);
     final student = ref.watch(studentProvider).student;
 
-    final attempted = _statsData?['attemptedQuestions'] ?? student?.attemptedQuestionCount ?? 0;
-    final accuracy = _statsData?['accuracyPercentage'] ?? student?.accuracyPercentage ?? 100;
-    final studyMinutes = _statsData?['studyMinutesTotal'] ?? student?.studyMinutes ?? 0;
-    final longestStreak = _statsData?['longestStreak'] ?? student?.longestStreak ?? 1;
+    final attempted = _statsData?['attemptedQuestions'] ??
+        student?.attemptedQuestionCount ??
+        0;
+    final accuracy =
+        _statsData?['accuracyPercentage'] ?? student?.accuracyPercentage ?? 100;
+    final studyMinutes =
+        _statsData?['studyMinutesTotal'] ?? student?.studyMinutes ?? 0;
+    final longestStreak =
+        _statsData?['longestStreak'] ?? student?.longestStreak ?? 1;
     final totalCoins = _statsData?['totalCoins'] ?? student?.coinBalance ?? 0;
     final level = _statsData?['level'] ?? student?.level ?? 1;
 
@@ -87,7 +92,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               onRefresh: _loadStats,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -205,7 +211,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                   color: colors.ink,
                                 ),
                               ),
-                              const Icon(Icons.bar_chart_rounded, color: Color(0xFF6C47FF)),
+                              const Icon(Icons.bar_chart_rounded,
+                                  color: Color(0xFF6C47FF)),
                             ],
                           ),
                           const SizedBox(height: 20),
@@ -217,49 +224,75 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 maxY: _calculateMaxBar(weeklyList),
                                 barTouchData: BarTouchData(
                                   touchTooltipData: BarTouchTooltipData(
-                                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                                      final day = groupIndex < weeklyList.length ? weeklyList[groupIndex]['dayKey'] : '';
+                                    getTooltipItem:
+                                        (group, groupIndex, rod, rodIndex) {
+                                      final day = groupIndex < weeklyList.length
+                                          ? weeklyList[groupIndex]['dayKey']
+                                          : '';
                                       return BarTooltipItem(
                                         '$day: ${rod.toY.toInt()} ta',
-                                        const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                        const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
                                       );
                                     },
                                   ),
                                 ),
-                                barGroups: List.generate(weeklyList.length, (i) {
-                                  final count = (weeklyList[i]['count'] ?? 0) as int;
-                                  final isToday = weeklyList[i]['isToday'] == true;
+                                barGroups:
+                                    List.generate(weeklyList.length, (i) {
+                                  final count =
+                                      (weeklyList[i]['count'] ?? 0) as int;
+                                  final isToday =
+                                      weeklyList[i]['isToday'] == true;
                                   return BarChartGroupData(
                                     x: i,
                                     barRods: [
                                       BarChartRodData(
                                         toY: count.toDouble(),
-                                        color: isToday ? const Color(0xFF6C47FF) : const Color(0xFFC4B5FD),
+                                        color: isToday
+                                            ? const Color(0xFF6C47FF)
+                                            : const Color(0xFFC4B5FD),
                                         width: 20,
-                                        borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                                        borderRadius:
+                                            const BorderRadius.vertical(
+                                                top: Radius.circular(8)),
                                       ),
                                     ],
                                   );
                                 }),
                                 titlesData: FlTitlesData(
-                                  leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                  leftTitles: const AxisTitles(
+                                      sideTitles:
+                                          SideTitles(showTitles: false)),
+                                  rightTitles: const AxisTitles(
+                                      sideTitles:
+                                          SideTitles(showTitles: false)),
+                                  topTitles: const AxisTitles(
+                                      sideTitles:
+                                          SideTitles(showTitles: false)),
                                   bottomTitles: AxisTitles(
                                     sideTitles: SideTitles(
                                       showTitles: true,
                                       getTitlesWidget: (val, meta) {
                                         final idx = val.toInt();
-                                        if (idx >= 0 && idx < weeklyList.length) {
-                                          final isToday = weeklyList[idx]['isToday'] == true;
+                                        if (idx >= 0 &&
+                                            idx < weeklyList.length) {
+                                          final isToday = weeklyList[idx]
+                                                  ['isToday'] ==
+                                              true;
                                           return Padding(
-                                            padding: const EdgeInsets.only(top: 8),
+                                            padding:
+                                                const EdgeInsets.only(top: 8),
                                             child: Text(
                                               weeklyList[idx]['dayKey'] ?? '',
                                               style: TextStyle(
                                                 fontSize: 12,
-                                                fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
-                                                color: isToday ? colors.primary : colors.muted,
+                                                fontWeight: isToday
+                                                    ? FontWeight.w800
+                                                    : FontWeight.w600,
+                                                color: isToday
+                                                    ? colors.primary
+                                                    : colors.muted,
                                               ),
                                             ),
                                           );
@@ -314,15 +347,20 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                               child: Center(
                                 child: Text(
                                   'Hozircha darslar boshlanmagan.',
-                                  style: TextStyle(color: colors.muted, fontSize: 13),
+                                  style: TextStyle(
+                                      color: colors.muted, fontSize: 13),
                                 ),
                               ),
                             )
                           else
                             ...topicMastery.map((topic) {
-                              final mastery = (topic['masteryPercentage'] ?? 0) as int;
-                              final statusLabel = (topic['statusLabel'] ?? 'Boshlanmagan') as String;
-                              final statusColor = _parseColor(topic['statusColor'], const Color(0xFF6C47FF));
+                              final mastery =
+                                  (topic['masteryPercentage'] ?? 0) as int;
+                              final statusLabel = (topic['statusLabel'] ??
+                                  'Boshlanmagan') as String;
+                              final statusColor = _parseColor(
+                                  topic['statusColor'],
+                                  const Color(0xFF6C47FF));
                               final total = topic['totalLessons'] ?? 1;
                               final completed = topic['completedLessons'] ?? 0;
 
@@ -332,7 +370,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Expanded(
                                           child: Text(
@@ -345,10 +384,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                           ),
                                         ),
                                         Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 3),
                                           decoration: BoxDecoration(
-                                            color: statusColor.withOpacity(0.12),
-                                            borderRadius: BorderRadius.circular(8),
+                                            color:
+                                                statusColor.withOpacity(0.12),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
                                           child: Text(
                                             '$mastery% · $statusLabel',
@@ -365,7 +407,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(4),
                                       child: LinearProgressIndicator(
-                                        value: (mastery / 100.0).clamp(0.0, 1.0),
+                                        value:
+                                            (mastery / 100.0).clamp(0.0, 1.0),
                                         minHeight: 7,
                                         backgroundColor: colors.field,
                                         color: statusColor,
@@ -394,11 +437,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         decoration: BoxDecoration(
                           color: const Color(0xFFF3F0FF),
                           borderRadius: BorderRadius.circular(22),
-                          border: Border.all(color: const Color(0xFFDED6FF), width: 1.5),
+                          border: Border.all(
+                              color: const Color(0xFFDED6FF), width: 1.5),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.auto_awesome_rounded, color: Color(0xFF6C47FF), size: 28),
+                            const Icon(Icons.auto_awesome_rounded,
+                                color: Color(0xFF6C47FF), size: 28),
                             const SizedBox(width: 14),
                             Expanded(
                               child: Column(
@@ -435,13 +480,19 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF6C47FF),
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 8),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
                               ),
                               onPressed: () {
-                                context.push('/kids/lesson/${nextLesson['id']}');
+                                context
+                                    .push('/kids/lesson/${nextLesson['id']}');
                               },
-                              child: const Text('Boshlash', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+                              child: const Text('Boshlash',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 12)),
                             ),
                           ],
                         ),

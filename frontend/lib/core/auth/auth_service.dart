@@ -21,7 +21,6 @@ class AuthResult {
   final bool requiresParentalConsent;
 
   const AuthResult({
-    
     required this.success,
     this.student,
     this.token,
@@ -66,7 +65,8 @@ class AuthService {
 
       _sharedGoogleSignIn = GoogleSignIn(
         clientId: effectiveClientId,
-        serverClientId: kIsWeb ? null : (webClientId.isNotEmpty ? webClientId : null),
+        serverClientId:
+            kIsWeb ? null : (webClientId.isNotEmpty ? webClientId : null),
         scopes: kIsWeb ? const [] : const ['email', 'profile'],
       );
       _isGoogleSignInInitialized = true;
@@ -98,8 +98,6 @@ class AuthService {
     _isGoogleSignInInitialized = false;
     _googleSignInInitFailed = false;
   }
-  
-  
 
   /// Controlled lazy initialization for GoogleSignIn
   GoogleSignIn? _getGoogleSignIn() {
@@ -124,7 +122,8 @@ class AuthService {
   bool get isAuthenticating => _isAuthenticating;
 
   /// Authenticate Google User with Backend (Single-flight in-flight guard)
-  Future<AuthResult> authenticateGoogleUser(GoogleSignInAccount googleUser) async {
+  Future<AuthResult> authenticateGoogleUser(
+      GoogleSignInAccount googleUser) async {
     if (_ongoingGoogleAuth != null) {
       return _ongoingGoogleAuth!;
     }
@@ -134,10 +133,12 @@ class AuthService {
     return _ongoingGoogleAuth!;
   }
 
-  Future<AuthResult> _doAuthenticateGoogleUser(GoogleSignInAccount googleUser) async {
+  Future<AuthResult> _doAuthenticateGoogleUser(
+      GoogleSignInAccount googleUser) async {
     _isAuthenticating = true;
     try {
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final Map<String, dynamic> requestBody = {
         'email': googleUser.email,
@@ -159,8 +160,10 @@ class AuthService {
       }
 
       // Guard: Do not send doomed request to backend if both tokens are missing
-      if ((idToken == null || idToken.isEmpty) && (accessToken == null || accessToken.isEmpty)) {
-        debugPrint('⚠️ [AuthService] Google autentifikatsiya tokenlari (idToken/accessToken) bo‘sh keldi.');
+      if ((idToken == null || idToken.isEmpty) &&
+          (accessToken == null || accessToken.isEmpty)) {
+        debugPrint(
+            '⚠️ [AuthService] Google autentifikatsiya tokenlari (idToken/accessToken) bo‘sh keldi.');
         return const AuthResult(
           success: false,
           errorMessage: 'Google orqali kirib bo‘lmadi, qayta urinib ko‘ring.',
@@ -179,11 +182,13 @@ class AuthService {
             (userData['username'] as String).isEmpty ||
             userData['dateOfBirth'] == null ||
             (userData['dateOfBirth'] as String).isEmpty;
-        final bool profileCompleted = data['profileCompleted'] == true && !needsProfile;
+        final bool profileCompleted =
+            data['profileCompleted'] == true && !needsProfile;
 
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
-        if (data['refreshToken'] != null && (data['refreshToken'] as String).isNotEmpty) {
+        if (data['refreshToken'] != null &&
+            (data['refreshToken'] as String).isNotEmpty) {
           await StorageService.saveRefreshToken(data['refreshToken'] as String);
         }
 
@@ -199,13 +204,16 @@ class AuthService {
       } else {
         return AuthResult(
           success: false,
-          errorMessage: res.data['error'] ?? 'Google orqali kirishda xatolik yuz berdi.',
+          errorMessage:
+              res.data['error'] ?? 'Google orqali kirishda xatolik yuz berdi.',
         );
       }
     } catch (e) {
       debugPrint('ℹ️ Google orqali kirish backend natijasi: $e');
       if (e is DioException) {
-        if (e.response?.data != null && e.response?.data is Map && e.response?.data['error'] != null) {
+        if (e.response?.data != null &&
+            e.response?.data is Map &&
+            e.response?.data['error'] != null) {
           return AuthResult(
             success: false,
             errorMessage: e.response!.data['error'].toString(),
@@ -220,13 +228,14 @@ class AuthService {
       }
       return const AuthResult(
         success: false,
-        errorMessage: 'Google orqali tizimga kirishda server bilan aloqa uzildi.',
+        errorMessage:
+            'Google orqali tizimga kirishda server bilan aloqa uzildi.',
       );
     } finally {
       _isAuthenticating = false;
     }
   }
-  
+
   /// Check whether Google Sign-In is safely available
   bool get isGoogleSignInAvailable => !_googleSignInInitFailed;
 
@@ -245,7 +254,8 @@ class AuthService {
       final GoogleSignInAccount? googleUser = await googleSignIn
           .signIn()
           .timeout(const Duration(seconds: 25), onTimeout: () {
-        debugPrint('⚠️ [AuthService/Google] signIn() so‘rovi 25 soniyada javob bermadi.');
+        debugPrint(
+            '⚠️ [AuthService/Google] signIn() so‘rovi 25 soniyada javob bermadi.');
         return null;
       });
 
@@ -274,18 +284,24 @@ class AuthService {
           errStr.contains('access_denied')) {
         return const AuthResult(
           success: false,
-          errorMessage: null, // Bekor qilindi, qizil xatolik xabari ko'rsatilmaydi
+          errorMessage:
+              null, // Bekor qilindi, qizil xatolik xabari ko'rsatilmaydi
         );
       }
 
       // 2. Android: ApiException 10 (DEVELOPER_ERROR) — SHA-1 yoki Package Name mos emas
       if (errStr.contains('10') || errStr.contains('developer_error')) {
-        debugPrint('❌ [Google Sign-In] ApiException 10 (DEVELOPER_ERROR) aniqlandi!');
-        debugPrint('📌 BUNI TUZATISH UCHUN Google Cloud Console ga quyidagilarni kiriting:');
+        debugPrint(
+            '❌ [Google Sign-In] ApiException 10 (DEVELOPER_ERROR) aniqlandi!');
+        debugPrint(
+            '📌 BUNI TUZATISH UCHUN Google Cloud Console ga quyidagilarni kiriting:');
         debugPrint('   Package name: com.mathcityai.mathcity_ai');
-        debugPrint('   Debug SHA-1: 9D:02:97:60:C4:AE:DD:81:42:03:AE:70:F1:C7:E2:94:B0:EA:F3:8B');
-        debugPrint('   Release SHA-1: 43:3D:D9:C8:8A:D6:90:14:8B:DF:07:F4:0D:42:EB:70:3D:0F:10:E1');
-        debugPrint('   Play App Signing SHA-1: Google Play Console > Setup > App Integrity bo‘limidan oling.');
+        debugPrint(
+            '   Debug SHA-1: 9D:02:97:60:C4:AE:DD:81:42:03:AE:70:F1:C7:E2:94:B0:EA:F3:8B');
+        debugPrint(
+            '   Release SHA-1: 43:3D:D9:C8:8A:D6:90:14:8B:DF:07:F4:0D:42:EB:70:3D:0F:10:E1');
+        debugPrint(
+            '   Play App Signing SHA-1: Google Play Console > Setup > App Integrity bo‘limidan oling.');
         return const AuthResult(
           success: false,
           errorMessage:
@@ -295,7 +311,8 @@ class AuthService {
 
       // 3. Android: ApiException 12500 (OAuth rozilik ekrani to‘liq emas yoki tizim xatosi)
       if (errStr.contains('12500')) {
-        debugPrint('❌ [Google Sign-In] ApiException 12500 aniqlandi (OAuth rozilik ekrani sozlanmagan).');
+        debugPrint(
+            '❌ [Google Sign-In] ApiException 12500 aniqlandi (OAuth rozilik ekrani sozlanmagan).');
         return const AuthResult(
           success: false,
           errorMessage:
@@ -328,7 +345,9 @@ class AuthService {
       }
 
       // 6. Tarmoq xatoligi
-      if (errStr.contains('network') || errStr.contains('socket') || errStr.contains('timeout')) {
+      if (errStr.contains('network') ||
+          errStr.contains('socket') ||
+          errStr.contains('timeout')) {
         return const AuthResult(
           success: false,
           errorMessage:
@@ -359,7 +378,8 @@ class AuthService {
         final token = res.data['data']['token'] as String;
         final refreshToken = res.data['data']['refreshToken'] as String?;
         final bool isNewUser = res.data['data']['isNewUser'] == true;
-        final bool profileCompleted = res.data['data']['profileCompleted'] == true;
+        final bool profileCompleted =
+            res.data['data']['profileCompleted'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
         if (refreshToken != null && refreshToken.isNotEmpty) {
@@ -424,7 +444,8 @@ class AuthService {
     final birthDate = dob ?? DateTime(2015, 5, 15);
     final now = DateTime.now();
     int age = now.year - birthDate.year;
-    if (now.month < birthDate.month || (now.month == birthDate.month && now.day < birthDate.day)) {
+    if (now.month < birthDate.month ||
+        (now.month == birthDate.month && now.day < birthDate.day)) {
       age--;
     }
 
@@ -438,21 +459,24 @@ class AuthService {
     }
 
     try {
-      final res = await ApiClient().dio.post(
-        '/auth/register',
-        data: {
-          'displayName': name.trim(),
-          'loginOrEmail': loginOrEmail.trim(),
-          'password': password,
-          'confirmPassword': confirmPassword ?? password,
-          'dateOfBirth': birthDate.toIso8601String(),
-          'grade': (age - 5).clamp(1, 11),
-        },
-        options: Options(
-          sendTimeout: const Duration(seconds: 10),
-          receiveTimeout: const Duration(seconds: 20),
-        ),
-      ).timeout(const Duration(seconds: 15), onTimeout: () {
+      final res = await ApiClient()
+          .dio
+          .post(
+            '/auth/register',
+            data: {
+              'displayName': name.trim(),
+              'loginOrEmail': loginOrEmail.trim(),
+              'password': password,
+              'confirmPassword': confirmPassword ?? password,
+              'dateOfBirth': birthDate.toIso8601String(),
+              'grade': (age - 5).clamp(1, 11),
+            },
+            options: Options(
+              sendTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 20),
+            ),
+          )
+          .timeout(const Duration(seconds: 15), onTimeout: () {
         throw DioException(
           requestOptions: RequestOptions(path: '/auth/register'),
           type: DioExceptionType.receiveTimeout,
@@ -464,7 +488,8 @@ class AuthService {
         final token = res.data['data']['token'] as String;
         final refreshToken = res.data['data']['refreshToken'] as String?;
         final bool isNewUser = res.data['data']['isNewUser'] == true;
-        final bool profileCompleted = res.data['data']['profileCompleted'] == true;
+        final bool profileCompleted =
+            res.data['data']['profileCompleted'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
         if (refreshToken != null && refreshToken.isNotEmpty) {
@@ -497,7 +522,8 @@ class AuthService {
       }
       return const AuthResult(
         success: false,
-        errorMessage: 'Server bilan aloqa o‘rnatib bo‘lmadi. Qayta urinib ko‘ring.',
+        errorMessage:
+            'Server bilan aloqa o‘rnatib bo‘lmadi. Qayta urinib ko‘ring.',
       );
     }
   }
@@ -540,32 +566,39 @@ class AuthService {
           if (res.data['success'] == true) {
             final student = StudentModel.fromJson(res.data['data']);
             await StorageService.saveCachedStudent(student.toJson());
-            return AuthResult(success: true, student: student, token: savedToken);
+            return AuthResult(
+                success: true, student: student, token: savedToken);
           }
         } catch (meError) {
-          final is401 = meError is DioException && meError.response?.statusCode == 401;
+          final is401 =
+              meError is DioException && meError.response?.statusCode == 401;
           if (is401) {
             // Token expired - attempt refresh with stored refresh token
             try {
               final storedRefresh = await StorageService.getRefreshToken();
-              final refreshRes = await ApiClient().dio.post('/auth/refresh', data: {
+              final refreshRes =
+                  await ApiClient().dio.post('/auth/refresh', data: {
                 if (storedRefresh != null) 'refreshToken': storedRefresh,
               });
               if (refreshRes.data['success'] == true) {
                 final newToken = refreshRes.data['data']['token'] as String;
-                final newRefresh = refreshRes.data['data']['refreshToken'] as String?;
+                final newRefresh =
+                    refreshRes.data['data']['refreshToken'] as String?;
                 ApiClient().setAuthToken(newToken);
                 await StorageService.saveAuthToken(newToken);
                 if (newRefresh != null && newRefresh.isNotEmpty) {
                   await StorageService.saveRefreshToken(newRefresh);
                 }
-                final student = StudentModel.fromJson(refreshRes.data['data']['user']);
+                final student =
+                    StudentModel.fromJson(refreshRes.data['data']['user']);
                 await StorageService.saveCachedStudent(student.toJson());
-                return AuthResult(success: true, student: student, token: newToken);
+                return AuthResult(
+                    success: true, student: student, token: newToken);
               }
             } catch (refreshError) {
               if (refreshError is DioException &&
-                  (refreshError.response?.statusCode == 401 || refreshError.response?.statusCode == 403)) {
+                  (refreshError.response?.statusCode == 401 ||
+                      refreshError.response?.statusCode == 403)) {
                 // Token definitely rejected by server
                 await StorageService.clear();
                 ApiClient().clearAuthToken();
@@ -576,7 +609,8 @@ class AuthService {
           // Server might be sleeping (Render spin-up) or network is offline
           // DO NOT clear tokens! Return cached student so user stays logged in!
           if (fallbackStudent != null) {
-            return AuthResult(success: true, student: fallbackStudent, token: savedToken);
+            return AuthResult(
+                success: true, student: fallbackStudent, token: savedToken);
           }
           // If we had a token, treat as temporary offline success even without full profile
           return AuthResult(success: true, token: savedToken);
@@ -590,7 +624,8 @@ class AuthService {
   }
 
   /// Request password reset code
-  Future<Map<String, dynamic>> requestPasswordReset(String emailOrUsername) async {
+  Future<Map<String, dynamic>> requestPasswordReset(
+      String emailOrUsername) async {
     try {
       final res = await ApiClient().dio.post('/auth/forgot-password', data: {
         'email': emailOrUsername.trim(),
@@ -604,7 +639,8 @@ class AuthService {
       final serverMsg = _parseDioErrorMessage(e);
       return {
         'success': false,
-        'message': serverMsg ?? 'Server bilan aloqa uzildi. Qayta urinib ko‘ring.',
+        'message':
+            serverMsg ?? 'Server bilan aloqa uzildi. Qayta urinib ko‘ring.',
       };
     }
   }
@@ -664,7 +700,8 @@ class AuthService {
         nonce: sha256Nonce,
         webAuthenticationOptions: WebAuthenticationOptions(
           clientId: 'ai.mathcity.web',
-          redirectUri: Uri.parse('${AppConfig.productionApiUrl}/api/auth/apple/callback'),
+          redirectUri: Uri.parse(
+              '${AppConfig.productionApiUrl}/api/auth/apple/callback'),
         ),
       );
 
@@ -675,19 +712,21 @@ class AuthService {
         'nonce': rawNonce,
         'appleUserId': credential.userIdentifier,
         'email': credential.email,
-        'fullName': credential.givenName != null || credential.familyName != null
-            ? {
-                'givenName': credential.givenName,
-                'familyName': credential.familyName,
-              }
-            : null,
+        'fullName':
+            credential.givenName != null || credential.familyName != null
+                ? {
+                    'givenName': credential.givenName,
+                    'familyName': credential.familyName,
+                  }
+                : null,
       });
 
       if (res.data['success'] == true) {
         final token = res.data['data']['token'] as String;
         final refreshToken = res.data['data']['refreshToken'] as String?;
         final bool isNewUser = res.data['data']['isNewUser'] == true;
-        final bool profileCompleted = res.data['data']['profileCompleted'] == true;
+        final bool profileCompleted =
+            res.data['data']['profileCompleted'] == true;
         ApiClient().setAuthToken(token);
         await StorageService.saveAuthToken(token);
         if (refreshToken != null && refreshToken.isNotEmpty) {
@@ -707,7 +746,8 @@ class AuthService {
       } else {
         return AuthResult(
           success: false,
-          errorMessage: res.data['error'] ?? 'Apple orqali kirishda xatolik yuz berdi.',
+          errorMessage:
+              res.data['error'] ?? 'Apple orqali kirishda xatolik yuz berdi.',
         );
       }
     } on SignInWithAppleAuthorizationException catch (e) {
@@ -716,12 +756,15 @@ class AuthService {
       }
       return AuthResult(
         success: false,
-        errorMessage: 'Apple tizimiga kirish bekor qilindi yoki xato yuz berdi (${e.message}).',
+        errorMessage:
+            'Apple tizimiga kirish bekor qilindi yoki xato yuz berdi (${e.message}).',
       );
     } catch (e) {
       debugPrint('ℹ️ Apple sign in error: $e');
       final err = e.toString().toLowerCase();
-      if (err.contains('cancel') || err.contains('closed') || err.contains('dismissed')) {
+      if (err.contains('cancel') ||
+          err.contains('closed') ||
+          err.contains('dismissed')) {
         return const AuthResult(success: false, errorMessage: null);
       }
       if (err.contains('notsupported') || err.contains('not supported')) {
@@ -733,7 +776,8 @@ class AuthService {
       }
       return const AuthResult(
         success: false,
-        errorMessage: 'Apple orqali ulanishda xatolik yuz berdi. Internet aloqasini tekshiring.',
+        errorMessage:
+            'Apple orqali ulanishda xatolik yuz berdi. Internet aloqasini tekshiring.',
       );
     }
   }
@@ -750,20 +794,24 @@ class AuthService {
     }
     try {
       final res = await ApiClient().dio.get(
-        '/auth/username-available',
-        queryParameters: {'username': clean},
-        options: Options(
-          validateStatus: (status) => true,
-          sendTimeout: const Duration(seconds: 4),
-          receiveTimeout: const Duration(seconds: 4),
-        ),
-      );
+            '/auth/username-available',
+            queryParameters: {'username': clean},
+            options: Options(
+              validateStatus: (status) => true,
+              sendTimeout: const Duration(seconds: 4),
+              receiveTimeout: const Duration(seconds: 4),
+            ),
+          );
       if (res.statusCode == 200 && res.data != null) {
         final available = res.data['available'] == true ||
             (res.data['data'] is Map && res.data['data']['available'] == true);
-        final message = (res.data['data'] is Map && res.data['data']['message'] != null)
-            ? res.data['data']['message']
-            : (res.data['message'] ?? (available ? '✓ Bu nom bo‘sh' : 'Bu username band. Boshqasini tanlang.'));
+        final message =
+            (res.data['data'] is Map && res.data['data']['message'] != null)
+                ? res.data['data']['message']
+                : (res.data['message'] ??
+                    (available
+                        ? '✓ Bu nom bo‘sh'
+                        : 'Bu username band. Boshqasini tanlang.'));
         return {
           'available': available,
           'message': message,
@@ -772,7 +820,9 @@ class AuthService {
       if (res.data != null && res.data is Map) {
         return {
           'available': false,
-          'message': res.data['message'] ?? res.data['error'] ?? 'Bu username band. Boshqasini tanlang.',
+          'message': res.data['message'] ??
+              res.data['error'] ??
+              'Bu username band. Boshqasini tanlang.',
         };
       }
     } catch (_) {}
@@ -787,18 +837,18 @@ class AuthService {
   }) async {
     try {
       final res = await ApiClient().dio.get(
-        '/auth/username-suggestions',
-        queryParameters: {
-          'seed': seed,
-          'count': count,
-          if (excluded.isNotEmpty) 'excluded': excluded.join(','),
-        },
-        options: Options(
-          validateStatus: (status) => true,
-          sendTimeout: const Duration(seconds: 4),
-          receiveTimeout: const Duration(seconds: 4),
-        ),
-      );
+            '/auth/username-suggestions',
+            queryParameters: {
+              'seed': seed,
+              'count': count,
+              if (excluded.isNotEmpty) 'excluded': excluded.join(','),
+            },
+            options: Options(
+              validateStatus: (status) => true,
+              sendTimeout: const Duration(seconds: 4),
+              receiveTimeout: const Duration(seconds: 4),
+            ),
+          );
       if (res.statusCode == 200 && res.data != null) {
         final raw = res.data['data'] ?? res.data['suggestions'];
         if (raw is List) {
@@ -828,7 +878,8 @@ class AuthService {
       if (res.data['success'] == true) {
         final userData = res.data['data']['user'];
         final student = StudentModel.fromJson(userData);
-        final bool requiresParentalConsent = res.data['data']['requiresParentalConsent'] == true;
+        final bool requiresParentalConsent =
+            res.data['data']['requiresParentalConsent'] == true;
         return AuthResult(
           success: true,
           student: student,
@@ -845,7 +896,8 @@ class AuthService {
       final serverMsg = _parseDioErrorMessage(e);
       return AuthResult(
         success: false,
-        errorMessage: serverMsg ?? 'Profilni saqlashda server bilan aloqa uzildi.',
+        errorMessage:
+            serverMsg ?? 'Profilni saqlashda server bilan aloqa uzildi.',
       );
     }
   }
@@ -860,7 +912,9 @@ class AuthService {
         if (data['error'] == 'USERNAME_TAKEN' && data['message'] != null) {
           return data['message'].toString();
         }
-        if (data['message'] != null && data['message'].toString().isNotEmpty && data['message'] != data['error']) {
+        if (data['message'] != null &&
+            data['message'].toString().isNotEmpty &&
+            data['message'] != data['error']) {
           return data['message'].toString();
         }
         if (data['error'] != null && data['error'].toString().isNotEmpty) {
@@ -870,10 +924,12 @@ class AuthService {
         try {
           final decoded = jsonDecode(data);
           if (decoded is Map) {
-            if (decoded['error'] != null && decoded['error'].toString().isNotEmpty) {
+            if (decoded['error'] != null &&
+                decoded['error'].toString().isNotEmpty) {
               return decoded['error'].toString();
             }
-            if (decoded['message'] != null && decoded['message'].toString().isNotEmpty) {
+            if (decoded['message'] != null &&
+                decoded['message'].toString().isNotEmpty) {
               return decoded['message'].toString();
             }
           }
@@ -902,7 +958,8 @@ class AuthService {
     required int month,
     required int year,
   }) async {
-    return completeProfile(username: username, day: day, month: month, year: year);
+    return completeProfile(
+        username: username, day: day, month: month, year: year);
   }
 
   /// In-App Account Deletion (App Store Guideline compliance)

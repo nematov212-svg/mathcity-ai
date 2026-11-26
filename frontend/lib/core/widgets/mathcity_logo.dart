@@ -24,7 +24,8 @@ class MathCityLogo extends StatelessWidget {
           width: size,
           height: size,
           fit: BoxFit.contain,
-          errorBuilder: (context, error, stackTrace) => _buildFallbackVector(context),
+          errorBuilder: (context, error, stackTrace) =>
+              _buildFallbackVector(context),
         ),
       );
     }
@@ -50,7 +51,8 @@ class MathCityLogo extends StatelessWidget {
           width: size,
           height: size,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => _buildFallbackVector(context),
+          errorBuilder: (context, error, stackTrace) =>
+              _buildFallbackVector(context),
         ),
       ),
     );

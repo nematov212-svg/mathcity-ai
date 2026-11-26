@@ -22,7 +22,8 @@ class PrimaryButton extends StatefulWidget {
   State<PrimaryButton> createState() => _PrimaryButtonState();
 }
 
-class _PrimaryButtonState extends State<PrimaryButton> with SingleTickerProviderStateMixin {
+class _PrimaryButtonState extends State<PrimaryButton>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _scaleCtrl;
   late final Animation<double> _scaleAnimation;
 
@@ -80,7 +81,8 @@ class _PrimaryButtonState extends State<PrimaryButton> with SingleTickerProvider
           height: buttonHeight,
           decoration: BoxDecoration(
             gradient: widget.isSuccess
-                ? const LinearGradient(colors: [Color(0xFF22C55E), Color(0xFF16A34A)])
+                ? const LinearGradient(
+                    colors: [Color(0xFF22C55E), Color(0xFF16A34A)])
                 : (isEnabled
                     ? OnboardingTheme.ctaGradient
                     : LinearGradient(colors: [
@@ -117,7 +119,9 @@ class _PrimaryButtonState extends State<PrimaryButton> with SingleTickerProvider
                       Text(
                         widget.text,
                         style: OnboardingTheme.buttonStyle(
-                          color: isEnabled ? Colors.white : Colors.white.withOpacity(0.85),
+                          color: isEnabled
+                              ? Colors.white
+                              : Colors.white.withOpacity(0.85),
                           fontSize: isTablet ? 18 : 17,
                         ),
                       ),

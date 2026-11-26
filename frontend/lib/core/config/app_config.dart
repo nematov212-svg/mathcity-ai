@@ -68,9 +68,8 @@ class AppConfig {
 
   /// Helper to ensure URL does not end with trailing slash and ends with /api
   static String _formatApiUrl(String rawUrl) {
-    final clean = rawUrl.endsWith('/')
-        ? rawUrl.substring(0, rawUrl.length - 1)
-        : rawUrl;
+    final clean =
+        rawUrl.endsWith('/') ? rawUrl.substring(0, rawUrl.length - 1) : rawUrl;
     return clean.endsWith('/api') ? clean : '$clean/api';
   }
 

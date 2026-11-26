@@ -19,7 +19,8 @@ class GameResultScreen extends ConsumerWidget {
 
     final totalQuestionsPlayed = 20;
     final totalCorrectAnswers = correct + 9; // combined summary
-    final accuracyPercent = ((totalCorrectAnswers / totalQuestionsPlayed) * 100).round();
+    final accuracyPercent =
+        ((totalCorrectAnswers / totalQuestionsPlayed) * 100).round();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F8FE),
@@ -63,7 +64,8 @@ class GameResultScreen extends ConsumerWidget {
             // Scrollable Results Content
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                 children: [
                   // Dual Celebration Illustration
                   Center(
@@ -74,9 +76,11 @@ class GameResultScreen extends ConsumerWidget {
                       errorBuilder: (_, __, ___) => const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.rocket_launch_rounded, size: 60, color: Color(0xFF7C5CF8)),
+                          Icon(Icons.rocket_launch_rounded,
+                              size: 60, color: Color(0xFF7C5CF8)),
                           SizedBox(width: 20),
-                          Icon(Icons.pie_chart_rounded, size: 60, color: Color(0xFFFB923C)),
+                          Icon(Icons.pie_chart_rounded,
+                              size: 60, color: Color(0xFFFB923C)),
                         ],
                       ),
                     ),
@@ -111,15 +115,18 @@ class GameResultScreen extends ConsumerWidget {
 
                   // Golden Reward Banner
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 16),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFEF9C3),
                       borderRadius: BorderRadius.circular(24),
-                      border: Border.all(color: const Color(0xFFFDE047), width: 1.2),
+                      border: Border.all(
+                          color: const Color(0xFFFDE047), width: 1.2),
                     ),
                     child: Row(
                       children: [
-                        const CoinIcon(size: 48, floating: true, popOnAppear: true),
+                        const CoinIcon(
+                            size: 48, floating: true, popOnAppear: true),
                         const SizedBox(width: 16),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,11 +158,13 @@ class GameResultScreen extends ConsumerWidget {
 
                   // 3-Column Stats Row
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(22),
-                      border: Border.all(color: const Color(0xFFF1F5F9), width: 1.2),
+                      border: Border.all(
+                          color: const Color(0xFFF1F5F9), width: 1.2),
                       boxShadow: [
                         BoxShadow(
                           color: const Color(0xFF1E1B4B).withOpacity(0.03),
@@ -168,9 +177,15 @@ class GameResultScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _buildStatCol('$totalQuestionsPlayed', 'Savollar'),
-                        Container(height: 36, width: 1, color: const Color(0xFFE2E8F0)),
+                        Container(
+                            height: 36,
+                            width: 1,
+                            color: const Color(0xFFE2E8F0)),
                         _buildStatCol('$totalCorrectAnswers', 'To‘g‘ri'),
-                        Container(height: 36, width: 1, color: const Color(0xFFE2E8F0)),
+                        Container(
+                            height: 36,
+                            width: 1,
+                            color: const Color(0xFFE2E8F0)),
                         _buildStatCol('$accuracyPercent%', 'Aniqllik'),
                       ],
                     ),
@@ -205,7 +220,8 @@ class GameResultScreen extends ConsumerWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         if (isFraction) {
-                          context.pushReplacement('/kids/games/fraction-battle');
+                          context
+                              .pushReplacement('/kids/games/fraction-battle');
                         } else {
                           context.pushReplacement('/kids/house-building');
                         }
@@ -223,7 +239,8 @@ class GameResultScreen extends ConsumerWidget {
                         children: [
                           Text(
                             'Yana o‘ynash',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w800),
                           ),
                           SizedBox(width: 8),
                           Icon(Icons.arrow_forward_rounded, size: 18),
@@ -249,7 +266,8 @@ class GameResultScreen extends ConsumerWidget {
                       ),
                       child: const Text(
                         'O‘yinlar markaziga qaytish',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w800),
                       ),
                     ),
                   ),
@@ -330,7 +348,8 @@ class GameResultScreen extends ConsumerWidget {
               child: Image.asset(
                 assetPath,
                 fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => Icon(fallbackIcon, color: const Color(0xFF7C5CF8), size: 24),
+                errorBuilder: (_, __, ___) => Icon(fallbackIcon,
+                    color: const Color(0xFF7C5CF8), size: 24),
               ),
             ),
           ),

@@ -21,7 +21,8 @@ void main() {
   group('0-QADAM: Phone Baseline Rendering Tests (< 600px)', () {
     for (final width in phoneWidths) {
       group('Width: ${width}px', () {
-        testWidgets('1. KidsHomeScreen renders without overflow', (tester) async {
+        testWidgets('1. KidsHomeScreen renders without overflow',
+            (tester) async {
           tester.view.physicalSize = Size(width, 800);
           tester.view.devicePixelRatio = 1.0;
           addTearDown(tester.view.resetPhysicalSize);
@@ -35,7 +36,8 @@ void main() {
           expect(tester.takeException(), isNull);
         });
 
-        testWidgets('2. LessonsScreen renders without overflow', (tester) async {
+        testWidgets('2. LessonsScreen renders without overflow',
+            (tester) async {
           FlutterErrorDetails? caughtDetails;
           final oldHandler = FlutterError.onError;
           FlutterError.onError = (details) {
@@ -53,7 +55,8 @@ void main() {
           );
           await tester.pump(const Duration(milliseconds: 300));
           FlutterError.onError = oldHandler;
-          if (caughtDetails != null && caughtDetails!.informationCollector != null) {
+          if (caughtDetails != null &&
+              caughtDetails!.informationCollector != null) {
             for (final node in caughtDetails!.informationCollector!()) {
               print('LESSONS ERROR at $width: ${node.toDescription()}');
             }
@@ -61,7 +64,8 @@ void main() {
           expect(caughtDetails, isNull);
         });
 
-        testWidgets('3. ZiyoTutorScreen renders without overflow', (tester) async {
+        testWidgets('3. ZiyoTutorScreen renders without overflow',
+            (tester) async {
           tester.view.physicalSize = Size(width, 800);
           tester.view.devicePixelRatio = 1.0;
           addTearDown(tester.view.resetPhysicalSize);
@@ -75,7 +79,8 @@ void main() {
           expect(tester.takeException(), isNull);
         });
 
-        testWidgets('4. LeaderboardScreen renders without overflow', (tester) async {
+        testWidgets('4. LeaderboardScreen renders without overflow',
+            (tester) async {
           FlutterErrorDetails? caughtDetails;
           final oldHandler = FlutterError.onError;
           FlutterError.onError = (details) {
@@ -93,7 +98,8 @@ void main() {
           );
           await tester.pump(const Duration(milliseconds: 300));
           FlutterError.onError = oldHandler;
-          if (caughtDetails != null && caughtDetails!.informationCollector != null) {
+          if (caughtDetails != null &&
+              caughtDetails!.informationCollector != null) {
             for (final node in caughtDetails!.informationCollector!()) {
               print('LEADERBOARD ERROR at $width: ${node.toDescription()}');
             }
@@ -101,7 +107,8 @@ void main() {
           expect(caughtDetails, isNull);
         });
 
-        testWidgets('5. ProfileScreen renders without overflow', (tester) async {
+        testWidgets('5. ProfileScreen renders without overflow',
+            (tester) async {
           FlutterErrorDetails? caughtDetails;
           final oldHandler = FlutterError.onError;
           FlutterError.onError = (details) {
@@ -124,7 +131,8 @@ void main() {
           await tester.pump(const Duration(seconds: 1));
           container.read(studentProvider.notifier).stopHeartbeat();
           FlutterError.onError = oldHandler;
-          if (caughtDetails != null && caughtDetails!.informationCollector != null) {
+          if (caughtDetails != null &&
+              caughtDetails!.informationCollector != null) {
             for (final node in caughtDetails!.informationCollector!()) {
               print('PROFILE ERROR at $width: ${node.toDescription()}');
             }
@@ -132,7 +140,8 @@ void main() {
           expect(caughtDetails, isNull);
         });
 
-        testWidgets('6. MathCityProScreen renders without overflow', (tester) async {
+        testWidgets('6. MathCityProScreen renders without overflow',
+            (tester) async {
           FlutterErrorDetails? caughtDetails;
           final oldHandler = FlutterError.onError;
           FlutterError.onError = (details) {
@@ -150,7 +159,8 @@ void main() {
           );
           await tester.pump(const Duration(milliseconds: 300));
           FlutterError.onError = oldHandler;
-          if (caughtDetails != null && caughtDetails!.informationCollector != null) {
+          if (caughtDetails != null &&
+              caughtDetails!.informationCollector != null) {
             for (final node in caughtDetails!.informationCollector!()) {
               print('DIAGNOSTIC: ${node.toDescription()}');
             }
@@ -179,7 +189,8 @@ void main() {
                   builder: (ctx) => Scaffold(
                     body: Center(
                       child: ElevatedButton(
-                        onPressed: () => showUrgentAnnouncementDialog(ctx, item),
+                        onPressed: () =>
+                            showUrgentAnnouncementDialog(ctx, item),
                         child: const Text('Open'),
                       ),
                     ),
@@ -195,7 +206,8 @@ void main() {
           expect(tester.takeException(), isNull);
         });
 
-        testWidgets('8. ExerciseScreen renders without overflow', (tester) async {
+        testWidgets('8. ExerciseScreen renders without overflow',
+            (tester) async {
           tester.view.physicalSize = Size(width, 800);
           tester.view.devicePixelRatio = 1.0;
           addTearDown(tester.view.resetPhysicalSize);
@@ -223,7 +235,8 @@ void main() {
           expect(tester.takeException(), isNull);
         });
 
-        testWidgets('10. RegisterScreen renders without overflow', (tester) async {
+        testWidgets('10. RegisterScreen renders without overflow',
+            (tester) async {
           tester.view.physicalSize = Size(width, 800);
           tester.view.devicePixelRatio = 1.0;
           addTearDown(tester.view.resetPhysicalSize);
@@ -237,7 +250,8 @@ void main() {
           expect(tester.takeException(), isNull);
         });
 
-        testWidgets('11. CompleteProfileScreen renders without overflow', (tester) async {
+        testWidgets('11. CompleteProfileScreen renders without overflow',
+            (tester) async {
           tester.view.physicalSize = Size(width, 800);
           tester.view.devicePixelRatio = 1.0;
           addTearDown(tester.view.resetPhysicalSize);

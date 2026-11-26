@@ -27,6 +27,12 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
   }
 
   @override
+  void dispose() {
+    PopupManager.stopLivePolling();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final studentState = ref.watch(studentProvider);
     final student = studentState.student;
@@ -34,7 +40,9 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
     final coins = student?.coinBalance ?? 0;
     final xp = student?.totalXP ?? 0;
     final level = student?.level ?? 1;
-    final name = (student != null && student.displayName.trim().isNotEmpty) ? student.displayName.trim() : 'O‘quvchi';
+    final name = (student != null && student.displayName.trim().isNotEmpty)
+        ? student.displayName.trim()
+        : 'O‘quvchi';
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final colors = AppThemeColors.of(context);
@@ -60,7 +68,8 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: AppColors.teenSurface,
-                            border: Border.all(color: AppColors.teenPrimaryLime, width: 2),
+                            border: Border.all(
+                                color: AppColors.teenPrimaryLime, width: 2),
                           ),
                           child: const Center(
                             child: Icon(Icons.person_rounded,
@@ -105,7 +114,8 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
                       CoinBadge(count: coins, size: 26),
                       const SizedBox(width: 4),
                       IconButton(
-                        icon: const Icon(Icons.settings_outlined, color: AppColors.teenMutedText),
+                        icon: const Icon(Icons.settings_outlined,
+                            color: AppColors.teenMutedText),
                         onPressed: () => context.push('/settings'),
                       ),
                     ],
@@ -121,7 +131,8 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
               // Hero Course Banner: Kvadrat tenglamalar (Figma 2:70)
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                 decoration: BoxDecoration(
                   color: AppColors.teenSurface,
                   borderRadius: BorderRadius.circular(22),
@@ -134,7 +145,8 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: AppColors.teenPrimaryLime.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(10),
@@ -149,7 +161,8 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
                             ),
                           ),
                         ),
-                        const Icon(Icons.functions_rounded, color: AppColors.teenPrimaryLime, size: 24),
+                        const Icon(Icons.functions_rounded,
+                            color: AppColors.teenPrimaryLime, size: 24),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -176,10 +189,13 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
                         backgroundColor: AppColors.teenPrimaryLime,
                         foregroundColor: AppColors.teenLimeTextDark,
                         elevation: 0,
-                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 18, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
                       ),
-                      onPressed: () => context.push('/kids/lesson/lesson-g7-01'),
+                      onPressed: () =>
+                          context.push('/kids/lesson/lesson-g7-01'),
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -218,7 +234,8 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Icon(Icons.emoji_events_rounded, color: Color(0xFFFFB300), size: 32),
+                            const Icon(Icons.emoji_events_rounded,
+                                color: Color(0xFFFFB300), size: 32),
                             const SizedBox(height: 12),
                             const Text(
                               'Reyting',
@@ -230,7 +247,9 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              (student != null && (student.coinBalance > 0 || student.totalXP > 0))
+                              (student != null &&
+                                      (student.coinBalance > 0 ||
+                                          student.totalXP > 0))
                                   ? 'Siz ${student.rank}-o‘rindasiz'
                                   : 'Hali reytingda emassiz',
                               maxLines: 1,
@@ -260,7 +279,8 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
                         child: const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.psychology_rounded, color: AppColors.teenPrimaryLime, size: 32),
+                            Icon(Icons.psychology_rounded,
+                                color: AppColors.teenPrimaryLime, size: 32),
                             SizedBox(height: 12),
                             Text(
                               'AI Ustoz',
@@ -300,7 +320,8 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
                   ),
                   child: const Row(
                     children: [
-                      Icon(Icons.insights_rounded, color: AppColors.teenPrimaryLime, size: 28),
+                      Icon(Icons.insights_rounded,
+                          color: AppColors.teenPrimaryLime, size: 28),
                       SizedBox(width: 14),
                       Expanded(
                         child: Column(
@@ -325,7 +346,8 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
                           ],
                         ),
                       ),
-                      Icon(Icons.arrow_forward_ios_rounded, color: AppColors.teenMutedText, size: 16),
+                      Icon(Icons.arrow_forward_ios_rounded,
+                          color: AppColors.teenMutedText, size: 16),
                     ],
                   ),
                 ),
@@ -343,7 +365,8 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.teenSurface,
-        border: Border(top: BorderSide(color: AppColors.teenBorder, width: 1.0)),
+        border:
+            Border(top: BorderSide(color: AppColors.teenBorder, width: 1.0)),
       ),
       child: BottomNavigationBar(
         currentIndex: currentIndex,
@@ -351,8 +374,10 @@ class _TeenHomeScreenState extends ConsumerState<TeenHomeScreen> {
         backgroundColor: AppColors.teenSurface,
         selectedItemColor: AppColors.teenPrimaryLime,
         unselectedItemColor: AppColors.teenMutedText,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+        selectedLabelStyle:
+            const TextStyle(fontWeight: FontWeight.w700, fontSize: 11),
+        unselectedLabelStyle:
+            const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
           if (index == 0) context.go('/teen/home');

@@ -82,7 +82,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
     if (pass.isEmpty) return 0;
     int score = 0;
     if (pass.length >= 8) score++;
-    if (pass.contains(RegExp(r'[A-Z]')) && pass.contains(RegExp(r'[a-z]'))) score++;
+    if (pass.contains(RegExp(r'[A-Z]')) && pass.contains(RegExp(r'[a-z]')))
+      score++;
     if (pass.contains(RegExp(r'[0-9]'))) score++;
     if (pass.contains(RegExp(r'[^A-Za-z0-9]')) || pass.length >= 12) score++;
     return score.clamp(1, 4);
@@ -134,7 +135,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
     }
 
     if (name.length < 2) {
-      setState(() => _errorMessage = 'Ism kamida 2 ta harfdan iborat bo‘lishi kerak.');
+      setState(() =>
+          _errorMessage = 'Ism kamida 2 ta harfdan iborat bo‘lishi kerak.');
       _triggerShake();
       return;
     }
@@ -148,7 +150,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
     if (loginOrEmail.contains('@')) {
       final emailRegex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
       if (!emailRegex.hasMatch(loginOrEmail)) {
-        setState(() => _errorMessage = 'Email manzili noto‘g‘ri kiritildi (masalan: foydalanuvchi@mail.uz).');
+        setState(() => _errorMessage =
+            'Email manzili noto‘g‘ri kiritildi (masalan: foydalanuvchi@mail.uz).');
         _triggerShake();
         return;
       }
@@ -159,18 +162,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
         return;
       }
       if (loginOrEmail.length > 20) {
-        setState(() => _errorMessage = 'Foydalanuvchi nomi 20 ta belgidan oshmasligi kerak.');
+        setState(() => _errorMessage =
+            'Foydalanuvchi nomi 20 ta belgidan oshmasligi kerak.');
         _triggerShake();
         return;
       }
       final loginRegex = RegExp(r'^[a-zA-Z0-9_.]+$');
       if (!loginRegex.hasMatch(loginOrEmail)) {
-        setState(() => _errorMessage = 'Login faqat lotin harflari, raqamlar, pastki chiziq va nuqtadan iborat bo‘lsin.');
+        setState(() => _errorMessage =
+            'Login faqat lotin harflari, raqamlar, pastki chiziq va nuqtadan iborat bo‘lsin.');
         _triggerShake();
         return;
       }
       if (!RegExp(r'[a-zA-Z]').hasMatch(loginOrEmail)) {
-        setState(() => _errorMessage = 'Loginda kamida bitta harf bo‘lishi kerak.');
+        setState(
+            () => _errorMessage = 'Loginda kamida bitta harf bo‘lishi kerak.');
         _triggerShake();
         return;
       }
@@ -183,7 +189,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
     }
 
     if (password.length < 8) {
-      setState(() => _errorMessage = 'Parol kamida 8 ta belgidan iborat bo‘lsin.');
+      setState(
+          () => _errorMessage = 'Parol kamida 8 ta belgidan iborat bo‘lsin.');
       _triggerShake();
       return;
     }
@@ -216,14 +223,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
         context.go('/onboarding/intro');
       } else {
         setState(() {
-          _errorMessage = result.errorMessage ?? 'Ro‘yxatdan o‘tishda xatolik yuz berdi.';
+          _errorMessage =
+              result.errorMessage ?? 'Ro‘yxatdan o‘tishda xatolik yuz berdi.';
         });
         _triggerShake();
       }
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _errorMessage = 'Server bilan aloqa o‘rnatib bo‘lmadi. Qayta urinib ko‘ring.';
+        _errorMessage =
+            'Server bilan aloqa o‘rnatib bo‘lmadi. Qayta urinib ko‘ring.';
       });
       _triggerShake();
     } finally {
@@ -274,7 +283,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
                   decoration: BoxDecoration(
                     color: AuthTokens.errorLight.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(16),
@@ -369,7 +379,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                       borderSide: BorderSide(
                         color: isNameValid
                             ? const Color(0xFF22C55E).withOpacity(0.6)
-                            : (isDark ? AuthTokens.lineDark : AuthTokens.lineLight),
+                            : (isDark
+                                ? AuthTokens.lineDark
+                                : AuthTokens.lineLight),
                         width: 2.0,
                       ),
                     ),
@@ -405,7 +417,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                   controller: _loginController,
                   focusNode: _loginFocusNode,
                   keyboardType: TextInputType.emailAddress,
-                  autofillHints: const [AutofillHints.username, AutofillHints.email],
+                  autofillHints: const [
+                    AutofillHints.username,
+                    AutofillHints.email
+                  ],
                   style: TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 16,
@@ -449,7 +464,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                       borderSide: BorderSide(
                         color: isLoginValid
                             ? const Color(0xFF22C55E).withOpacity(0.6)
-                            : (isDark ? AuthTokens.lineDark : AuthTokens.lineLight),
+                            : (isDark
+                                ? AuthTokens.lineDark
+                                : AuthTokens.lineLight),
                         width: 2.0,
                       ),
                     ),
@@ -535,7 +552,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                       borderSide: BorderSide(
-                        color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                        color:
+                            isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
                         width: 2.0,
                       ),
                     ),
@@ -549,7 +567,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 8),
 
               // 4-Bar Password Strength Indicator (6px height, gap 6)
@@ -566,7 +584,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                       decoration: BoxDecoration(
                         color: isFilled
                             ? strengthColor
-                            : (isDark ? AuthTokens.lineDark : AuthTokens.lineLight),
+                            : (isDark
+                                ? AuthTokens.lineDark
+                                : AuthTokens.lineLight),
                         borderRadius: BorderRadius.circular(3),
                       ),
                     ),
@@ -635,7 +655,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                         ),
                         onPressed: () {
                           setState(() {
-                            _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                            _isConfirmPasswordVisible =
+                                !_isConfirmPasswordVisible;
                           });
                         },
                       ),
@@ -647,7 +668,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                             ? const Color(0xFF22C55E)
                             : (isConfirmPassMismatch
                                 ? const Color(0xFFE5484D)
-                                : (isDark ? AuthTokens.lineDark : AuthTokens.lineLight)),
+                                : (isDark
+                                    ? AuthTokens.lineDark
+                                    : AuthTokens.lineLight)),
                         width: 2.0,
                       ),
                     ),
@@ -689,7 +712,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: _isSuccess
-                        ? const LinearGradient(colors: [Color(0xFF22C55E), Color(0xFF16A34A)])
+                        ? const LinearGradient(
+                            colors: [Color(0xFF22C55E), Color(0xFF16A34A)])
                         : AuthTokens.brandGradient,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
@@ -712,14 +736,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    onPressed: (_isLoading || _isSuccess) ? null : _handleRegister,
+                    onPressed:
+                        (_isLoading || _isSuccess) ? null : _handleRegister,
                     child: _isLoading
                         ? const SizedBox(
                             width: 22,
                             height: 22,
                             child: CircularProgressIndicator(
                               strokeWidth: 2.5,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
                         : _isSuccess
@@ -729,7 +755,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.check_circle_rounded, color: Colors.white, size: 22),
+                                    Icon(Icons.check_circle_rounded,
+                                        color: Colors.white, size: 22),
                                     SizedBox(width: 8),
                                     Text(
                                       'Hisob yaratildi!',

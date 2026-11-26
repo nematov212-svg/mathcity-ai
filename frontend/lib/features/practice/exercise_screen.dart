@@ -10,6 +10,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/xp_coin.dart';
 import '../../core/services/sound_service.dart';
+import '../../core/widgets/promo_dialog_controller.dart';
 import '../../shared/models/lesson_model.dart';
 import '../../shared/repositories/exercise_repository.dart';
 import '../../shared/providers/student_provider.dart';
@@ -78,6 +79,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
   @override
   void initState() {
     super.initState();
+    PromoDialogController.instance.onLessonStarted();
     _focusNode = FocusNode();
     _questions = [];
 
@@ -92,7 +94,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
       TweenSequenceItem(tween: Tween(begin: 8.0, end: -6.0), weight: 2),
       TweenSequenceItem(tween: Tween(begin: -6.0, end: 6.0), weight: 2),
       TweenSequenceItem(tween: Tween(begin: 6.0, end: 0.0), weight: 1),
-    ]).animate(CurvedAnimation(parent: _shakeController, curve: Curves.easeInOut));
+    ]).animate(
+        CurvedAnimation(parent: _shakeController, curve: Curves.easeInOut));
 
     // Question Card transition animation
     _cardTransitionController = AnimationController(
@@ -100,13 +103,16 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
       duration: const Duration(milliseconds: 350),
     );
     _cardScaleAnimation = Tween<double>(begin: 0.96, end: 1.0).animate(
-      CurvedAnimation(parent: _cardTransitionController, curve: Curves.easeOutCubic),
+      CurvedAnimation(
+          parent: _cardTransitionController, curve: Curves.easeOutCubic),
     );
     _cardFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _cardTransitionController, curve: Curves.easeOut),
     );
-    _cardSlideAnimation = Tween<Offset>(begin: const Offset(0.06, 0.0), end: Offset.zero).animate(
-      CurvedAnimation(parent: _cardTransitionController, curve: Curves.easeOutCubic),
+    _cardSlideAnimation =
+        Tween<Offset>(begin: const Offset(0.06, 0.0), end: Offset.zero).animate(
+      CurvedAnimation(
+          parent: _cardTransitionController, curve: Curves.easeOutCubic),
     );
 
     // Particle burst on correct answer
@@ -121,6 +127,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
 
   @override
   void dispose() {
+    PromoDialogController.instance.onLessonEnded();
     _focusNode.dispose();
     _autoAdvanceTimer?.cancel();
     _shakeController.dispose();
@@ -235,12 +242,14 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
     setState(() => _isSubmitting = true);
     final currentQ = _questions[_currentIndex];
     final selected = _selectedOption!;
-    final timeSpentMs = DateTime.now().difference(_questionStartTime).inMilliseconds;
+    final timeSpentMs =
+        DateTime.now().difference(_questionStartTime).inMilliseconds;
 
     // Check correctness locally
     final bool isCorrect = selected == currentQ.correctAnswer ||
         (currentQ.options.contains(selected) &&
-         currentQ.options.indexOf(selected) == currentQ.options.indexOf(currentQ.correctAnswer));
+            currentQ.options.indexOf(selected) ==
+                currentQ.options.indexOf(currentQ.correctAnswer));
 
     // Call student notifier submitAnswer with local correctness evaluated
     final result = await ref.read(studentProvider.notifier).submitAnswer(
@@ -254,8 +263,10 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
 
     if (!mounted) return;
 
-    final String serverCorrect = result['correctAnswer'] ?? currentQ.correctAnswer;
-    final String serverExplanation = result['explanation'] ?? currentQ.explanation;
+    final String serverCorrect =
+        result['correctAnswer'] ?? currentQ.correctAnswer;
+    final String serverExplanation =
+        result['explanation'] ?? currentQ.explanation;
     final int coinsAwarded = result['coinsAwarded'] ?? (isCorrect ? 1 : 0);
     final int xpAwarded = result['xpAwarded'] ?? (isCorrect ? 10 : 0);
 
@@ -263,7 +274,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
       _isSubmitting = false;
       _isAnswerChecked = true;
       _isCorrect = isCorrect;
-      _revealedCorrectAnswer = serverCorrect.isNotEmpty ? serverCorrect : selected;
+      _revealedCorrectAnswer =
+          serverCorrect.isNotEmpty ? serverCorrect : selected;
       _explanation = serverExplanation;
     });
 
@@ -309,13 +321,18 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
     final currentQ = _questions[_currentIndex];
     final selectedIdx = currentQ.options.indexOf(_selectedOption ?? '');
 
-    final optionBox = _optionKeys[selectedIdx]?.currentContext?.findRenderObject() as RenderBox?;
-    final coinBadgeBox = _coinBadgeKey.currentContext?.findRenderObject() as RenderBox?;
+    final optionBox = _optionKeys[selectedIdx]
+        ?.currentContext
+        ?.findRenderObject() as RenderBox?;
+    final coinBadgeBox =
+        _coinBadgeKey.currentContext?.findRenderObject() as RenderBox?;
 
     if (optionBox == null || coinBadgeBox == null) return;
 
-    final startPos = optionBox.localToGlobal(Offset(optionBox.size.width / 2, optionBox.size.height / 2));
-    final endPos = coinBadgeBox.localToGlobal(Offset(coinBadgeBox.size.width * 0.25, coinBadgeBox.size.height / 2));
+    final startPos = optionBox.localToGlobal(
+        Offset(optionBox.size.width / 2, optionBox.size.height / 2));
+    final endPos = coinBadgeBox.localToGlobal(
+        Offset(coinBadgeBox.size.width * 0.25, coinBadgeBox.size.height / 2));
 
     final overlay = Overlay.of(context);
     late OverlayEntry entry;
@@ -335,8 +352,12 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
             final controlX = (startPos.dx + endPos.dx) / 2 + 30;
             final controlY = math.min(startPos.dy, endPos.dy) - 70;
 
-            final x = (1 - t) * (1 - t) * startPos.dx + 2 * (1 - t) * t * controlX + t * t * endPos.dx;
-            final y = (1 - t) * (1 - t) * startPos.dy + 2 * (1 - t) * t * controlY + t * t * endPos.dy;
+            final x = (1 - t) * (1 - t) * startPos.dx +
+                2 * (1 - t) * t * controlX +
+                t * t * endPos.dx;
+            final y = (1 - t) * (1 - t) * startPos.dy +
+                2 * (1 - t) * t * controlY +
+                t * t * endPos.dy;
             final scale = (1.25 - 0.35 * t).clamp(0.8, 1.3);
 
             return Positioned(
@@ -358,7 +379,10 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
                           fontSize: 18 * scale,
                           fontWeight: FontWeight.w900,
                           shadows: const [
-                            Shadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+                            Shadow(
+                                color: Colors.black26,
+                                blurRadius: 4,
+                                offset: Offset(0, 2)),
                           ],
                         ),
                       ),
@@ -409,10 +433,12 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
         final colors = AppThemeColors.of(context);
         return AlertDialog(
           backgroundColor: colors.card,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           title: Text(
             'Mashqni to‘xtatmoqchimisiz?',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: colors.ink),
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.w800, color: colors.ink),
           ),
           content: Text(
             'Hozirgacha to‘plangan $_sessionCoinsEarned ta tanga va $_sessionXpEarned XP balansingizda saqlanadi.',
@@ -423,13 +449,15 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
               onPressed: () => Navigator.pop(ctx),
               child: Text(
                 'Davom etish',
-                style: TextStyle(color: colors.primary, fontWeight: FontWeight.w700),
+                style: TextStyle(
+                    color: colors.primary, fontWeight: FontWeight.w700),
               ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFEF4444),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14)),
               ),
               onPressed: () {
                 Navigator.pop(ctx);
@@ -437,7 +465,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
               },
               child: const Text(
                 'Chiqish',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
               ),
             ),
           ],
@@ -546,7 +575,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
                         ),
                       ],
                     ),
-                    child: Icon(Icons.close_rounded, color: colors.ink, size: 22),
+                    child:
+                        Icon(Icons.close_rounded, color: colors.ink, size: 22),
                   ),
                 ),
               ),
@@ -600,7 +630,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
                       return LinearProgressIndicator(
                         value: val,
                         backgroundColor: colors.border,
-                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF6C55E0)),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                            Color(0xFF6C55E0)),
                       );
                     },
                   ),
@@ -733,7 +764,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.lightbulb_outline_rounded, color: Color(0xFFF59E0B), size: 16),
+                const Icon(Icons.lightbulb_outline_rounded,
+                    color: Color(0xFFF59E0B), size: 16),
                 const SizedBox(width: 6),
                 Flexible(
                   child: Text(
@@ -755,7 +787,9 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
-                color: _isCorrect ? const Color(0xFFDDF5E8) : const Color(0xFFFDECEC),
+                color: _isCorrect
+                    ? const Color(0xFFDDF5E8)
+                    : const Color(0xFFFDECEC),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -764,7 +798,9 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: _isCorrect ? const Color(0xFF1B8A55) : const Color(0xFFE24B4A),
+                  color: _isCorrect
+                      ? const Color(0xFF1B8A55)
+                      : const Color(0xFFE24B4A),
                 ),
               ),
             ),
@@ -789,7 +825,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
     Color optionTextColor = colors.ink;
     Widget letterChild = Text(
       letter,
-      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: letterTextColor),
+      style: TextStyle(
+          fontSize: 15, fontWeight: FontWeight.w800, color: letterTextColor),
     );
 
     if (_isAnswerChecked) {
@@ -802,21 +839,24 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
         bgColor = const Color(0xFFDDF5E8);
         letterBgColor = const Color(0xFF10B981);
         optionTextColor = const Color(0xFF064E3B);
-        letterChild = const Icon(Icons.check_rounded, color: Colors.white, size: 18);
+        letterChild =
+            const Icon(Icons.check_rounded, color: Colors.white, size: 18);
       } else if (isThisChoice && !_isCorrect) {
         // Wrong selection: Red
         borderColor = const Color(0xFFEF4444);
         bgColor = const Color(0xFFFDECEC);
         letterBgColor = const Color(0xFFEF4444);
         optionTextColor = const Color(0xFF7F1D1D);
-        letterChild = const Icon(Icons.close_rounded, color: Colors.white, size: 18);
+        letterChild =
+            const Icon(Icons.close_rounded, color: Colors.white, size: 18);
       } else if (isRealCorrect) {
         // Reveal correct answer: Soft Green
         borderColor = const Color(0xFF10B981);
         bgColor = const Color(0xFFF0FDF4);
         letterBgColor = const Color(0xFF10B981);
         optionTextColor = const Color(0xFF064E3B);
-        letterChild = const Icon(Icons.check_rounded, color: Colors.white, size: 18);
+        letterChild =
+            const Icon(Icons.check_rounded, color: Colors.white, size: 18);
       }
     } else if (isSelected) {
       // Selected state: Primary purple background with high contrast dark text
@@ -826,7 +866,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
       optionTextColor = const Color(0xFF1E1742);
       letterChild = Text(
         letter,
-        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: Colors.white),
+        style: const TextStyle(
+            fontSize: 15, fontWeight: FontWeight.w900, color: Colors.white),
       );
     }
 
@@ -847,10 +888,14 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
               decoration: BoxDecoration(
                 color: bgColor,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: borderColor, width: isSelected || _isAnswerChecked ? 2.0 : 1.2),
+                border: Border.all(
+                    color: borderColor,
+                    width: isSelected || _isAnswerChecked ? 2.0 : 1.2),
                 boxShadow: [
                   BoxShadow(
-                    color: isSelected ? const Color(0x226C55E0) : Colors.black.withOpacity(0.02),
+                    color: isSelected
+                        ? const Color(0x226C55E0)
+                        : Colors.black.withOpacity(0.02),
                     blurRadius: 10,
                     offset: const Offset(0, 3),
                   ),
@@ -874,7 +919,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
                       optionText,
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
+                        fontWeight:
+                            isSelected ? FontWeight.w800 : FontWeight.w700,
                         color: optionTextColor,
                       ),
                     ),
@@ -896,7 +942,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF6C55E0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             elevation: 4,
           ),
           onPressed: _advanceToNext,
@@ -905,7 +952,10 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
             children: [
               Text(
                 'Keyingi misol',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white),
               ),
               SizedBox(width: 8),
               Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
@@ -953,14 +1003,17 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
                   ? const SizedBox(
                       width: 24,
                       height: 24,
-                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                      child: CircularProgressIndicator(
+                          color: Colors.white, strokeWidth: 2.5),
                     )
                   : Text(
                       'Javobni tekshirish',
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w800,
-                        color: isEnabled ? Colors.white : colors.muted.withOpacity(0.7),
+                        color: isEnabled
+                            ? Colors.white
+                            : colors.muted.withOpacity(0.7),
                       ),
                     ),
             ),
@@ -984,210 +1037,232 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen>
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
               child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Big celebration trophy badge
-                Container(
-                  width: 96,
-                  height: 96,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFFFE082), Color(0xFFFFB300)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Big celebration trophy badge
+                  Container(
+                    width: 96,
+                    height: 96,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFFFE082), Color(0xFFFFB300)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFFFB300).withOpacity(0.35),
+                          blurRadius: 24,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
                     ),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFFFB300).withOpacity(0.35),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
+                    child: const Center(
+                      child: Icon(Icons.emoji_events_rounded,
+                          color: Colors.white, size: 52),
+                    ),
                   ),
-                  child: const Center(
-                    child: Icon(Icons.emoji_events_rounded, color: Colors.white, size: 52),
-                  ),
-                ),
-                const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                Text(
-                  'Mashq muvaffaqiyatli yakunlandi!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: colors.ink),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Barcha 20 ta misol ko‘rib chiqildi',
-                  style: TextStyle(fontSize: 14, color: colors.muted),
-                ),
-                const SizedBox(height: 28),
-
-                // Stats Card
-                Container(
-                  padding: const EdgeInsets.all(22),
-                  decoration: BoxDecoration(
-                    color: colors.card,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: colors.border),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
+                  Text(
+                    'Mashq muvaffaqiyatli yakunlandi!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                        color: colors.ink),
                   ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildResultStat(
-                            title: 'To‘g‘ri',
-                            value: '$_correctCount',
-                            color: const Color(0xFF10B981),
-                          ),
-                          _buildResultStat(
-                            title: 'Aniqlik',
-                            value: '$accuracy%',
-                            color: const Color(0xFF6C55E0),
-                          ),
-                          _buildResultStat(
-                            title: 'Noto‘g‘ri',
-                            value: '$_wrongCount',
-                            color: const Color(0xFFEF4444),
-                          ),
-                        ],
-                      ),
-                      const Divider(height: 28),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Row(
-                            children: [
-                              const CoinIcon(size: 24),
-                              const SizedBox(width: 8),
-                              TweenAnimationBuilder<double>(
-                                tween: Tween<double>(begin: 0.0, end: _sessionCoinsEarned.toDouble()),
-                                duration: const Duration(milliseconds: 700),
-                                curve: Curves.easeOutCubic,
-                                builder: (context, val, child) {
-                                  return Text(
-                                    '+${val.round()} tanga',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w900,
-                                      color: Color(0xFFD97706),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFEDE8FF),
-                              borderRadius: BorderRadius.circular(12),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Barcha 20 ta misol ko‘rib chiqildi',
+                    style: TextStyle(fontSize: 14, color: colors.muted),
+                  ),
+                  const SizedBox(height: 28),
+
+                  // Stats Card
+                  Container(
+                    padding: const EdgeInsets.all(22),
+                    decoration: BoxDecoration(
+                      color: colors.card,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: colors.border),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.04),
+                          blurRadius: 16,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildResultStat(
+                              title: 'To‘g‘ri',
+                              value: '$_correctCount',
+                              color: const Color(0xFF10B981),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
+                            _buildResultStat(
+                              title: 'Aniqlik',
+                              value: '$accuracy%',
+                              color: const Color(0xFF6C55E0),
+                            ),
+                            _buildResultStat(
+                              title: 'Noto‘g‘ri',
+                              value: '$_wrongCount',
+                              color: const Color(0xFFEF4444),
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 28),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
                               children: [
-                                const XpCoin(size: 16, showGlow: false),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '+$_sessionXpEarned XP',
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w900,
-                                    color: Color(0xFF6C55E0),
-                                  ),
+                                const CoinIcon(size: 24),
+                                const SizedBox(width: 8),
+                                TweenAnimationBuilder<double>(
+                                  tween: Tween<double>(
+                                      begin: 0.0,
+                                      end: _sessionCoinsEarned.toDouble()),
+                                  duration: const Duration(milliseconds: 700),
+                                  curve: Curves.easeOutCubic,
+                                  builder: (context, val, child) {
+                                    return Text(
+                                      '+${val.round()} tanga',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w900,
+                                        color: Color(0xFFD97706),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 32),
-
-                // Action Buttons
-                SizedBox(
-                  width: double.infinity,
-                  height: 54,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6C55E0),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                      elevation: 4,
-                    ),
-                    onPressed: () => context.go('/kids/leaderboard'),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.leaderboard_rounded, color: Colors.white, size: 20),
-                        SizedBox(width: 8),
-                        Text(
-                          'Reytingni ko‘rish',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.white),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEDE8FF),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const XpCoin(size: 16, showGlow: false),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '+$_sessionXpEarned XP',
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w900,
+                                      color: Color(0xFF6C55E0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  height: 54,
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Color(0xFF6C55E0), width: 1.5),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isLoading = true;
-                        _isCompleted = false;
-                        _currentIndex = 0;
-                        _selectedOption = null;
-                        _isAnswerChecked = false;
-                        _sessionCoinsEarned = 0;
-                        _sessionXpEarned = 0;
-                        _correctCount = 0;
-                        _wrongCount = 0;
-                      });
-                      _loadQuestions();
-                    },
-                    child: const Text(
-                      'Yana mashq qilish',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Color(0xFF6C55E0)),
+
+                  const SizedBox(height: 32),
+
+                  // Action Buttons
+                  SizedBox(
+                    width: double.infinity,
+                    height: 54,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF6C55E0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18)),
+                        elevation: 4,
+                      ),
+                      onPressed: () => context.go('/kids/leaderboard'),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.leaderboard_rounded,
+                              color: Colors.white, size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            'Reytingni ko‘rish',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.white),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 54,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                            color: Color(0xFF6C55E0), width: 1.5),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18)),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isLoading = true;
+                          _isCompleted = false;
+                          _currentIndex = 0;
+                          _selectedOption = null;
+                          _isAnswerChecked = false;
+                          _sessionCoinsEarned = 0;
+                          _sessionXpEarned = 0;
+                          _correctCount = 0;
+                          _wrongCount = 0;
+                        });
+                        _loadQuestions();
+                      },
+                      child: const Text(
+                        'Yana mashq qilish',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF6C55E0)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-  Widget _buildResultStat({required String title, required String value, required Color color}) {
+  Widget _buildResultStat(
+      {required String title, required String value, required Color color}) {
     return Column(
       children: [
         Text(
           value,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: color),
+          style: TextStyle(
+              fontSize: 22, fontWeight: FontWeight.w900, color: color),
         ),
         const SizedBox(height: 2),
         Text(
           title,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF94A3B8)),
+          style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF94A3B8)),
         ),
       ],
     );

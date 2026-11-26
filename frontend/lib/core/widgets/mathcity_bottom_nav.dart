@@ -35,7 +35,11 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
     (label: 'Asosiy', icon: Icons.home_rounded, route: '/kids/home'),
     (label: 'Darslar', icon: Icons.menu_book_rounded, route: '/kids/lessons'),
     (label: 'AI Ustoz', icon: Icons.smart_toy_rounded, route: '/kids/ai-tutor'),
-    (label: 'Reyting', icon: Icons.leaderboard_rounded, route: '/kids/leaderboard'),
+    (
+      label: 'Reyting',
+      icon: Icons.leaderboard_rounded,
+      route: '/kids/leaderboard'
+    ),
     (label: 'Profil', icon: Icons.person_rounded, route: '/kids/profile'),
   ];
 
@@ -76,9 +80,8 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
     final horizMargin = screenW < 360 ? 10.0 : 16.0;
 
     // Alignment: -1.0 (leftmost) to +1.0 (rightmost) across 5 equal tabs
-    final double pillAlignX = _items.isEmpty
-        ? 0.0
-        : -1.0 + (_activeTab / (_items.length - 1)) * 2.0;
+    final double pillAlignX =
+        _items.isEmpty ? 0.0 : -1.0 + (_activeTab / (_items.length - 1)) * 2.0;
 
     // Adaptive frosted glass background
     final Color glassBgColor = isDark
@@ -103,9 +106,8 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
             const Color(0xFFDDD6FE),
           ];
 
-    final Color activeColor = isDark
-        ? const Color(0xFFFFFFFF)
-        : const Color(0xFF6C47FF);
+    final Color activeColor =
+        isDark ? const Color(0xFFFFFFFF) : const Color(0xFF6C47FF);
     final Color inactiveColor = isDark
         ? const Color(0xFFA9A4CF).withValues(alpha: 0.72)
         : const Color(0xFF6B6785);
@@ -115,7 +117,8 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
 
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: 1.0, end: 0.0),
-      duration: reduceMotion ? Duration.zero : const Duration(milliseconds: 450),
+      duration:
+          reduceMotion ? Duration.zero : const Duration(milliseconds: 450),
       curve: Curves.easeOutCubic,
       builder: (context, entryProgress, childWidget) {
         return Transform.translate(
@@ -128,7 +131,8 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
       },
       child: Container(
         height: 68,
-        margin: EdgeInsets.only(left: horizMargin, right: horizMargin, bottom: 12),
+        margin:
+            EdgeInsets.only(left: horizMargin, right: horizMargin, bottom: 12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(26),
           boxShadow: [
@@ -193,7 +197,8 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF6C47FF).withValues(alpha: isDark ? 0.24 : 0.12),
+                              color: const Color(0xFF6C47FF)
+                                  .withValues(alpha: isDark ? 0.24 : 0.12),
                               blurRadius: 12,
                               offset: const Offset(0, 2),
                             ),
@@ -213,12 +218,14 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
                       return Expanded(
                         child: GestureDetector(
                           behavior: HitTestBehavior.opaque,
-                          onTapDown: (_) => setState(() => _pressedIndex = index),
+                          onTapDown: (_) =>
+                              setState(() => _pressedIndex = index),
                           onTapUp: (_) {
                             setState(() => _pressedIndex = null);
                             _onTap(index);
                           },
-                          onTapCancel: () => setState(() => _pressedIndex = null),
+                          onTapCancel: () =>
+                              setState(() => _pressedIndex = null),
                           child: AnimatedScale(
                             scale: isPressed ? 0.93 : 1.0,
                             duration: const Duration(milliseconds: 150),
@@ -243,7 +250,9 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
                                     child: Icon(
                                       item.icon,
                                       size: 22,
-                                      color: isSelected ? activeColor : inactiveColor,
+                                      color: isSelected
+                                          ? activeColor
+                                          : inactiveColor,
                                     ),
                                   ),
                                 ),
@@ -259,7 +268,9 @@ class _MathCityBottomNavState extends State<MathCityBottomNav> {
                                     fontWeight: isSelected
                                         ? FontWeight.w800
                                         : FontWeight.w600,
-                                    color: isSelected ? activeColor : inactiveColor,
+                                    color: isSelected
+                                        ? activeColor
+                                        : inactiveColor,
                                   ),
                                   child: Text(
                                     item.label,

@@ -17,7 +17,8 @@ class SpeechBubble extends StatelessWidget {
         final slide = Tween<Offset>(
           begin: const Offset(0.08, 0.0),
           end: Offset.zero,
-        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
+        ).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
 
         return FadeTransition(
           opacity: animation,

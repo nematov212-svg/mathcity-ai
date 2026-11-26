@@ -14,7 +14,8 @@ Widget buildHouseGameView({
 
 void postMessageToHouseGame(String type, Map<String, dynamic> data) {
   try {
-    final iframe = html.document.getElementById('house-game-iframe') as html.IFrameElement?;
+    final iframe = html.document.getElementById('house-game-iframe')
+        as html.IFrameElement?;
     iframe?.contentWindow?.postMessage({'type': type, 'data': data}, '*');
   } catch (e) {
     debugPrint('postMessageToHouseGame error: $e');
@@ -76,7 +77,9 @@ class _HouseGameWebWidgetState extends State<_HouseGameWebWidget> {
 
         if (dataMap != null && dataMap.containsKey('type')) {
           final type = dataMap['type'].toString();
-          final data = dataMap['data'] is Map ? Map<String, dynamic>.from(dataMap['data']) : <String, dynamic>{};
+          final data = dataMap['data'] is Map
+              ? Map<String, dynamic>.from(dataMap['data'])
+              : <String, dynamic>{};
           widget.onMessageFromGame(type, data);
         }
       } catch (e) {

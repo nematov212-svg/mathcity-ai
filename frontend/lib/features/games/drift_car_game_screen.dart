@@ -26,7 +26,9 @@ class _DriftCarGameScreenState extends ConsumerState<DriftCarGameScreen> {
       final res = await ApiClient().dio.get('/games/cars');
       if (res.data['success'] == true && res.data['data'] != null) {
         final rawData = res.data['data'];
-        final carsList = rawData is List ? rawData : (rawData is Map ? rawData['cars'] as List? : null);
+        final carsList = rawData is List
+            ? rawData
+            : (rawData is Map ? rawData['cars'] as List? : null);
         if (carsList != null) {
           final owned = carsList
               .where((c) => c['isOwned'] == true || c['isUnlocked'] == true)
@@ -72,7 +74,8 @@ class _DriftCarGameScreenState extends ConsumerState<DriftCarGameScreen> {
         if (currentCoins < price) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Oltin tangalar yetarli emas! Sizda: $currentCoins tanga, kerak: $price tanga.'),
+              content: Text(
+                  'Oltin tangalar yetarli emas! Sizda: $currentCoins tanga, kerak: $price tanga.'),
               backgroundColor: Colors.redAccent,
             ),
           );
@@ -83,7 +86,9 @@ class _DriftCarGameScreenState extends ConsumerState<DriftCarGameScreen> {
           final res = await ApiClient().dio.post('/games/cars/$carKey/buy');
           if (res.data['success'] == true) {
             final resData = res.data['data'] ?? {};
-            final newBal = resData['newCoinBalance'] ?? resData['newBalance'] ?? (currentCoins - price);
+            final newBal = resData['newCoinBalance'] ??
+                resData['newBalance'] ??
+                (currentCoins - price);
             if (!_ownedCars.contains(carKey)) {
               _ownedCars.add(carKey);
             }
@@ -98,7 +103,8 @@ class _DriftCarGameScreenState extends ConsumerState<DriftCarGameScreen> {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Tabriklaymiz! Yangi mashina garajingizga qo‘shildi! 🏎️'),
+                  content: Text(
+                      'Tabriklaymiz! Yangi mashina garajingizga qo‘shildi! 🏎️'),
                   backgroundColor: Color(0xFF10B981),
                 ),
               );
@@ -169,7 +175,8 @@ class _DriftCarGameScreenState extends ConsumerState<DriftCarGameScreen> {
             if (mounted && coinsAwarded > 0) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Ajoyib drift! +$coinsAwarded oltin tanga yutib oldingiz! 🪙🔥'),
+                  content: Text(
+                      'Ajoyib drift! +$coinsAwarded oltin tanga yutib oldingiz! 🪙🔥'),
                   backgroundColor: const Color(0xFF10B981),
                   duration: const Duration(seconds: 4),
                 ),

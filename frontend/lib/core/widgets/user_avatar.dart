@@ -41,7 +41,8 @@ class UserAvatar extends StatelessWidget {
       if (url.startsWith('data:image')) {
         try {
           final commaIndex = url.indexOf(',');
-          final base64Data = commaIndex != -1 ? url.substring(commaIndex + 1) : url;
+          final base64Data =
+              commaIndex != -1 ? url.substring(commaIndex + 1) : url;
           final bytes = base64Decode(base64Data);
           imageContent = Image.memory(
             bytes,

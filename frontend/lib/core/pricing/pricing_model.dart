@@ -20,15 +20,23 @@ class PricingPlan {
   });
 
   factory PricingPlan.fromJson(Map<String, dynamic> json) {
+    final basePrice = (json['basePrice'] as num?)?.toInt() ?? 29000;
+    final finalPrice = (json['finalPrice'] as num?)?.toInt() ?? basePrice;
+    final discountPercent = (json['discountPercent'] as num?)?.toInt() ?? 0;
+    final isDiscounted = json['isDiscounted'] == true ||
+        (discountPercent > 0 && finalPrice < basePrice);
+    final savings =
+        (json['savings'] as num?)?.toInt() ?? (basePrice - finalPrice);
     return PricingPlan(
-      id: (json['id'] ?? '').toString(),
+      id: (json['id'] ?? json['planId'] ?? '').toString(),
       name: (json['name'] ?? '').toString(),
-      basePrice: (json['basePrice'] as num?)?.toInt() ?? 29000,
-      finalPrice: (json['finalPrice'] as num?)?.toInt() ?? 29000,
-      discountPercent: (json['discountPercent'] as num?)?.toInt() ?? 0,
-      isDiscounted: json['isDiscounted'] == true,
-      savings: (json['savings'] as num?)?.toInt() ?? 0,
-      billingCycle: (json['billingCycle'] ?? 'month').toString(),
+      basePrice: basePrice,
+      finalPrice: finalPrice,
+      discountPercent: discountPercent,
+      isDiscounted: isDiscounted,
+      savings: savings > 0 ? savings : 0,
+      billingCycle:
+          (json['billingCycle'] ?? json['period'] ?? 'month').toString(),
     );
   }
 
@@ -77,14 +85,17 @@ class PricingData {
   /// Authoritative server-synced time on this device, immune to phone clock tampering
   DateTime get authoritativeNow => DateTime.now().add(serverOffset);
 
-  /// Remaining duration until the 7-day discount expires
+  /// Remaining duration until the discount expires
   Duration get remainingDiscountDuration {
     if (!isEligible || discountEndsAt == null) return Duration.zero;
     final diff = discountEndsAt!.difference(authoritativeNow);
     return diff.isNegative ? Duration.zero : diff;
   }
 
-  bool get hasActiveDiscount => isEligible && remainingDiscountDuration.inSeconds > 0 && monthlyPlan.isDiscounted;
+  bool get hasActiveDiscount =>
+      isEligible &&
+      remainingDiscountDuration.inSeconds > 0 &&
+      (monthlyPlan.isDiscounted || yearlyPlan.isDiscounted);
 
   factory PricingData.initial() {
     final now = DateTime.now();
@@ -99,25 +110,47 @@ class PricingData {
     );
   }
 
-  factory PricingData.fromJson(Map<String, dynamic> json, DateTime localReceivedAt) {
+  factory PricingData.fromJson(
+      Map<String, dynamic> json, DateTime localReceivedAt) {
     final serverNowStr = json['serverNow'] as String?;
-    final serverNow = serverNowStr != null ? DateTime.tryParse(serverNowStr) ?? localReceivedAt : localReceivedAt;
+    final serverNow = serverNowStr != null
+        ? DateTime.tryParse(serverNowStr) ?? localReceivedAt
+        : localReceivedAt;
     final serverOffset = serverNow.difference(localReceivedAt);
 
     final endsAtStr = json['discountEndsAt'] as String?;
-    final discountEndsAt = endsAtStr != null ? DateTime.tryParse(endsAtStr) : null;
+    final discountEndsAt =
+        endsAtStr != null ? DateTime.tryParse(endsAtStr) : null;
 
     final elig = json['eligibility'] as Map<String, dynamic>? ?? {};
-    final isEligible = elig['eligible'] == true;
+    final isEligible = elig['eligible'] == true || json['hasDiscount'] == true;
     final reason = (elig['reason'] ?? '').toString();
 
-    final plans = json['plans'] as Map<String, dynamic>? ?? {};
-    final monthly = plans['monthly'] != null
-        ? PricingPlan.fromJson(plans['monthly'] as Map<String, dynamic>)
-        : PricingPlan.monthlyDefault;
-    final yearly = plans['yearly'] != null
-        ? PricingPlan.fromJson(plans['yearly'] as Map<String, dynamic>)
-        : PricingPlan.yearlyDefault;
+    PricingPlan monthly = PricingPlan.monthlyDefault;
+    PricingPlan yearly = PricingPlan.yearlyDefault;
+
+    if (json['plans'] is List) {
+      final list = json['plans'] as List;
+      for (final p in list) {
+        if (p is Map<String, dynamic>) {
+          final id = (p['planId'] ?? p['id'] ?? '').toString().toLowerCase();
+          if (id == 'monthly') {
+            monthly = PricingPlan.fromJson(p);
+          } else if (id == 'yearly') {
+            yearly = PricingPlan.fromJson(p);
+          }
+        }
+      }
+    } else if (json['plans'] is Map) {
+      final plans = json['plans'] as Map<String, dynamic>;
+      if (plans['monthly'] != null) {
+        monthly =
+            PricingPlan.fromJson(plans['monthly'] as Map<String, dynamic>);
+      }
+      if (plans['yearly'] != null) {
+        yearly = PricingPlan.fromJson(plans['yearly'] as Map<String, dynamic>);
+      }
+    }
 
     return PricingData(
       serverNow: serverNow,

@@ -108,14 +108,14 @@ class WeeklyActivityNotifier extends StateNotifier<WeeklyActivityState> {
     }
   }
 
-  bool get _isTestEnv => !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+  bool get _isTestEnv =>
+      !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
 
   void _scheduleMidnightRefresh(int secondsUntilMidnight) {
     _midnightTimer?.cancel();
     if (_isTestEnv) return;
     if (secondsUntilMidnight > 0 && secondsUntilMidnight < 86400) {
-      _midnightTimer =
-          Timer(Duration(seconds: secondsUntilMidnight + 2), () {
+      _midnightTimer = Timer(Duration(seconds: secondsUntilMidnight + 2), () {
         refresh();
       });
     }

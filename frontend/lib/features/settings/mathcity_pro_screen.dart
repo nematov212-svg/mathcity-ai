@@ -6,10 +6,12 @@ import 'package:intl/intl.dart';
 import '../../core/network/api_client.dart';
 import '../../core/pricing/pricing_provider.dart';
 import '../../core/pricing/pricing_model.dart';
+import '../../core/widgets/promo_dialog_controller.dart';
 import '../../shared/providers/student_provider.dart';
 
 class MathCityProScreen extends ConsumerStatefulWidget {
-  const MathCityProScreen({super.key});
+  final String? initialPlan;
+  const MathCityProScreen({super.key, this.initialPlan});
 
   @override
   ConsumerState<MathCityProScreen> createState() => _MathCityProScreenState();
@@ -24,9 +26,26 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
   bool _isLoading = false;
   int _selectedPlanIndex = 0; // 0 = 1 oylik, 1 = 1 yillik
 
+  String _formatNumber(int number) {
+    final str = number.toString();
+    final reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+    return str.replaceAllMapped(reg, (Match m) => '${m[1]} ');
+  }
+
   @override
   void initState() {
     super.initState();
+
+    if (widget.initialPlan != null) {
+      if (widget.initialPlan!.toLowerCase().contains('year')) {
+        _selectedPlanIndex = 1;
+      } else {
+        _selectedPlanIndex = 0;
+      }
+    }
+
+    // Entering the Pro screen cancels remaining auto-promos
+    PromoDialogController.instance.cancelPromoFlow();
 
     _mascotController = AnimationController(
       vsync: this,
@@ -60,12 +79,15 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     final isYearly = _selectedPlanIndex == 1;
     final planType = isYearly ? 'YEARLY' : 'MONTHLY';
     final pricing = ref.read(pricingProvider).data;
-    final hasDiscount = !isYearly && pricing.hasActiveDiscount;
-    final monthlyPrice = hasDiscount ? pricing.monthlyPlan.finalPrice : pricing.monthlyPlan.basePrice;
-    final amountUzs = isYearly ? pricing.yearlyPlan.finalPrice : monthlyPrice;
-    final amountFormatted = isYearly
-        ? '250 000 so‘m'
-        : (hasDiscount ? '${pricing.monthlyPlan.finalPrice} so‘m' : '29 000 so‘m');
+    final hasDiscount = pricing.hasActiveDiscount;
+    final monthlyPrice = (hasDiscount && pricing.monthlyPlan.isDiscounted)
+        ? pricing.monthlyPlan.finalPrice
+        : pricing.monthlyPlan.basePrice;
+    final yearlyPrice = (hasDiscount && pricing.yearlyPlan.isDiscounted)
+        ? pricing.yearlyPlan.finalPrice
+        : pricing.yearlyPlan.basePrice;
+    final amountUzs = isYearly ? yearlyPrice : monthlyPrice;
+    final amountFormatted = '${_formatNumber(amountUzs)} so‘m';
 
     String selectedProvider = 'PAYME';
     bool isProcessing = false;
@@ -81,7 +103,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
             final providerLogo = selectedProvider == 'PAYME'
                 ? 'assets/images/payme_logo.png'
                 : 'assets/images/click_logo.png';
-            final providerName = selectedProvider == 'PAYME' ? 'Payme' : 'Click';
+            final providerName =
+                selectedProvider == 'PAYME' ? 'Payme' : 'Click';
 
             return Container(
               constraints: BoxConstraints(
@@ -96,7 +119,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                     Color(0xFF160E42),
                   ],
                 ),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(28)),
                 border: Border.all(
                   color: Colors.white.withOpacity(0.12),
                   width: 1.2,
@@ -141,7 +165,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
 
                       // Tarif ma'lumoti pilli
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFFD66B).withOpacity(0.12),
                           borderRadius: BorderRadius.circular(20),
@@ -154,15 +179,17 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              isYearly ? Icons.stars_rounded : Icons.calendar_today_rounded,
+                              isYearly
+                                  ? Icons.stars_rounded
+                                  : Icons.calendar_today_rounded,
                               size: 15,
                               color: const Color(0xFFFFD66B),
                             ),
                             const SizedBox(width: 7),
                             Text(
                               isYearly
-                                  ? '1 Yillik tarif • 250 000 so‘m'
-                                  : '1 Oylik tarif • 29 000 so‘m',
+                                  ? '1 Yillik tarif • $amountFormatted'
+                                  : '1 Oylik tarif • $amountFormatted',
                               style: const TextStyle(
                                 color: Color(0xFFFFD66B),
                                 fontSize: 13,
@@ -172,7 +199,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                             if (isYearly) ...[
                               const SizedBox(width: 6),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 1.5),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFFFD66B),
                                   borderRadius: BorderRadius.circular(5),
@@ -253,7 +281,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                       if (sheetError != null) ...[
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 10),
                           decoration: BoxDecoration(
                             color: const Color(0xFFEF4444).withOpacity(0.15),
                             borderRadius: BorderRadius.circular(14),
@@ -357,7 +386,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                                         height: 26,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(7),
+                                          borderRadius:
+                                              BorderRadius.circular(7),
                                         ),
                                         padding: const EdgeInsets.all(3),
                                         child: Image.asset(
@@ -541,9 +571,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                         : Colors.white.withOpacity(0.25),
                     width: 2,
                   ),
-                  color: isSelected
-                      ? const Color(0xFFFFD66B)
-                      : Colors.transparent,
+                  color:
+                      isSelected ? const Color(0xFFFFD66B) : Colors.transparent,
                 ),
                 child: isSelected
                     ? const Icon(
@@ -560,10 +589,12 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     );
   }
 
-  Future<bool> _executePayment(String provider, String planType, int amountUzs) async {
+  Future<bool> _executePayment(
+      String provider, String planType, int amountUzs) async {
     setState(() => _isLoading = true);
     try {
-      final orderRes = await ApiClient().dio.post('/payments/create-order', data: {
+      final orderRes =
+          await ApiClient().dio.post('/payments/create-order', data: {
         'provider': provider,
         'planType': planType,
       });
@@ -571,7 +602,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
       if (orderRes.data['success'] == true && orderRes.data['data'] != null) {
         final orderId = orderRes.data['data']['orderId'] as String;
 
-        final confirmRes = await ApiClient().dio.post('/payments/confirm-order', data: {
+        final confirmRes =
+            await ApiClient().dio.post('/payments/confirm-order', data: {
           'orderId': orderId,
           'provider': provider,
         });
@@ -582,7 +614,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
           if (!mounted) return true;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Tabriklaymiz! $provider orqali MathCity Pro obunasi muvaffaqiyatli faollashtirildi!'),
+              content: Text(
+                  'Tabriklaymiz! $provider orqali MathCity Pro obunasi muvaffaqiyatli faollashtirildi!'),
               backgroundColor: const Color(0xFF10B981),
               behavior: SnackBarBehavior.floating,
             ),
@@ -593,14 +626,15 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
 
       // Direct fallback
       final success = await ref.read(studentProvider.notifier).activatePro(
-        planType: planType,
-        provider: provider,
-      );
+            planType: planType,
+            provider: provider,
+          );
       if (!mounted) return success;
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Tabriklaymiz! $provider orqali MathCity Pro obunasi muvaffaqiyatli faollashtirildi!'),
+            content: Text(
+                'Tabriklaymiz! $provider orqali MathCity Pro obunasi muvaffaqiyatli faollashtirildi!'),
             backgroundColor: const Color(0xFF10B981),
             behavior: SnackBarBehavior.floating,
           ),
@@ -657,7 +691,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
               // Scrollable Body
               Positioned.fill(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 120),
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 12, bottom: 120),
                   child: Column(
                     children: [
                       // Top Bar
@@ -709,10 +744,10 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
 
                       const SizedBox(height: 12),
 
-                      // Mascot Robot Hero with Halo and Stars
+                      // Mascot Robot Hero with Halo and Stars (Balanced EdTech Size)
                       SizedBox(
-                        width: 250,
-                        height: 220,
+                        width: 180,
+                        height: 140,
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
@@ -730,14 +765,16 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                                   return Transform.scale(
                                     scale: scale,
                                     child: Container(
-                                      width: 220,
-                                      height: 220,
+                                      width: 140,
+                                      height: 140,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         gradient: RadialGradient(
                                           colors: [
-                                            const Color(0xFFFFD66B).withOpacity(opacity * 0.4),
-                                            const Color(0xFF6C47FF).withOpacity(opacity * 0.25),
+                                            const Color(0xFFFFD66B)
+                                                .withOpacity(opacity * 0.4),
+                                            const Color(0xFF6C47FF)
+                                                .withOpacity(opacity * 0.25),
                                             Colors.transparent,
                                           ],
                                           stops: const [0.0, 0.45, 1.0],
@@ -749,32 +786,20 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                               ),
                             ),
 
-                            // Sparkling Star 1 (Top-Left, Large)
+                            // Sparkling Star 1 (Top-Left)
                             Positioned(
-                              top: 24,
-                              left: 20,
-                              child: _buildSparkle(16, _starController, 0.0, disableAnim),
+                              top: 14,
+                              left: 16,
+                              child: _buildSparkle(
+                                  14, _starController, 0.0, disableAnim),
                             ),
 
-                            // Sparkling Star 2 (Top-Right, Large)
+                            // Sparkling Star 2 (Top-Right)
                             Positioned(
-                              top: 28,
-                              right: 22,
-                              child: _buildSparkle(14, _starController, 0.4, disableAnim),
-                            ),
-
-                            // Sparkling Star 3 (Bottom-Left, Small)
-                            Positioned(
-                              bottom: 30,
-                              left: 36,
-                              child: _buildSparkle(10, _starController, 0.7, disableAnim),
-                            ),
-
-                            // Sparkling Star 4 (Bottom-Right, Small)
-                            Positioned(
-                              bottom: 36,
-                              right: 32,
-                              child: _buildSparkle(11, _starController, 0.2, disableAnim),
+                              top: 18,
+                              right: 18,
+                              child: _buildSparkle(
+                                  12, _starController, 0.4, disableAnim),
                             ),
 
                             // Robot Mascot Image
@@ -784,27 +809,23 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                                 builder: (context, child) {
                                   final floatOffset = disableAnim
                                       ? 0.0
-                                      : math.sin(_mascotController.value * math.pi) * 8.0;
-                                  final tiltAngle = disableAnim
-                                      ? 0.0
-                                      : (math.sin(_mascotController.value * math.pi) * 0.035);
+                                      : math.sin(_mascotController.value *
+                                              math.pi) *
+                                          6.0;
                                   return Transform.translate(
                                     offset: Offset(0, -floatOffset),
-                                    child: Transform.rotate(
-                                      angle: tiltAngle,
-                                      child: child,
-                                    ),
+                                    child: child,
                                   );
                                 },
                                 child: Image.asset(
                                   'assets/logo.png',
-                                  width: 190,
-                                  height: 190,
+                                  width: 110,
+                                  height: 110,
                                   fit: BoxFit.contain,
                                   errorBuilder: (_, __, ___) => Image.asset(
                                     'assets/images/mathcity_logo.png',
-                                    width: 190,
-                                    height: 190,
+                                    width: 110,
+                                    height: 110,
                                     fit: BoxFit.contain,
                                   ),
                                 ),
@@ -814,7 +835,7 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                         ),
                       ),
 
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 10),
 
                       // Title & Subtitle
                       RichText(
@@ -848,11 +869,12 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                         ),
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 18),
 
                       // Three Metrics Panel
                       Container(
-                        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 14, horizontal: 10),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.06),
                           borderRadius: BorderRadius.circular(20),
@@ -863,51 +885,30 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                         ),
                         child: Row(
                           children: [
-                            Expanded(child: _buildMetricCol('AI Ustoz', '24/7 yordam')),
-                            Container(width: 1, height: 32, color: Colors.white.withOpacity(0.12)),
-                            Expanded(child: _buildMetricCol('Full', 'darsliklar')),
-                            Container(width: 1, height: 32, color: Colors.white.withOpacity(0.12)),
+                            Expanded(
+                                child:
+                                    _buildMetricCol('AI Ustoz', '24/7 yordam')),
+                            Container(
+                                width: 1,
+                                height: 32,
+                                color: Colors.white.withOpacity(0.12)),
+                            Expanded(
+                                child: _buildMetricCol('Full', 'darsliklar')),
+                            Container(
+                                width: 1,
+                                height: 32,
+                                color: Colors.white.withOpacity(0.12)),
                             Expanded(child: _buildMetricCol('0', 'reklama')),
                           ],
                         ),
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 18),
 
-                      // Benefits List (4 items)
-                      _buildBenefitItem(
-                        icon: Icons.menu_book_rounded,
-                        tileColor: const Color(0x2BFFD66B),
-                        iconColor: const Color(0xFFFFD66B),
-                        title: 'Cheksiz AI Ustoz',
-                        description: 'Istalgan mavzuda savol bering, qadam-baqadam tushuntirib beradi.',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildBenefitItem(
-                        icon: Icons.star_rounded,
-                        tileColor: const Color(0x338B6BFF),
-                        iconColor: const Color(0xFFB8A6FF),
-                        title: 'Matematika: to‘liq darsliklar',
-                        description: 'Sinflar bo‘yicha barcha mavzular, misol va nazorat testlari bir joyda.',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildBenefitItem(
-                        icon: Icons.calculate_rounded,
-                        tileColor: const Color(0x333B82F6),
-                        iconColor: const Color(0xFF60A5FA),
-                        title: 'Cheksiz mashqlar',
-                        description: 'Kunlik cheklovlarsiz mashq qiling va o‘z tempingizda rivojlaning.',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildBenefitItem(
-                        icon: Icons.check_circle_rounded,
-                        tileColor: const Color(0x3310B981),
-                        iconColor: const Color(0xFF34D399),
-                        title: 'Reklamasiz muhit',
-                        description: 'Hech qanday reklama va to‘xtatishlarsiz, faqat o‘qish.',
-                      ),
+                      // 6 Pro Benefits List
+                      _buildAllBenefitCards(isWide: false),
 
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 18),
 
                       // Pro Active banner OR Tariff cards
                       if (isPro)
@@ -917,14 +918,16 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                           decoration: BoxDecoration(
                             color: const Color(0xFF10B981).withOpacity(0.15),
                             borderRadius: BorderRadius.circular(22),
-                            border: Border.all(color: const Color(0xFF10B981), width: 1.5),
+                            border: Border.all(
+                                color: const Color(0xFF10B981), width: 1.5),
                           ),
                           child: Column(
                             children: [
                               const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.verified_rounded, color: Color(0xFF10B981), size: 24),
+                                  Icon(Icons.verified_rounded,
+                                      color: Color(0xFF10B981), size: 24),
                                   SizedBox(width: 8),
                                   Text(
                                     'MathCity Pro faol',
@@ -959,31 +962,41 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                             // 1 oylik
                             Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _selectedPlanIndex = 0),
+                                onTap: () =>
+                                    setState(() => _selectedPlanIndex = 0),
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 200),
-                                  constraints: const BoxConstraints(minHeight: 124),
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                  constraints:
+                                      const BoxConstraints(minHeight: 124),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 12),
                                   decoration: BoxDecoration(
                                     gradient: _selectedPlanIndex == 0
                                         ? const LinearGradient(
-                                            colors: [Color(0xFF2E1C7A), Color(0xFF1E1452)],
+                                            colors: [
+                                              Color(0xFF2E1C7A),
+                                              Color(0xFF1E1452)
+                                            ],
                                             begin: Alignment.topLeft,
                                             end: Alignment.bottomRight,
                                           )
                                         : null,
-                                    color: _selectedPlanIndex == 0 ? null : Colors.white.withOpacity(0.04),
+                                    color: _selectedPlanIndex == 0
+                                        ? null
+                                        : Colors.white.withOpacity(0.04),
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
                                       color: _selectedPlanIndex == 0
                                           ? const Color(0xFFFFD66B)
                                           : Colors.white.withOpacity(0.2),
-                                      width: _selectedPlanIndex == 0 ? 2.0 : 1.2,
+                                      width:
+                                          _selectedPlanIndex == 0 ? 2.0 : 1.2,
                                     ),
                                     boxShadow: _selectedPlanIndex == 0
                                         ? [
                                             BoxShadow(
-                                              color: const Color(0xFFFFD66B).withOpacity(0.25),
+                                              color: const Color(0xFFFFD66B)
+                                                  .withOpacity(0.25),
                                               blurRadius: 14,
                                               offset: const Offset(0, 4),
                                             ),
@@ -991,14 +1004,16 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                                         : null,
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       FittedBox(
                                         fit: BoxFit.scaleDown,
                                         alignment: Alignment.centerLeft,
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             const Text(
                                               '1 oylik',
@@ -1030,20 +1045,28 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                                               Text(
                                                 '${pricing.monthlyPlan.basePrice} so‘m',
                                                 style: TextStyle(
-                                                  color: Colors.white.withOpacity(0.45),
+                                                  color: Colors.white
+                                                      .withOpacity(0.45),
                                                   fontSize: 11.5,
                                                   fontWeight: FontWeight.w600,
-                                                  decoration: TextDecoration.lineThrough,
-                                                  decorationColor: const Color(0xFFEF4444),
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                  decorationColor:
+                                                      const Color(0xFFEF4444),
                                                   decorationThickness: 2,
                                                 ),
                                               ),
                                               const SizedBox(width: 4),
                                               Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 4,
+                                                        vertical: 1),
                                                 decoration: BoxDecoration(
-                                                  color: const Color(0xFFFFD700),
-                                                  borderRadius: BorderRadius.circular(4),
+                                                  color:
+                                                      const Color(0xFFFFD700),
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
                                                 ),
                                                 child: const Text(
                                                   '-30%',
@@ -1111,31 +1134,41 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                             // 1 yillik (Eng tejamkor)
                             Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _selectedPlanIndex = 1),
+                                onTap: () =>
+                                    setState(() => _selectedPlanIndex = 1),
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 200),
-                                  constraints: const BoxConstraints(minHeight: 124),
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                  constraints:
+                                      const BoxConstraints(minHeight: 124),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 12),
                                   decoration: BoxDecoration(
                                     gradient: _selectedPlanIndex == 1
                                         ? const LinearGradient(
-                                            colors: [Color(0xFF2E1C7A), Color(0xFF1E1452)],
+                                            colors: [
+                                              Color(0xFF2E1C7A),
+                                              Color(0xFF1E1452)
+                                            ],
                                             begin: Alignment.topLeft,
                                             end: Alignment.bottomRight,
                                           )
                                         : null,
-                                    color: _selectedPlanIndex == 1 ? null : Colors.white.withOpacity(0.04),
+                                    color: _selectedPlanIndex == 1
+                                        ? null
+                                        : Colors.white.withOpacity(0.04),
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
                                       color: _selectedPlanIndex == 1
                                           ? const Color(0xFFFFD66B)
                                           : Colors.white.withOpacity(0.2),
-                                      width: _selectedPlanIndex == 1 ? 2.0 : 1.2,
+                                      width:
+                                          _selectedPlanIndex == 1 ? 2.0 : 1.2,
                                     ),
                                     boxShadow: _selectedPlanIndex == 1
                                         ? [
                                             BoxShadow(
-                                              color: const Color(0xFFFFD66B).withOpacity(0.25),
+                                              color: const Color(0xFFFFD66B)
+                                                  .withOpacity(0.25),
                                               blurRadius: 14,
                                               offset: const Offset(0, 4),
                                             ),
@@ -1143,20 +1176,26 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                                         : null,
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       FittedBox(
                                         fit: BoxFit.scaleDown,
                                         alignment: Alignment.centerLeft,
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 6,
+                                                      vertical: 2),
                                               decoration: BoxDecoration(
                                                 color: const Color(0xFFFFD66B),
-                                                borderRadius: BorderRadius.circular(6),
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
                                               ),
                                               child: const Text(
                                                 'Eng tejamkor',
@@ -1188,26 +1227,95 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                                         ),
                                       ),
                                       const SizedBox(height: 4),
-                                      const FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: Text(
-                                          '250 000 so‘m',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 19,
-                                            fontWeight: FontWeight.w900,
+                                      if (hasActiveDiscount &&
+                                          pricing.yearlyPlan.isDiscounted) ...[
+                                        FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          alignment: Alignment.centerLeft,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                '${_formatNumber(pricing.yearlyPlan.basePrice)} so‘m',
+                                                style: TextStyle(
+                                                  color: Colors.white
+                                                      .withOpacity(0.45),
+                                                  fontSize: 11.5,
+                                                  fontWeight: FontWeight.w600,
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                  decorationColor:
+                                                      const Color(0xFFEF4444),
+                                                  decorationThickness: 2,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 4,
+                                                        vertical: 1),
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      const Color(0xFFFFD700),
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                ),
+                                                child: const Text(
+                                                  '-30%',
+                                                  style: TextStyle(
+                                                    color: Color(0xFF3B1700),
+                                                    fontSize: 8.5,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      const Text(
-                                        '≈20 833 so‘m/oy (-28%)',
-                                        style: TextStyle(
-                                          color: Color(0xFFFFD66B),
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w700,
+                                        const SizedBox(height: 2),
+                                        FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            '${_formatNumber(pricing.yearlyPlan.finalPrice)} so‘m',
+                                            style: const TextStyle(
+                                              color: Color(0xFFFFD700),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                        const SizedBox(height: 3),
+                                        const Text(
+                                          '12 oy (Tejov: 75 000 so‘m)',
+                                          style: TextStyle(
+                                            color: Color(0xFFA9A4CF),
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ] else ...[
+                                        const FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            '250 000 so‘m',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 19,
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        const Text(
+                                          '≈20 833 so‘m/oy (12 oy)',
+                                          style: TextStyle(
+                                            color: Color(0xFFFFD66B),
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ],
                                     ],
                                   ),
                                 ),
@@ -1217,7 +1325,33 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                         ),
                       ],
 
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 18),
+
+                      // Transparent renewal disclosure
+                      if (hasActiveDiscount) ...[
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.04),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                                color: Colors.white.withOpacity(0.08)),
+                          ),
+                          child: const Text(
+                            'Chegirma birinchi to‘lov davri uchun amal qiladi. Keyingi davrlarda standart tarif narxida yangilanadi. Istalgan vaqtda bekor qilish mumkin.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Color(0xFFA9A4CF),
+                              fontWeight: FontWeight.w500,
+                              height: 1.35,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                      ],
 
                       // Footer disclaimer
                       Row(
@@ -1273,93 +1407,98 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                 ),
               ),
 
-              // Fixed Bottom Button with expanding pulse ring
+              // Docked Bottom Button with SafeArea
               Positioned(
                 left: 20,
                 right: 20,
                 bottom: 16,
-                child: Stack(
-                  alignment: Alignment.center,
-                  clipBehavior: Clip.none,
-                  children: [
-                    if (!disableAnim && !isPro)
-                      AnimatedBuilder(
-                        animation: _pulseController,
-                        builder: (context, child) {
-                          final pulseValue = _pulseController.value;
-                          final pulseScale = 1.0 + (pulseValue * 0.08);
-                          final pulseOpacity = (1.0 - pulseValue) * 0.5;
-                          return Positioned.fill(
-                            child: Transform.scale(
-                              scale: pulseScale,
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(32),
-                                  border: Border.all(
-                                    color: const Color(0xFFFFD66B).withOpacity(pulseOpacity),
-                                    width: 2.0,
+                child: SafeArea(
+                  top: false,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    clipBehavior: Clip.none,
+                    children: [
+                      if (!disableAnim && !isPro)
+                        AnimatedBuilder(
+                          animation: _pulseController,
+                          builder: (context, child) {
+                            final pulseValue = _pulseController.value;
+                            final pulseScale = 1.0 + (pulseValue * 0.08);
+                            final pulseOpacity = (1.0 - pulseValue) * 0.5;
+                            return Positioned.fill(
+                              child: Transform.scale(
+                                scale: pulseScale,
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(32),
+                                    border: Border.all(
+                                      color: const Color(0xFFFFD66B)
+                                          .withOpacity(pulseOpacity),
+                                      width: 2.0,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 58,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFFFD66B), Color(0xFFF5A623)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(29),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFFFFD66B).withOpacity(0.45),
-                              blurRadius: 20,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
+                            );
+                          },
                         ),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(29),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 58,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFFFFD66B), Color(0xFFF5A623)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
+                            borderRadius: BorderRadius.circular(29),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    const Color(0xFFFFD66B).withOpacity(0.45),
+                                blurRadius: 20,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
                           ),
-                          onPressed: _isLoading ? null : (isPro ? () => context.pop() : _handlePurchase),
-                          child: _isLoading
-                              ? const SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    color: Color(0xFF1C1450),
-                                    strokeWidth: 2.5,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(29),
+                              ),
+                            ),
+                            onPressed: _isLoading
+                                ? null
+                                : (isPro
+                                    ? () => context.pop()
+                                    : _handlePurchase),
+                            child: _isLoading
+                                ? const SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: Color(0xFF1C1450),
+                                      strokeWidth: 2.5,
+                                    ),
+                                  )
+                                : Text(
+                                    isPro
+                                        ? 'Boshqarish'
+                                        : 'Pro ga ulanish • ${_formatNumber(_selectedPlanIndex == 1 ? ((hasActiveDiscount && pricing.yearlyPlan.isDiscounted) ? pricing.yearlyPlan.finalPrice : pricing.yearlyPlan.basePrice) : ((hasActiveDiscount && pricing.monthlyPlan.isDiscounted) ? pricing.monthlyPlan.finalPrice : pricing.monthlyPlan.basePrice))} so‘m',
+                                    style: const TextStyle(
+                                      fontSize: 16.5,
+                                      fontWeight: FontWeight.w900,
+                                      color: Color(0xFF1C1450),
+                                    ),
                                   ),
-                                )
-                              : Text(
-                                  isPro
-                                      ? 'Boshqarish'
-                                      : (_selectedPlanIndex == 1
-                                          ? 'Sotib olish — 250 000 so‘m'
-                                          : (hasActiveDiscount
-                                              ? 'Sotib olish — ${pricing.monthlyPlan.finalPrice} so‘m'
-                                              : 'Sotib olish — 29 000 so‘m')),
-                                  style: const TextStyle(
-                                    fontSize: 16.5,
-                                    fontWeight: FontWeight.w900,
-                                    color: Color(0xFF1C1450),
-                                  ),
-                                ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -1386,7 +1525,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFFFD700).withOpacity(0.5), width: 1.2),
+        border: Border.all(
+            color: const Color(0xFFFFD700).withOpacity(0.5), width: 1.2),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFFFFD700).withOpacity(0.15),
@@ -1442,10 +1582,13 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.timer_outlined, color: Color(0xFFFFD700), size: 13),
+                  const Icon(Icons.timer_outlined,
+                      color: Color(0xFFFFD700), size: 13),
                   const SizedBox(width: 6),
                   Text(
-                    'Tugashiga: $days kun $hours:$mins:$secs',
+                    days > 0
+                        ? 'Tugashiga: $days kun $hours:$mins:$secs'
+                        : 'Tugashiga: $hours:$mins:$secs',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
@@ -1462,9 +1605,11 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     );
   }
 
-  Widget _buildSparkle(double size, AnimationController controller, double offset, bool disableAnim) {
+  Widget _buildSparkle(double size, AnimationController controller,
+      double offset, bool disableAnim) {
     if (disableAnim) {
-      return Icon(Icons.auto_awesome, color: const Color(0xFFFFD66B).withOpacity(0.85), size: size);
+      return Icon(Icons.auto_awesome,
+          color: const Color(0xFFFFD66B).withOpacity(0.85), size: size);
     }
     return RepaintBoundary(
       child: AnimatedBuilder(
@@ -1517,6 +1662,74 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildAllBenefitCards({required bool isWide}) {
+    final benefits = [
+      (
+        icon: Icons.smart_toy_rounded,
+        tileColor: const Color(0x2BFFD66B),
+        iconColor: const Color(0xFFFFD66B),
+        title: 'Cheksiz AI Ustoz',
+        description:
+            'Istalgan mavzuda savol bering, qadam-baqadam tushuntirib beradi.',
+      ),
+      (
+        icon: Icons.menu_book_rounded,
+        tileColor: const Color(0x338B6BFF),
+        iconColor: const Color(0xFFB8A6FF),
+        title: 'To‘liq matematika darsliklari',
+        description:
+            'Sinflar bo‘yicha barcha mavzular, misol va nazorat testlari bir joyda.',
+      ),
+      (
+        icon: Icons.calculate_rounded,
+        tileColor: const Color(0x333B82F6),
+        iconColor: const Color(0xFF60A5FA),
+        title: 'Cheksiz mashqlar',
+        description:
+            'Kunlik cheklovlarsiz mashq qiling va o‘z tempingizda rivojlaning.',
+      ),
+      (
+        icon: Icons.verified_user_rounded,
+        tileColor: const Color(0x3310B981),
+        iconColor: const Color(0xFF34D399),
+        title: 'Reklamasiz o‘qish muhiti',
+        description:
+            'Hech qanday reklama va to‘xtatishlarsiz, toza o‘qish maydoni.',
+      ),
+      (
+        icon: Icons.monetization_on_rounded,
+        tileColor: const Color(0x33F59E0B),
+        iconColor: const Color(0xFFFBBF24),
+        title: '3 baravar ko‘p coin',
+        description:
+            'Har bir to‘g‘ri yechilgan masala uchun 3 baravar ko‘proq tangalar.',
+      ),
+      (
+        icon: Icons.workspace_premium_rounded,
+        tileColor: const Color(0x33EC4899),
+        iconColor: const Color(0xFFF472B6),
+        title: 'Qo‘shimcha premium imkoniyatlar',
+        description:
+            'Uy qurishdagi eksklyuziv buyumlar va maxsus reyting sovrinlari.',
+      ),
+    ];
+
+    return Column(
+      children: benefits.map((b) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: isWide ? 16 : 12),
+          child: _buildBenefitItem(
+            icon: b.icon,
+            tileColor: b.tileColor,
+            iconColor: b.iconColor,
+            title: b.title,
+            description: b.description,
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -1602,8 +1815,12 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     final isDesktop = screenWidth >= 1024;
     final isYearly = _selectedPlanIndex == 1;
     final planPrice = isYearly
-        ? '250 000 so‘m'
-        : (hasActiveDiscount ? '${pricing.monthlyPlan.finalPrice} so‘m' : '29 000 so‘m');
+        ? ((hasActiveDiscount && pricing.yearlyPlan.isDiscounted)
+            ? '${_formatNumber(pricing.yearlyPlan.finalPrice)} so‘m'
+            : '250 000 so‘m')
+        : ((hasActiveDiscount && pricing.monthlyPlan.isDiscounted)
+            ? '${_formatNumber(pricing.monthlyPlan.finalPrice)} so‘m'
+            : '29 000 so‘m');
 
     return Scaffold(
       body: Container(
@@ -1626,7 +1843,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
             children: [
               // Top Bar with Close button
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -1661,7 +1879,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                     ),
                     const Row(
                       children: [
-                        Icon(Icons.star_rounded, color: Color(0xFFFFD66B), size: 22),
+                        Icon(Icons.star_rounded,
+                            color: Color(0xFFFFD66B), size: 22),
                         SizedBox(width: 8),
                         Text(
                           'MathCity PRO',
@@ -1682,7 +1901,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
               // Main content
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   child: Center(
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
@@ -1790,7 +2010,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
 
               // Metrics Panel
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.06),
                   borderRadius: BorderRadius.circular(20),
@@ -1802,47 +2023,23 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                 child: Row(
                   children: [
                     Expanded(child: _buildMetricCol('AI Ustoz', '24/7 yordam')),
-                    Container(width: 1, height: 36, color: Colors.white.withOpacity(0.12)),
+                    Container(
+                        width: 1,
+                        height: 36,
+                        color: Colors.white.withOpacity(0.12)),
                     Expanded(child: _buildMetricCol('Full', 'darsliklar')),
-                    Container(width: 1, height: 36, color: Colors.white.withOpacity(0.12)),
+                    Container(
+                        width: 1,
+                        height: 36,
+                        color: Colors.white.withOpacity(0.12)),
                     Expanded(child: _buildMetricCol('0', 'reklama')),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
 
-              // Benefits
-              _buildBenefitItem(
-                icon: Icons.menu_book_rounded,
-                tileColor: const Color(0x2BFFD66B),
-                iconColor: const Color(0xFFFFD66B),
-                title: 'Cheksiz AI Ustoz',
-                description: 'Istalgan mavzuda savol bering, qadam-baqadam tushuntirib beradi.',
-              ),
-              const SizedBox(height: 16),
-              _buildBenefitItem(
-                icon: Icons.star_rounded,
-                tileColor: const Color(0x338B6BFF),
-                iconColor: const Color(0xFFB8A6FF),
-                title: 'Matematika: to‘liq darsliklar',
-                description: 'Sinflar bo‘yicha barcha mavzular, misol va nazorat testlari bir joyda.',
-              ),
-              const SizedBox(height: 16),
-              _buildBenefitItem(
-                icon: Icons.calculate_rounded,
-                tileColor: const Color(0x333B82F6),
-                iconColor: const Color(0xFF60A5FA),
-                title: 'Cheksiz mashqlar',
-                description: 'Kunlik cheklovlarsiz mashq qiling va o‘z tempingizda rivojlaning.',
-              ),
-              const SizedBox(height: 16),
-              _buildBenefitItem(
-                icon: Icons.check_circle_rounded,
-                tileColor: const Color(0x3310B981),
-                iconColor: const Color(0xFF34D399),
-                title: 'Reklamasiz muhit',
-                description: 'Hech qanday reklama va to‘xtatishlarsiz, faqat o‘qish.',
-              ),
+              // 6 Pro Benefits
+              _buildAllBenefitCards(isWide: true),
               const SizedBox(height: 24),
 
               // Guarantee Card
@@ -1855,7 +2052,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.shield_outlined, color: Color(0xFFFFD66B), size: 30),
+                    Icon(Icons.shield_outlined,
+                        color: Color(0xFFFFD66B), size: 30),
                     SizedBox(width: 14),
                     Expanded(
                       child: Column(
@@ -1901,7 +2099,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                 colors: [Color(0xFF261868), Color(0xFF160E42)],
               ),
               borderRadius: BorderRadius.circular(28),
-              border: Border.all(color: Colors.white.withOpacity(0.14), width: 1.4),
+              border:
+                  Border.all(color: Colors.white.withOpacity(0.14), width: 1.4),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.35),
@@ -1913,7 +2112,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
             child: isPro
                 ? Column(
                     children: [
-                      const Icon(Icons.verified_rounded, color: Color(0xFF10B981), size: 48),
+                      const Icon(Icons.verified_rounded,
+                          color: Color(0xFF10B981), size: 48),
                       const SizedBox(height: 12),
                       const Text(
                         'MathCity Pro faol',
@@ -1936,7 +2136,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                       const Text(
                         'Siz barcha Pro imkoniyatlaridan to‘liq foydalanmoqdasiz.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Color(0xFFA9A4CF), fontSize: 13),
+                        style:
+                            TextStyle(color: Color(0xFFA9A4CF), fontSize: 13),
                       ),
                     ],
                   )
@@ -1965,8 +2166,12 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                         price: hasActiveDiscount
                             ? '${pricing.monthlyPlan.finalPrice} so‘m'
                             : '29 000 so‘m',
-                        originalPrice: hasActiveDiscount ? '${pricing.monthlyPlan.basePrice} so‘m' : null,
-                        subtitle: hasActiveDiscount ? 'Har oy (Tejov: 8 700 so‘m)' : 'Har oyda to‘lanadi',
+                        originalPrice: hasActiveDiscount
+                            ? '${pricing.monthlyPlan.basePrice} so‘m'
+                            : null,
+                        subtitle: hasActiveDiscount
+                            ? 'Har oy (Tejov: 8 700 so‘m)'
+                            : 'Har oyda to‘lanadi',
                         badge: hasActiveDiscount ? '-30%' : null,
                       ),
                       const SizedBox(height: 14),
@@ -1975,10 +2180,50 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                       _buildWideTariffCard(
                         index: 1,
                         title: '1 yillik obuna',
-                        price: '250 000 so‘m',
-                        subtitle: '≈20 833 so‘m/oy (-28% tejash)',
-                        badge: 'Eng tejamkor',
+                        price: (hasActiveDiscount &&
+                                pricing.yearlyPlan.isDiscounted)
+                            ? '${_formatNumber(pricing.yearlyPlan.finalPrice)} so‘m'
+                            : '250 000 so‘m',
+                        originalPrice: (hasActiveDiscount &&
+                                pricing.yearlyPlan.isDiscounted)
+                            ? '${_formatNumber(pricing.yearlyPlan.basePrice)} so‘m'
+                            : null,
+                        subtitle: (hasActiveDiscount &&
+                                pricing.yearlyPlan.isDiscounted)
+                            ? '12 oylik obuna (Tejov: 75 000 so‘m)'
+                            : '≈20 833 so‘m/oy (12 oy)',
+                        badge: (hasActiveDiscount &&
+                                pricing.yearlyPlan.isDiscounted)
+                            ? 'Eng tejamkor • -30%'
+                            : 'Eng tejamkor',
                       ),
+                      const SizedBox(height: 14),
+
+                      // Transparent renewal disclosure
+                      if (hasActiveDiscount) ...[
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.04),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                                color: Colors.white.withOpacity(0.08)),
+                          ),
+                          child: const Text(
+                            'Chegirma birinchi to‘lov davri uchun amal qiladi. Keyingi davrlarda standart tarif narxida yangilanadi. Istalgan vaqtda bekor qilish mumkin.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Color(0xFFA9A4CF),
+                              fontWeight: FontWeight.w500,
+                              height: 1.35,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                      ],
                       const SizedBox(height: 24),
 
                       // CTA Button
@@ -2031,7 +2276,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.lock_outline_rounded, color: Color(0xFF9C96C8), size: 14),
+                            const Icon(Icons.lock_outline_rounded,
+                                color: Color(0xFF9C96C8), size: 14),
                             const SizedBox(width: 6),
                             const Text(
                               'Payme va Click orqali xavfsiz to‘lov',
@@ -2054,7 +2300,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                           children: [
                             const Text(
                               'Istalgan vaqtda bekor qilish mumkin · ',
-                              style: TextStyle(fontSize: 11, color: Color(0xFF9C96C8)),
+                              style: TextStyle(
+                                  fontSize: 11, color: Color(0xFF9C96C8)),
                             ),
                             GestureDetector(
                               onTap: () => context.push('/privacy-policy'),
@@ -2138,52 +2385,25 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.06),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.1), width: 1.2),
+            border:
+                Border.all(color: Colors.white.withOpacity(0.1), width: 1.2),
           ),
           child: Row(
             children: [
               Expanded(child: _buildMetricCol('AI Ustoz', '24/7 yordam')),
-              Container(width: 1, height: 32, color: Colors.white.withOpacity(0.12)),
+              Container(
+                  width: 1, height: 32, color: Colors.white.withOpacity(0.12)),
               Expanded(child: _buildMetricCol('Full', 'darsliklar')),
-              Container(width: 1, height: 32, color: Colors.white.withOpacity(0.12)),
+              Container(
+                  width: 1, height: 32, color: Colors.white.withOpacity(0.12)),
               Expanded(child: _buildMetricCol('0', 'reklama')),
             ],
           ),
         ),
         const SizedBox(height: 20),
 
-        // Benefits
-        _buildBenefitItem(
-          icon: Icons.menu_book_rounded,
-          tileColor: const Color(0x2BFFD66B),
-          iconColor: const Color(0xFFFFD66B),
-          title: 'Cheksiz AI Ustoz',
-          description: 'Istalgan mavzuda savol bering, qadam-baqadam tushuntirib beradi.',
-        ),
-        const SizedBox(height: 12),
-        _buildBenefitItem(
-          icon: Icons.star_rounded,
-          tileColor: const Color(0x338B6BFF),
-          iconColor: const Color(0xFFB8A6FF),
-          title: 'Matematika: to‘liq darsliklar',
-          description: 'Sinflar bo‘yicha barcha mavzular, misol va nazorat testlari bir joyda.',
-        ),
-        const SizedBox(height: 12),
-        _buildBenefitItem(
-          icon: Icons.calculate_rounded,
-          tileColor: const Color(0x333B82F6),
-          iconColor: const Color(0xFF60A5FA),
-          title: 'Cheksiz mashqlar',
-          description: 'Kunlik cheklovlarsiz mashq qiling va o‘z tempingizda rivojlaning.',
-        ),
-        const SizedBox(height: 12),
-        _buildBenefitItem(
-          icon: Icons.check_circle_rounded,
-          tileColor: const Color(0x3310B981),
-          iconColor: const Color(0xFF34D399),
-          title: 'Reklamasiz muhit',
-          description: 'Hech qanday reklama va to‘xtatishlarsiz, faqat o‘qish.',
-        ),
+        // 6 Pro Benefits
+        _buildAllBenefitCards(isWide: false),
         const SizedBox(height: 24),
 
         if (isPro)
@@ -2200,7 +2420,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.verified_rounded, color: Color(0xFF10B981), size: 24),
+                    Icon(Icons.verified_rounded,
+                        color: Color(0xFF10B981), size: 24),
                     SizedBox(width: 8),
                     Text(
                       'MathCity Pro faol',
@@ -2239,8 +2460,12 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                   price: hasActiveDiscount
                       ? '${pricing.monthlyPlan.finalPrice} so‘m'
                       : '29 000 so‘m',
-                  originalPrice: hasActiveDiscount ? '${pricing.monthlyPlan.basePrice} so‘m' : null,
-                  subtitle: hasActiveDiscount ? 'Har oy (Tejov: 8 700 so‘m)' : 'Har oyda to‘lanadi',
+                  originalPrice: hasActiveDiscount
+                      ? '${pricing.monthlyPlan.basePrice} so‘m'
+                      : null,
+                  subtitle: hasActiveDiscount
+                      ? 'Har oy (Tejov: 8 700 so‘m)'
+                      : 'Har oyda to‘lanadi',
                   badge: hasActiveDiscount ? '-30%' : null,
                 ),
               ),
@@ -2249,13 +2474,49 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                 child: _buildWideTariffCard(
                   index: 1,
                   title: '1 yillik',
-                  price: '250 000 so‘m',
-                  subtitle: '≈20 833 so‘m/oy (-28%)',
-                  badge: 'Eng tejamkor',
+                  price: (hasActiveDiscount && pricing.yearlyPlan.isDiscounted)
+                      ? '${_formatNumber(pricing.yearlyPlan.finalPrice)} so‘m'
+                      : '250 000 so‘m',
+                  originalPrice: (hasActiveDiscount &&
+                          pricing.yearlyPlan.isDiscounted)
+                      ? '${_formatNumber(pricing.yearlyPlan.basePrice)} so‘m'
+                      : null,
+                  subtitle:
+                      (hasActiveDiscount && pricing.yearlyPlan.isDiscounted)
+                          ? '12 oylik obuna (Tejov: 75 000 so‘m)'
+                          : '≈20 833 so‘m/oy (12 oy)',
+                  badge: (hasActiveDiscount && pricing.yearlyPlan.isDiscounted)
+                      ? 'Eng tejamkor • -30%'
+                      : 'Eng tejamkor',
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 14),
+
+          // Transparent renewal disclosure
+          if (hasActiveDiscount) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.04),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white.withOpacity(0.08)),
+              ),
+              child: const Text(
+                'Chegirma birinchi to‘lov davri uchun amal qiladi. Keyingi davrlarda standart tarif narxida yangilanadi. Istalgan vaqtda bekor qilish mumkin.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFFA9A4CF),
+                  fontWeight: FontWeight.w500,
+                  height: 1.35,
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+          ],
           const SizedBox(height: 24),
 
           // Action button
@@ -2354,7 +2615,9 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
             color: isSelected ? null : Colors.white.withOpacity(0.04),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: isSelected ? const Color(0xFFFFD66B) : Colors.white.withOpacity(0.2),
+              color: isSelected
+                  ? const Color(0xFFFFD66B)
+                  : Colors.white.withOpacity(0.2),
               width: isSelected ? 2.0 : 1.2,
             ),
             boxShadow: isSelected
@@ -2377,13 +2640,16 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isSelected ? const Color(0xFFFFD66B) : Colors.white38,
+                    color:
+                        isSelected ? const Color(0xFFFFD66B) : Colors.white38,
                     width: 2,
                   ),
-                  color: isSelected ? const Color(0xFFFFD66B) : Colors.transparent,
+                  color:
+                      isSelected ? const Color(0xFFFFD66B) : Colors.transparent,
                 ),
                 child: isSelected
-                    ? const Icon(Icons.check, size: 14, color: Color(0xFF1C1450))
+                    ? const Icon(Icons.check,
+                        size: 14, color: Color(0xFF1C1450))
                     : null,
               ),
               const SizedBox(width: 14),
@@ -2409,7 +2675,8 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                           if (badge != null) ...[
                             const SizedBox(width: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFFFD66B),
                                 borderRadius: BorderRadius.circular(6),
@@ -2450,7 +2717,9 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                           Text(
                             price,
                             style: TextStyle(
-                              color: isSelected ? const Color(0xFFFFD66B) : Colors.white,
+                              color: isSelected
+                                  ? const Color(0xFFFFD66B)
+                                  : Colors.white,
                               fontSize: 17,
                               fontWeight: FontWeight.w900,
                             ),

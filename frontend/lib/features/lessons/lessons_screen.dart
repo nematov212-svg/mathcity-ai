@@ -35,7 +35,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     {
       'id': 'lesson-k1-01',
       'title': '1 dan 10 gacha sonlar va sanash',
-      'description': 'Narsalarni sanash, sonlar ketma-ketligi va taqqoslash asoslari.',
+      'description':
+          'Narsalarni sanash, sonlar ketma-ketligi va taqqoslash asoslari.',
       'grade': 1,
       'chapterTitle': 'Boshlang‘ich hisob',
       'rewardXP': 80,
@@ -63,7 +64,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     {
       'id': 'lesson-k3-01',
       'title': 'Ko‘paytirish jadvali: Karra jadvali sirlari',
-      'description': '1 dan 10 gacha bo‘lgan karra jadvalining oson va tez hisoblash usullari.',
+      'description':
+          '1 dan 10 gacha bo‘lgan karra jadvalining oson va tez hisoblash usullari.',
       'grade': 3,
       'chapterTitle': 'Ko‘paytirish va Bo‘lish',
       'rewardXP': 120,
@@ -77,7 +79,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     {
       'id': 'lesson-k4-01',
       'title': 'Oddiy kasrlar: Butunning bo‘laklari',
-      'description': 'Surat, maxraj va teng bo‘laklar tushunchasi hamda taqqoslash.',
+      'description':
+          'Surat, maxraj va teng bo‘laklar tushunchasi hamda taqqoslash.',
       'grade': 4,
       'chapterTitle': 'Kasrlar va Bo‘laklar',
       'rewardXP': 100,
@@ -91,7 +94,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     {
       'id': 'lesson-k4-02',
       'title': 'Perimetr va Yuza hisoblash asoslari',
-      'description': 'To‘g‘ri to‘rtburchak va kvadrat perimetri hamda yuzasi formulalari.',
+      'description':
+          'To‘g‘ri to‘rtburchak va kvadrat perimetri hamda yuzasi formulalari.',
       'grade': 4,
       'chapterTitle': 'Geometriya asoslari',
       'rewardXP': 110,
@@ -105,7 +109,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     {
       'id': 'lesson-g5-01',
       'title': 'O‘nli kasrlar va ular ustida amallar',
-      'description': 'Vergul bilan yozish, o‘nli kasrlarni qo‘shish, ayirish va ko‘paytirish.',
+      'description':
+          'Vergul bilan yozish, o‘nli kasrlarni qo‘shish, ayirish va ko‘paytirish.',
       'grade': 5,
       'chapterTitle': 'Kasrlar',
       'rewardXP': 115,
@@ -119,7 +124,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     {
       'id': 'lesson-g6-01',
       'title': 'Foizlar: Sonning foizini topish',
-      'description': 'Yuzdan bir qism ma’nosi, hayotiy foiz masalalari va formulalar.',
+      'description':
+          'Yuzdan bir qism ma’nosi, hayotiy foiz masalalari va formulalar.',
       'grade': 6,
       'chapterTitle': 'Foizlar va Nisbatlar',
       'rewardXP': 120,
@@ -133,7 +139,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     {
       'id': 'lesson-g7-01',
       'title': 'Chiziqli bir noma’lumli tenglamalar',
-      'description': 'ax + b = c ko‘rinishidagi tenglamalarni yechish va ildizni topish.',
+      'description':
+          'ax + b = c ko‘rinishidagi tenglamalarni yechish va ildizni topish.',
       'grade': 7,
       'chapterTitle': 'Algebra va Tenglamalar',
       'rewardXP': 130,
@@ -147,7 +154,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     {
       'id': 'lesson-g8-01',
       'title': 'Kvadrat tenglamalar va Viyet teoremasi',
-      'description': 'Diskriminant formulasi yordamida ildizlarni topish va tekshirish.',
+      'description':
+          'Diskriminant formulasi yordamida ildizlarni topish va tekshirish.',
       'grade': 8,
       'chapterTitle': 'Kvadrat tenglamalar',
       'rewardXP': 140,
@@ -161,7 +169,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     {
       'id': 'lesson-g9-01',
       'title': 'Funksiyalar va ularning grafiklari',
-      'description': 'Chiziqli va kvadratik funksiyalar, aniqlanish va qiymatlar sohasi.',
+      'description':
+          'Chiziqli va kvadratik funksiyalar, aniqlanish va qiymatlar sohasi.',
       'grade': 9,
       'chapterTitle': 'Funksiyalar',
       'rewardXP': 145,
@@ -175,7 +184,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     {
       'id': 'lesson-g10-01',
       'title': 'Trigonometriya asoslari va formulalari',
-      'description': 'Sinus, kosinus, tangens va asosiy trigonometrik ayniyatlar.',
+      'description':
+          'Sinus, kosinus, tangens va asosiy trigonometrik ayniyatlar.',
       'grade': 10,
       'chapterTitle': 'Trigonometriya',
       'rewardXP': 150,
@@ -189,7 +199,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     {
       'id': 'lesson-g11-01',
       'title': 'Hosila va uning geometrik ma’nosi',
-      'description': 'Funksiyaning o‘sish va kamayish oraliqlari, urinma tenglamasi.',
+      'description':
+          'Funksiyaning o‘sish va kamayish oraliqlari, urinma tenglamasi.',
       'grade': 11,
       'chapterTitle': 'Matematik analiz',
       'rewardXP': 160,
@@ -227,7 +238,9 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
       setState(() => _isLoading = true);
     }
     try {
-      final res = await ApiClient().dio.get('/lessons', queryParameters: {'limit': 300});
+      final res = await ApiClient()
+          .dio
+          .get('/lessons', queryParameters: {'limit': 300});
       if (res.data != null && res.data['success'] == true) {
         final list = List<Map<String, dynamic>>.from(res.data['data'] ?? []);
         if (mounted) {
@@ -255,14 +268,21 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
 
     final catLower = category.toLowerCase();
     if (catLower.contains('kasr')) return const Color(0xFF8B5CF6);
-    if (catLower.contains('arifmet') || catLower.contains('karra') || catLower.contains('hisob')) {
+    if (catLower.contains('arifmet') ||
+        catLower.contains('karra') ||
+        catLower.contains('hisob')) {
       return const Color(0xFF10B981);
     }
-    if (catLower.contains('geom') || catLower.contains('shakl')) return const Color(0xFFF59E0B);
-    if (catLower.contains('tenglam') || catLower.contains('algeb')) return const Color(0xFFEF4444);
-    if (catLower.contains('foiz') || catLower.contains('nisbat')) return const Color(0xFF06B6D4);
+    if (catLower.contains('geom') || catLower.contains('shakl'))
+      return const Color(0xFFF59E0B);
+    if (catLower.contains('tenglam') || catLower.contains('algeb'))
+      return const Color(0xFFEF4444);
+    if (catLower.contains('foiz') || catLower.contains('nisbat'))
+      return const Color(0xFF06B6D4);
     if (catLower.contains('trigono')) return const Color(0xFFA855F7);
-    if (catLower.contains('analiz') || catLower.contains('hosila') || catLower.contains('integral')) {
+    if (catLower.contains('analiz') ||
+        catLower.contains('hosila') ||
+        catLower.contains('integral')) {
       return const Color(0xFF6366F1);
     }
     return const Color(0xFF8B5CF6);
@@ -275,18 +295,30 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     }
     final title = (lesson['title'] ?? '').toString().toLowerCase();
     if (title.contains('kasr')) return 'Kasrlar va Bo‘laklar';
-    if (title.contains('karra') || title.contains('jadval') || title.contains('qo‘shish') || title.contains('ayirish')) {
+    if (title.contains('karra') ||
+        title.contains('jadval') ||
+        title.contains('qo‘shish') ||
+        title.contains('ayirish')) {
       return 'Arifmetika va Hisoblash';
     }
-    if (title.contains('shakl') || title.contains('perimetr') || title.contains('yuza') || title.contains('geometriya')) {
+    if (title.contains('shakl') ||
+        title.contains('perimetr') ||
+        title.contains('yuza') ||
+        title.contains('geometriya')) {
       return 'Geometriya asoslari';
     }
-    if (title.contains('tenglama') || title.contains('viyet') || title.contains('ildiz')) {
+    if (title.contains('tenglama') ||
+        title.contains('viyet') ||
+        title.contains('ildiz')) {
       return 'Tenglamalar va Algebra';
     }
-    if (title.contains('foiz') || title.contains('proporsiya')) return 'Foizlar va Nisbatlar';
-    if (title.contains('trigonometriya') || title.contains('sinus')) return 'Trigonometriya';
-    if (title.contains('hosila') || title.contains('integral') || title.contains('funksiya')) {
+    if (title.contains('foiz') || title.contains('proporsiya'))
+      return 'Foizlar va Nisbatlar';
+    if (title.contains('trigonometriya') || title.contains('sinus'))
+      return 'Trigonometriya';
+    if (title.contains('hosila') ||
+        title.contains('integral') ||
+        title.contains('funksiya')) {
       return 'Funksiyalar va Analiz';
     }
     return chapter.isNotEmpty ? chapter : 'Umumiy matematika';
@@ -328,7 +360,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
               child: RefreshIndicator(
                 onRefresh: _fetchLessons,
                 color: const Color(0xFFA855F7),
-                child: _buildTopicsList(colors, isDark, student?.completedLessons ?? []),
+                child: _buildTopicsList(
+                    colors, isDark, student?.completedLessons ?? []),
               ),
             ),
           ],
@@ -345,7 +378,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     );
   }
 
-  Widget _buildGlassHeader(int coins, int xp, AppThemeColors colors, bool isDark) {
+  Widget _buildGlassHeader(
+      int coins, int xp, AppThemeColors colors, bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
       decoration: BoxDecoration(
@@ -417,7 +451,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                   child: RefreshIndicator(
                     onRefresh: _fetchLessons,
                     color: const Color(0xFFA855F7),
-                    child: _buildTopicsList(colors, isDark, student?.completedLessons ?? []),
+                    child: _buildTopicsList(
+                        colors, isDark, student?.completedLessons ?? []),
                   ),
                 ),
               ],
@@ -431,7 +466,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     );
   }
 
-  Widget _buildTopicsList(AppThemeColors colors, bool isDark, List<String> userCompletedLessons) {
+  Widget _buildTopicsList(
+      AppThemeColors colors, bool isDark, List<String> userCompletedLessons) {
     // 1. Merge default and API lessons uniquely
     final allLessons = <Map<String, dynamic>>[];
     allLessons.addAll(_defaultTopics);
@@ -439,11 +475,13 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     for (final apiL in _apiLessons) {
       final id = apiL['id']?.toString() ?? '';
       final idx = allLessons.indexWhere((l) => l['id'] == id);
-      final isDone = userCompletedLessons.contains(id) || apiL['isCompleted'] == true;
+      final isDone =
+          userCompletedLessons.contains(id) || apiL['isCompleted'] == true;
       final item = {
         'id': id,
         'title': apiL['title'] ?? 'Yangi dars',
-        'description': apiL['description'] ?? 'Matematika fani bo‘yicha to‘liq va tushunarli darslik.',
+        'description': apiL['description'] ??
+            'Matematika fani bo‘yicha to‘liq va tushunarli darslik.',
         'grade': apiL['grade'] ?? 4,
         'chapterTitle': apiL['chapterTitle'] ?? 'Matematika',
         'rewardXP': apiL['rewardXP'] ?? 100,
@@ -485,7 +523,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     }
 
     return CustomScrollView(
-      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+      physics:
+          const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       slivers: [
         // Top search bar and grade filter chips
         SliverToBoxAdapter(
@@ -530,16 +569,19 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                       fontWeight: FontWeight.w600,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Dars yoki mavzuni qidirish (masalan: kasr, tenglama)...',
+                      hintText:
+                          'Dars yoki mavzuni qidirish (masalan: kasr, tenglama)...',
                       hintStyle: TextStyle(
                         color: colors.muted,
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
-                      prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFFA855F7), size: 22),
+                      prefixIcon: const Icon(Icons.search_rounded,
+                          color: Color(0xFFA855F7), size: 22),
                       suffixIcon: _searchQuery.isNotEmpty
                           ? IconButton(
-                              icon: Icon(Icons.clear_rounded, color: colors.muted, size: 18),
+                              icon: Icon(Icons.clear_rounded,
+                                  color: colors.muted, size: 18),
                               onPressed: () {
                                 _searchController.clear();
                                 setState(() => _searchQuery = '');
@@ -547,7 +589,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             )
                           : null,
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 13),
                     ),
                   ),
                 ),
@@ -573,31 +616,38 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                         },
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 220),
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 8),
                           decoration: BoxDecoration(
                             gradient: isSelected
                                 ? const LinearGradient(
-                                    colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+                                    colors: [
+                                      Color(0xFF8B5CF6),
+                                      Color(0xFF6D28D9)
+                                    ],
                                   )
                                 : null,
                             color: isSelected
                                 ? null
                                 : (isDark
-                                    ? const Color(0xFF160E36).withValues(alpha: 0.8)
+                                    ? const Color(0xFF160E36)
+                                        .withValues(alpha: 0.8)
                                     : colors.card),
                             borderRadius: BorderRadius.circular(999),
                             border: Border.all(
                               color: isSelected
                                   ? const Color(0xFFA855F7)
                                   : (isDark
-                                      ? const Color(0xFF8B5CF6).withValues(alpha: 0.25)
+                                      ? const Color(0xFF8B5CF6)
+                                          .withValues(alpha: 0.25)
                                       : colors.border),
                               width: 1.2,
                             ),
                             boxShadow: isSelected
                                 ? [
                                     BoxShadow(
-                                      color: const Color(0xFF8B5CF6).withValues(alpha: 0.4),
+                                      color: const Color(0xFF8B5CF6)
+                                          .withValues(alpha: 0.4),
                                       blurRadius: 8,
                                       offset: const Offset(0, 2),
                                     ),
@@ -609,7 +659,9 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             isAll ? 'Barchasi' : '$grade-sinf',
                             style: TextStyle(
                               fontSize: 12,
-                              fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
+                              fontWeight: isSelected
+                                  ? FontWeight.w900
+                                  : FontWeight.w700,
                               color: isSelected
                                   ? Colors.white
                                   : (isDark ? Colors.white70 : colors.muted),
@@ -652,7 +704,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                         color: const Color(0xFF8B5CF6).withValues(alpha: 0.15),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.search_off_rounded, color: Color(0xFFA855F7), size: 36),
+                      child: const Icon(Icons.search_off_rounded,
+                          color: Color(0xFFA855F7), size: 36),
                     ),
                     const SizedBox(height: 18),
                     Text(
@@ -679,7 +732,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
           ...grouped.entries.map((entry) {
             final categoryName = entry.key;
             final lessons = entry.value;
-            final catColor = _resolveCategoryColor(categoryName, lessons.first['accentColor']);
+            final catColor = _resolveCategoryColor(
+                categoryName, lessons.first['accentColor']);
 
             return SliverMainAxisGroup(
               slivers: [
@@ -719,11 +773,13 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                             color: catColor.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: catColor.withValues(alpha: 0.3)),
+                            border: Border.all(
+                                color: catColor.withValues(alpha: 0.3)),
                           ),
                           child: Text(
                             '${lessons.length} ta mavzu',
@@ -744,15 +800,20 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   sliver: MediaQuery.of(context).size.width >= 600
                       ? SliverGrid(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: MediaQuery.of(context).size.width >= 1280 ? 3 : 2,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount:
+                                MediaQuery.of(context).size.width >= 1280
+                                    ? 3
+                                    : 2,
                             mainAxisSpacing: 14,
                             crossAxisSpacing: 14,
                             mainAxisExtent: 280,
                           ),
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
-                              return _buildFullWidthLessonCard(lessons[index], colors, isDark, catColor);
+                              return _buildFullWidthLessonCard(
+                                  lessons[index], colors, isDark, catColor);
                             },
                             childCount: lessons.length,
                           ),
@@ -762,7 +823,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 12),
-                                child: _buildFullWidthLessonCard(lessons[index], colors, isDark, catColor),
+                                child: _buildFullWidthLessonCard(
+                                    lessons[index], colors, isDark, catColor),
                               );
                             },
                             childCount: lessons.length,
@@ -834,7 +896,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
               ? () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Bu dars hozircha qulflangan. Oldingi darslarni bajaring!'),
+                      content: Text(
+                          'Bu dars hozircha qulflangan. Oldingi darslarni bajaring!'),
                       duration: Duration(seconds: 2),
                     ),
                   );
@@ -880,7 +943,6 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-
                     Expanded(
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
@@ -889,7 +951,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
                                 color: catColor.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(8),
@@ -905,11 +968,17 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             ),
                             const SizedBox(width: 6),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
-                                color: isDark ? Colors.white.withValues(alpha: 0.08) : colors.field,
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.08)
+                                    : colors.field,
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: isDark ? Colors.transparent : colors.border),
+                                border: Border.all(
+                                    color: isDark
+                                        ? Colors.transparent
+                                        : colors.border),
                               ),
                               child: Text(
                                 difficulty,
@@ -922,21 +991,33 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             ),
                             const SizedBox(width: 6),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
-                                color: isDark ? Colors.white.withValues(alpha: 0.08) : colors.field,
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.08)
+                                    : colors.field,
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: isDark ? Colors.transparent : colors.border),
+                                border: Border.all(
+                                    color: isDark
+                                        ? Colors.transparent
+                                        : colors.border),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.access_time_rounded, size: 12, color: isDark ? Colors.white54 : colors.muted),
+                                  Icon(Icons.access_time_rounded,
+                                      size: 12,
+                                      color: isDark
+                                          ? Colors.white54
+                                          : colors.muted),
                                   const SizedBox(width: 4),
                                   Text(
                                     estTime,
                                     style: TextStyle(
-                                      color: isDark ? Colors.white54 : colors.muted,
+                                      color: isDark
+                                          ? Colors.white54
+                                          : colors.muted,
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -948,19 +1029,22 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                         ),
                       ),
                     ),
-
                     if (isCompleted)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: const Color(0xFF065F46).withValues(alpha: 0.6),
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.4)),
+                          border: Border.all(
+                              color: const Color(0xFF10B981)
+                                  .withValues(alpha: 0.4)),
                         ),
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.check_circle_rounded, color: Color(0xFF34D399), size: 15),
+                            Icon(Icons.check_circle_rounded,
+                                color: Color(0xFF34D399), size: 15),
                             SizedBox(width: 4),
                             Text(
                               'Tugatildi',
@@ -980,7 +1064,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                           color: Colors.white.withValues(alpha: 0.08),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.lock_rounded, color: Colors.white38, size: 16),
+                        child: const Icon(Icons.lock_rounded,
+                            color: Colors.white38, size: 16),
                       ),
                   ],
                 ),
@@ -1022,7 +1107,8 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                     children: [
                       // XP Reward Pill (With real XpCoin)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: isDark
                               ? const Color(0xFF7C3AED).withValues(alpha: 0.2)
@@ -1043,7 +1129,9 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             Text(
                               '+$xp XP',
                               style: TextStyle(
-                                color: isDark ? const Color(0xFFE9D5FF) : colors.primary,
+                                color: isDark
+                                    ? const Color(0xFFE9D5FF)
+                                    : colors.primary,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w900,
                               ),
@@ -1055,12 +1143,15 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
 
                       // Coin Reward Pill
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.amber.withValues(alpha: isDark ? 0.15 : 0.2),
+                          color: Colors.amber
+                              .withValues(alpha: isDark ? 0.15 : 0.2),
                           borderRadius: BorderRadius.circular(999),
                           border: Border.all(
-                            color: Colors.amber.withValues(alpha: isDark ? 0.3 : 0.5),
+                            color: Colors.amber
+                                .withValues(alpha: isDark ? 0.3 : 0.5),
                             width: 1,
                           ),
                         ),
@@ -1072,7 +1163,9 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             Text(
                               '+$coins',
                               style: TextStyle(
-                                color: isDark ? Colors.amber : const Color(0xFFD97706),
+                                color: isDark
+                                    ? Colors.amber
+                                    : const Color(0xFFD97706),
                                 fontSize: 11,
                                 fontWeight: FontWeight.w900,
                               ),
@@ -1100,8 +1193,10 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                             borderRadius: BorderRadius.circular(999),
                             child: LinearProgressIndicator(
                               value: progress,
-                              backgroundColor: isDark ? Colors.white12 : colors.border,
-                              valueColor: AlwaysStoppedAnimation<Color>(catColor),
+                              backgroundColor:
+                                  isDark ? Colors.white12 : colors.border,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(catColor),
                               minHeight: 6,
                             ),
                           ),
@@ -1146,7 +1241,9 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                                 ? 'Qayta ko‘rish'
                                 : isLocked
                                     ? 'Qulflangan'
-                                    : (progress > 0 ? 'Davom etish' : 'Boshlash'),
+                                    : (progress > 0
+                                        ? 'Davom etish'
+                                        : 'Boshlash'),
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w800,

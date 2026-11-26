@@ -83,14 +83,16 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
       if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) return;
 
       final res = await ApiClient().dio.get(
-        '/games/house-building',
-        options: Options(
-          validateStatus: (status) => true,
-          sendTimeout: const Duration(seconds: 5),
-          receiveTimeout: const Duration(seconds: 5),
-        ),
-      );
-      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
+            '/games/house-building',
+            options: Options(
+              validateStatus: (status) => true,
+              sendTimeout: const Duration(seconds: 5),
+              receiveTimeout: const Duration(seconds: 5),
+            ),
+          );
+      if (res.statusCode == 200 &&
+          res.data != null &&
+          res.data['success'] == true) {
         final s = (res.data['data']['currentStage'] as num?)?.toInt() ?? 0;
         if (mounted) {
           setState(() => _houseStage = s);
@@ -106,7 +108,8 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
   Future<void> _loadDailyTasks() async {
     if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) return;
     try {
-      final data = await ref.read(studentProvider.notifier).fetchDailyMissions();
+      final data =
+          await ref.read(studentProvider.notifier).fetchDailyMissions();
       if (data != null && mounted) {
         final missions = data['missions'] as List<dynamic>? ?? [];
         final completed = data['completedCount'] as int? ?? 0;
@@ -117,8 +120,12 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
             orElse: () => missions.first,
           );
           final title = firstPending['title'] ?? 'Matematika vazifasi';
-          final curr = firstPending['currentProgress'] ?? firstPending['currentCount'] ?? 0;
-          final target = firstPending['targetProgress'] ?? firstPending['targetCount'] ?? 5;
+          final curr = firstPending['currentProgress'] ??
+              firstPending['currentCount'] ??
+              0;
+          final target = firstPending['targetProgress'] ??
+              firstPending['targetCount'] ??
+              5;
           taskDesc = '$title ($curr/$target)';
         }
         setState(() {
@@ -133,6 +140,7 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    PopupManager.stopLivePolling();
     AnnouncementManager.stopLivePolling();
     _mathAnimController.dispose();
     super.dispose();
@@ -180,22 +188,26 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                             fit: BoxFit.scaleDown,
                             alignment: Alignment.centerLeft,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 7),
                               decoration: BoxDecoration(
                                 color: isDark
-                                    ? const Color(0xFF160E36).withValues(alpha: 0.85)
+                                    ? const Color(0xFF160E36)
+                                        .withValues(alpha: 0.85)
                                     : colors.card,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
                                   color: isDark
-                                      ? const Color(0xFF8B5CF6).withValues(alpha: 0.35)
+                                      ? const Color(0xFF8B5CF6)
+                                          .withValues(alpha: 0.35)
                                       : colors.border,
                                   width: 1.2,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
                                     color: isDark
-                                        ? const Color(0xFF7C3AED).withValues(alpha: 0.15)
+                                        ? const Color(0xFF7C3AED)
+                                            .withValues(alpha: 0.15)
                                         : Colors.black.withValues(alpha: 0.04),
                                     blurRadius: 8,
                                     offset: const Offset(0, 2),
@@ -206,9 +218,14 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    student?.username != null && student!.username!.trim().isNotEmpty
-                                        ? (student.username!.startsWith('@') ? student.username! : '@${student.username}')
-                                        : (name.startsWith('@') ? name : '@$name'),
+                                    student?.username != null &&
+                                            student!.username!.trim().isNotEmpty
+                                        ? (student.username!.startsWith('@')
+                                            ? student.username!
+                                            : '@${student.username}')
+                                        : (name.startsWith('@')
+                                            ? name
+                                            : '@$name'),
                                     style: TextStyle(
                                       fontFamily: 'Nunito',
                                       fontSize: 13,
@@ -219,10 +236,14 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                   if (student?.isPro == true) ...[
                                     const SizedBox(width: 6),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 6, vertical: 2),
                                       decoration: BoxDecoration(
                                         gradient: const LinearGradient(
-                                          colors: [Color(0xFFFFB800), Color(0xFFFF8A00)],
+                                          colors: [
+                                            Color(0xFFFFB800),
+                                            Color(0xFFFF8A00)
+                                          ],
                                         ),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
@@ -284,16 +305,22 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                               bottom: -4,
                               right: -4,
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
-                                    colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+                                    colors: [
+                                      Color(0xFF8B5CF6),
+                                      Color(0xFF6D28D9)
+                                    ],
                                   ),
                                   borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.white, width: 1.5),
+                                  border: Border.all(
+                                      color: Colors.white, width: 1.5),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFF8B5CF6).withValues(alpha: 0.4),
+                                      color: const Color(0xFF8B5CF6)
+                                          .withValues(alpha: 0.4),
                                       blurRadius: 6,
                                       offset: const Offset(0, 2),
                                     ),
@@ -364,21 +391,26 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                               child: AnimatedBuilder(
                                 animation: _mathAnimController,
                                 builder: (context, _) {
-                                  final progress = disableAnim ? 0.0 : _mathAnimController.value;
+                                  final progress = disableAnim
+                                      ? 0.0
+                                      : _mathAnimController.value;
                                   return CustomPaint(
-                                    painter: _FloatingMathSymbolsPainter(progress: progress),
+                                    painter: _FloatingMathSymbolsPainter(
+                                        progress: progress),
                                   );
                                 },
                               ),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 22),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Align(
@@ -386,15 +418,20 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                         child: FittedBox(
                                           fit: BoxFit.scaleDown,
                                           child: Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 5),
                                             decoration: BoxDecoration(
-                                              color: Colors.white.withValues(alpha: 0.22),
-                                              borderRadius: BorderRadius.circular(999),
+                                              color: Colors.white
+                                                  .withValues(alpha: 0.22),
+                                              borderRadius:
+                                                  BorderRadius.circular(999),
                                             ),
                                             child: const Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                Icon(Icons.auto_awesome, color: Color(0xFFFFD66B), size: 14),
+                                                Icon(Icons.auto_awesome,
+                                                    color: Color(0xFFFFD66B),
+                                                    size: 14),
                                                 SizedBox(width: 5),
                                                 Text(
                                                   'MISOLLAR ISHLASH',
@@ -417,7 +454,8 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          const XpCoin(size: 16, showGlow: false),
+                                          const XpCoin(
+                                              size: 16, showGlow: false),
                                           const SizedBox(width: 4),
                                           const Text(
                                             '+XP',
@@ -471,9 +509,11 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                       backgroundColor: Colors.white,
                                       foregroundColor: const Color(0xFF5B3BE8),
                                       elevation: 0,
-                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 11),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(999),
+                                        borderRadius:
+                                            BorderRadius.circular(999),
                                       ),
                                     ),
                                     onPressed: () {
@@ -520,22 +560,26 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                           onTap: () => context.push('/kids/leaderboard'),
                           borderRadius: BorderRadius.circular(24),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 16),
                             decoration: BoxDecoration(
                               color: isDark
-                                  ? const Color(0xFF160E36).withValues(alpha: 0.85)
+                                  ? const Color(0xFF160E36)
+                                      .withValues(alpha: 0.85)
                                   : colors.card,
                               borderRadius: BorderRadius.circular(24),
                               border: Border.all(
                                 color: isDark
-                                    ? const Color(0xFFFFD66B).withValues(alpha: 0.4)
+                                    ? const Color(0xFFFFD66B)
+                                        .withValues(alpha: 0.4)
                                     : colors.border,
                                 width: 1.3,
                               ),
                               boxShadow: [
                                 BoxShadow(
                                   color: isDark
-                                      ? const Color(0xFFF59E0B).withValues(alpha: 0.08)
+                                      ? const Color(0xFFF59E0B)
+                                          .withValues(alpha: 0.08)
                                       : Colors.black.withValues(alpha: 0.04),
                                   blurRadius: 14,
                                   offset: const Offset(0, 4),
@@ -550,14 +594,18 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                   height: 42,
                                   decoration: BoxDecoration(
                                     gradient: const LinearGradient(
-                                      colors: [Color(0xFFFFE082), Color(0xFFFFB300)],
+                                      colors: [
+                                        Color(0xFFFFE082),
+                                        Color(0xFFFFB300)
+                                      ],
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                     ),
                                     borderRadius: BorderRadius.circular(14),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: const Color(0xFFFFB300).withValues(alpha: 0.3),
+                                        color: const Color(0xFFFFB300)
+                                            .withValues(alpha: 0.3),
                                         blurRadius: 8,
                                         offset: const Offset(0, 2),
                                       ),
@@ -604,22 +652,26 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                           onTap: () => context.push('/kids/house-building'),
                           borderRadius: BorderRadius.circular(24),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 16),
                             decoration: BoxDecoration(
                               color: isDark
-                                  ? const Color(0xFF160E36).withValues(alpha: 0.85)
+                                  ? const Color(0xFF160E36)
+                                      .withValues(alpha: 0.85)
                                   : colors.card,
                               borderRadius: BorderRadius.circular(24),
                               border: Border.all(
                                 color: isDark
-                                    ? const Color(0xFFA855F7).withValues(alpha: 0.4)
+                                    ? const Color(0xFFA855F7)
+                                        .withValues(alpha: 0.4)
                                     : colors.border,
                                 width: 1.3,
                               ),
                               boxShadow: [
                                 BoxShadow(
                                   color: isDark
-                                      ? const Color(0xFF7C3AED).withValues(alpha: 0.12)
+                                      ? const Color(0xFF7C3AED)
+                                          .withValues(alpha: 0.12)
                                       : Colors.black.withValues(alpha: 0.04),
                                   blurRadius: 14,
                                   offset: const Offset(0, 4),
@@ -634,14 +686,18 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                   height: 42,
                                   decoration: BoxDecoration(
                                     gradient: const LinearGradient(
-                                      colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+                                      colors: [
+                                        Color(0xFF8B5CF6),
+                                        Color(0xFF6D28D9)
+                                      ],
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                     ),
                                     borderRadius: BorderRadius.circular(14),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: const Color(0xFF8B5CF6).withValues(alpha: 0.35),
+                                        color: const Color(0xFF8B5CF6)
+                                            .withValues(alpha: 0.35),
                                         blurRadius: 8,
                                         offset: const Offset(0, 2),
                                       ),
@@ -666,11 +722,15 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  _houseStage >= 6 ? 'Uy to‘liq tayyor! 🏆' : '$_houseStage/6 bosqich',
+                                  _houseStage >= 6
+                                      ? 'Uy to‘liq tayyor! 🏆'
+                                      : '$_houseStage/6 bosqich',
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w800,
-                                    color: isDark ? const Color(0xFFC084FC) : colors.primary,
+                                    color: isDark
+                                        ? const Color(0xFFC084FC)
+                                        : colors.primary,
                                   ),
                                 ),
                               ],
@@ -689,7 +749,8 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                     onTap: () => context.push('/kids/ai-tutor'),
                     borderRadius: BorderRadius.circular(24),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 14),
                       decoration: BoxDecoration(
                         color: isDark
                             ? const Color(0xFF160E36).withValues(alpha: 0.85)
@@ -720,7 +781,8 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                               borderRadius: BorderRadius.circular(14),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFF7C3AED).withValues(alpha: 0.35),
+                                  color: const Color(0xFF7C3AED)
+                                      .withValues(alpha: 0.35),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -733,7 +795,8 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                                 fit: BoxFit.cover,
                                 errorBuilder: (_, __, ___) => Container(
                                   color: const Color(0xFF7C3AED),
-                                  child: const Icon(Icons.school_rounded, color: Colors.white, size: 24),
+                                  child: const Icon(Icons.school_rounded,
+                                      color: Colors.white, size: 24),
                                 ),
                               ),
                             ),
@@ -796,7 +859,8 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                     onTap: () => context.push('/kids/daily-tasks'),
                     borderRadius: BorderRadius.circular(24),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 16),
                       decoration: BoxDecoration(
                         color: isDark
                             ? const Color(0xFF160E36).withValues(alpha: 0.85)
@@ -811,7 +875,8 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                         boxShadow: [
                           BoxShadow(
                             color: isDark
-                                ? const Color(0xFF7C3AED).withValues(alpha: 0.08)
+                                ? const Color(0xFF7C3AED)
+                                    .withValues(alpha: 0.08)
                                 : Colors.black.withValues(alpha: 0.04),
                             blurRadius: 14,
                             offset: const Offset(0, 4),
@@ -850,9 +915,11 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                               ),
                               const SizedBox(width: 8),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF065F46).withValues(alpha: 0.6),
+                                  color: const Color(0xFF065F46)
+                                      .withValues(alpha: 0.6),
                                   borderRadius: BorderRadius.circular(999),
                                 ),
                                 child: Text(
@@ -952,7 +1019,8 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                         fontFamily: 'Nunito',
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? const Color(0xFFC084FC) : colors.primary,
+                        color:
+                            isDark ? const Color(0xFFC084FC) : colors.primary,
                       ),
                     ),
                   ],
@@ -964,7 +1032,8 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                     value: progress,
                     minHeight: 6,
                     backgroundColor: Colors.white12,
-                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFA855F7)),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Color(0xFFA855F7)),
                   ),
                 ),
               ],
@@ -982,7 +1051,8 @@ class _FloatingMathSymbolsPainter extends CustomPainter {
 
   const _FloatingMathSymbolsPainter({required this.progress});
 
-  static const List<({String symbol, double x, double y, double size})> _symbols = [
+  static const List<({String symbol, double x, double y, double size})>
+      _symbols = [
     (symbol: '+', x: 0.12, y: 0.22, size: 24),
     (symbol: '−', x: 0.82, y: 0.18, size: 22),
     (symbol: '×', x: 0.65, y: 0.68, size: 20),

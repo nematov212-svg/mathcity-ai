@@ -71,7 +71,9 @@ class _ChipTagState extends State<ChipTag> with SingleTickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(999),
-              border: isRule ? null : Border.all(color: OnboardingTheme.border, width: 1.4),
+              border: isRule
+                  ? null
+                  : Border.all(color: OnboardingTheme.border, width: 1.4),
               boxShadow: isRule
                   ? []
                   : [

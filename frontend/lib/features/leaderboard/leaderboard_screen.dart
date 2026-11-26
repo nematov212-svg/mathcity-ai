@@ -42,7 +42,8 @@ class LeaderboardContestData {
       id: (json['id'] ?? 'contest-season-1').toString(),
       name: (json['name'] ?? '30 kunlik musobaqa').toString(),
       durationDays: (json['durationDays'] as num?)?.toInt() ?? 30,
-      startDate: DateTime.tryParse(json['startDate']?.toString() ?? '') ?? DateTime.now(),
+      startDate: DateTime.tryParse(json['startDate']?.toString() ?? '') ??
+          DateTime.now(),
       endDate: DateTime.tryParse(json['endDate']?.toString() ?? '') ??
           DateTime.now().add(const Duration(days: 30)),
       isEnded: json['isEnded'] == true,
@@ -73,10 +74,11 @@ class LeaderboardUser {
     required this.coinBalance,
     required this.level,
   });
-  
+
   factory LeaderboardUser.fromJson(Map<String, dynamic> json) {
     final uid = (json['userId'] ?? json['id'] ?? '').toString();
-    final rawName = (json['displayName'] ?? json['username'] ?? 'O‘quvchi').toString();
+    final rawName =
+        (json['displayName'] ?? json['username'] ?? 'O‘quvchi').toString();
     return LeaderboardUser(
       rank: (json['rank'] as num?)?.toInt() ?? 1,
       id: uid,
@@ -157,7 +159,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   }
 
   String _formatContestRemaining(LeaderboardContestData? contest) {
-    final end = contest?.endDate ?? DateTime.now().add(const Duration(days: 30));
+    final end =
+        contest?.endDate ?? DateTime.now().add(const Duration(days: 30));
     final now = DateTime.now();
     final diff = end.difference(now);
 
@@ -240,13 +243,15 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
       }
 
       final res = await ApiClient().dio.get(
-        '/leaderboard',
-        queryParameters: {'scope': _selectedScope, 'limit': limit},
-        options: Options(
-          validateStatus: (status) => true,
-        ),
-      );
-      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
+            '/leaderboard',
+            queryParameters: {'scope': _selectedScope, 'limit': limit},
+            options: Options(
+              validateStatus: (status) => true,
+            ),
+          );
+      if (res.statusCode == 200 &&
+          res.data != null &&
+          res.data['success'] == true) {
         final rawData = res.data['data'];
         final List<dynamic> listData;
         if (rawData is List) {
@@ -260,13 +265,14 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
         }
 
         final list = listData
-            .map((item) => LeaderboardUser.fromJson(item as Map<String, dynamic>))
+            .map((item) =>
+                LeaderboardUser.fromJson(item as Map<String, dynamic>))
             .toList();
 
         final myRankJson = res.data['me'] ??
             (rawData is Map ? (rawData['me'] ?? rawData['myRank']) : null);
-        final contestJson = res.data['contest'] ??
-            (rawData is Map ? rawData['contest'] : null);
+        final contestJson =
+            res.data['contest'] ?? (rawData is Map ? rawData['contest'] : null);
 
         if (contestJson is Map<String, dynamic>) {
           _contest = LeaderboardContestData.fromJson(contestJson);
@@ -284,11 +290,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
         // Fetch detailed me stats
         try {
           final meRes = await ApiClient().dio.get(
-            '/students/leaderboard/me',
-            options: Options(
-              validateStatus: (status) => true,
-            ),
-          );
+                '/students/leaderboard/me',
+                options: Options(
+                  validateStatus: (status) => true,
+                ),
+              );
           if (meRes.statusCode == 200 &&
               meRes.data != null &&
               meRes.data['success'] == true &&
@@ -303,12 +309,14 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
           setState(() {
             _leaderboard = list;
             if (myRankJson != null) {
-              _myRank = LeaderboardUser.fromJson(myRankJson as Map<String, dynamic>);
+              _myRank =
+                  LeaderboardUser.fromJson(myRankJson as Map<String, dynamic>);
             }
             if (climbingUsers.isNotEmpty) {
               _highlightedUserIds = climbingUsers;
               _highlightClearTimer?.cancel();
-              _highlightClearTimer = Timer(const Duration(milliseconds: 1400), () {
+              _highlightClearTimer =
+                  Timer(const Duration(milliseconds: 1400), () {
                 if (mounted) {
                   setState(() => _highlightedUserIds.clear());
                 }
@@ -373,368 +381,401 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     );
   }
 
-  Widget _buildLeaderboardStack(AppThemeColors colors, bool isDark, {required bool isPhone}) {
+  Widget _buildLeaderboardStack(AppThemeColors colors, bool isDark,
+      {required bool isPhone}) {
     return Stack(
       children: [
         Positioned.fill(
           child: AnimatedMathBackground(isDark: isDark, isLeaderboard: true),
         ),
         Column(
-              children: [
-                // Top Header Bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Row(
-                    children: [
-                      InkWell(
+          children: [
+            // Top Header Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      if (context.canPop()) {
+                        context.pop();
+                      } else {
+                        context.go('/kids/home');
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: colors.card,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: colors.border),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Icon(Icons.arrow_back_rounded,
+                          color: colors.ink, size: 20),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Reyting',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                            color: colors.ink,
+                          ),
+                        ),
+                        Text(
+                          'Matematika bo‘yicha umumiy reyting',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: colors.muted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      _loadLeaderboard();
+                    },
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: colors.card,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: colors.border),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: _isLoading
+                          ? SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    colors.primary),
+                              ),
+                            )
+                          : Icon(Icons.refresh_rounded,
+                              color: colors.primary, size: 20),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Scope Selector Tabs: [Top 100], [Top 50], [Top 10], [Top 5]
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: colors.card,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.border),
+                ),
+                child: Row(
+                  children: _scopes.map((s) {
+                    final isSelected = _selectedScope == s['id'];
+                    return Expanded(
+                      child: GestureDetector(
                         onTap: () {
-                          HapticFeedback.lightImpact();
-                          if (context.canPop()) {
-                            context.pop();
-                          } else {
-                            context.go('/kids/home');
+                          if (_selectedScope != s['id']) {
+                            HapticFeedback.selectionClick();
+                            setState(() {
+                              _selectedScope = s['id']!;
+                            });
+                            _loadLeaderboard();
                           }
                         },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(vertical: 8),
                           decoration: BoxDecoration(
-                            color: colors.card,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: colors.border),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.04),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
+                            color: isSelected
+                                ? const Color(0xFF6C55E0)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(Icons.arrow_back_rounded, color: colors.ink, size: 20),
+                          alignment: Alignment.center,
+                          child: Text(
+                            s['label']!,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w800,
+                              color: isSelected ? Colors.white : colors.muted,
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 14),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+
+            // Main Content
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _errorMessage != null
+                      ? _buildErrorState(colors)
+                      : _leaderboard.isEmpty
+                          ? _buildEmptyState(colors, isDark)
+                          : RefreshIndicator(
+                              onRefresh: () => _loadLeaderboard(),
+                              color: colors.primary,
+                              backgroundColor: colors.card,
+                              child: Builder(
+                                builder: (context) {
+                                  final remainingCount = _leaderboard.length > 3
+                                      ? _leaderboard.length - 3
+                                      : 0;
+                                  final showFewBanner = _leaderboard.length < 5;
+                                  final totalCount = 2 +
+                                      remainingCount +
+                                      (showFewBanner ? 1 : 0);
+
+                                  return ListView.builder(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        16, 4, 16, 175),
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(
+                                            parent: BouncingScrollPhysics()),
+                                    itemCount: totalCount,
+                                    itemBuilder: (context, index) {
+                                      if (index == 0) {
+                                        return _buildContestBanner(
+                                            colors, isDark);
+                                      }
+                                      if (index == 1) {
+                                        return _buildTop3Podium(colors, isDark);
+                                      }
+                                      if (index > 1 + remainingCount) {
+                                        return _buildFewUsersBanner(
+                                            colors, isDark);
+                                      }
+                                      final user = _leaderboard[1 + index];
+                                      final currentStudent =
+                                          ref.watch(studentProvider).student;
+                                      final isMyRow = (_myRank != null &&
+                                              (user.id == _myRank!.id ||
+                                                  user.userId ==
+                                                      _myRank!.userId)) ||
+                                          (currentStudent != null &&
+                                              (user.id == currentStudent.id ||
+                                                  user.userId ==
+                                                      currentStudent.id));
+                                      final isHighlighted =
+                                          _highlightedUserIds.contains(user.id);
+                                      return AnimatedContainer(
+                                        duration:
+                                            const Duration(milliseconds: 450),
+                                        curve: Curves.easeInOutCubic,
+                                        child: _buildLeaderboardCard(
+                                          user: user,
+                                          isMyRow: isMyRow,
+                                          isHighlighted: isHighlighted,
+                                          colors: colors,
+                                          isDark: isDark,
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+            ),
+          ],
+        ),
+
+        // Sticky Bottom Personal Rank Card (Sizning joriy o'rningiz)
+        if (_myRank != null)
+          Builder(
+            builder: (context) {
+              final curStudent = ref.watch(studentProvider).student;
+              final realCoins =
+                  (curStudent != null && curStudent.coinBalance > 0)
+                      ? curStudent.coinBalance
+                      : _myRank!.coinBalance;
+              final realXP = (curStudent != null && curStudent.totalXP > 0)
+                  ? curStudent.totalXP
+                  : _myRank!.totalXP;
+
+              return Positioned(
+                left: 16,
+                right: 16,
+                bottom: isPhone ? 92 : 20,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF5B3BE8), Color(0xFF7A58F8)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(
+                        color: Colors.white.withOpacity(0.35), width: 1.2),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF5B3BE8).withOpacity(0.45),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      // Rank number badge
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.25),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          '#${_myRank!.rank}',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+
+                      // User Avatar
+                      UserAvatar(
+                        avatarUrl: curStudent?.avatarUrl ?? _myRank!.avatarUrl,
+                        displayName:
+                            (curStudent?.displayName.isNotEmpty == true)
+                                ? curStudent!.displayName
+                                : (_myRank!.displayName.isNotEmpty
+                                    ? _myRank!.displayName
+                                    : _myRank!.username),
+                        size: 34,
+                        borderColor: Colors.white,
+                        borderWidth: 1.5,
+                      ),
+                      const SizedBox(width: 8),
+
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Reyting',
-                              style: TextStyle(
-                                fontSize: 22,
+                              'Siz ${_myRank!.rank}-o‘rindasiz',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 13,
                                 fontWeight: FontWeight.w900,
-                                color: colors.ink,
+                                color: Colors.white,
                               ),
                             ),
+                            const SizedBox(height: 1),
                             Text(
-                              'Matematika bo‘yicha umumiy reyting',
-                              style: TextStyle(
-                                fontSize: 12,
+                              '@${curStudent?.username ?? _myRank!.username} • ${_coinsToTop100 > 0 ? "Top 100 ga $_coinsToTop100 coin" : (_coinsToNextRank > 0 ? "+$_coinsToNextRank coin" : "Ajoyib!")}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 10.5,
                                 fontWeight: FontWeight.w600,
-                                color: colors.muted,
+                                color: Color(0xFFE0E7FF),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          _loadLeaderboard();
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: colors.card,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: colors.border),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.04),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: _isLoading
-                              ? SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
-                                  ),
-                                )
-                              : Icon(Icons.refresh_rounded, color: colors.primary, size: 20),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
 
-                // Scope Selector Tabs: [Top 100], [Top 50], [Top 10], [Top 5]
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: colors.card,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: colors.border),
-                    ),
-                    child: Row(
-                      children: _scopes.map((s) {
-                        final isSelected = _selectedScope == s['id'];
-                        return Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              if (_selectedScope != s['id']) {
-                                HapticFeedback.selectionClick();
-                                setState(() {
-                                  _selectedScope = s['id']!;
-                                });
-                                _loadLeaderboard();
-                              }
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              decoration: BoxDecoration(
-                                color: isSelected ? const Color(0xFF6C55E0) : Colors.transparent,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                s['label']!,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w800,
-                                  color: isSelected ? Colors.white : colors.muted,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
+                      const SizedBox(width: 6),
 
-                // Main Content
-                Expanded(
-                  child: _isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : _errorMessage != null
-                          ? _buildErrorState(colors)
-                          : _leaderboard.isEmpty
-                              ? _buildEmptyState(colors, isDark)
-                              : RefreshIndicator(
-                                  onRefresh: () => _loadLeaderboard(),
-                                  color: colors.primary,
-                                  backgroundColor: colors.card,
-                                  child: Builder(
-                                    builder: (context) {
-                                      final remainingCount = _leaderboard.length > 3 ? _leaderboard.length - 3 : 0;
-                                      final showFewBanner = _leaderboard.length < 5;
-                                      final totalCount = 2 + remainingCount + (showFewBanner ? 1 : 0);
-
-                                      return ListView.builder(
-                                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 175),
-                                        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                                        itemCount: totalCount,
-                                        itemBuilder: (context, index) {
-                                          if (index == 0) {
-                                            return _buildContestBanner(colors, isDark);
-                                          }
-                                          if (index == 1) {
-                                            return _buildTop3Podium(colors, isDark);
-                                          }
-                                          if (index > 1 + remainingCount) {
-                                            return _buildFewUsersBanner(colors, isDark);
-                                          }
-                                          final user = _leaderboard[1 + index];
-                                          final currentStudent = ref.watch(studentProvider).student;
-                                          final isMyRow = (_myRank != null && (user.id == _myRank!.id || user.userId == _myRank!.userId)) ||
-                                              (currentStudent != null && (user.id == currentStudent.id || user.userId == currentStudent.id));
-                                          final isHighlighted = _highlightedUserIds.contains(user.id);
-                                          return AnimatedContainer(
-                                            duration: const Duration(milliseconds: 450),
-                                            curve: Curves.easeInOutCubic,
-                                            child: _buildLeaderboardCard(
-                                              user: user,
-                                              isMyRow: isMyRow,
-                                              isHighlighted: isHighlighted,
-                                              colors: colors,
-                                              isDark: isDark,
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                ),
-              ],
-            ),
-
-            // Sticky Bottom Personal Rank Card (Sizning joriy o'rningiz)
-            if (_myRank != null)
-              Builder(
-                builder: (context) {
-                  final curStudent = ref.watch(studentProvider).student;
-                  final realCoins = (curStudent != null && curStudent.coinBalance > 0)
-                      ? curStudent.coinBalance
-                      : _myRank!.coinBalance;
-                  final realXP = (curStudent != null && curStudent.totalXP > 0)
-                      ? curStudent.totalXP
-                      : _myRank!.totalXP;
-
-                  return Positioned(
-                    left: 16,
-                    right: 16,
-                    bottom: isPhone ? 92 : 20,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF5B3BE8), Color(0xFF7A58F8)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(22),
-                        border: Border.all(color: Colors.white.withOpacity(0.35), width: 1.2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF5B3BE8).withOpacity(0.45),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: Row(
+                      // Coin & XP badges
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Rank number badge
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 7, vertical: 3.5),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.25),
-                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white.withOpacity(0.18),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Text(
-                              '#${_myRank!.rank}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-
-                          // User Avatar
-                          UserAvatar(
-                            avatarUrl: curStudent?.avatarUrl ?? _myRank!.avatarUrl,
-                            displayName: (curStudent?.displayName.isNotEmpty == true)
-                                ? curStudent!.displayName
-                                : (_myRank!.displayName.isNotEmpty ? _myRank!.displayName : _myRank!.username),
-                            size: 34,
-                            borderColor: Colors.white,
-                            borderWidth: 1.5,
-                          ),
-                          const SizedBox(width: 8),
-
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
+                                const CoinIcon(size: 13),
+                                const SizedBox(width: 3),
                                 Text(
-                                  'Siz ${_myRank!.rank}-o‘rindasiz',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                                  '$realCoins',
                                   style: const TextStyle(
-                                    fontSize: 13,
+                                    fontSize: 11.5,
                                     fontWeight: FontWeight.w900,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 1),
-                                Text(
-                                  '@${curStudent?.username ?? _myRank!.username} • ${_coinsToTop100 > 0 ? "Top 100 ga $_coinsToTop100 coin" : (_coinsToNextRank > 0 ? "+$_coinsToNextRank coin" : "Ajoyib!")}',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 10.5,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFFE0E7FF),
+                                    color: Color(0xFFFFD66B),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-
-                          const SizedBox(width: 6),
-
-                          // Coin & XP badges
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3.5),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.18),
-                                  borderRadius: BorderRadius.circular(8),
+                          const SizedBox(width: 4),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 7, vertical: 3.5),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const XpCoin(size: 12, showGlow: false),
+                                const SizedBox(width: 3),
+                                Text(
+                                  '$realXP',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const CoinIcon(size: 13),
-                                    const SizedBox(width: 3),
-                                    Text(
-                                      '$realCoins',
-                                      style: const TextStyle(
-                                        fontSize: 11.5,
-                                        fontWeight: FontWeight.w900,
-                                        color: Color(0xFFFFD66B),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3.5),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const XpCoin(size: 12, showGlow: false),
-                                    const SizedBox(width: 3),
-                                    Text(
-                                      '$realXP',
-                                      style: const TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  );
-                },
-              ),
-          ],
-        );
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+      ],
+    );
   }
 
   Widget _buildLeaderboardCard({
@@ -851,9 +892,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
           // Real User Avatar
           UserAvatar(
             avatarUrl: user.avatarUrl,
-            displayName: user.displayName.isNotEmpty ? user.displayName : user.username,
+            displayName:
+                user.displayName.isNotEmpty ? user.displayName : user.username,
             size: 42,
-            borderColor: user.rank == 1 ? const Color(0xFFFFB300) : colors.border,
+            borderColor:
+                user.rank == 1 ? const Color(0xFFFFB300) : colors.border,
             borderWidth: user.rank == 1 ? 2.0 : 1.2,
           ),
           const SizedBox(width: 12),
@@ -873,14 +916,17 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
-                          color: user.rank == 1 ? const Color(0xFF78350F) : colors.ink,
+                          color: user.rank == 1
+                              ? const Color(0xFF78350F)
+                              : colors.ink,
                         ),
                       ),
                     ),
                     if (isMyRow) ...[
                       const SizedBox(width: 6),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: const Color(0xFF6C55E0),
                           borderRadius: BorderRadius.circular(8),
@@ -898,7 +944,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                     if (isHighlighted) ...[
                       const SizedBox(width: 6),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: const Color(0xFF10B981),
                           borderRadius: BorderRadius.circular(8),
@@ -921,7 +968,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
-                    color: user.rank == 1 ? const Color(0xFF92400E) : colors.muted,
+                    color:
+                        user.rank == 1 ? const Color(0xFF92400E) : colors.muted,
                   ),
                 ),
               ],
@@ -938,7 +986,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w900,
-                  color: user.rank == 1 ? const Color(0xFF92400E) : const Color(0xFFD97706),
+                  color: user.rank == 1
+                      ? const Color(0xFF92400E)
+                      : const Color(0xFFD97706),
                 ),
               ),
               const SizedBox(width: 10),
@@ -947,7 +997,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                 decoration: BoxDecoration(
                   color: user.rank == 1
                       ? const Color(0xFFFFB300).withOpacity(0.2)
-                      : (isDark ? const Color(0xFF281F5E) : const Color(0xFFEDE8FF)),
+                      : (isDark
+                          ? const Color(0xFF281F5E)
+                          : const Color(0xFFEDE8FF)),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
@@ -960,7 +1012,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
-                        color: user.rank == 1 ? const Color(0xFF78350F) : const Color(0xFF6C55E0),
+                        color: user.rank == 1
+                            ? const Color(0xFF78350F)
+                            : const Color(0xFF6C55E0),
                       ),
                     ),
                   ],
@@ -1040,7 +1094,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
               ),
               Flexible(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: const Color(0xFF8B5CF6).withOpacity(0.15),
                     borderRadius: BorderRadius.circular(10),
@@ -1048,7 +1103,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.timer_outlined, size: 12, color: Color(0xFF8B5CF6)),
+                      const Icon(Icons.timer_outlined,
+                          size: 12, color: Color(0xFF8B5CF6)),
                       const SizedBox(width: 4),
                       Flexible(
                         child: Text(
@@ -1099,7 +1155,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w800,
-                color: accentColor.computeLuminance() > 0.5 ? const Color(0xFF78350F) : accentColor,
+                color: accentColor.computeLuminance() > 0.5
+                    ? const Color(0xFF78350F)
+                    : accentColor,
               ),
             ),
             const SizedBox(height: 2),
@@ -1147,7 +1205,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                     rank: 2,
                     pedestalHeight: 105,
                     podiumColor: const Color(0xFFFF9800),
-                    gradientColors: const [Color(0xFFFFB347), Color(0xFFFF8C00)],
+                    gradientColors: const [
+                      Color(0xFFFFB347),
+                      Color(0xFFFF8C00)
+                    ],
                     badgeIcon: '🥈',
                     crown: false,
                     colors: colors,
@@ -1158,7 +1219,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                     rank: 2,
                     pedestalHeight: 105,
                     podiumColor: const Color(0xFFFF9800),
-                    gradientColors: const [Color(0xFFFFB347), Color(0xFFFF8C00)],
+                    gradientColors: const [
+                      Color(0xFFFFB347),
+                      Color(0xFFFF8C00)
+                    ],
                     badgeIcon: '🥈',
                     colors: colors,
                     isDark: isDark,
@@ -1176,7 +1240,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                     rank: 1,
                     pedestalHeight: 140,
                     podiumColor: const Color(0xFFFFD700),
-                    gradientColors: const [Color(0xFFFFE066), Color(0xFFFFC000)],
+                    gradientColors: const [
+                      Color(0xFFFFE066),
+                      Color(0xFFFFC000)
+                    ],
                     badgeIcon: '👑',
                     crown: true,
                     colors: colors,
@@ -1187,7 +1254,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                     rank: 1,
                     pedestalHeight: 140,
                     podiumColor: const Color(0xFFFFD700),
-                    gradientColors: const [Color(0xFFFFE066), Color(0xFFFFC000)],
+                    gradientColors: const [
+                      Color(0xFFFFE066),
+                      Color(0xFFFFC000)
+                    ],
                     badgeIcon: '👑',
                     colors: colors,
                     isDark: isDark,
@@ -1205,7 +1275,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                     rank: 3,
                     pedestalHeight: 80,
                     podiumColor: const Color(0xFF9E9E9E),
-                    gradientColors: const [Color(0xFFCFD8DC), Color(0xFF90A4AE)],
+                    gradientColors: const [
+                      Color(0xFFCFD8DC),
+                      Color(0xFF90A4AE)
+                    ],
                     badgeIcon: '🥉',
                     crown: false,
                     colors: colors,
@@ -1216,7 +1289,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                     rank: 3,
                     pedestalHeight: 80,
                     podiumColor: const Color(0xFF9E9E9E),
-                    gradientColors: const [Color(0xFFCFD8DC), Color(0xFF90A4AE)],
+                    gradientColors: const [
+                      Color(0xFFCFD8DC),
+                      Color(0xFF90A4AE)
+                    ],
                     badgeIcon: '🥉',
                     colors: colors,
                     isDark: isDark,
@@ -1345,12 +1421,15 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     required bool isDark,
     required StudentModel? currentStudent,
   }) {
-    final isMe = (_myRank != null && (user.id == _myRank!.id || user.userId == _myRank!.userId)) ||
-        (currentStudent != null && (user.id == currentStudent.id || user.userId == currentStudent.id));
+    final isMe = (_myRank != null &&
+            (user.id == _myRank!.id || user.userId == _myRank!.userId)) ||
+        (currentStudent != null &&
+            (user.id == currentStudent.id || user.userId == currentStudent.id));
 
     final displayName = isMe
         ? 'Siz'
-        : (user.displayName.isNotEmpty && user.displayName.toLowerCase() != 'siz'
+        : (user.displayName.isNotEmpty &&
+                user.displayName.toLowerCase() != 'siz'
             ? user.displayName
             : user.username);
 
@@ -1443,7 +1522,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w800,
-                color: isDark ? const Color(0xFFFFD66B) : const Color(0xFFB45309),
+                color:
+                    isDark ? const Color(0xFFFFD66B) : const Color(0xFFB45309),
               ),
             ),
           ],
@@ -1491,13 +1571,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w900,
-                    color: isDark ? Colors.white.withOpacity(0.85) : Colors.black.withOpacity(0.65),
+                    color: isDark
+                        ? Colors.white.withOpacity(0.85)
+                        : Colors.black.withOpacity(0.65),
                   ),
                 ),
                 if (isMe)
                   Container(
                     margin: const EdgeInsets.only(top: 2),
-                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1.5),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 7, vertical: 1.5),
                     decoration: BoxDecoration(
                       color: const Color(0xFF6C55E0),
                       borderRadius: BorderRadius.circular(8),
@@ -1568,7 +1651,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
       margin: const EdgeInsets.only(top: 14, bottom: 20),
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF231C4D).withOpacity(0.65) : const Color(0xFFF4F0FF),
+        color: isDark
+            ? const Color(0xFF231C4D).withOpacity(0.65)
+            : const Color(0xFFF4F0FF),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: const Color(0xFF6C55E0).withOpacity(0.25),
@@ -1632,16 +1717,20 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
             Text(
               _errorMessage ?? 'Serverga ulanib bo‘lmadi',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink),
+              style: TextStyle(
+                  fontSize: 15, fontWeight: FontWeight.w700, color: colors.ink),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors.primary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
               ),
               onPressed: () => _loadLeaderboard(),
-              child: const Text('Qayta urinish', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+              child: const Text('Qayta urinish',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w700)),
             ),
           ],
         ),

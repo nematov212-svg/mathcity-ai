@@ -33,7 +33,8 @@ class OnboardingHeader extends StatelessWidget {
                   height: 44,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: OnboardingTheme.border, width: 1.2),
+                    border:
+                        Border.all(color: OnboardingTheme.border, width: 1.2),
                     boxShadow: [
                       BoxShadow(
                         color: OnboardingTheme.primary.withOpacity(0.06),
@@ -70,7 +71,8 @@ class OnboardingHeader extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3),
                           color: isFilled ? null : OnboardingTheme.lilac,
-                          gradient: isFilled ? OnboardingTheme.ctaGradient : null,
+                          gradient:
+                              isFilled ? OnboardingTheme.ctaGradient : null,
                         ),
                       ),
                     );

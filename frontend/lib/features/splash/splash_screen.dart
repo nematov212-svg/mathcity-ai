@@ -15,7 +15,8 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends ConsumerState<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
@@ -27,7 +28,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
       vsync: this,
       duration: const Duration(milliseconds: 1400),
     );
-    
+
     _scaleAnimation = CurvedAnimation(
       parent: _controller,
       curve: Curves.easeOutBack,
@@ -53,7 +54,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
       if (!mounted) return;
 
       final bool hasToken = results[0] as bool;
-      final Map<String, dynamic>? cachedStudent = results[1] as Map<String, dynamic>?;
+      final Map<String, dynamic>? cachedStudent =
+          results[1] as Map<String, dynamic>?;
 
       if (hasToken) {
         // Feed cached profile into Riverpod immediately to prevent 0 coin / 0 XP / blank avatar flash
@@ -63,7 +65,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
 
         // Wait up to 3.5 seconds for fresh server profile
         try {
-          await AuthService().restoreSession().timeout(const Duration(milliseconds: 3500));
+          await AuthService()
+              .restoreSession()
+              .timeout(const Duration(milliseconds: 3500));
         } catch (_) {}
 
         if (!mounted) return;
@@ -72,7 +76,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
         if (currentStudent != null && !currentStudent.profileCompleted) {
           context.go('/complete-profile');
           return;
-        } else if (cachedStudent != null && cachedStudent['profileCompleted'] == false) {
+        } else if (cachedStudent != null &&
+            cachedStudent['profileCompleted'] == false) {
           context.go('/complete-profile');
           return;
         }
@@ -146,7 +151,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
                       height: 28,
                       child: CircularProgressIndicator(
                         strokeWidth: 3,
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.kidsPrimary),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.kidsPrimary),
                       ),
                     ),
                   ],

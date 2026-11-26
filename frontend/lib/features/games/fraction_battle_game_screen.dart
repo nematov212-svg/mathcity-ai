@@ -10,10 +10,12 @@ class FractionBattleGameScreen extends ConsumerStatefulWidget {
   const FractionBattleGameScreen({super.key});
 
   @override
-  ConsumerState<FractionBattleGameScreen> createState() => _FractionBattleGameScreenState();
+  ConsumerState<FractionBattleGameScreen> createState() =>
+      _FractionBattleGameScreenState();
 }
 
-class _FractionBattleGameScreenState extends ConsumerState<FractionBattleGameScreen> {
+class _FractionBattleGameScreenState
+    extends ConsumerState<FractionBattleGameScreen> {
   int _currentQuestionIndex = 0;
   final int _totalQuestions = 10;
   int _lives = 3;
@@ -155,7 +157,8 @@ class _FractionBattleGameScreenState extends ConsumerState<FractionBattleGameScr
     if (currentCoins < 5) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Yordam olish uchun tangalar yetarli emas (5 tanga kerak).'),
+          content:
+              Text('Yordam olish uchun tangalar yetarli emas (5 tanga kerak).'),
         ),
       );
       return;
@@ -181,7 +184,8 @@ class _FractionBattleGameScreenState extends ConsumerState<FractionBattleGameScr
     int earnedXP = 50;
 
     try {
-      final res = await ApiClient().dio.post('/games/kasrlar-jangi/result', data: {
+      final res =
+          await ApiClient().dio.post('/games/kasrlar-jangi/result', data: {
         'score': _score,
         'correctAnswersCount': _correctCount,
         'level': 2,
@@ -289,7 +293,8 @@ class _FractionBattleGameScreenState extends ConsumerState<FractionBattleGameScr
                     child: LinearProgressIndicator(
                       value: progress,
                       backgroundColor: const Color(0xFFEDE9FE),
-                      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF6B42F5)),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                          Color(0xFF6B42F5)),
                       minHeight: 6,
                     ),
                   ),
@@ -310,7 +315,8 @@ class _FractionBattleGameScreenState extends ConsumerState<FractionBattleGameScr
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFFBEB),
                       borderRadius: BorderRadius.circular(32),
-                      border: Border.all(color: const Color(0xFFFDE68A), width: 1.2),
+                      border: Border.all(
+                          color: const Color(0xFFFDE68A), width: 1.2),
                       boxShadow: [
                         BoxShadow(
                           color: const Color(0xFF92400E).withOpacity(0.06),
@@ -500,7 +506,9 @@ class _FractionBattleGameScreenState extends ConsumerState<FractionBattleGameScr
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: InkWell(
-                            onTap: _isAnswered ? null : () => _onOperatorSelected(op),
+                            onTap: _isAnswered
+                                ? null
+                                : () => _onOperatorSelected(op),
                             borderRadius: BorderRadius.circular(18),
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 180),
@@ -508,10 +516,12 @@ class _FractionBattleGameScreenState extends ConsumerState<FractionBattleGameScr
                               decoration: BoxDecoration(
                                 color: bgColor,
                                 borderRadius: BorderRadius.circular(18),
-                                border: Border.all(color: borderColor, width: 1.6),
+                                border:
+                                    Border.all(color: borderColor, width: 1.6),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFF1E1B4B).withOpacity(0.04),
+                                    color: const Color(0xFF1E1B4B)
+                                        .withOpacity(0.04),
                                     blurRadius: 10,
                                     offset: const Offset(0, 4),
                                   ),
@@ -562,7 +572,8 @@ class _FractionBattleGameScreenState extends ConsumerState<FractionBattleGameScr
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: const Color(0xFFF1F5F9), width: 1.2),
+                      border: Border.all(
+                          color: const Color(0xFFF1F5F9), width: 1.2),
                     ),
                     child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -597,11 +608,13 @@ class _FractionBattleGameScreenState extends ConsumerState<FractionBattleGameScr
                       onTap: _handleUseHint,
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 18, vertical: 10),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFEF9C3),
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: const Color(0xFFFDE047), width: 1),
+                          border: Border.all(
+                              color: const Color(0xFFFDE047), width: 1),
                         ),
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,

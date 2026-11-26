@@ -40,7 +40,8 @@ class _XpCoinState extends State<XpCoin> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    if (widget.animate && !(!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST'))) {
+    if (widget.animate &&
+        !(!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST'))) {
       _animController = AnimationController(
         vsync: this,
         duration: const Duration(milliseconds: 1800),
@@ -215,7 +216,8 @@ class _XpCoinPainter extends CustomPainter {
         const [0.0, 1.0],
       );
     canvas.save();
-    canvas.clipPath(Path()..addOval(Rect.fromCircle(center: center, radius: faceRadius)));
+    canvas.clipPath(
+        Path()..addOval(Rect.fromCircle(center: center, radius: faceRadius)));
     canvas.drawPath(glintPath, glintPaint);
     canvas.restore();
   }
@@ -261,11 +263,13 @@ class _XpBadgeState extends State<XpBadge> with SingleTickerProviderStateMixin {
     );
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.0, end: 1.18).chain(CurveTween(curve: Curves.easeOutBack)),
+        tween: Tween<double>(begin: 1.0, end: 1.18)
+            .chain(CurveTween(curve: Curves.easeOutBack)),
         weight: 50,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.18, end: 1.0).chain(CurveTween(curve: Curves.easeInOutCubic)),
+        tween: Tween<double>(begin: 1.18, end: 1.0)
+            .chain(CurveTween(curve: Curves.easeInOutCubic)),
         weight: 50,
       ),
     ]).animate(_pulseController);

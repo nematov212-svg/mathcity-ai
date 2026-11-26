@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../../../theme/onboarding_theme.dart';
 
 enum MascotMood {
-  normal,    // Step 1: Username
-  partyHat,  // Step 2: Birth date
+  normal, // Step 1: Username
+  partyHat, // Step 2: Birth date
   celebrate, // Step 3: Finish
 }
 
@@ -35,7 +35,8 @@ class _MascotViewState extends State<MascotView> with TickerProviderStateMixin {
   late final AnimationController _jumpCtrl;
   late final Animation<double> _jumpAnimation;
 
-  bool get _isTesting => WidgetsBinding.instance.runtimeType.toString().contains('Test');
+  bool get _isTesting =>
+      WidgetsBinding.instance.runtimeType.toString().contains('Test');
 
   @override
   void initState() {
@@ -65,8 +66,14 @@ class _MascotViewState extends State<MascotView> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 700),
     );
     _jumpAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0.0, end: -14.0).chain(CurveTween(curve: Curves.easeOut)), weight: 45),
-      TweenSequenceItem(tween: Tween(begin: -14.0, end: 0.0).chain(CurveTween(curve: Curves.bounceOut)), weight: 55),
+      TweenSequenceItem(
+          tween: Tween(begin: 0.0, end: -14.0)
+              .chain(CurveTween(curve: Curves.easeOut)),
+          weight: 45),
+      TweenSequenceItem(
+          tween: Tween(begin: -14.0, end: 0.0)
+              .chain(CurveTween(curve: Curves.bounceOut)),
+          weight: 55),
     ]).animate(_jumpCtrl);
 
     if (!_isTesting) {
@@ -101,7 +108,8 @@ class _MascotViewState extends State<MascotView> with TickerProviderStateMixin {
   @override
   void didUpdateWidget(covariant MascotView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.mood == MascotMood.celebrate && oldWidget.mood != MascotMood.celebrate) {
+    if (widget.mood == MascotMood.celebrate &&
+        oldWidget.mood != MascotMood.celebrate) {
       _jumpCtrl.repeat(period: const Duration(milliseconds: 2200));
     } else if (widget.mood != MascotMood.celebrate) {
       _jumpCtrl.stop();
@@ -120,12 +128,15 @@ class _MascotViewState extends State<MascotView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final disableAnimations = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final disableAnimations =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
 
     return AnimatedBuilder(
       animation: Listenable.merge([_breatheCtrl, _blinkCtrl, _jumpCtrl]),
       builder: (context, child) {
-        final floatY = disableAnimations ? 0.0 : _breatheAnimation.value + _jumpAnimation.value;
+        final floatY = disableAnimations
+            ? 0.0
+            : _breatheAnimation.value + _jumpAnimation.value;
         return Transform.translate(
           offset: Offset(0, floatY),
           child: SizedBox(
@@ -164,7 +175,8 @@ class _MascotPainter extends CustomPainter {
       ..color = OnboardingTheme.primary.withOpacity(0.18)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
     canvas.drawOval(
-      Rect.fromCenter(center: Offset(center.dx, h * 0.95), width: w * 0.72, height: 14),
+      Rect.fromCenter(
+          center: Offset(center.dx, h * 0.95), width: w * 0.72, height: 14),
       shadowPaint,
     );
 
@@ -181,7 +193,8 @@ class _MascotPainter extends CustomPainter {
 
     // Antenna Ball
     final isGoldAntenna = mood == MascotMood.celebrate;
-    final ballColor = isGoldAntenna ? OnboardingTheme.gold : const Color(0xFFFF7A9C);
+    final ballColor =
+        isGoldAntenna ? OnboardingTheme.gold : const Color(0xFFFF7A9C);
     final ballPaint = Paint()..color = ballColor;
     final ballPos = Offset(center.dx, center.dy - h * 0.49);
 
@@ -202,14 +215,16 @@ class _MascotPainter extends CustomPainter {
     // Left Ear
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-        Rect.fromCenter(center: Offset(center.dx - w * 0.38, earY), width: 14, height: 26),
+        Rect.fromCenter(
+            center: Offset(center.dx - w * 0.38, earY), width: 14, height: 26),
         const Radius.circular(7),
       ),
       earPaint,
     );
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-        Rect.fromCenter(center: Offset(center.dx - w * 0.38, earY), width: 7, height: 16),
+        Rect.fromCenter(
+            center: Offset(center.dx - w * 0.38, earY), width: 7, height: 16),
         const Radius.circular(4),
       ),
       innerEarPaint,
@@ -218,14 +233,16 @@ class _MascotPainter extends CustomPainter {
     // Right Ear
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-        Rect.fromCenter(center: Offset(center.dx + w * 0.38, earY), width: 14, height: 26),
+        Rect.fromCenter(
+            center: Offset(center.dx + w * 0.38, earY), width: 14, height: 26),
         const Radius.circular(7),
       ),
       earPaint,
     );
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-        Rect.fromCenter(center: Offset(center.dx + w * 0.38, earY), width: 7, height: 16),
+        Rect.fromCenter(
+            center: Offset(center.dx + w * 0.38, earY), width: 7, height: 16),
         const Radius.circular(4),
       ),
       innerEarPaint,
@@ -237,10 +254,14 @@ class _MascotPainter extends CustomPainter {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [Color(0xFF8D74FF), Color(0xFF5B45D6)],
-      ).createShader(Rect.fromCenter(center: center, width: w * 0.76, height: h * 0.68));
+      ).createShader(
+          Rect.fromCenter(center: center, width: w * 0.76, height: h * 0.68));
 
-    final bodyRect = Rect.fromCenter(center: center, width: w * 0.74, height: h * 0.68);
-    canvas.drawRRect(RRect.fromRectAndRadius(bodyRect, Radius.circular(w * 0.32)), bodyPaint);
+    final bodyRect =
+        Rect.fromCenter(center: center, width: w * 0.74, height: h * 0.68);
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(bodyRect, Radius.circular(w * 0.32)),
+        bodyPaint);
 
     // ─── 5. Face Screen ───────────────────────────────────────────────────────
     final faceRect = Rect.fromCenter(
@@ -249,24 +270,31 @@ class _MascotPainter extends CustomPainter {
       height: h * 0.44,
     );
     final facePaint = Paint()..color = const Color(0xFFF9F8FF);
-    canvas.drawRRect(RRect.fromRectAndRadius(faceRect, Radius.circular(w * 0.22)), facePaint);
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(faceRect, Radius.circular(w * 0.22)),
+        facePaint);
 
     // Face Inner Screen Border
     final faceBorderPaint = Paint()
       ..color = OnboardingTheme.lilac
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
-    canvas.drawRRect(RRect.fromRectAndRadius(faceRect, Radius.circular(w * 0.22)), faceBorderPaint);
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(faceRect, Radius.circular(w * 0.22)),
+        faceBorderPaint);
 
     // ─── 6. Cheeks ───────────────────────────────────────────────────────────
-    final cheekPaint = Paint()..color = const Color(0xFFFF9EB7).withOpacity(0.55);
+    final cheekPaint = Paint()
+      ..color = const Color(0xFFFF9EB7).withOpacity(0.55);
     final cheekY = center.dy + h * 0.05;
     canvas.drawOval(
-      Rect.fromCenter(center: Offset(center.dx - w * 0.18, cheekY), width: 11, height: 7),
+      Rect.fromCenter(
+          center: Offset(center.dx - w * 0.18, cheekY), width: 11, height: 7),
       cheekPaint,
     );
     canvas.drawOval(
-      Rect.fromCenter(center: Offset(center.dx + w * 0.18, cheekY), width: 11, height: 7),
+      Rect.fromCenter(
+          center: Offset(center.dx + w * 0.18, cheekY), width: 11, height: 7),
       cheekPaint,
     );
 
@@ -323,7 +351,8 @@ class _MascotPainter extends CustomPainter {
       // Big beaming open smile with tongue
       final openMouthPath = Path();
       openMouthPath.moveTo(center.dx - 10, mouthY - 2);
-      openMouthPath.quadraticBezierTo(center.dx, mouthY + 12, center.dx + 10, mouthY - 2);
+      openMouthPath.quadraticBezierTo(
+          center.dx, mouthY + 12, center.dx + 10, mouthY - 2);
       openMouthPath.close();
 
       final openMouthFill = Paint()..color = const Color(0xFF1E1B3A);
@@ -339,7 +368,8 @@ class _MascotPainter extends CustomPainter {
       // Gentle sweet smile arc
       final smilePath = Path();
       smilePath.moveTo(center.dx - 7.5, mouthY);
-      smilePath.quadraticBezierTo(center.dx, mouthY + 5.5, center.dx + 7.5, mouthY);
+      smilePath.quadraticBezierTo(
+          center.dx, mouthY + 5.5, center.dx + 7.5, mouthY);
       canvas.drawPath(smilePath, mouthPaint);
     }
 

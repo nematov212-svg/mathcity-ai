@@ -193,25 +193,41 @@ class _MathBackgroundPainter extends CustomPainter {
   });
 
   static const List<_MathParticle> _mathSymbols = [
-    _MathParticle(x: 0.10, y: 0.18, speed: 0.8, phase: 0.0, symbol: '+', size: 20),
-    _MathParticle(x: 0.85, y: 0.22, speed: 1.1, phase: 1.2, symbol: 'π', size: 18),
-    _MathParticle(x: 0.25, y: 0.45, speed: 0.9, phase: 2.1, symbol: '×', size: 18),
-    _MathParticle(x: 0.78, y: 0.58, speed: 0.7, phase: 3.4, symbol: '√', size: 19),
-    _MathParticle(x: 0.15, y: 0.75, speed: 1.0, phase: 4.2, symbol: '÷', size: 21),
-    _MathParticle(x: 0.88, y: 0.82, speed: 0.85, phase: 5.1, symbol: '−', size: 19),
-    _MathParticle(x: 0.50, y: 0.90, speed: 0.95, phase: 2.8, symbol: 'x²', size: 17),
+    _MathParticle(
+        x: 0.10, y: 0.18, speed: 0.8, phase: 0.0, symbol: '+', size: 20),
+    _MathParticle(
+        x: 0.85, y: 0.22, speed: 1.1, phase: 1.2, symbol: 'π', size: 18),
+    _MathParticle(
+        x: 0.25, y: 0.45, speed: 0.9, phase: 2.1, symbol: '×', size: 18),
+    _MathParticle(
+        x: 0.78, y: 0.58, speed: 0.7, phase: 3.4, symbol: '√', size: 19),
+    _MathParticle(
+        x: 0.15, y: 0.75, speed: 1.0, phase: 4.2, symbol: '÷', size: 21),
+    _MathParticle(
+        x: 0.88, y: 0.82, speed: 0.85, phase: 5.1, symbol: '−', size: 19),
+    _MathParticle(
+        x: 0.50, y: 0.90, speed: 0.95, phase: 2.8, symbol: 'x²', size: 17),
   ];
 
   static const List<_SparkParticle> _sparks = [
-    _SparkParticle(x: 0.08, y: 0.12, size: 2.5, phase: 0.4, color: Color(0xFFC084FC)),
-    _SparkParticle(x: 0.35, y: 0.08, size: 3.0, phase: 1.2, color: Color(0xFF60A5FA)),
-    _SparkParticle(x: 0.92, y: 0.15, size: 2.8, phase: 2.0, color: Color(0xFFFBBF24)),
-    _SparkParticle(x: 0.18, y: 0.32, size: 2.2, phase: 3.1, color: Color(0xFFA78BFA)),
-    _SparkParticle(x: 0.82, y: 0.38, size: 3.2, phase: 4.5, color: Color(0xFF34D399)),
-    _SparkParticle(x: 0.05, y: 0.60, size: 2.4, phase: 5.2, color: Color(0xFFF472B6)),
-    _SparkParticle(x: 0.94, y: 0.68, size: 2.6, phase: 1.8, color: Color(0xFFFBBF24)),
-    _SparkParticle(x: 0.30, y: 0.78, size: 3.0, phase: 3.7, color: Color(0xFF818CF8)),
-    _SparkParticle(x: 0.70, y: 0.88, size: 2.5, phase: 4.9, color: Color(0xFF38BDF8)),
+    _SparkParticle(
+        x: 0.08, y: 0.12, size: 2.5, phase: 0.4, color: Color(0xFFC084FC)),
+    _SparkParticle(
+        x: 0.35, y: 0.08, size: 3.0, phase: 1.2, color: Color(0xFF60A5FA)),
+    _SparkParticle(
+        x: 0.92, y: 0.15, size: 2.8, phase: 2.0, color: Color(0xFFFBBF24)),
+    _SparkParticle(
+        x: 0.18, y: 0.32, size: 2.2, phase: 3.1, color: Color(0xFFA78BFA)),
+    _SparkParticle(
+        x: 0.82, y: 0.38, size: 3.2, phase: 4.5, color: Color(0xFF34D399)),
+    _SparkParticle(
+        x: 0.05, y: 0.60, size: 2.4, phase: 5.2, color: Color(0xFFF472B6)),
+    _SparkParticle(
+        x: 0.94, y: 0.68, size: 2.6, phase: 1.8, color: Color(0xFFFBBF24)),
+    _SparkParticle(
+        x: 0.30, y: 0.78, size: 3.0, phase: 3.7, color: Color(0xFF818CF8)),
+    _SparkParticle(
+        x: 0.70, y: 0.88, size: 2.5, phase: 4.9, color: Color(0xFF38BDF8)),
   ];
 
   static const List<_CoinParticle> _coins = [
@@ -378,7 +394,8 @@ class _MathBackgroundPainter extends CustomPainter {
       // Gentle vertical float + horizontal sinusoidal sway
       final floatDist = h * 0.10;
       final driftY = ((progress * p.speed + p.phase) % 1.0) * floatDist;
-      final swayX = math.sin((progress * math.pi * 2 * p.speed) + p.phase) * 14.0;
+      final swayX =
+          math.sin((progress * math.pi * 2 * p.speed) + p.phase) * 14.0;
 
       final x = p.x * w + swayX;
       final y = (p.y * h - driftY) % h;
@@ -410,7 +427,8 @@ class _MathBackgroundPainter extends CustomPainter {
 
     for (final c in _coins) {
       final driftY = ((progress * c.speed + c.phase) % 1.0) * (h * 0.08);
-      final swayX = math.cos((progress * math.pi * 2 * c.speed) + c.phase) * 12.0;
+      final swayX =
+          math.cos((progress * math.pi * 2 * c.speed) + c.phase) * 12.0;
 
       final cx = c.x * w + swayX;
       final cy = (c.y * h - driftY) % h;
@@ -420,13 +438,15 @@ class _MathBackgroundPainter extends CustomPainter {
       final ringPaint = Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.6
-        ..color = const Color(0xFFFFD700).withValues(alpha: isDark ? 0.25 : 0.20);
+        ..color =
+            const Color(0xFFFFD700).withValues(alpha: isDark ? 0.25 : 0.20);
       canvas.drawCircle(Offset(cx, cy), r, ringPaint);
 
       // Inner glowing core
       final corePaint = Paint()
         ..style = PaintingStyle.fill
-        ..color = const Color(0xFFFFB800).withValues(alpha: isDark ? 0.12 : 0.08);
+        ..color =
+            const Color(0xFFFFB800).withValues(alpha: isDark ? 0.12 : 0.08);
       canvas.drawCircle(Offset(cx, cy), r * 0.7, corePaint);
     }
   }

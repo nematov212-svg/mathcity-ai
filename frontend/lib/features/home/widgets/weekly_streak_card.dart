@@ -157,7 +157,8 @@ class _WeeklyStreakCardState extends ConsumerState<WeeklyStreakCard>
     );
   }
 
-  Widget _buildDayItem(ActivityDayItem day, bool isDark, AppThemeColors colors) {
+  Widget _buildDayItem(
+      ActivityDayItem day, bool isDark, AppThemeColors colors) {
     final isToday = day.isToday;
 
     return GestureDetector(
@@ -185,7 +186,8 @@ class _WeeklyStreakCardState extends ConsumerState<WeeklyStreakCard>
     );
   }
 
-  Widget _buildDayCircle(ActivityDayItem day, bool isDark, AppThemeColors colors) {
+  Widget _buildDayCircle(
+      ActivityDayItem day, bool isDark, AppThemeColors colors) {
     final isToday = day.isToday;
     final isFuture = day.isFuture;
     final level = day.level;
@@ -263,9 +265,7 @@ class _WeeklyStreakCardState extends ConsumerState<WeeklyStreakCard>
         width: 22,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.05)
-              : colors.field,
+          color: isDark ? Colors.white.withValues(alpha: 0.05) : colors.field,
           border: Border.all(
             color: isDark ? Colors.white12 : colors.border,
             width: 1.0,
@@ -356,9 +356,7 @@ class _WeeklyStreakCardState extends ConsumerState<WeeklyStreakCard>
         shape: BoxShape.circle,
         gradient: gradient,
         boxShadow: shadows,
-        border: isToday
-            ? Border.all(color: Colors.amber, width: 1.2)
-            : null,
+        border: isToday ? Border.all(color: Colors.amber, width: 1.2) : null,
       ),
       child: Center(
         child: AnimatedSwitcher(
@@ -406,7 +404,8 @@ class _WeeklyStreakCardState extends ConsumerState<WeeklyStreakCard>
           badgeTextColor = const Color(0xFF059669);
           break;
         case ActivityLevel.none:
-          badgeText = day.isToday ? 'Bugun hali bajarilmadi 🎯' : 'Bajarilmagan ❄️';
+          badgeText =
+              day.isToday ? 'Bugun hali bajarilmadi 🎯' : 'Bajarilmagan ❄️';
           badgeBg = colors.muted.withValues(alpha: 0.15);
           badgeTextColor = colors.muted;
           break;
@@ -423,7 +422,9 @@ class _WeeklyStreakCardState extends ConsumerState<WeeklyStreakCard>
             color: isDark ? const Color(0xFF160E36) : colors.card,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
             border: Border.all(
-              color: isDark ? const Color(0xFF8B5CF6).withValues(alpha: 0.3) : colors.border,
+              color: isDark
+                  ? const Color(0xFF8B5CF6).withValues(alpha: 0.3)
+                  : colors.border,
             ),
           ),
           child: SafeArea(
@@ -463,7 +464,8 @@ class _WeeklyStreakCardState extends ConsumerState<WeeklyStreakCard>
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
                         color: badgeBg,
                         borderRadius: BorderRadius.circular(12),
@@ -590,10 +592,14 @@ class _WeeklyStreakCardState extends ConsumerState<WeeklyStreakCard>
             ? (colors.isDark
                 ? const Color(0xFF7C3AED).withValues(alpha: 0.15)
                 : const Color(0xFF7C3AED).withValues(alpha: 0.08))
-            : (colors.isDark ? Colors.white.withValues(alpha: 0.04) : colors.field),
+            : (colors.isDark
+                ? Colors.white.withValues(alpha: 0.04)
+                : colors.field),
         borderRadius: BorderRadius.circular(14),
         border: isHighlight
-            ? Border.all(color: const Color(0xFF7C3AED).withValues(alpha: 0.4), width: 1.2)
+            ? Border.all(
+                color: const Color(0xFF7C3AED).withValues(alpha: 0.4),
+                width: 1.2)
             : null,
       ),
       child: Row(

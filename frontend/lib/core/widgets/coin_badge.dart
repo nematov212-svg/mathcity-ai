@@ -20,7 +20,8 @@ class CoinBadge extends StatefulWidget {
   State<CoinBadge> createState() => _CoinBadgeState();
 }
 
-class _CoinBadgeState extends State<CoinBadge> with SingleTickerProviderStateMixin {
+class _CoinBadgeState extends State<CoinBadge>
+    with SingleTickerProviderStateMixin {
   late int _previousCount;
   late AnimationController _bounceController;
   late Animation<double> _bounceAnimation;
@@ -34,8 +35,14 @@ class _CoinBadgeState extends State<CoinBadge> with SingleTickerProviderStateMix
       duration: const Duration(milliseconds: 450),
     );
     _bounceAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween<double>(begin: 1.0, end: 1.25).chain(CurveTween(curve: Curves.easeOutBack)), weight: 50),
-      TweenSequenceItem(tween: Tween<double>(begin: 1.25, end: 1.0).chain(CurveTween(curve: Curves.easeInCubic)), weight: 50),
+      TweenSequenceItem(
+          tween: Tween<double>(begin: 1.0, end: 1.25)
+              .chain(CurveTween(curve: Curves.easeOutBack)),
+          weight: 50),
+      TweenSequenceItem(
+          tween: Tween<double>(begin: 1.25, end: 1.0)
+              .chain(CurveTween(curve: Curves.easeInCubic)),
+          weight: 50),
     ]).animate(_bounceController);
   }
 
@@ -83,7 +90,9 @@ class _CoinBadgeState extends State<CoinBadge> with SingleTickerProviderStateMix
         children: [
           // Official Golden MathCity Coin with dynamic bounce
           ScaleTransition(
-            scale: disableAnimations ? const AlwaysStoppedAnimation(1.0) : _bounceAnimation,
+            scale: disableAnimations
+                ? const AlwaysStoppedAnimation(1.0)
+                : _bounceAnimation,
             child: CoinIcon(
               size: widget.size,
               floating: widget.animate,
@@ -104,7 +113,9 @@ class _CoinBadgeState extends State<CoinBadge> with SingleTickerProviderStateMix
             )
           else
             TweenAnimationBuilder<double>(
-              tween: Tween<double>(begin: _previousCount.toDouble(), end: widget.count.toDouble()),
+              tween: Tween<double>(
+                  begin: _previousCount.toDouble(),
+                  end: widget.count.toDouble()),
               duration: const Duration(milliseconds: 600),
               curve: Curves.easeOutCubic,
               builder: (context, value, child) {

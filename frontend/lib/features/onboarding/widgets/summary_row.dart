@@ -30,7 +30,8 @@ class SummaryRow extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: isGold ? OnboardingTheme.goldBg : OnboardingTheme.lilac,
+                  color:
+                      isGold ? OnboardingTheme.goldBg : OnboardingTheme.lilac,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Center(

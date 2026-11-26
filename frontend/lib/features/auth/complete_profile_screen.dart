@@ -13,7 +13,8 @@ class CompleteProfileScreen extends ConsumerStatefulWidget {
   const CompleteProfileScreen({super.key});
 
   @override
-  ConsumerState<CompleteProfileScreen> createState() => _CompleteProfileScreenState();
+  ConsumerState<CompleteProfileScreen> createState() =>
+      _CompleteProfileScreenState();
 }
 
 class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
@@ -46,7 +47,9 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     // Pre-fill username from current student display name if applicable
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final student = ref.read(studentProvider).student;
-      if (student != null && student.displayName.isNotEmpty && !student.displayName.contains(' ')) {
+      if (student != null &&
+          student.displayName.isNotEmpty &&
+          !student.displayName.contains(' ')) {
         _usernameController.text = student.displayName.toLowerCase();
         _onUsernameChanged(_usernameController.text);
       }
@@ -74,32 +77,24 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
       return;
     }
 
-    if (clean.length < 4) {
+    if (clean.length < 3 || clean.length > 20) {
       setState(() {
         _isCheckingUsername = false;
         _isUsernameAvailable = false;
         _hasCheckedUsername = true;
-        _usernameStatusMessage = 'Kamida 4 ta belgi kiriting.';
+        _usernameStatusMessage =
+            'Foydalanuvchi nomi 3 dan 20 tagacha belgidan iborat bo‘lishi kerak.';
       });
       return;
     }
 
-    if (clean.length > 20) {
+    if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(clean)) {
       setState(() {
         _isCheckingUsername = false;
         _isUsernameAvailable = false;
         _hasCheckedUsername = true;
-        _usernameStatusMessage = 'Foydalanuvchi nomi 20 ta belgidan oshmasligi kerak.';
-      });
-      return;
-    }
-
-    if (!RegExp(r'^[a-zA-Z0-9_.]+$').hasMatch(clean)) {
-      setState(() {
-        _isCheckingUsername = false;
-        _isUsernameAvailable = false;
-        _hasCheckedUsername = true;
-        _usernameStatusMessage = 'Faqat lotin harflari, raqamlar, pastki chiziq va nuqta ruxsat etiladi.';
+        _usernameStatusMessage =
+            'Faqat lotin harflari, raqamlar va pastki chiziq ruxsat etiladi.';
       });
       return;
     }
@@ -119,7 +114,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
         _isCheckingUsername = false;
         _isUsernameAvailable = false;
         _hasCheckedUsername = true;
-        _usernameStatusMessage = 'Email manzilini foydalanuvchi nomi sifatida kiritmang.';
+        _usernameStatusMessage =
+            'Email manzilini foydalanuvchi nomi sifatida kiritmang.';
       });
       return;
     }
@@ -138,21 +134,37 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
         _isCheckingUsername = false;
         _hasCheckedUsername = true;
         _isUsernameAvailable = res['available'] == true;
-        _usernameStatusMessage = res['message'] as String? ?? (_isUsernameAvailable ? 'Foydalanuvchi nomi bo‘sh!' : 'Band nom.');
+        _usernameStatusMessage = res['message'] as String? ??
+            (_isUsernameAvailable ? 'Foydalanuvchi nomi bo‘sh!' : 'Band nom.');
       });
     });
   }
 
   int _maxDaysInMonth(int? year, int? month) {
     if (month == null) return 31;
-    if (year == null) return [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+    if (year == null)
+      return [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
     final isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-    final days = [31, isLeapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    final days = [
+      31,
+      isLeapYear ? 29 : 28,
+      31,
+      30,
+      31,
+      30,
+      31,
+      31,
+      30,
+      31,
+      30,
+      31
+    ];
     return days[month - 1];
   }
 
   int? get _calculatedAge {
-    if (_selectedYear == null || _selectedMonth == null || _selectedDay == null) return null;
+    if (_selectedYear == null || _selectedMonth == null || _selectedDay == null)
+      return null;
     final now = DateTime.now();
     int age = now.year - _selectedYear!;
     final monthDiff = now.month - _selectedMonth!;
@@ -163,7 +175,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
   }
 
   bool get _isDateValid {
-    if (_selectedYear == null || _selectedMonth == null || _selectedDay == null) return false;
+    if (_selectedYear == null || _selectedMonth == null || _selectedDay == null)
+      return false;
     final maxDays = _maxDaysInMonth(_selectedYear, _selectedMonth);
     if (_selectedDay! > maxDays || _selectedDay! < 1) return false;
 
@@ -204,7 +217,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
       context.go('/kids/home');
     } else {
       setState(() {
-        _errorMessage = result.errorMessage ?? 'Profilni saqlashda xatolik yuz berdi. Qayta urinib ko‘ring.';
+        _errorMessage = result.errorMessage ??
+            'Profilni saqlashda xatolik yuz berdi. Qayta urinib ko‘ring.';
       });
     }
   }
@@ -236,11 +250,11 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
       child: Scaffold(
         backgroundColor: const Color(0xFFF6F4FF),
         body: SafeArea(
-        child: ResponsiveAuthCard(
-          maxCardWidth: 500,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+          child: ResponsiveAuthCard(
+            maxCardWidth: 500,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
                 const SizedBox(height: 12),
                 Center(
                   child: Hero(
@@ -277,15 +291,18 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
 
                 if (_errorMessage != null) ...[
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFEF2F2),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFFCA5A5), width: 1),
+                      border:
+                          Border.all(color: const Color(0xFFFCA5A5), width: 1),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.error_outline, color: Color(0xFFDC2626), size: 20),
+                        const Icon(Icons.error_outline,
+                            color: Color(0xFFDC2626), size: 20),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
@@ -332,42 +349,53 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF94A3B8),
                     ),
-                    prefixIcon: const Icon(Icons.alternate_email, color: Color(0xFF6A4CFF), size: 20),
+                    prefixIcon: const Icon(Icons.alternate_email,
+                        color: Color(0xFF6A4CFF), size: 20),
                     suffixIcon: _isCheckingUsername
                         ? const Padding(
                             padding: EdgeInsets.all(12.0),
                             child: SizedBox(
                               width: 16,
                               height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF6A4CFF)),
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2, color: Color(0xFF6A4CFF)),
                             ),
                           )
                         : _hasCheckedUsername
                             ? Icon(
-                                _isUsernameAvailable ? Icons.check_circle : Icons.cancel,
-                                color: _isUsernameAvailable ? const Color(0xFF16A34A) : const Color(0xFFDC2626),
+                                _isUsernameAvailable
+                                    ? Icons.check_circle
+                                    : Icons.cancel,
+                                color: _isUsernameAvailable
+                                    ? const Color(0xFF16A34A)
+                                    : const Color(0xFFDC2626),
                                 size: 20,
                               )
                             : null,
                     filled: true,
                     fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: Color(0xFFCBD5E1), width: 1.5),
+                      borderSide: const BorderSide(
+                          color: Color(0xFFCBD5E1), width: 1.5),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide(
                         color: _hasCheckedUsername
-                            ? (_isUsernameAvailable ? const Color(0xFF16A34A) : const Color(0xFFDC2626))
+                            ? (_isUsernameAvailable
+                                ? const Color(0xFF16A34A)
+                                : const Color(0xFFDC2626))
                             : const Color(0xFFCBD5E1),
                         width: 1.5,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: Color(0xFF6A4CFF), width: 2),
+                      borderSide:
+                          const BorderSide(color: Color(0xFF6A4CFF), width: 2),
                     ),
                   ),
                 ),
@@ -411,7 +439,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                         value: _selectedDay,
                         isExpanded: true,
                         dropdownColor: Colors.white,
-                        icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF64748B), size: 20),
+                        icon: const Icon(Icons.keyboard_arrow_down_rounded,
+                            color: Color(0xFF64748B), size: 20),
                         style: const TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 15,
@@ -420,7 +449,10 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                         ),
                         decoration: _dropdownDecoration('Kun'),
                         selectedItemBuilder: (BuildContext context) {
-                          return List.generate(_maxDaysInMonth(_selectedYear, _selectedMonth), (i) => i + 1)
+                          return List.generate(
+                                  _maxDaysInMonth(
+                                      _selectedYear, _selectedMonth),
+                                  (i) => i + 1)
                               .map((day) => Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
@@ -435,7 +467,9 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                                   ))
                               .toList();
                         },
-                        items: List.generate(_maxDaysInMonth(_selectedYear, _selectedMonth), (i) => i + 1)
+                        items: List.generate(
+                                _maxDaysInMonth(_selectedYear, _selectedMonth),
+                                (i) => i + 1)
                             .map((day) => DropdownMenuItem(
                                   value: day,
                                   child: Text(
@@ -463,7 +497,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                         value: _selectedMonth,
                         isExpanded: true,
                         dropdownColor: Colors.white,
-                        icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF64748B), size: 20),
+                        icon: const Icon(Icons.keyboard_arrow_down_rounded,
+                            color: Color(0xFF64748B), size: 20),
                         style: const TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 14,
@@ -523,7 +558,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                         value: _selectedYear,
                         isExpanded: true,
                         dropdownColor: Colors.white,
-                        icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF64748B), size: 20),
+                        icon: const Icon(Icons.keyboard_arrow_down_rounded,
+                            color: Color(0xFF64748B), size: 20),
                         style: const TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 15,
@@ -532,7 +568,9 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                         ),
                         decoration: _dropdownDecoration('Yil'),
                         selectedItemBuilder: (BuildContext context) {
-                          return List.generate(currentYear - 5 - (currentYear - 100) + 1, (i) => currentYear - 5 - i)
+                          return List.generate(
+                                  currentYear - 5 - (currentYear - 100) + 1,
+                                  (i) => currentYear - 5 - i)
                               .map((y) => Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
@@ -547,7 +585,9 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                                   ))
                               .toList();
                         },
-                        items: List.generate(currentYear - 5 - (currentYear - 100) + 1, (i) => currentYear - 5 - i)
+                        items: List.generate(
+                                currentYear - 5 - (currentYear - 100) + 1,
+                                (i) => currentYear - 5 - i)
                             .map((y) => DropdownMenuItem(
                                   value: y,
                                   child: Text(
@@ -579,7 +619,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                 if (age != null) ...[
                   const SizedBox(height: 10),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
                       color: age < 5 || age > 100
                           ? const Color(0xFFFEF2F2)
@@ -589,9 +630,13 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                     child: Row(
                       children: [
                         Icon(
-                          age < 5 || age > 100 ? Icons.warning_amber_rounded : Icons.cake_outlined,
+                          age < 5 || age > 100
+                              ? Icons.warning_amber_rounded
+                              : Icons.cake_outlined,
                           size: 20,
-                          color: age < 5 || age > 100 ? const Color(0xFFDC2626) : const Color(0xFF6A4CFF),
+                          color: age < 5 || age > 100
+                              ? const Color(0xFFDC2626)
+                              : const Color(0xFF6A4CFF),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -603,7 +648,9 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                               fontFamily: 'Nunito',
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
-                              color: age < 5 || age > 100 ? const Color(0xFFDC2626) : const Color(0xFF5B21B6),
+                              color: age < 5 || age > 100
+                                  ? const Color(0xFFDC2626)
+                                  : const Color(0xFF5B21B6),
                             ),
                           ),
                         ),
@@ -627,7 +674,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                       children: [
                         const Row(
                           children: [
-                            Icon(Icons.family_restroom, color: Color(0xFFD97706), size: 20),
+                            Icon(Icons.family_restroom,
+                                color: Color(0xFFD97706), size: 20),
                             SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -645,7 +693,11 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                         const SizedBox(height: 6),
                         const Text(
                           'Ota-onangiz bilan birga foydalaning. MathCity AI bolalar xavfsizligi va maxfiyligi qoidalariga to‘liq rioya qiladi.',
-                          style: TextStyle(fontFamily: 'Nunito', fontSize: 12, color: Color(0xFF78350F), height: 1.35),
+                          style: TextStyle(
+                              fontFamily: 'Nunito',
+                              fontSize: 12,
+                              color: Color(0xFF78350F),
+                              height: 1.35),
                         ),
                         const SizedBox(height: 6),
                         Row(
@@ -654,7 +706,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                               value: _parentalConsentChecked,
                               activeColor: const Color(0xFF6A4CFF),
                               onChanged: (val) {
-                                setState(() => _parentalConsentChecked = val ?? false);
+                                setState(() =>
+                                    _parentalConsentChecked = val ?? false);
                               },
                             ),
                             const Expanded(
@@ -685,15 +738,20 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                     if (!_isFormValid) {
                       final u = _usernameController.text.trim();
                       if (u.isEmpty) {
-                        setState(() => _errorMessage = 'Iltimos, foydalanuvchi nomini kiriting.');
+                        setState(() => _errorMessage =
+                            'Iltimos, foydalanuvchi nomini kiriting.');
                       } else if (_isCheckingUsername) {
-                        setState(() => _errorMessage = 'Foydalanuvchi nomi tekshirilmoqda, iltimos kuting.');
+                        setState(() => _errorMessage =
+                            'Foydalanuvchi nomi tekshirilmoqda, iltimos kuting.');
                       } else if (!_isUsernameAvailable) {
-                        setState(() => _errorMessage = _usernameStatusMessage ?? 'Foydalanuvchi nomi yaroqsiz yoki band.');
+                        setState(() => _errorMessage = _usernameStatusMessage ??
+                            'Foydalanuvchi nomi yaroqsiz yoki band.');
                       } else if (!_isDateValid) {
-                        setState(() => _errorMessage = 'Tug‘ilgan sanangizni to‘g‘ri tanlang.');
+                        setState(() => _errorMessage =
+                            'Tug‘ilgan sanangizni to‘g‘ri tanlang.');
                       } else if (isMinor && !_parentalConsentChecked) {
-                        setState(() => _errorMessage = 'Ota-ona bilan birgalikda foydalanishni tasdiqlang.');
+                        setState(() => _errorMessage =
+                            'Ota-ona bilan birgalikda foydalanishni tasdiqlang.');
                       }
                       return;
                     }
@@ -710,7 +768,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
         ),
       ),
     );
-}
+  }
 
   InputDecoration _dropdownDecoration(String label) {
     return InputDecoration(
@@ -745,5 +803,3 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     );
   }
 }
-
-

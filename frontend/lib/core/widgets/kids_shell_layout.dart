@@ -15,11 +15,15 @@ class KidsNavShellScope extends InheritedWidget {
   });
 
   static bool of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<KidsNavShellScope>()?.hasShell ?? false;
+    return context
+            .dependOnInheritedWidgetOfExactType<KidsNavShellScope>()
+            ?.hasShell ??
+        false;
   }
 
   @override
-  bool updateShouldNotify(KidsNavShellScope oldWidget) => hasShell != oldWidget.hasShell;
+  bool updateShouldNotify(KidsNavShellScope oldWidget) =>
+      hasShell != oldWidget.hasShell;
 }
 
 /// Persistent Layout Shell for MathCity AI primary navigation tabs:
@@ -66,9 +70,8 @@ class KidsShellLayout extends StatelessWidget {
         hasShell: true,
         child: child,
       ),
-      bottomNavigationBar: isKeyboardOpen
-          ? null
-          : MathCityBottomNav(currentIndex: currentIndex),
+      bottomNavigationBar:
+          isKeyboardOpen ? null : MathCityBottomNav(currentIndex: currentIndex),
     );
   }
 }

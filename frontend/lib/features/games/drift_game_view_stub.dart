@@ -10,11 +10,13 @@ Widget buildDriftGameView({
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: const [
-          Icon(Icons.sports_motorsports_rounded, size: 64, color: Color(0xFF10B981)),
+          Icon(Icons.sports_motorsports_rounded,
+              size: 64, color: Color(0xFF10B981)),
           SizedBox(height: 16),
           Text(
             'MathCity 3D Drift & Poyga',
-            style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8),
           Text(

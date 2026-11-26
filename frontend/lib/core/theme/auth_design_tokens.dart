@@ -14,7 +14,8 @@ class AuthTokens {
   static const Color goldLight = Color(0xFFFFC83D);
   static const Color errorLight = Color(0xFFE5484D);
   static const Color successLight = Color(0xFF22C55E);
-  static const Color shadowLight = Color(0x296A4CFF); // rgba(106, 76, 255, 0.16)
+  static const Color shadowLight =
+      Color(0x296A4CFF); // rgba(106, 76, 255, 0.16)
 
   // --- Dark Palette ---
   static const Color bgDark = Color(0xFF120E2B);
@@ -43,11 +44,18 @@ class AuthTokens {
       Theme.of(context).brightness == Brightness.dark;
 
   static Color bg(BuildContext context) => isDark(context) ? bgDark : bgLight;
-  static Color card(BuildContext context) => isDark(context) ? cardDark : cardLight;
-  static Color field(BuildContext context) => isDark(context) ? fieldDark : fieldLight;
-  static Color line(BuildContext context) => isDark(context) ? lineDark : lineLight;
-  static Color ink(BuildContext context) => isDark(context) ? inkDark : inkLight;
-  static Color mute(BuildContext context) => isDark(context) ? muteDark : muteLight;
-  static Color shadow(BuildContext context) => isDark(context) ? shadowDark : shadowLight;
-  static Color brand(BuildContext context) => isDark(context) ? const Color(0xFF8B6BFF) : brandLight;
+  static Color card(BuildContext context) =>
+      isDark(context) ? cardDark : cardLight;
+  static Color field(BuildContext context) =>
+      isDark(context) ? fieldDark : fieldLight;
+  static Color line(BuildContext context) =>
+      isDark(context) ? lineDark : lineLight;
+  static Color ink(BuildContext context) =>
+      isDark(context) ? inkDark : inkLight;
+  static Color mute(BuildContext context) =>
+      isDark(context) ? muteDark : muteLight;
+  static Color shadow(BuildContext context) =>
+      isDark(context) ? shadowDark : shadowLight;
+  static Color brand(BuildContext context) =>
+      isDark(context) ? const Color(0xFF8B6BFF) : brandLight;
 }

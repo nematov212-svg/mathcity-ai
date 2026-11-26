@@ -39,7 +39,8 @@ void main() {
   });
 
   group('AnimatedMathBackground Widget Tests', () {
-    testWidgets('AnimatedMathBackground renders cleanly in Dark and Light mode', (tester) async {
+    testWidgets('AnimatedMathBackground renders cleanly in Dark and Light mode',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -67,7 +68,9 @@ void main() {
   });
 
   group('SettingsScreen Redesign Tests', () {
-    testWidgets('SettingsScreen renders profile card, theme mode selector, and certificate row', (tester) async {
+    testWidgets(
+        'SettingsScreen renders profile card, theme mode selector, and certificate row',
+        (tester) async {
       tester.view.physicalSize = const Size(800, 1400);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -94,7 +97,8 @@ void main() {
   });
 
   group('CertificateScreen Pro & Lesson Gate Tests', () {
-    testWidgets('CertificateScreen shows Pro required message for Free users', (tester) async {
+    testWidgets('CertificateScreen shows Pro required message for Free users',
+        (tester) async {
       final freeStudent = StudentModel(
         id: 'free-1',
         email: 'ali@mathcity.uz',
@@ -121,7 +125,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            studentProvider.overrideWith((ref) => _MockStudentNotifier(freeStudent)),
+            studentProvider
+                .overrideWith((ref) => _MockStudentNotifier(freeStudent)),
           ],
           child: const MaterialApp(
             home: CertificateScreen(),
@@ -134,7 +139,9 @@ void main() {
       expect(find.text('Pro obunani ochish'), findsOneWidget);
     });
 
-    testWidgets('CertificateScreen shows empty state for Pro user without completed lessons', (tester) async {
+    testWidgets(
+        'CertificateScreen shows empty state for Pro user without completed lessons',
+        (tester) async {
       final proStudentNoLessons = StudentModel(
         id: 'pro-1',
         email: 'laylo@mathcity.uz',
@@ -161,7 +168,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            studentProvider.overrideWith((ref) => _MockStudentNotifier(proStudentNoLessons)),
+            studentProvider.overrideWith(
+                (ref) => _MockStudentNotifier(proStudentNoLessons)),
           ],
           child: const MaterialApp(
             home: CertificateScreen(),
@@ -174,7 +182,9 @@ void main() {
       expect(find.text('Darslarga o‘tish'), findsOneWidget);
     });
 
-    testWidgets('CertificateScreen renders full luxury Certificate for Pro user with completed lessons', (tester) async {
+    testWidgets(
+        'CertificateScreen renders full luxury Certificate for Pro user with completed lessons',
+        (tester) async {
       final proStudentWithLessons = StudentModel(
         id: 'pro-2',
         email: 'javohir@mathcity.uz',
@@ -201,7 +211,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            studentProvider.overrideWith((ref) => _MockStudentNotifier(proStudentWithLessons)),
+            studentProvider.overrideWith(
+                (ref) => _MockStudentNotifier(proStudentWithLessons)),
           ],
           child: const MaterialApp(
             home: CertificateScreen(),

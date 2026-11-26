@@ -1,5 +1,6 @@
 class SubscriptionModel {
-  final String status; // 'FREE_TRIAL_ACTIVE', 'FREE_TRIAL_EXPIRED', 'PRO_ACTIVE', 'PRO_EXPIRED'
+  final String
+      status; // 'FREE_TRIAL_ACTIVE', 'FREE_TRIAL_EXPIRED', 'PRO_ACTIVE', 'PRO_EXPIRED'
   final int trialDaysRemaining;
   final bool isProActive;
   final String planName;
@@ -147,7 +148,10 @@ class StudentModel {
     final rawUsername = json['username'] as String?;
     final rawDob = json['dateOfBirth'] as String?;
     final isComplete = json['profileCompleted'] == true ||
-        (rawUsername != null && rawUsername.trim().isNotEmpty && rawDob != null && rawDob.trim().isNotEmpty);
+        (rawUsername != null &&
+            rawUsername.trim().isNotEmpty &&
+            rawDob != null &&
+            rawDob.trim().isNotEmpty);
 
     return StudentModel(
       id: json['id'] ?? '',
@@ -155,8 +159,11 @@ class StudentModel {
       displayName: json['displayName'] ?? (rawUsername ?? 'O‘quvchi'),
       username: rawUsername,
       dateOfBirth: rawDob,
-      profileCompleted: json['profileCompleted'] != null ? json['profileCompleted'] == true : isComplete,
-      parentalConsentRequired: json['parentalConsentRequired'] ?? ((json['age'] ?? 10) < 13),
+      profileCompleted: json['profileCompleted'] != null
+          ? json['profileCompleted'] == true
+          : isComplete,
+      parentalConsentRequired:
+          json['parentalConsentRequired'] ?? ((json['age'] ?? 10) < 13),
       age: json['age'] ?? 10,
       mode: json['mode'] ?? 'KIDS',
       grade: json['grade'] ?? 4,
@@ -171,10 +178,17 @@ class StudentModel {
       studyMinutes: json['studyMinutes'] ?? json['studyMinutesToday'] ?? 0,
       currentStreak: json['currentStreak'] ?? 1,
       longestStreak: json['longestStreak'] ?? 1,
-      completedLessonsCount: json['completedLessonsCount'] ?? (json['completedLessons'] is List ? (json['completedLessons'] as List).length : 0),
-      completedLessons: (json['completedLessons'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
+      completedLessonsCount: json['completedLessonsCount'] ??
+          (json['completedLessons'] is List
+              ? (json['completedLessons'] as List).length
+              : 0),
+      completedLessons: (json['completedLessons'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
       completedTopicsCount: json['completedTopicsCount'] ?? 0,
-      achievementsCount: json['achievementsCount'] ?? (json['unlockedAchievementsCount'] ?? 0),
+      achievementsCount:
+          json['achievementsCount'] ?? (json['unlockedAchievementsCount'] ?? 0),
       friendsCount: json['friendsCount'] ?? 0,
       rank: json['rank'] ?? 1,
       subscription: json['subscription'] != null
@@ -223,7 +237,8 @@ class StudentModel {
       username: username ?? this.username,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       profileCompleted: profileCompleted ?? this.profileCompleted,
-      parentalConsentRequired: parentalConsentRequired ?? this.parentalConsentRequired,
+      parentalConsentRequired:
+          parentalConsentRequired ?? this.parentalConsentRequired,
       age: age,
       mode: mode ?? this.mode,
       grade: grade ?? this.grade,
@@ -231,7 +246,8 @@ class StudentModel {
       totalXP: totalXP ?? this.totalXP,
       level: level ?? this.level,
       cityLevel: cityLevel ?? this.cityLevel,
-      attemptedQuestionCount: attemptedQuestionCount ?? this.attemptedQuestionCount,
+      attemptedQuestionCount:
+          attemptedQuestionCount ?? this.attemptedQuestionCount,
       correctQuestionCount: correctQuestionCount ?? this.correctQuestionCount,
       subscription: subscription ?? this.subscription,
       avatarUrl: avatarUrl ?? this.avatarUrl,
@@ -239,7 +255,8 @@ class StudentModel {
       studyMinutes: studyMinutes ?? this.studyMinutes,
       currentStreak: currentStreak ?? this.currentStreak,
       longestStreak: longestStreak ?? this.longestStreak,
-      completedLessonsCount: completedLessonsCount ?? this.completedLessonsCount,
+      completedLessonsCount:
+          completedLessonsCount ?? this.completedLessonsCount,
       completedLessons: completedLessons ?? this.completedLessons,
       completedTopicsCount: completedTopicsCount ?? this.completedTopicsCount,
       achievementsCount: achievementsCount ?? this.achievementsCount,

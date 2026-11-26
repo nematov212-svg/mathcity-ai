@@ -62,7 +62,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     });
 
     if (anim != null) {
-      ref.read(animationsEnabledProvider.notifier).setAnimationsEnabled(newAnim);
+      ref
+          .read(animationsEnabledProvider.notifier)
+          .setAnimationsEnabled(newAnim);
     }
 
     await ref.read(studentProvider.notifier).updateSettings({
@@ -112,10 +114,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           builder: (context, setDlgState) {
             return AlertDialog(
               backgroundColor: colors.card,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24)),
               title: Text(
                 'Profilni tahrirlash',
-                style: TextStyle(fontWeight: FontWeight.w800, color: colors.ink),
+                style:
+                    TextStyle(fontWeight: FontWeight.w800, color: colors.ink),
               ),
               content: SingleChildScrollView(
                 child: Column(
@@ -127,7 +131,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         labelText: 'Ismingiz',
                         filled: true,
                         fillColor: colors.field,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16)),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -137,10 +142,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         labelText: 'Sinf',
                         filled: true,
                         fillColor: colors.field,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16)),
                       ),
                       items: List.generate(11, (i) => i + 1)
-                          .map((g) => DropdownMenuItem(value: g, child: Text('$g-sinf')))
+                          .map((g) => DropdownMenuItem(
+                              value: g, child: Text('$g-sinf')))
                           .toList(),
                       onChanged: (val) {
                         if (val != null) setDlgState(() => selectedGrade = val);
@@ -152,27 +159,34 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
-                  child: Text('Bekor qilish', style: TextStyle(color: colors.muted)),
+                  child: Text('Bekor qilish',
+                      style: TextStyle(color: colors.muted)),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colors.primary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
                   ),
                   onPressed: () async {
                     HapticFeedback.lightImpact();
                     Navigator.pop(ctx);
-                    await ref.read(studentProvider.notifier).updateProfileDetails(
+                    await ref
+                        .read(studentProvider.notifier)
+                        .updateProfileDetails(
                           displayName: nameCtrl.text.trim(),
                           grade: selectedGrade,
                         );
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Profil muvaffaqiyatli saqlandi!')),
+                        const SnackBar(
+                            content: Text('Profil muvaffaqiyatli saqlandi!')),
                       );
                     }
                   },
-                  child: const Text('Saqlash', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: const Text('Saqlash',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
               ],
             );
@@ -224,18 +238,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                   ],
                 ),
-                child: const Icon(Icons.workspace_premium_rounded, color: Colors.white, size: 36),
+                child: const Icon(Icons.workspace_premium_rounded,
+                    color: Colors.white, size: 36),
               ),
               const SizedBox(height: 16),
               Text(
                 'MathCity Pro Sertifikati',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: colors.ink),
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: colors.ink),
               ),
               const SizedBox(height: 10),
               Text(
                 'Sertifikat faqat MathCity Pro obunachilari uchun mavjud. Kursni muvaffaqiyatli tugatib, rasmiy sertifikat oling!',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: colors.muted, height: 1.4),
+                style:
+                    TextStyle(fontSize: 14, color: colors.muted, height: 1.4),
               ),
               const SizedBox(height: 22),
               SizedBox(
@@ -245,10 +264,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     backgroundColor: const Color(0xFF6C47FF),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)),
                   ),
                   icon: const Icon(Icons.bolt_rounded),
-                  label: const Text('Pro\'ga o‘tish', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
+                  label: const Text('Pro\'ga o‘tish',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
                   onPressed: () {
                     Navigator.pop(ctx);
                     context.push('/tariflar');
@@ -302,7 +324,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 children: [
                   Text(
                     'O‘quv ma’lumotlari (JSON)',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: colors.ink),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: colors.ink),
                   ),
                   IconButton(
                     icon: const Icon(Icons.copy_rounded),
@@ -311,7 +336,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       Clipboard.setData(ClipboardData(text: jsonStr));
                       Navigator.pop(ctx);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Ma’lumotlar nusxalandi!')),
+                        const SnackBar(
+                            content: Text('Ma’lumotlar nusxalandi!')),
                       );
                     },
                   ),
@@ -329,7 +355,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   child: SingleChildScrollView(
                     child: Text(
                       jsonStr,
-                      style: TextStyle(fontSize: 12, fontFamily: 'monospace', color: colors.ink),
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'monospace',
+                          color: colors.ink),
                     ),
                   ),
                 ),
@@ -355,12 +384,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         return StatefulBuilder(
           builder: (context, setSheetState) {
             return Padding(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   color: colors.card,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -379,7 +410,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     const SizedBox(height: 20),
                     const Row(
                       children: [
-                        Icon(Icons.warning_amber_rounded, color: AppColors.kidsError, size: 28),
+                        Icon(Icons.warning_amber_rounded,
+                            color: AppColors.kidsError, size: 28),
                         SizedBox(width: 10),
                         Text(
                           'Hisobni butunlay o‘chirish',
@@ -394,12 +426,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     const SizedBox(height: 12),
                     Text(
                       'Barcha o‘quv natijalari, tangalar, XP va yutuqlaringiz serverdan butunlay o‘chirib tashlanadi va qayta tiklab bo‘lmaydi.',
-                      style: TextStyle(fontSize: 13, color: colors.muted, height: 1.4),
+                      style: TextStyle(
+                          fontSize: 13, color: colors.muted, height: 1.4),
                     ),
                     const SizedBox(height: 16),
                     Text(
                       'Tasdiqlash uchun foydalanuvchi nomingizni yozing: "${student.username ?? student.displayName}"',
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: colors.ink),
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: colors.ink),
                     ),
                     const SizedBox(height: 8),
                     TextField(
@@ -409,7 +445,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         errorText: errorText,
                         filled: true,
                         fillColor: colors.field,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16)),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -419,7 +456,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           child: OutlinedButton(
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14)),
                             ),
                             onPressed: () => Navigator.pop(ctx),
                             child: const Text('Bekor qilish'),
@@ -432,17 +470,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               backgroundColor: AppColors.kidsError,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14)),
                             ),
                             onPressed: () async {
                               HapticFeedback.lightImpact();
-                              final expected = student.username ?? student.displayName;
+                              final expected =
+                                  student.username ?? student.displayName;
                               if (confirmCtrl.text.trim() != expected.trim()) {
-                                setSheetState(() => errorText = 'Foydalanuvchi nomi mos kelmadi');
+                                setSheetState(() => errorText =
+                                    'Foydalanuvchi nomi mos kelmadi');
                                 return;
                               }
                               Navigator.pop(ctx);
-                              final success = await ref.read(studentProvider.notifier).deleteAccountConfirm(
+                              final success = await ref
+                                  .read(studentProvider.notifier)
+                                  .deleteAccountConfirm(
                                     username: confirmCtrl.text.trim(),
                                   );
                               if (context.mounted) {
@@ -450,12 +493,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                   context.go('/login');
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Hisobni o‘chirishda xatolik yuz berdi.')),
+                                    const SnackBar(
+                                        content: Text(
+                                            'Hisobni o‘chirishda xatolik yuz berdi.')),
                                   );
                                 }
                               }
                             },
-                            child: const Text('O‘chirish', style: TextStyle(fontWeight: FontWeight.bold)),
+                            child: const Text('O‘chirish',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                           ),
                         ),
                       ],
@@ -486,7 +532,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new_rounded, color: colors.ink),
-          onPressed: () => context.canPop() ? context.pop() : context.go('/kids/home'),
+          onPressed: () =>
+              context.canPop() ? context.pop() : context.go('/kids/home'),
         ),
         title: Text(
           'Sozlamalar',
@@ -529,11 +576,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             colors: colors,
                             icon: Icons.auto_awesome_rounded,
                             iconColor: const Color(0xFF6C47FF),
-                            iconBg: const Color(0xFF6C47FF).withValues(alpha: 0.12),
+                            iconBg:
+                                const Color(0xFF6C47FF).withValues(alpha: 0.12),
                             title: 'Ta’lim rejimi',
                             subtitle: 'Matematika kursi (barcha yoshlar)',
                             trailing: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 6),
                               decoration: BoxDecoration(
                                 color: colors.primary.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(12),
@@ -564,7 +613,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             colors: colors,
                             icon: Icons.volume_up_rounded,
                             iconColor: const Color(0xFF3B82F6),
-                            iconBg: const Color(0xFF3B82F6).withValues(alpha: 0.12),
+                            iconBg:
+                                const Color(0xFF3B82F6).withValues(alpha: 0.12),
                             title: 'Tovush effektlari',
                             subtitle: 'To‘g‘ri javoblar va tangalar ovozi',
                             value: _soundEnabled,
@@ -575,9 +625,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             colors: colors,
                             icon: Icons.animation_rounded,
                             iconColor: const Color(0xFFA855F7),
-                            iconBg: const Color(0xFFA855F7).withValues(alpha: 0.12),
+                            iconBg:
+                                const Color(0xFFA855F7).withValues(alpha: 0.12),
                             title: 'Animatsiyalar',
-                            subtitle: 'Harakatlanuvchi fon va bayram effektlari',
+                            subtitle:
+                                'Harakatlanuvchi fon va bayram effektlari',
                             value: _animationsEnabled,
                             onChanged: (val) => _syncSettings(anim: val),
                           ),
@@ -597,7 +649,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             colors: colors,
                             icon: Icons.notifications_active_rounded,
                             iconColor: const Color(0xFFF59E0B),
-                            iconBg: const Color(0xFFF59E0B).withValues(alpha: 0.12),
+                            iconBg:
+                                const Color(0xFFF59E0B).withValues(alpha: 0.12),
                             title: 'Kunlik eslatma',
                             subtitle: 'Har kuni darslarni eslatib turish',
                             value: _dailyReminderEnabled,
@@ -609,15 +662,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               colors: colors,
                               icon: Icons.access_time_filled_rounded,
                               iconColor: const Color(0xFF10B981),
-                              iconBg: const Color(0xFF10B981).withValues(alpha: 0.12),
+                              iconBg: const Color(0xFF10B981)
+                                  .withValues(alpha: 0.12),
                               title: 'Eslatma vaqti',
                               subtitle: 'Eslatish soati (Toshkent vaqti)',
                               trailing: Chip(
                                 label: Text(
                                   _reminderTime,
-                                  style: TextStyle(fontWeight: FontWeight.w800, color: colors.primary),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      color: colors.primary),
                                 ),
-                                backgroundColor: colors.primary.withValues(alpha: 0.12),
+                                backgroundColor:
+                                    colors.primary.withValues(alpha: 0.12),
                               ),
                               onTap: _pickReminderTime,
                             ),
@@ -656,10 +713,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             colors: colors,
                             icon: Icons.download_rounded,
                             iconColor: const Color(0xFF6C47FF),
-                            iconBg: const Color(0xFF6C47FF).withValues(alpha: 0.12),
+                            iconBg:
+                                const Color(0xFF6C47FF).withValues(alpha: 0.12),
                             title: 'O‘quv ma’lumotlarini yuklab olish',
-                            subtitle: 'O‘qish statistikasi va yutuqlarni JSON shaklida olish',
-                            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                            subtitle:
+                                'O‘qish statistikasi va yutuqlarni JSON shaklida olish',
+                            trailing: const Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 16),
                             onTap: _showExportDataSheet,
                           ),
                           Divider(height: 16, color: colors.border),
@@ -671,8 +732,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             title: 'Hisobni butunlay o‘chirish',
                             subtitle: 'Barcha ma’lumotlarni o‘chirish',
                             titleColor: AppColors.kidsError,
-                            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-                            onTap: student != null ? () => _showDeleteAccountSheet(student) : null,
+                            trailing: const Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 16),
+                            onTap: student != null
+                                ? () => _showDeleteAccountSheet(student)
+                                : null,
                           ),
                         ],
                       ),
@@ -686,12 +751,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           foregroundColor: AppColors.kidsError,
                           elevation: 0,
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
                         ),
                         icon: const Icon(Icons.logout_rounded, size: 20),
                         label: const Text(
                           'Hisobdan chiqish',
-                          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w800, fontSize: 15),
                         ),
                         onPressed: () async {
                           HapticFeedback.lightImpact();
@@ -699,7 +766,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             context: context,
                             builder: (ctx) => AlertDialog(
                               title: const Text('Hisobdan chiqish'),
-                              content: const Text('Haqiqatan ham hisobdan chiqmoqchimisiz?'),
+                              content: const Text(
+                                  'Haqiqatan ham hisobdan chiqmoqchimisiz?'),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(ctx, false),
@@ -707,7 +775,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 ),
                                 TextButton(
                                   onPressed: () => Navigator.pop(ctx, true),
-                                  child: const Text('Chiqish', style: TextStyle(color: Colors.red)),
+                                  child: const Text('Chiqish',
+                                      style: TextStyle(color: Colors.red)),
                                 ),
                               ],
                             ),
@@ -727,7 +796,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           children: [
                             Text(
                               'MathCity AI · v1.0.0 (Toshkent vaqti UTC+5)',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: colors.muted),
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: colors.muted),
                             ),
                             const SizedBox(height: 8),
                             Wrap(
@@ -837,7 +909,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         const SizedBox(width: 8),
                         if (isPro)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
                                 colors: [Color(0xFFFFA000), Color(0xFFFF6F00)],
@@ -847,7 +920,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.star_rounded, color: Colors.white, size: 12),
+                                Icon(Icons.star_rounded,
+                                    color: Colors.white, size: 12),
                                 SizedBox(width: 3),
                                 Text(
                                   'PRO',
@@ -862,7 +936,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           )
                         else
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               color: colors.field,
                               borderRadius: BorderRadius.circular(8),
@@ -890,10 +965,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               OutlinedButton(
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: colors.primary),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 ),
-                onPressed: student != null ? () => _showEditProfileDialog(student) : null,
+                onPressed: student != null
+                    ? () => _showEditProfileDialog(student)
+                    : null,
                 child: Text(
                   'Tahrirlash',
                   style: TextStyle(
@@ -918,7 +997,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.military_tech_rounded, size: 18, color: colors.primary),
+                    Icon(Icons.military_tech_rounded,
+                        size: 18, color: colors.primary),
                     const SizedBox(width: 6),
                     Text(
                       'Lvl $level',
@@ -1008,7 +1088,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 color: const Color(0xFF6C47FF).withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.palette_rounded, color: Color(0xFF6C47FF), size: 20),
+              child: const Icon(Icons.palette_rounded,
+                  color: Color(0xFF6C47FF), size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -1017,7 +1098,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 children: [
                   Text(
                     'Mavzu rejimi',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: colors.ink),
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: colors.ink),
                   ),
                   Text(
                     'Yorug‘, tungi yoki tizim mavzusiga moslash',
@@ -1036,23 +1120,31 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ButtonSegment(
                 value: ThemeMode.light,
                 icon: Icon(Icons.wb_sunny_rounded, size: 16),
-                label: Text('Yorug‘', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+                label: Text('Yorug‘',
+                    style:
+                        TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
               ),
               ButtonSegment(
                 value: ThemeMode.dark,
                 icon: Icon(Icons.dark_mode_rounded, size: 16),
-                label: Text('Tungi', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+                label: Text('Tungi',
+                    style:
+                        TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
               ),
               ButtonSegment(
                 value: ThemeMode.system,
                 icon: Icon(Icons.settings_suggest_rounded, size: 16),
-                label: Text('Tizim', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+                label: Text('Tizim',
+                    style:
+                        TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
               ),
             ],
             selected: {currentMode},
             onSelectionChanged: (newSelection) {
               HapticFeedback.lightImpact();
-              ref.read(themeModeProvider.notifier).setThemeMode(newSelection.first);
+              ref
+                  .read(themeModeProvider.notifier)
+                  .setThemeMode(newSelection.first);
             },
           ),
         ),
@@ -1227,8 +1319,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                     ),
                     Text(
-                      isPro ? 'Barcha imtiyozlar va cheksiz AI ochiq' : 'Oyiga 29 000 so‘m',
-                      style: const TextStyle(fontSize: 12, color: Colors.white70),
+                      isPro
+                          ? 'Barcha imtiyozlar va cheksiz AI ochiq'
+                          : 'Oyiga 29 000 so‘m',
+                      style:
+                          const TextStyle(fontSize: 12, color: Colors.white70),
                     ),
                   ],
                 ),
@@ -1236,9 +1331,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
-                  foregroundColor: isPro ? const Color(0xFF059669) : const Color(0xFF6C47FF),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  foregroundColor:
+                      isPro ? const Color(0xFF059669) : const Color(0xFF6C47FF),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 ),
                 onPressed: () {
                   HapticFeedback.lightImpact();
@@ -1246,7 +1344,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 },
                 child: Text(
                   isPro ? 'Boshqarish' : 'Pro olish',
-                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w800, fontSize: 13),
                 ),
               ),
             ],
@@ -1263,9 +1362,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 children: const [
                   _ProBenefitRow(text: 'Cheksiz AI Ustoz va ovozli suhbat'),
                   SizedBox(height: 6),
-                  _ProBenefitRow(text: 'Rasmiy tasdiqlangan matematika sertifikati'),
+                  _ProBenefitRow(
+                      text: 'Rasmiy tasdiqlangan matematika sertifikati'),
                   SizedBox(height: 6),
-                  _ProBenefitRow(text: 'Barcha yuqori darajadagi darslar va yutuqlar'),
+                  _ProBenefitRow(
+                      text: 'Barcha yuqori darajadagi darslar va yutuqlar'),
                 ],
               ),
             ),
@@ -1289,7 +1390,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [Color(0xFFFFA000), Color(0xFFFF6F00)],
@@ -1306,7 +1408,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                 ),
                 const SizedBox(width: 6),
-                const Icon(Icons.lock_rounded, size: 16, color: Color(0xFFF59E0B)),
+                const Icon(Icons.lock_rounded,
+                    size: 16, color: Color(0xFFF59E0B)),
               ],
             ),
       onTap: () {
@@ -1328,12 +1431,14 @@ class _ProBenefitRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Icon(Icons.check_circle_rounded, color: Color(0xFF34D399), size: 16),
+        const Icon(Icons.check_circle_rounded,
+            color: Color(0xFF34D399), size: 16),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w600),
+            style: const TextStyle(
+                fontSize: 12, color: Colors.white, fontWeight: FontWeight.w600),
           ),
         ),
       ],

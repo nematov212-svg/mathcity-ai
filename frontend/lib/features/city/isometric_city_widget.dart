@@ -37,7 +37,8 @@ class IsometricCityWidget extends StatefulWidget {
 
 class _IsometricCityWidgetState extends State<IsometricCityWidget>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  final TransformationController _transformController = TransformationController();
+  final TransformationController _transformController =
+      TransformationController();
   double _zoomLevel = 1.0;
   late AnimationController _ambientController;
   late AnimationController _carController;
@@ -53,7 +54,8 @@ class _IsometricCityWidgetState extends State<IsometricCityWidget>
 
     _carController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: (7000 / widget.carSpeed).clamp(2500, 10000).round()),
+      duration: Duration(
+          milliseconds: (7000 / widget.carSpeed).clamp(2500, 10000).round()),
     )..repeat();
   }
 
@@ -72,8 +74,8 @@ class _IsometricCityWidgetState extends State<IsometricCityWidget>
   void didUpdateWidget(covariant IsometricCityWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.carSpeed != widget.carSpeed) {
-      _carController.duration =
-          Duration(milliseconds: (7000 / widget.carSpeed).clamp(2500, 10000).round());
+      _carController.duration = Duration(
+          milliseconds: (7000 / widget.carSpeed).clamp(2500, 10000).round());
       if (!_carController.isAnimating) {
         _carController.repeat();
       }
@@ -123,13 +125,18 @@ class _IsometricCityWidgetState extends State<IsometricCityWidget>
                 height: double.infinity,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFFE5DEFF), Color(0xFFF3F0FF), Color(0xFFE8F6FE)],
+                    colors: [
+                      Color(0xFFE5DEFF),
+                      Color(0xFFF3F0FF),
+                      Color(0xFFE8F6FE)
+                    ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
                 ),
                 child: CustomPaint(
-                  painter: SkyAndRainbowPainter(ambientOffset: _ambientController.value),
+                  painter: SkyAndRainbowPainter(
+                      ambientOffset: _ambientController.value),
                 ),
               );
             },
@@ -152,30 +159,31 @@ class _IsometricCityWidgetState extends State<IsometricCityWidget>
                 },
                 child: RepaintBoundary(
                   child: AnimatedBuilder(
-                    animation: Listenable.merge([_ambientController, _carController]),
+                    animation:
+                        Listenable.merge([_ambientController, _carController]),
                     builder: (context, _) {
                       return CustomPaint(
-                      size: const Size(540, 540),
-                      painter: IsometricIslandPainter(
-                        placedBuildings: widget.placedBuildings,
-                        animatingGridX: widget.animatingGridX,
-                        animatingGridY: widget.animatingGridY,
-                        constructionProgress: widget.constructionProgress,
-                        ambientOffset: _ambientController.value,
-                        carProgress: _carController.value,
-                        citizenCount: widget.citizenCount,
-                        carColor: widget.carColor,
-                        carLevel: widget.carLevel,
-                        carModel: widget.carModel,
-                      ),
-                    );
-                  },
+                        size: const Size(540, 540),
+                        painter: IsometricIslandPainter(
+                          placedBuildings: widget.placedBuildings,
+                          animatingGridX: widget.animatingGridX,
+                          animatingGridY: widget.animatingGridY,
+                          constructionProgress: widget.constructionProgress,
+                          ambientOffset: _ambientController.value,
+                          carProgress: _carController.value,
+                          citizenCount: widget.citizenCount,
+                          carColor: widget.carColor,
+                          carLevel: widget.carLevel,
+                          carModel: widget.carModel,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
 
         // Floating Zoom Controls
         Positioned(
@@ -197,19 +205,22 @@ class _IsometricCityWidgetState extends State<IsometricCityWidget>
             child: Column(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.add_rounded, color: Color(0xFF7154EC), size: 24),
+                  icon: const Icon(Icons.add_rounded,
+                      color: Color(0xFF7154EC), size: 24),
                   tooltip: 'Kattalashtirish',
                   onPressed: _zoomIn,
                 ),
                 Container(width: 24, height: 1, color: AppColors.kidsBorder),
                 IconButton(
-                  icon: const Icon(Icons.remove_rounded, color: Color(0xFF7154EC), size: 24),
+                  icon: const Icon(Icons.remove_rounded,
+                      color: Color(0xFF7154EC), size: 24),
                   tooltip: 'Kichiklashtirish',
                   onPressed: _zoomOut,
                 ),
                 Container(width: 24, height: 1, color: AppColors.kidsBorder),
                 IconButton(
-                  icon: const Icon(Icons.center_focus_strong_rounded, color: Color(0xFF7154EC), size: 20),
+                  icon: const Icon(Icons.center_focus_strong_rounded,
+                      color: Color(0xFF7154EC), size: 20),
                   tooltip: 'Markazga qaytish',
                   onPressed: _resetView,
                 ),
@@ -234,10 +245,11 @@ class _IsometricCityWidgetState extends State<IsometricCityWidget>
     final gridY = ((dy / (tileH / 2) - dx / (tileW / 2)) / 2).round();
 
     if (gridX >= 0 && gridX < 4 && gridY >= 0 && gridY < 4) {
-      final building = widget.placedBuildings.cast<PlacedBuildingModel?>().firstWhere(
-            (b) => b?.gridX == gridX && b?.gridY == gridY,
-            orElse: () => null,
-          );
+      final building =
+          widget.placedBuildings.cast<PlacedBuildingModel?>().firstWhere(
+                (b) => b?.gridX == gridX && b?.gridY == gridY,
+                orElse: () => null,
+              );
 
       if (building != null) {
         widget.onBuildingTap?.call(building);
@@ -283,16 +295,21 @@ class SkyAndRainbowPainter extends CustomPainter {
       radius -= 5.5;
     }
 
-    _drawCloud(canvas, Offset(size.width * 0.18 + ambientOffset * 12, size.height * 0.15), 32);
-    _drawCloud(canvas, Offset(size.width * 0.84 - ambientOffset * 9, size.height * 0.11), 26);
-    _drawCloud(canvas, Offset(size.width * 0.52 + ambientOffset * 6, size.height * 0.08), 22);
+    _drawCloud(canvas,
+        Offset(size.width * 0.18 + ambientOffset * 12, size.height * 0.15), 32);
+    _drawCloud(canvas,
+        Offset(size.width * 0.84 - ambientOffset * 9, size.height * 0.11), 26);
+    _drawCloud(canvas,
+        Offset(size.width * 0.52 + ambientOffset * 6, size.height * 0.08), 22);
   }
 
   void _drawCloud(Canvas canvas, Offset pos, double radius) {
     final cloudPaint = Paint()..color = Colors.white.withOpacity(0.75);
     canvas.drawCircle(pos, radius, cloudPaint);
-    canvas.drawCircle(Offset(pos.dx - radius * 0.6, pos.dy + radius * 0.2), radius * 0.7, cloudPaint);
-    canvas.drawCircle(Offset(pos.dx + radius * 0.7, pos.dy + radius * 0.1), radius * 0.8, cloudPaint);
+    canvas.drawCircle(Offset(pos.dx - radius * 0.6, pos.dy + radius * 0.2),
+        radius * 0.7, cloudPaint);
+    canvas.drawCircle(Offset(pos.dx + radius * 0.7, pos.dy + radius * 0.1),
+        radius * 0.8, cloudPaint);
   }
 
   @override
@@ -359,11 +376,14 @@ class IsometricIslandPainter extends CustomPainter {
     canvas.drawPath(cliffPath, cliffPaint);
 
     // Island Soil crystals / roots
-    canvas.drawCircle(Offset(topFrontBottom.dx - 32, topFrontBottom.dy + 75), 5, Paint()..color = const Color(0xFF5A4432));
-    canvas.drawCircle(Offset(topFrontBottom.dx + 28, topFrontBottom.dy + 70), 4, Paint()..color = const Color(0xFF5A4432));
+    canvas.drawCircle(Offset(topFrontBottom.dx - 32, topFrontBottom.dy + 75), 5,
+        Paint()..color = const Color(0xFF5A4432));
+    canvas.drawCircle(Offset(topFrontBottom.dx + 28, topFrontBottom.dy + 70), 4,
+        Paint()..color = const Color(0xFF5A4432));
 
     // 2. 4x4 Isometric Grid: Grass Plots & Lake
-    final bool hasLakeBuilding = placedBuildings.any((b) => b.gridX == 0 && b.gridY == 0);
+    final bool hasLakeBuilding =
+        placedBuildings.any((b) => b.gridX == 0 && b.gridY == 0);
 
     for (int y = 0; y < 4; y++) {
       for (int x = 0; x < 4; x++) {
@@ -423,7 +443,8 @@ class IsometricIslandPainter extends CustomPainter {
     for (final b in sortedBuildings) {
       final pos = _toScreen(b.gridX, b.gridY, originX, originY, tileW, tileH);
 
-      final isCurrentlyBuilding = animatingGridX == b.gridX && animatingGridY == b.gridY;
+      final isCurrentlyBuilding =
+          animatingGridX == b.gridX && animatingGridY == b.gridY;
       final scale = isCurrentlyBuilding
           ? Curves.elasticOut.transform(constructionProgress.clamp(0.0, 1.0))
           : 1.0;
@@ -444,14 +465,17 @@ class IsometricIslandPainter extends CustomPainter {
     }
 
     // 6. Draw Citizens (Fuqarolar) strolling around plaza and paths
-    _drawCitizens(canvas, originX, originY, tileW, tileH, ambientOffset, citizenCount);
+    _drawCitizens(
+        canvas, originX, originY, tileW, tileH, ambientOffset, citizenCount);
 
     // 7. Draw 60fps Moving Isometric Car along the Road Loop
-    _drawMovingCar(canvas, originX, originY, tileW, tileH, carProgress, carColor, carLevel, carModel);
+    _drawMovingCar(canvas, originX, originY, tileW, tileH, carProgress,
+        carColor, carLevel, carModel);
   }
 
   // --- Natural Shimmering Lake ---
-  void _drawLakeTile(Canvas canvas, Offset pos, double tw, double th, double offset) {
+  void _drawLakeTile(
+      Canvas canvas, Offset pos, double tw, double th, double offset) {
     final lakePath = Path()
       ..moveTo(pos.dx, pos.dy - th / 2)
       ..lineTo(pos.dx + tw / 2, pos.dy)
@@ -464,7 +488,8 @@ class IsometricIslandPainter extends CustomPainter {
     canvas.drawPath(lakePath, sandPaint);
 
     // Water pool
-    final waterRect = Rect.fromCenter(center: pos, width: tw * 0.78, height: th * 0.78);
+    final waterRect =
+        Rect.fromCenter(center: pos, width: tw * 0.78, height: th * 0.78);
     final waterPaint = Paint()
       ..shader = const LinearGradient(
         colors: [Color(0xFF38BDF8), Color(0xFF0284C7)],
@@ -480,16 +505,21 @@ class IsometricIslandPainter extends CustomPainter {
       ..strokeWidth = 1.2;
     final r1 = (waterRect.width * 0.25) + math.sin(offset * 2 * math.pi) * 3;
     final r2 = (waterRect.width * 0.45) + math.cos(offset * 2 * math.pi) * 4;
-    canvas.drawOval(Rect.fromCenter(center: pos, width: r1, height: r1 * 0.5), ripplePaint);
-    canvas.drawOval(Rect.fromCenter(center: pos, width: r2, height: r2 * 0.5), ripplePaint);
+    canvas.drawOval(
+        Rect.fromCenter(center: pos, width: r1, height: r1 * 0.5), ripplePaint);
+    canvas.drawOval(
+        Rect.fromCenter(center: pos, width: r2, height: r2 * 0.5), ripplePaint);
 
     // Lotus Water Lily
-    canvas.drawCircle(Offset(pos.dx - 8, pos.dy - 2), 4, Paint()..color = const Color(0xFF10B981));
-    canvas.drawCircle(Offset(pos.dx - 8, pos.dy - 2), 2, Paint()..color = const Color(0xFFF43F5E));
+    canvas.drawCircle(Offset(pos.dx - 8, pos.dy - 2), 4,
+        Paint()..color = const Color(0xFF10B981));
+    canvas.drawCircle(Offset(pos.dx - 8, pos.dy - 2), 2,
+        Paint()..color = const Color(0xFFF43F5E));
   }
 
   // --- Road Network ---
-  void _drawRoadNetwork(Canvas canvas, double ox, double oy, double tw, double th) {
+  void _drawRoadNetwork(
+      Canvas canvas, double ox, double oy, double tw, double th) {
     final roadPaint = Paint()
       ..color = const Color(0xFF94A3B8)
       ..style = PaintingStyle.stroke
@@ -519,7 +549,8 @@ class IsometricIslandPainter extends CustomPainter {
   }
 
   // --- Perimeter 3D Trees ---
-  void _drawPerimeterTrees(Canvas canvas, double ox, double oy, double tw, double th) {
+  void _drawPerimeterTrees(
+      Canvas canvas, double ox, double oy, double tw, double th) {
     final treePlots = [
       _toScreen(0, 1, ox, oy, tw, th) + const Offset(-24, 0),
       _toScreen(1, 0, ox, oy, tw, th) + const Offset(0, -18),
@@ -539,8 +570,10 @@ class IsometricIslandPainter extends CustomPainter {
       Paint()..color = const Color(0xFF78350F),
     );
     // Tree Foliage (Double dome)
-    canvas.drawCircle(Offset(pos.dx, pos.dy - 14), 9, Paint()..color = const Color(0xFF15803D));
-    canvas.drawCircle(Offset(pos.dx, pos.dy - 17), 7, Paint()..color = const Color(0xFF22C55E));
+    canvas.drawCircle(Offset(pos.dx, pos.dy - 14), 9,
+        Paint()..color = const Color(0xFF15803D));
+    canvas.drawCircle(Offset(pos.dx, pos.dy - 17), 7,
+        Paint()..color = const Color(0xFF22C55E));
   }
 
   // --- Moving 60fps Isometric Car ---
@@ -575,7 +608,8 @@ class IsometricIslandPainter extends CustomPainter {
 
     // Car Shadow
     canvas.drawOval(
-      Rect.fromCenter(center: carPos + const Offset(0, 2), width: 22, height: 10),
+      Rect.fromCenter(
+          center: carPos + const Offset(0, 2), width: 22, height: 10),
       Paint()..color = Colors.black.withOpacity(0.25),
     );
 
@@ -595,14 +629,18 @@ class IsometricIslandPainter extends CustomPainter {
       ..lineTo(carPos.dx, carPos.dy - 1)
       ..lineTo(carPos.dx - 6, carPos.dy - 4)
       ..close();
-    canvas.drawPath(roofPath, Paint()..color = Colors.lightBlueAccent.withOpacity(0.9));
+    canvas.drawPath(
+        roofPath, Paint()..color = Colors.lightBlueAccent.withOpacity(0.9));
 
     // Headlights
-    canvas.drawCircle(carPos + const Offset(7, 2), 1.8, Paint()..color = const Color(0xFFFDE047));
+    canvas.drawCircle(carPos + const Offset(7, 2), 1.8,
+        Paint()..color = const Color(0xFFFDE047));
 
     // Wheels
-    canvas.drawCircle(carPos + const Offset(-6, 2), 2.2, Paint()..color = const Color(0xFF1E293B));
-    canvas.drawCircle(carPos + const Offset(4, 3), 2.2, Paint()..color = const Color(0xFF1E293B));
+    canvas.drawCircle(carPos + const Offset(-6, 2), 2.2,
+        Paint()..color = const Color(0xFF1E293B));
+    canvas.drawCircle(carPos + const Offset(4, 3), 2.2,
+        Paint()..color = const Color(0xFF1E293B));
 
     // Sportkar / Cyber-avto upgrades
     if (level >= 2) {
@@ -657,7 +695,8 @@ class IsometricIslandPainter extends CustomPainter {
 
       // Shadow
       canvas.drawOval(
-        Rect.fromCenter(center: Offset(citizenX, citizenY + 3), width: 8, height: 4),
+        Rect.fromCenter(
+            center: Offset(citizenX, citizenY + 3), width: 8, height: 4),
         Paint()..color = Colors.black.withOpacity(0.2),
       );
 
@@ -699,7 +738,9 @@ class IsometricIslandPainter extends CustomPainter {
       canvas.drawCircle(
         Offset(pX, pY),
         2.5,
-        Paint()..color = colors[i % colors.length].withOpacity((1.0 - progress).clamp(0.0, 1.0)),
+        Paint()
+          ..color = colors[i % colors.length]
+              .withOpacity((1.0 - progress).clamp(0.0, 1.0)),
       );
     }
   }

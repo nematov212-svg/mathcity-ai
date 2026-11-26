@@ -115,79 +115,388 @@ const List<Map<String, String>> kRoofColors = [
 
 const List<HouseCatalogItem> kFallbackHouseCatalog = [
   // Foundation
-  HouseCatalogItem(id: 'clean_lot', name: 'Maydonni tozalash', category: 'foundation', stage: 1, coinPrice: 1, iconEmoji: '🧹'),
-  HouseCatalogItem(id: 'gravel_base', name: 'Qum-shag‘al asos', category: 'foundation', stage: 1, coinPrice: 5, iconEmoji: '🪨'),
-  HouseCatalogItem(id: 'concrete_foundation', name: 'Beton poydevor', category: 'foundation', stage: 1, coinPrice: 30, iconEmoji: '🧱'),
-  HouseCatalogItem(id: 'reinforced_basement', name: 'Mustahkam poydevor', category: 'foundation', stage: 1, coinPrice: 120, iconEmoji: '🏗️'),
+  HouseCatalogItem(
+      id: 'clean_lot',
+      name: 'Maydonni tozalash',
+      category: 'foundation',
+      stage: 1,
+      coinPrice: 1,
+      iconEmoji: '🧹'),
+  HouseCatalogItem(
+      id: 'gravel_base',
+      name: 'Qum-shag‘al asos',
+      category: 'foundation',
+      stage: 1,
+      coinPrice: 5,
+      iconEmoji: '🪨'),
+  HouseCatalogItem(
+      id: 'concrete_foundation',
+      name: 'Beton poydevor',
+      category: 'foundation',
+      stage: 1,
+      coinPrice: 30,
+      iconEmoji: '🧱'),
+  HouseCatalogItem(
+      id: 'reinforced_basement',
+      name: 'Mustahkam poydevor',
+      category: 'foundation',
+      stage: 1,
+      coinPrice: 120,
+      iconEmoji: '🏗️'),
 
   // Walls
-  HouseCatalogItem(id: 'mud_brick_wall', name: 'Paxsa devor', category: 'walls', stage: 2, coinPrice: 25, iconEmoji: '🧱'),
-  HouseCatalogItem(id: 'white_brick_wall', name: 'Oq g‘isht devor', category: 'walls', stage: 2, coinPrice: 50, iconEmoji: '🏠'),
-  HouseCatalogItem(id: 'red_brick_wall', name: 'Pishiq qizil g‘isht & usta', category: 'walls', stage: 2, coinPrice: 75, iconEmoji: '🧱'),
-  HouseCatalogItem(id: 'stone_wall', name: 'Tabiiy tosh devor', category: 'walls', stage: 2, coinPrice: 110, iconEmoji: '🪨'),
-  HouseCatalogItem(id: 'modern_glass_wall', name: 'Zamonaviy shisha-panoramik', category: 'walls', stage: 2, coinPrice: 200, iconEmoji: '✨'),
+  HouseCatalogItem(
+      id: 'mud_brick_wall',
+      name: 'Paxsa devor',
+      category: 'walls',
+      stage: 2,
+      coinPrice: 40,
+      iconEmoji: '🧱'),
+  HouseCatalogItem(
+      id: 'white_brick_wall',
+      name: 'Oq g‘isht devor',
+      category: 'walls',
+      stage: 2,
+      coinPrice: 80,
+      iconEmoji: '🏠'),
+  HouseCatalogItem(
+      id: 'red_brick_wall',
+      name: 'Pishiq qizil g‘isht devor',
+      category: 'walls',
+      stage: 2,
+      coinPrice: 150,
+      iconEmoji: '🧱'),
+  HouseCatalogItem(
+      id: 'stone_wall',
+      name: 'Tabiiy tosh devor',
+      category: 'walls',
+      stage: 2,
+      coinPrice: 250,
+      iconEmoji: '🪨'),
+  HouseCatalogItem(
+      id: 'modern_glass_wall',
+      name: 'Zamonaviy shisha-panoramik',
+      category: 'walls',
+      stage: 2,
+      coinPrice: 400,
+      iconEmoji: '✨'),
 
   // Roofs
-  HouseCatalogItem(id: 'flat_roof', name: 'Yassi tom (Terrasa & Panjara)', category: 'roof', stage: 3, coinPrice: 30, iconEmoji: '🛖'),
-  HouseCatalogItem(id: 'shed_roof', name: 'Bir nishabli tom', category: 'roof', stage: 3, coinPrice: 45, iconEmoji: '🛖'),
-  HouseCatalogItem(id: 'gable_roof', name: 'Ikki nishabli tom', category: 'roof', stage: 3, coinPrice: 60, iconEmoji: '🛖'),
-  HouseCatalogItem(id: 'pyramid_roof', name: 'Piramida tom', category: 'roof', stage: 3, coinPrice: 80, iconEmoji: '🛖'),
-  HouseCatalogItem(id: 'tile_roof', name: 'Koshinli (cherepitsa) tom', category: 'roof', stage: 3, coinPrice: 120, iconEmoji: '🛖'),
-  HouseCatalogItem(id: 'solar_roof', name: 'Quyosh panelli tom', category: 'roof', stage: 3, coinPrice: 250, iconEmoji: '☀️'),
+  HouseCatalogItem(
+      id: 'flat_roof',
+      name: 'Yassi tom (Terrasa & Panjara)',
+      category: 'roof',
+      stage: 3,
+      coinPrice: 40,
+      iconEmoji: '🛖'),
+  HouseCatalogItem(
+      id: 'shed_roof',
+      name: 'Bir nishabli tom',
+      category: 'roof',
+      stage: 3,
+      coinPrice: 60,
+      iconEmoji: '🛖'),
+  HouseCatalogItem(
+      id: 'gable_roof',
+      name: 'Ikki nishabli tom',
+      category: 'roof',
+      stage: 3,
+      coinPrice: 100,
+      iconEmoji: '🛖'),
+  HouseCatalogItem(
+      id: 'pyramid_roof',
+      name: 'Piramida tom',
+      category: 'roof',
+      stage: 3,
+      coinPrice: 120,
+      iconEmoji: '🛖'),
+  HouseCatalogItem(
+      id: 'tile_roof',
+      name: 'Koshinli (cherepitsa) tom',
+      category: 'roof',
+      stage: 3,
+      coinPrice: 180,
+      iconEmoji: '🛖'),
+  HouseCatalogItem(
+      id: 'solar_roof',
+      name: 'Quyosh panelli tom',
+      category: 'roof',
+      stage: 3,
+      coinPrice: 450,
+      iconEmoji: '☀️'),
 
   // Doors
-  HouseCatalogItem(id: 'simple_wood_door', name: 'Oddiy yog‘och eshik', category: 'doors', stage: 5, coinPrice: 10, iconEmoji: '🚪'),
-  HouseCatalogItem(id: 'standard_door', name: 'Klassik eshik', category: 'doors', stage: 5, coinPrice: 20, iconEmoji: '🚪'),
-  HouseCatalogItem(id: 'double_door', name: 'Ikki tabaqali hashamatli eshik', category: 'doors', stage: 5, coinPrice: 45, iconEmoji: '🚪'),
-  HouseCatalogItem(id: 'garage_gate', name: 'Avtomat garaj darvozasi (108)', category: 'doors', stage: 5, coinPrice: 80, iconEmoji: '🚪'),
-  HouseCatalogItem(id: 'modern_glass_door', name: 'Zamonaviy shisha eshik', category: 'doors', stage: 5, coinPrice: 120, iconEmoji: '🚪'),
+  HouseCatalogItem(
+      id: 'simple_wood_door',
+      name: 'Oddiy yog‘och eshik',
+      category: 'doors',
+      stage: 5,
+      coinPrice: 40,
+      iconEmoji: '🚪'),
+  HouseCatalogItem(
+      id: 'standard_door',
+      name: 'Klassik eshik',
+      category: 'doors',
+      stage: 5,
+      coinPrice: 90,
+      iconEmoji: '🚪'),
+  HouseCatalogItem(
+      id: 'double_door',
+      name: 'Ikki tabaqali hashamatli eshik',
+      category: 'doors',
+      stage: 5,
+      coinPrice: 160,
+      iconEmoji: '🚪'),
+  HouseCatalogItem(
+      id: 'garage_gate',
+      name: 'Avtomat garaj darvozasi (108)',
+      category: 'doors',
+      stage: 5,
+      coinPrice: 220,
+      iconEmoji: '🚪'),
+  HouseCatalogItem(
+      id: 'modern_glass_door',
+      name: 'Zamonaviy shisha eshik',
+      category: 'doors',
+      stage: 5,
+      coinPrice: 300,
+      iconEmoji: '🚪'),
 
   // Windows
-  HouseCatalogItem(id: 'small_window', name: 'Kichik deraza', category: 'windows', stage: 4, coinPrice: 8, iconEmoji: '🪟'),
-  HouseCatalogItem(id: 'standard_window', name: 'Standart oq romli deraza', category: 'windows', stage: 4, coinPrice: 15, iconEmoji: '🪟'),
-  HouseCatalogItem(id: 'panoramic_window', name: 'Katta panoramik vitrina', category: 'windows', stage: 4, coinPrice: 40, iconEmoji: '🪟'),
-  HouseCatalogItem(id: 'stained_glass_window', name: 'Rangli vitraj deraza', category: 'windows', stage: 4, coinPrice: 75, iconEmoji: '🪟'),
+  HouseCatalogItem(
+      id: 'small_window',
+      name: 'Kichik deraza',
+      category: 'windows',
+      stage: 4,
+      coinPrice: 15,
+      iconEmoji: '🪟'),
+  HouseCatalogItem(
+      id: 'standard_window',
+      name: 'Standart oq romli deraza',
+      category: 'windows',
+      stage: 4,
+      coinPrice: 50,
+      iconEmoji: '🪟'),
+  HouseCatalogItem(
+      id: 'panoramic_window',
+      name: 'Katta panoramik vitrina',
+      category: 'windows',
+      stage: 4,
+      coinPrice: 150,
+      iconEmoji: '🪟'),
+  HouseCatalogItem(
+      id: 'stained_glass_window',
+      name: 'Rangli vitraj deraza',
+      category: 'windows',
+      stage: 4,
+      coinPrice: 200,
+      iconEmoji: '🪟'),
 
   // Yard & Garden
-  HouseCatalogItem(id: 'stone_path', name: 'Tosh yo‘lak & LED chiroqlar', category: 'yard', stage: 6, coinPrice: 5, iconEmoji: '🛤️', multiPlace: true),
-  HouseCatalogItem(id: 'bush', name: 'Binafsha gulli butazor', category: 'yard', stage: 6, coinPrice: 6, iconEmoji: '🌺', multiPlace: true),
-  HouseCatalogItem(id: 'flower', name: 'Gulzordagi rang-barang gullar', category: 'yard', stage: 6, coinPrice: 4, iconEmoji: '🌸', multiPlace: true),
-  HouseCatalogItem(id: 'tree', name: 'Salobatli manzarali daraxt', category: 'yard', stage: 6, coinPrice: 15, iconEmoji: '🌳', multiPlace: true),
-  HouseCatalogItem(id: 'fruit_tree', name: 'Mevazor olma daraxti', category: 'yard', stage: 6, coinPrice: 25, iconEmoji: '🍎', multiPlace: true),
-  HouseCatalogItem(id: 'street_lantern', name: 'Zamonaviy LED tungi fonar', category: 'yard', stage: 6, coinPrice: 18, iconEmoji: '💡', multiPlace: true),
-  HouseCatalogItem(id: 'bench', name: 'Yog‘och o‘rindiq (skameyka)', category: 'yard', stage: 6, coinPrice: 12, iconEmoji: '🪑', multiPlace: true),
-  HouseCatalogItem(id: 'wooden_fence', name: 'Oq yog‘och panjara', category: 'yard', stage: 6, coinPrice: 8, iconEmoji: '🪵', multiPlace: true),
-  HouseCatalogItem(id: 'swimming_pool', name: 'Hashamatli basseyn & soyabon', category: 'yard', stage: 6, coinPrice: 220, iconEmoji: '🏊'),
-  HouseCatalogItem(id: 'fountain', name: 'Marmar favvora', category: 'yard', stage: 6, coinPrice: 160, iconEmoji: '⛲'),
+  HouseCatalogItem(
+      id: 'stone_path',
+      name: 'Tosh yo‘lak & LED chiroqlar',
+      category: 'yard',
+      stage: 6,
+      coinPrice: 5,
+      iconEmoji: '🛤️',
+      multiPlace: true),
+  HouseCatalogItem(
+      id: 'bush',
+      name: 'Binafsha gulli butazor',
+      category: 'yard',
+      stage: 6,
+      coinPrice: 6,
+      iconEmoji: '🌺',
+      multiPlace: true),
+  HouseCatalogItem(
+      id: 'flower',
+      name: 'Gulzordagi rang-barang gullar',
+      category: 'yard',
+      stage: 6,
+      coinPrice: 4,
+      iconEmoji: '🌸',
+      multiPlace: true),
+  HouseCatalogItem(
+      id: 'tree',
+      name: 'Salobatli manzarali daraxt',
+      category: 'yard',
+      stage: 6,
+      coinPrice: 15,
+      iconEmoji: '🌳',
+      multiPlace: true),
+  HouseCatalogItem(
+      id: 'fruit_tree',
+      name: 'Mevazor olma daraxti',
+      category: 'yard',
+      stage: 6,
+      coinPrice: 25,
+      iconEmoji: '🍎',
+      multiPlace: true),
+  HouseCatalogItem(
+      id: 'street_lantern',
+      name: 'Zamonaviy LED tungi fonar',
+      category: 'yard',
+      stage: 6,
+      coinPrice: 18,
+      iconEmoji: '💡',
+      multiPlace: true),
+  HouseCatalogItem(
+      id: 'bench',
+      name: 'Yog‘och o‘rindiq (skameyka)',
+      category: 'yard',
+      stage: 6,
+      coinPrice: 12,
+      iconEmoji: '🪑',
+      multiPlace: true),
+  HouseCatalogItem(
+      id: 'wooden_fence',
+      name: 'Oq yog‘och panjara',
+      category: 'yard',
+      stage: 6,
+      coinPrice: 8,
+      iconEmoji: '🪵',
+      multiPlace: true),
+  HouseCatalogItem(
+      id: 'swimming_pool',
+      name: 'Hashamatli basseyn & soyabon',
+      category: 'yard',
+      stage: 6,
+      coinPrice: 220,
+      iconEmoji: '🏊'),
+  HouseCatalogItem(
+      id: 'fountain',
+      name: 'Marmar favvora',
+      category: 'yard',
+      stage: 6,
+      coinPrice: 160,
+      iconEmoji: '⛲'),
 
   // Transport
-  HouseCatalogItem(id: 'bicycle', name: 'Tezyurar sport velosiped', category: 'vehicles', stage: 6, coinPrice: 15, iconEmoji: '🚲'),
-  HouseCatalogItem(id: 'scooter', name: 'Elektr skuter', category: 'vehicles', stage: 6, coinPrice: 25, iconEmoji: '🛴'),
-  HouseCatalogItem(id: 'motorcycle', name: 'Klassik mototsikl', category: 'vehicles', stage: 6, coinPrice: 70, iconEmoji: '🏍️'),
-  HouseCatalogItem(id: 'standard_car', name: 'Oila uchun qulay sedan', category: 'vehicles', stage: 6, coinPrice: 180, iconEmoji: '🚗'),
-  HouseCatalogItem(id: 'sports_car', name: 'Hashamatli sportkar (Supercar)', category: 'vehicles', stage: 6, coinPrice: 350, iconEmoji: '🏎️'),
-  HouseCatalogItem(id: 'large_suv', name: 'Katta jip (SUV)', category: 'vehicles', stage: 6, coinPrice: 420, iconEmoji: '🚙'),
+  HouseCatalogItem(
+      id: 'bicycle',
+      name: 'Tezyurar sport velosiped',
+      category: 'vehicles',
+      stage: 6,
+      coinPrice: 40,
+      iconEmoji: '🚲'),
+  HouseCatalogItem(
+      id: 'scooter',
+      name: 'Elektr skuter',
+      category: 'vehicles',
+      stage: 6,
+      coinPrice: 70,
+      iconEmoji: '🛴'),
+  HouseCatalogItem(
+      id: 'motorcycle',
+      name: 'Klassik mototsikl',
+      category: 'vehicles',
+      stage: 6,
+      coinPrice: 150,
+      iconEmoji: '🏍️'),
+  HouseCatalogItem(
+      id: 'standard_car',
+      name: 'Oila uchun qulay sedan',
+      category: 'vehicles',
+      stage: 6,
+      coinPrice: 300,
+      iconEmoji: '🚗'),
+  HouseCatalogItem(
+      id: 'sports_car',
+      name: 'Hashamatli sportkar (Supercar)',
+      category: 'vehicles',
+      stage: 6,
+      coinPrice: 450,
+      iconEmoji: '🏎️'),
+  HouseCatalogItem(
+      id: 'large_suv',
+      name: 'Katta jip (SUV)',
+      category: 'vehicles',
+      stage: 6,
+      coinPrice: 500,
+      iconEmoji: '🚙'),
 
   // Interior
-  HouseCatalogItem(id: 'carpet', name: 'Milliy gilam', category: 'interior', stage: 2, coinPrice: 8, iconEmoji: '🛋️'),
-  HouseCatalogItem(id: 'table', name: 'Yog‘och stol', category: 'interior', stage: 2, coinPrice: 12, iconEmoji: '🪵'),
-  HouseCatalogItem(id: 'sofa', name: 'Yumshoq zamonaviy divan', category: 'interior', stage: 2, coinPrice: 35, iconEmoji: '🛋️'),
-  HouseCatalogItem(id: 'bed', name: 'Katta qulay karavot', category: 'interior', stage: 2, coinPrice: 40, iconEmoji: '🛏️'),
-  HouseCatalogItem(id: 'tv', name: 'Katta ekranli Smart TV', category: 'interior', stage: 2, coinPrice: 60, iconEmoji: '📺'),
+  HouseCatalogItem(
+      id: 'carpet',
+      name: 'Milliy gilam',
+      category: 'interior',
+      stage: 2,
+      coinPrice: 8,
+      iconEmoji: '🛋️'),
+  HouseCatalogItem(
+      id: 'table',
+      name: 'Yog‘och stol',
+      category: 'interior',
+      stage: 2,
+      coinPrice: 12,
+      iconEmoji: '🪵'),
+  HouseCatalogItem(
+      id: 'sofa',
+      name: 'Yumshoq zamonaviy divan',
+      category: 'interior',
+      stage: 2,
+      coinPrice: 35,
+      iconEmoji: '🛋️'),
+  HouseCatalogItem(
+      id: 'bed',
+      name: 'Katta qulay karavot',
+      category: 'interior',
+      stage: 2,
+      coinPrice: 40,
+      iconEmoji: '🛏️'),
+  HouseCatalogItem(
+      id: 'tv',
+      name: 'Katta ekranli Smart TV',
+      category: 'interior',
+      stage: 2,
+      coinPrice: 60,
+      iconEmoji: '📺'),
 
   // Extras
-  HouseCatalogItem(id: 'stairs', name: 'Pelepoya (zinapoya)', category: 'extras', stage: 2, coinPrice: 15, iconEmoji: '🪜'),
-  HouseCatalogItem(id: 'balcony', name: 'Shisha panjarali balkon', category: 'extras', stage: 3, coinPrice: 45, iconEmoji: '🏢'),
-  HouseCatalogItem(id: 'second_floor', name: 'Ikkinchi qavat (2-etaj)', category: 'extras', stage: 3, coinPrice: 300, iconEmoji: '🏰'),
-  HouseCatalogItem(id: 'chimney', name: 'Kamin mo‘risi', category: 'extras', stage: 3, coinPrice: 20, iconEmoji: '🧱'),
-  HouseCatalogItem(id: 'roof_antenna', name: 'Tom antennasi', category: 'extras', stage: 3, coinPrice: 12, iconEmoji: '📡'),
+  HouseCatalogItem(
+      id: 'stairs',
+      name: 'Pelepoya (zinapoya)',
+      category: 'extras',
+      stage: 2,
+      coinPrice: 15,
+      iconEmoji: '🪜'),
+  HouseCatalogItem(
+      id: 'balcony',
+      name: 'Shisha panjarali balkon',
+      category: 'extras',
+      stage: 3,
+      coinPrice: 45,
+      iconEmoji: '🏢'),
+  HouseCatalogItem(
+      id: 'second_floor',
+      name: 'Ikkinchi qavat (2-etaj)',
+      category: 'extras',
+      stage: 3,
+      coinPrice: 300,
+      iconEmoji: '🏰'),
+  HouseCatalogItem(
+      id: 'chimney',
+      name: 'Kamin mo‘risi',
+      category: 'extras',
+      stage: 3,
+      coinPrice: 20,
+      iconEmoji: '🧱'),
+  HouseCatalogItem(
+      id: 'roof_antenna',
+      name: 'Tom antennasi',
+      category: 'extras',
+      stage: 3,
+      coinPrice: 12,
+      iconEmoji: '📡'),
 ];
 
 class HouseBuildingScreen extends ConsumerStatefulWidget {
   const HouseBuildingScreen({super.key});
 
   @override
-  ConsumerState<HouseBuildingScreen> createState() => _HouseBuildingScreenState();
+  ConsumerState<HouseBuildingScreen> createState() =>
+      _HouseBuildingScreenState();
 }
 
 class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
@@ -279,14 +588,16 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
 
     try {
       final res = await ApiClient().dio.get(
-        '/games/house-building',
-        options: Options(
-          validateStatus: (status) => true,
-          sendTimeout: const Duration(seconds: 6),
-          receiveTimeout: const Duration(seconds: 6),
-        ),
-      );
-      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
+            '/games/house-building',
+            options: Options(
+              validateStatus: (status) => true,
+              sendTimeout: const Duration(seconds: 6),
+              receiveTimeout: const Duration(seconds: 6),
+            ),
+          );
+      if (res.statusCode == 200 &&
+          res.data != null &&
+          res.data['success'] == true) {
         final data = res.data['data'];
         final stage = (data['currentStage'] as num?)?.toInt() ?? 0;
         final catalogRaw = data['catalog'] as List? ?? [];
@@ -395,13 +706,17 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
       );
 
       if (res.data != null && res.data['success'] == true) {
-        final placedItem = Map<String, dynamic>.from(res.data['data']['placedItem']);
-        final newStage = (res.data['data']['currentStage'] as num?)?.toInt() ?? _currentStage;
-        final xpAwarded = (res.data['data']['xpAwarded'] as num?)?.toInt() ?? 10;
+        final placedItem =
+            Map<String, dynamic>.from(res.data['data']['placedItem']);
+        final newStage = (res.data['data']['currentStage'] as num?)?.toInt() ??
+            _currentStage;
+        final xpAwarded =
+            (res.data['data']['xpAwarded'] as num?)?.toInt() ?? 10;
 
         // Update local state
         setState(() {
-          _placedItems.removeWhere((p) => p['instanceId'] == placedItem['instanceId']);
+          _placedItems
+              .removeWhere((p) => p['instanceId'] == placedItem['instanceId']);
           _placedItems.add(placedItem);
           _currentStage = newStage;
           _activePlacingItem = null;
@@ -422,15 +737,18 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
           _triggerConfetti();
           _showCelebrationDialog();
         } else {
-          _showSnackbar('Qurilish muvaffaqiyatli amalga oshirildi! ✨ (+$xpAwarded XP)');
+          _showSnackbar(
+              'Qurilish muvaffaqiyatli amalga oshirildi! ✨ (+$xpAwarded XP)');
         }
       } else {
-        final errorMsg = res.data?['error']?.toString() ?? 'Joylashtirishda xatolik yuz berdi';
+        final errorMsg = res.data?['error']?.toString() ??
+            'Joylashtirishda xatolik yuz berdi';
         _showSnackbar(errorMsg, isError: true);
         postMessageToHouseGame('CANCEL_PLACEMENT', {});
       }
     } catch (e) {
-      debugPrint('Error placing item on backend, applying resilient local placement: $e');
+      debugPrint(
+          'Error placing item on backend, applying resilient local placement: $e');
       final localInstanceId = 'placed_${DateTime.now().millisecondsSinceEpoch}';
       final placedItem = {
         'instanceId': localInstanceId,
@@ -462,7 +780,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     }
   }
 
-  Future<void> _buyItem(HouseCatalogItem item, {bool placeImmediately = true}) async {
+  Future<void> _buyItem(HouseCatalogItem item,
+      {bool placeImmediately = true}) async {
     final student = ref.read(studentProvider).student;
     final currentCoins = student?.coinBalance ?? 0;
 
@@ -498,7 +817,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
         }
       }
     } catch (e) {
-      debugPrint('Error purchasing item on backend, applying resilient local purchase: $e');
+      debugPrint(
+          'Error purchasing item on backend, applying resilient local purchase: $e');
       ref.read(studentProvider.notifier).updateCoins(-item.coinPrice);
       ref.read(studentProvider.notifier).updateXP(5);
       setState(() {
@@ -547,9 +867,11 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
         data: {'instanceId': instanceId},
       );
       if (res.data != null && res.data['success'] == true) {
-        final updated = Map<String, dynamic>.from(res.data['data']['placedItem']);
+        final updated =
+            Map<String, dynamic>.from(res.data['data']['placedItem']);
         setState(() {
-          final idx = _placedItems.indexWhere((p) => p['instanceId'] == instanceId);
+          final idx =
+              _placedItems.indexWhere((p) => p['instanceId'] == instanceId);
           if (idx != -1) _placedItems[idx] = updated;
           if (_selectedPlacedItem?['instanceId'] == instanceId) {
             _selectedPlacedItem = updated;
@@ -571,7 +893,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
       );
       if (res.data != null && res.data['success'] == true) {
         final refund = (res.data['data']['refund'] as num?)?.toInt() ?? 0;
-        final newStage = (res.data['data']['currentStage'] as num?)?.toInt() ?? _currentStage;
+        final newStage = (res.data['data']['currentStage'] as num?)?.toInt() ??
+            _currentStage;
 
         ref.read(studentProvider.notifier).updateCoins(refund);
 
@@ -603,7 +926,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     setState(() {
       _isInteriorMode = !_isInteriorMode;
     });
-    postMessageToHouseGame('SET_INTERIOR_MODE', {'isInterior': _isInteriorMode});
+    postMessageToHouseGame(
+        'SET_INTERIOR_MODE', {'isInterior': _isInteriorMode});
   }
 
   void _toggleMute() {
@@ -625,9 +949,11 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
       SnackBar(
         content: Text(
           text,
-          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          style:
+              const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: isError ? const Color(0xFFEF4444) : const Color(0xFF10B981),
+        backgroundColor:
+            isError ? const Color(0xFFEF4444) : const Color(0xFF10B981),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         duration: const Duration(seconds: 2),
@@ -643,7 +969,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
       context: context,
       barrierDismissible: true,
       builder: (ctx) => AlertDialog(
-        backgroundColor: appColors?.card ?? (isDark ? const Color(0xFF1E1B4B) : Colors.white),
+        backgroundColor: appColors?.card ??
+            (isDark ? const Color(0xFF1E1B4B) : Colors.white),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(28),
           side: const BorderSide(color: Color(0xFFF59E0B), width: 2),
@@ -667,7 +994,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                   ),
                 ],
               ),
-              child: const Icon(Icons.emoji_events_rounded, color: Colors.white, size: 48),
+              child: const Icon(Icons.emoji_events_rounded,
+                  color: Colors.white, size: 48),
             ),
             const SizedBox(height: 18),
             Text(
@@ -675,7 +1003,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w900,
-                color: appColors?.ink ?? (isDark ? Colors.white : const Color(0xFF17152B)),
+                color: appColors?.ink ??
+                    (isDark ? Colors.white : const Color(0xFF17152B)),
                 letterSpacing: 0.5,
               ),
             ),
@@ -685,7 +1014,10 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
-                color: appColors?.muted ?? (isDark ? const Color(0xFFB5B2C7) : const Color(0xFF626579)),
+                color: appColors?.muted ??
+                    (isDark
+                        ? const Color(0xFFB5B2C7)
+                        : const Color(0xFF626579)),
                 height: 1.4,
               ),
             ),
@@ -695,7 +1027,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
               decoration: BoxDecoration(
                 color: const Color(0xFF10B981).withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.4)),
+                border: Border.all(
+                    color: const Color(0xFF10B981).withValues(alpha: 0.4)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -719,11 +1052,14 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8B5CF6),
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                 elevation: 4,
               ),
-              child: const Text('Ajoyib!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              child: const Text('Ajoyib!',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             ),
           ],
         ),
@@ -740,11 +1076,13 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: appColors?.card ?? (isDark ? const Color(0xFF1B182C) : Colors.white),
+        backgroundColor: appColors?.card ??
+            (isDark ? const Color(0xFF1B182C) : Colors.white),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
           side: BorderSide(
-            color: appColors?.border ?? (isDark ? const Color(0xFF302A46) : const Color(0xFFE2E5EF)),
+            color: appColors?.border ??
+                (isDark ? const Color(0xFF302A46) : const Color(0xFFE2E5EF)),
           ),
         ),
         title: Row(
@@ -755,7 +1093,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                 color: Colors.amber.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.monetization_on_rounded, color: Colors.amber, size: 28),
+              child: const Icon(Icons.monetization_on_rounded,
+                  color: Colors.amber, size: 28),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -764,7 +1103,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: appColors?.ink ?? (isDark ? Colors.white : const Color(0xFF17152B)),
+                  color: appColors?.ink ??
+                      (isDark ? Colors.white : const Color(0xFF17152B)),
                 ),
               ),
             ),
@@ -778,14 +1118,18 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
               '«${item.name}» uchun ${item.coinPrice} coin kerak. Sizda esa $userCoins coin mavjud.',
               style: TextStyle(
                 fontSize: 14,
-                color: appColors?.muted ?? (isDark ? const Color(0xFFB5B2C7) : const Color(0xFF626579)),
+                color: appColors?.muted ??
+                    (isDark
+                        ? const Color(0xFFB5B2C7)
+                        : const Color(0xFF626579)),
               ),
             ),
             const SizedBox(height: 14),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF26213B) : const Color(0xFFF1F3F9),
+                color:
+                    isDark ? const Color(0xFF26213B) : const Color(0xFFF1F3F9),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Row(
@@ -795,7 +1139,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                     'Sizdagi coinlar:',
                     style: TextStyle(
                       fontSize: 13,
-                      color: appColors?.ink ?? (isDark ? Colors.white : const Color(0xFF17152B)),
+                      color: appColors?.ink ??
+                          (isDark ? Colors.white : const Color(0xFF17152B)),
                     ),
                   ),
                   Row(
@@ -804,7 +1149,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                       const SizedBox(width: 4),
                       Text(
                         '$userCoins ta',
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.amber),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.amber),
                       ),
                     ],
                   ),
@@ -828,7 +1174,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
             child: Text(
               'Bekor qilish',
               style: TextStyle(
-                color: appColors?.muted ?? (isDark ? Colors.white70 : const Color(0xFF626579)),
+                color: appColors?.muted ??
+                    (isDark ? Colors.white70 : const Color(0xFF626579)),
               ),
             ),
           ),
@@ -842,7 +1189,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF8B5CF6),
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
           ),
         ],
@@ -882,7 +1230,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     final xpBalance = student?.totalXP ?? 0;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+      backgroundColor:
+          isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
       body: Stack(
         children: [
           // 1. Embedded 3D House Scene Viewport
@@ -916,7 +1265,10 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
           // 3. Top HUD: Back Button, Progress Pill, Coin/XP Badges, Tool Buttons
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width < 360 ? 8 : 14,
+                vertical: 8,
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -934,12 +1286,21 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                       // Stage Pill
                       Expanded(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: MediaQuery.of(context).size.width < 360
+                                ? 8
+                                : 12,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
-                            color: (isDark ? const Color(0xFF1E1B4B) : Colors.white).withValues(alpha: 0.9),
+                            color: (isDark
+                                    ? const Color(0xFF1E1B4B)
+                                    : Colors.white)
+                                .withValues(alpha: 0.9),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: const Color(0xFF8B5CF6).withValues(alpha: 0.4),
+                              color: const Color(0xFF8B5CF6)
+                                  .withValues(alpha: 0.4),
                               width: 1.5,
                             ),
                             boxShadow: [
@@ -955,7 +1316,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                               Container(
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.2),
+                                  color: const Color(0xFF8B5CF6)
+                                      .withValues(alpha: 0.2),
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
@@ -970,62 +1332,73 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'Uy qurish',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
-                                            color: isDark ? Colors.white : const Color(0xFF0F172A),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 6),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.15),
-                                            borderRadius: BorderRadius.circular(6),
-                                          ),
-                                          child: const Text(
-                                            'Qurilish bosqichlari',
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      alignment: Alignment.centerLeft,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            'Uy qurish',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
-                                              fontSize: 10,
-                                              color: Color(0xFF8B5CF6),
+                                              fontSize: 13,
                                               fontWeight: FontWeight.bold,
+                                              color: isDark
+                                                  ? Colors.white
+                                                  : const Color(0xFF0F172A),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                          const SizedBox(width: 6),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 1.5),
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFF8B5CF6)
+                                                  .withValues(alpha: 0.15),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                            child: Text(
+                                              '$_currentStage/6 bosqich',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                fontSize: 9,
+                                                color: Color(0xFF8B5CF6),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     const SizedBox(height: 2),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'Orzuingizdagi uyni quring',
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          '• ${kHouseStageTitles[(_currentStage).clamp(0, 5)]}',
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            color: Color(0xFF10B981),
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      kHouseStageTitles[
+                                          (_currentStage).clamp(0, 5)],
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        color: Color(0xFF10B981),
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     const SizedBox(height: 4),
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(4),
                                       child: LinearProgressIndicator(
-                                        value: (_currentStage / 6.0).clamp(0.0, 1.0),
-                                        backgroundColor: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.08),
-                                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF8B5CF6)),
+                                        value: (_currentStage / 6.0)
+                                            .clamp(0.0, 1.0),
+                                        backgroundColor: (isDark
+                                                ? Colors.white
+                                                : Colors.black)
+                                            .withValues(alpha: 0.08),
+                                        valueColor:
+                                            const AlwaysStoppedAnimation<Color>(
+                                                Color(0xFF8B5CF6)),
                                         minHeight: 5,
                                       ),
                                     ),
@@ -1040,9 +1413,12 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
 
                       // Coin & XP Pill
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
-                          color: (isDark ? const Color(0xFF1E1B4B) : Colors.white).withValues(alpha: 0.9),
+                          color:
+                              (isDark ? const Color(0xFF1E1B4B) : Colors.white)
+                                  .withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                             color: Colors.amber.withValues(alpha: 0.4),
@@ -1056,31 +1432,34 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                             ),
                           ],
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const CoinBadge(count: 0, size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              '$coinBalance',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: Colors.amber,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const CoinIcon(size: 16),
+                              const SizedBox(width: 4),
+                              Text(
+                                '$coinBalance',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: Colors.amber,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            const XpCoin(size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              '$xpBalance',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: Color(0xFF8B5CF6),
+                              const SizedBox(width: 8),
+                              const XpCoin(size: 16),
+                              const SizedBox(width: 4),
+                              Text(
+                                '$xpBalance',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: Color(0xFF8B5CF6),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -1088,41 +1467,50 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                   const SizedBox(height: 8),
 
                   // Tool Buttons Row (Theme, Reset Camera, Interior, Audio)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      _buildQuickActionChip(
-                        icon: _isNightMode ? Icons.nightlight_round : Icons.wb_sunny_rounded,
-                        label: _isNightMode ? 'Tun' : 'Kun',
-                        onTap: _toggleTheme,
-                        isActive: _isNightMode,
-                        isDark: isDark,
-                      ),
-                      const SizedBox(width: 6),
-                      _buildQuickActionChip(
-                        icon: Icons.videocam_rounded,
-                        label: 'Markaz',
-                        onTap: _resetCamera,
-                        isActive: false,
-                        isDark: isDark,
-                      ),
-                      const SizedBox(width: 6),
-                      _buildQuickActionChip(
-                        icon: Icons.meeting_room_rounded,
-                        label: _isInteriorMode ? 'Tashqi' : 'Ichki',
-                        onTap: _toggleInterior,
-                        isActive: _isInteriorMode,
-                        isDark: isDark,
-                      ),
-                      const SizedBox(width: 6),
-                      _buildQuickActionChip(
-                        icon: _isMuted ? Icons.volume_off_rounded : Icons.volume_up_rounded,
-                        label: _isMuted ? 'Ovozsiz' : 'Ovozli',
-                        onTap: _toggleMute,
-                        isActive: !_isMuted,
-                        isDark: isDark,
-                      ),
-                    ],
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    reverse: true,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildQuickActionChip(
+                          icon: _isNightMode
+                              ? Icons.nightlight_round
+                              : Icons.wb_sunny_rounded,
+                          label: _isNightMode ? 'Tun' : 'Kun',
+                          onTap: _toggleTheme,
+                          isActive: _isNightMode,
+                          isDark: isDark,
+                        ),
+                        const SizedBox(width: 6),
+                        _buildQuickActionChip(
+                          icon: Icons.videocam_rounded,
+                          label: 'Markaz',
+                          onTap: _resetCamera,
+                          isActive: false,
+                          isDark: isDark,
+                        ),
+                        const SizedBox(width: 6),
+                        _buildQuickActionChip(
+                          icon: Icons.meeting_room_rounded,
+                          label: _isInteriorMode ? 'Tashqi' : 'Ichki',
+                          onTap: _toggleInterior,
+                          isActive: _isInteriorMode,
+                          isDark: isDark,
+                        ),
+                        const SizedBox(width: 6),
+                        _buildQuickActionChip(
+                          icon: _isMuted
+                              ? Icons.volume_off_rounded
+                              : Icons.volume_up_rounded,
+                          label: _isMuted ? 'Ovozsiz' : 'Ovozli',
+                          onTap: _toggleMute,
+                          isActive: !_isMuted,
+                          isDark: isDark,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -1137,7 +1525,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
               right: 16,
               child: SafeArea(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: const Color(0xFF1E1B4B).withValues(alpha: 0.94),
                     borderRadius: BorderRadius.circular(20),
@@ -1191,15 +1580,18 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF3B82F6),
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
                         ),
                       ),
                       const SizedBox(width: 8),
                       // Cancel Button
                       IconButton(
                         onPressed: _cancelPlacement,
-                        icon: const Icon(Icons.close_rounded, color: Colors.white70),
+                        icon: const Icon(Icons.close_rounded,
+                            color: Colors.white70),
                         tooltip: 'Bekor qilish',
                       ),
                     ],
@@ -1216,7 +1608,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
               right: 16,
               child: SafeArea(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
                     color: const Color(0xFF0F172A).withValues(alpha: 0.94),
                     borderRadius: BorderRadius.circular(20),
@@ -1240,7 +1633,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                           color: const Color(0xFF10B981).withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.check_circle_rounded, color: Color(0xFF10B981), size: 22),
+                        child: const Icon(Icons.check_circle_rounded,
+                            color: Color(0xFF10B981), size: 22),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -1249,7 +1643,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              _selectedPlacedItem!['name']?.toString() ?? 'Tanlangan buyum',
+                              _selectedPlacedItem!['name']?.toString() ??
+                                  'Tanlangan buyum',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -1269,19 +1664,23 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                       // Rotate
                       IconButton(
                         onPressed: () {
-                          final instanceId = _selectedPlacedItem!['instanceId']?.toString();
+                          final instanceId =
+                              _selectedPlacedItem!['instanceId']?.toString();
                           if (instanceId != null) _rotatePlacedItem(instanceId);
                         },
-                        icon: const Icon(Icons.rotate_right_rounded, color: Color(0xFF60A5FA)),
+                        icon: const Icon(Icons.rotate_right_rounded,
+                            color: Color(0xFF60A5FA)),
                         tooltip: '90° burish',
                       ),
                       // Sell for 50%
                       IconButton(
                         onPressed: () {
-                          final instanceId = _selectedPlacedItem!['instanceId']?.toString();
+                          final instanceId =
+                              _selectedPlacedItem!['instanceId']?.toString();
                           if (instanceId != null) _sellPlacedItem(instanceId);
                         },
-                        icon: const Icon(Icons.delete_outline_rounded, color: Color(0xFFF87171)),
+                        icon: const Icon(Icons.delete_outline_rounded,
+                            color: Color(0xFFF87171)),
                         tooltip: 'Sotish (50% coin qaytariladi)',
                       ),
                       // Close selection
@@ -1291,7 +1690,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                             _selectedPlacedItem = null;
                           });
                         },
-                        icon: const Icon(Icons.close_rounded, color: Colors.white70),
+                        icon: const Icon(Icons.close_rounded,
+                            color: Colors.white70),
                       ),
                     ],
                   ),
@@ -1315,7 +1715,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF8B5CF6).withValues(alpha: 0.45),
+                          color:
+                              const Color(0xFF8B5CF6).withValues(alpha: 0.45),
                           blurRadius: 18,
                           offset: const Offset(0, 6),
                         ),
@@ -1327,22 +1728,27 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                         onTap: _openStoreBottomSheet,
                         borderRadius: BorderRadius.circular(24),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(Icons.storefront_rounded, color: Colors.white, size: 22),
-                              SizedBox(width: 10),
-                              Text(
-                                'Qurilish do‘koni',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  letterSpacing: 0.3,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                Icon(Icons.storefront_rounded,
+                                    color: Colors.white, size: 22),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Qurilish do‘koni',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    letterSpacing: 0.3,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -1365,7 +1771,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     return Tooltip(
       message: tooltip,
       child: Material(
-        color: (isDark ? const Color(0xFF1E1B4B) : Colors.white).withValues(alpha: 0.9),
+        color: (isDark ? const Color(0xFF1E1B4B) : Colors.white)
+            .withValues(alpha: 0.9),
         shape: const CircleBorder(),
         elevation: 3,
         shadowColor: Colors.black26,
@@ -1395,7 +1802,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     return Material(
       color: isActive
           ? const Color(0xFF8B5CF6)
-          : (isDark ? const Color(0xFF1E1B4B) : Colors.white).withValues(alpha: 0.88),
+          : (isDark ? const Color(0xFF1E1B4B) : Colors.white)
+              .withValues(alpha: 0.88),
       borderRadius: BorderRadius.circular(14),
       elevation: 2,
       shadowColor: Colors.black26,
@@ -1410,7 +1818,11 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
               Icon(
                 icon,
                 size: 15,
-                color: isActive ? Colors.white : (isDark ? const Color(0xFFCBD5E1) : const Color(0xFF334155)),
+                color: isActive
+                    ? Colors.white
+                    : (isDark
+                        ? const Color(0xFFCBD5E1)
+                        : const Color(0xFF334155)),
               ),
               const SizedBox(width: 4),
               Text(
@@ -1418,7 +1830,11 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: isActive ? Colors.white : (isDark ? const Color(0xFFCBD5E1) : const Color(0xFF334155)),
+                  color: isActive
+                      ? Colors.white
+                      : (isDark
+                          ? const Color(0xFFCBD5E1)
+                          : const Color(0xFF334155)),
                 ),
               ),
             ],
@@ -1460,7 +1876,8 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: kStoreCategories.length, vsync: this);
+    _tabController =
+        TabController(length: kStoreCategories.length, vsync: this);
   }
 
   @override
@@ -1477,7 +1894,8 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
     return Container(
       height: MediaQuery.of(context).size.height * 0.72,
       decoration: BoxDecoration(
-        color: appColors?.card ?? (isDark ? const Color(0xFF0F172A) : Colors.white),
+        color: appColors?.card ??
+            (isDark ? const Color(0xFF0F172A) : Colors.white),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         border: Border(
           top: BorderSide(
@@ -1514,14 +1932,16 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.storefront_rounded, color: Color(0xFF8B5CF6), size: 24),
+                    const Icon(Icons.storefront_rounded,
+                        color: Color(0xFF8B5CF6), size: 24),
                     const SizedBox(width: 8),
                     Text(
                       'Qurilish katalogi',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: appColors?.ink ?? (isDark ? Colors.white : const Color(0xFF0F172A)),
+                        color: appColors?.ink ??
+                            (isDark ? Colors.white : const Color(0xFF0F172A)),
                       ),
                     ),
                   ],
@@ -1530,7 +1950,8 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                   onPressed: () => Navigator.of(context).pop(),
                   icon: Icon(
                     Icons.close_rounded,
-                    color: appColors?.muted ?? (isDark ? Colors.white70 : const Color(0xFF64748B)),
+                    color: appColors?.muted ??
+                        (isDark ? Colors.white70 : const Color(0xFF64748B)),
                   ),
                 ),
               ],
@@ -1544,8 +1965,10 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
             indicatorColor: const Color(0xFF8B5CF6),
             indicatorWeight: 3,
             labelColor: const Color(0xFF8B5CF6),
-            unselectedLabelColor: appColors?.muted ?? (isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B)),
-            labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            unselectedLabelColor: appColors?.muted ??
+                (isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B)),
+            labelStyle:
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
             tabs: kStoreCategories
                 .map((cat) => Tab(
                       icon: Icon(cat.icon, size: 18),
@@ -1561,7 +1984,8 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
             child: TabBarView(
               controller: _tabController,
               children: kStoreCategories.map((cat) {
-                final items = widget.catalog.where((c) => c.category == cat.key).toList();
+                final items =
+                    widget.catalog.where((c) => c.category == cat.key).toList();
                 return _buildCategoryGrid(cat.key, items, isDark, appColors);
               }).toList(),
             ),
@@ -1587,7 +2011,9 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
               color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF8FAFC),
               border: Border(
                 bottom: BorderSide(
-                  color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                  color: isDark
+                      ? const Color(0xFF334155)
+                      : const Color(0xFFE2E8F0),
                 ),
               ),
             ),
@@ -1598,7 +2024,8 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: appColors?.ink ?? (isDark ? Colors.white : const Color(0xFF1E293B)),
+                    color: appColors?.ink ??
+                        (isDark ? Colors.white : const Color(0xFF1E293B)),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -1608,18 +2035,24 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                     child: Row(
                       children: kRoofColors.map((rc) {
                         final hex = rc['hex']!;
-                        final isSelected = widget.activeRoofColor.toLowerCase() == hex.toLowerCase();
-                        final color = Color(int.parse(hex.replaceFirst('#', '0xFF')));
+                        final isSelected =
+                            widget.activeRoofColor.toLowerCase() ==
+                                hex.toLowerCase();
+                        final color =
+                            Color(int.parse(hex.replaceFirst('#', '0xFF')));
                         return GestureDetector(
                           onTap: () => widget.onSelectRoofColor(hex),
                           child: Container(
                             margin: const EdgeInsets.only(right: 8),
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
                               color: color.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: isSelected ? const Color(0xFF8B5CF6) : color,
+                                color: isSelected
+                                    ? const Color(0xFF8B5CF6)
+                                    : color,
                                 width: isSelected ? 2.5 : 1,
                               ),
                             ),
@@ -1629,15 +2062,22 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                                 Container(
                                   width: 12,
                                   height: 12,
-                                  decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                                  decoration: BoxDecoration(
+                                      color: color, shape: BoxShape.circle),
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
                                   rc['name']!,
                                   style: TextStyle(
                                     fontSize: 12,
-                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                    color: isSelected ? const Color(0xFF8B5CF6) : (isDark ? Colors.white70 : const Color(0xFF334155)),
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    color: isSelected
+                                        ? const Color(0xFF8B5CF6)
+                                        : (isDark
+                                            ? Colors.white70
+                                            : const Color(0xFF334155)),
                                   ),
                                 ),
                               ],
@@ -1659,7 +2099,8 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                   child: Text(
                     'Ushbu bo‘limda buyumlar yo‘q',
                     style: TextStyle(
-                      color: appColors?.muted ?? (isDark ? Colors.white60 : const Color(0xFF64748B)),
+                      color: appColors?.muted ??
+                          (isDark ? Colors.white60 : const Color(0xFF64748B)),
                     ),
                   ),
                 )
@@ -1674,27 +2115,37 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                   itemCount: items.length,
                   itemBuilder: (ctx, idx) {
                     final item = items[idx];
-                    final isPlaced = widget.placedItems.any((p) => p['itemId'] == item.id);
+                    final isPlaced =
+                        widget.placedItems.any((p) => p['itemId'] == item.id);
                     final isOwned = widget.inventory.contains(item.id);
 
                     // Check dependency
                     bool isLocked = false;
                     String lockReason = '';
                     if (item.category == 'walls') {
-                      final hasFoundation = widget.placedItems.any((p) => (p['category'] ?? '').toString() == 'foundation' || (p['itemId'] ?? '').toString().contains('foundation'));
+                      final hasFoundation = widget.placedItems.any((p) =>
+                          (p['category'] ?? '').toString() == 'foundation' ||
+                          (p['itemId'] ?? '')
+                              .toString()
+                              .contains('foundation'));
                       if (!hasFoundation) {
                         isLocked = true;
                         lockReason = 'Avval poydevor quring';
                       }
-                    } else if (item.category == 'roof' || item.category == 'doors' || item.category == 'windows') {
-                      final hasWall = widget.placedItems.any((p) => (p['category'] ?? '').toString() == 'walls' || (p['itemId'] ?? '').toString().contains('wall'));
+                    } else if (item.category == 'roof' ||
+                        item.category == 'doors' ||
+                        item.category == 'windows') {
+                      final hasWall = widget.placedItems.any((p) =>
+                          (p['category'] ?? '').toString() == 'walls' ||
+                          (p['itemId'] ?? '').toString().contains('wall'));
                       if (!hasWall) {
                         isLocked = true;
                         lockReason = 'Avval devor quring';
                       }
                     }
 
-                    return _buildItemCard(item, isPlaced, isOwned, isLocked, lockReason, isDark, appColors);
+                    return _buildItemCard(item, isPlaced, isOwned, isLocked,
+                        lockReason, isDark, appColors);
                   },
                 ),
         ),
@@ -1739,7 +2190,8 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
               Text(item.iconEmoji, style: const TextStyle(fontSize: 26)),
               if (isPlaced)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: const Color(0xFF10B981).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
@@ -1779,7 +2231,8 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
-              color: appColors?.ink ?? (isDark ? Colors.white : const Color(0xFF0F172A)),
+              color: appColors?.ink ??
+                  (isDark ? Colors.white : const Color(0xFF0F172A)),
             ),
           ),
           const Spacer(),
@@ -1810,9 +2263,12 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                   foregroundColor: const Color(0xFF10B981),
                   side: const BorderSide(color: Color(0xFF10B981)),
                   padding: const EdgeInsets.symmetric(vertical: 6),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
                 ),
-                child: const Text('Ko‘chirish', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                child: const Text('Ko‘chirish',
+                    style:
+                        TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
               ),
             )
           else if (isOwned)
@@ -1824,9 +2280,12 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                   backgroundColor: const Color(0xFF10B981),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 6),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
                 ),
-                child: const Text('Joylashtirish', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                child: const Text('Joylashtirish',
+                    style:
+                        TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
               ),
             )
           else
@@ -1838,9 +2297,12 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                   backgroundColor: const Color(0xFF8B5CF6),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 6),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
                 ),
-                child: Text('Sotib olish (${item.coinPrice})', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                child: Text('Sotib olish (${item.coinPrice})',
+                    style: const TextStyle(
+                        fontSize: 11, fontWeight: FontWeight.bold)),
               ),
             ),
         ],
@@ -1891,7 +2353,8 @@ class _ConfettiPainter extends CustomPainter {
       canvas.translate(currentX, currentY);
       canvas.rotate(p.rotation + p.vRot * progress);
       canvas.drawRect(
-        Rect.fromCenter(center: Offset.zero, width: p.size, height: p.size * 0.6),
+        Rect.fromCenter(
+            center: Offset.zero, width: p.size, height: p.size * 0.6),
         paint,
       );
       canvas.restore();

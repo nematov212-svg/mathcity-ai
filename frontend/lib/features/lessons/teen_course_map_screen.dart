@@ -57,7 +57,8 @@ class TeenCourseMapScreen extends StatelessWidget {
         backgroundColor: AppColors.teenSurface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon:
+              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           onPressed: () => context.pop(),
         ),
         title: const Text(
@@ -90,7 +91,8 @@ class TeenCourseMapScreen extends StatelessWidget {
               color: AppColors.teenSurface,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: isActive ? AppColors.teenPrimaryLime : AppColors.teenBorder,
+                color:
+                    isActive ? AppColors.teenPrimaryLime : AppColors.teenBorder,
                 width: isActive ? 2 : 1,
               ),
             ),
@@ -101,24 +103,33 @@ class TeenCourseMapScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: (isActive ? AppColors.teenPrimaryLime : Colors.white)
+                        color: (isActive
+                                ? AppColors.teenPrimaryLime
+                                : Colors.white)
                             .withOpacity(0.12),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
                         '${m['tag']} • ${m['grade']}',
                         style: TextStyle(
-                          color: isActive ? AppColors.teenPrimaryLime : AppColors.teenMutedText,
+                          color: isActive
+                              ? AppColors.teenPrimaryLime
+                              : AppColors.teenMutedText,
                           fontSize: 11,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
                     ),
                     Icon(
-                      isLocked ? Icons.lock_outline_rounded : Icons.check_circle_outline_rounded,
-                      color: isLocked ? AppColors.teenMutedText : AppColors.teenPrimaryLime,
+                      isLocked
+                          ? Icons.lock_outline_rounded
+                          : Icons.check_circle_outline_rounded,
+                      color: isLocked
+                          ? AppColors.teenMutedText
+                          : AppColors.teenPrimaryLime,
                       size: 20,
                     ),
                   ],
@@ -143,11 +154,17 @@ class TeenCourseMapScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isLocked ? const Color(0xFF1E273D) : AppColors.teenPrimaryLime,
-                    foregroundColor: isLocked ? AppColors.teenMutedText : AppColors.teenLimeTextDark,
+                    backgroundColor: isLocked
+                        ? const Color(0xFF1E273D)
+                        : AppColors.teenPrimaryLime,
+                    foregroundColor: isLocked
+                        ? AppColors.teenMutedText
+                        : AppColors.teenLimeTextDark,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18, vertical: 10),
                   ),
                   onPressed: isLocked
                       ? null
@@ -156,7 +173,8 @@ class TeenCourseMapScreen extends StatelessWidget {
                         },
                   child: Text(
                     isLocked ? 'Qulflangan' : 'Darslarni boshlash',
-                    style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w800, fontSize: 13),
                   ),
                 ),
               ],

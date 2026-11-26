@@ -64,7 +64,10 @@ class LessonModel {
       chapterTitle: json['chapterTitle'],
       contentMd: json['contentMd'],
       coverImage: json['coverImage'],
-      gallery: (json['gallery'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      gallery: (json['gallery'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       videoUrl: json['videoUrl'],
       audioUrl: json['audioUrl'],
       textExplanation: json['textExplanation'],

@@ -48,21 +48,25 @@ class OnboardingTheme {
   static const double cardRadius = 22.0;
 
   // ─── Shadows ──────────────────────────────────────────────────────────────
-  static List<BoxShadow> primaryShadow({double opacity = 0.28, double blur = 20}) => [
-    BoxShadow(
-      color: primary.withOpacity(opacity),
-      blurRadius: blur,
-      offset: const Offset(0, 8),
-    ),
-  ];
+  static List<BoxShadow> primaryShadow(
+          {double opacity = 0.28, double blur = 20}) =>
+      [
+        BoxShadow(
+          color: primary.withOpacity(opacity),
+          blurRadius: blur,
+          offset: const Offset(0, 8),
+        ),
+      ];
 
-  static List<BoxShadow> cardShadow({double opacity = 0.08, double blur = 18}) => [
-    BoxShadow(
-      color: primary.withOpacity(opacity),
-      blurRadius: blur,
-      offset: const Offset(0, 6),
-    ),
-  ];
+  static List<BoxShadow> cardShadow(
+          {double opacity = 0.08, double blur = 18}) =>
+      [
+        BoxShadow(
+          color: primary.withOpacity(opacity),
+          blurRadius: blur,
+          offset: const Offset(0, 6),
+        ),
+      ];
 
   static const List<String> fallbackFonts = [
     'Nunito',
@@ -151,7 +155,8 @@ class OnboardingTheme {
     }
   }
 
-  static TextStyle buttonStyle({Color color = Colors.white, double fontSize = 17}) {
+  static TextStyle buttonStyle(
+      {Color color = Colors.white, double fontSize = 17}) {
     try {
       return GoogleFonts.nunito(
         fontSize: fontSize,

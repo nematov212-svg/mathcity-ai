@@ -10,7 +10,9 @@ void main() {
     GoogleFonts.config.allowRuntimeFetching = false;
   });
   group('MathCity AI Onboarding Flow v2 Tests (Figma Match)', () {
-    testWidgets('Screen 1 renders # badge, title, chips, suggestions, and input', (WidgetTester tester) async {
+    testWidgets(
+        'Screen 1 renders # badge, title, chips, suggestions, and input',
+        (WidgetTester tester) async {
       tester.view.physicalSize = const Size(1080, 2400);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -53,7 +55,8 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('Step navigation 1 -> 2 -> 3 works seamlessly', (WidgetTester tester) async {
+    testWidgets('Step navigation 1 -> 2 -> 3 works seamlessly',
+        (WidgetTester tester) async {
       tester.view.physicalSize = const Size(1080, 2400);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -103,11 +106,16 @@ void main() {
       expect(find.text('Ta’lim rejimi'), findsOneWidget);
       expect(find.text('Boshlang‘ich balans'), findsOneWidget);
       expect(find.text('0 oltin tanga'), findsOneWidget);
-      expect(find.text('Birinchi darsni tugating va birinchi oltin tangangizni oling.'), findsOneWidget);
+      expect(
+          find.text(
+              'Birinchi darsni tugating va birinchi oltin tangangizni oling.'),
+          findsOneWidget);
       expect(find.text('Ro‘yxatdan o‘tish'), findsOneWidget);
     });
 
-    testWidgets('Responsive Layout - IntroScreen does NOT overflow on 320px width', (WidgetTester tester) async {
+    testWidgets(
+        'Responsive Layout - IntroScreen does NOT overflow on 320px width',
+        (WidgetTester tester) async {
       tester.view.physicalSize = const Size(320, 568);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);

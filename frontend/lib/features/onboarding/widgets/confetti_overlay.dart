@@ -37,7 +37,8 @@ class ConfettiOverlay extends StatefulWidget {
   State<ConfettiOverlay> createState() => _ConfettiOverlayState();
 }
 
-class _ConfettiOverlayState extends State<ConfettiOverlay> with SingleTickerProviderStateMixin {
+class _ConfettiOverlayState extends State<ConfettiOverlay>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
   final List<ConfettiParticle> _particles = [];
   final math.Random _rnd = math.Random();
@@ -151,7 +152,8 @@ class _ConfettiPainter extends CustomPainter {
       canvas.rotate(p.rotation);
       canvas.drawRRect(
         RRect.fromRectAndRadius(
-          Rect.fromCenter(center: Offset.zero, width: p.size, height: p.size * 0.65),
+          Rect.fromCenter(
+              center: Offset.zero, width: p.size, height: p.size * 0.65),
           const Radius.circular(2),
         ),
         paint,

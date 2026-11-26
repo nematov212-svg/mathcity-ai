@@ -7,7 +7,9 @@ import 'package:mathcity_ai/core/widgets/mathcity_logo.dart';
 
 void main() {
   group('MathCity AI Complete Profile Screen Tests', () {
-    testWidgets('CompleteProfileScreen renders header, username field, date selectors, and initial age badge', (WidgetTester tester) async {
+    testWidgets(
+        'CompleteProfileScreen renders header, username field, date selectors, and initial age badge',
+        (WidgetTester tester) async {
       tester.view.physicalSize = const Size(1080, 2400);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -38,7 +40,9 @@ void main() {
       expect(find.byType(CustomButton), findsOneWidget);
     });
 
-    testWidgets('Validates username input rules: too short error and invalid character warnings', (WidgetTester tester) async {
+    testWidgets(
+        'Validates username input rules: too short error and invalid character warnings',
+        (WidgetTester tester) async {
       tester.view.physicalSize = const Size(1080, 2400);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -57,15 +61,23 @@ void main() {
       // Enter short username (2 chars)
       await tester.enterText(usernameField, 'ab');
       await tester.pump(const Duration(milliseconds: 100));
-      expect(find.text('Foydalanuvchi nomi 3 dan 20 tagacha belgidan iborat bo‘lishi kerak.'), findsOneWidget);
+      expect(
+          find.text(
+              'Foydalanuvchi nomi 3 dan 20 tagacha belgidan iborat bo‘lishi kerak.'),
+          findsOneWidget);
 
       // Enter invalid character (e.g. space)
       await tester.enterText(usernameField, 'user name');
       await tester.pump(const Duration(milliseconds: 100));
-      expect(find.text('Faqat lotin harflari, raqamlar va pastki chiziq ruxsat etiladi.'), findsOneWidget);
+      expect(
+          find.text(
+              'Faqat lotin harflari, raqamlar va pastki chiziq ruxsat etiladi.'),
+          findsOneWidget);
     });
 
-    testWidgets('Displays COPPA parental advisory when calculated age is under 13', (WidgetTester tester) async {
+    testWidgets(
+        'Displays COPPA parental advisory when calculated age is under 13',
+        (WidgetTester tester) async {
       tester.view.physicalSize = const Size(1080, 2400);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);

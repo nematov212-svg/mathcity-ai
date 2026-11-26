@@ -27,54 +27,61 @@ class TeenDesktopScreen extends ConsumerWidget {
             child: Material(
               color: AppColors.teenSurface,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
                   children: [
-                    Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: AppColors.teenPrimaryLime,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'M²',
-                          style: TextStyle(
-                            color: AppColors.teenLimeTextDark,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w900,
+                    Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: AppColors.teenPrimaryLime,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'M²',
+                              style: TextStyle(
+                                color: AppColors.teenLimeTextDark,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'MathCity Pro',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 12),
-                    const Text(
-                      'MathCity Pro',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                      ),
-                    ),
+                    const SizedBox(height: 36),
+                    _buildNavItem(Icons.dashboard_rounded, 'Boshqaruv paneli',
+                        true, () {}),
+                    _buildNavItem(Icons.menu_book_rounded, 'O‘quv kursi', false,
+                        () => context.push('/teen/courses')),
+                    _buildNavItem(Icons.psychology_rounded, 'AI Ustoz', false,
+                        () => context.push('/teen/ai-tutor')),
+                    _buildNavItem(Icons.location_city_rounded, 'Ilmiy shahar',
+                        false, () => context.push('/teen/city')),
+                    _buildNavItem(Icons.insights_rounded, 'Akademik tahlil',
+                        false, () => context.push('/teen/analytics')),
+                    const Spacer(),
+                    _buildNavItem(Icons.settings_outlined, 'Sozlamalar', false,
+                        () => context.push('/settings')),
                   ],
                 ),
-                const SizedBox(height: 36),
-                _buildNavItem(Icons.dashboard_rounded, 'Boshqaruv paneli', true, () {}),
-                _buildNavItem(Icons.menu_book_rounded, 'O‘quv kursi', false, () => context.push('/teen/courses')),
-                _buildNavItem(Icons.psychology_rounded, 'AI Ustoz', false, () => context.push('/teen/ai-tutor')),
-                _buildNavItem(Icons.location_city_rounded, 'Ilmiy shahar', false, () => context.push('/teen/city')),
-                _buildNavItem(Icons.insights_rounded, 'Akademik tahlil', false, () => context.push('/teen/analytics')),
-                const Spacer(),
-                _buildNavItem(Icons.settings_outlined, 'Sozlamalar', false, () => context.push('/settings')),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
 
           // Main Teen Desktop Workspace
           Expanded(
@@ -99,7 +106,8 @@ class TeenDesktopScreen extends ConsumerWidget {
                           ),
                           const Text(
                             'O‘smirlar ilmiy tahlil va matematika dasturi',
-                            style: TextStyle(fontSize: 14, color: AppColors.teenMutedText),
+                            style: TextStyle(
+                                fontSize: 14, color: AppColors.teenMutedText),
                           ),
                         ],
                       ),
@@ -109,7 +117,8 @@ class TeenDesktopScreen extends ConsumerWidget {
                           const SizedBox(width: 16),
                           SizedBox(
                             width: 240,
-                            child: XPBar(currentXP: xp, level: level, isDark: true),
+                            child: XPBar(
+                                currentXP: xp, level: level, isDark: true),
                           ),
                         ],
                       ),
@@ -134,9 +143,11 @@ class TeenDesktopScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: AppColors.teenPrimaryLime.withOpacity(0.15),
+                                  color: AppColors.teenPrimaryLime
+                                      .withOpacity(0.15),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: const Text(
@@ -160,18 +171,24 @@ class TeenDesktopScreen extends ConsumerWidget {
                               const SizedBox(height: 8),
                               const Text(
                                 'Nazariya, diskriminant qoidalari, grafiklar va haqiqiy ildizlarni hisoblash amaliyoti.',
-                                style: TextStyle(color: AppColors.teenMutedText, fontSize: 14),
+                                style: TextStyle(
+                                    color: AppColors.teenMutedText,
+                                    fontSize: 14),
                               ),
                               const SizedBox(height: 24),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.teenPrimaryLime,
                                   foregroundColor: AppColors.teenLimeTextDark,
-                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)),
                                 ),
                                 onPressed: () => context.push('/teen/courses'),
-                                child: const Text('Kursni davom ettirish', style: TextStyle(fontWeight: FontWeight.w800)),
+                                child: const Text('Kursni davom ettirish',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w800)),
                               ),
                             ],
                           ),
@@ -186,7 +203,8 @@ class TeenDesktopScreen extends ConsumerWidget {
                             border: Border.all(color: AppColors.teenBorder),
                           ),
                           child: const Center(
-                            child: Icon(Icons.functions_rounded, size: 64, color: AppColors.teenPrimaryLime),
+                            child: Icon(Icons.functions_rounded,
+                                size: 64, color: AppColors.teenPrimaryLime),
                           ),
                         ),
                       ],
@@ -212,16 +230,22 @@ class TeenDesktopScreen extends ConsumerWidget {
                             child: const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(Icons.psychology_rounded, color: AppColors.teenPrimaryLime, size: 36),
+                                Icon(Icons.psychology_rounded,
+                                    color: AppColors.teenPrimaryLime, size: 36),
                                 Spacer(),
                                 Text(
                                   'AI Ustoz',
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white),
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.white),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
                                   'LaTeX formula renderlash va bosqichma-bosqich isbotlar.',
-                                  style: TextStyle(color: AppColors.teenMutedText, fontSize: 13),
+                                  style: TextStyle(
+                                      color: AppColors.teenMutedText,
+                                      fontSize: 13),
                                 ),
                               ],
                             ),
@@ -244,16 +268,22 @@ class TeenDesktopScreen extends ConsumerWidget {
                             child: const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(Icons.insights_rounded, color: Color(0xFF00CEC9), size: 36),
+                                Icon(Icons.insights_rounded,
+                                    color: Color(0xFF00CEC9), size: 36),
                                 Spacer(),
                                 Text(
                                   'Akademik telemetriya',
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white),
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.white),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
                                   'Kuchli va kuchaytirish talab etiladigan mavzular tahlili.',
-                                  style: TextStyle(color: AppColors.teenMutedText, fontSize: 13),
+                                  style: TextStyle(
+                                      color: AppColors.teenMutedText,
+                                      fontSize: 13),
                                 ),
                               ],
                             ),
@@ -271,21 +301,26 @@ class TeenDesktopScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildNavItem(IconData icon, String title, bool active, VoidCallback onTap) {
+  Widget _buildNavItem(
+      IconData icon, String title, bool active, VoidCallback onTap) {
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
       child: Material(
         color: active ? const Color(0xFF1E273D) : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         child: ListTile(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          leading: Icon(icon, color: active ? AppColors.teenPrimaryLime : AppColors.teenMutedText),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          leading: Icon(icon,
+              color:
+                  active ? AppColors.teenPrimaryLime : AppColors.teenMutedText),
           title: Text(
             title,
             style: TextStyle(
               fontSize: 14,
               fontWeight: active ? FontWeight.w700 : FontWeight.w500,
-              color: active ? AppColors.teenPrimaryLime : AppColors.teenMutedText,
+              color:
+                  active ? AppColors.teenPrimaryLime : AppColors.teenMutedText,
             ),
           ),
           onTap: onTap,

@@ -23,7 +23,8 @@ void main() async {
   };
 
   PlatformDispatcher.instance.onError = (error, stack) {
-    debugPrint('🚨 [PlatformDispatcher] Kutilmagan asinxron xato: $error\n$stack');
+    debugPrint(
+        '🚨 [PlatformDispatcher] Kutilmagan asinxron xato: $error\n$stack');
     return true; // Mark as handled to prevent uncaught app termination
   };
 
@@ -31,7 +32,8 @@ void main() async {
   try {
     await AuthService.init();
   } catch (e, stack) {
-    debugPrint('⚠️ [AuthService.init] Google Sign-In initsializatsiya ogohlantirishi: $e\n$stack');
+    debugPrint(
+        '⚠️ [AuthService.init] Google Sign-In initsializatsiya ogohlantirishi: $e\n$stack');
   }
 
   // Warm up backend in background (especially useful for Render free-tier instance cold start)

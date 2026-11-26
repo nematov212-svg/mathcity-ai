@@ -4,7 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mathcity_ai/app/app.dart';
 
 void main() {
-  testWidgets('MathCity AI app smoke test and brand verification', (WidgetTester tester) async {
+  testWidgets('MathCity AI app smoke test and brand verification',
+      (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
 
     // Build MathCityApp within ProviderScope
@@ -22,7 +23,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 1500));
     await tester.pump(const Duration(milliseconds: 500));
     await tester.pump();
-    
+
     // Login screen frame verification (Reference Image 2)
     expect(find.text('Yana xush kelibsiz!'), findsOneWidget);
     expect(find.text('Kirish'), findsOneWidget);

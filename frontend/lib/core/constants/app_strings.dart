@@ -1,7 +1,8 @@
 class AppStrings {
   static const String appTitle = 'MathCity AI';
   static const String welcomeTitle = 'Matematika shahringizga xush kelibsiz!';
-  static const String welcomeSubtitle = 'Matematikani o‘rganing, tangalar to‘plang va orzuingizdagi shaharni barpo eting!';
+  static const String welcomeSubtitle =
+      'Matematikani o‘rganing, tangalar to‘plang va orzuingizdagi shaharni barpo eting!';
   static const String startButton = 'Boshlash';
   static const String continueButton = 'Davom etish';
   static const String retryButton = 'Yana urinib ko‘rish';

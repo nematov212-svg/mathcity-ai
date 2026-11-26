@@ -10,7 +10,8 @@ import 'package:mathcity_ai/core/widgets/mathcity_logo.dart';
 import 'package:mathcity_ai/core/widgets/coin_badge.dart';
 
 void main() {
-  testWidgets('WelcomeScreen renders MathCityLogo and Google Sign-In button', (WidgetTester tester) async {
+  testWidgets('WelcomeScreen renders MathCityLogo and Google Sign-In button',
+      (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 1920);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -22,7 +23,7 @@ void main() {
         ),
       ),
     );
-    
+
     await tester.pumpAndSettle();
 
     // Verify mascot logo presence
@@ -35,7 +36,9 @@ void main() {
     expect(find.text('Boshlash'), findsOneWidget);
   });
 
-  testWidgets('ExerciseScreen renders 20-question session with instant choice evaluation', (WidgetTester tester) async {
+  testWidgets(
+      'ExerciseScreen renders 20-question session with instant choice evaluation',
+      (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 1920);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -77,7 +80,8 @@ void main() {
     await tester.pump(const Duration(milliseconds: 1500));
   });
 
-  testWidgets('CityScreen renders 3D isometric city with Yangi bino qurish CTA', (WidgetTester tester) async {
+  testWidgets('CityScreen renders 3D isometric city with Yangi bino qurish CTA',
+      (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 1920);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -97,7 +101,9 @@ void main() {
     expect(find.byType(CoinBadge), findsOneWidget);
   });
 
-  testWidgets('TariflarScreen renders MathCity Pro, 29 000 UZS/oy, and 30-day trial', (WidgetTester tester) async {
+  testWidgets(
+      'TariflarScreen renders MathCity Pro, 29 000 UZS/oy, and 30-day trial',
+      (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 1920);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -120,7 +126,8 @@ void main() {
     expect(find.textContaining('Xaridlarni tiklash'), findsOneWidget);
   });
 
-  testWidgets('SettingsScreen includes ILOVA KO‘RINISHI VA REJIMI', (WidgetTester tester) async {
+  testWidgets('SettingsScreen includes ILOVA KO‘RINISHI VA REJIMI',
+      (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 1920);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);

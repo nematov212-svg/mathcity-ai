@@ -17,7 +17,7 @@ Widget buildHouseGameView({
   final isTest = Platform.environment.containsKey('FLUTTER_TEST');
   final isMobile = !isTest &&
       (defaultTargetPlatform == TargetPlatform.android ||
-       defaultTargetPlatform == TargetPlatform.iOS);
+          defaultTargetPlatform == TargetPlatform.iOS);
 
   if (!isMobile) {
     return Container(
@@ -31,7 +31,10 @@ Widget buildHouseGameView({
               SizedBox(height: 8),
               Text(
                 'MathCity 3D Uy Qurish',
-                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 4),
               Text(
@@ -53,7 +56,8 @@ void postMessageToHouseGame(String type, Map<String, dynamic> data) {
   if (_globalHouseWebViewController != null) {
     try {
       final jsonStr = jsonEncode({'type': type, 'data': data});
-      _globalHouseWebViewController!.runJavaScript("window.postMessage($jsonStr, '*');");
+      _globalHouseWebViewController!
+          .runJavaScript("window.postMessage($jsonStr, '*');");
     } catch (e) {
       debugPrint('Error posting message to mobile house game: $e');
     }
@@ -66,7 +70,8 @@ class _HouseGameMobileWebView extends StatefulWidget {
   const _HouseGameMobileWebView({required this.onMessageFromGame});
 
   @override
-  State<_HouseGameMobileWebView> createState() => _HouseGameMobileWebViewState();
+  State<_HouseGameMobileWebView> createState() =>
+      _HouseGameMobileWebViewState();
 }
 
 class _HouseGameMobileWebViewState extends State<_HouseGameMobileWebView> {
@@ -83,7 +88,8 @@ class _HouseGameMobileWebViewState extends State<_HouseGameMobileWebView> {
         onMessageReceived: (JavaScriptMessage msg) {
           try {
             final decoded = jsonDecode(msg.message);
-            if (decoded is Map<String, dynamic> && decoded.containsKey('type')) {
+            if (decoded is Map<String, dynamic> &&
+                decoded.containsKey('type')) {
               final type = decoded['type'].toString();
               final data = decoded['data'] is Map<String, dynamic>
                   ? decoded['data'] as Map<String, dynamic>
@@ -99,7 +105,6 @@ class _HouseGameMobileWebViewState extends State<_HouseGameMobileWebView> {
 
     _globalHouseWebViewController = _controller;
   }
-
 
   @override
   void dispose() {

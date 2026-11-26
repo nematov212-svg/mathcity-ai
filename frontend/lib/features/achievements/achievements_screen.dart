@@ -61,7 +61,9 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
     if (res['success'] == true) {
       setState(() {
         _isPro = res['isPro'] == true;
-        _achievements = res['data'] != null ? List<Map<String, dynamic>>.from(res['data']) : [];
+        _achievements = res['data'] != null
+            ? List<Map<String, dynamic>>.from(res['data'])
+            : [];
         _isLoading = false;
         _errorMessage = null;
       });
@@ -74,18 +76,21 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
     } else {
       setState(() {
         _isLoading = false;
-        _errorMessage = (res['error'] as String?) ?? 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring';
+        _errorMessage = (res['error'] as String?) ??
+            'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring';
       });
     }
   }
 
-  Future<void> _claimAchievement(Map<String, dynamic> ach, GlobalKey key) async {
+  Future<void> _claimAchievement(
+      Map<String, dynamic> ach, GlobalKey key) async {
     HapticFeedback.mediumImpact();
     final achKey = ach['key'] as String;
 
     final renderBox = key.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox != null) {
-      final startPos = renderBox.localToGlobal(Offset(renderBox.size.width - 60, renderBox.size.height / 2));
+      final startPos = renderBox.localToGlobal(
+          Offset(renderBox.size.width - 60, renderBox.size.height / 2));
       setState(() {
         _flyingCoinStart = startPos;
         _flyingCoinEnd = const Offset(320, 48);
@@ -96,7 +101,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
       });
     }
 
-    final res = await ref.read(studentProvider.notifier).claimAchievement(achKey);
+    final res =
+        await ref.read(studentProvider.notifier).claimAchievement(achKey);
     if (!mounted) return;
 
     if (res['success'] == true) {
@@ -106,10 +112,12 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
         SnackBar(
           behavior: SnackBarBehavior.floating,
           backgroundColor: const Color(0xFF10B981),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           content: Text(
             'Tabriklaymiz! +$coins oltin tanga va +$xp XP hisobingizga qo‘shildi!',
-            style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
+            style: const TextStyle(
+                fontWeight: FontWeight.w700, color: Colors.white),
           ),
         ),
       );
@@ -196,7 +204,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
               duration: const Duration(milliseconds: 650),
               curve: Curves.easeInOutCubic,
               builder: (context, anim, child) {
-                final currentOffset = Offset.lerp(_flyingCoinStart, _flyingCoinEnd, anim)!;
+                final currentOffset =
+                    Offset.lerp(_flyingCoinStart, _flyingCoinEnd, anim)!;
                 final scale = 1.0 + 0.4 * (1.0 - (anim - 0.5).abs() * 2);
                 return Positioned(
                   left: currentOffset.dx,
@@ -210,11 +219,15 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
                         color: Color(0xFFFFD66B),
                         shape: BoxShape.circle,
                         boxShadow: [
-                          BoxShadow(color: Color(0x66F5A623), blurRadius: 10, offset: Offset(0, 2)),
+                          BoxShadow(
+                              color: Color(0x66F5A623),
+                              blurRadius: 10,
+                              offset: Offset(0, 2)),
                         ],
                       ),
                       child: const Center(
-                        child: Icon(Icons.monetization_on_rounded, color: Color(0xFFD97706), size: 22),
+                        child: Icon(Icons.monetization_on_rounded,
+                            color: Color(0xFFD97706), size: 22),
                       ),
                     ),
                   ),
@@ -250,7 +263,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              _errorMessage ?? 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring',
+              _errorMessage ??
+                  'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -264,7 +278,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors.primary,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -296,8 +311,10 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
           final isClaimed = ach['isClaimed'] == true;
           final coins = ach['rewardCoins'] ?? 10;
           final xp = ach['rewardXP'] ?? 50;
-          final double progress = ((ach['progressRatio'] ?? 0.0) as num).toDouble().clamp(0.0, 1.0);
-          final progressText = (ach['progressText'] ?? (isUnlocked ? 'Ochilgan' : '0/1')) as String;
+          final double progress =
+              ((ach['progressRatio'] ?? 0.0) as num).toDouble().clamp(0.0, 1.0);
+          final progressText = (ach['progressText'] ??
+              (isUnlocked ? 'Ochilgan' : '0/1')) as String;
 
           return Container(
             key: cardKey,
@@ -342,7 +359,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
                       ),
                       child: Icon(
                         _getIconData(ach['iconName']),
-                        color: isUnlocked ? const Color(0xFF2A1B7A) : colors.muted,
+                        color:
+                            isUnlocked ? const Color(0xFF2A1B7A) : colors.muted,
                         size: 26,
                       ),
                     ),
@@ -373,7 +391,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFFF7ED),
                         borderRadius: BorderRadius.circular(10),
@@ -401,7 +420,9 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
                           value: progress,
                           minHeight: 7,
                           backgroundColor: colors.field,
-                          color: isUnlocked ? const Color(0xFF10B981) : colors.primary,
+                          color: isUnlocked
+                              ? const Color(0xFF10B981)
+                              : colors.primary,
                         ),
                       ),
                     ),
@@ -423,7 +444,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
                   alignment: Alignment.centerRight,
                   child: isClaimed
                       ? Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
                             color: const Color(0xFFE1F6EC),
                             borderRadius: BorderRadius.circular(14),
@@ -431,7 +453,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
                           child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.check_rounded, color: Color(0xFF10B981), size: 16),
+                              Icon(Icons.check_rounded,
+                                  color: Color(0xFF10B981), size: 16),
                               SizedBox(width: 4),
                               Text(
                                 'Olingan ✓',
@@ -450,7 +473,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
                                 backgroundColor: const Color(0xFF10B981),
                                 foregroundColor: Colors.white,
                                 elevation: 2,
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
@@ -463,13 +487,16 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
                                   SizedBox(width: 6),
                                   Text(
                                     'Mukofotni olish',
-                                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 13),
                                   ),
                                 ],
                               ),
                             )
                           : Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
                               decoration: BoxDecoration(
                                 color: colors.field,
                                 borderRadius: BorderRadius.circular(14),
@@ -478,7 +505,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
                               child: const Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.lock_outline_rounded, size: 14, color: Color(0xFF94A3B8)),
+                                  Icon(Icons.lock_outline_rounded,
+                                      size: 14, color: Color(0xFF94A3B8)),
                                   SizedBox(width: 4),
                                   Text(
                                     'Bajarilmoqda',
@@ -566,7 +594,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
                       ],
                     ),
                     child: const Center(
-                      child: Icon(Icons.lock_rounded, color: Color(0xFF2A1B7A), size: 36),
+                      child: Icon(Icons.lock_rounded,
+                          color: Color(0xFF2A1B7A), size: 36),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -613,7 +642,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
                           SizedBox(width: 8),
                           Text(
                             'MathCity Pro olish',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w800),
                           ),
                         ],
                       ),

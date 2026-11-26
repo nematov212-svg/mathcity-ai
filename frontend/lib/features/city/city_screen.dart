@@ -17,7 +17,8 @@ class CityScreen extends ConsumerStatefulWidget {
   ConsumerState<CityScreen> createState() => _CityScreenState();
 }
 
-class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStateMixin {
+class _CityScreenState extends ConsumerState<CityScreen>
+    with TickerProviderStateMixin {
   late AnimationController _constructionController;
   late AnimationController _coinDeductController;
   String? _coinDeductText;
@@ -123,7 +124,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
       category: 'Ilm-fan',
       costInCoins: 300,
       requiredLevel: 3,
-      description: 'Yulduzlar va osmon sirlarini o‘rganuvchi teleskopli rasadxona.',
+      description:
+          'Yulduzlar va osmon sirlarini o‘rganuvchi teleskopli rasadxona.',
       iconName: 'visibility',
       mode: 'KIDS',
     ),
@@ -181,7 +183,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
             if (data['carConfig'] != null) {
               _carLevel = data['carConfig']['level'] ?? _carLevel;
               _carModel = data['carConfig']['model'] ?? _carModel;
-              _carSpeed = (data['carConfig']['speed'] as num?)?.toDouble() ?? _carSpeed;
+              _carSpeed =
+                  (data['carConfig']['speed'] as num?)?.toDouble() ?? _carSpeed;
               final colHex = data['carConfig']['color'] as String?;
               if (colHex != null && colHex.startsWith('#')) {
                 _carColor = Color(int.parse(colHex.replaceFirst('#', '0xFF')));
@@ -208,7 +211,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
     if (userCoins < cost) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Fuqarolarni taklif qilish uchun kamida 25 ta oltin tanga kerak!'),
+          content: Text(
+              'Fuqarolarni taklif qilish uchun kamida 25 ta oltin tanga kerak!'),
           backgroundColor: Color(0xFFE53935),
         ),
       );
@@ -221,7 +225,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
       final res = await ApiClient().dio.post('/city/citizens/recruit');
       if (!mounted) return;
       if (res.data != null && res.data['success'] == true) {
-        final newCount = res.data['data']['citizenCount'] ?? (_citizenCount + 5);
+        final newCount =
+            res.data['data']['citizenCount'] ?? (_citizenCount + 5);
         final newBalance = res.data['data']['newCoinBalance'];
         setState(() {
           _citizenCount = newCount;
@@ -234,7 +239,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('5 nafar yangi fuqaro shahringizga ko‘chib keldi! 🎉'),
+              content:
+                  Text('5 nafar yangi fuqaro shahringizga ko‘chib keldi! 🎉'),
               backgroundColor: Color(0xFF0F9D58),
             ),
           );
@@ -268,7 +274,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
     if (userCoins < cost) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Mashinani kuchaytirish uchun kamida 50 ta oltin tanga kerak!'),
+          content: Text(
+              'Mashinani kuchaytirish uchun kamida 50 ta oltin tanga kerak!'),
           backgroundColor: Color(0xFFE53935),
         ),
       );
@@ -286,7 +293,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
           setState(() {
             _carLevel = carCfg['level'] ?? (_carLevel + 1);
             _carModel = carCfg['model'] ?? 'Sportkar';
-            _carSpeed = (carCfg['speed'] as num?)?.toDouble() ?? (_carSpeed + 0.3);
+            _carSpeed =
+                (carCfg['speed'] as num?)?.toDouble() ?? (_carSpeed + 0.3);
             final colHex = carCfg['color'] as String?;
             if (colHex != null && colHex.startsWith('#')) {
               _carColor = Color(int.parse(colHex.replaceFirst('#', '0xFF')));
@@ -301,7 +309,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Mashina yangilandi: $_carModel (Tezlik: ${_carSpeed}x)! 🚗💨'),
+              content: Text(
+                  'Mashina yangilandi: $_carModel (Tezlik: ${_carSpeed}x)! 🚗💨'),
               backgroundColor: const Color(0xFF0F9D58),
             ),
           );
@@ -312,8 +321,19 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
 
     // Fallback optimistic update
     final nextLvl = _carLevel + 1;
-    final models = ['Sedan', 'Sportkar', 'Cyber-avto', 'Superkar', 'Uchuvchi avto'];
-    final colors = [const Color(0xFFE53E3E), const Color(0xFF3182CE), const Color(0xFF38A169), const Color(0xFFD69E2E)];
+    final models = [
+      'Sedan',
+      'Sportkar',
+      'Cyber-avto',
+      'Superkar',
+      'Uchuvchi avto'
+    ];
+    final colors = [
+      const Color(0xFFE53E3E),
+      const Color(0xFF3182CE),
+      const Color(0xFF38A169),
+      const Color(0xFFD69E2E)
+    ];
     setState(() {
       _carLevel = nextLvl;
       _carModel = models[(nextLvl - 1) % models.length];
@@ -327,7 +347,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
     }
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Mashina yangilandi: $_carModel (Tezlik: ${_carSpeed}x)! 🚗💨'),
+        content: Text(
+            'Mashina yangilandi: $_carModel (Tezlik: ${_carSpeed}x)! 🚗💨'),
         backgroundColor: const Color(0xFF0F9D58),
       ),
     );
@@ -344,7 +365,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
       bool found = false;
       for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
-          final isOccupied = _placedBuildings.any((b) => b.gridX == x && b.gridY == y);
+          final isOccupied =
+              _placedBuildings.any((b) => b.gridX == x && b.gridY == y);
           if (!isOccupied) {
             gridX = x;
             gridY = y;
@@ -382,7 +404,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                           color: colors.primary.withOpacity(0.12),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Icon(Icons.storefront_rounded, color: colors.primary, size: 24),
+                        child: Icon(Icons.storefront_rounded,
+                            color: colors.primary, size: 24),
                       ),
                       const SizedBox(width: 12),
                       Text(
@@ -422,7 +445,9 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                         color: colors.bg,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: canAfford ? colors.primary.withOpacity(0.3) : colors.border,
+                          color: canAfford
+                              ? colors.primary.withOpacity(0.3)
+                              : colors.border,
                         ),
                       ),
                       child: Row(
@@ -436,7 +461,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                               ),
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            child: Icon(_getIconData(building.iconName), color: Colors.white, size: 26),
+                            child: Icon(_getIconData(building.iconName),
+                                color: Colors.white, size: 26),
                           ),
                           const SizedBox(width: 14),
                           Expanded(
@@ -482,13 +508,15 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                           const SizedBox(width: 10),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: canAfford ? colors.primary : colors.inactive,
+                              backgroundColor:
+                                  canAfford ? colors.primary : colors.inactive,
                               foregroundColor: Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(14),
                               ),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 10),
                             ),
                             onPressed: () async {
                               Navigator.pop(context);
@@ -497,13 +525,15 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('Oltin tangalaringiz yetarli emas! Misollarni to‘g‘ri yechib tanga to‘plang.'),
+                                    content: Text(
+                                        'Oltin tangalaringiz yetarli emas! Misollarni to‘g‘ri yechib tanga to‘plang.'),
                                     backgroundColor: Color(0xFFE53935),
                                   ),
                                 );
                               }
                             },
-                            child: const Text('Qurish', style: TextStyle(fontWeight: FontWeight.w800)),
+                            child: const Text('Qurish',
+                                style: TextStyle(fontWeight: FontWeight.w800)),
                           ),
                         ],
                       ),
@@ -518,17 +548,21 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
     );
   }
 
-  Future<void> _executePurchase(BuildingModel building, int gridX, int gridY) async {
+  Future<void> _executePurchase(
+      BuildingModel building, int gridX, int gridY) async {
     _triggerCoinDeduction(building.costInCoins);
 
-    final success = await ref.read(studentProvider.notifier).purchaseBuilding(building.key, gridX, gridY);
+    final success = await ref
+        .read(studentProvider.notifier)
+        .purchaseBuilding(building.key, gridX, gridY);
     if (!mounted) return;
 
     if (success) {
       setState(() {
         _animatingGridX = gridX;
         _animatingGridY = gridY;
-        _placedBuildings.removeWhere((b) => b.gridX == gridX && b.gridY == gridY);
+        _placedBuildings
+            .removeWhere((b) => b.gridX == gridX && b.gridY == gridY);
         _placedBuildings.add(PlacedBuildingModel(
           buildingKey: building.key,
           name: building.name,
@@ -551,7 +585,9 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
             children: [
               const Icon(Icons.check_circle_rounded, color: Colors.white),
               const SizedBox(width: 8),
-              Expanded(child: Text('${building.name} shahringizda muvaffaqiyatli qurildi! 🏰')),
+              Expanded(
+                  child: Text(
+                      '${building.name} shahringizda muvaffaqiyatli qurildi! 🏰')),
             ],
           ),
           backgroundColor: const Color(0xFF0F9D58),
@@ -583,12 +619,16 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                   ),
                   borderRadius: BorderRadius.circular(18),
                 ),
-                child: Icon(_getIconData(building.iconName), color: Colors.white, size: 32),
+                child: Icon(_getIconData(building.iconName),
+                    color: Colors.white, size: 32),
               ),
               const SizedBox(height: 14),
               Text(
                 building.name,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: colors.ink),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    color: colors.ink),
               ),
               const SizedBox(height: 6),
               Text(
@@ -666,9 +706,13 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                       children: [
                         IconButton(
                           padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                          icon: Icon(Icons.arrow_back_ios_new_rounded, color: colors.ink, size: 18),
-                          onPressed: () => context.canPop() ? context.pop() : context.go('/kids/home'),
+                          constraints:
+                              const BoxConstraints(minWidth: 32, minHeight: 32),
+                          icon: Icon(Icons.arrow_back_ios_new_rounded,
+                              color: colors.ink, size: 18),
+                          onPressed: () => context.canPop()
+                              ? context.pop()
+                              : context.go('/kids/home'),
                         ),
                         const SizedBox(width: 4),
                         Expanded(
@@ -708,7 +752,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 5),
                         decoration: BoxDecoration(
                           color: colors.primary.withOpacity(0.12),
                           borderRadius: BorderRadius.circular(12),
@@ -748,7 +793,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                         carSpeed: _carSpeed,
                         carModel: _carModel,
                         onBuildingTap: (building) => _inspectBuilding(building),
-                        onEmptyPlotTap: (gridX, gridY) => _openShop(gridX, gridY),
+                        onEmptyPlotTap: (gridX, gridY) =>
+                            _openShop(gridX, gridY),
                       );
                     },
                   ),
@@ -761,7 +807,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 7),
                           decoration: BoxDecoration(
                             color: colors.card,
                             borderRadius: BorderRadius.circular(20),
@@ -777,7 +824,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.location_on_rounded, color: colors.primary, size: 16),
+                              Icon(Icons.location_on_rounded,
+                                  color: colors.primary, size: 16),
                               const SizedBox(width: 5),
                               Text(
                                 'Bilimobod',
@@ -792,7 +840,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 7),
                           decoration: BoxDecoration(
                             color: colors.card,
                             borderRadius: BorderRadius.circular(20),
@@ -808,7 +857,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.people_alt_rounded, color: Color(0xFF10B981), size: 16),
+                              const Icon(Icons.people_alt_rounded,
+                                  color: Color(0xFF10B981), size: 16),
                               const SizedBox(width: 5),
                               Text(
                                 '$_citizenCount fuqaro',
@@ -840,7 +890,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                           child: Opacity(
                             opacity: opacity,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 6),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFEF4444),
                                 borderRadius: BorderRadius.circular(999),
@@ -916,7 +967,8 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFD4F8E6),
                                   borderRadius: BorderRadius.circular(12),
@@ -945,14 +997,19 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                                   icon: const Icon(Icons.add_rounded, size: 18),
                                   label: const FittedBox(
                                     fit: BoxFit.scaleDown,
-                                    child: Text('Yangi bino qurish', style: TextStyle(fontWeight: FontWeight.w800)),
+                                    child: Text('Yangi bino qurish',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w800)),
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: colors.primary,
                                     foregroundColor: Colors.white,
                                     elevation: 0,
-                                    padding: const EdgeInsets.symmetric(vertical: 12),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
                                   ),
                                 ),
                               ),
@@ -963,16 +1020,24 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                                 flex: 4,
                                 child: OutlinedButton.icon(
                                   onPressed: _recruitCitizens,
-                                  icon: const Icon(Icons.person_add_rounded, size: 17),
+                                  icon: const Icon(Icons.person_add_rounded,
+                                      size: 17),
                                   label: const FittedBox(
                                     fit: BoxFit.scaleDown,
-                                    child: Text('+5 Fuqaro (25 🪙)', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 11)),
+                                    child: Text('+5 Fuqaro (25 🪙)',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 11)),
                                   ),
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: const Color(0xFF059669),
-                                    side: const BorderSide(color: Color(0xFF10B981), width: 1.2),
-                                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                    side: const BorderSide(
+                                        color: Color(0xFF10B981), width: 1.2),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 4),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
                                   ),
                                 ),
                               ),
@@ -983,16 +1048,24 @@ class _CityScreenState extends ConsumerState<CityScreen> with TickerProviderStat
                                 flex: 4,
                                 child: OutlinedButton.icon(
                                   onPressed: _upgradeCar,
-                                  icon: const Icon(Icons.directions_car_rounded, size: 17),
+                                  icon: const Icon(Icons.directions_car_rounded,
+                                      size: 17),
                                   label: const FittedBox(
                                     fit: BoxFit.scaleDown,
-                                    child: Text('Mashina (50 🪙)', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 11)),
+                                    child: Text('Mashina (50 🪙)',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 11)),
                                   ),
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: const Color(0xFFD97706),
-                                    side: const BorderSide(color: Color(0xFFF59E0B), width: 1.2),
-                                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                    side: const BorderSide(
+                                        color: Color(0xFFF59E0B), width: 1.2),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 4),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
                                   ),
                                 ),
                               ),

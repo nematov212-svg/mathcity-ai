@@ -57,10 +57,12 @@ class ExerciseRepository {
               if (ex.isValid()) {
                 serverExercises.add(ex);
               } else {
-                debugPrint('⚠️ [ExerciseRepository] Noto‘g‘ri server savoli o‘tkazib yuborildi: ${ex.id}');
+                debugPrint(
+                    '⚠️ [ExerciseRepository] Noto‘g‘ri server savoli o‘tkazib yuborildi: ${ex.id}');
               }
             } catch (err) {
-              debugPrint('⚠️ [ExerciseRepository] Savolni parse qilishda xato: $err');
+              debugPrint(
+                  '⚠️ [ExerciseRepository] Savolni parse qilishda xato: $err');
             }
           }
 
@@ -72,7 +74,8 @@ class ExerciseRepository {
         }
       }
     } catch (e) {
-      debugPrint('ℹ️ [ExerciseRepository] Serverdan mashqlarni yuklash kechikmoqda yoki oflayn, mahalliy bazadan yuklanadi: $e');
+      debugPrint(
+          'ℹ️ [ExerciseRepository] Serverdan mashqlarni yuklash kechikmoqda yoki oflayn, mahalliy bazadan yuklanadi: $e');
     }
 
     // 2. Offline Fallback: Load from assets/data/exercises_1000.json
@@ -86,7 +89,8 @@ class ExerciseRepository {
   }) async {
     if (_cachedAllExercises == null) {
       try {
-        final jsonString = await rootBundle.loadString('assets/data/exercises_1000.json');
+        final jsonString =
+            await rootBundle.loadString('assets/data/exercises_1000.json');
         final rawList = jsonDecode(jsonString) as List<dynamic>;
         final validList = <Exercise>[];
 
@@ -96,15 +100,18 @@ class ExerciseRepository {
             if (ex.isValid()) {
               validList.add(ex);
             } else {
-              debugPrint('⚠️ [ExerciseRepository] Buzilgan misol o‘tkazib yuborildi (index: $i, id: ${ex.id})');
+              debugPrint(
+                  '⚠️ [ExerciseRepository] Buzilgan misol o‘tkazib yuborildi (index: $i, id: ${ex.id})');
             }
           } catch (e) {
-            debugPrint('⚠️ [ExerciseRepository] Misolni o‘qishda xatolik (index: $i): $e');
+            debugPrint(
+                '⚠️ [ExerciseRepository] Misolni o‘qishda xatolik (index: $i): $e');
           }
         }
         _cachedAllExercises = validList;
       } catch (e) {
-        debugPrint('🚨 [ExerciseRepository] exercises_1000.json yuklashda xatolik: $e');
+        debugPrint(
+            '🚨 [ExerciseRepository] exercises_1000.json yuklashda xatolik: $e');
         _cachedAllExercises = [];
       }
     }
@@ -117,7 +124,8 @@ class ExerciseRepository {
 
     // If matching exercises are fewer than requested count, supplement from adjacent levels
     if (matching.length < count) {
-      final otherLevels = all.where((e) => e.level != targetLevel).toList()..shuffle();
+      final otherLevels = all.where((e) => e.level != targetLevel).toList()
+        ..shuffle();
       matching.addAll(otherLevels.take(count - matching.length));
     }
 
@@ -128,8 +136,11 @@ class ExerciseRepository {
 
   /// For unit tests and direct validation
   Future<List<Exercise>> loadAllLocalExercises() async {
-    final jsonString = await rootBundle.loadString('assets/data/exercises_1000.json');
+    final jsonString =
+        await rootBundle.loadString('assets/data/exercises_1000.json');
     final rawList = jsonDecode(jsonString) as List<dynamic>;
-    return rawList.map((e) => Exercise.fromJson(e as Map<String, dynamic>)).toList();
+    return rawList
+        .map((e) => Exercise.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 }

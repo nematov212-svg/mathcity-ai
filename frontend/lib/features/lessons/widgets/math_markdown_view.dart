@@ -39,13 +39,16 @@ class MathMarkdownView extends StatelessWidget {
       // 1. Headers: ###, ##, #
       if (line.startsWith('### ')) {
         final title = line.replaceFirst('### ', '').trim();
-        widgets.add(_buildHeader(title, 16, FontWeight.w800, themeAccent, colors));
+        widgets
+            .add(_buildHeader(title, 16, FontWeight.w800, themeAccent, colors));
       } else if (line.startsWith('## ')) {
         final title = line.replaceFirst('## ', '').trim();
-        widgets.add(_buildHeader(title, 18, FontWeight.w900, themeAccent, colors));
+        widgets
+            .add(_buildHeader(title, 18, FontWeight.w900, themeAccent, colors));
       } else if (line.startsWith('# ')) {
         final title = line.replaceFirst('# ', '').trim();
-        widgets.add(_buildHeader(title, 20, FontWeight.w900, themeAccent, colors));
+        widgets
+            .add(_buildHeader(title, 20, FontWeight.w900, themeAccent, colors));
       }
       // 2. Blockquote / Callout
       else if (line.startsWith('> ')) {
@@ -62,10 +65,13 @@ class MathMarkdownView extends StatelessWidget {
         final match = RegExp(r'^(\d+)\.\s(.*)$').firstMatch(line);
         final numStr = match?.group(1) ?? '1';
         final itemText = match?.group(2) ?? '';
-        widgets.add(_buildNumberedItem(numStr, itemText, defaultStyle, themeAccent));
+        widgets.add(
+            _buildNumberedItem(numStr, itemText, defaultStyle, themeAccent));
       }
       // 5. Standalone LaTeX block (e.g. $$...$$ or \[...\])
-      else if (line.startsWith(r'$$') && line.endsWith(r'$$') && line.length > 4) {
+      else if (line.startsWith(r'$$') &&
+          line.endsWith(r'$$') &&
+          line.length > 4) {
         final latex = line.substring(2, line.length - 2).trim();
         widgets.add(_buildLatexBlock(latex, colors));
       }
@@ -81,7 +87,8 @@ class MathMarkdownView extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(String title, double fontSize, FontWeight weight, Color accent, AppThemeColors colors) {
+  Widget _buildHeader(String title, double fontSize, FontWeight weight,
+      Color accent, AppThemeColors colors) {
     return Padding(
       padding: const EdgeInsets.only(top: 14, bottom: 8),
       child: Row(
@@ -166,7 +173,8 @@ class MathMarkdownView extends StatelessWidget {
     );
   }
 
-  Widget _buildNumberedItem(String numStr, String text, TextStyle baseStyle, Color accent) {
+  Widget _buildNumberedItem(
+      String numStr, String text, TextStyle baseStyle, Color accent) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(

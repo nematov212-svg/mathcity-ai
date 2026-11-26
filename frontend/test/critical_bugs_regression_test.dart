@@ -12,28 +12,23 @@ import 'package:mathcity_ai/shared/providers/student_provider.dart';
 
 void main() {
   group('1. Google Sign-In Resiliency (Error A Recovery)', () {
-    test('AuthService initializes safely without throwing uncaught assertions', () {
+    test('AuthService initializes safely without throwing uncaught assertions',
+        () {
       final authService = AuthService();
       expect(authService, isNotNull);
       expect(authService.isGoogleSignInAvailable, isTrue);
     });
 
-    testWidgets('WelcomeScreen renders without crashing on missing Google OAuth', (tester) async {
-
-
+    testWidgets(
+        'WelcomeScreen renders without crashing on missing Google OAuth',
+        (tester) async {
       await tester.pumpWidget(
-        
         const ProviderScope(
           child: MaterialApp(
-            
             home: WelcomeScreen(),
-
           ),
-
         ),
-
       );
-
 
       await tester.pump(const Duration(milliseconds: 300));
 
@@ -45,7 +40,8 @@ void main() {
     final testWidths = [320.0, 360.0, 390.0, 768.0, 1024.0];
 
     for (final width in testWidths) {
-      testWidgets('KidsHomeScreen does NOT overflow at width: $width', (tester) async {
+      testWidgets('KidsHomeScreen does NOT overflow at width: $width',
+          (tester) async {
         tester.view.physicalSize = Size(width, 800);
         tester.view.devicePixelRatio = 1.0;
         addTearDown(tester.view.resetPhysicalSize);
@@ -64,7 +60,8 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('TeenHomeScreen does NOT overflow at width: $width', (tester) async {
+      testWidgets('TeenHomeScreen does NOT overflow at width: $width',
+          (tester) async {
         tester.view.physicalSize = Size(width, 800);
         tester.view.devicePixelRatio = 1.0;
         addTearDown(tester.view.resetPhysicalSize);
@@ -86,7 +83,8 @@ void main() {
         expect(exc, isNull);
       });
 
-      testWidgets('CityScreen does NOT overflow at width: $width', (tester) async {
+      testWidgets('CityScreen does NOT overflow at width: $width',
+          (tester) async {
         tester.view.physicalSize = Size(width, 800);
         tester.view.devicePixelRatio = 1.0;
         addTearDown(tester.view.resetPhysicalSize);
@@ -111,7 +109,9 @@ void main() {
   });
 
   group('3. ListTile Material Ancestry Assertion Verification', () {
-    testWidgets('SettingsScreen ListTiles and SwitchListTiles render without Material assertions', (tester) async {
+    testWidgets(
+        'SettingsScreen ListTiles and SwitchListTiles render without Material assertions',
+        (tester) async {
       tester.view.physicalSize = const Size(390, 1000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -132,9 +132,10 @@ void main() {
     });
   });
 
-
   group('4. Coin Economy and 100-Coin Building Purchase', () {
-    testWidgets('Student begins with 100 coins and purchases 100-coin building down to 0', (tester) async {
+    testWidgets(
+        'Student begins with 100 coins and purchases 100-coin building down to 0',
+        (tester) async {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
@@ -147,27 +148,33 @@ void main() {
       expect(container.read(studentProvider).student?.coinBalance, 0);
 
       // Attempt second purchase with 0 balance: must fail
-      final secondSuccess = await notifier.purchaseBuilding('school_math', 1, 0);
+      final secondSuccess =
+          await notifier.purchaseBuilding('school_math', 1, 0);
       expect(secondSuccess, isFalse);
       expect(container.read(studentProvider).student?.coinBalance, 0);
     });
 
-    testWidgets('Submit answer adds exactly 1 coin to student balance', (tester) async {
+    testWidgets('Submit answer adds exactly 1 coin to student balance',
+        (tester) async {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
       final notifier = container.read(studentProvider.notifier);
-      final initialCoins = container.read(studentProvider).student?.coinBalance ?? 100;
+      final initialCoins =
+          container.read(studentProvider).student?.coinBalance ?? 100;
 
       final result = await notifier.submitAnswer('q-math-01', '20');
       expect(result['isCorrect'], isTrue);
       expect(result['coinsAwarded'], 1);
-      expect(container.read(studentProvider).student?.coinBalance, initialCoins + 1);
+      expect(container.read(studentProvider).student?.coinBalance,
+          initialCoins + 1);
     });
   });
 
   group('5. Apple-Style Payment Screen & Card Checkout Verification', () {
-    testWidgets('AddPaymentScreen renders title, methods, and 29 000 so‘m to‘lash button', (tester) async {
+    testWidgets(
+        'AddPaymentScreen renders title, methods, and 29 000 so‘m to‘lash button',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -183,7 +190,8 @@ void main() {
       expect(find.text('Visa / Mastercard'), findsOneWidget);
       expect(find.text('Click Business'), findsOneWidget);
       expect(find.text('29 000 so‘m to‘lash'), findsOneWidget);
-      expect(find.text('256-bit SSL va PCI-DSS xavfsiz to‘lov shifrlanishi'), findsOneWidget);
+      expect(find.text('256-bit SSL va PCI-DSS xavfsiz to‘lov shifrlanishi'),
+          findsOneWidget);
     });
   });
 }

@@ -5,11 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Professional Animated New User 30% Discount Dialog
-/// Dark (#12102B) + Green-Turquoise (#3FA38A) border
-/// Floating -30% Badge, 2-Column Price Card with 600ms Count-Up,
-/// Live Server-Synchronized Countdown Timer (HH:MM:SS),
-/// Pulse + Shine Green (#1D9E75) CTA Button
+/// Professional Apple Style Animated New User 30% Discount Dialog
+/// - 24px border radius, glassmorphism backdrop blur
+/// - Smooth Fade + Scale entry and exit animations
+/// - Interactive selectable monthly / yearly plan cards
+/// - Dynamic CTA button with selected plan price
+/// - 5-second auto-close progress bar
+/// - Real server-backed 24-hour countdown timer (HH:MM:SS)
+/// - Light & Dark mode support with clear contrast
 class NewUserDiscountDialog extends ConsumerStatefulWidget {
   final DateTime expiresAt;
   final int discountPercent;
@@ -17,7 +20,10 @@ class NewUserDiscountDialog extends ConsumerStatefulWidget {
   final int monthlyDiscountedPrice;
   final int yearlyOriginalPrice;
   final int yearlyDiscountedPrice;
+  final Duration? autoCloseDuration;
   final VoidCallback? onDismiss;
+  final ValueChanged<String>? onClaimWithPlan;
+  final String initialPlan;
 
   const NewUserDiscountDialog({
     super.key,
@@ -27,7 +33,10 @@ class NewUserDiscountDialog extends ConsumerStatefulWidget {
     this.monthlyDiscountedPrice = 20300,
     this.yearlyOriginalPrice = 250000,
     this.yearlyDiscountedPrice = 175000,
+    this.autoCloseDuration = const Duration(seconds: 5),
     this.onDismiss,
+    this.onClaimWithPlan,
+    this.initialPlan = 'yearly',
   });
 
   static Future<void> show(
@@ -38,6 +47,8 @@ class NewUserDiscountDialog extends ConsumerStatefulWidget {
     int monthlyDiscountedPrice = 20300,
     int yearlyOriginalPrice = 250000,
     int yearlyDiscountedPrice = 175000,
+    Duration autoCloseDuration = const Duration(seconds: 5),
+    ValueChanged<String>? onClaimWithPlan,
   }) {
     return showDialog<void>(
       context: context,
@@ -50,12 +61,15 @@ class NewUserDiscountDialog extends ConsumerStatefulWidget {
         monthlyDiscountedPrice: monthlyDiscountedPrice,
         yearlyOriginalPrice: yearlyOriginalPrice,
         yearlyDiscountedPrice: yearlyDiscountedPrice,
+        autoCloseDuration: autoCloseDuration,
+        onClaimWithPlan: onClaimWithPlan,
       ),
     );
   }
 
   @override
-  ConsumerState<NewUserDiscountDialog> createState() => _NewUserDiscountDialogState();
+  ConsumerState<NewUserDiscountDialog> createState() =>
+      _NewUserDiscountDialogState();
 }
 
 class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
@@ -64,67 +78,51 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
 
-  late AnimationController _floatingController;
-  late Animation<double> _floatingAnimation;
-
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
-
-  late AnimationController _shineController;
 
   late AnimationController _countUpController;
   late Animation<int> _monthlyCountAnimation;
   late Animation<int> _yearlyCountAnimation;
 
+  AnimationController? _autoCloseController;
+
   Timer? _countdownTimer;
   Duration _remainingTime = Duration.zero;
   bool _isClosing = false;
+  late String _selectedPlan; // 'monthly' | 'yearly'
 
   @override
   void initState() {
     super.initState();
+    _selectedPlan = widget.initialPlan;
 
-    // 1. Entrance animation (scale 0.9 -> 1.0, fade)
+    // 1. Entrance animation (scale 0.90 -> 1.0, fade)
     _entranceController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 380),
+      duration: const Duration(milliseconds: 320),
     );
-    _scaleAnimation = Tween<double>(begin: 0.90, end: 1.0).animate(
-      CurvedAnimation(parent: _entranceController, curve: Curves.easeOutBack),
+    _scaleAnimation = Tween<double>(begin: 0.92, end: 1.0).animate(
+      CurvedAnimation(parent: _entranceController, curve: Curves.easeOutCubic),
     );
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _entranceController, curve: Curves.easeOut),
     );
     _entranceController.forward();
 
-    // 2. Slow floating for -30% badge
-    _floatingController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2500),
-    )..repeat(reverse: true);
-    _floatingAnimation = Tween<double>(begin: -3.5, end: 3.5).animate(
-      CurvedAnimation(parent: _floatingController, curve: Curves.easeInOutSine),
-    );
-
-    // 3. CTA Pulse
+    // 2. Subtle CTA pulse animation
     _pulseController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1400),
+      duration: const Duration(milliseconds: 1600),
     )..repeat(reverse: true);
-    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.035).animate(
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.025).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
 
-    // 4. CTA Shine line sweep
-    _shineController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 3000),
-    )..repeat();
-
-    // 5. Price count-up animation (600ms)
+    // 3. Price count-up animation
     _countUpController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 500),
     );
     _monthlyCountAnimation = IntTween(
       begin: 0,
@@ -140,7 +138,22 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
     );
     _countUpController.forward();
 
-    // 6. Live countdown timer ticking every second
+    // 4. Auto-close timer controller (5 seconds)
+    if (widget.autoCloseDuration != null &&
+        widget.autoCloseDuration!.inSeconds > 0) {
+      _autoCloseController = AnimationController(
+        vsync: this,
+        duration: widget.autoCloseDuration,
+      );
+      _autoCloseController!.forward();
+      _autoCloseController!.addStatusListener((status) {
+        if (status == AnimationStatus.completed && mounted && !_isClosing) {
+          _handleDismiss();
+        }
+      });
+    }
+
+    // 5. 24-hour server countdown timer
     _updateRemainingTime();
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       _updateRemainingTime();
@@ -165,13 +178,18 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
     }
   }
 
+  void _pauseAutoClose() {
+    if (_autoCloseController?.isAnimating == true) {
+      _autoCloseController?.stop();
+    }
+  }
+
   @override
   void dispose() {
     _countdownTimer?.cancel();
+    _autoCloseController?.dispose();
     _entranceController.dispose();
-    _floatingController.dispose();
     _pulseController.dispose();
-    _shineController.dispose();
     _countUpController.dispose();
     super.dispose();
   }
@@ -179,6 +197,7 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
   Future<void> _handleDismiss() async {
     if (_isClosing) return;
     _isClosing = true;
+    _autoCloseController?.stop();
 
     widget.onDismiss?.call();
 
@@ -191,12 +210,20 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
   }
 
   void _handleClaimDiscount() {
+    if (_isClosing) return;
+    _isClosing = true;
+    _autoCloseController?.stop();
     HapticFeedback.mediumImpact();
-    _handleDismiss();
 
-    // Navigate to MathCity Pro screen with discount applied
-    if (context.mounted) {
-      context.push('/kids/pro');
+    final chosenPlan = _selectedPlan;
+    widget.onDismiss?.call();
+    widget.onClaimWithPlan?.call(chosenPlan);
+
+    Navigator.of(context, rootNavigator: true).pop();
+
+    // Navigate to MathCity Pro with selected plan
+    if (widget.onClaimWithPlan == null && context.mounted) {
+      context.push('/kids/pro?plan=$chosenPlan');
     }
   }
 
@@ -208,6 +235,7 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final mediaQuery = MediaQuery.of(context);
     final reduceMotion = mediaQuery.disableAnimations;
 
@@ -216,12 +244,16 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
     final seconds = (_remainingTime.inSeconds % 60).toString().padLeft(2, '0');
     final countdownString = '$hours:$minutes:$seconds';
 
+    final selectedPrice = _selectedPlan == 'yearly'
+        ? widget.yearlyDiscountedPrice
+        : widget.monthlyDiscountedPrice;
+
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 420, minWidth: 280),
@@ -241,135 +273,127 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
               },
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF161334),
-                      Color(0xFF12102B),
-                      Color(0xFF0C0A20),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                  borderRadius: BorderRadius.circular(22),
+                  color: isDark
+                      ? const Color(0xFF161233).withValues(alpha: 0.96)
+                      : Colors.white.withValues(alpha: 0.96),
+                  borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color: const Color(0xFF3FA38A),
-                    width: 1.4,
+                    color: isDark
+                        ? const Color(0xFF6366F1).withValues(alpha: 0.35)
+                        : const Color(0xFFE2E8F0),
+                    width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF3FA38A).withOpacity(0.35),
-                      blurRadius: 30,
-                      offset: const Offset(0, 8),
-                    ),
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.6),
-                      blurRadius: 20,
-                      offset: const Offset(0, 4),
+                      color: isDark
+                          ? const Color(0xFF6366F1).withValues(alpha: 0.20)
+                          : Colors.black.withValues(alpha: 0.12),
+                      blurRadius: 36,
+                      offset: const Offset(0, 12),
                     ),
                   ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(22),
+                  borderRadius: BorderRadius.circular(24),
                   child: Stack(
                     children: [
-                      // Scrollable content body
+                      // 5-second auto-close subtle progress bar at very top
+                      if (_autoCloseController != null)
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          child: AnimatedBuilder(
+                            animation: _autoCloseController!,
+                            builder: (context, _) {
+                              final progress =
+                                  1.0 - _autoCloseController!.value;
+                              return LinearProgressIndicator(
+                                value: progress.clamp(0.0, 1.0),
+                                minHeight: 3,
+                                backgroundColor: Colors.transparent,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  const Color(0xFF6366F1)
+                                      .withValues(alpha: 0.6),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+
+                      // Content Body
                       SingleChildScrollView(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
+                        padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // 1. Top Green Pill Badge: "Yangi foydalanuvchilar uchun"
-                            Semantics(
-                              label: 'Yangi foydalanuvchilar uchun maxsus taklif',
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [Color(0xFF1D9E75), Color(0xFF10815C)],
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color(0xFF1D9E75).withOpacity(0.40),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: const Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.card_giftcard_rounded,
-                                      color: Colors.white,
-                                      size: 15,
-                                    ),
-                                    SizedBox(width: 6),
-                                    Text(
-                                      'YANGI FOYDALANUVCHILAR UCHUN',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w900,
-                                        letterSpacing: 0.8,
-                                      ),
-                                    ),
-                                  ],
+                            // 1. Apple-style Pill Badge
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF6366F1)
+                                    .withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: const Color(0xFF6366F1)
+                                      .withValues(alpha: 0.3),
+                                  width: 1,
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 16),
-
-                            // 2. Center: Floating "-30% CHEGIRMA" badge + Title
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Floating -30% round badge
-                                reduceMotion
-                                    ? _buildDiscountBadge()
-                                    : AnimatedBuilder(
-                                        animation: _floatingAnimation,
-                                        builder: (context, child) {
-                                          return Transform.translate(
-                                            offset: Offset(0, _floatingAnimation.value),
-                                            child: child,
-                                          );
-                                        },
-                                        child: _buildDiscountBadge(),
-                                      ),
-                                const SizedBox(width: 14),
-
-                                // Title and Subtitle
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Birinchi oy MathCity Pro',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w900,
-                                          letterSpacing: 0.1,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 3),
-                                      Text(
-                                        'Faqat yangi hisoblar uchun',
-                                        style: TextStyle(
-                                          color: Colors.white.withOpacity(0.70),
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.auto_awesome_rounded,
+                                    color: Color(0xFF818CF8),
+                                    size: 14,
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'MAXSUS TAKLIF • 30% CHEGIRMA',
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? const Color(0xFFA5B4FC)
+                                          : const Color(0xFF4F46E5),
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: 0.6,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 14),
 
-                            // 3. Price Cards in Two Columns (Monthly & Yearly) with Count-Up
+                            // 2. Title & Subtitle
+                            Text(
+                              'MathCity Pro ga ulaning',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: isDark
+                                    ? Colors.white
+                                    : const Color(0xFF0F172A),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: -0.3,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Birinchi to‘lovingiz uchun maxsus 30% chegirma',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: isDark
+                                    ? const Color(0xFF94A3B8)
+                                    : const Color(0xFF64748B),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 18),
+
+                            // 3. Interactive Selectable Plan Cards (Monthly vs Yearly)
                             AnimatedBuilder(
                               animation: _countUpController,
                               builder: (context, _) {
@@ -384,22 +408,44 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
                                   children: [
                                     // Monthly Plan Card
                                     Expanded(
-                                      child: _buildPlanPriceCard(
+                                      child: _buildSelectablePlanCard(
+                                        isDark: isDark,
+                                        planKey: 'monthly',
                                         title: 'Oylik',
-                                        originalPrice: widget.monthlyOriginalPrice,
+                                        subtitle: 'Birinchi oy uchun',
+                                        originalPrice:
+                                            widget.monthlyOriginalPrice,
                                         discountedPrice: currentMonthly,
-                                        isPopular: false,
+                                        badge: null,
+                                        isSelected: _selectedPlan == 'monthly',
+                                        onTap: () {
+                                          _pauseAutoClose();
+                                          HapticFeedback.selectionClick();
+                                          setState(
+                                              () => _selectedPlan = 'monthly');
+                                        },
                                       ),
                                     ),
                                     const SizedBox(width: 10),
 
                                     // Yearly Plan Card
                                     Expanded(
-                                      child: _buildPlanPriceCard(
+                                      child: _buildSelectablePlanCard(
+                                        isDark: isDark,
+                                        planKey: 'yearly',
                                         title: 'Yillik',
-                                        originalPrice: widget.yearlyOriginalPrice,
+                                        subtitle: '12 oylik obuna',
+                                        originalPrice:
+                                            widget.yearlyOriginalPrice,
                                         discountedPrice: currentYearly,
-                                        isPopular: true,
+                                        badge: 'Eng tejamkor',
+                                        isSelected: _selectedPlan == 'yearly',
+                                        onTap: () {
+                                          _pauseAutoClose();
+                                          HapticFeedback.selectionClick();
+                                          setState(
+                                              () => _selectedPlan = 'yearly');
+                                        },
                                       ),
                                     ),
                                   ],
@@ -408,62 +454,81 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
                             ),
                             const SizedBox(height: 16),
 
-                            // 4. Countdown Timer: "Taklif tugashiga: HH:MM:SS"
+                            // 4. Live 24-hour server countdown timer
                             Container(
                               width: double.infinity,
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 8),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF10815C).withOpacity(0.15),
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.05)
+                                    : const Color(0xFFF1F5F9),
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: const Color(0xFF3FA38A).withOpacity(0.35),
+                                  color: isDark
+                                      ? Colors.white.withValues(alpha: 0.08)
+                                      : const Color(0xFFE2E8F0),
                                   width: 1,
                                 ),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.timer_outlined,
-                                    color: Color(0xFF3FA38A),
-                                    size: 16,
-                                  ),
-                                  const SizedBox(width: 7),
-                                  Text(
-                                    'Taklif tugashiga: ',
-                                    style: TextStyle(
-                                      color: Colors.white.withOpacity(0.85),
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.timer_outlined,
+                                      color: isDark
+                                          ? const Color(0xFFFBBF24)
+                                          : const Color(0xFFD97706),
+                                      size: 16,
                                     ),
-                                  ),
-                                  Text(
-                                    countdownString,
-                                    style: const TextStyle(
-                                      color: Color(0xFFFFD66B),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 0.5,
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'Chegirma tugashiga: ',
+                                      style: TextStyle(
+                                        color: isDark
+                                            ? const Color(0xFFCBD5E1)
+                                            : const Color(0xFF475569),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      countdownString,
+                                      style: TextStyle(
+                                        color: isDark
+                                            ? const Color(0xFFFBBF24)
+                                            : const Color(0xFFB45309),
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             const SizedBox(height: 18),
 
-                            // 5. Main Action CTA Button: "30% chegirma bilan olish"
-                            _buildActionButton(
+                            // 5. Dynamic CTA Button
+                            _buildDynamicActionButton(
+                              isDark: isDark,
                               reduceMotion: reduceMotion,
+                              priceText: '${_formatNumber(selectedPrice)} so‘m',
                               onPressed: _handleClaimDiscount,
                             ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: 8),
 
-                            // 6. Secondary text button: "Keyinroq"
+                            // 6. Secondary button: "Keyinroq"
                             TextButton(
                               onPressed: _handleDismiss,
                               style: TextButton.styleFrom(
-                                foregroundColor: Colors.white60,
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                foregroundColor: isDark
+                                    ? const Color(0xFF94A3B8)
+                                    : const Color(0xFF64748B),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                               ),
                               child: const Text(
                                 'Keyinroq',
@@ -478,34 +543,33 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
                         ),
                       ),
 
-                      // Close X button with minimum 44x44 tap area
+                      // Close X button with accessible tap target
                       Positioned(
-                        top: 8,
-                        right: 8,
+                        top: 10,
+                        right: 10,
                         child: Semantics(
                           label: 'Taklifni yopish',
                           button: true,
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              borderRadius: BorderRadius.circular(22),
+                              borderRadius: BorderRadius.circular(20),
                               onTap: _handleDismiss,
                               child: Container(
-                                width: 44,
-                                height: 44,
-                                alignment: Alignment.center,
-                                child: Container(
-                                  width: 32,
-                                  height: 32,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.12),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.close_rounded,
-                                    color: Colors.white70,
-                                    size: 19,
-                                  ),
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  color: isDark
+                                      ? Colors.white.withValues(alpha: 0.08)
+                                      : Colors.black.withValues(alpha: 0.05),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.close_rounded,
+                                  color: isDark
+                                      ? Colors.white70
+                                      : const Color(0xFF475569),
+                                  size: 18,
                                 ),
                               ),
                             ),
@@ -523,46 +587,149 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
     );
   }
 
-  Widget _buildDiscountBadge() {
-    return Container(
-      width: 58,
-      height: 58,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFFF9800), Color(0xFFF57C00), Color(0xFFE65100)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        shape: BoxShape.circle,
-        border: Border.all(color: const Color(0xFFFFD700), width: 2),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFFF9800).withOpacity(0.40),
-            blurRadius: 14,
-            offset: const Offset(0, 4),
+  Widget _buildSelectablePlanCard({
+    required bool isDark,
+    required String planKey,
+    required String title,
+    required String subtitle,
+    required int originalPrice,
+    required int discountedPrice,
+    required String? badge,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? (isDark
+                  ? const Color(0xFF6366F1).withValues(alpha: 0.16)
+                  : const Color(0xFFEEF2FF))
+              : (isDark
+                  ? Colors.white.withValues(alpha: 0.03)
+                  : const Color(0xFFF8FAFC)),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: isSelected
+                ? const Color(0xFF6366F1)
+                : (isDark
+                    ? Colors.white.withValues(alpha: 0.10)
+                    : const Color(0xFFE2E8F0)),
+            width: isSelected ? 2.0 : 1.0,
           ),
-        ],
-      ),
-      child: const Center(
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF6366F1).withValues(alpha: 0.25),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
+        ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: isDark ? Colors.white : const Color(0xFF0F172A),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+                Icon(
+                  isSelected
+                      ? Icons.check_circle_rounded
+                      : Icons.radio_button_unchecked_rounded,
+                  color: isSelected
+                      ? const Color(0xFF6366F1)
+                      : (isDark ? Colors.white38 : const Color(0xFF94A3B8)),
+                  size: 18,
+                ),
+              ],
+            ),
+            const SizedBox(height: 2),
+
+            if (badge != null) ...[
+              Container(
+                margin: const EdgeInsets.only(top: 2, bottom: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF10B981).withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const Text(
+                  'Eng tejamkor',
+                  style: TextStyle(
+                    color: Color(0xFF10B981),
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ] else ...[
+              const SizedBox(height: 6),
+            ],
+
             Text(
-              '-30%',
+              subtitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5,
+                color:
+                    isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                fontSize: 10.5,
+                fontWeight: FontWeight.w500,
               ),
             ),
-            Text(
-              'CHEGIRMA',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 6.5,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.4,
+            const SizedBox(height: 6),
+
+            // Strikethrough original price
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '${_formatNumber(originalPrice)} so‘m',
+                style: TextStyle(
+                  color: isDark ? Colors.white38 : const Color(0xFF94A3B8),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  decoration: TextDecoration.lineThrough,
+                  decorationColor: const Color(0xFFEF4444),
+                  decorationThickness: 1.8,
+                ),
+              ),
+            ),
+            const SizedBox(height: 1),
+
+            // Discounted price
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '${_formatNumber(discountedPrice)} so‘m',
+                style: TextStyle(
+                  color: isSelected
+                      ? (isDark
+                          ? const Color(0xFFA5B4FC)
+                          : const Color(0xFF4338CA))
+                      : (isDark ? Colors.white : const Color(0xFF0F172A)),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.2,
+                ),
               ),
             ),
           ],
@@ -571,90 +738,10 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
     );
   }
 
-  Widget _buildPlanPriceCard({
-    required String title,
-    required int originalPrice,
-    required int discountedPrice,
-    required bool isPopular,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      decoration: BoxDecoration(
-        color: isPopular
-            ? const Color(0xFF1D9E75).withOpacity(0.15)
-            : Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isPopular ? const Color(0xFF3FA38A) : Colors.white.withOpacity(0.12),
-          width: isPopular ? 1.6 : 1.0,
-        ),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              if (isPopular) ...[
-                const SizedBox(width: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1D9E75),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: const Text(
-                    'Tejamkor',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 8,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ),
-              ],
-            ],
-          ),
-          const SizedBox(height: 6),
-
-          // Strikethrough original price
-          Text(
-            '${_formatNumber(originalPrice)} so‘m',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.45),
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-              decoration: TextDecoration.lineThrough,
-              decorationColor: const Color(0xFFEF4444),
-              decorationThickness: 2,
-            ),
-          ),
-          const SizedBox(height: 2),
-
-          // Discounted price
-          Text(
-            '${_formatNumber(discountedPrice)} so‘m',
-            style: const TextStyle(
-              color: Color(0xFFFFD66B),
-              fontSize: 15,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 0.1,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionButton({
+  Widget _buildDynamicActionButton({
+    required bool isDark,
     required bool reduceMotion,
+    required String priceText,
     required VoidCallback onPressed,
   }) {
     Widget buttonContent = Container(
@@ -662,73 +749,46 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
       height: 52,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF1D9E75), Color(0xFF10815C)],
+          colors: [Color(0xFF6366F1), Color(0xFF4F46E5)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1D9E75).withOpacity(0.40),
-            blurRadius: 18,
+            color: const Color(0xFF6366F1).withValues(alpha: 0.35),
+            blurRadius: 16,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(14),
-        child: Stack(
-          children: [
-            // Shine sweep effect every ~3 seconds
-            if (!reduceMotion)
-              AnimatedBuilder(
-                animation: _shineController,
-                builder: (context, child) {
-                  final progress = _shineController.value;
-                  return Positioned.fill(
-                    child: FractionallySizedBox(
-                      alignment: Alignment(-2.0 + progress * 4.0, 0.0),
-                      widthFactor: 0.35,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.white.withOpacity(0.0),
-                              Colors.white.withOpacity(0.35),
-                              Colors.white.withOpacity(0.0),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.bolt_rounded,
+                color: Color(0xFFFBBF24),
+                size: 20,
               ),
-
-            // Button Text with badge icon
-            const Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.bolt_rounded,
-                    color: Color(0xFFFFD66B),
-                    size: 21,
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  '30% chegirma bilan olish • $priceText',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.1,
                   ),
-                  SizedBox(width: 8),
-                  Text(
-                    '30% chegirma bilan olish',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -752,7 +812,7 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(16),
           onTap: onPressed,
           child: buttonContent,
         ),

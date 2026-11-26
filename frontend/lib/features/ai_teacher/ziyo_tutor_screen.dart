@@ -171,7 +171,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       if (!_cosmicController.isAnimating &&
-          !(kDebugMode && !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST'))) {
+          !(kDebugMode &&
+              !kIsWeb &&
+              Platform.environment.containsKey('FLUTTER_TEST'))) {
         _cosmicController.repeat();
       }
     } else {
@@ -207,7 +209,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
       );
       if (_speechAvailable) {
         final locales = await _speech.locales();
-        final uzLocale = locales.where((l) => l.localeId.startsWith('uz')).firstOrNull;
+        final uzLocale =
+            locales.where((l) => l.localeId.startsWith('uz')).firstOrNull;
         // Never fallback to ru_RU or en_US when user speaks Uzbek. Keep uz_UZ or use server STT
         _speechLocale = uzLocale?.localeId ?? 'uz_UZ';
       }
@@ -279,8 +282,30 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
 
   static String _numberToWord(int n) {
     if (n == 0) return 'nol';
-    const ones = ['', 'bir', 'ikki', 'uch', 'to‘rt', 'besh', 'olti', 'yetti', 'sakkiz', 'to‘qqiz'];
-    const tens = ['', 'o‘n', 'yigirma', 'o‘ttiz', 'qirq', 'ellik', 'oltmish', 'yetmish', 'sakson', 'to‘qson'];
+    const ones = [
+      '',
+      'bir',
+      'ikki',
+      'uch',
+      'to‘rt',
+      'besh',
+      'olti',
+      'yetti',
+      'sakkiz',
+      'to‘qqiz'
+    ];
+    const tens = [
+      '',
+      'o‘n',
+      'yigirma',
+      'o‘ttiz',
+      'qirq',
+      'ellik',
+      'oltmish',
+      'yetmish',
+      'sakson',
+      'to‘qson'
+    ];
     if (n < 10) return ones[n];
     if (n < 100) {
       final t = n ~/ 10;
@@ -432,7 +457,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
               const SizedBox(height: 18),
               Text(
                 'Matematika savolini rasmga olish',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: colors.ink),
+                style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                    color: colors.ink),
               ),
               const SizedBox(height: 18),
               ListTile(
@@ -444,7 +472,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                   ),
                   child: Icon(Icons.camera_alt_rounded, color: colors.primary),
                 ),
-                title: Text('Kamera orqali suratga olish', style: TextStyle(fontWeight: FontWeight.w700, color: colors.ink)),
+                title: Text('Kamera orqali suratga olish',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700, color: colors.ink)),
                 onTap: () {
                   Navigator.pop(ctx);
                   _pickImage(ImageSource.camera);
@@ -457,9 +487,12 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                     color: colors.primary.withOpacity(0.12),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.photo_library_rounded, color: colors.primary),
+                  child:
+                      Icon(Icons.photo_library_rounded, color: colors.primary),
                 ),
-                title: Text('Galereyadan tanlash', style: TextStyle(fontWeight: FontWeight.w700, color: colors.ink)),
+                title: Text('Galereyadan tanlash',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700, color: colors.ink)),
                 onTap: () {
                   Navigator.pop(ctx);
                   _pickImage(ImageSource.gallery);
@@ -475,7 +508,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
   Future<void> _pickImage(ImageSource source) async {
     try {
       if (kIsWeb && source == ImageSource.gallery) {
-        final result = await FilePicker.pickFiles(type: FileType.image, withData: true);
+        final result =
+            await FilePicker.pickFiles(type: FileType.image, withData: true);
         if (!mounted || result == null || result.files.isEmpty) return;
         final bytes = result.files.first.bytes;
         if (bytes != null) {
@@ -506,7 +540,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Rasm tanlashda xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.'),
+            content: Text(
+                'Rasm tanlashda xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.'),
             backgroundColor: Color(0xFFDC2626),
           ),
         );
@@ -552,7 +587,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
       if (!hasPermission) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Mikrofon ruxsati berilmadi. Iltimos, sozlamalarda mikrofonga ruxsat bering.'),
+            content: Text(
+                'Mikrofon ruxsati berilmadi. Iltimos, sozlamalarda mikrofonga ruxsat bering.'),
             backgroundColor: Color(0xFFDC2626),
           ),
         );
@@ -611,7 +647,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Ovoz yozishda xatolik yuz berdi. Mikrofon ulanganligini tekshiring.'),
+            content: Text(
+                'Ovoz yozishda xatolik yuz berdi. Mikrofon ulanganligini tekshiring.'),
             backgroundColor: Color(0xFFDC2626),
           ),
         );
@@ -660,7 +697,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('🎙️ Ovoz matnga o‘girildi. Matnni tekshirib yoki tahrirlab, Yuborish tugmasini bosing.'),
+            content: Text(
+                '🎙️ Ovoz matnga o‘girildi. Matnni tekshirib yoki tahrirlab, Yuborish tugmasini bosing.'),
             backgroundColor: Color(0xFF6C47FF),
             duration: Duration(seconds: 3),
           ),
@@ -732,10 +770,15 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
     _scrollToBottom();
 
     // Cap recent history at 4 messages
-    final recentHistory = _messages.reversed.take(4).toList().reversed.map((m) => {
-      'role': m.isUser ? 'user' : 'model',
-      'text': m.text,
-    }).toList();
+    final recentHistory = _messages.reversed
+        .take(4)
+        .toList()
+        .reversed
+        .map((m) => {
+              'role': m.isUser ? 'user' : 'model',
+              'text': m.text,
+            })
+        .toList();
 
     try {
       final res = await ApiClient().dio.post('/ai/chat/voice', data: {
@@ -761,7 +804,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         final serverTranscript = data['transcript'] as String?;
 
         setState(() {
-          if (serverTranscript != null && serverTranscript.isNotEmpty && userMessageIndex < _messages.length) {
+          if (serverTranscript != null &&
+              serverTranscript.isNotEmpty &&
+              userMessageIndex < _messages.length) {
             _messages[userMessageIndex] = MessageItem(
               id: messageId,
               text: '🎙️ "$serverTranscript"',
@@ -812,7 +857,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
       final responseData = e.response?.data;
       final isQuotaLimit = responseData is Map &&
           (responseData['code'] == 'AI_QUOTA_EXCEEDED' ||
-           responseData['error']?.toString().contains('bepul') == true);
+              responseData['error']?.toString().contains('bepul') == true);
 
       if (isQuotaLimit) {
         _showQuotaExceededDialog();
@@ -832,7 +877,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         final backoffMs = retryCount == 0 ? 1500 : 3000;
         Future.delayed(Duration(milliseconds: backoffMs), () {
           if (mounted) {
-            _sendVoiceMessage(path: path, transcript: transcript, retryCount: retryCount + 1);
+            _sendVoiceMessage(
+                path: path, transcript: transcript, retryCount: retryCount + 1);
           }
         });
       } else {
@@ -847,7 +893,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
       debugPrint('🚨 [ZiyoTutor] Ovozli xabar xatosi: $e');
       setState(() {
         _messages.add(MessageItem(
-          text: 'Ovozli xabarni tahlil qilishda xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.',
+          text:
+              'Ovozli xabarni tahlil qilishda xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.',
           isUser: false,
         ));
       });
@@ -862,7 +909,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
     if (_isSending || _isLoading) return;
 
     final now = DateTime.now();
-    if (_lastSendTime != null && now.difference(_lastSendTime!) < const Duration(milliseconds: 1500)) {
+    if (_lastSendTime != null &&
+        now.difference(_lastSendTime!) < const Duration(milliseconds: 1500)) {
       return;
     }
     _lastSendTime = now;
@@ -902,10 +950,15 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
     final currentLevel = ExerciseRepository.determineLevelForAge(userAge);
 
     // Capped at 4 recent history items
-    final recentHistory = _messages.reversed.take(4).toList().reversed.map((m) => {
-      'role': m.isUser ? 'user' : 'model',
-      'text': m.text,
-    }).toList();
+    final recentHistory = _messages.reversed
+        .take(4)
+        .toList()
+        .reversed
+        .map((m) => {
+              'role': m.isUser ? 'user' : 'model',
+              'text': m.text,
+            })
+        .toList();
 
     try {
       if (hasImage) {
@@ -1021,7 +1074,7 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
       final responseData = e.response?.data;
       final isQuotaLimit = responseData is Map &&
           (responseData['code'] == 'AI_QUOTA_EXCEEDED' ||
-           responseData['error']?.toString().contains('bepul') == true);
+              responseData['error']?.toString().contains('bepul') == true);
 
       if (isQuotaLimit) {
         _showQuotaExceededDialog();
@@ -1041,7 +1094,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         final backoffMs = retryCount == 0 ? 1500 : 3000;
         Future.delayed(Duration(milliseconds: backoffMs), () {
           if (mounted) {
-            _sendMessage(customText: customText, action: action, retryCount: retryCount + 1);
+            _sendMessage(
+                customText: customText,
+                action: action,
+                retryCount: retryCount + 1);
           }
         });
       } else {
@@ -1084,11 +1140,13 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: const Row(
           children: [
-            Icon(Icons.workspace_premium_rounded, color: Color(0xFF6C5CE7), size: 28),
+            Icon(Icons.workspace_premium_rounded,
+                color: Color(0xFF6C5CE7), size: 28),
             SizedBox(width: 12),
             Text(
               'Limit tugadi',
-              style: TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF1E1742)),
+              style: TextStyle(
+                  fontWeight: FontWeight.w800, color: Color(0xFF1E1742)),
             ),
           ],
         ),
@@ -1099,18 +1157,22 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Keyinroq', style: TextStyle(color: Color(0xFF64748B))),
+            child: const Text('Keyinroq',
+                style: TextStyle(color: Color(0xFF64748B))),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF6C5CE7),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14)),
             ),
             onPressed: () {
               Navigator.pop(ctx);
               context.push('/payment/add');
             },
-            child: const Text('Pro tarifiga o‘tish (29 000 UZS)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: const Text('Pro tarifiga o‘tish (29 000 UZS)',
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -1145,7 +1207,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.add_circle_outline_rounded, color: colors.primary, size: 26),
+                    icon: Icon(Icons.add_circle_outline_rounded,
+                        color: colors.primary, size: 26),
                     tooltip: 'Yangi suhbat',
                     onPressed: () {
                       Navigator.pop(ctx);
@@ -1177,13 +1240,15 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                                   : colors.field,
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: isSelected ? colors.primary : colors.border,
+                                color:
+                                    isSelected ? colors.primary : colors.border,
                               ),
                             ),
                             child: ListTile(
                               leading: Icon(
                                 Icons.chat_bubble_outline_rounded,
-                                color: isSelected ? colors.primary : colors.muted,
+                                color:
+                                    isSelected ? colors.primary : colors.muted,
                                 size: 20,
                               ),
                               title: Text(
@@ -1191,8 +1256,11 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                                  color: isSelected ? colors.primary : colors.ink,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w800
+                                      : FontWeight.w600,
+                                  color:
+                                      isSelected ? colors.primary : colors.ink,
                                   fontSize: 14,
                                 ),
                               ),
@@ -1200,14 +1268,17 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                                 conv.preview,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 12, color: colors.muted),
+                                style: TextStyle(
+                                    fontSize: 12, color: colors.muted),
                               ),
                               trailing: IconButton(
-                                icon: const Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFEF4444)),
+                                icon: const Icon(Icons.delete_outline_rounded,
+                                    size: 18, color: Color(0xFFEF4444)),
                                 onPressed: () {
                                   _deleteConversation(conv.id);
                                   setSheetState(() {
-                                    _conversations.removeWhere((c) => c.id == conv.id);
+                                    _conversations
+                                        .removeWhere((c) => c.id == conv.id);
                                   });
                                 },
                               ),
@@ -1257,9 +1328,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
     final colors = AppThemeColors.of(context);
     final isDark = colors.isDark;
     final student = ref.watch(studentProvider).student;
-    final displayName = (student != null && student.displayName.trim().isNotEmpty)
-        ? student.displayName.trim()
-        : 'O‘quvchi';
+    final displayName =
+        (student != null && student.displayName.trim().isNotEmpty)
+            ? student.displayName.trim()
+            : 'O‘quvchi';
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -1316,7 +1388,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         if (screenWidth < 600) {
           return Scaffold(
             backgroundColor: colors.bg,
-            bottomNavigationBar: (KidsNavShellScope.of(context) || MediaQuery.of(context).viewInsets.bottom > 0)
+            bottomNavigationBar: (KidsNavShellScope.of(context) ||
+                    MediaQuery.of(context).viewInsets.bottom > 0)
                 ? null
                 : const MathCityBottomNav(currentIndex: 2),
             body: stackWithBackground,
@@ -1360,7 +1433,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black.withOpacity(0.35) : Colors.black.withOpacity(0.04),
+            color: isDark
+                ? Colors.black.withOpacity(0.35)
+                : Colors.black.withOpacity(0.04),
             blurRadius: 18,
             offset: const Offset(0, 4),
           ),
@@ -1448,7 +1523,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                                 color: const Color(0xFF10B981),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFF10B981).withOpacity(0.7),
+                                    color: const Color(0xFF10B981)
+                                        .withOpacity(0.7),
                                     blurRadius: 4,
                                     spreadRadius: 1,
                                   ),
@@ -1483,7 +1559,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                   _GlassActionButton(
                     tooltip: 'Tarix',
                     onTap: isDesktop
-                        ? () => setState(() => _showDesktopSidebar = !_showDesktopSidebar)
+                        ? () => setState(
+                            () => _showDesktopSidebar = !_showDesktopSidebar)
                         : _openHistoryBottomSheet,
                     child: Icon(
                       Icons.history_rounded,
@@ -1503,7 +1580,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
   Widget _buildQuotaBadge(bool isDesktop, AppThemeColors colors) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 2),
-      padding: EdgeInsets.symmetric(horizontal: isDesktop ? 10 : 8, vertical: 5),
+      padding:
+          EdgeInsets.symmetric(horizontal: isDesktop ? 10 : 8, vertical: 5),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: _isPro
@@ -1519,7 +1597,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         ),
         boxShadow: [
           BoxShadow(
-            color: (_isPro ? const Color(0xFF10B981) : const Color(0xFF8B5CF6)).withOpacity(0.2),
+            color: (_isPro ? const Color(0xFF10B981) : const Color(0xFF8B5CF6))
+                .withOpacity(0.2),
             blurRadius: 8,
           ),
         ],
@@ -1536,7 +1615,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
           Text(
             _isPro
                 ? (isDesktop ? 'Pro — Cheksiz' : 'Pro')
-                : (isDesktop ? '$_remainingQuota/5 bepul' : '$_remainingQuota/5'),
+                : (isDesktop
+                    ? '$_remainingQuota/5 bepul'
+                    : '$_remainingQuota/5'),
             style: TextStyle(
               fontFamily: 'Nunito',
               fontSize: 11,
@@ -1556,7 +1637,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
       width: 290,
       decoration: BoxDecoration(
         color: const Color(0xEE10082E),
-        border: Border(right: BorderSide(color: Colors.white.withOpacity(0.12))),
+        border:
+            Border(right: BorderSide(color: Colors.white.withOpacity(0.12))),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1580,7 +1662,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add_circle_outline_rounded, color: Color(0xFFA78BFA), size: 22),
+                  icon: const Icon(Icons.add_circle_outline_rounded,
+                      color: Color(0xFFA78BFA), size: 22),
                   tooltip: 'Yangi suhbat boshlash',
                   onPressed: _startNewConversation,
                 ),
@@ -1598,26 +1681,34 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                   )
                 : ListView.builder(
                     itemCount: _conversations.length,
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                     itemBuilder: (context, index) {
                       final conv = _conversations[index];
                       final isSelected = conv.id == _activeConversationId;
                       return Container(
                         margin: const EdgeInsets.only(bottom: 6),
                         decoration: BoxDecoration(
-                          color: isSelected ? const Color(0x337C3AED) : Colors.transparent,
+                          color: isSelected
+                              ? const Color(0x337C3AED)
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: isSelected ? const Color(0xFFA78BFA) : Colors.transparent,
+                            color: isSelected
+                                ? const Color(0xFFA78BFA)
+                                : Colors.transparent,
                           ),
                         ),
                         child: ListTile(
                           dense: true,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 10),
                           leading: Icon(
                             Icons.chat_bubble_outline_rounded,
                             size: 16,
-                            color: isSelected ? const Color(0xFFA78BFA) : const Color(0xFF94A3B8),
+                            color: isSelected
+                                ? const Color(0xFFA78BFA)
+                                : const Color(0xFF94A3B8),
                           ),
                           title: Text(
                             conv.title,
@@ -1626,8 +1717,12 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                             style: TextStyle(
                               fontFamily: 'Nunito',
                               fontSize: 13,
-                              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                              color: isSelected ? Colors.white : const Color(0xFFE2E8F0),
+                              fontWeight: isSelected
+                                  ? FontWeight.w800
+                                  : FontWeight.w600,
+                              color: isSelected
+                                  ? Colors.white
+                                  : const Color(0xFFE2E8F0),
                             ),
                           ),
                           subtitle: Text(
@@ -1641,7 +1736,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                             ),
                           ),
                           trailing: IconButton(
-                            icon: const Icon(Icons.delete_outline_rounded, size: 16, color: Color(0xFF94A3B8)),
+                            icon: const Icon(Icons.delete_outline_rounded,
+                                size: 16, color: Color(0xFF94A3B8)),
                             onPressed: () => _deleteConversation(conv.id),
                           ),
                           onTap: () => _loadConversation(conv.id),
@@ -1655,7 +1751,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
     );
   }
 
-  Widget _buildWelcomingState(String displayName, AppThemeColors colors, bool isDark) {
+  Widget _buildWelcomingState(
+      String displayName, AppThemeColors colors, bool isDark) {
     final disableAnim = MediaQuery.of(context).disableAnimations;
     return Center(
       child: SingleChildScrollView(
@@ -1721,7 +1818,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
     );
   }
 
-  Widget _buildMessageBubble(MessageItem msg, AppThemeColors colors, bool isDark) {
+  Widget _buildMessageBubble(
+      MessageItem msg, AppThemeColors colors, bool isDark) {
     if (msg.isUser) {
       return Align(
         alignment: Alignment.centerRight,
@@ -1735,7 +1833,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(20).copyWith(bottomRight: const Radius.circular(4)),
+            borderRadius: BorderRadius.circular(20)
+                .copyWith(bottomRight: const Radius.circular(4)),
             boxShadow: [
               BoxShadow(
                 color: colors.primary.withOpacity(0.25),
@@ -1782,11 +1881,15 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: isDark ? const Color(0xE017103B) : colors.card,
-          borderRadius: BorderRadius.circular(24).copyWith(topLeft: const Radius.circular(4)),
-          border: Border.all(color: isDark ? Colors.white.withOpacity(0.12) : colors.border),
+          borderRadius: BorderRadius.circular(24)
+              .copyWith(topLeft: const Radius.circular(4)),
+          border: Border.all(
+              color: isDark ? Colors.white.withOpacity(0.12) : colors.border),
           boxShadow: [
             BoxShadow(
-              color: isDark ? Colors.black.withOpacity(0.35) : Colors.black.withOpacity(0.04),
+              color: isDark
+                  ? Colors.black.withOpacity(0.35)
+                  : Colors.black.withOpacity(0.04),
               blurRadius: 18,
               offset: const Offset(0, 4),
             ),
@@ -1833,9 +1936,13 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                 const Spacer(),
                 IconButton(
                   icon: Icon(
-                    _isSpeaking ? Icons.stop_circle_rounded : Icons.volume_up_rounded,
+                    _isSpeaking
+                        ? Icons.stop_circle_rounded
+                        : Icons.volume_up_rounded,
                     size: 20,
-                    color: _isSpeaking ? const Color(0xFFEF4444) : const Color(0xFFA78BFA),
+                    color: _isSpeaking
+                        ? const Color(0xFFEF4444)
+                        : const Color(0xFFA78BFA),
                   ),
                   tooltip: _isSpeaking ? 'To‘xtatish' : 'Ovozli eshitish',
                   padding: EdgeInsets.zero,
@@ -1863,11 +1970,15 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
               const SizedBox(height: 14),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: isDark ? Colors.white.withOpacity(0.06) : colors.field,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: isDark ? Colors.white.withOpacity(0.12) : colors.border),
+                  border: Border.all(
+                      color: isDark
+                          ? Colors.white.withOpacity(0.12)
+                          : colors.border),
                 ),
                 child: Center(
                   child: SingleChildScrollView(
@@ -1891,13 +2002,17 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                       children: [
                         CircleAvatar(
                           radius: 11,
-                          backgroundColor: isDark ? const Color(0xFF2E1C6A) : colors.primaryLight,
+                          backgroundColor: isDark
+                              ? const Color(0xFF2E1C6A)
+                              : colors.primaryLight,
                           child: Text(
                             '${step.stepNumber}',
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
-                              color: isDark ? const Color(0xFFA78BFA) : colors.primary,
+                              color: isDark
+                                  ? const Color(0xFFA78BFA)
+                                  : colors.primary,
                             ),
                           ),
                         ),
@@ -1911,14 +2026,19 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                                 style: TextStyle(
                                   fontFamily: 'Nunito',
                                   fontSize: 13,
-                                  color: isDark ? const Color(0xFFC7D2FE) : colors.ink,
+                                  color: isDark
+                                      ? const Color(0xFFC7D2FE)
+                                      : colors.ink,
                                 ),
                               ),
                               if (step.latex.isNotEmpty) ...[
                                 const SizedBox(height: 4),
                                 Math.tex(
                                   step.latex,
-                                  textStyle: TextStyle(fontSize: 14, color: isDark ? Colors.white : colors.ink),
+                                  textStyle: TextStyle(
+                                      fontSize: 14,
+                                      color:
+                                          isDark ? Colors.white : colors.ink),
                                 ),
                               ],
                             ],
@@ -1933,16 +2053,19 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
             if (msg.finalAnswer != null && msg.finalAnswer!.isNotEmpty) ...[
               const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(
                   color: const Color(0x3310B981),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF10B981), width: 1.2),
+                  border:
+                      Border.all(color: const Color(0xFF10B981), width: 1.2),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.check_circle_rounded, color: Color(0xFF10B981), size: 16),
+                    const Icon(Icons.check_circle_rounded,
+                        color: Color(0xFF10B981), size: 16),
                     const SizedBox(width: 8),
                     Text(
                       'Javob: ${msg.finalAnswer}',
@@ -1965,9 +2088,14 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
               runSpacing: 6,
               children: [
                 ActionChip(
-                  backgroundColor: isDark ? Colors.white.withOpacity(0.08) : colors.field,
-                  side: BorderSide(color: isDark ? Colors.white.withOpacity(0.14) : colors.border),
-                  avatar: const Icon(Icons.copy_rounded, size: 14, color: Color(0xFFA78BFA)),
+                  backgroundColor:
+                      isDark ? Colors.white.withOpacity(0.08) : colors.field,
+                  side: BorderSide(
+                      color: isDark
+                          ? Colors.white.withOpacity(0.14)
+                          : colors.border),
+                  avatar: const Icon(Icons.copy_rounded,
+                      size: 14, color: Color(0xFFA78BFA)),
                   label: Text(
                     'Nusxalash',
                     style: TextStyle(
@@ -1980,9 +2108,14 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                   onPressed: () => _copySolution(msg),
                 ),
                 ActionChip(
-                  backgroundColor: isDark ? Colors.white.withOpacity(0.08) : colors.field,
-                  side: BorderSide(color: isDark ? Colors.white.withOpacity(0.14) : colors.border),
-                  avatar: const Icon(Icons.lightbulb_outline_rounded, size: 14, color: Color(0xFFFBBF24)),
+                  backgroundColor:
+                      isDark ? Colors.white.withOpacity(0.08) : colors.field,
+                  side: BorderSide(
+                      color: isDark
+                          ? Colors.white.withOpacity(0.14)
+                          : colors.border),
+                  avatar: const Icon(Icons.lightbulb_outline_rounded,
+                      size: 14, color: Color(0xFFFBBF24)),
                   label: Text(
                     'Tushunmadim, soddaroq tushuntir',
                     style: TextStyle(
@@ -1992,12 +2125,19 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  onPressed: () => _sendMessage(customText: 'Tushunmadim, soddaroq tushuntir', action: 'explain_more'),
+                  onPressed: () => _sendMessage(
+                      customText: 'Tushunmadim, soddaroq tushuntir',
+                      action: 'explain_more'),
                 ),
                 ActionChip(
-                  backgroundColor: isDark ? Colors.white.withOpacity(0.08) : colors.field,
-                  side: BorderSide(color: isDark ? Colors.white.withOpacity(0.14) : colors.border),
-                  avatar: const Icon(Icons.refresh_rounded, size: 14, color: Color(0xFF60A5FA)),
+                  backgroundColor:
+                      isDark ? Colors.white.withOpacity(0.08) : colors.field,
+                  side: BorderSide(
+                      color: isDark
+                          ? Colors.white.withOpacity(0.14)
+                          : colors.border),
+                  avatar: const Icon(Icons.refresh_rounded,
+                      size: 14, color: Color(0xFF60A5FA)),
                   label: Text(
                     'Yana bir misol ber',
                     style: TextStyle(
@@ -2007,7 +2147,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  onPressed: () => _sendMessage(customText: 'Yana bir shunga o‘xshash misol ber', action: 'similar_example'),
+                  onPressed: () => _sendMessage(
+                      customText: 'Yana bir shunga o‘xshash misol ber',
+                      action: 'similar_example'),
                 ),
                 if (msg.suggestedActions != null)
                   ...msg.suggestedActions!.map((act) {
@@ -2049,10 +2191,13 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         decoration: BoxDecoration(
           color: isDark ? const Color(0xE017103B) : colors.card,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isDark ? Colors.white.withOpacity(0.12) : colors.border),
+          border: Border.all(
+              color: isDark ? Colors.white.withOpacity(0.12) : colors.border),
           boxShadow: [
             BoxShadow(
-              color: isDark ? Colors.black.withOpacity(0.25) : Colors.black.withOpacity(0.04),
+              color: isDark
+                  ? Colors.black.withOpacity(0.25)
+                  : Colors.black.withOpacity(0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -2168,7 +2313,8 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: const Color(0xFFEF4444), width: 1.5),
         boxShadow: const [
-          BoxShadow(color: Color(0x33EF4444), blurRadius: 16, offset: Offset(0, 4)),
+          BoxShadow(
+              color: Color(0x33EF4444), blurRadius: 16, offset: Offset(0, 4)),
         ],
       ),
       child: Row(
@@ -2205,13 +2351,15 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             onPressed: _cancelRecording,
-            child: const Text('Bekor qilish', style: TextStyle(color: Color(0xFFC7D2FE), fontSize: 12)),
+            child: const Text('Bekor qilish',
+                style: TextStyle(color: Color(0xFFC7D2FE), fontSize: 12)),
           ),
           const SizedBox(width: 4),
           IconButton(
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
-            icon: const Icon(Icons.stop_circle_rounded, color: Color(0xFFEF4444), size: 30),
+            icon: const Icon(Icons.stop_circle_rounded,
+                color: Color(0xFFEF4444), size: 30),
             onPressed: _finishVoiceRecording,
           ),
         ],
@@ -2223,11 +2371,18 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xF00D0726) : colors.card.withValues(alpha: 0.95),
-        border: Border(top: BorderSide(color: isDark ? Colors.white.withOpacity(0.12) : colors.border, width: 1.0)),
+        color: isDark
+            ? const Color(0xF00D0726)
+            : colors.card.withValues(alpha: 0.95),
+        border: Border(
+            top: BorderSide(
+                color: isDark ? Colors.white.withOpacity(0.12) : colors.border,
+                width: 1.0)),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black.withOpacity(0.35) : Colors.black.withOpacity(0.04),
+            color: isDark
+                ? Colors.black.withOpacity(0.35)
+                : Colors.black.withOpacity(0.04),
             blurRadius: 16,
             offset: const Offset(0, -4),
           ),
@@ -2262,7 +2417,10 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
                 decoration: BoxDecoration(
                   color: isDark ? Colors.white.withOpacity(0.08) : colors.field,
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: isDark ? Colors.white.withOpacity(0.14) : colors.border),
+                  border: Border.all(
+                      color: isDark
+                          ? Colors.white.withOpacity(0.14)
+                          : colors.border),
                 ),
                 child: TextField(
                   controller: _textController,
@@ -2337,7 +2495,9 @@ class _ZiyoTutorScreenState extends ConsumerState<ZiyoTutorScreen>
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: isPrimary
-                  ? (isDisabled ? const Color(0xFF8B5CF6).withOpacity(0.3) : const Color(0xFFA78BFA))
+                  ? (isDisabled
+                      ? const Color(0xFF8B5CF6).withOpacity(0.3)
+                      : const Color(0xFFA78BFA))
                   : (isDark ? Colors.white.withOpacity(0.14) : colors.border),
             ),
             boxShadow: isPrimary && !isDisabled
@@ -2442,8 +2602,11 @@ class _AIUstozHeroLogo extends StatelessWidget {
       builder: (context, child) {
         final val = disableAnim ? 0.0 : animation.value;
         final breathCycle = (val * 3.5) % 1.0;
-        final scale = disableAnim ? 1.0 : (1.0 + math.sin(breathCycle * math.pi * 2) * 0.035);
-        final floatY = disableAnim ? 0.0 : (math.sin(breathCycle * math.pi * 2) * 6.0);
+        final scale = disableAnim
+            ? 1.0
+            : (1.0 + math.sin(breathCycle * math.pi * 2) * 0.035);
+        final floatY =
+            disableAnim ? 0.0 : (math.sin(breathCycle * math.pi * 2) * 6.0);
 
         return RepaintBoundary(
           child: SizedBox(
@@ -2475,16 +2638,25 @@ class _AIUstozHeroLogo extends StatelessWidget {
 
                 // 4 Orbiting twinkling stars
                 ...List.generate(4, (index) {
-                  final double baseAngle = (val * 2 * math.pi) + (index * math.pi / 2);
+                  final double baseAngle =
+                      (val * 2 * math.pi) + (index * math.pi / 2);
                   const double orbitRadius = 78.0;
                   final double ox = math.cos(baseAngle) * orbitRadius;
                   final double oy = math.sin(baseAngle) * orbitRadius + floatY;
 
                   final starData = [
                     (Icons.auto_awesome, const Color(0xFFFBBF24), 18.0), // Gold
-                    (Icons.star_rounded, const Color(0xFF60A5FA), 14.0), // Electric Blue
-                    (Icons.auto_awesome, Colors.white, 16.0),            // Crisp White
-                    (Icons.star_rounded, const Color(0xFFF59E0B), 12.0), // Amber
+                    (
+                      Icons.star_rounded,
+                      const Color(0xFF60A5FA),
+                      14.0
+                    ), // Electric Blue
+                    (Icons.auto_awesome, Colors.white, 16.0), // Crisp White
+                    (
+                      Icons.star_rounded,
+                      const Color(0xFFF59E0B),
+                      12.0
+                    ), // Amber
                   ][index];
 
                   return Transform.translate(
@@ -2587,51 +2759,345 @@ class CosmicBackgroundPainter extends CustomPainter {
   });
 
   static const List<_CosmicStar> _stars = [
-    _CosmicStar(x: 0.12, y: 0.08, size: 3.5, twinkleSpeed: 2.2, phase: 0.0, isSparkle: true, isGold: true),
-    _CosmicStar(x: 0.85, y: 0.12, size: 4.2, twinkleSpeed: 1.8, phase: 1.2, isSparkle: true, isGold: false),
-    _CosmicStar(x: 0.28, y: 0.19, size: 2.0, twinkleSpeed: 3.1, phase: 2.4, isSparkle: false, isGold: false),
-    _CosmicStar(x: 0.72, y: 0.24, size: 3.8, twinkleSpeed: 2.5, phase: 0.7, isSparkle: true, isGold: true),
-    _CosmicStar(x: 0.06, y: 0.32, size: 2.2, twinkleSpeed: 1.9, phase: 3.1, isSparkle: false, isGold: true),
-    _CosmicStar(x: 0.92, y: 0.36, size: 3.0, twinkleSpeed: 2.8, phase: 1.9, isSparkle: true, isGold: false),
-    _CosmicStar(x: 0.44, y: 0.14, size: 1.8, twinkleSpeed: 3.4, phase: 0.3, isSparkle: false, isGold: false),
-    _CosmicStar(x: 0.61, y: 0.42, size: 2.4, twinkleSpeed: 2.1, phase: 2.8, isSparkle: false, isGold: true),
-    _CosmicStar(x: 0.18, y: 0.48, size: 4.0, twinkleSpeed: 1.7, phase: 1.5, isSparkle: true, isGold: false),
-    _CosmicStar(x: 0.79, y: 0.52, size: 2.0, twinkleSpeed: 3.2, phase: 0.9, isSparkle: false, isGold: false),
-    _CosmicStar(x: 0.35, y: 0.58, size: 3.4, twinkleSpeed: 2.6, phase: 2.1, isSparkle: true, isGold: true),
-    _CosmicStar(x: 0.90, y: 0.63, size: 2.2, twinkleSpeed: 1.6, phase: 3.5, isSparkle: false, isGold: false),
-    _CosmicStar(x: 0.08, y: 0.69, size: 3.6, twinkleSpeed: 2.3, phase: 0.4, isSparkle: true, isGold: true),
-    _CosmicStar(x: 0.53, y: 0.67, size: 1.9, twinkleSpeed: 3.0, phase: 1.8, isSparkle: false, isGold: false),
-    _CosmicStar(x: 0.25, y: 0.76, size: 2.5, twinkleSpeed: 2.4, phase: 2.9, isSparkle: false, isGold: true),
-    _CosmicStar(x: 0.82, y: 0.79, size: 3.8, twinkleSpeed: 1.9, phase: 0.6, isSparkle: true, isGold: false),
-    _CosmicStar(x: 0.40, y: 0.83, size: 2.1, twinkleSpeed: 3.3, phase: 1.3, isSparkle: false, isGold: false),
-    _CosmicStar(x: 0.68, y: 0.88, size: 3.2, twinkleSpeed: 2.0, phase: 2.6, isSparkle: true, isGold: true),
-    _CosmicStar(x: 0.14, y: 0.91, size: 2.2, twinkleSpeed: 2.7, phase: 0.8, isSparkle: false, isGold: true),
-    _CosmicStar(x: 0.94, y: 0.93, size: 3.5, twinkleSpeed: 2.2, phase: 1.7, isSparkle: true, isGold: false),
-    _CosmicStar(x: 0.48, y: 0.96, size: 1.8, twinkleSpeed: 3.5, phase: 3.2, isSparkle: false, isGold: false),
-    _CosmicStar(x: 0.31, y: 0.05, size: 2.2, twinkleSpeed: 2.5, phase: 0.2, isSparkle: false, isGold: true),
-    _CosmicStar(x: 0.65, y: 0.09, size: 3.0, twinkleSpeed: 2.9, phase: 1.6, isSparkle: true, isGold: true),
-    _CosmicStar(x: 0.04, y: 0.16, size: 1.7, twinkleSpeed: 3.6, phase: 2.5, isSparkle: false, isGold: false),
-    _CosmicStar(x: 0.96, y: 0.21, size: 3.2, twinkleSpeed: 1.8, phase: 0.5, isSparkle: true, isGold: false),
-    _CosmicStar(x: 0.50, y: 0.29, size: 2.0, twinkleSpeed: 2.3, phase: 1.1, isSparkle: false, isGold: true),
-    _CosmicStar(x: 0.22, y: 0.39, size: 3.1, twinkleSpeed: 2.7, phase: 2.7, isSparkle: true, isGold: true),
-    _CosmicStar(x: 0.76, y: 0.45, size: 1.9, twinkleSpeed: 3.1, phase: 0.1, isSparkle: false, isGold: false),
-    _CosmicStar(x: 0.38, y: 0.47, size: 2.6, twinkleSpeed: 2.0, phase: 3.3, isSparkle: false, isGold: true),
-    _CosmicStar(x: 0.60, y: 0.55, size: 3.3, twinkleSpeed: 2.4, phase: 1.4, isSparkle: true, isGold: false),
-    _CosmicStar(x: 0.10, y: 0.59, size: 1.8, twinkleSpeed: 3.4, phase: 2.0, isSparkle: false, isGold: false),
-    _CosmicStar(x: 0.86, y: 0.71, size: 3.0, twinkleSpeed: 2.1, phase: 0.8, isSparkle: true, isGold: true),
+    _CosmicStar(
+        x: 0.12,
+        y: 0.08,
+        size: 3.5,
+        twinkleSpeed: 2.2,
+        phase: 0.0,
+        isSparkle: true,
+        isGold: true),
+    _CosmicStar(
+        x: 0.85,
+        y: 0.12,
+        size: 4.2,
+        twinkleSpeed: 1.8,
+        phase: 1.2,
+        isSparkle: true,
+        isGold: false),
+    _CosmicStar(
+        x: 0.28,
+        y: 0.19,
+        size: 2.0,
+        twinkleSpeed: 3.1,
+        phase: 2.4,
+        isSparkle: false,
+        isGold: false),
+    _CosmicStar(
+        x: 0.72,
+        y: 0.24,
+        size: 3.8,
+        twinkleSpeed: 2.5,
+        phase: 0.7,
+        isSparkle: true,
+        isGold: true),
+    _CosmicStar(
+        x: 0.06,
+        y: 0.32,
+        size: 2.2,
+        twinkleSpeed: 1.9,
+        phase: 3.1,
+        isSparkle: false,
+        isGold: true),
+    _CosmicStar(
+        x: 0.92,
+        y: 0.36,
+        size: 3.0,
+        twinkleSpeed: 2.8,
+        phase: 1.9,
+        isSparkle: true,
+        isGold: false),
+    _CosmicStar(
+        x: 0.44,
+        y: 0.14,
+        size: 1.8,
+        twinkleSpeed: 3.4,
+        phase: 0.3,
+        isSparkle: false,
+        isGold: false),
+    _CosmicStar(
+        x: 0.61,
+        y: 0.42,
+        size: 2.4,
+        twinkleSpeed: 2.1,
+        phase: 2.8,
+        isSparkle: false,
+        isGold: true),
+    _CosmicStar(
+        x: 0.18,
+        y: 0.48,
+        size: 4.0,
+        twinkleSpeed: 1.7,
+        phase: 1.5,
+        isSparkle: true,
+        isGold: false),
+    _CosmicStar(
+        x: 0.79,
+        y: 0.52,
+        size: 2.0,
+        twinkleSpeed: 3.2,
+        phase: 0.9,
+        isSparkle: false,
+        isGold: false),
+    _CosmicStar(
+        x: 0.35,
+        y: 0.58,
+        size: 3.4,
+        twinkleSpeed: 2.6,
+        phase: 2.1,
+        isSparkle: true,
+        isGold: true),
+    _CosmicStar(
+        x: 0.90,
+        y: 0.63,
+        size: 2.2,
+        twinkleSpeed: 1.6,
+        phase: 3.5,
+        isSparkle: false,
+        isGold: false),
+    _CosmicStar(
+        x: 0.08,
+        y: 0.69,
+        size: 3.6,
+        twinkleSpeed: 2.3,
+        phase: 0.4,
+        isSparkle: true,
+        isGold: true),
+    _CosmicStar(
+        x: 0.53,
+        y: 0.67,
+        size: 1.9,
+        twinkleSpeed: 3.0,
+        phase: 1.8,
+        isSparkle: false,
+        isGold: false),
+    _CosmicStar(
+        x: 0.25,
+        y: 0.76,
+        size: 2.5,
+        twinkleSpeed: 2.4,
+        phase: 2.9,
+        isSparkle: false,
+        isGold: true),
+    _CosmicStar(
+        x: 0.82,
+        y: 0.79,
+        size: 3.8,
+        twinkleSpeed: 1.9,
+        phase: 0.6,
+        isSparkle: true,
+        isGold: false),
+    _CosmicStar(
+        x: 0.40,
+        y: 0.83,
+        size: 2.1,
+        twinkleSpeed: 3.3,
+        phase: 1.3,
+        isSparkle: false,
+        isGold: false),
+    _CosmicStar(
+        x: 0.68,
+        y: 0.88,
+        size: 3.2,
+        twinkleSpeed: 2.0,
+        phase: 2.6,
+        isSparkle: true,
+        isGold: true),
+    _CosmicStar(
+        x: 0.14,
+        y: 0.91,
+        size: 2.2,
+        twinkleSpeed: 2.7,
+        phase: 0.8,
+        isSparkle: false,
+        isGold: true),
+    _CosmicStar(
+        x: 0.94,
+        y: 0.93,
+        size: 3.5,
+        twinkleSpeed: 2.2,
+        phase: 1.7,
+        isSparkle: true,
+        isGold: false),
+    _CosmicStar(
+        x: 0.48,
+        y: 0.96,
+        size: 1.8,
+        twinkleSpeed: 3.5,
+        phase: 3.2,
+        isSparkle: false,
+        isGold: false),
+    _CosmicStar(
+        x: 0.31,
+        y: 0.05,
+        size: 2.2,
+        twinkleSpeed: 2.5,
+        phase: 0.2,
+        isSparkle: false,
+        isGold: true),
+    _CosmicStar(
+        x: 0.65,
+        y: 0.09,
+        size: 3.0,
+        twinkleSpeed: 2.9,
+        phase: 1.6,
+        isSparkle: true,
+        isGold: true),
+    _CosmicStar(
+        x: 0.04,
+        y: 0.16,
+        size: 1.7,
+        twinkleSpeed: 3.6,
+        phase: 2.5,
+        isSparkle: false,
+        isGold: false),
+    _CosmicStar(
+        x: 0.96,
+        y: 0.21,
+        size: 3.2,
+        twinkleSpeed: 1.8,
+        phase: 0.5,
+        isSparkle: true,
+        isGold: false),
+    _CosmicStar(
+        x: 0.50,
+        y: 0.29,
+        size: 2.0,
+        twinkleSpeed: 2.3,
+        phase: 1.1,
+        isSparkle: false,
+        isGold: true),
+    _CosmicStar(
+        x: 0.22,
+        y: 0.39,
+        size: 3.1,
+        twinkleSpeed: 2.7,
+        phase: 2.7,
+        isSparkle: true,
+        isGold: true),
+    _CosmicStar(
+        x: 0.76,
+        y: 0.45,
+        size: 1.9,
+        twinkleSpeed: 3.1,
+        phase: 0.1,
+        isSparkle: false,
+        isGold: false),
+    _CosmicStar(
+        x: 0.38,
+        y: 0.47,
+        size: 2.6,
+        twinkleSpeed: 2.0,
+        phase: 3.3,
+        isSparkle: false,
+        isGold: true),
+    _CosmicStar(
+        x: 0.60,
+        y: 0.55,
+        size: 3.3,
+        twinkleSpeed: 2.4,
+        phase: 1.4,
+        isSparkle: true,
+        isGold: false),
+    _CosmicStar(
+        x: 0.10,
+        y: 0.59,
+        size: 1.8,
+        twinkleSpeed: 3.4,
+        phase: 2.0,
+        isSparkle: false,
+        isGold: false),
+    _CosmicStar(
+        x: 0.86,
+        y: 0.71,
+        size: 3.0,
+        twinkleSpeed: 2.1,
+        phase: 0.8,
+        isSparkle: true,
+        isGold: true),
   ];
 
   static const List<_CosmicCoin> _coins = [
-    _CosmicCoin(x: 0.08, initialY: 0.04, speed: 0.20, size: 22.0, flipSpeed: 1.4, phase: 0.3, opacity: 0.65),
-    _CosmicCoin(x: 0.88, initialY: 0.14, speed: 0.17, size: 26.0, flipSpeed: 1.8, phase: 1.7, opacity: 0.75),
-    _CosmicCoin(x: 0.22, initialY: 0.28, speed: 0.24, size: 18.0, flipSpeed: 2.1, phase: 2.8, opacity: 0.45),
-    _CosmicCoin(x: 0.75, initialY: 0.38, speed: 0.19, size: 24.0, flipSpeed: 1.6, phase: 0.9, opacity: 0.70),
-    _CosmicCoin(x: 0.14, initialY: 0.52, speed: 0.23, size: 20.0, flipSpeed: 1.9, phase: 3.2, opacity: 0.50),
-    _CosmicCoin(x: 0.82, initialY: 0.62, speed: 0.16, size: 28.0, flipSpeed: 1.3, phase: 1.4, opacity: 0.80),
-    _CosmicCoin(x: 0.30, initialY: 0.72, speed: 0.21, size: 22.0, flipSpeed: 2.0, phase: 2.2, opacity: 0.55),
-    _CosmicCoin(x: 0.66, initialY: 0.82, speed: 0.22, size: 19.0, flipSpeed: 1.7, phase: 0.5, opacity: 0.48),
-    _CosmicCoin(x: 0.06, initialY: 0.90, speed: 0.18, size: 25.0, flipSpeed: 1.5, phase: 1.9, opacity: 0.68),
-    _CosmicCoin(x: 0.93, initialY: 0.46, speed: 0.25, size: 17.0, flipSpeed: 2.2, phase: 3.0, opacity: 0.42),
+    _CosmicCoin(
+        x: 0.08,
+        initialY: 0.04,
+        speed: 0.20,
+        size: 22.0,
+        flipSpeed: 1.4,
+        phase: 0.3,
+        opacity: 0.65),
+    _CosmicCoin(
+        x: 0.88,
+        initialY: 0.14,
+        speed: 0.17,
+        size: 26.0,
+        flipSpeed: 1.8,
+        phase: 1.7,
+        opacity: 0.75),
+    _CosmicCoin(
+        x: 0.22,
+        initialY: 0.28,
+        speed: 0.24,
+        size: 18.0,
+        flipSpeed: 2.1,
+        phase: 2.8,
+        opacity: 0.45),
+    _CosmicCoin(
+        x: 0.75,
+        initialY: 0.38,
+        speed: 0.19,
+        size: 24.0,
+        flipSpeed: 1.6,
+        phase: 0.9,
+        opacity: 0.70),
+    _CosmicCoin(
+        x: 0.14,
+        initialY: 0.52,
+        speed: 0.23,
+        size: 20.0,
+        flipSpeed: 1.9,
+        phase: 3.2,
+        opacity: 0.50),
+    _CosmicCoin(
+        x: 0.82,
+        initialY: 0.62,
+        speed: 0.16,
+        size: 28.0,
+        flipSpeed: 1.3,
+        phase: 1.4,
+        opacity: 0.80),
+    _CosmicCoin(
+        x: 0.30,
+        initialY: 0.72,
+        speed: 0.21,
+        size: 22.0,
+        flipSpeed: 2.0,
+        phase: 2.2,
+        opacity: 0.55),
+    _CosmicCoin(
+        x: 0.66,
+        initialY: 0.82,
+        speed: 0.22,
+        size: 19.0,
+        flipSpeed: 1.7,
+        phase: 0.5,
+        opacity: 0.48),
+    _CosmicCoin(
+        x: 0.06,
+        initialY: 0.90,
+        speed: 0.18,
+        size: 25.0,
+        flipSpeed: 1.5,
+        phase: 1.9,
+        opacity: 0.68),
+    _CosmicCoin(
+        x: 0.93,
+        initialY: 0.46,
+        speed: 0.25,
+        size: 17.0,
+        flipSpeed: 2.2,
+        phase: 3.0,
+        opacity: 0.42),
   ];
 
   @override
@@ -2693,7 +3159,9 @@ class CosmicBackgroundPainter extends CustomPainter {
     for (final star in _stars) {
       final sx = star.x * size.width;
       final sy = star.y * size.height;
-      final wave = math.sin((progress * 2 * math.pi * star.twinkleSpeed) + star.phase).abs();
+      final wave = math
+          .sin((progress * 2 * math.pi * star.twinkleSpeed) + star.phase)
+          .abs();
       final alpha = (0.30 + 0.70 * wave).clamp(0.0, 1.0) * globalAlpha;
 
       final color = star.isGold
@@ -2703,9 +3171,11 @@ class CosmicBackgroundPainter extends CustomPainter {
       final starPaint = Paint()..color = color;
 
       if (star.isSparkle) {
-        _drawSparkle(canvas, Offset(sx, sy), star.size * (0.85 + 0.3 * wave), starPaint);
+        _drawSparkle(
+            canvas, Offset(sx, sy), star.size * (0.85 + 0.3 * wave), starPaint);
       } else {
-        canvas.drawCircle(Offset(sx, sy), (star.size / 2) * (0.8 + 0.3 * wave), starPaint);
+        canvas.drawCircle(
+            Offset(sx, sy), (star.size / 2) * (0.8 + 0.3 * wave), starPaint);
       }
     }
 
@@ -2745,16 +3215,19 @@ class CosmicBackgroundPainter extends CustomPainter {
         ..style = PaintingStyle.stroke;
 
       canvas.drawLine(Offset(tailX, tailY), Offset(currX, currY), streakPaint);
-      canvas.drawCircle(Offset(currX, currY), 2.5, Paint()..color = Colors.white.withOpacity(globalAlpha));
+      canvas.drawCircle(Offset(currX, currY), 2.5,
+          Paint()..color = Colors.white.withOpacity(globalAlpha));
     }
 
     // 5. 8-12 Gold Coins (Gently drifting downwards with 3D horizontal flip)
     for (final coin in _coins) {
       final coinX = coin.x * size.width;
-      final coinY = ((coin.initialY + progress * coin.speed * 4) % 1.0) * size.height;
+      final coinY =
+          ((coin.initialY + progress * coin.speed * 4) % 1.0) * size.height;
 
       // 3D flip factor scaleX (-1.0 to 1.0)
-      final flip = math.cos((progress * 2 * math.pi * coin.flipSpeed) + coin.phase);
+      final flip =
+          math.cos((progress * 2 * math.pi * coin.flipSpeed) + coin.phase);
       final widthFactor = flip.abs().clamp(0.08, 1.0);
       final isBack = flip < 0;
 
@@ -2767,7 +3240,8 @@ class CosmicBackgroundPainter extends CustomPainter {
       final h = r;
 
       // Outer rim
-      final rimRect = Rect.fromCenter(center: Offset.zero, width: w * 2, height: h * 2);
+      final rimRect =
+          Rect.fromCenter(center: Offset.zero, width: w * 2, height: h * 2);
       final coinPaint = Paint()
         ..shader = ui.Gradient.linear(
           Offset(-w, -h),
@@ -2783,7 +3257,8 @@ class CosmicBackgroundPainter extends CustomPainter {
 
       // Inner face
       if (w > 5) {
-        final innerRect = Rect.fromCenter(center: Offset.zero, width: (w - 2.2) * 2, height: (h - 2.2) * 2);
+        final innerRect = Rect.fromCenter(
+            center: Offset.zero, width: (w - 2.2) * 2, height: (h - 2.2) * 2);
         final innerPaint = Paint()
           ..shader = ui.Gradient.linear(
             Offset(-w, -h),
@@ -2796,8 +3271,10 @@ class CosmicBackgroundPainter extends CustomPainter {
         // Center engraved Star
         if (w > 8) {
           final insigniaPaint = Paint()
-            ..color = const Color(0xFFFFFBEB).withOpacity(0.9 * coin.opacity * globalAlpha);
-          _drawEmbossedStar(canvas, Offset.zero, (w * 0.42).clamp(2.0, 7.0), insigniaPaint);
+            ..color = const Color(0xFFFFFBEB)
+                .withOpacity(0.9 * coin.opacity * globalAlpha);
+          _drawEmbossedStar(
+              canvas, Offset.zero, (w * 0.42).clamp(2.0, 7.0), insigniaPaint);
         }
       }
 
@@ -2817,7 +3294,8 @@ class CosmicBackgroundPainter extends CustomPainter {
     canvas.drawPath(path, paint);
   }
 
-  void _drawEmbossedStar(Canvas canvas, Offset center, double radius, Paint paint) {
+  void _drawEmbossedStar(
+      Canvas canvas, Offset center, double radius, Paint paint) {
     final path = Path();
     for (int i = 0; i < 5; i++) {
       final double outerAngle = -math.pi / 2 + i * 2 * math.pi / 5;
@@ -2839,7 +3317,8 @@ class CosmicBackgroundPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CosmicBackgroundPainter oldDelegate) {
-    return oldDelegate.progress != progress || oldDelegate.hasMessages != hasMessages;
+    return oldDelegate.progress != progress ||
+        oldDelegate.hasMessages != hasMessages;
   }
 }
 
@@ -2877,24 +3356,24 @@ class _BouncingDotsIndicatorState extends State<_BouncingDotsIndicator>
         animation: _animController,
         builder: (context, child) {
           return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(3, (index) {
-            final delay = index * 0.2;
-            final val = (_animController.value - delay) % 1.0;
-            final bounce = (val < 0.5) ? (val * 2) : ((1.0 - val) * 2);
-            return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 2.5),
-              width: 7,
-              height: 7 + (bounce * 4),
-              decoration: BoxDecoration(
-                color: widget.color.withOpacity(0.4 + (bounce * 0.6)),
-                borderRadius: BorderRadius.circular(4),
-              ),
-            );
-          }),
-        );
-      },
-    ),
-  );
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(3, (index) {
+              final delay = index * 0.2;
+              final val = (_animController.value - delay) % 1.0;
+              final bounce = (val < 0.5) ? (val * 2) : ((1.0 - val) * 2);
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                width: 7,
+                height: 7 + (bounce * 4),
+                decoration: BoxDecoration(
+                  color: widget.color.withOpacity(0.4 + (bounce * 0.6)),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              );
+            }),
+          );
+        },
+      ),
+    );
   }
 }

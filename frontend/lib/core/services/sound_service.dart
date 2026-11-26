@@ -66,8 +66,8 @@ class SoundService {
     byteData.setUint8(2, 0x46); // F
     byteData.setUint8(3, 0x46); // F
     byteData.setUint32(4, 36 + totalSamples * 2, Endian.little);
-    byteData.setUint8(8, 0x57);  // W
-    byteData.setUint8(9, 0x41);  // A
+    byteData.setUint8(8, 0x57); // W
+    byteData.setUint8(9, 0x41); // A
     byteData.setUint8(10, 0x56); // V
     byteData.setUint8(11, 0x45); // E
 
@@ -77,11 +77,11 @@ class SoundService {
     byteData.setUint8(14, 0x74); // t
     byteData.setUint8(15, 0x20); // ' '
     byteData.setUint32(16, 16, Endian.little); // Subchunk1Size
-    byteData.setUint16(20, 1, Endian.little);  // AudioFormat (1 = PCM)
-    byteData.setUint16(22, 1, Endian.little);  // NumChannels (1 = Mono)
+    byteData.setUint16(20, 1, Endian.little); // AudioFormat (1 = PCM)
+    byteData.setUint16(22, 1, Endian.little); // NumChannels (1 = Mono)
     byteData.setUint32(24, sampleRate, Endian.little); // SampleRate
     byteData.setUint32(28, sampleRate * 2, Endian.little); // ByteRate
-    byteData.setUint16(32, 2, Endian.little);  // BlockAlign
+    byteData.setUint16(32, 2, Endian.little); // BlockAlign
     byteData.setUint16(34, 16, Endian.little); // BitsPerSample
 
     // data subchunk
@@ -98,7 +98,8 @@ class SoundService {
       final freq = freqs[seg];
       final t = i / sampleRate;
       final decay = 1.0 - (i / totalSamples);
-      final sample = (math.sin(2 * math.pi * freq * t) * volume * decay * 32767).toInt();
+      final sample =
+          (math.sin(2 * math.pi * freq * t) * volume * decay * 32767).toInt();
       byteData.setInt16(offset, sample.clamp(-32768, 32767), Endian.little);
       offset += 2;
     }

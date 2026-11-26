@@ -123,21 +123,72 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       setState(() {
         _weeklyActivity = List<Map<String, dynamic>>.from(data['week']);
         _isLoadingWeekly = false;
-        final todayIdx = _weeklyActivity.indexWhere((w) => w['isToday'] == true);
-        _selectedDayIndex = todayIdx != -1 ? todayIdx : (data['currentDayIndex'] ?? 0);
+        final todayIdx =
+            _weeklyActivity.indexWhere((w) => w['isToday'] == true);
+        _selectedDayIndex =
+            todayIdx != -1 ? todayIdx : (data['currentDayIndex'] ?? 0);
       });
     } else if (mounted) {
       setState(() {
         _isLoadingWeekly = false;
         if (_weeklyActivity.isEmpty) {
           _weeklyActivity = [
-            {'dayKey': 'Du', 'dayName': 'Dushanba', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': false},
-            {'dayKey': 'Se', 'dayName': 'Seshanba', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': false},
-            {'dayKey': 'Ch', 'dayName': 'Chorshanba', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': false},
-            {'dayKey': 'Pa', 'dayName': 'Payshanba', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': false},
-            {'dayKey': 'Ju', 'dayName': 'Juma', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': false},
-            {'dayKey': 'Sh', 'dayName': 'Shanba', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': true},
-            {'dayKey': 'Ya', 'dayName': 'Yakshanba', 'minutes': 0, 'lessonsDone': 0, 'problemsSolved': 0, 'isToday': false},
+            {
+              'dayKey': 'Du',
+              'dayName': 'Dushanba',
+              'minutes': 0,
+              'lessonsDone': 0,
+              'problemsSolved': 0,
+              'isToday': false
+            },
+            {
+              'dayKey': 'Se',
+              'dayName': 'Seshanba',
+              'minutes': 0,
+              'lessonsDone': 0,
+              'problemsSolved': 0,
+              'isToday': false
+            },
+            {
+              'dayKey': 'Ch',
+              'dayName': 'Chorshanba',
+              'minutes': 0,
+              'lessonsDone': 0,
+              'problemsSolved': 0,
+              'isToday': false
+            },
+            {
+              'dayKey': 'Pa',
+              'dayName': 'Payshanba',
+              'minutes': 0,
+              'lessonsDone': 0,
+              'problemsSolved': 0,
+              'isToday': false
+            },
+            {
+              'dayKey': 'Ju',
+              'dayName': 'Juma',
+              'minutes': 0,
+              'lessonsDone': 0,
+              'problemsSolved': 0,
+              'isToday': false
+            },
+            {
+              'dayKey': 'Sh',
+              'dayName': 'Shanba',
+              'minutes': 0,
+              'lessonsDone': 0,
+              'problemsSolved': 0,
+              'isToday': true
+            },
+            {
+              'dayKey': 'Ya',
+              'dayName': 'Yakshanba',
+              'minutes': 0,
+              'lessonsDone': 0,
+              'problemsSolved': 0,
+              'isToday': false
+            },
           ];
           _selectedDayIndex = 5;
         }
@@ -148,13 +199,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   void _showStudyHistorySheet() async {
     HapticFeedback.lightImpact();
     final colors = AppThemeColors.of(context);
-    final history = await ref.read(studentProvider.notifier).fetchStudyHistory();
+    final history =
+        await ref.read(studentProvider.notifier).fetchStudyHistory();
     if (!mounted) return;
 
     final days = history != null && history['history'] != null
         ? List<Map<String, dynamic>>.from(history['history'])
         : <Map<String, dynamic>>[];
-    final totalMin = history != null ? (history['totalMinutes'] ?? 0) : (ref.read(studentProvider).student?.studyMinutes ?? 0);
+    final totalMin = history != null
+        ? (history['totalMinutes'] ?? 0)
+        : (ref.read(studentProvider).student?.studyMinutes ?? 0);
 
     showModalBottomSheet(
       context: context,
@@ -194,7 +248,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: colors.primary.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(12),
@@ -225,7 +280,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                 ...days.map((d) {
                   return Container(
                     margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 12),
                     decoration: BoxDecoration(
                       color: colors.field,
                       borderRadius: BorderRadius.circular(14),
@@ -278,7 +334,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
         duration: const Duration(seconds: 3),
         content: Text(
           '$dayName · $minutes min · $lessons dars · $problems ta misol',
-          style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.white, fontSize: 13),
+          style: const TextStyle(
+              fontWeight: FontWeight.w700, color: Colors.white, fontSize: 13),
         ),
       ),
     );
@@ -340,11 +397,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         color: colors.primary.withOpacity(0.12),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.photo_library_rounded, color: colors.primary),
+                      child: Icon(Icons.photo_library_rounded,
+                          color: colors.primary),
                     ),
                     title: Text(
                       'Galereyadan tanlash',
-                      style: TextStyle(fontWeight: FontWeight.w700, color: colors.ink),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700, color: colors.ink),
                     ),
                     onTap: () {
                       Navigator.pop(ctx);
@@ -358,11 +417,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         color: colors.primary.withOpacity(0.12),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.camera_alt_rounded, color: colors.primary),
+                      child:
+                          Icon(Icons.camera_alt_rounded, color: colors.primary),
                     ),
                     title: Text(
                       'Kameradan olish',
-                      style: TextStyle(fontWeight: FontWeight.w700, color: colors.ink),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700, color: colors.ink),
                     ),
                     onTap: () {
                       Navigator.pop(ctx);
@@ -376,11 +437,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         color: const Color(0xFFEF4444).withOpacity(0.12),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.delete_outline_rounded, color: Color(0xFFEF4444)),
+                      child: const Icon(Icons.delete_outline_rounded,
+                          color: Color(0xFFEF4444)),
                     ),
                     title: const Text(
                       'Rasmni o‘chirish',
-                      style: TextStyle(fontWeight: FontWeight.w700, color: Color(0xFFEF4444)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFFEF4444)),
                     ),
                     onTap: () {
                       Navigator.pop(ctx);
@@ -422,7 +486,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       setState(() => _isUploadingAvatar = true);
 
       final base64String = 'data:image/jpeg;base64,${base64Encode(bytes)}';
-      final success = await ref.read(studentProvider.notifier).updateAvatar(base64String);
+      final success =
+          await ref.read(studentProvider.notifier).updateAvatar(base64String);
 
       if (!mounted) return;
       if (success) {
@@ -478,7 +543,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           final colors = AppThemeColors.of(context);
           return AlertDialog(
             backgroundColor: colors.card,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             title: Text(
               'Profilni tahrirlash',
               style: TextStyle(fontWeight: FontWeight.w800, color: colors.ink),
@@ -487,20 +553,32 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Ism va familiya', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: colors.muted)),
+                Text('Ism va familiya',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                        color: colors.muted)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: nameController,
-                  style: TextStyle(color: colors.ink, fontWeight: FontWeight.w600),
+                  style:
+                      TextStyle(color: colors.ink, fontWeight: FontWeight.w600),
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: colors.bg,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: colors.border)),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: colors.border)),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 12),
                   ),
                 ),
                 const SizedBox(height: 16),
-                Text('Sinf', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: colors.muted)),
+                Text('Sinf',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                        color: colors.muted)),
                 const SizedBox(height: 6),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -517,7 +595,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                       items: List.generate(11, (i) => i + 1).map((g) {
                         return DropdownMenuItem<int>(
                           value: g,
-                          child: Text('$g-sinf', style: TextStyle(color: colors.ink, fontWeight: FontWeight.w600)),
+                          child: Text('$g-sinf',
+                              style: TextStyle(
+                                  color: colors.ink,
+                                  fontWeight: FontWeight.w600)),
                         );
                       }).toList(),
                       onChanged: (val) {
@@ -533,24 +614,31 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: Text('Bekor qilish', style: TextStyle(color: colors.muted, fontWeight: FontWeight.w700)),
+                child: Text('Bekor qilish',
+                    style: TextStyle(
+                        color: colors.muted, fontWeight: FontWeight.w700)),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colors.primary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
                 ),
                 onPressed: () async {
                   final newName = nameController.text.trim();
                   if (newName.isNotEmpty) {
-                    await ref.read(studentProvider.notifier).updateProfileDetails(
-                      displayName: newName,
-                      grade: selectedGrade,
-                    );
+                    await ref
+                        .read(studentProvider.notifier)
+                        .updateProfileDetails(
+                          displayName: newName,
+                          grade: selectedGrade,
+                        );
                   }
                   if (ctx.mounted) Navigator.pop(ctx);
                 },
-                child: const Text('Saqlash', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                child: const Text('Saqlash',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w700)),
               ),
             ],
           );
@@ -613,8 +701,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                 color: colors.primary,
                 backgroundColor: colors.card,
                 child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                  padding: const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 110),
+                  physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics()),
+                  padding: const EdgeInsets.only(
+                      left: 16, right: 16, top: 12, bottom: 110),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -639,7 +729,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                   onTap: () {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text('Yangi bildirishnomalar yo‘q.'),
+                                        content: Text(
+                                            'Yangi bildirishnomalar yo‘q.'),
                                         duration: Duration(seconds: 1),
                                       ),
                                     );
@@ -647,9 +738,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                 ),
                                 const SizedBox(width: 10),
                                 _buildCircleIconButton(
-                                  icon: isDark ? Icons.wb_sunny_outlined : Icons.dark_mode_outlined,
+                                  icon: isDark
+                                      ? Icons.wb_sunny_outlined
+                                      : Icons.dark_mode_outlined,
                                   onTap: () {
-                                    ref.read(themeModeProvider.notifier).toggleTheme();
+                                    ref
+                                        .read(themeModeProvider.notifier)
+                                        .toggleTheme();
                                     HapticFeedback.selectionClick();
                                   },
                                 ),
@@ -666,11 +761,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         index: 1,
                         child: Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 22),
                           decoration: BoxDecoration(
                             color: colors.card,
                             borderRadius: BorderRadius.circular(24),
-                            border: Border.all(color: colors.border, width: 1.2),
+                            border:
+                                Border.all(color: colors.border, width: 1.2),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -687,7 +784,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                       decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
                                         gradient: LinearGradient(
-                                          colors: [Color(0xFF6C47FF), Color(0xFFA58BFF)],
+                                          colors: [
+                                            Color(0xFF6C47FF),
+                                            Color(0xFFA58BFF)
+                                          ],
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
                                         ),
@@ -695,10 +795,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                       child: Container(
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: isDark ? const Color(0xFF1E1945) : const Color(0xFFEDE9FE),
+                                          color: isDark
+                                              ? const Color(0xFF1E1945)
+                                              : const Color(0xFFEDE9FE),
                                         ),
                                         child: ClipOval(
-                                          child: _buildAvatarImage(student?.avatarUrl, colors),
+                                          child: _buildAvatarImage(
+                                              student?.avatarUrl, colors),
                                         ),
                                       ),
                                     ),
@@ -709,13 +812,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                         child: Container(
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: Colors.black.withOpacity(0.45),
+                                            color:
+                                                Colors.black.withOpacity(0.45),
                                           ),
                                           child: const Center(
                                             child: SizedBox(
                                               width: 28,
                                               height: 28,
-                                              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                                              child: CircularProgressIndicator(
+                                                  color: Colors.white,
+                                                  strokeWidth: 2.5),
                                             ),
                                           ),
                                         ),
@@ -730,14 +836,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                         label: 'Rasmni o‘zgartirish',
                                         child: InkWell(
                                           onTap: _showAvatarOptions,
-                                          borderRadius: BorderRadius.circular(22),
+                                          borderRadius:
+                                              BorderRadius.circular(22),
                                           child: Container(
                                             width: 44,
                                             height: 44,
                                             decoration: BoxDecoration(
                                               color: colors.primary,
                                               shape: BoxShape.circle,
-                                              border: Border.all(color: colors.card, width: 2.5),
+                                              border: Border.all(
+                                                  color: colors.card,
+                                                  width: 2.5),
                                               boxShadow: const [
                                                 BoxShadow(
                                                   color: Color(0x336C47FF),
@@ -791,9 +900,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                 runSpacing: 8,
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 14, vertical: 6),
                                     decoration: BoxDecoration(
-                                      color: isDark ? const Color(0xFF281F5E) : const Color(0xFFEDE8FF),
+                                      color: isDark
+                                          ? const Color(0xFF281F5E)
+                                          : const Color(0xFFEDE8FF),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Text(
@@ -801,14 +913,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                       style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w800,
-                                        color: isDark ? const Color(0xFFC7B3FF) : const Color(0xFF6C47FF),
+                                        color: isDark
+                                            ? const Color(0xFFC7B3FF)
+                                            : const Color(0xFF6C47FF),
                                       ),
                                     ),
                                   ),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 14, vertical: 6),
                                     decoration: BoxDecoration(
-                                      color: isDark ? const Color(0xFF231E48) : const Color(0xFFF3F2F8),
+                                      color: isDark
+                                          ? const Color(0xFF231E48)
+                                          : const Color(0xFFF3F2F8),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Text(
@@ -832,12 +949,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                 child: SizedBox(
                                   width: 380,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       AnimatedBuilder(
                                         animation: _xpController,
                                         builder: (context, child) {
-                                          final animatedXP = (xp * (disableAnim ? 1.0 : _xpController.value)).round();
+                                          final animatedXP = (xp *
+                                                  (disableAnim
+                                                      ? 1.0
+                                                      : _xpController.value))
+                                              .round();
                                           return Text(
                                             '$animatedXP XP',
                                             style: TextStyle(
@@ -865,22 +987,32 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                 width: double.infinity,
                                 height: 8,
                                 decoration: BoxDecoration(
-                                  color: isDark ? const Color(0xFF2B2456) : const Color(0xFFEBE7F7),
+                                  color: isDark
+                                      ? const Color(0xFF2B2456)
+                                      : const Color(0xFFEBE7F7),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: AnimatedBuilder(
                                   animation: _xpController,
                                   builder: (context, child) {
-                                    final progress = (xp / nextLevelXP).clamp(0.05, 1.0);
-                                    final animatedWidth = progress * (disableAnim ? 1.0 : _xpController.value);
+                                    final progress =
+                                        (xp / nextLevelXP).clamp(0.05, 1.0);
+                                    final animatedWidth = progress *
+                                        (disableAnim
+                                            ? 1.0
+                                            : _xpController.value);
                                     return FractionallySizedBox(
                                       alignment: Alignment.centerLeft,
                                       widthFactor: animatedWidth,
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                           gradient: const LinearGradient(
-                                            colors: [Color(0xFF6C47FF), Color(0xFF8B6BFF)],
+                                            colors: [
+                                              Color(0xFF6C47FF),
+                                              Color(0xFF8B6BFF)
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -897,10 +1029,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                 height: 44,
                                 child: OutlinedButton(
                                   style: OutlinedButton.styleFrom(
-                                    side: BorderSide(color: colors.primary, width: 1.5),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+                                    side: BorderSide(
+                                        color: colors.primary, width: 1.5),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(22)),
                                   ),
-                                  onPressed: student != null ? () => _showEditProfileDialog(student) : null,
+                                  onPressed: student != null
+                                      ? () => _showEditProfileDialog(student)
+                                      : null,
                                   child: Text(
                                     'Profilni tahrirlash',
                                     style: TextStyle(
@@ -944,7 +1081,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                             const SizedBox(width: 10),
                             Expanded(
                               child: _buildStatCard(
-                                customIcon: const XpCoin(size: 22, showGlow: false),
+                                customIcon:
+                                    const XpCoin(size: 22, showGlow: false),
                                 iconBg: const Color(0xFFEDE8FF),
                                 iconColor: const Color(0xFF6C47FF),
                                 value: '$xp',
@@ -984,7 +1122,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                       icon: Icons.access_time_rounded,
                                       iconBg: const Color(0xFFE5EEFF),
                                       iconColor: const Color(0xFF3B82F6),
-                                      value: _formatStudyMinutes(student?.studyMinutes ?? 0),
+                                      value: _formatStudyMinutes(
+                                          student?.studyMinutes ?? 0),
                                       label: 'Bugun · Tarix >',
                                       colors: colors,
                                     ),
@@ -996,7 +1135,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                     icon: Icons.menu_book_rounded,
                                     iconBg: const Color(0xFFFFF1D6),
                                     iconColor: const Color(0xFFF59E0B),
-                                    value: '${student?.completedLessonsCount ?? 0} dars · ${student?.completedTopicsCount ?? 0} mavzu',
+                                    value:
+                                        '${student?.completedLessonsCount ?? 0} dars · ${student?.completedTopicsCount ?? 0} mavzu',
                                     label: 'Darslar',
                                     colors: colors,
                                   ),
@@ -1045,7 +1185,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                           decoration: BoxDecoration(
                             color: colors.card,
                             borderRadius: BorderRadius.circular(24),
-                            border: Border.all(color: colors.border, width: 1.2),
+                            border:
+                                Border.all(color: colors.border, width: 1.2),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1056,7 +1197,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                 child: SizedBox(
                                   width: 540,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         'Haftalik faollik',
@@ -1067,10 +1209,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                         ),
                                       ),
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
                                         decoration: BoxDecoration(
                                           color: const Color(0xFFFFE9DB),
-                                          borderRadius: BorderRadius.circular(16),
+                                          borderRadius:
+                                              BorderRadius.circular(16),
                                         ),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
@@ -1079,10 +1223,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                               child: AnimatedBuilder(
                                                 animation: _flameController,
                                                 builder: (context, child) {
-                                                  final scale = disableAnim ? 1.0 : 1.0 + _flameController.value * 0.14;
+                                                  final scale = disableAnim
+                                                      ? 1.0
+                                                      : 1.0 +
+                                                          _flameController
+                                                                  .value *
+                                                              0.14;
                                                   return Transform.scale(
                                                     scale: scale,
-                                                    child: const Icon(Icons.local_fire_department_rounded, color: Color(0xFFE5611B), size: 16),
+                                                    child: const Icon(
+                                                        Icons
+                                                            .local_fire_department_rounded,
+                                                        color:
+                                                            Color(0xFFE5611B),
+                                                        size: 16),
                                                   );
                                                 },
                                               ),
@@ -1110,41 +1264,62 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                               SizedBox(
                                 height: 130,
                                 child: _isLoadingWeekly
-                                    ? const Center(child: CircularProgressIndicator())
+                                    ? const Center(
+                                        child: CircularProgressIndicator())
                                     : Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: List.generate(_weeklyActivity.length, (i) {
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: List.generate(
+                                            _weeklyActivity.length, (i) {
                                           final dayData = _weeklyActivity[i];
-                                          final isSelected = _selectedDayIndex == i;
-                                          final minutes = (dayData['minutes'] ?? 0) as int;
+                                          final isSelected =
+                                              _selectedDayIndex == i;
+                                          final minutes =
+                                              (dayData['minutes'] ?? 0) as int;
                                           final hasActivity = minutes > 0;
-                                          final isToday = dayData['isToday'] == true;
-                                          final dayLabel = (dayData['dayKey'] ?? dayData['day'] ?? '') as String;
+                                          final isToday =
+                                              dayData['isToday'] == true;
+                                          final dayLabel = (dayData['dayKey'] ??
+                                              dayData['day'] ??
+                                              '') as String;
 
                                           return Expanded(
                                             child: GestureDetector(
                                               behavior: HitTestBehavior.opaque,
                                               onTap: () {
-                                                setState(() => _selectedDayIndex = i);
+                                                setState(() =>
+                                                    _selectedDayIndex = i);
                                                 _showDayActivityDetail(dayData);
                                               },
                                               child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
                                                 children: [
                                                   // Tooltip bubble
                                                   if (isSelected && minutes > 0)
                                                     Container(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                                      margin: const EdgeInsets.only(bottom: 6),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 8,
+                                                          vertical: 3),
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              bottom: 6),
                                                       decoration: BoxDecoration(
-                                                        color: const Color(0xFF1C1450),
-                                                        borderRadius: BorderRadius.circular(8),
+                                                        color: const Color(
+                                                            0xFF1C1450),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
                                                         boxShadow: const [
                                                           BoxShadow(
-                                                            color: Color(0x33000000),
+                                                            color: Color(
+                                                                0x33000000),
                                                             blurRadius: 4,
-                                                            offset: Offset(0, 2),
+                                                            offset:
+                                                                Offset(0, 2),
                                                           ),
                                                         ],
                                                       ),
@@ -1153,7 +1328,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                                         style: const TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 11,
-                                                          fontWeight: FontWeight.w800,
+                                                          fontWeight:
+                                                              FontWeight.w800,
                                                         ),
                                                       ),
                                                     )
@@ -1162,32 +1338,61 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
 
                                                   // Bar capsule
                                                   AnimatedBuilder(
-                                                    animation: _columnGrowthController,
+                                                    animation:
+                                                        _columnGrowthController,
                                                     builder: (context, child) {
-                                                      final animVal = disableAnim ? 1.0 : _columnGrowthController.value;
+                                                      final animVal = disableAnim
+                                                          ? 1.0
+                                                          : _columnGrowthController
+                                                              .value;
                                                       const maxMinutes = 15;
-                                                      final calculatedHeight = minutes == 0
-                                                          ? 10.0
-                                                          : (minutes / maxMinutes * 84.0).clamp(10.0, 84.0);
-                                                      final barHeight = calculatedHeight * animVal;
+                                                      final calculatedHeight =
+                                                          minutes == 0
+                                                              ? 10.0
+                                                              : (minutes /
+                                                                      maxMinutes *
+                                                                      84.0)
+                                                                  .clamp(10.0,
+                                                                      84.0);
+                                                      final barHeight =
+                                                          calculatedHeight *
+                                                              animVal;
 
                                                       return Container(
                                                         width: 24,
                                                         height: barHeight,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(12),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(12),
                                                           gradient: isToday
                                                               ? const LinearGradient(
-                                                                  colors: [Color(0xFF8B6BFF), Color(0xFF5232D9)],
-                                                                  begin: Alignment.topCenter,
-                                                                  end: Alignment.bottomCenter,
+                                                                  colors: [
+                                                                    Color(
+                                                                        0xFF8B6BFF),
+                                                                    Color(
+                                                                        0xFF5232D9)
+                                                                  ],
+                                                                  begin: Alignment
+                                                                      .topCenter,
+                                                                  end: Alignment
+                                                                      .bottomCenter,
                                                                 )
                                                               : null,
                                                           color: isToday
                                                               ? null
                                                               : (hasActivity
-                                                                  ? (isDark ? const Color(0xFF4A3B8C) : const Color(0xFFC9BBFF))
-                                                                  : (isDark ? const Color(0xFF2A2352) : const Color(0xFFEDEBF7))),
+                                                                  ? (isDark
+                                                                      ? const Color(
+                                                                          0xFF4A3B8C)
+                                                                      : const Color(
+                                                                          0xFFC9BBFF))
+                                                                  : (isDark
+                                                                      ? const Color(
+                                                                          0xFF2A2352)
+                                                                      : const Color(
+                                                                          0xFFEDEBF7))),
                                                         ),
                                                       );
                                                     },
@@ -1200,8 +1405,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                                     dayLabel,
                                                     style: TextStyle(
                                                       fontSize: 12,
-                                                      fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
-                                                      color: isToday ? colors.primaryDark : colors.muted,
+                                                      fontWeight: isToday
+                                                          ? FontWeight.w800
+                                                          : FontWeight.w600,
+                                                      color: isToday
+                                                          ? colors.primaryDark
+                                                          : colors.muted,
                                                     ),
                                                   ),
                                                 ],
@@ -1226,7 +1435,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                           decoration: BoxDecoration(
                             color: colors.card,
                             borderRadius: BorderRadius.circular(24),
-                            border: Border.all(color: colors.border, width: 1.2),
+                            border:
+                                Border.all(color: colors.border, width: 1.2),
                           ),
                           child: Column(
                             children: [
@@ -1265,24 +1475,35 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                               ),
                               _buildDivider(colors),
                               _buildMenuItem(
-                                icon: isDark ? Icons.dark_mode_rounded : Icons.wb_sunny_rounded,
-                                tileColor: isDark ? const Color(0xFF2E2660) : const Color(0xFFEDE9FE),
+                                icon: isDark
+                                    ? Icons.dark_mode_rounded
+                                    : Icons.wb_sunny_rounded,
+                                tileColor: isDark
+                                    ? const Color(0xFF2E2660)
+                                    : const Color(0xFFEDE9FE),
                                 iconColor: colors.primary,
                                 title: 'Tungi rejim',
                                 subtitle: () {
                                   final mode = ref.watch(themeModeProvider);
-                                  if (mode == ThemeMode.dark) return 'Tungi rejim (Faol)';
-                                  if (mode == ThemeMode.light) return 'Kunduzgi rejim (Faol)';
+                                  if (mode == ThemeMode.dark)
+                                    return 'Tungi rejim (Faol)';
+                                  if (mode == ThemeMode.light)
+                                    return 'Kunduzgi rejim (Faol)';
                                   return 'Tizim bo‘yicha (Avtomatik)';
                                 }(),
                                 colors: colors,
-                                onTap: () => _showThemeModeDialog(context, colors),
+                                onTap: () =>
+                                    _showThemeModeDialog(context, colors),
                               ),
                               _buildDivider(colors),
                               _buildMenuItem(
                                 icon: Icons.settings_rounded,
-                                tileColor: isDark ? const Color(0xFF2A2452) : const Color(0xFFECEBF3),
-                                iconColor: isDark ? const Color(0xFFA9A4CF) : const Color(0xFF6B6785),
+                                tileColor: isDark
+                                    ? const Color(0xFF2A2452)
+                                    : const Color(0xFFECEBF3),
+                                iconColor: isDark
+                                    ? const Color(0xFFA9A4CF)
+                                    : const Color(0xFF6B6785),
                                 title: 'Sozlamalar',
                                 subtitle: 'Mavzu, tovush va xavfsizlik',
                                 colors: colors,
@@ -1501,7 +1722,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         child: SizedBox(
                           width: 28,
                           height: 28,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                          child: CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 2.5),
                         ),
                       ),
                     ),
@@ -1532,7 +1754,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                               ),
                             ],
                           ),
-                          child: const Icon(Icons.camera_alt_rounded, size: 20, color: Colors.white),
+                          child: const Icon(Icons.camera_alt_rounded,
+                              size: 20, color: Colors.white),
                         ),
                       ),
                     ),
@@ -1545,13 +1768,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           Text(
             name,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: colors.ink),
+            style: TextStyle(
+                fontSize: 22, fontWeight: FontWeight.w800, color: colors.ink),
           ),
           const SizedBox(height: 4),
           Text(
             '@$username · $grade-sinf o‘quvchisi',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: colors.muted),
+            style: TextStyle(
+                fontSize: 14, fontWeight: FontWeight.w600, color: colors.muted),
           ),
           const SizedBox(height: 12),
           Wrap(
@@ -1560,9 +1785,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
             runSpacing: 8,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF281F5E) : const Color(0xFFEDE8FF),
+                  color: isDark
+                      ? const Color(0xFF281F5E)
+                      : const Color(0xFFEDE8FF),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -1570,19 +1798,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? const Color(0xFFC7B3FF) : const Color(0xFF6C47FF),
+                    color: isDark
+                        ? const Color(0xFFC7B3FF)
+                        : const Color(0xFF6C47FF),
                   ),
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF231E48) : const Color(0xFFF3F2F8),
+                  color: isDark
+                      ? const Color(0xFF231E48)
+                      : const Color(0xFFF3F2F8),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   'Qo‘shilgan: $joinedText',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: colors.muted),
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: colors.muted),
                 ),
               ),
             ],
@@ -1611,7 +1847,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                   ),
                   Text(
                     'Keyingi daraja: $nextLevelXP XP',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: colors.muted),
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: colors.muted),
                   ),
                 ],
               ),
@@ -1629,7 +1868,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
               animation: _xpController,
               builder: (context, child) {
                 final progress = (xp / nextLevelXP).clamp(0.05, 1.0);
-                final animatedWidth = progress * (disableAnim ? 1.0 : _xpController.value);
+                final animatedWidth =
+                    progress * (disableAnim ? 1.0 : _xpController.value);
                 return FractionallySizedBox(
                   alignment: Alignment.centerLeft,
                   widthFactor: animatedWidth,
@@ -1654,12 +1894,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: colors.primary, width: 1.5),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(22)),
                 ),
-                onPressed: student != null ? () => _showEditProfileDialog(student) : null,
+                onPressed: student != null
+                    ? () => _showEditProfileDialog(student)
+                    : null,
                 child: Text(
                   'Profilni tahrirlash',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: colors.primary),
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: colors.primary),
                 ),
               ),
             ),
@@ -1738,7 +1984,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                     icon: Icons.menu_book_rounded,
                     iconBg: const Color(0xFFFFF1D6),
                     iconColor: const Color(0xFFF59E0B),
-                    value: '${student?.completedLessonsCount ?? 0} dars · ${student?.completedTopicsCount ?? 0} mavzu',
+                    value:
+                        '${student?.completedLessonsCount ?? 0} dars · ${student?.completedTopicsCount ?? 0} mavzu',
                     label: 'Darslar',
                     colors: colors,
                   ),
@@ -1812,7 +2059,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFE9DB),
                       borderRadius: BorderRadius.circular(16),
@@ -1824,10 +2072,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                           child: AnimatedBuilder(
                             animation: _flameController,
                             builder: (context, child) {
-                              final scale = disableAnim ? 1.0 : 1.0 + _flameController.value * 0.14;
+                              final scale = disableAnim
+                                  ? 1.0
+                                  : 1.0 + _flameController.value * 0.14;
                               return Transform.scale(
                                 scale: scale,
-                                child: const Icon(Icons.local_fire_department_rounded, color: Color(0xFFE5611B), size: 16),
+                                child: const Icon(
+                                    Icons.local_fire_department_rounded,
+                                    color: Color(0xFFE5611B),
+                                    size: 16),
                               );
                             },
                           ),
@@ -1857,7 +2110,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
               final minutes = (dayData['minutes'] ?? 0) as int;
               final hasActivity = minutes > 0;
               final isToday = dayData['isToday'] == true;
-              final dayLabel = (dayData['dayKey'] ?? dayData['day'] ?? '') as String;
+              final dayLabel =
+                  (dayData['dayKey'] ?? dayData['day'] ?? '') as String;
 
               return Expanded(
                 child: Padding(
@@ -1867,7 +2121,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                     children: [
                       if (isToday)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           margin: const EdgeInsets.only(bottom: 6),
                           decoration: BoxDecoration(
                             color: colors.primaryDark,
@@ -1887,7 +2142,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                       AnimatedBuilder(
                         animation: _columnGrowthController,
                         builder: (context, child) {
-                          final animVal = disableAnim ? 1.0 : _columnGrowthController.value;
+                          final animVal =
+                              disableAnim ? 1.0 : _columnGrowthController.value;
                           const maxMinutes = 15;
                           final calculatedHeight = minutes == 0
                               ? 10.0
@@ -1901,7 +2157,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                               borderRadius: BorderRadius.circular(12),
                               gradient: isToday
                                   ? const LinearGradient(
-                                      colors: [Color(0xFF8B6BFF), Color(0xFF5232D9)],
+                                      colors: [
+                                        Color(0xFF8B6BFF),
+                                        Color(0xFF5232D9)
+                                      ],
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                     )
@@ -1909,8 +2168,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                               color: isToday
                                   ? null
                                   : (hasActivity
-                                      ? (isDark ? const Color(0xFF4A3B8C) : const Color(0xFFC9BBFF))
-                                      : (isDark ? const Color(0xFF2A2352) : const Color(0xFFEDEBF7))),
+                                      ? (isDark
+                                          ? const Color(0xFF4A3B8C)
+                                          : const Color(0xFFC9BBFF))
+                                      : (isDark
+                                          ? const Color(0xFF2A2352)
+                                          : const Color(0xFFEDEBF7))),
                             ),
                           );
                         },
@@ -1920,7 +2183,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         dayLabel,
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
+                          fontWeight:
+                              isToday ? FontWeight.w800 : FontWeight.w600,
                           color: isToday ? colors.primaryDark : colors.muted,
                         ),
                       ),
@@ -1986,7 +2250,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           _buildDivider(colors),
           _buildMenuItem(
             icon: isDark ? Icons.dark_mode_rounded : Icons.wb_sunny_rounded,
-            tileColor: isDark ? const Color(0xFF2E2660) : const Color(0xFFEDE9FE),
+            tileColor:
+                isDark ? const Color(0xFF2E2660) : const Color(0xFFEDE9FE),
             iconColor: colors.primary,
             title: 'Tungi rejim',
             subtitle: () {
@@ -2001,8 +2266,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           _buildDivider(colors),
           _buildMenuItem(
             icon: Icons.settings_rounded,
-            tileColor: isDark ? const Color(0xFF2A2452) : const Color(0xFFECEBF3),
-            iconColor: isDark ? const Color(0xFFA9A4CF) : const Color(0xFF6B6785),
+            tileColor:
+                isDark ? const Color(0xFF2A2452) : const Color(0xFFECEBF3),
+            iconColor:
+                isDark ? const Color(0xFFA9A4CF) : const Color(0xFF6B6785),
             title: 'Sozlamalar',
             subtitle: 'Mavzu, tovush va xavfsizlik',
             colors: colors,
@@ -2021,7 +2288,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       animation: _entranceController,
       builder: (context, _) {
         final delay = index * 0.07;
-        final animVal = (_entranceController.value - delay).clamp(0.0, 1.0) / (1.0 - delay);
+        final animVal =
+            (_entranceController.value - delay).clamp(0.0, 1.0) / (1.0 - delay);
         final curved = Curves.easeOutCubic.transform(animVal);
         final opacity = curved.clamp(0.0, 1.0);
         final translateY = 16.0 * (1.0 - curved);
@@ -2037,7 +2305,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
     );
   }
 
-  Widget _buildCircleIconButton({required IconData icon, required VoidCallback onTap}) {
+  Widget _buildCircleIconButton(
+      {required IconData icon, required VoidCallback onTap}) {
     final colors = AppThemeColors.of(context);
     return Semantics(
       button: true,
@@ -2084,13 +2353,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       try {
         final exp = DateTime.parse(student!.subscription.proExpiresAt!);
         remainingDays = exp.difference(DateTime.now()).inDays.clamp(0, 365);
-        expireDateStr = '${exp.day.toString().padLeft(2, '0')}.${exp.month.toString().padLeft(2, '0')}.${exp.year}';
+        expireDateStr =
+            '${exp.day.toString().padLeft(2, '0')}.${exp.month.toString().padLeft(2, '0')}.${exp.year}';
       } catch (_) {}
     } else if (student?.subscription.trialExpiresAt != null) {
       try {
         final exp = DateTime.parse(student!.subscription.trialExpiresAt!);
         remainingDays = exp.difference(DateTime.now()).inDays.clamp(0, 365);
-        expireDateStr = '${exp.day.toString().padLeft(2, '0')}.${exp.month.toString().padLeft(2, '0')}.${exp.year}';
+        expireDateStr =
+            '${exp.day.toString().padLeft(2, '0')}.${exp.month.toString().padLeft(2, '0')}.${exp.year}';
       } catch (_) {}
     }
     final progressFraction = (remainingDays / 30.0).clamp(0.05, 1.0);
@@ -2124,8 +2395,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                 child: AnimatedBuilder(
                   animation: _crownController,
                   builder: (context, child) {
-                    final floatVal = disableAnim ? 0.0 : math.sin(_crownController.value * math.pi * 2) * 4.0;
-                    final angle = disableAnim ? 0.0 : (math.sin(_crownController.value * math.pi * 2) * 0.06);
+                    final floatVal = disableAnim
+                        ? 0.0
+                        : math.sin(_crownController.value * math.pi * 2) * 4.0;
+                    final angle = disableAnim
+                        ? 0.0
+                        : (math.sin(_crownController.value * math.pi * 2) *
+                            0.06);
                     return Transform.translate(
                       offset: Offset(0, floatVal),
                       child: Transform.rotate(
@@ -2135,33 +2411,35 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                     );
                   },
                   child: Container(
-                  width: 68,
-                  height: 68,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22),
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFFFD66B), Color(0xFFF5A623)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x40F5A623),
-                        blurRadius: 12,
-                        offset: Offset(0, 4),
+                    width: 68,
+                    height: 68,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(22),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFFFD66B), Color(0xFFF5A623)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Icon(
-                      isPro ? Icons.workspace_premium_rounded : Icons.star_rounded,
-                      color: const Color(0xFF2A1B7A),
-                      size: 38,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x40F5A623),
+                          blurRadius: 12,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Icon(
+                        isPro
+                            ? Icons.workspace_premium_rounded
+                            : Icons.star_rounded,
+                        color: const Color(0xFF2A1B7A),
+                        size: 38,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
 
               const SizedBox(width: 16),
 
@@ -2173,15 +2451,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2.5),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2.5),
                           decoration: BoxDecoration(
-                            color: isPro ? const Color(0xFF10B981) : const Color(0xFFFFD66B),
+                            color: isPro
+                                ? const Color(0xFF10B981)
+                                : const Color(0xFFFFD66B),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             isPro ? 'PRO FAOL' : 'PRO',
                             style: TextStyle(
-                              color: isPro ? Colors.white : const Color(0xFF2A1B7A),
+                              color: isPro
+                                  ? Colors.white
+                                  : const Color(0xFF2A1B7A),
                               fontSize: 11,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 0.1,
@@ -2207,7 +2490,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      isPro ? 'Pro faol · $remainingDays kun qoldi' : 'Oyiga 29 000 so‘m',
+                      isPro
+                          ? 'Pro faol · $remainingDays kun qoldi'
+                          : 'Oyiga 29 000 so‘m',
                       style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 14,
@@ -2230,7 +2515,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                 value: progressFraction,
                 minHeight: 8,
                 backgroundColor: Colors.white.withOpacity(0.2),
-                valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFFFD66B)),
+                valueColor:
+                    const AlwaysStoppedAnimation<Color>(Color(0xFFFFD66B)),
               ),
             ),
             const SizedBox(height: 6),
@@ -2239,11 +2525,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
               children: [
                 Text(
                   'Tugash sanasi: $expireDateStr',
-                  style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600),
                 ),
                 Text(
                   '$remainingDays kun qoldi',
-                  style: const TextStyle(color: Color(0xFFFFD66B), fontSize: 12, fontWeight: FontWeight.w800),
+                  style: const TextStyle(
+                      color: Color(0xFFFFD66B),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800),
                 ),
               ],
             ),
@@ -2285,7 +2577,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)),
                 ),
                 onPressed: () {
                   context.push('/tariflar');
@@ -2308,10 +2601,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         child: AnimatedBuilder(
                           animation: _arrowController,
                           builder: (context, child) {
-                            final shift = disableAnim ? 0.0 : _arrowController.value * 5.0;
+                            final shift = disableAnim
+                                ? 0.0
+                                : _arrowController.value * 5.0;
                             return Transform.translate(
                               offset: Offset(shift, 0),
-                              child: const Icon(Icons.arrow_forward_rounded, color: Color(0xFF2A1B7A), size: 18),
+                              child: const Icon(Icons.arrow_forward_rounded,
+                                  color: Color(0xFF2A1B7A), size: 18),
                             );
                           },
                         ),
@@ -2426,9 +2722,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
             child: AnimatedBuilder(
               animation: _flameController,
               builder: (context, child) {
-                final scale = (isPulsing && !MediaQuery.of(context).disableAnimations)
-                    ? 1.0 + _flameController.value * 0.14
-                    : 1.0;
+                final scale =
+                    (isPulsing && !MediaQuery.of(context).disableAnimations)
+                        ? 1.0 + _flameController.value * 0.14
+                        : 1.0;
                 return Transform.scale(
                   scale: scale,
                   child: Container(
@@ -2517,7 +2814,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         color: Color(0xFF1C1450),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.lock_rounded, color: Colors.white, size: 10),
+                      child: const Icon(Icons.lock_rounded,
+                          color: Colors.white, size: 10),
                     ),
                   ),
               ],
@@ -2545,7 +2843,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                       if (trailingBadge != null) ...[
                         const SizedBox(width: 6),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: const Color(0xFFFFD66B),
                             borderRadius: BorderRadius.circular(6),
@@ -2635,7 +2934,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                   selected: currentMode == ThemeMode.light,
                   colors: colors,
                   onTap: () {
-                    ref.read(themeModeProvider.notifier).setThemeMode(ThemeMode.light);
+                    ref
+                        .read(themeModeProvider.notifier)
+                        .setThemeMode(ThemeMode.light);
                     Navigator.pop(context);
                   },
                 ),
@@ -2648,7 +2949,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                   selected: currentMode == ThemeMode.dark,
                   colors: colors,
                   onTap: () {
-                    ref.read(themeModeProvider.notifier).setThemeMode(ThemeMode.dark);
+                    ref
+                        .read(themeModeProvider.notifier)
+                        .setThemeMode(ThemeMode.dark);
                     Navigator.pop(context);
                   },
                 ),
@@ -2661,7 +2964,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                   selected: currentMode == ThemeMode.system,
                   colors: colors,
                   onTap: () {
-                    ref.read(themeModeProvider.notifier).setThemeMode(ThemeMode.system);
+                    ref
+                        .read(themeModeProvider.notifier)
+                        .setThemeMode(ThemeMode.system);
                     Navigator.pop(context);
                   },
                 ),
@@ -2688,9 +2993,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: selected
-              ? colors.primary.withOpacity(0.12)
-              : colors.field,
+          color: selected ? colors.primary.withOpacity(0.12) : colors.field,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: selected ? colors.primary : colors.border,
@@ -2747,8 +3050,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
     try {
       final dt = DateTime.parse(raw);
       final months = [
-        'Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun',
-        'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'
+        'Yanvar',
+        'Fevral',
+        'Mart',
+        'Aprel',
+        'May',
+        'Iyun',
+        'Iyul',
+        'Avgust',
+        'Sentabr',
+        'Oktabr',
+        'Noyabr',
+        'Dekabr'
       ];
       return '${months[dt.month - 1]} ${dt.year}';
     } catch (_) {

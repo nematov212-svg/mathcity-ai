@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum ScreenType {
   compact, // < 600px (Mobile)
-  medium,  // 600px - 1023px (Tablet)
+  medium, // 600px - 1023px (Tablet)
   expanded // >= 1024px (Desktop)
 }
 
@@ -34,13 +34,15 @@ class ResponsiveAuthCard extends StatelessWidget {
         if (screenType == ScreenType.compact) {
           // Mobile: preserve exact mobile arrangement with scrollability
           return SingleChildScrollView(
-            padding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            padding: contentPadding ??
+                const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: child,
           );
         }
 
         // Tablet & Desktop: Centered card with professional border and subtle shadow
-        final cardWidth = screenType == ScreenType.medium ? 520.0 : maxCardWidth;
+        final cardWidth =
+            screenType == ScreenType.medium ? 520.0 : maxCardWidth;
         final vMargin = screenType == ScreenType.medium ? 32.0 : 48.0;
 
         return Center(
@@ -49,11 +51,13 @@ class ResponsiveAuthCard extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: cardWidth),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 36),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 36, vertical: 36),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(28),
-                  border: Border.all(color: const Color(0xFFE5E7EB), width: 1.2),
+                  border:
+                      Border.all(color: const Color(0xFFE5E7EB), width: 1.2),
                   boxShadow: const [
                     BoxShadow(
                       color: Color(0x0C000000),

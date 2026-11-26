@@ -7,7 +7,8 @@ import 'package:mathcity_ai/features/games/fraction_battle_game_screen.dart';
 import 'package:mathcity_ai/features/games/game_result_screen.dart';
 
 void main() {
-  testWidgets('GamesHubScreen renders Figma design elements correctly', (tester) async {
+  testWidgets('GamesHubScreen renders Figma design elements correctly',
+      (tester) async {
     tester.view.physicalSize = const Size(800, 1400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -31,7 +32,8 @@ void main() {
     expect(find.text('Kasrlar jangi'), findsOneWidget);
   });
 
-  testWidgets('HouseBuildingScreen renders house building overview and stages', (tester) async {
+  testWidgets('HouseBuildingScreen renders house building overview and stages',
+      (tester) async {
     tester.view.physicalSize = const Size(800, 1400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -46,12 +48,13 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Uy qurish'), findsWidgets);
-    expect(find.text('Orzuingizdagi uyni quring'), findsOneWidget);
-    expect(find.text('Qurilish bosqichlari'), findsOneWidget);
+    expect(find.text('Qurilish do‘koni'), findsOneWidget);
     expect(find.textContaining('Poydevor'), findsWidgets);
   });
 
-  testWidgets('FractionBattleGameScreen renders fraction cards and operator buttons', (tester) async {
+  testWidgets(
+      'FractionBattleGameScreen renders fraction cards and operator buttons',
+      (tester) async {
     tester.view.physicalSize = const Size(800, 1400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -72,7 +75,8 @@ void main() {
     expect(find.text('>'), findsOneWidget);
   });
 
-  testWidgets('GameResultScreen renders celebration and reward banner', (tester) async {
+  testWidgets('GameResultScreen renders celebration and reward banner',
+      (tester) async {
     tester.view.physicalSize = const Size(800, 1400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);

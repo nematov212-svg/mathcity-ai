@@ -30,7 +30,8 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: const Text(
           'Obunani bekor qilish',
-          style: TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF1E1742)),
+          style:
+              TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF1E1742)),
         ),
         content: const Text(
           'Haqiqatan ham MathCity Pro obunasini bekor qilmoqchimisiz? To‘langan muddat yakuniga qadar barcha Pro imkoniyatlar saqlanadi.',
@@ -39,15 +40,18 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Yo‘q, qolsin', style: TextStyle(color: Color(0xFF64748B))),
+            child: const Text('Yo‘q, qolsin',
+                style: TextStyle(color: Color(0xFF64748B))),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFEF4444),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14)),
             ),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Ha, bekor qilinsin', style: TextStyle(color: Colors.white)),
+            child: const Text('Ha, bekor qilinsin',
+                style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -90,7 +94,9 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          success ? 'Xaridlar muvaffaqiyatli tiklandi!' : 'Faol xaridlar topilmadi.',
+          success
+              ? 'Xaridlar muvaffaqiyatli tiklandi!'
+              : 'Faol xaridlar topilmadi.',
         ),
         backgroundColor: success ? Colors.green : Colors.grey[800],
       ),
@@ -129,7 +135,8 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.kidsDarkText),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: AppColors.kidsDarkText),
           onPressed: () => context.pop(),
         ),
         title: const Text(
@@ -176,7 +183,9 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
                       BoxShadow(
                         color: (isPro
                                 ? const Color(0xFF6C5CE7)
-                                : (isTrialExpired ? const Color(0xFF475569) : const Color(0xFF2E7D32)))
+                                : (isTrialExpired
+                                    ? const Color(0xFF475569)
+                                    : const Color(0xFF2E7D32)))
                             .withValues(alpha: 0.3),
                         blurRadius: 18,
                         offset: const Offset(0, 6),
@@ -190,7 +199,8 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(10),
@@ -198,7 +208,9 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
                             child: Text(
                               isPro
                                   ? 'FAOL OBUNA'
-                                  : (isTrialExpired ? 'MUDDATI TUGAGAN' : 'BEPUL SINOV'),
+                                  : (isTrialExpired
+                                      ? 'MUDDATI TUGAGAN'
+                                      : 'BEPUL SINOV'),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 11,
@@ -208,7 +220,9 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
                             ),
                           ),
                           Icon(
-                            isPro ? Icons.workspace_premium_rounded : Icons.timer_rounded,
+                            isPro
+                                ? Icons.workspace_premium_rounded
+                                : Icons.timer_rounded,
                             color: Colors.white,
                             size: 26,
                           ),
@@ -260,7 +274,9 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(28),
                     border: Border.all(
-                      color: isPro ? const Color(0xFF6C5CE7) : AppColors.kidsBorder,
+                      color: isPro
+                          ? const Color(0xFF6C5CE7)
+                          : AppColors.kidsBorder,
                       width: isPro ? 2 : 1.5,
                     ),
                     boxShadow: [
@@ -286,11 +302,13 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
                               color: const Color(0xFFFFF9E6),
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: const Color(0xFFFFD54F)),
+                              border:
+                                  Border.all(color: const Color(0xFFFFD54F)),
                             ),
                             child: const Text(
                               'TAVSIYA ETILADI',
@@ -370,7 +388,8 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.verified_rounded, color: AppColors.kidsGreen, size: 20),
+                              Icon(Icons.verified_rounded,
+                                  color: AppColors.kidsGreen, size: 20),
                               SizedBox(width: 8),
                               Text(
                                 'Siz allaqachon Pro tarifidan foydalanmoqdasiz',
@@ -399,10 +418,13 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
                         ),
                       ] else ...[
                         CustomButton(
-                          text: _isLoading ? 'Yuklanmoqda...' : 'Pro tarifiga o‘tish (29 000 UZS)',
+                          text: _isLoading
+                              ? 'Yuklanmoqda...'
+                              : 'Pro tarifiga o‘tish (29 000 UZS)',
                           backgroundColor: const Color(0xFF6C5CE7),
                           borderRadius: 18,
-                          icon: const Icon(Icons.flash_on_rounded, color: Colors.white),
+                          icon: const Icon(Icons.flash_on_rounded,
+                              color: Colors.white),
                           onPressed: _isLoading ? null : _upgradeToPro,
                         ),
                       ],
@@ -415,7 +437,8 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
                 Center(
                   child: TextButton.icon(
                     onPressed: _isLoading ? null : _restorePurchases,
-                    icon: const Icon(Icons.restore_rounded, size: 18, color: AppColors.kidsSecondaryText),
+                    icon: const Icon(Icons.restore_rounded,
+                        size: 18, color: AppColors.kidsSecondaryText),
                     label: const Text(
                       'Xaridlarni tiklash (Restore Purchases)',
                       style: TextStyle(
@@ -441,12 +464,18 @@ class _TariflarScreenState extends ConsumerState<TariflarScreen> {
                     children: [
                       Text(
                         'To‘lov shartlari',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.kidsDarkText),
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.kidsDarkText),
                       ),
                       SizedBox(height: 6),
                       Text(
                         'To‘lov Click Business, Uzcard, Humo, Visa va Mastercard orqali O‘zbekiston so‘mida (UZS) xavfsiz amalga oshiriladi. MathCity AI bank kartasi ma’lumotlarini saqlamaydi.',
-                        style: TextStyle(fontSize: 11, color: AppColors.kidsSecondaryText, height: 1.45),
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: AppColors.kidsSecondaryText,
+                            height: 1.45),
                       ),
                     ],
                   ),

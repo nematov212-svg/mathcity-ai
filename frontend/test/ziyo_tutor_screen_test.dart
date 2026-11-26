@@ -4,7 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mathcity_ai/features/ai_teacher/ziyo_tutor_screen.dart';
 
 void main() {
-  testWidgets('AI Ustoz screen renders cosmic starry UI, glass header, and official logo', (tester) async {
+  testWidgets(
+      'AI Ustoz screen renders cosmic starry UI, glass header, and official logo',
+      (tester) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -25,7 +27,8 @@ void main() {
     expect(find.byIcon(Icons.arrow_back_ios_new_rounded), findsOneWidget);
 
     // 2. Empty state greeting verification
-    expect(find.textContaining('Men sizning AI matematik ustozingizman'), findsOneWidget);
+    expect(find.textContaining('Men sizning AI matematik ustozingizman'),
+        findsOneWidget);
 
     // 3. Removed 4 starter prompts verification (Must NOT be present)
     expect(find.text('2 × 5 nechchi bo‘ladi?'), findsNothing);

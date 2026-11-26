@@ -183,7 +183,8 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     return AppThemeColors(
       primary: Color.lerp(primary, other.primary, t) ?? primary,
       primaryDark: Color.lerp(primaryDark, other.primaryDark, t) ?? primaryDark,
-      primaryLight: Color.lerp(primaryLight, other.primaryLight, t) ?? primaryLight,
+      primaryLight:
+          Color.lerp(primaryLight, other.primaryLight, t) ?? primaryLight,
       ink: Color.lerp(ink, other.ink, t) ?? ink,
       muted: Color.lerp(muted, other.muted, t) ?? muted,
       inactive: Color.lerp(inactive, other.inactive, t) ?? inactive,
@@ -196,11 +197,17 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
       proDark: Color.lerp(proDark, other.proDark, t) ?? proDark,
       flame: Color.lerp(flame, other.flame, t) ?? flame,
       podiumGold: Color.lerp(podiumGold, other.podiumGold, t) ?? podiumGold,
-      podiumSilver: Color.lerp(podiumSilver, other.podiumSilver, t) ?? podiumSilver,
-      podiumBronze: Color.lerp(podiumBronze, other.podiumBronze, t) ?? podiumBronze,
-      goldGradient: LinearGradient.lerp(goldGradient, other.goldGradient, t) ?? goldGradient,
-      proGradient: LinearGradient.lerp(proGradient, other.proGradient, t) ?? proGradient,
-      cosmicGradient: LinearGradient.lerp(cosmicGradient, other.cosmicGradient, t) ?? cosmicGradient,
+      podiumSilver:
+          Color.lerp(podiumSilver, other.podiumSilver, t) ?? podiumSilver,
+      podiumBronze:
+          Color.lerp(podiumBronze, other.podiumBronze, t) ?? podiumBronze,
+      goldGradient: LinearGradient.lerp(goldGradient, other.goldGradient, t) ??
+          goldGradient,
+      proGradient:
+          LinearGradient.lerp(proGradient, other.proGradient, t) ?? proGradient,
+      cosmicGradient:
+          LinearGradient.lerp(cosmicGradient, other.cosmicGradient, t) ??
+              cosmicGradient,
       isDark: t < 0.5 ? isDark : other.isDark,
     );
   }
@@ -409,7 +416,8 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
   Future<void> _loadThemeMode() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final saved = prefs.getString(_prefKey) ?? prefs.getString(_legacyPrefKey);
+      final saved =
+          prefs.getString(_prefKey) ?? prefs.getString(_legacyPrefKey);
       if (saved == 'dark') {
         state = ThemeMode.dark;
       } else if (saved == 'system') {
@@ -446,7 +454,8 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
   }
 }
 
-final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((ref) {
+final themeModeProvider =
+    StateNotifierProvider<ThemeModeNotifier, ThemeMode>((ref) {
   return ThemeModeNotifier();
 });
 

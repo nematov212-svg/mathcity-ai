@@ -88,8 +88,7 @@ class _CertificateScreenState extends ConsumerState<CertificateScreen> {
 
   void _shareCertificate(String certId, String studentName) {
     HapticFeedback.lightImpact();
-    final certInfo =
-        'MathCity AI Rasmiy Sertifikati\n'
+    final certInfo = 'MathCity AI Rasmiy Sertifikati\n'
         'Talaba: $studentName\n'
         'Sertifikat ID: $certId\n'
         'Tasdiqlangan: https://mathcity.uz/verify/$certId';
@@ -110,17 +109,19 @@ class _CertificateScreenState extends ConsumerState<CertificateScreen> {
     final student = studentState.student;
 
     final isPro = student?.subscription.isProActive == true;
-    final completedCount = student?.completedLessonsCount ??
-        student?.completedLessons.length ??
-        0;
+    final completedCount =
+        student?.completedLessonsCount ?? student?.completedLessons.length ?? 0;
 
-    final studentName = (student != null && student.displayName.trim().isNotEmpty)
-        ? student.displayName.trim()
-        : 'O‘quvchi';
+    final studentName =
+        (student != null && student.displayName.trim().isNotEmpty)
+            ? student.displayName.trim()
+            : 'O‘quvchi';
 
     final certDate = _formatDateUz(DateTime.now());
     final rawId = student?.id ?? 'STUDENT';
-    final shortId = rawId.length >= 6 ? rawId.substring(0, 6).toUpperCase() : rawId.toUpperCase();
+    final shortId = rawId.length >= 6
+        ? rawId.substring(0, 6).toUpperCase()
+        : rawId.toUpperCase();
     final certId = 'MC-CERT-${DateTime.now().year}-$shortId';
 
     return Scaffold(
@@ -410,9 +411,11 @@ class _CertificateScreenState extends ConsumerState<CertificateScreen> {
                           gradient: const LinearGradient(
                             colors: [Color(0xFF5B21B6), Color(0xFF2563EB)],
                           ),
-                          border: Border.all(color: const Color(0xFFD4AF37), width: 1.5),
+                          border: Border.all(
+                              color: const Color(0xFFD4AF37), width: 1.5),
                         ),
-                        child: const Icon(Icons.school_rounded, color: Colors.white, size: 24),
+                        child: const Icon(Icons.school_rounded,
+                            color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 12),
                       Column(
@@ -610,7 +613,8 @@ class _CertificateScreenState extends ConsumerState<CertificateScreen> {
                             Container(
                               width: 110,
                               height: 1.5,
-                              color: const Color(0xFF1E1B4B).withValues(alpha: 0.4),
+                              color: const Color(0xFF1E1B4B)
+                                  .withValues(alpha: 0.4),
                               margin: const EdgeInsets.symmetric(vertical: 4),
                             ),
                             const Text(
@@ -647,13 +651,15 @@ class _CertificateScreenState extends ConsumerState<CertificateScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFFFEF3C7).withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFD4AF37).withValues(alpha: 0.4)),
+        border:
+            Border.all(color: const Color(0xFFD4AF37).withValues(alpha: 0.4)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (customIcon != null) customIcon,
-          if (icon != null) Icon(icon, size: 16, color: const Color(0xFFB45309)),
+          if (icon != null)
+            Icon(icon, size: 16, color: const Color(0xFFB45309)),
           const SizedBox(width: 6),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

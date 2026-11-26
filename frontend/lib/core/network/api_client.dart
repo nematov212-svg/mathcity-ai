@@ -13,7 +13,8 @@ class ApiClient {
 
   /// Global notifier when server is sleeping/waking up on Render free tier
   final ValueNotifier<bool> isServerWakingUp = ValueNotifier<bool>(false);
-  final ValueNotifier<String?> serverStatusMessage = ValueNotifier<String?>(null);
+  final ValueNotifier<String?> serverStatusMessage =
+      ValueNotifier<String?>(null);
 
   ApiClient._internal() {
     dio = Dio(
@@ -45,7 +46,8 @@ class ApiClient {
             '/auth/reset-password',
             '/health',
           ];
-          final isPublicAuth = publicAuthPaths.any((p) => options.path.contains(p));
+          final isPublicAuth =
+              publicAuthPaths.any((p) => options.path.contains(p));
 
           if (!isPublicAuth) {
             // If token not in memory, restore from storage
@@ -64,7 +66,8 @@ class ApiClient {
           final reqOptions = error.requestOptions;
 
           // Safe diagnostic logging for Auth endpoints (only log unexpected server 5xx errors)
-          if (reqOptions.path.contains('/auth/') && (statusCode == null || statusCode >= 500)) {
+          if (reqOptions.path.contains('/auth/') &&
+              (statusCode == null || statusCode >= 500)) {
             final responseBody = error.response?.data;
             final reqData = reqOptions.data;
             Map<String, dynamic>? sanitizedFields;
@@ -72,13 +75,16 @@ class ApiClient {
               sanitizedFields = {};
               reqData.forEach((key, val) {
                 if (val is String) {
-                  sanitizedFields![key.toString()] = '<string len=${val.length}>';
+                  sanitizedFields![key.toString()] =
+                      '<string len=${val.length}>';
                 } else {
-                  sanitizedFields![key.toString()] = val?.runtimeType.toString() ?? 'null';
+                  sanitizedFields![key.toString()] =
+                      val?.runtimeType.toString() ?? 'null';
                 }
               });
             }
-            debugPrint('⚠️ [API Client] ${reqOptions.path} server xatoligi (HTTP $statusCode): $responseBody | Yuborilgan maydonlar: $sanitizedFields');
+            debugPrint(
+                '⚠️ [API Client] ${reqOptions.path} server xatoligi (HTTP $statusCode): $responseBody | Yuborilgan maydonlar: $sanitizedFields');
           }
 
           // If 401 Unauthorized occurs on token refresh, clear stored session
@@ -104,13 +110,16 @@ class ApiClient {
           // Faqat timeout yoki haqiqiy Render gateway HTML/empty 5xx xatolarida qayta uriniladi.
           // Agar server structured JSON qaytargan bo'lsa (masalan: {"success":false,"error":...}) yoki bu to'lov bo'lsa,
           // server uyg'oq hisoblanadi va "Server uyg'onmoqda" deb kutmasdan darhol xato foydalanuvchiga uzatiladi!
-          final is4xxClientError = statusCode != null && statusCode >= 400 && statusCode < 500;
-          final is5xxServerError = statusCode != null && statusCode >= 500 && statusCode < 600;
+          final is4xxClientError =
+              statusCode != null && statusCode >= 400 && statusCode < 500;
+          final is5xxServerError =
+              statusCode != null && statusCode >= 500 && statusCode < 600;
           final isTimeout = error.type == DioExceptionType.connectionTimeout ||
               error.type == DioExceptionType.receiveTimeout ||
               error.type == DioExceptionType.sendTimeout;
 
-          final hasStructuredJsonBody = error.response?.data is Map<String, dynamic>;
+          final hasStructuredJsonBody =
+              error.response?.data is Map<String, dynamic>;
           final isPaymentEndpoint = reqOptions.path.contains('payment') ||
               reqOptions.path.contains('click') ||
               reqOptions.path.contains('payme');
@@ -126,8 +135,10 @@ class ApiClient {
             reqOptions.extra['retryCount'] = nextRetry;
 
             isServerWakingUp.value = true;
-            serverStatusMessage.value = 'Server uyg‘onmoqda, iltimos kuting... ($nextRetry/3)';
-            debugPrint('⏳ [API Client] Server uyg‘onmoqda... Qayta urinish: $nextRetry/3');
+            serverStatusMessage.value =
+                'Server uyg‘onmoqda, iltimos kuting... ($nextRetry/3)';
+            debugPrint(
+                '⏳ [API Client] Server uyg‘onmoqda... Qayta urinish: $nextRetry/3');
 
             // Exponential backoff: 2s, 4s, 8s
             final delaySeconds = 2 * (1 << (retryCount));
@@ -181,13 +192,15 @@ class ApiClient {
           receiveTimeout: const Duration(seconds: 15),
           headers: {
             'Content-Type': 'application/json',
-            if (currentToken != null && currentToken.isNotEmpty) 'Authorization': 'Bearer $currentToken',
+            if (currentToken != null && currentToken.isNotEmpty)
+              'Authorization': 'Bearer $currentToken',
           },
         ),
       );
 
       final res = await refreshDio.post('/auth/refresh', data: {
-        if (refreshToken != null && refreshToken.isNotEmpty) 'refreshToken': refreshToken,
+        if (refreshToken != null && refreshToken.isNotEmpty)
+          'refreshToken': refreshToken,
       });
 
       if (res.data['success'] == true && res.data['data'] != null) {
@@ -206,7 +219,8 @@ class ApiClient {
       _authToken = null;
       await StorageService.clearAuthToken();
       if (e is! DioException || e.response?.statusCode != 401) {
-        debugPrint('ℹ️ [API Client] Avtomatik token yangilash muvaffaqiyatsiz bo‘ldi: $e');
+        debugPrint(
+            'ℹ️ [API Client] Avtomatik token yangilash muvaffaqiyatsiz bo‘ldi: $e');
       }
     }
 
@@ -240,7 +254,8 @@ class ApiClient {
       );
 
       // If running on web localhost, probe local backend first
-      if (kIsWeb && (Uri.base.host == 'localhost' || Uri.base.host == '127.0.0.1')) {
+      if (kIsWeb &&
+          (Uri.base.host == 'localhost' || Uri.base.host == '127.0.0.1')) {
         if (Uri.base.queryParameters['api'] != 'render') {
           try {
             final probeDio = Dio(
@@ -256,7 +271,8 @@ class ApiClient {
               dio.options.baseUrl = 'http://localhost:4000/api';
               _hasWarmedUp = true;
               if (kDebugMode) {
-                debugPrint('🚀 [API Client] Lokal server faol va tayyor: http://localhost:4000/api');
+                debugPrint(
+                    '🚀 [API Client] Lokal server faol va tayyor: http://localhost:4000/api');
               }
               return;
             }
@@ -299,12 +315,15 @@ class ApiClient {
           if (data is Map && data['error'] is String) {
             return data['error'] as String;
           }
-          if (status == 401) return 'Sessiya muddati tugadi. Iltimos, qaytadan kiring.';
+          if (status == 401)
+            return 'Sessiya muddati tugadi. Iltimos, qaytadan kiring.';
           if (status == 403) return 'Ushbu amalni bajarishga ruxsat yo‘q.';
           if (status == 404) return 'So‘ralgan ma’lumot topilmadi.';
           if (status == 502 || status == 503 || status == 504) {
             final reqPath = error.requestOptions.path;
-            if (reqPath.contains('payment') || reqPath.contains('click') || reqPath.contains('payme')) {
+            if (reqPath.contains('payment') ||
+                reqPath.contains('click') ||
+                reqPath.contains('payme')) {
               return 'To‘lov tizimi hozircha ishlamayapti, keyinroq urinib ko‘ring.';
             }
             return 'Server vaqtincha band yoki uyg‘onmoqda. Birozdan so‘ng qayta urinib ko‘ring.';

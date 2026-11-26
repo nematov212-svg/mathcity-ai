@@ -68,7 +68,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
                     color: AuthTokens.card(context),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                      color:
+                          isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
                       width: 1.5,
                     ),
                   ),
@@ -80,7 +81,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: AuthTokens.brand(context).withOpacity(0.12),
+                              color:
+                                  AuthTokens.brand(context).withOpacity(0.12),
                               borderRadius: BorderRadius.circular(14),
                             ),
                             child: Icon(
@@ -187,7 +189,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 _buildSection(
                   context,
                   icon: Icons.verified_user_outlined,
-                  title: '4. Google Foydalanuvchi Ma’lumotlari (Limited Use siyosati)',
+                  title:
+                      '4. Google Foydalanuvchi Ma’lumotlari (Limited Use siyosati)',
                   content:
                       'Google hisobi orqali kirishda olingan ma’lumotlar bilan ishlashimiz qat’iy ravishda "Google API Services User Data Policy" hamda uning "Limited Use" (Cheklangan foydalanish) talablariga mos keladi:\n\n'
                       '1. Faqat autentifikatsiya: Google ma’lumotlari faqatgina tizimga xavfsiz kirish va o‘quvchi profilini yaratish uchun ishlatiladi.\n'
@@ -225,7 +228,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 _buildSection(
                   context,
                   icon: Icons.cookie_outlined,
-                  title: '7. Xotira, Cookie va Kuzatuv (Tracking) Texnologiyalari',
+                  title:
+                      '7. Xotira, Cookie va Kuzatuv (Tracking) Texnologiyalari',
                   content:
                       '• Ilovamizda uchinchi tomon kuzatuv trekerlari (masalan, AdMob, Facebook Pixel va h.k.) MAVJUD EMAS.\n'
                       '• Qurilmada faqat xavfsiz mahalliy xotira (FlutterSecureStorage, SharedPreferences, LocalStorage) ishlatiladi.\n'
@@ -247,7 +251,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 _buildSection(
                   context,
                   icon: Icons.delete_forever_rounded,
-                  title: '9. Foydalanuvchi Huquqlari va Hisobni O‘chirish Tartibi',
+                  title:
+                      '9. Foydalanuvchi Huquqlari va Hisobni O‘chirish Tartibi',
                   content:
                       'Har bir foydalanuvchi yoki uning ota-onasi quyidagi to‘liq huquqlarga ega:\n\n'
                       '1. Ma’lumotlarni ko‘rish va eksport qilish: Ilovaning "Sozlamalar" bo‘limidan o‘z ma’lumotlarini ko‘rish yoki yuklab olish mumkin.\n'
@@ -296,7 +301,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                         side: BorderSide(
-                          color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                          color: isDark
+                              ? AuthTokens.lineDark
+                              : AuthTokens.lineLight,
                         ),
                       ),
                     ),

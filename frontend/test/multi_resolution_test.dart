@@ -32,7 +32,9 @@ void main() {
       expect(getScreenType(1920), ScreenType.desktop);
     });
 
-    testWidgets('2. ResponsiveLayout adapts dynamically to mobile, tablet, and desktop', (tester) async {
+    testWidgets(
+        '2. ResponsiveLayout adapts dynamically to mobile, tablet, and desktop',
+        (tester) async {
       final widget = MaterialApp(
         home: ResponsiveLayout(
           mobile: const Text('MOBILE_VIEW'),
@@ -66,7 +68,9 @@ void main() {
       tester.view.resetPhysicalSize();
     });
 
-    testWidgets('3. AppResponsiveScaffold shows Sidebar on desktop and Rail on tablet', (tester) async {
+    testWidgets(
+        '3. AppResponsiveScaffold shows Sidebar on desktop and Rail on tablet',
+        (tester) async {
       Widget buildTest(Size size) {
         return const ProviderScope(
           child: MaterialApp(
@@ -124,7 +128,8 @@ void main() {
       final size = entry.value;
 
       group('Resolution: $resName (${size.width}x${size.height})', () {
-        testWidgets('LessonsScreen renders cleanly on $resName', (tester) async {
+        testWidgets('LessonsScreen renders cleanly on $resName',
+            (tester) async {
           FlutterErrorDetails? caughtDetails;
           final oldHandler = FlutterError.onError;
           FlutterError.onError = (details) => caughtDetails = details;
@@ -149,7 +154,8 @@ void main() {
           expect(caughtDetails, isNull);
         });
 
-        testWidgets('ZiyoTutorScreen renders cleanly on $resName', (tester) async {
+        testWidgets('ZiyoTutorScreen renders cleanly on $resName',
+            (tester) async {
           FlutterErrorDetails? caughtDetails;
           final oldHandler = FlutterError.onError;
           FlutterError.onError = (details) => caughtDetails = details;
@@ -174,7 +180,8 @@ void main() {
           expect(caughtDetails, isNull);
         });
 
-        testWidgets('LeaderboardScreen renders cleanly on $resName', (tester) async {
+        testWidgets('LeaderboardScreen renders cleanly on $resName',
+            (tester) async {
           tester.view.physicalSize = size;
           tester.view.devicePixelRatio = 1.0;
           addTearDown(tester.view.resetPhysicalSize);
@@ -186,7 +193,8 @@ void main() {
           expect(tester.takeException(), isNull);
         });
 
-        testWidgets('ProfileScreen renders cleanly on $resName', (tester) async {
+        testWidgets('ProfileScreen renders cleanly on $resName',
+            (tester) async {
           tester.view.physicalSize = size;
           tester.view.devicePixelRatio = 1.0;
           addTearDown(tester.view.resetPhysicalSize);
@@ -205,7 +213,8 @@ void main() {
           expect(tester.takeException(), isNull);
         });
 
-        testWidgets('MathCityProScreen renders cleanly on $resName', (tester) async {
+        testWidgets('MathCityProScreen renders cleanly on $resName',
+            (tester) async {
           FlutterErrorDetails? caughtDetails;
           final oldHandler = FlutterError.onError;
           FlutterError.onError = (details) {
@@ -232,7 +241,8 @@ void main() {
           expect(caughtDetails, isNull);
         });
 
-        testWidgets('ExerciseScreen renders cleanly on $resName', (tester) async {
+        testWidgets('ExerciseScreen renders cleanly on $resName',
+            (tester) async {
           tester.view.physicalSize = size;
           tester.view.devicePixelRatio = 1.0;
           addTearDown(tester.view.resetPhysicalSize);
@@ -244,7 +254,8 @@ void main() {
           expect(tester.takeException(), isNull);
         });
 
-        testWidgets('KidsHomeScreen/Desktop/Tablet renders cleanly on $resName', (tester) async {
+        testWidgets('KidsHomeScreen/Desktop/Tablet renders cleanly on $resName',
+            (tester) async {
           tester.view.physicalSize = size;
           tester.view.devicePixelRatio = 1.0;
           addTearDown(tester.view.resetPhysicalSize);
@@ -266,7 +277,9 @@ void main() {
       });
     }
 
-    testWidgets('ExerciseScreen desktop keyboard shortcuts select option and advance', (tester) async {
+    testWidgets(
+        'ExerciseScreen desktop keyboard shortcuts select option and advance',
+        (tester) async {
       tester.view.physicalSize = const Size(1280, 800);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);

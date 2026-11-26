@@ -31,7 +31,8 @@ class UrgentAnnouncementDialog extends StatefulWidget {
   }
 
   @override
-  State<UrgentAnnouncementDialog> createState() => _UrgentAnnouncementDialogState();
+  State<UrgentAnnouncementDialog> createState() =>
+      _UrgentAnnouncementDialogState();
 }
 
 class _UrgentAnnouncementDialogState extends State<UrgentAnnouncementDialog>
@@ -109,7 +110,8 @@ class _UrgentAnnouncementDialogState extends State<UrgentAnnouncementDialog>
     try {
       ApiClient().dio.post('/announcements/${widget.item.id}/dismiss').ignore();
       final prefs = await SharedPreferences.getInstance();
-      final expiryMs = DateTime.now().add(const Duration(hours: 24)).millisecondsSinceEpoch;
+      final expiryMs =
+          DateTime.now().add(const Duration(hours: 24)).millisecondsSinceEpoch;
       await prefs.setInt('dismissed_until_${widget.item.id}', expiryMs);
       await prefs.setString(
         'announcement_last_viewed_date_${widget.item.id}',
@@ -145,11 +147,12 @@ class _UrgentAnnouncementDialogState extends State<UrgentAnnouncementDialog>
     final reduceMotion = mediaQuery.disableAnimations;
 
     // Extract dynamic rewards and progress
-    final rewards = widget.item.rewards ?? [
-      {'rank': 1, 'coins': 500},
-      {'rank': 2, 'coins': 250},
-      {'rank': 3, 'coins': 150},
-    ];
+    final rewards = widget.item.rewards ??
+        [
+          {'rank': 1, 'coins': 500},
+          {'rank': 2, 'coins': 250},
+          {'rank': 3, 'coins': 150},
+        ];
 
     final totalDays = widget.item.competitionTotalDays ?? 30;
     final daysElapsed = (widget.item.daysElapsed ?? 1).clamp(1, totalDays);
@@ -161,7 +164,8 @@ class _UrgentAnnouncementDialogState extends State<UrgentAnnouncementDialog>
     final subtitle = widget.item.text.isNotEmpty
         ? widget.item.text
         : 'Eng ko‘p coin to‘plagan o‘quvchilar mukofot oladi';
-    final buttonText = widget.item.buttonText ?? '1-o‘rinni egallash uchun harakat';
+    final buttonText =
+        widget.item.buttonText ?? '1-o‘rinni egallash uchun harakat';
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -229,15 +233,20 @@ class _UrgentAnnouncementDialogState extends State<UrgentAnnouncementDialog>
                             Semantics(
                               label: 'Shoshilinch e‘lon',
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 6),
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
-                                    colors: [Color(0xFFEF4444), Color(0xFFDC2626)],
+                                    colors: [
+                                      Color(0xFFEF4444),
+                                      Color(0xFFDC2626)
+                                    ],
                                   ),
                                   borderRadius: BorderRadius.circular(20),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFFEF4444).withOpacity(0.4),
+                                      color: const Color(0xFFEF4444)
+                                          .withOpacity(0.4),
                                       blurRadius: 10,
                                       offset: const Offset(0, 2),
                                     ),
@@ -296,7 +305,8 @@ class _UrgentAnnouncementDialogState extends State<UrgentAnnouncementDialog>
                             _buildPodiumCard(
                               rank: 1,
                               title: '1-o‘rin',
-                              coins: '${rewards.isNotEmpty ? rewards[0]['coins'] : 500} coin',
+                              coins:
+                                  '${rewards.isNotEmpty ? rewards[0]['coins'] : 500} coin',
                               borderColor: const Color(0xFFE8A33D),
                               bgColor: const Color(0xFF281A10),
                               icon: Icons.emoji_events_rounded,
@@ -308,7 +318,8 @@ class _UrgentAnnouncementDialogState extends State<UrgentAnnouncementDialog>
                             _buildPodiumCard(
                               rank: 2,
                               title: '2-o‘rin',
-                              coins: '${rewards.length > 1 ? rewards[1]['coins'] : 250} coin',
+                              coins:
+                                  '${rewards.length > 1 ? rewards[1]['coins'] : 250} coin',
                               borderColor: const Color(0xFFA0AEC0),
                               bgColor: const Color(0xFF1B202E),
                               icon: Icons.military_tech_rounded,
@@ -319,7 +330,8 @@ class _UrgentAnnouncementDialogState extends State<UrgentAnnouncementDialog>
                             _buildPodiumCard(
                               rank: 3,
                               title: '3-o‘rin',
-                              coins: '${rewards.length > 2 ? rewards[2]['coins'] : 150} coin',
+                              coins:
+                                  '${rewards.length > 2 ? rewards[2]['coins'] : 150} coin',
                               borderColor: const Color(0xFFCD7F32),
                               bgColor: const Color(0xFF261914),
                               icon: Icons.workspace_premium_rounded,
@@ -330,7 +342,8 @@ class _UrgentAnnouncementDialogState extends State<UrgentAnnouncementDialog>
 
                             // 4. Progress Bar: "Musobaqa davom etmoqda — X / 30 kun"
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 10),
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.05),
                                 borderRadius: BorderRadius.circular(14),
@@ -343,7 +356,8 @@ class _UrgentAnnouncementDialogState extends State<UrgentAnnouncementDialog>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         'Musobaqa davom etmoqda',
@@ -369,8 +383,10 @@ class _UrgentAnnouncementDialogState extends State<UrgentAnnouncementDialog>
                                     child: LinearProgressIndicator(
                                       value: progressValue,
                                       minHeight: 7,
-                                      backgroundColor: Colors.white.withOpacity(0.12),
-                                      valueColor: const AlwaysStoppedAnimation<Color>(
+                                      backgroundColor:
+                                          Colors.white.withOpacity(0.12),
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
                                         Color(0xFFEE6A3C),
                                       ),
                                     ),
@@ -516,7 +532,8 @@ class _UrgentAnnouncementDialogState extends State<UrgentAnnouncementDialog>
               decoration: BoxDecoration(
                 color: borderColor.withOpacity(0.18),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: borderColor.withOpacity(0.4), width: 1),
+                border:
+                    Border.all(color: borderColor.withOpacity(0.4), width: 1),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,

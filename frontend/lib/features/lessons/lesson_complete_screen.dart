@@ -36,7 +36,8 @@ class LessonCompleteScreen extends ConsumerWidget {
                   ],
                 ),
                 child: const Center(
-                  child: Icon(Icons.emoji_events_rounded, color: Colors.white, size: 68),
+                  child: Icon(Icons.emoji_events_rounded,
+                      color: Colors.white, size: 68),
                 ),
               ),
               const SizedBox(height: 28),
@@ -105,16 +106,21 @@ class LessonCompleteScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        Container(width: 1.5, height: 48, color: AppColors.kidsBorder),
+                        Container(
+                            width: 1.5,
+                            height: 48,
+                            color: AppColors.kidsBorder),
                         // XP Reward
                         Column(
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 8),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF0EDFF),
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: const Color(0xFFDED6FF)),
+                                border:
+                                    Border.all(color: const Color(0xFFDED6FF)),
                               ),
                               child: const Row(
                                 mainAxisSize: MainAxisSize.min,

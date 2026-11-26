@@ -10,6 +10,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/xp_coin.dart';
 import '../../core/network/api_client.dart';
+import '../../core/widgets/promo_dialog_controller.dart';
 import '../../shared/models/lesson_model.dart';
 import '../../shared/providers/student_provider.dart';
 import 'widgets/math_markdown_view.dart';
@@ -27,7 +28,8 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
   LessonModel? _lesson;
   bool _isLoading = true;
   String? _errorMessage;
-  int _currentStep = 0; // 0: Kirish, 1: Tushuntirish, 2: Misollar, 3: Mashq, 4: Mini-test
+  int _currentStep =
+      0; // 0: Kirish, 1: Tushuntirish, 2: Misollar, 3: Mashq, 4: Mini-test
 
   // Quiz state
   List<Map<String, dynamic>> _quizQuestions = [];
@@ -47,7 +49,14 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
   @override
   void initState() {
     super.initState();
+    PromoDialogController.instance.onLessonStarted();
     _fetchLesson();
+  }
+
+  @override
+  void dispose() {
+    PromoDialogController.instance.onLessonEnded();
+    super.dispose();
   }
 
   void _fetchLesson() async {
@@ -65,15 +74,17 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
 
     try {
       final res = await ApiClient().dio.get(
-        '/lessons/${widget.lessonId}',
-        options: Options(
-          validateStatus: (status) => true,
-          sendTimeout: const Duration(seconds: 6),
-          receiveTimeout: const Duration(seconds: 6),
-        ),
-      );
+            '/lessons/${widget.lessonId}',
+            options: Options(
+              validateStatus: (status) => true,
+              sendTimeout: const Duration(seconds: 6),
+              receiveTimeout: const Duration(seconds: 6),
+            ),
+          );
 
-      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
+      if (res.statusCode == 200 &&
+          res.data != null &&
+          res.data['success'] == true) {
         final data = res.data['data'];
         final lesson = LessonModel.fromJson(data);
 
@@ -81,12 +92,14 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
         final questions = <Map<String, dynamic>>[];
         if (data['sections'] != null && (data['sections'] as List).isNotEmpty) {
           for (final sec in data['sections']) {
-            if (sec['questions'] != null && (sec['questions'] as List).isNotEmpty) {
+            if (sec['questions'] != null &&
+                (sec['questions'] as List).isNotEmpty) {
               for (final q in sec['questions']) {
                 questions.add({
                   'id': q['id'],
                   'prompt': q['prompt'] ?? '',
-                  'options': List<String>.from(q['options'] ?? ['A', 'B', 'C', 'D']),
+                  'options':
+                      List<String>.from(q['options'] ?? ['A', 'B', 'C', 'D']),
                   'correctAnswer': q['correctAnswer'] ?? '',
                   'explanation': q['explanation'] ?? '',
                 });
@@ -135,9 +148,11 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
       chapterTitle: 'Kasrlar va Bo‘laklar',
       title: 'Oddiy kasrlar: Butunning bo‘laklari',
       topicKey: 'fractions_intro',
-      description: 'Kasr nima? Surat va maxraj ma’nosi hamda qismlarga ajratish.',
+      description:
+          'Kasr nima? Surat va maxraj ma’nosi hamda qismlarga ajratish.',
       formulaLatex: r'\frac{1}{4} = \text{to‘rtdan bir}',
-      contentMd: 'Kasr butunning bir yoki bir nechta teng bo‘laklarini ifodalaydi. Yuqoridagi son surat, pastdagi son esa maxraj deb ataladi.',
+      contentMd:
+          'Kasr butunning bir yoki bir nechta teng bo‘laklarini ifodalaydi. Yuqoridagi son surat, pastdagi son esa maxraj deb ataladi.',
       rewardCoins: 12,
       rewardXP: 100,
       orderIndex: 1,
@@ -161,21 +176,30 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
         'prompt': 'Kasrning chiziq ustidagi soni nima deb ataladi?',
         'options': ['Surat', 'Maxraj', 'Bo‘linuvchi', 'Ko‘paytuvchi'],
         'correctAnswer': 'Surat',
-        'explanation': 'Kasr chizig‘i ustidagi son surat bo‘lib, olingan teng bo‘laklar sonini bildiradi.',
+        'explanation':
+            'Kasr chizig‘i ustidagi son surat bo‘lib, olingan teng bo‘laklar sonini bildiradi.',
       },
       {
         'id': 'q2',
         'prompt': 'Kasrning maxraji nimani bildiradi?',
-        'options': ['Butun nechta teng bo‘lakka bo‘linganini', 'Nechta qism olinganini', 'Yig‘indini', 'Ko‘paytmani'],
+        'options': [
+          'Butun nechta teng bo‘lakka bo‘linganini',
+          'Nechta qism olinganini',
+          'Yig‘indini',
+          'Ko‘paytmani'
+        ],
         'correctAnswer': 'Butun nechta teng bo‘lakka bo‘linganini',
-        'explanation': 'Maxraj butun jami nechta teng qismga bo‘linganini ko‘rsatadi.',
+        'explanation':
+            'Maxraj butun jami nechta teng qismga bo‘linganini ko‘rsatadi.',
       },
       {
         'id': 'q3',
-        'prompt': 'Pitsaning 4 ta teng bo‘lagidan 1 tasini yesak, qancha qismi qoladi?',
+        'prompt':
+            'Pitsaning 4 ta teng bo‘lagidan 1 tasini yesak, qancha qismi qoladi?',
         'options': ['3/4', '1/4', '2/4', '4/4'],
         'correctAnswer': '3/4',
-        'explanation': '4 ta bo‘lakdan 1 tasi yeyilsa, 3 ta bo‘lak qoladi, ya’ni 3/4 qismi.',
+        'explanation':
+            '4 ta bo‘lakdan 1 tasi yeyilsa, 3 ta bo‘lak qoladi, ya’ni 3/4 qismi.',
       },
     ];
   }
@@ -185,18 +209,21 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
     setState(() => _isSavingProgress = true);
 
     try {
-      final res = await ApiClient().dio.post('/lessons/${_lesson!.id}/complete');
+      final res =
+          await ApiClient().dio.post('/lessons/${_lesson!.id}/complete');
       if (res.data['success'] == true) {
         final data = res.data['data'];
         final isFirst = data['isFirstCompletion'] == true;
-        final coins = data['coinsAwarded'] as int? ?? (isFirst ? _lesson!.rewardCoins : 0);
-        final xp = data['xpAwarded'] as int? ?? (isFirst ? _lesson!.rewardXP : 0);
+        final coins = data['coinsAwarded'] as int? ??
+            (isFirst ? _lesson!.rewardCoins : 0);
+        final xp =
+            data['xpAwarded'] as int? ?? (isFirst ? _lesson!.rewardXP : 0);
 
         ref.read(studentProvider.notifier).markLessonCompleted(
-          lessonId: _lesson!.id,
-          rewardCoins: coins,
-          rewardXP: xp,
-        );
+              lessonId: _lesson!.id,
+              rewardCoins: coins,
+              rewardXP: xp,
+            );
 
         if (!mounted) return;
         _showSuccessDialog(isFirst, coins, xp);
@@ -206,10 +233,10 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
 
     // Offline / fallback completion
     ref.read(studentProvider.notifier).markLessonCompleted(
-      lessonId: _lesson!.id,
-      rewardCoins: _lesson!.rewardCoins,
-      rewardXP: _lesson!.rewardXP,
-    );
+          lessonId: _lesson!.id,
+          rewardCoins: _lesson!.rewardCoins,
+          rewardXP: _lesson!.rewardXP,
+        );
 
     if (mounted) {
       _showSuccessDialog(true, _lesson!.rewardCoins, _lesson!.rewardXP);
@@ -222,7 +249,8 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
       barrierDismissible: false,
       builder: (ctx) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
           contentPadding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -234,7 +262,8 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
                   color: Color(0xFFECFDF5),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.stars_rounded, color: Color(0xFF10B981), size: 44),
+                child: const Icon(Icons.stars_rounded,
+                    color: Color(0xFF10B981), size: 44),
               ),
               const SizedBox(height: 16),
               const Text(
@@ -245,8 +274,8 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
               const SizedBox(height: 8),
               Text(
                 isFirst
-                  ? 'Siz ${_quizQuestions.length} ta savoldan $_correctCount tasiga to‘g‘ri javob berdingiz va yutuqlarni qo‘lga kiritdingiz!'
-                  : 'Siz ${_quizQuestions.length} ta savoldan $_correctCount tasiga to‘g‘ri javob berdingiz.',
+                    ? 'Siz ${_quizQuestions.length} ta savoldan $_correctCount tasiga to‘g‘ri javob berdingiz va yutuqlarni qo‘lga kiritdingiz!'
+                    : 'Siz ${_quizQuestions.length} ta savoldan $_correctCount tasiga to‘g‘ri javob berdingiz.',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 13, color: Colors.grey),
               ),
@@ -256,7 +285,8 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFFF7ED),
                         borderRadius: BorderRadius.circular(999),
@@ -266,13 +296,17 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
                         children: [
                           const XpCoin(size: 16, showGlow: false),
                           const SizedBox(width: 4),
-                          Text('+$xp XP', style: const TextStyle(color: Color(0xFFD97706), fontWeight: FontWeight.w900)),
+                          Text('+$xp XP',
+                              style: const TextStyle(
+                                  color: Color(0xFFD97706),
+                                  fontWeight: FontWeight.w900)),
                         ],
                       ),
                     ),
                     const SizedBox(width: 10),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFEFCE8),
                         borderRadius: BorderRadius.circular(999),
@@ -280,9 +314,13 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.monetization_on_rounded, color: Color(0xFFCA8A04), size: 16),
+                          const Icon(Icons.monetization_on_rounded,
+                              color: Color(0xFFCA8A04), size: 16),
                           const SizedBox(width: 4),
-                          Text('+$coins', style: const TextStyle(color: Color(0xFFCA8A04), fontWeight: FontWeight.w900)),
+                          Text('+$coins',
+                              style: const TextStyle(
+                                  color: Color(0xFFCA8A04),
+                                  fontWeight: FontWeight.w900)),
                         ],
                       ),
                     ),
@@ -300,9 +338,11 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6C47FF),
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
                   ),
-                  child: const Text('Darslar ro‘yxatiga qaytish', style: TextStyle(fontWeight: FontWeight.w800)),
+                  child: const Text('Darslar ro‘yxatiga qaytish',
+                      style: TextStyle(fontWeight: FontWeight.w800)),
                 ),
               ),
             ],
@@ -337,7 +377,8 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
             icon: Icon(Icons.arrow_back_ios_rounded, color: colors.ink),
             onPressed: () => context.pop(),
           ),
-          title: Text('Dars', style: TextStyle(color: colors.ink, fontWeight: FontWeight.bold)),
+          title: Text('Dars',
+              style: TextStyle(color: colors.ink, fontWeight: FontWeight.bold)),
         ),
         body: Center(
           child: Padding(
@@ -349,7 +390,10 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
                 const SizedBox(height: 16),
                 Text(
                   _errorMessage ?? 'Dars topilmadi yoki vaqtincha ochilmadi.',
-                  style: TextStyle(color: colors.ink, fontSize: 16, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                      color: colors.ink,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
@@ -360,8 +404,10 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colors.primary,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
                   ),
                 ),
               ],
@@ -406,7 +452,8 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
             // Step Content Area
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: _buildCurrentStepContent(colors, lesson),
               ),
             ),
@@ -579,7 +626,10 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [colors.primary.withOpacity(0.12), colors.primary.withOpacity(0.04)],
+                colors: [
+                  colors.primary.withOpacity(0.12),
+                  colors.primary.withOpacity(0.04)
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -624,11 +674,15 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.menu_book_rounded, color: colors.primary, size: 22),
+                  Icon(Icons.menu_book_rounded,
+                      color: colors.primary, size: 22),
                   const SizedBox(width: 8),
                   Text(
                     'Nazariy tushunchalar',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: colors.ink),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: colors.ink),
                   ),
                 ],
               ),
@@ -659,7 +713,8 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
             const SizedBox(width: 8),
             Text(
               'Ishlangan misollar',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: colors.ink),
+              style: TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.w900, color: colors.ink),
             ),
           ],
         ),
@@ -669,8 +724,10 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
         _buildExampleCard(
           number: '1',
           title: 'Asosiy misol',
-          problem: 'Berilgan qoida asosida hisoblash amalini qadam-baqadam bajaring.',
-          solution: '1-qadam: Formulani yozamiz.\n2-qadam: Qiymatlarni o‘rniga qo‘yamiz.\n3-qadam: Yakuniy to‘g‘ri natijani olamiz.',
+          problem:
+              'Berilgan qoida asosida hisoblash amalini qadam-baqadam bajaring.',
+          solution:
+              '1-qadam: Formulani yozamiz.\n2-qadam: Qiymatlarni o‘rniga qo‘yamiz.\n3-qadam: Yakuniy to‘g‘ri natijani olamiz.',
           colors: colors,
         ),
         const SizedBox(height: 14),
@@ -680,7 +737,8 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
           number: '2',
           title: 'Amaliy masala',
           problem: 'Kundalik hayotda ushbu mavzu qanday qo‘llaniladi?',
-          solution: 'Tushunchani real narsalar (taqsimot, o‘lchash, hisob) bilan solishtirib yechim topamiz.',
+          solution:
+              'Tushunchani real narsalar (taqsimot, o‘lchash, hisob) bilan solishtirib yechim topamiz.',
           colors: colors,
         ),
       ],
@@ -714,20 +772,27 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                 ),
                 child: Text(
                   'Misol $number',
-                  style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900),
                 ),
               ),
               const SizedBox(width: 8),
               Text(
                 title,
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: colors.ink),
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                    color: colors.ink),
               ),
             ],
           ),
           const SizedBox(height: 10),
           Text(
             problem,
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink),
+            style: TextStyle(
+                fontSize: 13, fontWeight: FontWeight.w600, color: colors.ink),
           ),
           const SizedBox(height: 10),
           Container(
@@ -764,7 +829,8 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
             children: [
               Row(
                 children: [
-                  Icon(Icons.warning_amber_rounded, color: Color(0xFFEF4444), size: 22),
+                  Icon(Icons.warning_amber_rounded,
+                      color: Color(0xFFEF4444), size: 22),
                   SizedBox(width: 8),
                   Text(
                     'Keng tarqalgan xatolar',
@@ -781,7 +847,8 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                 '• Amallar tartibini buzish (ko‘paytirish/bo‘lishni qo‘shish/ayirishdan keyin bajarish).\n'
                 '• Ishoralarni unutib qoldirish (minus va plyus qoidalari).\n'
                 '• Masala shartini oxirigacha diqqat bilan o‘qimaslik.',
-                style: TextStyle(fontSize: 13, height: 1.45, color: Color(0xFF991B1B)),
+                style: TextStyle(
+                    fontSize: 13, height: 1.45, color: Color(0xFF991B1B)),
               ),
             ],
           ),
@@ -799,7 +866,8 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.smart_toy_rounded, color: Color(0xFF16A34A), size: 28),
+              const Icon(Icons.smart_toy_rounded,
+                  color: Color(0xFF16A34A), size: 28),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -817,7 +885,10 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                     Text(
                       'Keyingi bosqichda siz 3–5 ta mini-test savollariga javob berasiz. '
                       'Har bir to‘g‘ri javob uchun sizga XP va tangalar beriladi. Tayyormisiz?',
-                      style: TextStyle(fontSize: 13, height: 1.4, color: const Color(0xFF166534).withOpacity(0.9)),
+                      style: TextStyle(
+                          fontSize: 13,
+                          height: 1.4,
+                          color: const Color(0xFF166534).withOpacity(0.9)),
                     ),
                   ],
                 ),
@@ -842,7 +913,10 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                 const SizedBox(width: 8),
                 Text(
                   'Nazorat mini-testi',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: colors.ink),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: colors.ink),
                 ),
               ],
             ),
@@ -854,7 +928,10 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
               ),
               child: Text(
                 '${_quizQuestions.length} ta savol',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: colors.primary),
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: colors.primary),
               ),
             ),
           ],
@@ -931,7 +1008,8 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                               });
                             },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 12),
                         decoration: BoxDecoration(
                           color: tileColor,
                           borderRadius: BorderRadius.circular(12),
@@ -944,11 +1022,15 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                               height: 22,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: isSelected ? borderColor : Colors.transparent,
-                                border: Border.all(color: borderColor, width: 1.5),
+                                color: isSelected
+                                    ? borderColor
+                                    : Colors.transparent,
+                                border:
+                                    Border.all(color: borderColor, width: 1.5),
                               ),
                               child: isSelected
-                                  ? const Icon(Icons.check, size: 14, color: Colors.white)
+                                  ? const Icon(Icons.check,
+                                      size: 14, color: Colors.white)
                                   : null,
                             ),
                             const SizedBox(width: 10),
@@ -957,7 +1039,9 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                                 opt,
                                 style: TextStyle(
                                   fontSize: 14,
-                                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w800
+                                      : FontWeight.w600,
                                   color: textColor,
                                 ),
                               ),
@@ -980,12 +1064,14 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.info_outline_rounded, size: 16, color: Colors.grey),
+                        const Icon(Icons.info_outline_rounded,
+                            size: 16, color: Colors.grey),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
                             explanation,
-                            style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.3),
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.grey, height: 1.3),
                           ),
                         ),
                       ],
@@ -1020,13 +1106,17 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
               width: 120,
               height: 120,
               child: CustomPaint(
-                painter: FractionPiePainter(highlightedSlices: 1, totalSlices: 4),
+                painter:
+                    FractionPiePainter(highlightedSlices: 1, totalSlices: 4),
               ),
             ),
             const SizedBox(height: 14),
             const Text(
               '1/4 — To‘rtdan bir qism (chorak)',
-              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.kidsDarkText),
+              style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 13,
+                  color: AppColors.kidsDarkText),
             ),
           ],
         ),
@@ -1042,7 +1132,8 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
         ),
         child: Column(
           children: [
-            const Text('Foiz shkalasi: 100% — Butun', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+            const Text('Foiz shkalasi: 100% — Butun',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
             const SizedBox(height: 12),
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
@@ -1051,9 +1142,36 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                 color: const Color(0xFFEFF0FA),
                 child: Row(
                   children: [
-                    Expanded(flex: 25, child: Container(color: const Color(0xFF6C5CE7), child: const Center(child: Text('25%', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))))),
-                    Expanded(flex: 25, child: Container(color: const Color(0xFF8B7CF6), child: const Center(child: Text('50%', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))))),
-                    Expanded(flex: 50, child: Container(color: const Color(0xFFDED6FF), child: const Center(child: Text('100%', style: TextStyle(color: Color(0xFF4C3EC7), fontSize: 10, fontWeight: FontWeight.bold))))),
+                    Expanded(
+                        flex: 25,
+                        child: Container(
+                            color: const Color(0xFF6C5CE7),
+                            child: const Center(
+                                child: Text('25%',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold))))),
+                    Expanded(
+                        flex: 25,
+                        child: Container(
+                            color: const Color(0xFF8B7CF6),
+                            child: const Center(
+                                child: Text('50%',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold))))),
+                    Expanded(
+                        flex: 50,
+                        child: Container(
+                            color: const Color(0xFFDED6FF),
+                            child: const Center(
+                                child: Text('100%',
+                                    style: TextStyle(
+                                        color: Color(0xFF4C3EC7),
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold))))),
                   ],
                 ),
               ),
@@ -1072,11 +1190,15 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
         ),
         child: Column(
           children: [
-            const Icon(Icons.functions_rounded, size: 40, color: Color(0xFF6C47FF)),
+            const Icon(Icons.functions_rounded,
+                size: 40, color: Color(0xFF6C47FF)),
             const SizedBox(height: 8),
             Text(
               lesson.formulaLatex ?? 'a + b = c',
-              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: Color(0xFF6C47FF)),
+              style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  color: Color(0xFF6C47FF)),
             ),
           ],
         ),
@@ -1106,10 +1228,13 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
               style: OutlinedButton.styleFrom(
                 foregroundColor: colors.ink,
                 side: BorderSide(color: colors.border),
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14)),
               ),
-              child: const Text('Orqaga', style: TextStyle(fontWeight: FontWeight.w700)),
+              child: const Text('Orqaga',
+                  style: TextStyle(fontWeight: FontWeight.w700)),
             ),
             const SizedBox(width: 12),
           ],
@@ -1130,7 +1255,8 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                       // Check answers
                       int correct = 0;
                       for (int i = 0; i < _quizQuestions.length; i++) {
-                        if (_selectedAnswers[i] == _quizQuestions[i]['correctAnswer']) {
+                        if (_selectedAnswers[i] ==
+                            _quizQuestions[i]['correctAnswer']) {
                           correct++;
                         }
                       }
@@ -1147,7 +1273,8 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colors.primary,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
                   elevation: 0,
                 ),
                 child: Text(
@@ -1156,7 +1283,8 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                       : (!_quizSubmitted
                           ? 'Testni tekshirish'
                           : 'Darsni yakunlash'),
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w800),
                 ),
               ),
             ),
@@ -1171,7 +1299,8 @@ class FractionPiePainter extends CustomPainter {
   final int highlightedSlices;
   final int totalSlices;
 
-  FractionPiePainter({required this.highlightedSlices, required this.totalSlices});
+  FractionPiePainter(
+      {required this.highlightedSlices, required this.totalSlices});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1214,7 +1343,7 @@ class FractionPiePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant FractionPiePainter oldDelegate) {
-    return oldDelegate.highlightedSlices != highlightedSlices || oldDelegate.totalSlices != totalSlices;
+    return oldDelegate.highlightedSlices != highlightedSlices ||
+        oldDelegate.totalSlices != totalSlices;
   }
 }
-

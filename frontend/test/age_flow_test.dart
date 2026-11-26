@@ -7,7 +7,8 @@ import 'package:mathcity_ai/features/home/teen_home_screen.dart';
 import 'package:mathcity_ai/core/widgets/coin_badge.dart';
 
 void main() {
-  testWidgets('Access denied screen renders exact Uzbek message', (WidgetTester tester) async {
+  testWidgets('Access denied screen renders exact Uzbek message',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: AccessDeniedScreen(),
@@ -16,13 +17,16 @@ void main() {
 
     expect(find.text('Yosh cheklovi'), findsOneWidget);
     expect(
-      find.text('MathCity AI faqat 16 yoshgacha bo‘lgan o‘quvchilar uchun mo‘ljallangan. Afsuski, siz kira olmaysiz.'),
+      find.text(
+          'MathCity AI faqat 16 yoshgacha bo‘lgan o‘quvchilar uchun mo‘ljallangan. Afsuski, siz kira olmaysiz.'),
       findsOneWidget,
     );
     expect(find.text('Bosh sahifaga qaytish'), findsOneWidget);
   });
 
-  testWidgets('CoinBadge displays yellow gold currency with official dollar coin (never stars)', (WidgetTester tester) async {
+  testWidgets(
+      'CoinBadge displays yellow gold currency with official dollar coin (never stars)',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
@@ -36,7 +40,8 @@ void main() {
     expect(find.byIcon(Icons.star), findsNothing);
   });
 
-  testWidgets('Kids Home Screen displays personalized dashboard and features', (WidgetTester tester) async {
+  testWidgets('Kids Home Screen displays personalized dashboard and features',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       const ProviderScope(
         child: MaterialApp(
@@ -51,7 +56,9 @@ void main() {
     expect(find.text('AI Ustoz'), findsAtLeastNWidgets(1));
   });
 
-  testWidgets('Teen Home Screen displays mature dark theme and high school math', (WidgetTester tester) async {
+  testWidgets(
+      'Teen Home Screen displays mature dark theme and high school math',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       const ProviderScope(
         child: MaterialApp(

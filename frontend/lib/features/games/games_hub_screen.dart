@@ -17,14 +17,15 @@ class GamesHubScreen extends ConsumerStatefulWidget {
   ConsumerState<GamesHubScreen> createState() => _GamesHubScreenState();
 }
 
-class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTickerProviderStateMixin {
+class _GamesHubScreenState extends ConsumerState<GamesHubScreen>
+    with SingleTickerProviderStateMixin {
   String _selectedFilter = 'Barchasi'; // 'Barchasi', 'Oson', 'O‘rta', 'Qiyin'
   List<Map<String, dynamic>> _games = [];
   List<Map<String, dynamic>> _recentResults = [];
   bool _isLoading = false;
 
   late AnimationController _floatController;
-  
+
   @override
   void initState() {
     super.initState();
@@ -56,7 +57,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
           _games = List<Map<String, dynamic>>.from(gamesRes.data['data']);
         }
         if (recentRes.data['success'] == true) {
-          _recentResults = List<Map<String, dynamic>>.from(recentRes.data['data']);
+          _recentResults =
+              List<Map<String, dynamic>>.from(recentRes.data['data']);
         }
         _isLoading = false;
       });
@@ -71,7 +73,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
         {
           'key': 'uy_qurish',
           'title': 'Uy qurish',
-          'description': 'Misollar yechib tanga to‘plang va orzuingizdagi uyni 6 bosqichda quring!',
+          'description':
+              'Misollar yechib tanga to‘plang va orzuingizdagi uyni 6 bosqichda quring!',
           'difficulty': 'Oson - Maroqli',
           'duration': 'Cheksiz',
           'rewardBadge': '+680 XP',
@@ -86,7 +89,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
         {
           'key': 'kasrlar_jangi',
           'title': 'Kasrlar jangi',
-          'description': 'Kasrlarni vizual shakllar bilan taqqoslang va fazoni zabt eting.',
+          'description':
+              'Kasrlarni vizual shakllar bilan taqqoslang va fazoni zabt eting.',
           'difficulty': 'O‘rta',
           'duration': '4 daqiqa',
           'rewardBadge': '+40 oltin tanga',
@@ -101,7 +105,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
         {
           'key': 'mathcity_drift',
           'title': 'MathCity Drift: 3D Poyga & Garaj',
-          'description': '10+ mashina, real deformatsiya, kuchli dvigatel ovozi va drift reytingi!',
+          'description':
+              '10+ mashina, real deformatsiya, kuchli dvigatel ovozi va drift reytingi!',
           'difficulty': 'O‘rta - Qiyin',
           'duration': 'Cheksiz',
           'rewardBadge': '+50 oltin tanga',
@@ -118,9 +123,12 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
 
     return _games.where((g) {
       if (_selectedFilter == 'Barchasi') return true;
-      if (_selectedFilter == 'Oson') return (g['difficulty'] as String? ?? '').contains('Oson');
-      if (_selectedFilter == 'O‘rta') return (g['difficulty'] as String? ?? '').contains('O‘rta');
-      if (_selectedFilter == 'Qiyin') return (g['difficulty'] as String? ?? '').contains('Qiyin');
+      if (_selectedFilter == 'Oson')
+        return (g['difficulty'] as String? ?? '').contains('Oson');
+      if (_selectedFilter == 'O‘rta')
+        return (g['difficulty'] as String? ?? '').contains('O‘rta');
+      if (_selectedFilter == 'Qiyin')
+        return (g['difficulty'] as String? ?? '').contains('Qiyin');
       return true;
     }).toList();
   }
@@ -140,7 +148,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
               children: [
                 // Top App Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -153,7 +162,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
                               color: colors.primary.withOpacity(0.12),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Icon(Icons.sports_esports_rounded, color: colors.primary, size: 22),
+                            child: Icon(Icons.sports_esports_rounded,
+                                color: colors.primary, size: 22),
                           ),
                           const SizedBox(width: 10),
                           Column(
@@ -191,7 +201,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
                       : RefreshIndicator(
                           onRefresh: _loadGamesData,
                           child: ListView(
-                            padding: const EdgeInsets.fromLTRB(20, 8, 20, 110), // Padding for glass bottom bar
+                            padding: const EdgeInsets.fromLTRB(
+                                20, 8, 20, 110), // Padding for glass bottom bar
                             children: [
                               // Hero Banner
                               _buildHeroBanner(colors),
@@ -200,7 +211,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
 
                               // Filter Chips Row
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'O‘yinni tanlang',
@@ -250,7 +262,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
                                   ),
                                 ),
                                 const SizedBox(height: 12),
-                                ..._recentResults.map((r) => _buildRecentResultTile(r, colors)),
+                                ..._recentResults.map(
+                                    (r) => _buildRecentResultTile(r, colors)),
                               ],
 
                               const SizedBox(height: 20),
@@ -300,7 +313,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(14),
@@ -347,7 +361,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
             child: AnimatedBuilder(
               animation: _floatController,
               builder: (context, child) {
-                final offset = math.sin(_floatController.value * math.pi * 2) * 6.0;
+                final offset =
+                    math.sin(_floatController.value * math.pi * 2) * 6.0;
                 return Transform.translate(
                   offset: Offset(0, offset),
                   child: child,
@@ -392,7 +407,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
               borderRadius: BorderRadius.circular(16),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   color: isSelected ? colors.primary : colors.card,
                   borderRadius: BorderRadius.circular(16),
@@ -421,13 +437,18 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
     final title = game['title'] ?? 'O‘yin';
     final desc = game['description'] ?? '';
     final diff = game['difficulty'] ?? 'O‘rta';
-    final rewardBadge = game['rewardBadge'] as String? ?? (game['key'] == 'kasrlar_jangi' ? '+40 oltin tanga' : '+30 oltin tanga');
+    final rewardBadge = game['rewardBadge'] as String? ??
+        (game['key'] == 'kasrlar_jangi'
+            ? '+40 oltin tanga'
+            : '+30 oltin tanga');
     final highScore = game['highScore'] ?? 0;
     final timesPlayed = game['timesPlayed'] ?? 0;
     final key = game['key'] ?? '';
     final route = key == 'kasrlar_jangi'
         ? '/kids/games/fraction-battle'
-        : (key == 'mathcity_drift' ? '/kids/games/drift-car' : '/kids/house-building');
+        : (key == 'mathcity_drift'
+            ? '/kids/games/drift-car'
+            : '/kids/house-building');
     final isLocked = game['isLocked'] == true;
 
     return Container(
@@ -500,7 +521,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: const Color(0xFFFEF3C7),
                             borderRadius: BorderRadius.circular(6),
@@ -535,7 +557,10 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
                 children: [
                   Text(
                     'Eng yaxshi: $highScore ball',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: colors.ink),
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: colors.ink),
                   ),
                   Text(
                     'O‘ynalgan: $timesPlayed marta',
@@ -548,8 +573,10 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
                   backgroundColor: isLocked ? colors.field : colors.primary,
                   foregroundColor: isLocked ? colors.muted : Colors.white,
                   elevation: isLocked ? 0 : 2,
-                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
                 ),
                 onPressed: isLocked
                     ? null
@@ -560,11 +587,16 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(isLocked ? Icons.lock_rounded : Icons.play_arrow_rounded, size: 18),
+                    Icon(
+                        isLocked
+                            ? Icons.lock_rounded
+                            : Icons.play_arrow_rounded,
+                        size: 18),
                     const SizedBox(width: 6),
                     Text(
                       isLocked ? '5-bosqichda' : 'O‘ynash',
-                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w800, fontSize: 13),
                     ),
                   ],
                 ),
@@ -585,7 +617,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
     if (playedAt != null) {
       try {
         final dt = DateTime.parse(playedAt);
-        dateStr = '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+        dateStr =
+            '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
       } catch (_) {}
     }
 
@@ -608,7 +641,8 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
                   color: const Color(0xFFFFF7ED),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.emoji_events_rounded, color: Color(0xFFF59E0B), size: 18),
+                child: const Icon(Icons.emoji_events_rounded,
+                    color: Color(0xFFF59E0B), size: 18),
               ),
               const SizedBox(width: 12),
               Column(
@@ -616,7 +650,10 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
                 children: [
                   Text(
                     title,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: colors.ink),
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: colors.ink),
                   ),
                   Text(
                     '$dateStr · $score ball',
@@ -634,7 +671,10 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
             ),
             child: Text(
               '+$coinsEarned tanga',
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Color(0xFF10B981)),
+              style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF10B981)),
             ),
           ),
         ],

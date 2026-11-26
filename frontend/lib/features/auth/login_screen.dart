@@ -93,10 +93,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     });
 
     try {
-      final result = await ref.read(studentProvider.notifier).loginWithCredentials(
-            identifier: identifier,
-            password: password,
-          );
+      final result =
+          await ref.read(studentProvider.notifier).loginWithCredentials(
+                identifier: identifier,
+                password: password,
+              );
 
       if (!mounted) return;
 
@@ -119,7 +120,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _errorMessage = 'Server bilan aloqa o‘rnatib bo‘lmadi. Qayta urinib ko‘ring.';
+        _errorMessage =
+            'Server bilan aloqa o‘rnatib bo‘lmadi. Qayta urinib ko‘ring.';
       });
       _triggerShake();
     } finally {
@@ -135,7 +137,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     });
 
     try {
-      final result = await ref.read(studentProvider.notifier).signInWithGoogle();
+      final result =
+          await ref.read(studentProvider.notifier).signInWithGoogle();
 
       if (!mounted) return;
 
@@ -147,7 +150,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         } else {
           _navigateToDashboard(result.student);
         }
-      } else if (result.errorMessage != null && !result.errorMessage!.contains('bekor')) {
+      } else if (result.errorMessage != null &&
+          !result.errorMessage!.contains('bekor')) {
         setState(() {
           _errorMessage = result.errorMessage;
         });
@@ -167,7 +171,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   @override
   Widget build(BuildContext context) {
     ref.listen<StudentState>(studentProvider, (prev, next) {
-      if (next.student != null && prev?.student?.id != next.student?.id && mounted) {
+      if (next.student != null &&
+          prev?.student?.id != next.student?.id &&
+          mounted) {
         if (!next.student!.profileCompleted) {
           context.go('/complete-profile');
         } else {
@@ -204,7 +210,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
                   decoration: BoxDecoration(
                     color: AuthTokens.errorLight.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(16),
@@ -254,7 +261,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                   controller: _identifierController,
                   focusNode: _identifierFocusNode,
                   keyboardType: TextInputType.emailAddress,
-                  autofillHints: const [AutofillHints.username, AutofillHints.email],
+                  autofillHints: const [
+                    AutofillHints.username,
+                    AutofillHints.email
+                  ],
                   style: TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 16,
@@ -286,7 +296,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                       borderSide: BorderSide(
-                        color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                        color:
+                            isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
                         width: 2.0,
                       ),
                     ),
@@ -370,7 +381,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                       borderSide: BorderSide(
-                        color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                        color:
+                            isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
                         width: 2.0,
                       ),
                     ),
@@ -392,7 +404,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                     minimumSize: const Size(48, 44),
                   ),
                   onPressed: () => context.push('/forgot-password'),
@@ -416,7 +429,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: _isSuccess
-                        ? const LinearGradient(colors: [Color(0xFF22C55E), Color(0xFF16A34A)])
+                        ? const LinearGradient(
+                            colors: [Color(0xFF22C55E), Color(0xFF16A34A)])
                         : AuthTokens.brandGradient,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
@@ -446,7 +460,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                             height: 22,
                             child: CircularProgressIndicator(
                               strokeWidth: 2.5,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
                         : _isSuccess
@@ -456,7 +471,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.check_circle_rounded, color: Colors.white, size: 22),
+                                    Icon(Icons.check_circle_rounded,
+                                        color: Colors.white, size: 22),
                                     SizedBox(width: 8),
                                     Text(
                                       'Xush kelibsiz!',
@@ -508,7 +524,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                 children: [
                   Expanded(
                     child: Divider(
-                      color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                      color:
+                          isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
                       thickness: 1.5,
                     ),
                   ),
@@ -526,7 +543,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                   ),
                   Expanded(
                     child: Divider(
-                      color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                      color:
+                          isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
                       thickness: 1.5,
                     ),
                   ),

@@ -14,9 +14,11 @@ class OnboardingScaffold extends StatefulWidget {
   State<OnboardingScaffold> createState() => _OnboardingScaffoldState();
 }
 
-class _OnboardingScaffoldState extends State<OnboardingScaffold> with SingleTickerProviderStateMixin {
+class _OnboardingScaffoldState extends State<OnboardingScaffold>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _floatCtrl;
-  bool get _isTesting => WidgetsBinding.instance.runtimeType.toString().contains('Test');
+  bool get _isTesting =>
+      WidgetsBinding.instance.runtimeType.toString().contains('Test');
 
   @override
   void initState() {
@@ -40,7 +42,8 @@ class _OnboardingScaffoldState extends State<OnboardingScaffold> with SingleTick
   Widget build(BuildContext context) {
     final media = MediaQuery.sizeOf(context);
     final isTablet = media.width >= 600;
-    final disableAnimations = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final disableAnimations =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -81,10 +84,14 @@ class _OnboardingScaffoldState extends State<OnboardingScaffold> with SingleTick
             // ─── 2. Floating Math Glyphs (+ × π ÷ √) ────────────────────────
             if (!disableAnimations) ...[
               _buildMathSymbol('+', top: 90, left: 24, size: 28, rotation: 0.1),
-              _buildMathSymbol('×', top: 220, right: 28, size: 30, rotation: -0.15),
-              _buildMathSymbol('π', bottom: 260, left: 32, size: 32, rotation: 0.2),
-              _buildMathSymbol('÷', bottom: 120, right: 30, size: 30, rotation: -0.1),
-              _buildMathSymbol('√', top: 380, left: 18, size: 28, rotation: 0.05),
+              _buildMathSymbol('×',
+                  top: 220, right: 28, size: 30, rotation: -0.15),
+              _buildMathSymbol('π',
+                  bottom: 260, left: 32, size: 32, rotation: 0.2),
+              _buildMathSymbol('÷',
+                  bottom: 120, right: 30, size: 30, rotation: -0.1),
+              _buildMathSymbol('√',
+                  top: 380, left: 18, size: 28, rotation: 0.05),
             ],
 
             // ─── 3. Main Responsive Content ──────────────────────────────────
@@ -93,15 +100,19 @@ class _OnboardingScaffoldState extends State<OnboardingScaffold> with SingleTick
                 child: SingleChildScrollView(
                   physics: const ClampingScrollPhysics(),
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: isTablet ? 560 : double.infinity),
+                    constraints: BoxConstraints(
+                        maxWidth: isTablet ? 560 : double.infinity),
                     child: isTablet
                         ? Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 24),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(32),
-                              border: Border.all(color: OnboardingTheme.border, width: 1.5),
-                              boxShadow: OnboardingTheme.cardShadow(opacity: 0.14, blur: 32),
+                              border: Border.all(
+                                  color: OnboardingTheme.border, width: 1.5),
+                              boxShadow: OnboardingTheme.cardShadow(
+                                  opacity: 0.14, blur: 32),
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(32),

@@ -14,7 +14,8 @@ class TeenAnalyticsScreen extends StatelessWidget {
         backgroundColor: AppColors.teenSurface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon:
+              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           onPressed: () => context.pop(),
         ),
         title: const Text(
@@ -75,7 +76,8 @@ class TeenAnalyticsScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   const Text(
                     'Kunlik to‘g‘ri yechilgan algebra va geometriya masalalari',
-                    style: TextStyle(fontSize: 12, color: AppColors.teenMutedText),
+                    style:
+                        TextStyle(fontSize: 12, color: AppColors.teenMutedText),
                   ),
                   const SizedBox(height: 24),
                   SizedBox(
@@ -92,15 +94,27 @@ class TeenAnalyticsScreen extends StatelessWidget {
                           _buildBar(6, 20),
                         ],
                         titlesData: FlTitlesData(
-                          leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          leftTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
+                          rightTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
+                          topTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
                           bottomTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
                               getTitlesWidget: (val, meta) {
-                                const days = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'];
-                                if (val.toInt() >= 0 && val.toInt() < days.length) {
+                                const days = [
+                                  'Du',
+                                  'Se',
+                                  'Ch',
+                                  'Pa',
+                                  'Ju',
+                                  'Sh',
+                                  'Ya'
+                                ];
+                                if (val.toInt() >= 0 &&
+                                    val.toInt() < days.length) {
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 8),
                                     child: Text(
@@ -148,13 +162,17 @@ class TeenAnalyticsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _buildSubjectBar('Algebra va Kvadrat tenglamalar', 0.94, AppColors.teenPrimaryLime),
+                  _buildSubjectBar('Algebra va Kvadrat tenglamalar', 0.94,
+                      AppColors.teenPrimaryLime),
                   const SizedBox(height: 12),
-                  _buildSubjectBar('Geometriya va Pifagor teoremasi', 0.88, const Color(0xFF00CEC9)),
+                  _buildSubjectBar('Geometriya va Pifagor teoremasi', 0.88,
+                      const Color(0xFF00CEC9)),
                   const SizedBox(height: 12),
-                  _buildSubjectBar('Funksiyalar va Grafiklar', 0.78, const Color(0xFF6C5CE7)),
+                  _buildSubjectBar('Funksiyalar va Grafiklar', 0.78,
+                      const Color(0xFF6C5CE7)),
                   const SizedBox(height: 12),
-                  _buildSubjectBar('Trigonometriya ayniyatlari', 0.65, Colors.amber),
+                  _buildSubjectBar(
+                      'Trigonometriya ayniyatlari', 0.65, Colors.amber),
                 ],
               ),
             ),
@@ -178,7 +196,8 @@ class TeenAnalyticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTile({required String title, required String value, required Color color}) {
+  Widget _buildTile(
+      {required String title, required String value, required Color color}) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -220,11 +239,15 @@ class TeenAnalyticsScreen extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white),
+              style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white),
             ),
             Text(
               '${(progress * 100).toInt()}%',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: color),
+              style: TextStyle(
+                  fontSize: 13, fontWeight: FontWeight.w800, color: color),
             ),
           ],
         ),

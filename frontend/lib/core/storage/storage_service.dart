@@ -14,7 +14,8 @@ class StorageService {
   static const String _keyCachedStudent = 'cached_student_profile_v2';
   static const String _keySyncQueue = 'pending_offline_sync_queue';
 
-  static bool get _isTestEnv => !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+  static bool get _isTestEnv =>
+      !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
 
   static Future<void> saveAuthToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
@@ -89,7 +90,8 @@ class StorageService {
   }
 
   /// Bulletproof offline-first StudentModel snapshot persistence
-  static Future<void> saveCachedStudent(Map<String, dynamic> studentJson) async {
+  static Future<void> saveCachedStudent(
+      Map<String, dynamic> studentJson) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final encoded = jsonEncode(studentJson);

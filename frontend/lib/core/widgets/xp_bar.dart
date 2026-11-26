@@ -16,7 +16,8 @@ class XPBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final int levelBaseXP = (level - 1) * 200;
     final int progressXP = currentXP - levelBaseXP;
-    final double percent = (progressXP / 200.0).clamp(0.08, 1.0); // Minimum gentle visual fill
+    final double percent =
+        (progressXP / 200.0).clamp(0.08, 1.0); // Minimum gentle visual fill
 
     return Container(
       width: double.infinity,
@@ -30,7 +31,8 @@ class XPBar extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: (isDark ? Colors.black : const Color(0xFF7154EC)).withOpacity(0.05),
+            color: (isDark ? Colors.black : const Color(0xFF7154EC))
+                .withOpacity(0.05),
             blurRadius: 18,
             offset: const Offset(0, 4),
           ),
@@ -51,7 +53,9 @@ class XPBar extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 14,
-                    color: isDark ? const Color(0xFFC7FA74) : const Color(0xFF4F39CE),
+                    color: isDark
+                        ? const Color(0xFFC7FA74)
+                        : const Color(0xFF4F39CE),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -60,7 +64,9 @@ class XPBar extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
-                    color: isDark ? const Color(0xFF8B9BB4) : const Color(0xFF8C8CA8),
+                    color: isDark
+                        ? const Color(0xFF8B9BB4)
+                        : const Color(0xFF8C8CA8),
                   ),
                 ),
               ],
@@ -78,7 +84,9 @@ class XPBar extends StatelessWidget {
                 widthFactor: percent,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFFC7FA74) : const Color(0xFF9E8EFA),
+                    color: isDark
+                        ? const Color(0xFFC7FA74)
+                        : const Color(0xFF9E8EFA),
                     borderRadius: BorderRadius.circular(999),
                   ),
                 ),

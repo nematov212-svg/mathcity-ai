@@ -87,7 +87,8 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
         // Desktop split-screen is used when width >= 1024 and orientation is landscape/desktop
         final isDesktop = screenWidth >= 1024 && screenWidth >= screenHeight;
         final isTablet = screenWidth >= 600 && !isDesktop;
-        final isMobileLandscape = !isDesktop && !isTablet && screenHeight <= 500;
+        final isMobileLandscape =
+            !isDesktop && !isTablet && screenHeight <= 500;
 
         if (isDesktop) {
           return _buildDesktopLayout(context, screenWidth);
@@ -145,12 +146,18 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
                   ),
 
                   // Ambient Math Symbols in white (14% opacity)
-                  _buildFloatingSymbol('+', top: 90, left: 70, size: 48, rotation: 0.1),
-                  _buildFloatingSymbol('−', top: 180, right: 90, size: 42, rotation: -0.15),
-                  _buildFloatingSymbol('×', top: 340, left: 110, size: 56, rotation: 0.2),
-                  _buildFloatingSymbol('÷', bottom: 220, right: 100, size: 46, rotation: -0.1),
-                  _buildFloatingSymbol('π', bottom: 120, left: 80, size: 64, rotation: 0.05),
-                  _buildFloatingSymbol('√', top: 120, right: 180, size: 54, rotation: -0.08),
+                  _buildFloatingSymbol('+',
+                      top: 90, left: 70, size: 48, rotation: 0.1),
+                  _buildFloatingSymbol('−',
+                      top: 180, right: 90, size: 42, rotation: -0.15),
+                  _buildFloatingSymbol('×',
+                      top: 340, left: 110, size: 56, rotation: 0.2),
+                  _buildFloatingSymbol('÷',
+                      bottom: 220, right: 100, size: 46, rotation: -0.1),
+                  _buildFloatingSymbol('π',
+                      bottom: 120, left: 80, size: 64, rotation: 0.05),
+                  _buildFloatingSymbol('√',
+                      top: 120, right: 180, size: 54, rotation: -0.08),
 
                   // Central Brand Content
                   Center(
@@ -164,35 +171,36 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
                             child: AnimatedBuilder(
                               animation: _animCtrl,
                               builder: (context, child) {
-                                final offset = math.sin(_animCtrl.value * math.pi * 2) * 4;
+                                final offset =
+                                    math.sin(_animCtrl.value * math.pi * 2) * 4;
                                 return Transform.translate(
                                   offset: Offset(0, offset),
                                   child: child,
                                 );
                               },
                               child: Container(
-                              width: 240,
-                              height: 240,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.12),
-                                    blurRadius: 36,
-                                    offset: const Offset(0, 14),
+                                width: 240,
+                                height: 240,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.12),
+                                      blurRadius: 36,
+                                      offset: const Offset(0, 14),
+                                    ),
+                                  ],
+                                ),
+                                child: const Center(
+                                  child: MathCityLogo(
+                                    size: 210,
+                                    showText: true,
                                   ),
-                                ],
-                              ),
-                              child: const Center(
-                                child: MathCityLogo(
-                                  size: 210,
-                                  showText: true,
                                 ),
                               ),
                             ),
                           ),
-                        ),
 
                           const SizedBox(height: 32),
 
@@ -238,7 +246,8 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
               color: AuthTokens.bg(context),
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: cardWidth),
                     child: Column(
@@ -248,12 +257,15 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
                         // White Form Card Container
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 40),
                           decoration: BoxDecoration(
                             color: AuthTokens.card(context),
                             borderRadius: BorderRadius.circular(36),
                             border: Border.all(
-                              color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                              color: isDark
+                                  ? AuthTokens.lineDark
+                                  : AuthTokens.lineLight,
                               width: 1.5,
                             ),
                             boxShadow: [
@@ -344,9 +356,7 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
             ? 18.0
             : math.max(20.0, (screenWidth - cardMaxWidth) / 2));
 
-    final h1FontSize = isTablet
-        ? 34.0
-        : (screenWidth < 360 ? 22.0 : 26.0);
+    final h1FontSize = isTablet ? 34.0 : (screenWidth < 360 ? 22.0 : 26.0);
 
     return Scaffold(
       backgroundColor: AuthTokens.bg(context),
@@ -362,7 +372,8 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
                 height: isTablet ? 380 : 240,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AuthTokens.brandLight.withOpacity(isDark ? 0.18 : 0.12),
+                  color:
+                      AuthTokens.brandLight.withOpacity(isDark ? 0.18 : 0.12),
                 ),
               ),
             ),
@@ -381,15 +392,23 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
 
             // Floating Ambient Math Symbols (Hidden in tight landscape)
             if (!isMobileLandscape) ...[
-              _buildFloatingSymbol('+', top: 70, left: 16, size: 28, rotation: 0.1),
-              _buildFloatingSymbol('−', top: 150, right: 18, size: 24, rotation: -0.15),
-              _buildFloatingSymbol('×', top: 380, left: 16, size: 30, rotation: 0.2),
-              _buildFloatingSymbol('÷', bottom: 180, right: 18, size: 28, rotation: -0.1),
-              _buildFloatingSymbol('π', bottom: 80, left: 22, size: 32, rotation: 0.05),
+              _buildFloatingSymbol('+',
+                  top: 70, left: 16, size: 28, rotation: 0.1),
+              _buildFloatingSymbol('−',
+                  top: 150, right: 18, size: 24, rotation: -0.15),
+              _buildFloatingSymbol('×',
+                  top: 380, left: 16, size: 30, rotation: 0.2),
+              _buildFloatingSymbol('÷',
+                  bottom: 180, right: 18, size: 28, rotation: -0.1),
+              _buildFloatingSymbol('π',
+                  bottom: 80, left: 22, size: 32, rotation: 0.05),
               if (isTablet) ...[
-                _buildFloatingSymbol('=', top: 260, right: 40, size: 30, rotation: 0.1),
-                _buildFloatingSymbol('√', bottom: 280, left: 45, size: 32, rotation: -0.2),
-                _buildFloatingSymbol('%', top: 90, right: 80, size: 26, rotation: 0.15),
+                _buildFloatingSymbol('=',
+                    top: 260, right: 40, size: 30, rotation: 0.1),
+                _buildFloatingSymbol('√',
+                    bottom: 280, left: 45, size: 32, rotation: -0.2),
+                _buildFloatingSymbol('%',
+                    top: 90, right: 80, size: 26, rotation: 0.15),
               ],
             ],
 
@@ -413,52 +432,59 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
                           child: AnimatedBuilder(
                             animation: _animCtrl,
                             builder: (context, child) {
-                              final floatY = math.sin(_animCtrl.value * math.pi * 2) * (isMobileLandscape ? 2 : 4);
+                              final floatY =
+                                  math.sin(_animCtrl.value * math.pi * 2) *
+                                      (isMobileLandscape ? 2 : 4);
                               return Transform.translate(
                                 offset: Offset(0, floatY),
                                 child: child,
                               );
                             },
                             child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              // Pulse ring behind emblem
-                              Container(
-                                width: logoSize + 16,
-                                height: logoSize + 16,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: (isDark ? const Color(0xFF282054) : const Color(0xFFECE7FD))
-                                      .withOpacity(0.55),
-                                ),
-                              ),
-                              // Emblem plate
-                              Container(
-                                width: logoSize,
-                                height: logoSize,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: isDark ? const Color(0xFF231D4D) : const Color(0xFFECE7FD),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AuthTokens.brandLight.withOpacity(0.18),
-                                      blurRadius: 24,
-                                      offset: const Offset(0, 8),
-                                    ),
-                                  ],
-                                ),
-                                child: Center(
-                                  child: MathCityLogo(
-                                    size: logoSize * 0.82,
-                                    showText: true,
+                              alignment: Alignment.center,
+                              children: [
+                                // Pulse ring behind emblem
+                                Container(
+                                  width: logoSize + 16,
+                                  height: logoSize + 16,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: (isDark
+                                            ? const Color(0xFF282054)
+                                            : const Color(0xFFECE7FD))
+                                        .withOpacity(0.55),
                                   ),
                                 ),
-                              ),
-                            ],
+                                // Emblem plate
+                                Container(
+                                  width: logoSize,
+                                  height: logoSize,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: isDark
+                                        ? const Color(0xFF231D4D)
+                                        : const Color(0xFFECE7FD),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AuthTokens.brandLight
+                                            .withOpacity(0.18),
+                                        blurRadius: 24,
+                                        offset: const Offset(0, 8),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: MathCityLogo(
+                                      size: logoSize * 0.82,
+                                      showText: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
 
                       SizedBox(height: isMobileLandscape ? 8 : 16),
 
@@ -502,7 +528,9 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
                           color: AuthTokens.card(context),
                           borderRadius: BorderRadius.circular(cardRadius),
                           border: Border.all(
-                            color: isDark ? AuthTokens.lineDark : AuthTokens.lineLight,
+                            color: isDark
+                                ? AuthTokens.lineDark
+                                : AuthTokens.lineLight,
                             width: 1.5,
                           ),
                           boxShadow: [
@@ -551,7 +579,9 @@ class _ResponsiveAuthShellState extends State<ResponsiveAuthShell>
           child: AnimatedBuilder(
             animation: _animCtrl,
             builder: (context, child) {
-              final dy = math.sin((_animCtrl.value + rotation.abs()) * math.pi * 2) * 5;
+              final dy =
+                  math.sin((_animCtrl.value + rotation.abs()) * math.pi * 2) *
+                      5;
               return Transform.translate(
                 offset: Offset(0, dy),
                 child: Transform.rotate(

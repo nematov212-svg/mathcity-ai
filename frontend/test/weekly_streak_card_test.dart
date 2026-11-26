@@ -23,7 +23,8 @@ void main() {
       expect(ActivityLevel.none.labelUz, 'Bajarilmagan');
     });
 
-    test('WeeklyActivityData model serialization and copyWith works properly', () {
+    test('WeeklyActivityData model serialization and copyWith works properly',
+        () {
       final data = WeeklyActivityData(
         days: [
           ActivityDayItem(
@@ -69,19 +70,60 @@ void main() {
       expect(parsed.days[1].level, ActivityLevel.high);
     });
 
-    testWidgets('WeeklyStreakCard renders streak counter, day names, and opens bottom sheet modal', (tester) async {
+    testWidgets(
+        'WeeklyStreakCard renders streak counter, day names, and opens bottom sheet modal',
+        (tester) async {
       tester.view.physicalSize = const Size(390, 844);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
 
       final mockDays = [
-        ActivityDayItem(date: '2026-11-23', weekday: 'Du', weekdayName: 'Dushanba', score: 10, level: ActivityLevel.medium),
-        ActivityDayItem(date: '2026-11-24', weekday: 'Se', weekdayName: 'Seshanba', score: 30, level: ActivityLevel.high),
-        ActivityDayItem(date: '2026-11-25', weekday: 'Ch', weekdayName: 'Chorshanba', score: 5, level: ActivityLevel.low),
-        ActivityDayItem(date: '2026-11-26', weekday: 'Pa', weekdayName: 'Payshanba', score: 0, level: ActivityLevel.none, isToday: true),
-        ActivityDayItem(date: '2026-11-27', weekday: 'Ju', weekdayName: 'Juma', score: 0, level: ActivityLevel.none, isFuture: true),
-        ActivityDayItem(date: '2026-11-28', weekday: 'Sh', weekdayName: 'Shanba', score: 0, level: ActivityLevel.none, isFuture: true),
-        ActivityDayItem(date: '2026-11-29', weekday: 'Ya', weekdayName: 'Yakshanba', score: 0, level: ActivityLevel.none, isFuture: true),
+        ActivityDayItem(
+            date: '2026-11-23',
+            weekday: 'Du',
+            weekdayName: 'Dushanba',
+            score: 10,
+            level: ActivityLevel.medium),
+        ActivityDayItem(
+            date: '2026-11-24',
+            weekday: 'Se',
+            weekdayName: 'Seshanba',
+            score: 30,
+            level: ActivityLevel.high),
+        ActivityDayItem(
+            date: '2026-11-25',
+            weekday: 'Ch',
+            weekdayName: 'Chorshanba',
+            score: 5,
+            level: ActivityLevel.low),
+        ActivityDayItem(
+            date: '2026-11-26',
+            weekday: 'Pa',
+            weekdayName: 'Payshanba',
+            score: 0,
+            level: ActivityLevel.none,
+            isToday: true),
+        ActivityDayItem(
+            date: '2026-11-27',
+            weekday: 'Ju',
+            weekdayName: 'Juma',
+            score: 0,
+            level: ActivityLevel.none,
+            isFuture: true),
+        ActivityDayItem(
+            date: '2026-11-28',
+            weekday: 'Sh',
+            weekdayName: 'Shanba',
+            score: 0,
+            level: ActivityLevel.none,
+            isFuture: true),
+        ActivityDayItem(
+            date: '2026-11-29',
+            weekday: 'Ya',
+            weekdayName: 'Yakshanba',
+            score: 0,
+            level: ActivityLevel.none,
+            isFuture: true),
       ];
 
       final testData = WeeklyActivityData(
@@ -97,7 +139,8 @@ void main() {
 
       final container = ProviderContainer(
         overrides: [
-          weeklyActivityProvider.overrideWith((ref) => MockWeeklyActivityNotifier(testData)),
+          weeklyActivityProvider
+              .overrideWith((ref) => MockWeeklyActivityNotifier(testData)),
         ],
       );
       addTearDown(container.dispose);

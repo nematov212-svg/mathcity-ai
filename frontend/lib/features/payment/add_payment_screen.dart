@@ -16,7 +16,8 @@ class AddPaymentScreen extends ConsumerStatefulWidget {
 
 class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
   // Payment provider / method selection
-  String _selectedMethod = 'CLICK_UZCARD_HUMO'; // 'CLICK_UZCARD_HUMO', 'CLICK_VISA_MC', 'CLICK_APP'
+  String _selectedMethod =
+      'CLICK_UZCARD_HUMO'; // 'CLICK_UZCARD_HUMO', 'CLICK_VISA_MC', 'CLICK_APP'
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -49,14 +50,17 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
     } catch (e) {
       setState(() => _isLoading = false);
       String msg = 'To‘lov tizimiga ulanishda xatolik yuz berdi.';
-      if (e is DioException && e.response?.data != null && e.response?.data['error'] != null) {
+      if (e is DioException &&
+          e.response?.data != null &&
+          e.response?.data['error'] != null) {
         msg = e.response!.data['error'];
       }
       setState(() => _errorMessage = msg);
     }
   }
 
-  void _showProviderCheckoutDialog(String orderId, String checkoutUrl, bool isSandbox) {
+  void _showProviderCheckoutDialog(
+      String orderId, String checkoutUrl, bool isSandbox) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -71,13 +75,17 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                 color: Color(0xFFEDE9FE),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.payment_rounded, color: Color(0xFF6C5CE7), size: 24),
+              child: const Icon(Icons.payment_rounded,
+                  color: Color(0xFF6C5CE7), size: 24),
             ),
             const SizedBox(width: 12),
             const Expanded(
               child: Text(
                 'Click Business To‘lovi',
-                style: TextStyle(color: Color(0xFF1E1742), fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Color(0xFF1E1742),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -90,7 +98,8 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
               isSandbox
                   ? 'To‘lov tizimi hozirda sinov rejimida. Rasmiy Click shlyuzi orqali 29 000 so‘m to‘lovni tasdiqlang.'
                   : 'To‘lovni yakunlash uchun Click Business rasmiy sertifikatlangan to‘lov sahifasiga o‘ting. Summa: 29 000 so‘m.',
-              style: const TextStyle(color: Color(0xFF64748B), fontSize: 14, height: 1.4),
+              style: const TextStyle(
+                  color: Color(0xFF64748B), fontSize: 14, height: 1.4),
             ),
             const SizedBox(height: 16),
             Container(
@@ -102,12 +111,16 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.lock_outline_rounded, size: 16, color: Color(0xFF10B981)),
+                  Icon(Icons.lock_outline_rounded,
+                      size: 16, color: Color(0xFF10B981)),
                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Xavfsiz shifrlangan to‘lov shlyuzi',
-                      style: TextStyle(color: Color(0xFF047857), fontSize: 12, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          color: Color(0xFF047857),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                 ],
@@ -118,18 +131,22 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Bekor qilish', style: TextStyle(color: Color(0xFF64748B))),
+            child: const Text('Bekor qilish',
+                style: TextStyle(color: Color(0xFF64748B))),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF6C5CE7),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14)),
             ),
             onPressed: () {
               Navigator.pop(ctx);
               _simulateSuccessfulPaymentVerification(orderId);
             },
-            child: const Text('To‘lovni tasdiqlash', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: const Text('To‘lovni tasdiqlash',
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -141,7 +158,8 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
 
     try {
       // 1. Authoritative Store purchase & Pro activation call
-      final purchaseRes = await ApiClient().dio.post('/subscriptions/purchase', data: {
+      final purchaseRes =
+          await ApiClient().dio.post('/subscriptions/purchase', data: {
         'platform': 'web',
         'orderId': orderId,
         'productId': 'mathcity_pro_monthly',
@@ -179,12 +197,16 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: const Column(
           children: [
-            Icon(Icons.check_circle_rounded, color: Color(0xFF10B981), size: 54),
+            Icon(Icons.check_circle_rounded,
+                color: Color(0xFF10B981), size: 54),
             SizedBox(height: 12),
             Text(
               'Tabriklaymiz! 🎉',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Color(0xFF1E1742), fontWeight: FontWeight.w900, fontSize: 22),
+              style: TextStyle(
+                  color: Color(0xFF1E1742),
+                  fontWeight: FontWeight.w900,
+                  fontSize: 22),
             ),
           ],
         ),
@@ -198,14 +220,18 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF6C5CE7),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
               ),
               onPressed: () {
                 Navigator.pop(ctx);
                 context.go('/kids/home');
               },
-              child: const Text('Bosh sahifaga o‘tish', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              child: const Text('Bosh sahifaga o‘tish',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ),
         ],
@@ -225,7 +251,8 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Color(0xFF1E1742)),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: Color(0xFF1E1742)),
           onPressed: () => context.pop(),
         ),
         title: const Text(
@@ -279,7 +306,8 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                               letterSpacing: 1.1,
                             ),
                           ),
-                          Icon(Icons.workspace_premium_rounded, color: Colors.white, size: 22),
+                          Icon(Icons.workspace_premium_rounded,
+                              color: Colors.white, size: 22),
                         ],
                       ),
                       SizedBox(height: 10),
@@ -293,7 +321,9 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        hasDiscount ? '20 300 UZS / oyiga (-30% chegirma)' : '29 000 UZS / oyiga',
+                        hasDiscount
+                            ? '20 300 UZS / oyiga (-30% chegirma)'
+                            : '29 000 UZS / oyiga',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -334,11 +364,13 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                       _buildMethodTile(
                         method: 'CLICK_UZCARD_HUMO',
                         title: 'Uzcard / Humo',
-                        subtitle: 'Milliy to‘lov kartalari orqali (Click shlyuzi)',
+                        subtitle:
+                            'Milliy to‘lov kartalari orqali (Click shlyuzi)',
                         icon: Icons.credit_card_rounded,
                         badgeText: 'UZCARD • HUMO',
                       ),
-                      const Divider(height: 1, indent: 60, color: Color(0xFFE2E8F0)),
+                      const Divider(
+                          height: 1, indent: 60, color: Color(0xFFE2E8F0)),
                       _buildMethodTile(
                         method: 'CLICK_VISA_MC',
                         title: 'Visa / Mastercard',
@@ -346,11 +378,13 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                         icon: Icons.credit_card_outlined,
                         badgeText: 'VISA • MC',
                       ),
-                      const Divider(height: 1, indent: 60, color: Color(0xFFE2E8F0)),
+                      const Divider(
+                          height: 1, indent: 60, color: Color(0xFFE2E8F0)),
                       _buildMethodTile(
                         method: 'CLICK_APP',
                         title: 'Click Business',
-                        subtitle: 'Click ilovasi yoki hamyon orqali tezkor to‘lov',
+                        subtitle:
+                            'Click ilovasi yoki hamyon orqali tezkor to‘lov',
                         icon: Icons.touch_app_rounded,
                         badgeText: 'CLICK',
                       ),
@@ -370,12 +404,16 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.error_outline_rounded, color: Color(0xFFEF4444), size: 20),
+                        const Icon(Icons.error_outline_rounded,
+                            color: Color(0xFFEF4444), size: 20),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             _errorMessage!,
-                            style: const TextStyle(color: Color(0xFFB91C1C), fontSize: 13, fontWeight: FontWeight.w600),
+                            style: const TextStyle(
+                                color: Color(0xFFB91C1C),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                       ],
@@ -386,10 +424,13 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
 
                 // Action Pay Button
                 CustomButton(
-                  text: _isLoading ? 'To‘lovga ulanmoqda...' : '$priceFormatted to‘lash',
+                  text: _isLoading
+                      ? 'To‘lovga ulanmoqda...'
+                      : '$priceFormatted to‘lash',
                   backgroundColor: const Color(0xFF6C5CE7),
                   borderRadius: 18,
-                  icon: const Icon(Icons.lock_rounded, color: Colors.white, size: 20),
+                  icon: const Icon(Icons.lock_rounded,
+                      color: Colors.white, size: 20),
                   onPressed: _isLoading ? null : _initiatePayment,
                 ),
                 const SizedBox(height: 16),
@@ -399,7 +440,8 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.verified_user_rounded, color: Color(0xFF10B981), size: 16),
+                      const Icon(Icons.verified_user_rounded,
+                          color: Color(0xFF10B981), size: 16),
                       const SizedBox(width: 6),
                       Flexible(
                         child: Text(
@@ -441,12 +483,16 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFEDE9FE) : const Color(0xFFF1F5F9),
+                color: isSelected
+                    ? const Color(0xFFEDE9FE)
+                    : const Color(0xFFF1F5F9),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
-                color: isSelected ? const Color(0xFF6C5CE7) : const Color(0xFF64748B),
+                color: isSelected
+                    ? const Color(0xFF6C5CE7)
+                    : const Color(0xFF64748B),
                 size: 22,
               ),
             ),
@@ -462,19 +508,24 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                         style: TextStyle(
                           color: const Color(0xFF1E1742),
                           fontSize: 15,
-                          fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                          fontWeight:
+                              isSelected ? FontWeight.w800 : FontWeight.w600,
                         ),
                       ),
                       const SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: const Color(0xFFF1F5F9),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           badgeText,
-                          style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: Color(0xFF64748B)),
+                          style: const TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF64748B)),
                         ),
                       ),
                     ],
@@ -482,15 +533,18 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                   const SizedBox(height: 3),
                   Text(
                     subtitle,
-                    style: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                    style:
+                        const TextStyle(color: Color(0xFF64748B), fontSize: 12),
                   ),
                 ],
               ),
             ),
             if (isSelected)
-              const Icon(Icons.check_circle_rounded, color: Color(0xFF6C5CE7), size: 22)
+              const Icon(Icons.check_circle_rounded,
+                  color: Color(0xFF6C5CE7), size: 22)
             else
-              const Icon(Icons.circle_outlined, color: Color(0xFFCBD5E1), size: 22),
+              const Icon(Icons.circle_outlined,
+                  color: Color(0xFFCBD5E1), size: 22),
           ],
         ),
       ),

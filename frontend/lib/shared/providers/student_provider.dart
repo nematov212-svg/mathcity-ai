@@ -57,7 +57,8 @@ class StudentNotifier extends StateNotifier<StudentState> {
   }
 
   void _loadFromCacheFirst() {
-    final isTestEnv = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    final isTestEnv =
+        !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
     if (isTestEnv && state.student == null) {
       state = state.copyWith(
         student: StudentModel(
@@ -118,15 +119,18 @@ class StudentNotifier extends StateNotifier<StudentState> {
   void _initGoogleAuthListener() {
     if (!kIsWeb) return;
     try {
-      _googleAccountSub = _authService.onGoogleAccountChanged.listen((account) async {
+      _googleAccountSub =
+          _authService.onGoogleAccountChanged.listen((account) async {
         // Guard: Skip if already processing an authentication request to avoid duplicate network calls
         if (account != null && !_authService.isAuthenticating) {
           state = state.copyWith(isLoading: true, errorMessage: null);
           final result = await _authService.authenticateGoogleUser(account);
           if (result.success && result.student != null) {
-            state = state.copyWith(student: result.student, isLoading: false, errorMessage: null);
+            state = state.copyWith(
+                student: result.student, isLoading: false, errorMessage: null);
             unawaited(_persistToCache(result.student!));
-          } else if (result.errorMessage != null && !result.errorMessage!.contains('bekor')) {
+          } else if (result.errorMessage != null &&
+              !result.errorMessage!.contains('bekor')) {
             state = state.copyWith(
               isLoading: false,
               errorMessage: result.errorMessage,
@@ -199,27 +203,36 @@ class StudentNotifier extends StateNotifier<StudentState> {
     }
   }
 
-  Future<bool> activatePro({String planType = 'MONTHLY', String provider = 'CLICK'}) async {
+  Future<bool> activatePro(
+      {String planType = 'MONTHLY', String provider = 'CLICK'}) async {
     state = state.copyWith(isLoading: true);
     try {
       final res = await ApiClient().dio.post('/subscriptions/purchase', data: {
         'platform': 'web',
-        'productId': planType == 'YEARLY' ? 'mathcity_pro_yearly' : 'mathcity_pro_monthly',
+        'productId': planType == 'YEARLY'
+            ? 'mathcity_pro_yearly'
+            : 'mathcity_pro_monthly',
         'planType': planType,
       });
       if (res.data['success'] == true && res.data['data'] != null) {
         final data = res.data['data'];
         final proExpiresAt = data['proExpiresAt'] as String?;
-        final price = (data['priceMonthlyUzs'] as num?)?.toInt() ?? (planType == 'YEARLY' ? 250000 : 29000);
+        final price = (data['priceMonthlyUzs'] as num?)?.toInt() ??
+            (planType == 'YEARLY' ? 250000 : 29000);
         if (state.student != null) {
           final updated = state.student!.copyWith(
             subscription: SubscriptionModel(
               status: 'PRO_ACTIVE',
               isProActive: true,
-              planName: planType == 'YEARLY' ? 'MathCity Pro 1 Yillik' : 'MathCity Pro 1 Oylik',
+              planName: planType == 'YEARLY'
+                  ? 'MathCity Pro 1 Yillik'
+                  : 'MathCity Pro 1 Oylik',
               priceMonthlyUzs: price,
               trialDaysRemaining: 0,
-              proExpiresAt: proExpiresAt ?? DateTime.now().add(Duration(days: planType == 'YEARLY' ? 365 : 30)).toIso8601String(),
+              proExpiresAt: proExpiresAt ??
+                  DateTime.now()
+                      .add(Duration(days: planType == 'YEARLY' ? 365 : 30))
+                      .toIso8601String(),
             ),
           );
           state = state.copyWith(
@@ -238,7 +251,9 @@ class StudentNotifier extends StateNotifier<StudentState> {
           subscription: SubscriptionModel(
             status: 'PRO_ACTIVE',
             isProActive: true,
-            planName: planType == 'YEARLY' ? 'MathCity Pro 1 Yillik' : 'MathCity Pro 1 Oylik',
+            planName: planType == 'YEARLY'
+                ? 'MathCity Pro 1 Yillik'
+                : 'MathCity Pro 1 Oylik',
             priceMonthlyUzs: planType == 'YEARLY' ? 250000 : 29000,
             trialDaysRemaining: 0,
             proExpiresAt: expiry.toIso8601String(),
@@ -278,17 +293,22 @@ class StudentNotifier extends StateNotifier<StudentState> {
 
   void startHeartbeat() {
     _heartbeatTimer?.cancel();
-    _heartbeatTimer = Timer.periodic(const Duration(seconds: 15), (timer) async {
-      if (DateTime.now().difference(_lastInteractionTime).inSeconds > 60) return;
+    _heartbeatTimer =
+        Timer.periodic(const Duration(seconds: 15), (timer) async {
+      if (DateTime.now().difference(_lastInteractionTime).inSeconds > 60)
+        return;
 
-      final token = ApiClient().authToken ?? await StorageService.getAuthToken();
+      final token =
+          ApiClient().authToken ?? await StorageService.getAuthToken();
       if (token == null || token.isEmpty || state.student == null) {
         stopHeartbeat();
         return;
       }
 
       try {
-        final res = await ApiClient().dio.post('/activity/heartbeat', data: {'seconds': 15});
+        final res = await ApiClient()
+            .dio
+            .post('/activity/heartbeat', data: {'seconds': 15});
         if (res.data['success'] == true && res.data['data'] != null) {
           final todayMin = res.data['data']['todayMinutes'];
           if (mounted && todayMin != null && state.student != null) {
@@ -321,16 +341,21 @@ class StudentNotifier extends StateNotifier<StudentState> {
         if (mounted && state.student != null) {
           state = state.copyWith(
             student: state.student!.copyWith(
-              coinBalance: d['coinBalance'] ?? d['coins'] ?? state.student!.coinBalance,
+              coinBalance:
+                  d['coinBalance'] ?? d['coins'] ?? state.student!.coinBalance,
               totalXP: d['totalXP'] ?? d['xp'] ?? state.student!.totalXP,
               level: d['level'] ?? state.student!.level,
-              studyMinutes: d['studyMinutesToday'] ?? state.student!.studyMinutes,
+              studyMinutes:
+                  d['studyMinutesToday'] ?? state.student!.studyMinutes,
               currentStreak: d['currentStreak'] ?? state.student!.currentStreak,
               longestStreak: d['longestStreak'] ?? state.student!.longestStreak,
-              completedLessonsCount: d['completedLessonsCount'] ?? state.student!.completedLessonsCount,
-              completedTopicsCount: d['completedTopicsCount'] ?? state.student!.completedTopicsCount,
+              completedLessonsCount: d['completedLessonsCount'] ??
+                  state.student!.completedLessonsCount,
+              completedTopicsCount: d['completedTopicsCount'] ??
+                  state.student!.completedTopicsCount,
               friendsCount: d['friendsCount'] ?? state.student!.friendsCount,
-              achievementsCount: d['unlockedAchievementsCount'] ?? state.student!.achievementsCount,
+              achievementsCount: d['unlockedAchievementsCount'] ??
+                  state.student!.achievementsCount,
               rank: d['rank'] ?? state.student!.rank,
               avatarUrl: d['avatarUrl'] ?? state.student!.avatarUrl,
               displayName: d['displayName'] ?? state.student!.displayName,
@@ -361,7 +386,10 @@ class StudentNotifier extends StateNotifier<StudentState> {
     } catch (_) {}
   }
 
-  void markLessonCompleted({required String lessonId, required int rewardCoins, required int rewardXP}) {
+  void markLessonCompleted(
+      {required String lessonId,
+      required int rewardCoins,
+      required int rewardXP}) {
     if (state.student == null) return;
     final isNew = !state.student!.completedLessons.contains(lessonId);
     final updatedList = List<String>.from(state.student!.completedLessons);
@@ -390,14 +418,16 @@ class StudentNotifier extends StateNotifier<StudentState> {
   Future<Map<String, dynamic>?> fetchWeeklyActivity() async {
     try {
       final res = await ApiClient().dio.get(
-        '/activity/week',
-        options: Options(
-          validateStatus: (status) => true,
-          sendTimeout: const Duration(seconds: 6),
-          receiveTimeout: const Duration(seconds: 6),
-        ),
-      );
-      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
+            '/activity/week',
+            options: Options(
+              validateStatus: (status) => true,
+              sendTimeout: const Duration(seconds: 6),
+              receiveTimeout: const Duration(seconds: 6),
+            ),
+          );
+      if (res.statusCode == 200 &&
+          res.data != null &&
+          res.data['success'] == true) {
         return res.data['data'];
       }
     } catch (_) {}
@@ -417,12 +447,14 @@ class StudentNotifier extends StateNotifier<StudentState> {
   Future<Map<String, dynamic>?> fetchDailyMissions() async {
     try {
       final res = await ApiClient().dio.get(
-        '/daily-tasks/today',
-        options: Options(
-          validateStatus: (status) => true,
-        ),
-      );
-      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
+            '/daily-tasks/today',
+            options: Options(
+              validateStatus: (status) => true,
+            ),
+          );
+      if (res.statusCode == 200 &&
+          res.data != null &&
+          res.data['success'] == true) {
         return res.data['data'];
       }
     } catch (_) {}
@@ -446,9 +478,15 @@ class StudentNotifier extends StateNotifier<StudentState> {
         }
         return {'success': true, 'data': d};
       }
-      return {'success': false, 'error': res.data['error'] ?? 'Mukofotni olib bo‘lmadi.'};
+      return {
+        'success': false,
+        'error': res.data['error'] ?? 'Mukofotni olib bo‘lmadi.'
+      };
     } catch (e) {
-      return {'success': false, 'error': 'Mukofotni olishda xatolik yuz berdi.'};
+      return {
+        'success': false,
+        'error': 'Mukofotni olishda xatolik yuz berdi.'
+      };
     }
   }
 
@@ -463,7 +501,12 @@ class StudentNotifier extends StateNotifier<StudentState> {
           'unlockedCount': res.data['unlockedCount'],
         };
       }
-      return {'success': false, 'isPro': false, 'error': res.data['error'] ?? 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring.'};
+      return {
+        'success': false,
+        'isPro': false,
+        'error': res.data['error'] ??
+            'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring.'
+      };
     } on DioException catch (dioErr) {
       final statusCode = dioErr.response?.statusCode;
       if (statusCode == 403) {
@@ -471,14 +514,30 @@ class StudentNotifier extends StateNotifier<StudentState> {
         if (data is Map && data['isProRequired'] == true) {
           return {'success': false, 'isPro': false, 'isProRequired': true};
         }
-        return {'success': false, 'isPro': false, 'error': 'Ruxsat berilmadi (403). Profilingizni tekshiring.'};
+        return {
+          'success': false,
+          'isPro': false,
+          'error': 'Ruxsat berilmadi (403). Profilingizni tekshiring.'
+        };
       }
       if (statusCode == 401) {
-        return {'success': false, 'isPro': false, 'error': 'Avtorizatsiyadan o‘tilmagan. Iltimos, hisobingizga kiring.'};
+        return {
+          'success': false,
+          'isPro': false,
+          'error': 'Avtorizatsiyadan o‘tilmagan. Iltimos, hisobingizga kiring.'
+        };
       }
-      return {'success': false, 'isPro': false, 'error': 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring.'};
+      return {
+        'success': false,
+        'isPro': false,
+        'error': 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring.'
+      };
     } catch (_) {
-      return {'success': false, 'isPro': false, 'error': 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring.'};
+      return {
+        'success': false,
+        'isPro': false,
+        'error': 'Yutuqlarni yuklab bo‘lmadi, qayta urinib ko‘ring.'
+      };
     }
   }
 
@@ -502,9 +561,15 @@ class StudentNotifier extends StateNotifier<StudentState> {
         }
         return {'success': true, 'data': d};
       }
-      return {'success': false, 'error': res.data['error'] ?? 'Mukofotni olib bo‘lmadi.'};
+      return {
+        'success': false,
+        'error': res.data['error'] ?? 'Mukofotni olib bo‘lmadi.'
+      };
     } catch (e) {
-      return {'success': false, 'error': 'Mukofotni olishda xatolik yuz berdi.'};
+      return {
+        'success': false,
+        'error': 'Mukofotni olishda xatolik yuz berdi.'
+      };
     }
   }
 
@@ -549,7 +614,8 @@ class StudentNotifier extends StateNotifier<StudentState> {
 
   Future<bool> deleteAccountConfirm({String? username}) async {
     try {
-      final res = await ApiClient().dio.delete('/me', data: {'username': username});
+      final res =
+          await ApiClient().dio.delete('/me', data: {'username': username});
       if (res.data['success'] == true) {
         await _authService.signOut();
         state = StudentState();
@@ -559,7 +625,8 @@ class StudentNotifier extends StateNotifier<StudentState> {
     return false;
   }
 
-  Future<Map<String, dynamic>?> finishGameResult(String gameKey, int score, int durationSeconds) async {
+  Future<Map<String, dynamic>?> finishGameResult(
+      String gameKey, int score, int durationSeconds) async {
     try {
       final res = await ApiClient().dio.post('/games/$gameKey/finish', data: {
         'score': score,
@@ -645,7 +712,8 @@ class StudentNotifier extends StateNotifier<StudentState> {
       final newXP = prevXP + xpAwarded;
       final newLevel = (newXP ~/ 200) + 1;
       final newAttempted = state.student!.attemptedQuestionCount + 1;
-      final newCorrect = state.student!.correctQuestionCount + (isCorrectLocally ? 1 : 0);
+      final newCorrect =
+          state.student!.correctQuestionCount + (isCorrectLocally ? 1 : 0);
 
       state = state.copyWith(
         lastCoinsAwarded: coinsAwarded,
@@ -671,7 +739,8 @@ class StudentNotifier extends StateNotifier<StudentState> {
     }
 
     // Background resilient sync to server (skipped in flutter_test to avoid pending FakeAsync timers)
-    final isTestEnv = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    final isTestEnv =
+        !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
     if (!isTestEnv) {
       unawaited(_syncAnswerToServer(
         questionId: questionId,
@@ -688,7 +757,8 @@ class StudentNotifier extends StateNotifier<StudentState> {
       'xpAwarded': xpAwarded,
       'newCoinBalance': state.student?.coinBalance ?? 0,
       'correctAnswer': correctAnswer ?? answer,
-      'explanation': explanation ?? (isCorrectLocally ? 'To‘g‘ri javob!' : 'Noto‘g‘ri javob.'),
+      'explanation': explanation ??
+          (isCorrectLocally ? 'To‘g‘ri javob!' : 'Noto‘g‘ri javob.'),
     };
   }
 
@@ -723,7 +793,10 @@ class StudentNotifier extends StateNotifier<StudentState> {
         final data = res.data['data'];
         final int? serverCoins = data['newCoinBalance'];
         final int? serverXP = data['newTotalXP'];
-        if (mounted && state.student != null && serverCoins != null && serverCoins >= state.student!.coinBalance) {
+        if (mounted &&
+            state.student != null &&
+            serverCoins != null &&
+            serverCoins >= state.student!.coinBalance) {
           state = state.copyWith(
             student: state.student!.copyWith(
               coinBalance: serverCoins,
@@ -734,12 +807,14 @@ class StudentNotifier extends StateNotifier<StudentState> {
         }
       }
     } catch (e) {
-      debugPrint('ℹ️ [StudentNotifier] Server sinxronizatsiyasi kechikmoqda, oflayn saqlandi: $e');
+      debugPrint(
+          'ℹ️ [StudentNotifier] Server sinxronizatsiyasi kechikmoqda, oflayn saqlandi: $e');
       await _queueOfflineAnswer(questionId, answer, timeSpentMs);
     }
   }
 
-  Future<void> _queueOfflineAnswer(String questionId, String answer, int? timeSpentMs) async {
+  Future<void> _queueOfflineAnswer(
+      String questionId, String answer, int? timeSpentMs) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final list = prefs.getStringList('offline_practice_answers') ?? [];
@@ -781,11 +856,13 @@ class StudentNotifier extends StateNotifier<StudentState> {
     } catch (_) {}
   }
 
-  Future<Map<String, dynamic>> submitQuestion(String questionId, String answer, {int? timeSpentMs}) =>
+  Future<Map<String, dynamic>> submitQuestion(String questionId, String answer,
+          {int? timeSpentMs}) =>
       submitAnswer(questionId, answer, timeSpentMs: timeSpentMs);
 
   // --- Purchase Building for 100 Coins ---
-  Future<bool> purchaseBuilding(String buildingKey, int gridX, int gridY) async {
+  Future<bool> purchaseBuilding(
+      String buildingKey, int gridX, int gridY) async {
     if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) {
       if (state.student != null && state.student!.coinBalance >= 100) {
         state = state.copyWith(
@@ -808,7 +885,8 @@ class StudentNotifier extends StateNotifier<StudentState> {
       if (res.data['success'] == true) {
         final data = res.data['data'];
         final newBalance = data['newCoinBalance'] ?? 0;
-        final newCityLevel = data['newCityLevel'] ?? (state.student?.cityLevel ?? 1);
+        final newCityLevel =
+            data['newCityLevel'] ?? (state.student?.cityLevel ?? 1);
 
         if (state.student != null) {
           final updated = state.student!.copyWith(
@@ -964,7 +1042,8 @@ class StudentNotifier extends StateNotifier<StudentState> {
     } else {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: (result.errorMessage != null && !result.errorMessage!.contains('bekor'))
+        errorMessage: (result.errorMessage != null &&
+                !result.errorMessage!.contains('bekor'))
             ? result.errorMessage
             : null,
       );
@@ -984,7 +1063,8 @@ class StudentNotifier extends StateNotifier<StudentState> {
     );
 
     if (result.success && result.student != null) {
-      state = state.copyWith(student: result.student, isLoading: false, errorMessage: null);
+      state = state.copyWith(
+          student: result.student, isLoading: false, errorMessage: null);
     } else {
       state = state.copyWith(
         isLoading: false,
@@ -1024,7 +1104,8 @@ class StudentNotifier extends StateNotifier<StudentState> {
     );
 
     if (result.success && result.student != null) {
-      state = state.copyWith(student: result.student, isLoading: false, errorMessage: null);
+      state = state.copyWith(
+          student: result.student, isLoading: false, errorMessage: null);
     } else {
       state = state.copyWith(
         isLoading: false,
@@ -1068,7 +1149,8 @@ class StudentNotifier extends StateNotifier<StudentState> {
     if (result.success && result.student != null) {
       state = state.copyWith(student: result.student, isLoading: false);
     } else {
-      state = state.copyWith(isLoading: false, errorMessage: result.errorMessage);
+      state =
+          state.copyWith(isLoading: false, errorMessage: result.errorMessage);
     }
     return result;
   }
@@ -1109,6 +1191,7 @@ class StudentNotifier extends StateNotifier<StudentState> {
   }
 }
 
-final studentProvider = StateNotifierProvider<StudentNotifier, StudentState>((ref) {
+final studentProvider =
+    StateNotifierProvider<StudentNotifier, StudentState>((ref) {
   return StudentNotifier(ref);
 });
