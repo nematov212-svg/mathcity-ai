@@ -215,8 +215,21 @@ class ApiClient {
     return false;
   }
 
-  /// Sends a background warm-up request to the health endpoint when the app starts
+  static bool _hasWarmedUp = false;
+  static Future<void>? _inFlightWarmUp;
+
+  /// Sends a background warm-up request to the health endpoint when the app starts (deduplicated & cached)
   Future<void> warmUp() async {
+    if (_hasWarmedUp) return;
+    if (_inFlightWarmUp != null) {
+      await _inFlightWarmUp;
+      return;
+    }
+    _inFlightWarmUp = _performWarmUp();
+    await _inFlightWarmUp;
+  }
+
+  Future<void> _performWarmUp() async {
     try {
       final warmupDio = Dio(
         BaseOptions(
@@ -226,9 +239,16 @@ class ApiClient {
       );
       final rootUrl = AppConfig.baseUrl.replaceAll(RegExp(r'/api/?$'), '');
       await warmupDio.get('$rootUrl/health');
-      debugPrint('☀️ [API Client] Server uyg‘oq va faol: $rootUrl/health');
+      _hasWarmedUp = true;
+      if (kDebugMode) {
+        debugPrint('☀️ [API Client] Server uyg‘oq va faol: $rootUrl/health');
+      }
     } catch (e) {
-      debugPrint('ℹ️ [API Client] Serverni isitish so‘rovi yakunlandi.');
+      if (kDebugMode) {
+        debugPrint('ℹ️ [API Client] Serverni isitish so‘rovi yakunlandi.');
+      }
+    } finally {
+      _inFlightWarmUp = null;
     }
   }
 

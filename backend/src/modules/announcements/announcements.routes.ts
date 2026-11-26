@@ -44,6 +44,26 @@ announcementsRouter.get('/active', (req: Request, res: Response) => {
 });
 
 /**
+ * POST /api/announcements/:id/view
+ * Increment announcement view count
+ */
+announcementsRouter.post('/:id/view', (req: Request, res: Response) => {
+  const success = repository.incrementAnnouncementView(String(req.params.id));
+  const item = repository.getAnnouncementById(String(req.params.id));
+  return res.json({ success, views: item?.views || 0 });
+});
+
+/**
+ * POST /api/announcements/:id/click
+ * Increment announcement click count
+ */
+announcementsRouter.post('/:id/click', (req: Request, res: Response) => {
+  const success = repository.incrementAnnouncementClick(String(req.params.id));
+  const item = repository.getAnnouncementById(String(req.params.id));
+  return res.json({ success, clicks: item?.clicks || 0 });
+});
+
+/**
  * GET /api/announcements/:id
  */
 announcementsRouter.get('/:id', (req: Request, res: Response) => {

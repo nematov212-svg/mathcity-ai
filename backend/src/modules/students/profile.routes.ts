@@ -161,14 +161,18 @@ studentsRouter.get('/leaderboard/me', optionalAuthMiddleware, (req: Authenticate
  * Scopes: top100 (default), top50, top10, top5, or custom ?limit=N&offset=M
  */
 studentsRouter.get('/leaderboard', optionalAuthMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  // Check and award contest prizes automatically and idempotently on leaderboard check
+  repository.checkAndAwardContestPrizes();
+  const contest = repository.getLeaderboardContest();
+
   const authUser = req.user;
 
   const scope = (req.query.scope as string) || 'top100';
   const period = (req.query.period as string) || 'all';
 
-  let limit = 50;
+  let limit = 100;
   if (req.query.limit) {
-    limit = Math.max(1, parseInt(req.query.limit as string, 10) || 50);
+    limit = Math.max(1, parseInt(req.query.limit as string, 10) || 100);
   } else if (scope === 'top5') limit = 5;
   else if (scope === 'top10') limit = 10;
   else if (scope === 'top50') limit = 50;
@@ -177,7 +181,7 @@ studentsRouter.get('/leaderboard', optionalAuthMiddleware, (req: AuthenticatedRe
   const offset = Math.max(0, parseInt((req.query.offset as string) || '0', 10) || 0);
 
   const allUsers = repository.getAllUsers();
-  // Bazadagi BARCHA haqiqiy foydalanuvchilar (0 tanga bo'lsa ham): coins DESC -> xp DESC -> createdAt ASC
+  // Bazadagi BARCHA haqiqiy foydalanuvchilar: coins DESC -> xp DESC -> createdAt ASC
   const sorted = [...allUsers].sort(sortLeaderboardUsers);
 
   const fullLeaderboard = sorted.map((u, index) => ({
@@ -186,6 +190,7 @@ studentsRouter.get('/leaderboard', optionalAuthMiddleware, (req: AuthenticatedRe
     id: u.id,
     username: u.username || `user_${u.id.slice(0, 6)}`,
     displayName: u.displayName ? u.displayName.split(' ')[0] : (u.username || 'O‘quvchi'),
+    avatar: u.avatarUrl || null,
     avatarUrl: u.avatarUrl || null,
     level: u.level || 1,
     coins: u.coinBalance || 0,
@@ -207,6 +212,7 @@ studentsRouter.get('/leaderboard', optionalAuthMiddleware, (req: AuthenticatedRe
     id: authUser.id,
     username: authUser.username || (authUser.displayName ? authUser.displayName.split(' ')[0] : 'Siz'),
     displayName: authUser.displayName || 'Siz',
+    avatar: authUser.avatarUrl || null,
     avatarUrl: authUser.avatarUrl || null,
     level: authUser.level || 1,
     coins: authUser.coinBalance || 0,
@@ -221,16 +227,16 @@ studentsRouter.get('/leaderboard', optionalAuthMiddleware, (req: AuthenticatedRe
 
   return res.json({
     success: true,
-    data: {
-      leaderboard: slicedList,
-      totalCount: fullLeaderboard.length,
-      scope,
-      period,
-      limit,
-      offset,
-      me: meObject,
-      myRank: meObject,
-    },
+    data: slicedList,
+    me: meObject,
+    contest,
+    // Extended properties for backward compatibility
+    leaderboard: slicedList,
+    totalCount: fullLeaderboard.length,
+    scope,
+    period,
+    limit,
+    offset,
   });
 });
 

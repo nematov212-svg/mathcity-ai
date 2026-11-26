@@ -18,6 +18,39 @@ import '../../core/widgets/user_avatar.dart';
 import '../../shared/models/student_model.dart';
 import '../../shared/providers/student_provider.dart';
 
+class LeaderboardContestData {
+  final String id;
+  final String name;
+  final int durationDays;
+  final DateTime startDate;
+  final DateTime endDate;
+  final bool isEnded;
+  final List<dynamic> prizes;
+
+  LeaderboardContestData({
+    required this.id,
+    required this.name,
+    required this.durationDays,
+    required this.startDate,
+    required this.endDate,
+    required this.isEnded,
+    required this.prizes,
+  });
+
+  factory LeaderboardContestData.fromJson(Map<String, dynamic> json) {
+    return LeaderboardContestData(
+      id: (json['id'] ?? 'contest-season-1').toString(),
+      name: (json['name'] ?? '30 kunlik musobaqa').toString(),
+      durationDays: (json['durationDays'] as num?)?.toInt() ?? 30,
+      startDate: DateTime.tryParse(json['startDate']?.toString() ?? '') ?? DateTime.now(),
+      endDate: DateTime.tryParse(json['endDate']?.toString() ?? '') ??
+          DateTime.now().add(const Duration(days: 30)),
+      isEnded: json['isEnded'] == true,
+      prizes: (json['prizes'] as List?) ?? [],
+    );
+  }
+}
+
 class LeaderboardUser {
   final int rank;
   final String id;
@@ -43,13 +76,14 @@ class LeaderboardUser {
 
   factory LeaderboardUser.fromJson(Map<String, dynamic> json) {
     final uid = (json['userId'] ?? json['id'] ?? '').toString();
+    final rawName = (json['displayName'] ?? json['username'] ?? 'O‘quvchi').toString();
     return LeaderboardUser(
       rank: (json['rank'] as num?)?.toInt() ?? 1,
       id: uid,
       userId: uid,
       username: (json['username'] as String?) ?? 'foydalanuvchi',
-      displayName: (json['displayName'] as String?) ?? 'O‘quvchi',
-      avatarUrl: json['avatarUrl'] as String?,
+      displayName: rawName,
+      avatarUrl: (json['avatarUrl'] ?? json['avatar']) as String?,
       totalXP: (json['totalXP'] ?? json['xp'] as num?)?.toInt() ?? 0,
       coinBalance: (json['coinBalance'] ?? json['coins'] as num?)?.toInt() ?? 0,
       level: (json['level'] as num?)?.toInt() ?? 1,
@@ -67,10 +101,13 @@ class LeaderboardScreen extends ConsumerStatefulWidget {
 class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   List<LeaderboardUser> _leaderboard = [];
   LeaderboardUser? _myRank;
+  LeaderboardContestData? _contest;
   bool _isLoading = true;
   String? _errorMessage;
   Timer? _pollingTimer;
+  Timer? _contestTimer;
   Timer? _highlightClearTimer;
+  ProviderSubscription<StudentState>? _studentSub;
 
   final List<Map<String, String>> _scopes = const [
     {'id': 'top100', 'label': 'Top 100'},
@@ -95,13 +132,48 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     _pollingTimer = Timer.periodic(const Duration(seconds: 12), (_) {
       if (mounted) _loadLeaderboard(silent: true);
     });
+
+    // Contest countdown tick every minute (or 30s)
+    _contestTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      if (mounted) setState(() {});
+    });
+
+    // Instant update reflection when user earns coins/XP in lessons or practice
+    _studentSub = ref.listenManual(studentProvider, (previous, next) {
+      if (previous?.student?.coinBalance != next.student?.coinBalance ||
+          previous?.student?.totalXP != next.student?.totalXP) {
+        _loadLeaderboard(silent: true);
+      }
+    });
   }
 
   @override
   void dispose() {
     _pollingTimer?.cancel();
+    _contestTimer?.cancel();
     _highlightClearTimer?.cancel();
+    _studentSub?.close();
     super.dispose();
+  }
+
+  String _formatContestRemaining(LeaderboardContestData? contest) {
+    final end = contest?.endDate ?? DateTime.now().add(const Duration(days: 30));
+    final now = DateTime.now();
+    final diff = end.difference(now);
+
+    if (contest?.isEnded == true || diff.isNegative) {
+      return "Musobaqa yakunlandi, g'oliblarga coinlar berildi!";
+    }
+
+    if (diff.inHours >= 1) {
+      final days = diff.inDays;
+      final hours = diff.inHours % 24;
+      return "Musobaqa tugashiga: $days kun $hours soat";
+    } else {
+      final minutes = diff.inMinutes;
+      final seconds = diff.inSeconds % 60;
+      return "Musobaqa tugashiga: $minutes daqiqa $seconds soniya";
+    }
   }
 
   Future<void> _loadLeaderboard({bool silent = false}) async {
@@ -156,20 +228,49 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     }
 
     try {
+      int limit = 100;
+      if (_selectedScope == 'top5') {
+        limit = 5;
+      } else if (_selectedScope == 'top10') {
+        limit = 10;
+      } else if (_selectedScope == 'top50') {
+        limit = 50;
+      } else if (_selectedScope == 'top100') {
+        limit = 100;
+      }
+
       final res = await ApiClient().dio.get(
-        '/students/leaderboard',
-        queryParameters: {'scope': _selectedScope},
+        '/leaderboard',
+        queryParameters: {'scope': _selectedScope, 'limit': limit},
         options: Options(
           validateStatus: (status) => true,
         ),
       );
       if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
-        final data = res.data['data'];
-        final list = (data['leaderboard'] as List<dynamic>?)
-                ?.map((item) => LeaderboardUser.fromJson(item))
-                .toList() ??
-            [];
-        final myRankJson = data['me'] ?? data['myRank'];
+        final rawData = res.data['data'];
+        final List<dynamic> listData;
+        if (rawData is List) {
+          listData = rawData;
+        } else if (rawData is Map && rawData['leaderboard'] is List) {
+          listData = rawData['leaderboard'] as List<dynamic>;
+        } else if (res.data['leaderboard'] is List) {
+          listData = res.data['leaderboard'] as List<dynamic>;
+        } else {
+          listData = [];
+        }
+
+        final list = listData
+            .map((item) => LeaderboardUser.fromJson(item as Map<String, dynamic>))
+            .toList();
+
+        final myRankJson = res.data['me'] ??
+            (rawData is Map ? (rawData['me'] ?? rawData['myRank']) : null);
+        final contestJson = res.data['contest'] ??
+            (rawData is Map ? rawData['contest'] : null);
+
+        if (contestJson is Map<String, dynamic>) {
+          _contest = LeaderboardContestData.fromJson(contestJson);
+        }
 
         final climbingUsers = <String>{};
         for (final u in list) {
@@ -188,7 +289,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
               validateStatus: (status) => true,
             ),
           );
-          if (meRes.statusCode == 200 && meRes.data != null && meRes.data['success'] == true && meRes.data['data'] != null) {
+          if (meRes.statusCode == 200 &&
+              meRes.data != null &&
+              meRes.data['success'] == true &&
+              meRes.data['data'] != null) {
             final meData = meRes.data['data'];
             _coinsToTop100 = meData['coinsToTop100'] ?? 0;
             _coinsToNextRank = meData['coinsToNextRank'] ?? 0;
@@ -199,7 +303,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
           setState(() {
             _leaderboard = list;
             if (myRankJson != null) {
-              _myRank = LeaderboardUser.fromJson(myRankJson);
+              _myRank = LeaderboardUser.fromJson(myRankJson as Map<String, dynamic>);
             }
             if (climbingUsers.isNotEmpty) {
               _highlightedUserIds = climbingUsers;
@@ -353,7 +457,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                               ),
                             ],
                           ),
-                          child: Icon(Icons.refresh_rounded, color: colors.primary, size: 20),
+                          child: _isLoading
+                              ? SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
+                                  ),
+                                )
+                              : Icon(Icons.refresh_rounded, color: colors.primary, size: 20),
                         ),
                       ),
                     ],
@@ -499,30 +612,25 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                           ),
                         ],
                       ),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: SizedBox(
-                          width: 290,
-                          child: Row(
-                            children: [
+                      child: Row(
+                        children: [
                           // Rank number badge
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.25),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
                               '#${_myRank!.rank}',
                               style: const TextStyle(
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w900,
                                 color: Colors.white,
                               ),
                             ),
                           ),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 8),
 
                           // User Avatar
                           UserAvatar(
@@ -530,18 +638,19 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                             displayName: (curStudent?.displayName.isNotEmpty == true)
                                 ? curStudent!.displayName
                                 : (_myRank!.displayName.isNotEmpty ? _myRank!.displayName : _myRank!.username),
-                            size: 38,
+                            size: 34,
                             borderColor: Colors.white,
                             borderWidth: 1.5,
                           ),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 8),
 
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  '#${_myRank!.rank} Siz ${_myRank!.rank}-o‘rindasiz',
+                                  'Siz ${_myRank!.rank}-o‘rindasiz',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
@@ -550,13 +659,13 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                                     color: Colors.white,
                                   ),
                                 ),
-                                const SizedBox(height: 2),
+                                const SizedBox(height: 1),
                                 Text(
-                                  '@${curStudent?.username ?? _myRank!.username} • ${_coinsToTop100 > 0 ? "Top 100 ga $_coinsToTop100 coin" : (_coinsToNextRank > 0 ? "+$_coinsToNextRank coin keyingi o‘rin" : "Ajoyib natija!")}',
+                                  '@${curStudent?.username ?? _myRank!.username} • ${_coinsToTop100 > 0 ? "Top 100 ga $_coinsToTop100 coin" : (_coinsToNextRank > 0 ? "+$_coinsToNextRank coin" : "Ajoyib!")}',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                    fontSize: 11,
+                                    fontSize: 10.5,
                                     fontWeight: FontWeight.w600,
                                     color: Color(0xFFE0E7FF),
                                   ),
@@ -565,68 +674,63 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                             ),
                           ),
 
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 6),
 
                           // Coin & XP badges
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.18),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const CoinIcon(size: 14),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        '$realCoins',
-                                        style: const TextStyle(
-                                          fontSize: 12.5,
-                                          fontWeight: FontWeight.w900,
-                                          color: Color(0xFFFFD66B),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3.5),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.18),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                const SizedBox(width: 6),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const XpCoin(size: 13, showGlow: false),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        '$realXP XP',
-                                        style: const TextStyle(
-                                          fontSize: 11.5,
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.white,
-                                        ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const CoinIcon(size: 13),
+                                    const SizedBox(width: 3),
+                                    Text(
+                                      '$realCoins',
+                                      style: const TextStyle(
+                                        fontSize: 11.5,
+                                        fontWeight: FontWeight.w900,
+                                        color: Color(0xFFFFD66B),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(width: 4),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3.5),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const XpCoin(size: 12, showGlow: false),
+                                    const SizedBox(width: 3),
+                                    Text(
+                                      '$realXP',
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ),
-              );
+                  );
                 },
               ),
           ],
@@ -870,9 +974,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   }
 
   Widget _buildContestBanner(AppThemeColors colors, bool isDark) {
-    final now = DateTime.now();
-    final daysRemaining = 30 - (now.day % 30);
-    final hoursRemaining = 23 - now.hour;
+    final contestTitle = _contest?.name ?? '30 kunlik musobaqa';
+    final timerText = _formatContestRemaining(_contest);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -916,9 +1019,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      '30 kunlik musobaqa',
-                      style: TextStyle(
+                    Text(
+                      contestTitle,
+                      style: const TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w900,
                         color: Color(0xFF8B5CF6),
@@ -935,26 +1038,32 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                   ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF8B5CF6).withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.timer_outlined, size: 12, color: Color(0xFF8B5CF6)),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${daysRemaining}k ${hoursRemaining}s',
-                      style: const TextStyle(
-                        fontSize: 10.5,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFF8B5CF6),
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF8B5CF6).withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.timer_outlined, size: 12, color: Color(0xFF8B5CF6)),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          timerText,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 10.5,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF8B5CF6),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -1030,70 +1139,197 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           // 2nd Place (Orange) - Left
-          if (second != null)
-            Expanded(
-              flex: 10,
-              child: _buildPodiumColumn(
-                user: second,
-                rank: 2,
-                pedestalHeight: 105,
-                podiumColor: const Color(0xFFFF9800),
-                gradientColors: const [Color(0xFFFFB347), Color(0xFFFF8C00)],
-                badgeIcon: '🥈',
-                crown: false,
-                colors: colors,
-                isDark: isDark,
-                currentStudent: currentStudent,
-              ),
-            )
-          else
-            const Expanded(flex: 10, child: SizedBox.shrink()),
+          Expanded(
+            flex: 10,
+            child: second != null
+                ? _buildPodiumColumn(
+                    user: second,
+                    rank: 2,
+                    pedestalHeight: 105,
+                    podiumColor: const Color(0xFFFF9800),
+                    gradientColors: const [Color(0xFFFFB347), Color(0xFFFF8C00)],
+                    badgeIcon: '🥈',
+                    crown: false,
+                    colors: colors,
+                    isDark: isDark,
+                    currentStudent: currentStudent,
+                  )
+                : _buildEmptyPodiumColumn(
+                    rank: 2,
+                    pedestalHeight: 105,
+                    podiumColor: const Color(0xFFFF9800),
+                    gradientColors: const [Color(0xFFFFB347), Color(0xFFFF8C00)],
+                    badgeIcon: '🥈',
+                    colors: colors,
+                    isDark: isDark,
+                  ),
+          ),
 
           const SizedBox(width: 8),
 
           // 1st Place (Yellow) - Center (Tallest)
-          if (first != null)
-            Expanded(
-              flex: 11,
-              child: _buildPodiumColumn(
-                user: first,
-                rank: 1,
-                pedestalHeight: 140,
-                podiumColor: const Color(0xFFFFD700),
-                gradientColors: const [Color(0xFFFFE066), Color(0xFFFFC000)],
-                badgeIcon: '👑',
-                crown: true,
-                colors: colors,
-                isDark: isDark,
-                currentStudent: currentStudent,
-              ),
-            )
-          else
-            const Expanded(flex: 11, child: SizedBox.shrink()),
+          Expanded(
+            flex: 11,
+            child: first != null
+                ? _buildPodiumColumn(
+                    user: first,
+                    rank: 1,
+                    pedestalHeight: 140,
+                    podiumColor: const Color(0xFFFFD700),
+                    gradientColors: const [Color(0xFFFFE066), Color(0xFFFFC000)],
+                    badgeIcon: '👑',
+                    crown: true,
+                    colors: colors,
+                    isDark: isDark,
+                    currentStudent: currentStudent,
+                  )
+                : _buildEmptyPodiumColumn(
+                    rank: 1,
+                    pedestalHeight: 140,
+                    podiumColor: const Color(0xFFFFD700),
+                    gradientColors: const [Color(0xFFFFE066), Color(0xFFFFC000)],
+                    badgeIcon: '👑',
+                    colors: colors,
+                    isDark: isDark,
+                  ),
+          ),
 
           const SizedBox(width: 8),
 
           // 3rd Place (Grey) - Right
-          if (third != null)
-            Expanded(
-              flex: 10,
-              child: _buildPodiumColumn(
-                user: third,
-                rank: 3,
-                pedestalHeight: 80,
-                podiumColor: const Color(0xFF9E9E9E),
-                gradientColors: const [Color(0xFFCFD8DC), Color(0xFF90A4AE)],
-                badgeIcon: '🥉',
-                crown: false,
-                colors: colors,
-                isDark: isDark,
-                currentStudent: currentStudent,
-              ),
-            )
-          else
-            const Expanded(flex: 10, child: SizedBox.shrink()),
+          Expanded(
+            flex: 10,
+            child: third != null
+                ? _buildPodiumColumn(
+                    user: third,
+                    rank: 3,
+                    pedestalHeight: 80,
+                    podiumColor: const Color(0xFF9E9E9E),
+                    gradientColors: const [Color(0xFFCFD8DC), Color(0xFF90A4AE)],
+                    badgeIcon: '🥉',
+                    crown: false,
+                    colors: colors,
+                    isDark: isDark,
+                    currentStudent: currentStudent,
+                  )
+                : _buildEmptyPodiumColumn(
+                    rank: 3,
+                    pedestalHeight: 80,
+                    podiumColor: const Color(0xFF9E9E9E),
+                    gradientColors: const [Color(0xFFCFD8DC), Color(0xFF90A4AE)],
+                    badgeIcon: '🥉',
+                    colors: colors,
+                    isDark: isDark,
+                  ),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildEmptyPodiumColumn({
+    required int rank,
+    required double pedestalHeight,
+    required Color podiumColor,
+    required List<Color> gradientColors,
+    required String badgeIcon,
+    required AppThemeColors colors,
+    required bool isDark,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(height: 12),
+        const SizedBox(height: 2),
+
+        // Empty Avatar Circle
+        Container(
+          width: rank == 1 ? 54 : 44,
+          height: rank == 1 ? 54 : 44,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isDark ? const Color(0xFF1E143E) : const Color(0xFFEDE9FE),
+            border: Border.all(
+              color: podiumColor.withOpacity(0.4),
+              width: 1.5,
+            ),
+          ),
+          child: Icon(
+            Icons.person_outline_rounded,
+            size: rank == 1 ? 28 : 22,
+            color: colors.muted.withOpacity(0.5),
+          ),
+        ),
+
+        const SizedBox(height: 10),
+
+        // Display Name
+        Text(
+          'Bo‘sh o‘rin',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            color: colors.muted,
+          ),
+        ),
+
+        const SizedBox(height: 2),
+
+        // Empty coins placeholder
+        Text(
+          '- -',
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            color: colors.muted.withOpacity(0.6),
+          ),
+        ),
+
+        const SizedBox(height: 6),
+
+        // Pedestal Body
+        Container(
+          width: double.infinity,
+          height: pedestalHeight,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                gradientColors[0].withOpacity(0.4),
+                gradientColors[1].withOpacity(0.25),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            border: Border.all(
+              color: podiumColor.withOpacity(0.3),
+              width: 1.2,
+            ),
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.topCenter,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                Text(badgeIcon, style: const TextStyle(fontSize: 18)),
+                const SizedBox(height: 2),
+                Text(
+                  '$rank',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
+                    color: isDark ? Colors.white38 : Colors.black26,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -1111,6 +1347,12 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   }) {
     final isMe = (_myRank != null && (user.id == _myRank!.id || user.userId == _myRank!.userId)) ||
         (currentStudent != null && (user.id == currentStudent.id || user.userId == currentStudent.id));
+
+    final displayName = isMe
+        ? 'Siz'
+        : (user.displayName.isNotEmpty && user.displayName.toLowerCase() != 'siz'
+            ? user.displayName
+            : user.username);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1140,7 +1382,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
               ),
               child: UserAvatar(
                 avatarUrl: user.avatarUrl,
-                displayName: user.displayName.isNotEmpty ? user.displayName : user.username,
+                displayName: displayName,
                 size: rank == 1 ? 54 : 44,
                 borderColor: podiumColor,
                 borderWidth: rank == 1 ? 2.5 : 2.0,
@@ -1178,7 +1420,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
 
         // Display Name
         Text(
-          isMe ? 'Siz' : user.displayName,
+          displayName,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(

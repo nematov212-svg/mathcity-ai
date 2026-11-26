@@ -135,33 +135,25 @@ export interface DailyActivityRecord {
 
 export type MissionStatus = 'ACTIVE' | 'COMPLETED' | 'CLAIMED' | 'EXPIRED';
 
-export type AnnouncementType = 'URGENT_ANNOUNCEMENT' | 'SPECIAL_OFFER' | 'ANNOUNCEMENT' | 'AD';
+export type AnnouncementType =
+  | 'urgent'
+  | 'special_offer'
+  | 'info'
+  | 'URGENT_ANNOUNCEMENT'
+  | 'SPECIAL_OFFER'
+  | 'ANNOUNCEMENT'
+  | 'AD';
 
-export interface AnnouncementButtonConfig {
-  text: string;
-  color?: string;
-  style?: 'filled' | 'outlined' | 'gradient';
-  action?: 'navigate' | 'dismiss' | 'url';
-  route?: string;
-}
-
-export interface AnnouncementDesign {
-  layout?: 'popup' | 'bottom_sheet' | 'full_screen' | 'top_banner';
-  background?: {
-    type?: 'solid' | 'gradient' | 'theme' | 'image';
-    value?: string;
-    textColor?: string;
-    accentColor?: string;
-  };
-  showTimer?: boolean;
-  livePricing?: boolean;
-  buttons?: AnnouncementButtonConfig[];
-  dismissOptions?: {
-    autoCloseSeconds?: number;
-    allowDismiss?: boolean;
-    frequency?: 'once_per_session' | 'once_per_day' | 'always';
-  };
-  audience?: 'all' | 'new_users' | 'free_users' | 'pro_users';
+export interface LeaderboardContest {
+  id: string;
+  name: string;
+  durationDays: number;
+  startDate: string; // ISO
+  endDate: string; // ISO
+  prizes: { rank: number; coins: number }[];
+  isEnded: boolean;
+  awardedAt?: string;
+  awardedWinners?: { rank: number; userId: string; username: string; coins: number }[];
 }
 
 export interface AnnouncementModel {
@@ -169,20 +161,29 @@ export interface AnnouncementModel {
   title: string;
   text: string;
   imageUrl?: string;
-  buttonText?: string;
+  buttonText: string;
+  buttonAction: string; // e.g. '/kids/leaderboard', '/kids/pro', 'url:https://...'
   buttonRoute?: string;
   type: AnnouncementType;
-  startDate: string; // ISO
-  endDate?: string; // ISO
-  delaySeconds: number; // e.g. 0 on app open, 300 for 5 minutes
-  autoCloseSeconds?: number; // e.g. 5 for 5-second auto close
+  startAt?: string; // ISO
+  startDate: string; // ISO alias
+  endAt?: string; // ISO
+  endDate?: string; // ISO alias
+  priority: number; // higher = shown first
+  autoCloseSeconds: number; // default 5, 0 = no auto close
+  showDelaySeconds: number; // 0 = immediate, 300 = 5 min
+  delaySeconds: number; // alias
+  audience: 'all' | 'new_users_within_days:3' | 'new_users_within_days:7' | 'new_users' | 'free_users' | 'pro_users';
+  frequency: 'once' | 'every_open' | 'once_per_day' | 'once_per_session' | 'always';
+  views: number;
+  clicks: number;
   discountPercent?: number; // e.g. 30
   discountPrice?: number; // e.g. 20300
   originalPrice?: number; // e.g. 29000
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
-  design?: AnnouncementDesign;
+  design?: any;
 }
 
 export interface DailyMissionRecord {
@@ -217,18 +218,40 @@ class DataRepository {
   private achievements: AchievementModel[] = initialAchievements;
   private dailyActivities: Map<string, DailyActivityRecord> = new Map();
   private dailyMissions: Map<string, DailyMissionRecord[]> = new Map();
+  private leaderboardContest: LeaderboardContest = {
+    id: 'contest-season-1',
+    name: '30 kunlik o‘quvchilar musobaqasi',
+    durationDays: 30,
+    startDate: new Date(Date.now() - 3600000).toISOString(),
+    endDate: new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString(),
+    prizes: [
+      { rank: 1, coins: 500 },
+      { rank: 2, coins: 250 },
+      { rank: 3, coins: 150 },
+    ],
+    isEnded: false,
+  };
   private announcements: AnnouncementModel[] = [
     {
       id: 'announcement-urgent-01',
       title: '30 kun ichida 1, 2 yoki 3-o‘rinni egallasangiz, ko‘plab coin yutib olishingiz mumkin!',
       text: '1-o‘rin 500 coin, 2-o‘rin 250 coin, 3-o‘rin 150 coin.',
       buttonText: '1-o‘rinni egallash uchun harakat',
+      buttonAction: '/kids/leaderboard',
       buttonRoute: '/kids/leaderboard',
-      type: 'URGENT_ANNOUNCEMENT',
+      type: 'urgent',
+      startAt: new Date(Date.now() - 3600000).toISOString(),
       startDate: new Date(Date.now() - 3600000).toISOString(),
+      endAt: new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString(),
       endDate: new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString(),
-      delaySeconds: 0,
+      priority: 10,
       autoCloseSeconds: 5,
+      showDelaySeconds: 0,
+      delaySeconds: 0,
+      audience: 'all',
+      frequency: 'every_open',
+      views: 0,
+      clicks: 0,
       isActive: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -238,11 +261,21 @@ class DataRepository {
       title: 'Maxsus taklif — MathCity AI dan',
       text: 'Yangi o‘quvchilar uchun MathCity PRO obunasiga 30% chegirma! 7 kun amal qiladi.',
       buttonText: 'PRO sotib olish',
+      buttonAction: '/kids/pro',
       buttonRoute: '/kids/pro',
-      type: 'SPECIAL_OFFER',
+      type: 'special_offer',
+      startAt: new Date(Date.now() - 3600000).toISOString(),
       startDate: new Date(Date.now() - 3600000).toISOString(),
+      endAt: new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString(),
       endDate: new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString(),
+      priority: 5,
+      autoCloseSeconds: 0,
+      showDelaySeconds: 300,
       delaySeconds: 300,
+      audience: 'new_users_within_days:7',
+      frequency: 'once',
+      views: 0,
+      clicks: 0,
       discountPercent: 30,
       discountPrice: 20300,
       originalPrice: 29000,
@@ -1178,33 +1211,129 @@ class DataRepository {
     };
   }
 
+  // --- Leaderboard Contest Management (Idempotent 500/250/150 rewards) ---
+  getLeaderboardContest(): LeaderboardContest {
+    return { ...this.leaderboardContest };
+  }
+
+  updateLeaderboardContest(data: any): LeaderboardContest {
+    let normalizedPrizes = this.leaderboardContest.prizes;
+    if (data.prizes) {
+      if (Array.isArray(data.prizes)) {
+        normalizedPrizes = data.prizes;
+      } else if (typeof data.prizes === 'object') {
+        normalizedPrizes = [
+          { rank: 1, coins: Number(data.prizes.first || data.prizes['1'] || 500) },
+          { rank: 2, coins: Number(data.prizes.second || data.prizes['2'] || 250) },
+          { rank: 3, coins: Number(data.prizes.third || data.prizes['3'] || 150) },
+        ];
+      }
+    }
+    this.leaderboardContest = {
+      ...this.leaderboardContest,
+      ...data,
+      prizes: normalizedPrizes,
+      id: this.leaderboardContest.id,
+    };
+    return { ...this.leaderboardContest };
+  }
+
+  checkAndAwardContestPrizes(): boolean {
+    const now = Date.now();
+    const end = new Date(this.leaderboardContest.endDate).getTime();
+    if (now < end || this.leaderboardContest.isEnded) {
+      return false;
+    }
+
+    const allUsers = this.getAllUsers();
+    const sorted = [...allUsers].sort((a, b) => {
+      const cA = a.coinBalance || 0;
+      const cB = b.coinBalance || 0;
+      if (cB !== cA) return cB - cA;
+      const xA = a.totalXP || 0;
+      const xB = b.totalXP || 0;
+      if (xB !== xA) return xB - xA;
+      const tA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const tB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return tA - tB;
+    });
+
+    const winners: { rank: number; userId: string; username: string; coins: number }[] = [];
+    const prizeMap: Record<number, number> = { 1: 500, 2: 250, 3: 150 };
+    for (const p of this.leaderboardContest.prizes) {
+      prizeMap[p.rank] = p.coins;
+    }
+
+    for (let i = 0; i < Math.min(3, sorted.length); i++) {
+      const rank = i + 1;
+      const winner = sorted[i];
+      const coins = prizeMap[rank] || (rank === 1 ? 500 : rank === 2 ? 250 : 150);
+      winner.coinBalance = (winner.coinBalance || 0) + coins;
+      this.updateUser(winner.id, { coinBalance: winner.coinBalance });
+      winners.push({
+        rank,
+        userId: winner.id,
+        username: winner.username || winner.displayName || `user_${winner.id.slice(0, 6)}`,
+        coins,
+      });
+    }
+
+    this.leaderboardContest.isEnded = true;
+    this.leaderboardContest.awardedAt = new Date().toISOString();
+    this.leaderboardContest.awardedWinners = winners;
+    return true;
+  }
+
+  finalizeContestManually(): { success: boolean; winners: any[] } {
+    if (this.leaderboardContest.isEnded) {
+      return { success: false, winners: this.leaderboardContest.awardedWinners || [] };
+    }
+    this.leaderboardContest.endDate = new Date().toISOString();
+    this.checkAndAwardContestPrizes();
+    return { success: true, winners: this.leaderboardContest.awardedWinners || [] };
+  }
+
   // --- Announcements & Advertisements Management ---
   getAllAnnouncements(): AnnouncementModel[] {
     return [...this.announcements];
   }
 
   getActiveAnnouncements(userCreatedAt?: string): AnnouncementModel[] {
-    const now = new Date().getTime();
-    return this.announcements.filter((a) => {
-      if (!a.isActive) return false;
-      const start = new Date(a.startDate).getTime();
-      if (!isNaN(start) && now < start) return false;
-      if (a.endDate) {
-        const end = new Date(a.endDate).getTime();
-        if (!isNaN(end) && now > end) return false;
-      }
-      // If Special Offer for new users, check 7-day limit from user registration
-      if (a.type === 'SPECIAL_OFFER' && userCreatedAt) {
-        const regTime = new Date(userCreatedAt).getTime();
-        if (!isNaN(regTime)) {
-          const sevenDaysMs = 7 * 24 * 3600 * 1000;
-          if (now - regTime > sevenDaysMs) {
-            return false; // Expired for this user
+    const now = Date.now();
+    return this.announcements
+      .filter((a) => {
+        if (!a.isActive) return false;
+        const startStr = a.startAt || a.startDate;
+        if (startStr) {
+          const start = new Date(startStr).getTime();
+          if (!isNaN(start) && now < start) return false;
+        }
+        const endStr = a.endAt || a.endDate;
+        if (endStr) {
+          const end = new Date(endStr).getTime();
+          if (!isNaN(end) && now > end) return false;
+        }
+
+        // Audience check
+        const audience = a.audience || 'all';
+        if (audience.startsWith('new_users_within_days:')) {
+          const days = parseInt(audience.split(':')[1], 10) || 7;
+          if (!userCreatedAt) return false;
+          const regTime = new Date(userCreatedAt).getTime();
+          if (isNaN(regTime) || now - regTime > days * 24 * 3600 * 1000) {
+            return false;
+          }
+        } else if (a.type === 'SPECIAL_OFFER' || a.type === 'special_offer') {
+          if (userCreatedAt) {
+            const regTime = new Date(userCreatedAt).getTime();
+            if (!isNaN(regTime) && now - regTime > 7 * 24 * 3600 * 1000) {
+              return false;
+            }
           }
         }
-      }
-      return true;
-    });
+        return true;
+      })
+      .sort((a, b) => (b.priority || 0) - (a.priority || 0));
   }
 
   getAnnouncementById(id: string): AnnouncementModel | undefined {
@@ -1214,18 +1343,31 @@ class DataRepository {
   createAnnouncement(data: Partial<AnnouncementModel>): AnnouncementModel {
     const id = `announcement-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
     const now = new Date().toISOString();
+    const btnAct = data.buttonAction || data.buttonRoute || '/kids/leaderboard';
+    const delay = typeof data.showDelaySeconds === 'number'
+      ? data.showDelaySeconds
+      : (typeof data.delaySeconds === 'number' ? data.delaySeconds : 0);
     const item: AnnouncementModel = {
       id,
       title: data.title || 'E‘lon',
       text: data.text || '',
       imageUrl: data.imageUrl,
       buttonText: data.buttonText || 'Batafsil',
-      buttonRoute: data.buttonRoute || '/kids/leaderboard',
-      type: data.type || 'ANNOUNCEMENT',
-      startDate: data.startDate || now,
-      endDate: data.endDate,
-      delaySeconds: typeof data.delaySeconds === 'number' ? data.delaySeconds : 0,
-      autoCloseSeconds: data.autoCloseSeconds,
+      buttonAction: btnAct,
+      buttonRoute: btnAct,
+      type: data.type || 'info',
+      startAt: data.startAt || data.startDate || now,
+      startDate: data.startDate || data.startAt || now,
+      endAt: data.endAt || data.endDate,
+      endDate: data.endDate || data.endAt,
+      priority: typeof data.priority === 'number' ? data.priority : 0,
+      autoCloseSeconds: typeof data.autoCloseSeconds === 'number' ? data.autoCloseSeconds : 5,
+      showDelaySeconds: delay,
+      delaySeconds: delay,
+      audience: data.audience || 'all',
+      frequency: data.frequency || 'every_open',
+      views: typeof data.views === 'number' ? data.views : 0,
+      clicks: typeof data.clicks === 'number' ? data.clicks : 0,
       discountPercent: data.discountPercent,
       discountPrice: data.discountPrice,
       originalPrice: data.originalPrice,
@@ -1244,9 +1386,17 @@ class DataRepository {
       throw new Error('E‘lon topilmadi');
     }
     const current = this.announcements[index];
+    const btnAct = data.buttonAction || data.buttonRoute || current.buttonAction || current.buttonRoute || '/kids/leaderboard';
+    const delay = typeof data.showDelaySeconds === 'number'
+      ? data.showDelaySeconds
+      : (typeof data.delaySeconds === 'number' ? data.delaySeconds : current.showDelaySeconds);
     const updated: AnnouncementModel = {
       ...current,
       ...data,
+      buttonAction: btnAct,
+      buttonRoute: btnAct,
+      showDelaySeconds: delay,
+      delaySeconds: delay,
       id: current.id,
       updatedAt: new Date().toISOString(),
     };
@@ -1260,6 +1410,24 @@ class DataRepository {
     this.announcements.splice(index, 1);
     return true;
   }
+
+  incrementAnnouncementView(id: string): boolean {
+    const item = this.announcements.find((a) => a.id === id);
+    if (!item) return false;
+    item.views = (item.views || 0) + 1;
+    item.updatedAt = new Date().toISOString();
+    return true;
+  }
+
+  incrementAnnouncementClick(id: string): boolean {
+    const item = this.announcements.find((a) => a.id === id);
+    if (!item) return false;
+    item.clicks = (item.clicks || 0) + 1;
+    item.updatedAt = new Date().toISOString();
+    return true;
+  }
+
+
 
   private usedPurchaseTokens: Set<string> = new Set();
 

@@ -53,7 +53,9 @@ class AuthService {
     try {
       final String? effectiveClientId;
       if (kIsWeb) {
-        effectiveClientId = webClientId.isNotEmpty ? webClientId : null;
+        effectiveClientId = webClientId.isNotEmpty
+            ? webClientId
+            : '608766203356-d6oq3gvc5n199671ho1npgr240afkjup.apps.googleusercontent.com';
       } else if (defaultTargetPlatform == TargetPlatform.iOS ||
           defaultTargetPlatform == TargetPlatform.macOS) {
         effectiveClientId = iosClientId.isNotEmpty ? iosClientId : null;

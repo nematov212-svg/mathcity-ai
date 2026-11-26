@@ -87,10 +87,10 @@ export const aiRateLimiter = createRateLimiter({
   },
 });
 
-// 2b. AI Voice Endpoint Rate Limiter (At least 10 requests per minute per user)
+// 2b. AI Voice Endpoint Rate Limiter (At least 30 requests per minute per user)
 export const aiVoiceRateLimiter = createRateLimiter({
   windowMs: 60 * 1000,
-  maxRequests: 15,
+  maxRequests: 30,
   message: 'Ovozli so‘rovlar limiti oshdi. Iltimos, 1 daqiqadan so‘ng qayta urinib ko‘ring.',
   keyGenerator: (req) => {
     const authReq = req as AuthenticatedRequest;

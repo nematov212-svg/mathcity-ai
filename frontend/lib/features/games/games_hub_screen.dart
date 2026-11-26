@@ -24,7 +24,7 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen> with SingleTick
   bool _isLoading = false;
 
   late AnimationController _floatController;
-
+  
   @override
   void initState() {
     super.initState();

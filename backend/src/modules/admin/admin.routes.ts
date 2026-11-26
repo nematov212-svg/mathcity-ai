@@ -1534,6 +1534,66 @@ adminRouter.delete('/announcements/:id', adminAuth, (req: AuthenticatedAdminRequ
   return res.json({ success: true, message: 'E‘lon o‘chirildi.' });
 });
 
+adminRouter.patch('/announcements/:id/toggle', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const annId = String(req.params.id);
+  const item = repository.getAnnouncementById(annId);
+  if (!item) {
+    return res.status(404).json({ success: false, error: 'E‘lon topilmadi.' });
+  }
+  const updated = repository.updateAnnouncement(annId, { isActive: !item.isActive });
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'TOGGLE_ANNOUNCEMENT',
+    targetType: 'ANNOUNCEMENT',
+    targetId: annId,
+    details: { isActive: updated.isActive },
+  });
+  return res.json({ success: true, data: updated });
+});
+
+// ---------------------------------------------------------------------------
+// 8b. REYTING MUSOBAQASI SOZLAMALARI (LEADERBOARD CONTEST)
+// ---------------------------------------------------------------------------
+adminRouter.get('/contest', adminAuth, (_req: Request, res: Response) => {
+  repository.checkAndAwardContestPrizes();
+  return res.json({
+    success: true,
+    data: repository.getLeaderboardContest(),
+  });
+});
+
+adminRouter.put('/contest', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const updated = repository.updateLeaderboardContest(req.body);
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'UPDATE_CONTEST',
+    targetType: 'CONTEST',
+    targetId: updated.id,
+    details: req.body,
+  });
+  return res.json({ success: true, data: updated });
+});
+
+adminRouter.post('/contest/finalize', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const result = repository.finalizeContestManually();
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'mirzobek',
+    action: 'FINALIZE_CONTEST',
+    targetType: 'CONTEST',
+    targetId: 'contest-season-1',
+    details: { winners: result.winners },
+  });
+  return res.json({
+    success: result.success,
+    data: repository.getLeaderboardContest(),
+    winners: result.winners,
+    message: result.success ? 'Musobaqa yakunlandi va coinlar g‘oliblarga taqsimlandi!' : 'Musobaqa allaqachon yakunlangan.',
+  });
+});
+
 // ---------------------------------------------------------------------------
 // 9. AI USTOZ ANALYTICS & RAG KNOWLEDGE REPOSITORY
 // ---------------------------------------------------------------------------

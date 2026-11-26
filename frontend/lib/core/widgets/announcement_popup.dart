@@ -80,14 +80,18 @@ class AnnouncementDesign {
 
 class AnnouncementItem {
   final String id;
-  final String type; // URGENT_ANNOUNCEMENT, SPECIAL_OFFER, ANNOUNCEMENT, AD
+  final String type; // urgent, special_offer, info, URGENT_ANNOUNCEMENT, SPECIAL_OFFER, ANNOUNCEMENT, AD
   final String title;
   final String text;
   final String? imageUrl;
   final String? buttonText;
+  final String? buttonAction;
   final String? buttonRoute;
   final int delaySeconds;
   final int? autoCloseSeconds;
+  final int priority;
+  final String frequency; // once, every_open, once_per_day
+  final String audience;
   final int? discountPercent;
   final int? discountPrice;
   final int? originalPrice;
@@ -100,9 +104,13 @@ class AnnouncementItem {
     required this.text,
     this.imageUrl,
     this.buttonText,
+    this.buttonAction,
     this.buttonRoute,
     this.delaySeconds = 0,
     this.autoCloseSeconds,
+    this.priority = 0,
+    this.frequency = 'every_open',
+    this.audience = 'all',
     this.discountPercent,
     this.discountPrice,
     this.originalPrice,
@@ -110,6 +118,8 @@ class AnnouncementItem {
   });
 
   factory AnnouncementItem.fromJson(Map<String, dynamic> json) {
+    final act = (json['buttonAction'] ?? json['buttonRoute']) as String?;
+    final delay = (json['showDelaySeconds'] ?? json['delaySeconds'] as num?)?.toInt() ?? 0;
     return AnnouncementItem(
       id: (json['id'] ?? '').toString(),
       type: (json['type'] ?? 'ANNOUNCEMENT').toString(),
@@ -117,9 +127,13 @@ class AnnouncementItem {
       text: (json['text'] ?? '').toString(),
       imageUrl: json['imageUrl'] as String?,
       buttonText: json['buttonText'] as String?,
-      buttonRoute: json['buttonRoute'] as String?,
-      delaySeconds: (json['delaySeconds'] as num?)?.toInt() ?? 0,
+      buttonAction: act,
+      buttonRoute: act,
+      delaySeconds: delay,
       autoCloseSeconds: (json['autoCloseSeconds'] as num?)?.toInt(),
+      priority: (json['priority'] as num?)?.toInt() ?? 0,
+      frequency: (json['frequency'] ?? 'every_open').toString(),
+      audience: (json['audience'] ?? 'all').toString(),
       discountPercent: (json['discountPercent'] as num?)?.toInt(),
       discountPrice: (json['discountPrice'] as num?)?.toInt(),
       originalPrice: (json['originalPrice'] as num?)?.toInt(),
@@ -141,6 +155,18 @@ class AnnouncementManager {
     _dismissedAnnouncementIds.add(id);
   }
 
+  static void recordView(String id) {
+    try {
+      ApiClient().dio.post('/announcements/$id/view').ignore();
+    } catch (_) {}
+  }
+
+  static void recordClick(String id) {
+    try {
+      ApiClient().dio.post('/announcements/$id/click').ignore();
+    } catch (_) {}
+  }
+
   static void startLivePolling(BuildContext context, WidgetRef ref) {
     _pollingTimer?.cancel();
     _pollingTimer = Timer.periodic(const Duration(seconds: 60), (_) {
@@ -155,29 +181,8 @@ class AnnouncementManager {
     _pollingTimer = null;
   }
 
-  /// Call once when home screen is initialized, on app resume, or every 60s.
+  /// Call once when home screen is initialized, on app resume, or periodically.
   /// Backend endpoint: GET /api/announcements/active
-  /// Expected response format:
-  /// {
-  ///   "success": true,
-  ///   "data": [
-  ///     {
-  ///       "id": "announcement-urgent-01",
-  ///       "title": "...",
-  ///       "text": "...",
-  ///       "buttonText": "...",
-  ///       "buttonRoute": "...",
-  ///       "type": "URGENT_ANNOUNCEMENT" | "SPECIAL_OFFER" | "ANNOUNCEMENT",
-  ///       "delaySeconds": 0,
-  ///       "autoCloseSeconds": 5,
-  ///       "isActive": true
-  ///     }
-  ///   ],
-  ///   "meta": {
-  ///     "total": 1,
-  ///     "hasNewUserDiscount": true
-  ///   }
-  /// }
   static Future<void> checkAndShowAnnouncements(BuildContext context, WidgetRef ref) async {
     if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) return;
     if (_lastFailedCheckAt != null &&
@@ -201,11 +206,15 @@ class AnnouncementManager {
           _lastFailedCheckAt = null;
         } else {
           _lastFailedCheckAt = DateTime.now();
-          debugPrint('ℹ️ [Announcements] Faol e‘lonlar topilmadi (HTTP ${res.statusCode}).');
+          if (kDebugMode) {
+            debugPrint('ℹ️ [Announcements] Hozircha e‘lonlar yo‘q.');
+          }
         }
       } catch (e) {
         _lastFailedCheckAt = DateTime.now();
-        debugPrint('ℹ️ [Announcements] E‘lonlar serveriga ulanib bo‘lmadi: $e');
+        if (kDebugMode) {
+          debugPrint('ℹ️ [Announcements] Hozircha e‘lonlar yo‘q.');
+        }
       }
 
       if (responseData == null || responseData['success'] != true || responseData['data'] is! List) {
@@ -213,9 +222,22 @@ class AnnouncementManager {
       }
 
       final rawList = responseData['data'] as List;
+      final prefs = await SharedPreferences.getInstance();
+      final todayStr = DateTime.now().toIso8601String().substring(0, 10);
+
       final announcements = rawList
           .map((e) => AnnouncementItem.fromJson(e as Map<String, dynamic>))
-          .where((a) => !_dismissedAnnouncementIds.contains(a.id))
+          .where((a) {
+            if (_dismissedAnnouncementIds.contains(a.id)) return false;
+            if (a.frequency == 'once') {
+              final viewed = prefs.getBool('announcement_viewed_${a.id}') ?? false;
+              if (viewed) return false;
+            } else if (a.frequency == 'once_per_day') {
+              final lastDate = prefs.getString('announcement_last_viewed_date_${a.id}');
+              if (lastDate == todayStr) return false;
+            }
+            return true;
+          })
           .toList();
 
       final meta = responseData['meta'] as Map<String, dynamic>? ?? {};
@@ -224,15 +246,25 @@ class AnnouncementManager {
       // 1. Check Urgent Announcement (Show on open if not shown this session)
       if (!_urgentShownThisSession) {
         final urgentItem = announcements.cast<AnnouncementItem?>().firstWhere(
-              (a) => a?.type == 'URGENT_ANNOUNCEMENT' || a?.type == 'ANNOUNCEMENT',
+              (a) =>
+                  a?.type == 'urgent' ||
+                  a?.type == 'URGENT_ANNOUNCEMENT' ||
+                  a?.type == 'ANNOUNCEMENT' ||
+                  a?.type == 'info',
               orElse: () => null,
             );
 
         if (urgentItem != null && context.mounted) {
           _urgentShownThisSession = true;
           final delayMs = urgentItem.delaySeconds > 0 ? (urgentItem.delaySeconds * 1000) : 700;
-          Future.delayed(Duration(milliseconds: delayMs), () {
+          Future.delayed(Duration(milliseconds: delayMs), () async {
             if (context.mounted && !_dismissedAnnouncementIds.contains(urgentItem.id)) {
+              if (urgentItem.frequency == 'once') {
+                await prefs.setBool('announcement_viewed_${urgentItem.id}', true);
+              } else if (urgentItem.frequency == 'once_per_day') {
+                await prefs.setString('announcement_last_viewed_date_${urgentItem.id}', todayStr);
+              }
+              recordView(urgentItem.id);
               showUrgentAnnouncementDialog(context, urgentItem);
             }
           });
@@ -243,17 +275,16 @@ class AnnouncementManager {
       if (!_specialOfferScheduled && hasNewUserDiscount) {
         final student = ref.read(studentProvider).student;
         if (student != null && student.isPro) {
-          return; // Already pro, do not show discount popup
+          return;
         }
 
         final specialOfferItem = announcements.cast<AnnouncementItem?>().firstWhere(
-              (a) => a?.type == 'SPECIAL_OFFER',
+              (a) => a?.type == 'special_offer' || a?.type == 'SPECIAL_OFFER',
               orElse: () => null,
             );
 
         if (specialOfferItem != null) {
-          final prefs = await SharedPreferences.getInstance();
-          final todayKey = 'offer_shown_${DateTime.now().toIso8601String().substring(0, 10)}';
+          final todayKey = 'offer_shown_$todayStr';
           final shownToday = prefs.getInt(todayKey) ?? 0;
           if (shownToday >= 3) return;
 
@@ -266,7 +297,13 @@ class AnnouncementManager {
             final currentStudent = ref.read(studentProvider).student;
             if (currentStudent != null && currentStudent.isPro) return;
 
+            if (specialOfferItem.frequency == 'once') {
+              await prefs.setBool('announcement_viewed_${specialOfferItem.id}', true);
+            } else if (specialOfferItem.frequency == 'once_per_day') {
+              await prefs.setString('announcement_last_viewed_date_${specialOfferItem.id}', todayStr);
+            }
             await prefs.setInt(todayKey, shownToday + 1);
+            recordView(specialOfferItem.id);
             if (context.mounted) {
               showSpecialOfferDialog(context, specialOfferItem);
             }
@@ -451,6 +488,7 @@ class _UrgentAnnouncementDialogState extends State<_UrgentAnnouncementDialog>
                                 borderRadius: BorderRadius.circular(16),
                                 onTap: () {
                                   HapticFeedback.lightImpact();
+                                  AnnouncementManager.recordClick(widget.item.id);
                                   _dismissDialog();
                                   context.push(route);
                                 },
@@ -760,6 +798,7 @@ class _SpecialOfferDialogState extends ConsumerState<_SpecialOfferDialog>
                                     borderRadius: BorderRadius.circular(18),
                                     onTap: () {
                                       HapticFeedback.mediumImpact();
+                                      AnnouncementManager.recordClick(widget.item.id);
                                       _dismissDialog();
                                       context.push(route);
                                     },

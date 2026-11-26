@@ -30,6 +30,7 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
   int _totalTasksCount = 4;
   String _taskProgressText = '5 ta matematika masalasini to‘g‘ri yeching';
   int _houseStage = 0;
+  bool _isLoadingHouse = false;
 
   @override
   void initState() {
@@ -67,6 +68,8 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
   }
 
   Future<void> _loadHouseProgress() async {
+    if (_isLoadingHouse) return;
+    _isLoadingHouse = true;
     try {
       final prefs = await SharedPreferences.getInstance();
       final cached = prefs.getInt('mc_house_building_stage') ?? 0;
@@ -82,7 +85,10 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
         }
         await prefs.setInt('mc_house_building_stage', s);
       }
-    } catch (_) {}
+    } catch (_) {
+    } finally {
+      _isLoadingHouse = false;
+    }
   }
 
   Future<void> _loadDailyTasks() async {
