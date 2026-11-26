@@ -19,6 +19,7 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2A1B7A">
   <meta name="description"
     content="MathCity AI — Maktab o`quvchilari uchun interaktiv va qiziqarli matematika ta`lim platformasi">
@@ -34,12 +35,41 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png" />
 
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+  </style>
+
   <title>MathCity AI — Matematika ta’lim platformasi</title>
   <link rel="manifest" href="manifest.json">
 
   <!-- Safe DOM guard, GSI duplicate suppressor & Clean Console logger -->
   <script>
     (function () {
+      // Prevent transient negative ViewInsets assertions during window resize / keyboard dismissal
+      window.addEventListener('unhandledrejection', function (event) {
+        if (event && event.reason) {
+          var str = String(event.reason.message || event.reason);
+          if (str.indexOf('ViewInsets cannot be negative') !== -1 || str.indexOf('_viewInsets.isNonNegative') !== -1) {
+            if (event.preventDefault) event.preventDefault();
+            return;
+          }
+        }
+      });
+      window.addEventListener('error', function (event) {
+        if (event && event.message && (event.message.indexOf('ViewInsets cannot be negative') !== -1 || event.message.indexOf('_viewInsets.isNonNegative') !== -1)) {
+          if (event.preventDefault) event.preventDefault();
+          return true;
+        }
+      });
+
       // 0. Console Logger Filter for GSI internal telemetry, preloads & noisy third-party notices
       ['log', 'info', 'warn', 'debug'].forEach(function (level) {
         var orig = console[level];
