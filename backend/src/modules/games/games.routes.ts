@@ -76,12 +76,134 @@ gamesRouter.get('/results/recent', authMiddleware, (req: AuthenticatedRequest, r
 
 /**
  * GET /api/games/house-building
- * Returns current house building state for authenticated user.
+ * Returns catalog, user 3D placement state, inventory, and progress.
  */
 gamesRouter.get('/house-building', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
-  const progress = repository.getHouseBuildingProgress(user.id);
-  return res.json({ success: true, data: progress });
+  const data = repository.getHouseBuildingData(user.id);
+  return res.json({ success: true, data });
+});
+
+const buyItemSchema = z.object({
+  itemId: z.string().min(1, 'Buyum identifikatori kiritilmadi.'),
+});
+
+/**
+ * POST /api/games/house-building/buy
+ * Server-authoritative purchase with atomic coin debit and inventory addition.
+ */
+gamesRouter.post('/house-building/buy', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const parse = buyItemSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: parse.error.errors[0]?.message || 'Noto‘g‘ri ma’lumot' });
+  }
+
+  const result = repository.buyHouseItem(user.id, parse.data.itemId);
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+  return res.json({ success: true, data: result });
+});
+
+const placeItemSchema = z.object({
+  itemId: z.string().min(1),
+  cellX: z.number().int().min(0).max(11),
+  cellY: z.number().int().min(0).max(11),
+  rotation: z.number().int().optional().default(0),
+  color: z.string().optional(),
+});
+
+/**
+ * POST /api/games/house-building/place
+ * Place an owned item on 12x12 grid with dependency and zone checks.
+ */
+gamesRouter.post('/house-building/place', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const parse = placeItemSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: 'Joylashtirish ma’lumotlari noto‘g‘ri kiritildi.' });
+  }
+
+  const { itemId, cellX, cellY, rotation, color } = parse.data;
+  const result = repository.placeHouseItem(user.id, itemId, cellX, cellY, rotation, color);
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+  return res.json({ success: true, data: result });
+});
+
+const moveItemSchema = z.object({
+  instanceId: z.string().min(1),
+  newCellX: z.number().int().min(0).max(11),
+  newCellY: z.number().int().min(0).max(11),
+});
+
+/**
+ * POST /api/games/house-building/move
+ */
+gamesRouter.post('/house-building/move', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const parse = moveItemSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: 'Ko‘chirish koordinatalari noto‘g‘ri.' });
+  }
+
+  const result = repository.moveHouseItem(user.id, parse.data.instanceId, parse.data.newCellX, parse.data.newCellY);
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+  return res.json({ success: true, data: result });
+});
+
+const rotateItemSchema = z.object({
+  instanceId: z.string().min(1),
+  rotation: z.number().int().optional(),
+});
+
+/**
+ * POST /api/games/house-building/rotate
+ */
+gamesRouter.post('/house-building/rotate', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const parse = rotateItemSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: 'Aylantirish ma’lumotlari noto‘g‘ri.' });
+  }
+
+  const result = repository.rotateHouseItem(user.id, parse.data.instanceId, parse.data.rotation);
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+  return res.json({ success: true, data: result });
+});
+
+const sellItemSchema = z.object({
+  instanceId: z.string().optional(),
+  itemId: z.string().optional(),
+});
+
+/**
+ * POST /api/games/house-building/sell
+ * Sell an item and refund 50% of the catalog price.
+ */
+gamesRouter.post('/house-building/sell', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const parse = sellItemSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ success: false, error: 'Sotish ma’lumotlari noto‘g‘ri.' });
+  }
+
+  const targetId = parse.data.instanceId || parse.data.itemId;
+  if (!targetId) {
+    return res.status(400).json({ success: false, error: 'Sotiladigan buyum ko‘rsatilmadi.' });
+  }
+
+  const result = repository.sellHouseItem(user.id, targetId);
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+  return res.json({ success: true, data: result });
 });
 
 const buildHouseSchema = z.object({

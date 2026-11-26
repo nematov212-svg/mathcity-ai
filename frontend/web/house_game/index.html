@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>MathCity 3D House Builder</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 3D WebGL Canvas Container -->
+  <div id="canvas-container"></div>
+
+  <!-- HUD In-Canvas Controls -->
+  <div class="hud-overlay">
+    <button id="btn-reset-cam" class="hud-btn" type="button">
+      <span>🎥</span>
+      <span>Markaz</span>
+    </button>
+    <button id="btn-rotate" class="hud-btn" type="button">
+      <span>🔄</span>
+      <span>90°</span>
+    </button>
+  </div>
+
+  <!-- Dynamic Feedback & Constraint Hint Box -->
+  <div id="hint-box"></div>
+
+  <!-- Fallback if WebGL is disabled or unsupported -->
+  <div id="fallback-view">
+    <div class="fallback-icon">🏡</div>
+    <div class="fallback-title">3D Uy Qurish O‘yini</div>
+    <div class="fallback-desc">Qurilmangizda WebGL qo‘llab-quvvatlanmadi yoki apparat tezlatgichi o‘chiq. Iltimos, brauzer sozlamalarini tekshiring.</div>
+  </div>
+
+  <!-- Local Offline Three.js Engine & Game Modules (Zero CDN) -->
+  <script src="libs/three.min.js"></script>
+  <script src="libs/OrbitControls.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/itemBuilder.js"></script>
+  <script src="js/scene.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

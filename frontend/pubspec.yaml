@@ -51,6 +51,7 @@ dependencies:
   audioplayers: ^6.8.1
   speech_to_text: ^7.5.0
   flutter_tts: ^4.2.5
+  webview_flutter: ^4.14.1
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +73,10 @@ flutter:
     - assets/animations/
     - assets/fonts/
     - assets/data/
+    - assets/house_game/
+    - assets/house_game/libs/
+    - assets/house_game/js/
+    - assets/house_game/css/
 
   fonts:
     - family: Nunito

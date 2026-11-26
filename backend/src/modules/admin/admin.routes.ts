@@ -1812,5 +1812,75 @@ adminRouter.put('/settings/discount', adminAuth, (req: AuthenticatedAdminRequest
   });
 });
 
+/**
+ * GET /api/admin/games/house/catalog
+ * Retrieve all 80+ items in the house building catalog for admin management
+ */
+adminRouter.get('/games/house/catalog', adminAuth, (_req: AuthenticatedAdminRequest, res: Response) => {
+  const catalog = repository.getHouseCatalog();
+  return res.json({
+    success: true,
+    data: catalog,
+    total: catalog.length,
+  });
+});
+
+const updateHouseItemSchema = z.object({
+  name: z.string().min(1).optional(),
+  coinPrice: z.number().int().min(1).max(5000).optional(),
+  price: z.number().int().min(1).max(5000).optional(),
+  category: z.enum(['foundation', 'walls', 'roofs', 'doors', 'windows', 'interior', 'yard', 'vehicles', 'extras']).optional(),
+  stageNumber: z.number().int().min(1).max(6).optional(),
+});
+
+/**
+ * PUT /api/admin/games/house/catalog/:id
+ * Update an item's price or attributes
+ */
+adminRouter.put('/games/house/catalog/:id', adminAuth, (req: AuthenticatedAdminRequest, res: Response) => {
+  const id = String(req.params.id);
+  const parse = updateHouseItemSchema.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({
+      success: false,
+      error: 'Noto‘g‘ri ma’lumotlar kiritildi.',
+      details: parse.error.format(),
+    });
+  }
+
+  const patch: Partial<import('../../config/houseBuildingCatalog.js').HouseCatalogItem> = {};
+  if (parse.data.name) patch.name = parse.data.name;
+  if (parse.data.price !== undefined) patch.price = parse.data.price;
+  if (parse.data.coinPrice !== undefined) patch.price = parse.data.coinPrice;
+  if (parse.data.category) patch.category = parse.data.category;
+  if (parse.data.stageNumber) patch.stageNumber = parse.data.stageNumber;
+
+  const success = repository.updateHouseCatalogItem(id, patch);
+  if (!success) {
+    return res.status(404).json({
+      success: false,
+      error: `IDsi "${id}" bo‘lgan buyum katalogda topilmadi.`,
+    });
+  }
+
+  const updatedItem = repository.getHouseCatalogItem(id);
+
+  adminStore.logAction({
+    adminId: req.adminUser?.id || 'admin',
+    adminUsername: req.adminUser?.username || 'admin',
+    action: 'UPDATE_HOUSE_CATALOG_ITEM',
+    targetType: 'GAME_CATALOG',
+    targetId: id,
+    details: updatedItem ? { ...updatedItem } : { id },
+  });
+
+  return res.json({
+    success: true,
+    message: 'Buyum muvaffaqiyatli yangilandi.',
+    data: updatedItem,
+  });
+});
+
+
 
 

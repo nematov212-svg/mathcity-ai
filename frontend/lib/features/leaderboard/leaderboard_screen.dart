@@ -73,7 +73,7 @@ class LeaderboardUser {
     required this.coinBalance,
     required this.level,
   });
-
+  
   factory LeaderboardUser.fromJson(Map<String, dynamic> json) {
     final uid = (json['userId'] ?? json['id'] ?? '').toString();
     final rawName = (json['displayName'] ?? json['username'] ?? 'O‘quvchi').toString();

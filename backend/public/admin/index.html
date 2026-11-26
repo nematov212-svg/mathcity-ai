@@ -300,6 +300,19 @@
             </svg>
             <span>Sozlamalar</span>
           </button>
+
+          <button onclick="navigate('house')" id="nav-house"
+            class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+            <div class="flex items-center space-x-3">
+              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              <span>Uy qurish do‘koni</span>
+            </div>
+            <span id="badge-total-house-items"
+              class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-bold">80</span>
+          </button>
         </div>
       </nav>
 
@@ -1301,6 +1314,64 @@
                 class="px-5 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm transition">
                 Saqlash
               </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+             VIEW: UY QURISH O'YINI VA DO'KON (HOUSE BUILDING & 3D STORE)
+             ===================================================================== -->
+        <section id="view-house" class="space-y-6 hidden">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">3D Uy qurish o‘yini do‘koni</h3>
+              <p class="text-xs text-slate-500">80+ buyumlar, ularning kategoriyalari, bosqichlari va narxlari (1 - 500 coin) boshqaruvi</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs px-3 py-1 bg-purple-50 text-purple-700 font-bold rounded-lg border border-purple-200" id="houseItemCountBadge">Jami: 80 ta buyum</span>
+            </div>
+          </div>
+
+          <!-- Filter & Search Toolbar -->
+          <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200/80 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-bold text-slate-600">Kategoriya:</label>
+              <select id="houseCategoryFilter" onchange="filterHouseCatalog()" class="text-xs border border-slate-300 rounded-xl px-3 py-1.5 font-semibold text-slate-800">
+                <option value="all">Barcha kategoriyalar</option>
+                <option value="foundation">🧱 Poydevor (foundation)</option>
+                <option value="walls">🏠 Devorlar (walls)</option>
+                <option value="roof">🛖 Tomlar (roof)</option>
+                <option value="doors">🚪 Eshiklar (doors)</option>
+                <option value="windows">🪟 Derazalar (windows)</option>
+                <option value="interior">🛋️ Ichki jihozlar (interior)</option>
+                <option value="yard">🌳 Hovli & Bog' (yard)</option>
+                <option value="vehicles">🚗 Transport (vehicles)</option>
+                <option value="extras">✨ Qo'shimcha (extras)</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <input type="text" id="houseSearchInput" oninput="filterHouseCatalog()" placeholder="Buyum nomini qidirish..." class="text-xs border border-slate-300 rounded-xl px-3 py-1.5 w-64 text-slate-800">
+            </div>
+          </div>
+
+          <!-- Items Table -->
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider">
+                  <tr>
+                    <th class="px-5 py-3.5">ID / Buyum</th>
+                    <th class="px-5 py-3.5">Kategoriya</th>
+                    <th class="px-5 py-3.5">Bosqich</th>
+                    <th class="px-5 py-3.5">Shart / Bog'liqlik</th>
+                    <th class="px-5 py-3.5">Narxi (Coin)</th>
+                    <th class="px-5 py-3.5 text-right">Amallar</th>
+                  </tr>
+                </thead>
+                <tbody id="houseCatalogTableBody" class="divide-y divide-slate-100 text-slate-700">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
@@ -2539,7 +2610,7 @@
     // Navigation Dispatcher
     function navigate(viewName) {
       currentView = viewName;
-      ['overview', 'students', 'lessons', 'questions', 'announcements', 'finance', 'ai', 'settings'].forEach(v => {
+      ['overview', 'students', 'lessons', 'questions', 'announcements', 'finance', 'ai', 'settings', 'house'].forEach(v => {
         const elem = document.getElementById(`view-${v}`);
         const nav = document.getElementById(`nav-${v}`);
         if (elem) elem.classList.add('hidden');
@@ -2565,7 +2636,8 @@
         announcements: { t: 'Reklamalar va E‘lonlar', s: 'Shoshilinch e‘lonlar, popuplar va chegirmali takliflar boshqaruvi' },
         finance: { t: 'Moliya va Karta', s: 'MathCity Pro obuna xaridlari va tasdiqlangan daromad' },
         ai: { t: 'AI Ustoz statistikasi', s: 'Sun’iy intellekt tomonidan javob berilgan savollar tahlili' },
-        settings: { t: 'Sozlamalar va Xavfsizlik', s: 'Admin paroli, tizim parametrlari va audit jurnali' }
+        settings: { t: 'Sozlamalar va Xavfsizlik', s: 'Admin paroli, tizim parametrlari va audit jurnali' },
+        house: { t: '3D Uy qurish o‘yini katalogi', s: '80+ buyumlar, kategoriyalar va narxlar (1-500 coin) boshqaruvi' }
       };
 
       if (titles[viewName]) {
@@ -2584,6 +2656,7 @@
       if (viewName === 'finance') loadFinance();
       if (viewName === 'ai') loadAiAnalytics();
       if (viewName === 'settings') loadSettings();
+      if (viewName === 'house') loadHouseCatalog();
     }
 
     function refreshCurrentView() {
@@ -5008,6 +5081,122 @@
         }
       } catch (err) {
         alert(err.message || 'Xatolik yuz berdi');
+      }
+    }
+
+    // =========================================================================
+    // HOUSE BUILDING GAME CATALOG STORE MANAGEMENT
+    // =========================================================================
+    let houseCatalogList = [];
+
+    async function loadHouseCatalog() {
+      try {
+        const res = await apiFetch('/api/admin/games/house/catalog', {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          houseCatalogList = json.data;
+          renderHouseCatalog(houseCatalogList);
+          const badge = document.getElementById('houseItemCountBadge');
+          if (badge) badge.textContent = `Jami: ${houseCatalogList.length} ta buyum`;
+          const navBadge = document.getElementById('badge-total-house-items');
+          if (navBadge) navBadge.textContent = houseCatalogList.length;
+        }
+      } catch (e) {
+        console.error('Error loading house catalog:', e);
+      }
+    }
+
+    function renderHouseCatalog(items) {
+      const tbody = document.getElementById('houseCatalogTableBody');
+      if (!tbody) return;
+      if (!items || !items.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-5 py-8 text-center text-slate-400">Buyumlar topilmadi.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = items.map(item => {
+        let catEmoji = '📦';
+        if (item.category === 'foundation') catEmoji = '🧱';
+        else if (item.category === 'walls') catEmoji = '🏠';
+        else if (item.category === 'roof') catEmoji = '🛖';
+        else if (item.category === 'doors') catEmoji = '🚪';
+        else if (item.category === 'windows') catEmoji = '🪟';
+        else if (item.category === 'interior') catEmoji = '🛋️';
+        else if (item.category === 'yard') catEmoji = '🌳';
+        else if (item.category === 'vehicles') catEmoji = '🚗';
+        else if (item.category === 'extras') catEmoji = '✨';
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="px-5 py-3 font-semibold text-slate-900 flex items-center gap-2">
+              <span class="text-lg">${catEmoji}</span>
+              <div>
+                <div>${item.name}</div>
+                <div class="text-[10px] text-slate-400 font-mono">${item.id}</div>
+              </div>
+            </td>
+            <td class="px-5 py-3 text-slate-600 font-medium">
+              <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-bold">${item.category}</span>
+            </td>
+            <td class="px-5 py-3 text-slate-700 font-bold">${item.stage}-bosqich</td>
+            <td class="px-5 py-3 text-slate-500 text-[11px]">${item.dependency || '—'}</td>
+            <td class="px-5 py-3 text-amber-600 font-extrabold text-sm flex items-center gap-1">
+              <span>🪙</span>
+              <span>${item.coinPrice} coin</span>
+            </td>
+            <td class="px-5 py-3 text-right">
+              <button onclick="editHouseItemPrice('${item.id}', ${item.coinPrice}, '${(item.name || '').replace(/'/g, "\\'")}')" class="px-3 py-1.5 text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition">
+                Narxni o‘zgartirish
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterHouseCatalog() {
+      const cat = document.getElementById('houseCategoryFilter')?.value || 'all';
+      const search = (document.getElementById('houseSearchInput')?.value || '').toLowerCase().trim();
+
+      let filtered = houseCatalogList;
+      if (cat !== 'all') {
+        filtered = filtered.filter(x => x.category === cat);
+      }
+      if (search) {
+        filtered = filtered.filter(x => (x.name || '').toLowerCase().includes(search) || (x.id || '').toLowerCase().includes(search));
+      }
+      renderHouseCatalog(filtered);
+    }
+
+    async function editHouseItemPrice(id, currentPrice, name) {
+      const input = prompt(`«${name}» uchun yangi coin narxini kiriting (1 – 5000):`, currentPrice);
+      if (input === null) return;
+      const newPrice = parseInt(input.trim(), 10);
+      if (isNaN(newPrice) || newPrice < 1 || newPrice > 5000) {
+        alert('Noto‘g‘ri narx kiritildi! 1 dan 5000 gacha raqam kiriting.');
+        return;
+      }
+
+      try {
+        const res = await apiFetch(`/api/admin/games/house/catalog/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({ coinPrice: newPrice })
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert(`«${name}» narxi ${newPrice} coinga o‘zgartirildi!`);
+          loadHouseCatalog();
+        } else {
+          alert('Xatolik: ' + (json.error || 'Saqlanmadi'));
+        }
+      } catch (err) {
+        alert('Server bilan aloqa uzildi: ' + err.message);
       }
     }
 

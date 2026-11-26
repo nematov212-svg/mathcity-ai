@@ -31,6 +31,31 @@ import {
   calculateActivityLevel,
   ACTIVITY_THRESHOLDS,
 } from '../config/activityConfig.js';
+import {
+  INITIAL_HOUSE_CATALOG,
+  HouseCatalogItem,
+  ROOF_COLORS,
+  getCatalogItemById,
+} from '../config/houseBuildingCatalog.js';
+
+export interface PlacedHouseItem {
+  instanceId: string;
+  itemId: string;
+  cellX: number;
+  cellY: number;
+  rotation: number;
+  color?: string;
+  placedAt: string;
+}
+
+export interface UserHouseState {
+  ownedItems: string[];
+  placedItems: PlacedHouseItem[];
+  currentStage: number;
+  completedStages: number[];
+  isFinished: boolean;
+  lastUpdated: string;
+}
 
 export type SubscriptionStatus =
   | 'FREE_TRIAL_ACTIVE'
@@ -112,6 +137,7 @@ export interface UserAccount {
     isFinished: boolean;
     lastBuiltAt?: string;
   };
+  houseState?: UserHouseState;
   settings?: {
     soundEnabled: boolean;
     animationsEnabled: boolean;
@@ -300,6 +326,8 @@ class DataRepository {
       updatedAt: new Date().toISOString(),
     },
   ];
+
+  private houseCatalog: HouseCatalogItem[] = [...INITIAL_HOUSE_CATALOG];
 
   constructor() { }
 
@@ -2677,6 +2705,442 @@ class DataRepository {
       xpEarned: stageConfig.xp,
       coinsSpent: stageConfig.cost,
       isFinished: user.houseBuildingProgress.isFinished,
+    };
+  }
+
+  // --- Professional 3D House Building Engine & Sandbox State ---
+  getHouseCatalog(): HouseCatalogItem[] {
+    return this.houseCatalog;
+  }
+
+  getHouseCatalogItem(itemId: string): HouseCatalogItem | undefined {
+    return this.houseCatalog.find((i) => i.id === itemId);
+  }
+
+  updateHouseCatalogItem(itemId: string, patch: Partial<HouseCatalogItem>): boolean {
+    const idx = this.houseCatalog.findIndex((i) => i.id === itemId);
+    if (idx === -1) return false;
+    this.houseCatalog[idx] = { ...this.houseCatalog[idx], ...patch };
+    return true;
+  }
+
+  addHouseCatalogItem(item: HouseCatalogItem): boolean {
+    if (this.houseCatalog.some((i) => i.id === item.id)) return false;
+    this.houseCatalog.push(item);
+    return true;
+  }
+
+  getUserHouseState(userId: string): UserHouseState {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    if (!user.houseBuildingProgress) {
+      user.houseBuildingProgress = {
+        currentStage: 0,
+        completedStages: [],
+        isFinished: false,
+      };
+    }
+
+    if (!user.houseState) {
+      user.houseState = {
+        ownedItems: [],
+        placedItems: [],
+        currentStage: user.houseBuildingProgress.currentStage || 0,
+        completedStages: [...(user.houseBuildingProgress.completedStages || [])],
+        isFinished: user.houseBuildingProgress.isFinished || false,
+        lastUpdated: new Date().toISOString(),
+      };
+
+      // Graceful migration from earlier 6-stage progress if any
+      const legacyStage = user.houseBuildingProgress.currentStage;
+      if (legacyStage >= 1 && user.houseState.placedItems.length === 0) {
+        if (legacyStage >= 1) {
+          user.houseState.ownedItems.push('concrete_foundation');
+          user.houseState.placedItems.push({
+            instanceId: 'migrated_stage_1',
+            itemId: 'concrete_foundation',
+            cellX: 5,
+            cellY: 5,
+            rotation: 0,
+            placedAt: new Date().toISOString(),
+          });
+        }
+        if (legacyStage >= 2) {
+          user.houseState.ownedItems.push('red_brick_wall');
+          user.houseState.placedItems.push({
+            instanceId: 'migrated_stage_2',
+            itemId: 'red_brick_wall',
+            cellX: 5,
+            cellY: 5,
+            rotation: 0,
+            placedAt: new Date().toISOString(),
+          });
+        }
+        if (legacyStage >= 3) {
+          user.houseState.ownedItems.push('flat_roof');
+          user.houseState.placedItems.push({
+            instanceId: 'migrated_stage_3',
+            itemId: 'flat_roof',
+            cellX: 5,
+            cellY: 5,
+            rotation: 0,
+            placedAt: new Date().toISOString(),
+          });
+        }
+        if (legacyStage >= 4) {
+          user.houseState.ownedItems.push('standard_door', 'standard_window');
+          user.houseState.placedItems.push({
+            instanceId: 'migrated_stage_4_door',
+            itemId: 'standard_door',
+            cellX: 5,
+            cellY: 5,
+            rotation: 0,
+            placedAt: new Date().toISOString(),
+          });
+          user.houseState.placedItems.push({
+            instanceId: 'migrated_stage_4_window',
+            itemId: 'standard_window',
+            cellX: 6,
+            cellY: 5,
+            rotation: 0,
+            placedAt: new Date().toISOString(),
+          });
+        }
+        if (legacyStage >= 5) {
+          user.houseState.ownedItems.push('tree');
+          user.houseState.placedItems.push({
+            instanceId: 'migrated_stage_5',
+            itemId: 'tree',
+            cellX: 1,
+            cellY: 1,
+            rotation: 0,
+            placedAt: new Date().toISOString(),
+          });
+        }
+        if (legacyStage >= 6) {
+          user.houseState.ownedItems.push('standard_car');
+          user.houseState.placedItems.push({
+            instanceId: 'migrated_stage_6',
+            itemId: 'standard_car',
+            cellX: 1,
+            cellY: 6,
+            rotation: 0,
+            placedAt: new Date().toISOString(),
+          });
+        }
+      }
+    }
+
+    return user.houseState;
+  }
+
+  recalculateHouseStages(userId: string): { currentStage: number; completedStages: number[]; isFinished: boolean } {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+    const state = this.getUserHouseState(userId);
+
+    const placedItemCategories = new Set<string>();
+    for (const p of state.placedItems) {
+      const item = this.getHouseCatalogItem(p.itemId);
+      if (item) {
+        placedItemCategories.add(item.category);
+      }
+    }
+
+    const hasFoundation = placedItemCategories.has('foundation');
+    const hasWall = placedItemCategories.has('walls');
+    const hasRoof = placedItemCategories.has('roofs');
+    const hasDoor = placedItemCategories.has('doors');
+    const hasWindow = placedItemCategories.has('windows');
+    const hasYard = placedItemCategories.has('yard');
+    const hasVehicleOrLantern =
+      placedItemCategories.has('vehicles') ||
+      state.placedItems.some((p) => p.itemId === 'street_lantern');
+
+    const completed: number[] = [];
+    if (hasFoundation) completed.push(1);
+    if (hasWall) completed.push(2);
+    if (hasRoof) completed.push(3);
+    if (hasDoor && hasWindow) completed.push(4);
+    if (hasYard) completed.push(5);
+    if (hasVehicleOrLantern) completed.push(6);
+
+    const currentStage = completed.length > 0 ? Math.max(...completed) : 0;
+    const isFinished = completed.length >= 6;
+
+    state.currentStage = currentStage;
+    state.completedStages = completed;
+    state.isFinished = isFinished;
+    state.lastUpdated = new Date().toISOString();
+
+    if (!user.houseBuildingProgress) {
+      user.houseBuildingProgress = { currentStage, completedStages: completed, isFinished };
+    } else {
+      user.houseBuildingProgress.currentStage = currentStage;
+      user.houseBuildingProgress.completedStages = completed;
+      user.houseBuildingProgress.isFinished = isFinished;
+    }
+
+    if (isFinished && !user.unlockedAchievements.includes('ach_master_builder')) {
+      user.unlockedAchievements.push('ach_master_builder');
+    }
+
+    return { currentStage, completedStages: completed, isFinished };
+  }
+
+  getHouseBuildingData(userId: string) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+    const state = this.getUserHouseState(userId);
+    const stageInfo = this.recalculateHouseStages(userId);
+
+    return {
+      catalog: this.getHouseCatalog(),
+      roofColors: ROOF_COLORS,
+      myState: {
+        coins: user.coinBalance,
+        xp: user.totalXP,
+        owned: state.ownedItems,
+        placed: state.placedItems,
+        currentStage: stageInfo.currentStage,
+        completedStages: stageInfo.completedStages,
+        isFinished: stageInfo.isFinished,
+        stages: [
+          { stage: 1, title: 'Poydevor', completed: stageInfo.completedStages.includes(1) },
+          { stage: 2, title: 'Uy devorlari', completed: stageInfo.completedStages.includes(2) },
+          { stage: 3, title: 'Uy tomi', completed: stageInfo.completedStages.includes(3) },
+          { stage: 4, title: 'Eshik va derazalar', completed: stageInfo.completedStages.includes(4) },
+          { stage: 5, title: 'Hovli', completed: stageInfo.completedStages.includes(5) },
+          { stage: 6, title: 'Jonlantirish', completed: stageInfo.completedStages.includes(6) },
+        ],
+      },
+      currentStage: stageInfo.currentStage,
+      completedStages: stageInfo.completedStages,
+      isFinished: stageInfo.isFinished,
+      userCoins: user.coinBalance,
+      userXP: user.totalXP,
+    };
+  }
+
+  buyHouseItem(userId: string, itemId: string) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+    const item = this.getHouseCatalogItem(itemId);
+    if (!item) {
+      return { success: false, error: 'Bunday buyum katalogda mavjud emas.' };
+    }
+    if (!item.isActive) {
+      return { success: false, error: 'Ushbu buyum hozirda faol emas.' };
+    }
+
+    if (user.coinBalance < item.price) {
+      return {
+        success: false,
+        error: `Tangalar yetarli emas! Sizda ${user.coinBalance} tanga bor, kerak: ${item.price} tanga.`,
+        neededCoins: item.price,
+        userCoins: user.coinBalance,
+      };
+    }
+
+    // Atomic debit & XP award
+    this.debitCoins(userId, item.price, `Uy qurish do‘koni: ${item.name}`);
+    if (item.xpReward > 0) {
+      this.addXP(userId, item.xpReward);
+    }
+
+    const state = this.getUserHouseState(userId);
+    state.ownedItems.push(itemId);
+    state.lastUpdated = new Date().toISOString();
+
+    this.persistUserToDatabase(user).catch(() => {});
+
+    return {
+      success: true,
+      item,
+      ownedCount: state.ownedItems.filter((id) => id === itemId).length,
+      coinsSpent: item.price,
+      xpEarned: item.xpReward,
+      newCoinBalance: user.coinBalance,
+      newTotalXP: user.totalXP,
+      currentStage: state.currentStage,
+      completedStages: state.completedStages,
+    };
+  }
+
+  placeHouseItem(
+    userId: string,
+    itemId: string,
+    cellX: number,
+    cellY: number,
+    rotation: number = 0,
+    color?: string
+  ) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+    const item = this.getHouseCatalogItem(itemId);
+    if (!item) {
+      return { success: false, error: 'Bunday buyum topilmadi.' };
+    }
+
+    const state = this.getUserHouseState(userId);
+    const totalOwned = state.ownedItems.filter((id) => id === itemId).length;
+    const totalPlaced = state.placedItems.filter((p) => p.itemId === itemId).length;
+
+    if (totalPlaced >= totalOwned) {
+      return {
+        success: false,
+        error: 'Sizda bu buyumning joylashtirilmagan nusxasi qolmadi. Avval do‘kondan sotib oling!',
+      };
+    }
+
+    // Coordinate validation (12x12 grid)
+    if (cellX < 0 || cellX >= 12 || cellY < 0 || cellY >= 12) {
+      return { success: false, error: 'Katak chegaradan tashqarida (0–11 oraliqda bo‘lishi kerak).' };
+    }
+
+    // Dependency rules
+    const hasFoundation = state.placedItems.some((p) => {
+      const cat = this.getHouseCatalogItem(p.itemId)?.category;
+      return cat === 'foundation';
+    });
+    const hasWall = state.placedItems.some((p) => {
+      const cat = this.getHouseCatalogItem(p.itemId)?.category;
+      return cat === 'walls';
+    });
+
+    if (item.category === 'walls' && !hasFoundation) {
+      return {
+        success: false,
+        error: 'Avval poydevor quring! Devor faqat poydevor ustiga quriladi.',
+      };
+    }
+
+    if ((item.category === 'roofs' || item.category === 'doors' || item.category === 'windows' || item.id === 'second_floor') && !hasWall) {
+      return {
+        success: false,
+        error: 'Avval devor quring! Tom, eshik va derazalar devorga o‘rnatiladi.',
+      };
+    }
+
+    const isInsideHouse = cellX >= 3 && cellX <= 8 && cellY >= 3 && cellY <= 8;
+
+    if (item.category === 'vehicles' && isInsideHouse) {
+      return {
+        success: false,
+        error: 'Mashina faqat hovli yo‘lagiga yoki darvoza oldiga joylashtiriladi.',
+      };
+    }
+
+    if (item.category === 'foundation' && !isInsideHouse) {
+      return {
+        success: false,
+        error: 'Poydevor faqat markaziy uy maydoniga (3–8 kataklar oralig‘iga) qo‘yiladi.',
+      };
+    }
+
+    const instanceId = `placed_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const newPlacedItem: PlacedHouseItem = {
+      instanceId,
+      itemId,
+      cellX,
+      cellY,
+      rotation: [0, 90, 180, 270].includes(rotation) ? rotation : 0,
+      color: color || item.defaultColor,
+      placedAt: new Date().toISOString(),
+    };
+
+    state.placedItems.push(newPlacedItem);
+    const stageInfo = this.recalculateHouseStages(userId);
+
+    this.persistUserToDatabase(user).catch(() => {});
+
+    return {
+      success: true,
+      placedItem: newPlacedItem,
+      totalPlaced: state.placedItems.length,
+      currentStage: stageInfo.currentStage,
+      completedStages: stageInfo.completedStages,
+      isFinished: stageInfo.isFinished,
+    };
+  }
+
+  moveHouseItem(userId: string, instanceId: string, newCellX: number, newCellY: number) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+    const state = this.getUserHouseState(userId);
+    const itemIdx = state.placedItems.findIndex((p) => p.instanceId === instanceId);
+    if (itemIdx === -1) {
+      return { success: false, error: 'Joylashtirilgan buyum topilmadi.' };
+    }
+
+    if (newCellX < 0 || newCellX >= 12 || newCellY < 0 || newCellY >= 12) {
+      return { success: false, error: 'Yangi katak chegaradan tashqarida.' };
+    }
+
+    state.placedItems[itemIdx].cellX = newCellX;
+    state.placedItems[itemIdx].cellY = newCellY;
+    state.lastUpdated = new Date().toISOString();
+
+    this.persistUserToDatabase(user).catch(() => {});
+    return { success: true, item: state.placedItems[itemIdx] };
+  }
+
+  rotateHouseItem(userId: string, instanceId: string, rotation?: number) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+    const state = this.getUserHouseState(userId);
+    const itemIdx = state.placedItems.findIndex((p) => p.instanceId === instanceId);
+    if (itemIdx === -1) {
+      return { success: false, error: 'Joylashtirilgan buyum topilmadi.' };
+    }
+
+    const currentRot = state.placedItems[itemIdx].rotation || 0;
+    const nextRot = rotation !== undefined ? rotation : (currentRot + 90) % 360;
+    state.placedItems[itemIdx].rotation = nextRot;
+    state.lastUpdated = new Date().toISOString();
+
+    this.persistUserToDatabase(user).catch(() => {});
+    return { success: true, item: state.placedItems[itemIdx], rotation: nextRot };
+  }
+
+  sellHouseItem(userId: string, instanceIdOrItemId: string) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+    const state = this.getUserHouseState(userId);
+
+    const placedIdx = state.placedItems.findIndex((p) => p.instanceId === instanceIdOrItemId);
+    let itemIdToSell = '';
+
+    if (placedIdx !== -1) {
+      itemIdToSell = state.placedItems[placedIdx].itemId;
+      state.placedItems.splice(placedIdx, 1);
+    } else {
+      itemIdToSell = instanceIdOrItemId;
+    }
+
+    const ownedIdx = state.ownedItems.indexOf(itemIdToSell);
+    if (ownedIdx === -1) {
+      return { success: false, error: 'Sizda bu buyum mavjud emas.' };
+    }
+    state.ownedItems.splice(ownedIdx, 1);
+
+    const catalogItem = this.getHouseCatalogItem(itemIdToSell);
+    const refundCoins = catalogItem ? Math.floor(catalogItem.price * 0.5) : 1;
+
+    this.creditCoins(userId, refundCoins, `Uy qurish: ${catalogItem?.name || 'buyum'} sotildi (50% qaytim)`);
+    const stageInfo = this.recalculateHouseStages(userId);
+
+    this.persistUserToDatabase(user).catch(() => {});
+
+    return {
+      success: true,
+      soldItemId: itemIdToSell,
+      refundCoins,
+      newCoinBalance: user.coinBalance,
+      currentStage: stageInfo.currentStage,
+      completedStages: stageInfo.completedStages,
+      isFinished: stageInfo.isFinished,
     };
   }
 
