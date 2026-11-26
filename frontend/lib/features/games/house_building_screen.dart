@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -277,8 +278,15 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     }
 
     try {
-      final res = await ApiClient().dio.get('/games/house-building');
-      if (res.data != null && res.data['success'] == true) {
+      final res = await ApiClient().dio.get(
+        '/games/house-building',
+        options: Options(
+          validateStatus: (status) => true,
+          sendTimeout: const Duration(seconds: 6),
+          receiveTimeout: const Duration(seconds: 6),
+        ),
+      );
+      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
         final data = res.data['data'];
         final stage = (data['currentStage'] as num?)?.toInt() ?? 0;
         final catalogRaw = data['catalog'] as List? ?? [];
@@ -308,8 +316,8 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
         }
         return;
       }
-    } catch (e) {
-      debugPrint('Error loading house building data: $e');
+    } catch (_) {
+      // Fallback gracefully to local catalog and offline state
     }
 
     if (mounted) {

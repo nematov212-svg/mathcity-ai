@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
+
 class AppConfig {
   static const String appName = 'MathCity AI';
   static const String appVersion = '1.0.1';
 
   /// Primary Production API Base URL on Render (Authoritative Default)
   static const String productionApiUrl = 'https://mathcity-ai-api.onrender.com';
+  static const String localApiUrl = 'http://localhost:4000';
   static String get apiBaseUrl => baseUrl;
 
   /// Web OAuth Client ID from Google Cloud Console (Public ID, not a secret)
@@ -48,7 +51,18 @@ class AppConfig {
       return _formatApiUrl(_overrideBaseUrl!);
     }
 
-    // 2. Default: Strictly Render Production Cloud API (24/7 active)
+    // 2. Localhost web dev: when tested in Chrome on localhost / 127.0.0.1
+    if (kIsWeb) {
+      final host = Uri.base.host;
+      if (host == 'localhost' || host == '127.0.0.1') {
+        if (Uri.base.queryParameters['api'] == 'render') {
+          return _formatApiUrl(productionApiUrl);
+        }
+        return _formatApiUrl(localApiUrl);
+      }
+    }
+
+    // 3. Default: Strictly Render Production Cloud API (24/7 active)
     return _formatApiUrl(productionApiUrl);
   }
 

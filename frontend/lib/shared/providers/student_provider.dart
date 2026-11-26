@@ -389,8 +389,15 @@ class StudentNotifier extends StateNotifier<StudentState> {
 
   Future<Map<String, dynamic>?> fetchWeeklyActivity() async {
     try {
-      final res = await ApiClient().dio.get('/activity/week');
-      if (res.data != null && res.data['success'] == true) {
+      final res = await ApiClient().dio.get(
+        '/activity/week',
+        options: Options(
+          validateStatus: (status) => true,
+          sendTimeout: const Duration(seconds: 6),
+          receiveTimeout: const Duration(seconds: 6),
+        ),
+      );
+      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
         return res.data['data'];
       }
     } catch (_) {}

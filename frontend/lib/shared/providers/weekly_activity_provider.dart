@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,6 +75,11 @@ class WeeklyActivityNotifier extends StateNotifier<WeeklyActivityState> {
     try {
       final res = await ApiClient().dio.get(
             '/activity/week',
+            options: Options(
+              validateStatus: (status) => true,
+              sendTimeout: const Duration(seconds: 6),
+              receiveTimeout: const Duration(seconds: 6),
+            ),
           );
 
       if (res.statusCode == 200 &&
@@ -98,9 +104,6 @@ class WeeklyActivityNotifier extends StateNotifier<WeeklyActivityState> {
       }
     } catch (e) {
       // Non-blocking: keep showing cached or empty data
-      if (kDebugMode) {
-        print('WeeklyActivityNotifier fetch error: $e');
-      }
       state = state.copyWith(isLoading: false);
     }
   }

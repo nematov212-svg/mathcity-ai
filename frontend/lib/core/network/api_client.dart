@@ -233,10 +233,41 @@ class ApiClient {
     try {
       final warmupDio = Dio(
         BaseOptions(
-          connectTimeout: const Duration(seconds: 15),
-          receiveTimeout: const Duration(seconds: 15),
+          connectTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
+          validateStatus: (status) => true,
         ),
       );
+
+      // If running on web localhost, probe local backend first
+      if (kIsWeb && (Uri.base.host == 'localhost' || Uri.base.host == '127.0.0.1')) {
+        if (Uri.base.queryParameters['api'] != 'render') {
+          try {
+            final probeDio = Dio(
+              BaseOptions(
+                connectTimeout: const Duration(milliseconds: 700),
+                receiveTimeout: const Duration(milliseconds: 700),
+                validateStatus: (status) => true,
+              ),
+            );
+            final localRes = await probeDio.get('http://localhost:4000/health');
+            if (localRes.statusCode == 200) {
+              AppConfig.setBaseUrl('http://localhost:4000/api');
+              dio.options.baseUrl = 'http://localhost:4000/api';
+              _hasWarmedUp = true;
+              if (kDebugMode) {
+                debugPrint('🚀 [API Client] Lokal server faol va tayyor: http://localhost:4000/api');
+              }
+              return;
+            }
+          } catch (_) {
+            // Local server offline, fallback to Render production
+            AppConfig.setBaseUrl(AppConfig.productionApiUrl);
+            dio.options.baseUrl = AppConfig.baseUrl;
+          }
+        }
+      }
+
       final rootUrl = AppConfig.baseUrl.replaceAll(RegExp(r'/api/?$'), '');
       await warmupDio.get('$rootUrl/health');
       _hasWarmedUp = true;

@@ -185,8 +185,7 @@ class AnnouncementManager {
   /// Backend endpoint: GET /api/announcements/active
   static Future<void> checkAndShowAnnouncements(BuildContext context, WidgetRef ref) async {
     if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) return;
-    if (_lastFailedCheckAt != null &&
-        DateTime.now().difference(_lastFailedCheckAt!) < const Duration(minutes: 5)) {
+    if (_lastFailedCheckAt != null && DateTime.now().isBefore(_lastFailedCheckAt!)) {
       return;
     }
     try {
@@ -197,24 +196,21 @@ class AnnouncementManager {
           '/announcements/active',
           options: Options(
             validateStatus: (status) => true,
-            sendTimeout: const Duration(seconds: 6),
-            receiveTimeout: const Duration(seconds: 6),
+            sendTimeout: const Duration(seconds: 5),
+            receiveTimeout: const Duration(seconds: 5),
           ),
         );
         if (res.statusCode == 200 && res.data != null) {
           responseData = res.data;
           _lastFailedCheckAt = null;
+        } else if (res.statusCode == 404) {
+          // Server has not deployed announcements route yet; back off for 30 minutes
+          _lastFailedCheckAt = DateTime.now().add(const Duration(minutes: 30));
         } else {
-          _lastFailedCheckAt = DateTime.now();
-          if (kDebugMode) {
-            debugPrint('ℹ️ [Announcements] Hozircha e‘lonlar yo‘q.');
-          }
+          _lastFailedCheckAt = DateTime.now().add(const Duration(minutes: 5));
         }
       } catch (e) {
-        _lastFailedCheckAt = DateTime.now();
-        if (kDebugMode) {
-          debugPrint('ℹ️ [Announcements] Hozircha e‘lonlar yo‘q.');
-        }
+        _lastFailedCheckAt = DateTime.now().add(const Duration(minutes: 5));
       }
 
       if (responseData == null || responseData['success'] != true || responseData['data'] is! List) {

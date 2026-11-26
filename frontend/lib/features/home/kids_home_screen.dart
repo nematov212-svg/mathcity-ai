@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 import 'dart:math' as math;
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -80,8 +81,15 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
 
       if (!kIsWeb && Platform.environment.containsKey('FLUTTER_TEST')) return;
 
-      final res = await ApiClient().dio.get('/games/house-building');
-      if (res.data != null && res.data['success'] == true) {
+      final res = await ApiClient().dio.get(
+        '/games/house-building',
+        options: Options(
+          validateStatus: (status) => true,
+          sendTimeout: const Duration(seconds: 5),
+          receiveTimeout: const Duration(seconds: 5),
+        ),
+      );
+      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
         final s = (res.data['data']['currentStage'] as num?)?.toInt() ?? 0;
         if (mounted) {
           setState(() => _houseStage = s);
