@@ -1,0 +1,279 @@
+{
+  "order": 30,
+  "bookNumber": 29,
+  "unitType": "LESSON",
+  "title": "Sonlarni ayirish (43 - 16)",
+  "emoji": "🍰",
+  "crossTopic": "Qandolatchilik",
+  "shortDesc": "Ikki xonali sondan ayirishni mustahkamlash va shirinliklar masalalari",
+  "intro": "Qandolatchilar bayram uchun mazali tort va pishiriqlar tayyorlashadi. Masalliqlar va buyurtmalarni hisoblashda 43 - 16 kabi ayirish amallarini qo'llaymiz.",
+  "keyPoints": [
+    "Ayirishni tekshirish: 27 + 16 = 43.",
+    "Birliklar yetmaganda o'nlikdan 1 ta o'nlik olinadi: 13 - 6 = 7.",
+    "Qandolat mahsulotlari soni va vazni bo'yicha amaliy masalalar."
+  ],
+  "miniExample": {
+    "emojis": "🍰 43 - 16 = 27 | 27 + 16 = 43",
+    "text": "43 ta tortdan 16 tasi sotilsa, 27 ta tort qoladi!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 43 - 16",
+      "options": [
+        "27",
+        "26",
+        "28",
+        "25"
+      ],
+      "correctIndex": 0,
+      "explanation": "43 - 16 = 27."
+    },
+    {
+      "text": "Qandolat do'konida 50 ta pirogdan 23 tasi sotildi. Nechta pirog qoldi?",
+      "options": [
+        "26",
+        "27",
+        "28",
+        "25"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 - 23 = 27 ta pirog."
+    },
+    {
+      "text": "Hisoblang: 64 - 28",
+      "options": [
+        "35",
+        "37",
+        "36",
+        "34"
+      ],
+      "correctIndex": 2,
+      "explanation": "64 - 20 = 44, 44 - 8 = 36."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 43 - 16",
+      "options": [
+        "27",
+        "26",
+        "28",
+        "25"
+      ],
+      "correctIndex": 0,
+      "explanation": "43 - 16 = 27."
+    },
+    {
+      "text": "Hisoblang: 52 - 18",
+      "options": [
+        "33",
+        "34",
+        "35",
+        "32"
+      ],
+      "correctIndex": 1,
+      "explanation": "52 - 10 = 42, 42 - 8 = 34."
+    },
+    {
+      "text": "Hisoblang: 63 - 27",
+      "options": [
+        "35",
+        "37",
+        "36",
+        "34"
+      ],
+      "correctIndex": 2,
+      "explanation": "63 - 20 = 43, 43 - 7 = 36."
+    },
+    {
+      "text": "Do'konga 70 ta shokoladli rulet keltirildi. 34 tasi sotildi. Nechtasi qoldi?",
+      "options": [
+        "35",
+        "37",
+        "34",
+        "36"
+      ],
+      "correctIndex": 3,
+      "explanation": "70 - 34 = 36 ta rulet."
+    },
+    {
+      "text": "Hisoblang: 81 - 45",
+      "options": [
+        "36",
+        "35",
+        "37",
+        "34"
+      ],
+      "correctIndex": 0,
+      "explanation": "81 - 40 = 41, 41 - 5 = 36."
+    },
+    {
+      "text": "Hisoblang: 92 - 56",
+      "options": [
+        "35",
+        "36",
+        "37",
+        "34"
+      ],
+      "correctIndex": 1,
+      "explanation": "92 - 50 = 42, 42 - 6 = 36."
+    },
+    {
+      "text": "Hisoblang: 45 - 19",
+      "options": [
+        "25",
+        "27",
+        "26",
+        "24"
+      ],
+      "correctIndex": 2,
+      "explanation": "45 - 10 = 35, 35 - 9 = 26."
+    },
+    {
+      "text": "Qandolatchi 48 ta keks pishirdi. 19 tasi ertalab sotildi. Nechtasi qoldi?",
+      "options": [
+        "28",
+        "30",
+        "27",
+        "29"
+      ],
+      "correctIndex": 3,
+      "explanation": "48 - 19 = 29 ta keks."
+    },
+    {
+      "text": "Tenglamani yeching: x + 16 = 43",
+      "options": [
+        "27",
+        "26",
+        "28",
+        "25"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 43 - 16 = 27."
+    },
+    {
+      "text": "Tenglamani yeching: y + 28 = 65",
+      "options": [
+        "36",
+        "37",
+        "38",
+        "35"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 65 - 28 = 37."
+    },
+    {
+      "text": "Taqqoslang: 43 - 16 va 14 + 13",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "43 - 16 = 27 va 14 + 13 = 27. Ular teng: 27 = 27."
+    },
+    {
+      "text": "Taqqoslang: 54 - 28 va 25",
+      "options": [
+        "<",
+        "=",
+        "+",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "54 - 28 = 26. 26 > 25."
+    },
+    {
+      "text": "Bayram dasturxoni uchun 60 ta kulcha pishirildi. 25 tasi mehmonlarga berildi. Nechtasi qoldi?",
+      "options": [
+        "35",
+        "34",
+        "36",
+        "33"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 - 25 = 35 ta."
+    },
+    {
+      "text": "Hisoblang: 73 - 38",
+      "options": [
+        "34",
+        "35",
+        "36",
+        "33"
+      ],
+      "correctIndex": 1,
+      "explanation": "73 - 30 = 43, 43 - 8 = 35."
+    },
+    {
+      "text": "Hisoblang: 86 - 49",
+      "options": [
+        "36",
+        "38",
+        "37",
+        "35"
+      ],
+      "correctIndex": 2,
+      "explanation": "86 - 40 = 46, 46 - 9 = 37."
+    },
+    {
+      "text": "Hisoblang: 42 - 17",
+      "options": [
+        "24",
+        "26",
+        "23",
+        "25"
+      ],
+      "correctIndex": 3,
+      "explanation": "42 - 10 = 32, 32 - 7 = 25."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 51 - * = 26?",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "23"
+      ],
+      "correctIndex": 0,
+      "explanation": "51 - 26 = 25."
+    },
+    {
+      "text": "Hisoblang: 67 - 39",
+      "options": [
+        "27",
+        "28",
+        "29",
+        "26"
+      ],
+      "correctIndex": 1,
+      "explanation": "67 - 30 = 37, 37 - 9 = 28."
+    },
+    {
+      "text": "Hisoblang: 95 - 58",
+      "options": [
+        "36",
+        "38",
+        "37",
+        "35"
+      ],
+      "correctIndex": 2,
+      "explanation": "95 - 50 = 45, 45 - 8 = 37."
+    },
+    {
+      "text": "Hisoblang: 56 - 29",
+      "options": [
+        "26",
+        "28",
+        "25",
+        "27"
+      ],
+      "correctIndex": 3,
+      "explanation": "56 - 20 = 36, 36 - 9 = 27."
+    }
+  ]
+}

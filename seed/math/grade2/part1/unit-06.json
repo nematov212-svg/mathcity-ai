@@ -1,0 +1,279 @@
+{
+  "order": 6,
+  "bookNumber": 6,
+  "unitType": "LESSON",
+  "title": "Takrorlash",
+  "emoji": "🦁",
+  "crossTopic": "Yovvoyi hayvonlar",
+  "shortDesc": "Tenglamalar, tenglamaning yechimi va geometrik xossalar",
+  "intro": "Yovvoyi tabiatda hayvonlar o‘z hududlariga ega. Ushbu darsda noma’lum sonni topish — tenglamalarni yechish va to‘rtburchaklar geometriyasini takrorlaymiz.",
+  "keyPoints": [
+    "Tenglama — noma’lum son qatnashgan tenglikdir.",
+    "Noma’lum qo‘shiluvchini topish uchun yig‘indidan ma’lum qo‘shiluvchi ayriladi.",
+    "Noma’lum kamayuvchini topish uchun ayirmaga ayriluvchi qo‘shiladi."
+  ],
+  "miniExample": {
+    "emojis": "🦁 x + 14 = 30 -> x = 16",
+    "text": "x ni topish uchun 30 dan 14 ni ayiramiz: x = 30 - 14 = 16!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Tenglamani yeching: x + 14 = 30",
+      "options": [
+        "16",
+        "14",
+        "15",
+        "44"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 30 - 14 = 16."
+    },
+    {
+      "text": "Tenglamani yeching: 25 - y = 10",
+      "options": [
+        "14",
+        "15",
+        "16",
+        "35"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 25 - 10 = 15."
+    },
+    {
+      "text": "Noma’lum son qatnashgan tenglik nima deyiladi?",
+      "options": [
+        "Ifoda",
+        "Kesma",
+        "Tenglama",
+        "Perimetr"
+      ],
+      "correctIndex": 2,
+      "explanation": "Noma’lum sonli tenglik tenglama deyiladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Tenglamani yeching: x + 12 = 28",
+      "options": [
+        "16",
+        "15",
+        "17",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 28 - 12 = 16."
+    },
+    {
+      "text": "Tenglamani yeching: a - 8 = 22",
+      "options": [
+        "14",
+        "30",
+        "29",
+        "31"
+      ],
+      "correctIndex": 1,
+      "explanation": "a = 22 + 8 = 30."
+    },
+    {
+      "text": "Tenglamani yeching: 40 - b = 15",
+      "options": [
+        "24",
+        "26",
+        "25",
+        "55"
+      ],
+      "correctIndex": 2,
+      "explanation": "b = 40 - 15 = 25."
+    },
+    {
+      "text": "Tenglamada noma’lum qo‘shiluvchini topish uchun qaysi amal bajariladi?",
+      "options": [
+        "Qo‘shish amali",
+        "Ko‘paytirish amali",
+        "Bo‘lish amali",
+        "Ayirish amali (yig‘indidan ma’lum qo‘shiluvchi ayriladi)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Noma’lum qo‘shiluvchini topish uchun yig‘indidan ma’lum qo‘shiluvchi ayriladi."
+    },
+    {
+      "text": "Tenglamada noma’lum kamayuvchini topish uchun nima qilinadi?",
+      "options": [
+        "Ayirmaga ayriluvchi qo‘shiladi",
+        "Ayirmadan ayriluvchi ayriladi",
+        "Sonlar ayiriladi",
+        "Amal o‘zgarmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "x - a = b bo‘lsa, kamayuvchi x = b + a bo‘ladi."
+    },
+    {
+      "text": "Sonlar nurida 10 lab sanang: 20, 30, 40, ? Keyingi son qaysi?",
+      "options": [
+        "45",
+        "50",
+        "60",
+        "55"
+      ],
+      "correctIndex": 1,
+      "explanation": "Har safar 10 qo‘shilmoqda: 40 + 10 = 50."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchakning perimetri 14 cm. Uning qarama-qarshi ikkita tomoni yig‘indisi 10 cm bo‘lsa, qolgan ikkita tomoni yig‘indisi necha cm?",
+      "options": [
+        "5 cm",
+        "6 cm",
+        "4 cm (14 - 10 = 4)",
+        "8 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 - 10 = 4 cm."
+    },
+    {
+      "text": "Bu to‘g‘ri to‘rtburchakning eni necha santimetrga teng (ikkita enining yig‘indisi 4 cm bo‘lsa)?",
+      "options": [
+        "1 cm",
+        "3 cm",
+        "4 cm",
+        "2 cm"
+      ],
+      "correctIndex": 3,
+      "explanation": "Eni: 4 / 2 = 2 cm."
+    },
+    {
+      "text": "Tenglamani yeching: 50 + x = 85",
+      "options": [
+        "35",
+        "34",
+        "36",
+        "135"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 85 - 50 = 35."
+    },
+    {
+      "text": "Tenglamani yeching: y - 24 = 36",
+      "options": [
+        "12",
+        "60",
+        "58",
+        "62"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 36 + 24 = 60."
+    },
+    {
+      "text": "Jadvaldan tenglama tuzing: 'Bir son bilan 17 ning yig‘indisi 40 ga teng'. Tenglamani yozing:",
+      "options": [
+        "x - 17 = 40",
+        "17 - x = 40",
+        "x + 17 = 40",
+        "x + 40 = 17"
+      ],
+      "correctIndex": 2,
+      "explanation": "Noma’lum son x va 17 yig‘indisi: x + 17 = 40."
+    },
+    {
+      "text": "Bu tenglamaning yechimi nechaga teng (x + 17 = 40)?",
+      "options": [
+        "22",
+        "24",
+        "57",
+        "23"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 40 - 17 = 23."
+    },
+    {
+      "text": "Tenglamani yeching: 70 - m = 28",
+      "options": [
+        "42",
+        "41",
+        "43",
+        "52"
+      ],
+      "correctIndex": 0,
+      "explanation": "m = 70 - 28 = 42."
+    },
+    {
+      "text": "Qo‘riqxonada 18 ta bug‘u bor edi. Yana bir nechta bug‘u keltirilgach, ularning soni 30 ta bo‘ldi. Nechta bug‘u keltirilgan?",
+      "options": [
+        "10 ta",
+        "12 ta bug‘u (18 + x = 30)",
+        "14 ta",
+        "48 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 30 - 18 = 12 ta bug‘u."
+    },
+    {
+      "text": "Tenglamani yeching: k + 35 = 70",
+      "options": [
+        "30",
+        "40",
+        "35",
+        "105"
+      ],
+      "correctIndex": 2,
+      "explanation": "k = 70 - 35 = 35."
+    },
+    {
+      "text": "Tenglamani yeching: 92 - x = 50",
+      "options": [
+        "40",
+        "44",
+        "142",
+        "42"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 92 - 50 = 42."
+    },
+    {
+      "text": "Agar x = 15 bo‘lsa, qaysi tenglama to‘g‘ri tenglikka aylanadi?",
+      "options": [
+        "x + 20 = 35",
+        "x - 5 = 12",
+        "30 - x = 10",
+        "x + 10 = 20"
+      ],
+      "correctIndex": 0,
+      "explanation": "15 + 20 = 35 to‘g‘ri."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchak perimetri 18 cm, tomonlaridan biri 6 cm. Ikkinchi tomoni necha cm?",
+      "options": [
+        "4 cm",
+        "3 cm (6 + 3 + 6 + 3 = 18)",
+        "5 cm",
+        "2 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 6 = 12 cm, 18 - 12 = 6 cm, 6 / 2 = 3 cm."
+    },
+    {
+      "text": "Zarafshon milliy bog‘ida jayronlar ro‘yxatga olindi. Birinchi to‘dada 24 ta, ikkinchi to‘dada birinchisidan noma’lum x ta kam jayron bor. Agar ikkala to‘dada jami 40 ta jayron bo‘lsa, ikkinchi to‘dada nechta jayron bor?",
+      "options": [
+        "14 ta",
+        "18 ta",
+        "16 ta (24 + 16 = 40)",
+        "20 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ikkinchi to‘da: 40 - 24 = 16 ta jayron."
+    },
+    {
+      "text": "Hayvonot bog‘idagi ayiqlarga qish mavsumi uchun 80 kg asal ajratildi. Birinchi oyda bir nechta kg, ikkinchi oyda 25 kg asal berilgach, 20 kg asal qoldi. Birinchi oyda necha kg asal berilgan?",
+      "options": [
+        "30 kg",
+        "40 kg",
+        "45 kg",
+        "35 kg (80 - x - 25 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ishlatilgan asal: 80 - 20 = 60 kg. Birinchi oy: 60 - 25 = 35 kg."
+    }
+  ]
+}

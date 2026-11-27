@@ -1,0 +1,279 @@
+{
+  "order": 16,
+  "bookNumber": 16,
+  "unitType": "LESSON",
+  "title": "Sonlarni qo‘shish (21 + 39)",
+  "emoji": "⛏️",
+  "crossTopic": "Foydali qazilmalar",
+  "shortDesc": "O'nlik hosil qilib qo'shishni mustahkamlash va masalalar",
+  "intro": "Konchilar mehnat qilib ko'mir, oltin va mis qazib olishadi. Biz esa yaxlit sonlar hosil qilish orqali masalalarni yechamiz.",
+  "keyPoints": [
+    "Qo'shishda qulay guruhlash: (21 + 15) + 39 = (21 + 39) + 15 = 60 + 15 = 75.",
+    "Birliklari 10 ni beruvchi sonlar: 1 va 9, 2 va 8, 3 va 7, 4 va 6, 5 va 5.",
+    "Foydali qazilmalar hajmini hisoblashda yaxlit sonlar amallarni tezlashtiradi."
+  ],
+  "miniExample": {
+    "emojis": "⛏️ (21 + 39) + 15 = 75",
+    "text": "21 va 39 ni guruhlasak 60 bo'ladi, 60 ga 15 ni qo'shsak 75!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Qulay usulda hisoblang: (21 + 39) + 14",
+      "options": [
+        "74",
+        "64",
+        "84",
+        "70"
+      ],
+      "correctIndex": 0,
+      "explanation": "21 + 39 = 60, 60 + 14 = 74."
+    },
+    {
+      "text": "Konda 32 tonna temir va 48 tonna mis qazildi. Jami necha tonna ruda qazildi?",
+      "options": [
+        "70",
+        "80",
+        "78",
+        "85"
+      ],
+      "correctIndex": 1,
+      "explanation": "32 + 48 = 80 tonna."
+    },
+    {
+      "text": "Hisoblang: 64 + 16",
+      "options": [
+        "70",
+        "78",
+        "80",
+        "82"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 + 10 = 70, 4 + 6 = 10. 70 + 10 = 80."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 21 + 39",
+      "options": [
+        "60",
+        "58",
+        "62",
+        "70"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 + 30 = 50, 1 + 9 = 10. 50 + 10 = 60."
+    },
+    {
+      "text": "Hisoblang: 32 + 48",
+      "options": [
+        "70",
+        "80",
+        "78",
+        "82"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 40 = 70, 2 + 8 = 10. 70 + 10 = 80."
+    },
+    {
+      "text": "Kondan birinchi smenada 26 vagon, ikkinchi smenada 34 vagon ko'mir chiqarildi. Jami necha vagon?",
+      "options": [
+        "50",
+        "55",
+        "60",
+        "65"
+      ],
+      "correctIndex": 2,
+      "explanation": "26 + 34 = 60 vagon."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (17 + 23) + 18",
+      "options": [
+        "60",
+        "48",
+        "68",
+        "58"
+      ],
+      "correctIndex": 3,
+      "explanation": "17 + 23 = 40, 40 + 18 = 58."
+    },
+    {
+      "text": "Hisoblang: 54 + 26",
+      "options": [
+        "80",
+        "70",
+        "78",
+        "84"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 + 20 = 70, 4 + 6 = 10. 70 + 10 = 80."
+    },
+    {
+      "text": "Hisoblang: 61 + 29",
+      "options": [
+        "80",
+        "90",
+        "89",
+        "91"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 + 20 = 80, 1 + 9 = 10. 80 + 10 = 90."
+    },
+    {
+      "text": "Oltin konida 13 ta katta va 27 ta kichik texnika ishlamoqda. Jami texnikalar soni nechta?",
+      "options": [
+        "30",
+        "35",
+        "40",
+        "45"
+      ],
+      "correctIndex": 2,
+      "explanation": "13 + 27 = 40 ta."
+    },
+    {
+      "text": "Tenglamani yeching: a - 39 = 21",
+      "options": [
+        "50",
+        "58",
+        "62",
+        "60"
+      ],
+      "correctIndex": 3,
+      "explanation": "a = 21 + 39 = 60."
+    },
+    {
+      "text": "Tenglamani yeching: x + 44 = 70",
+      "options": [
+        "26",
+        "24",
+        "36",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 70 - 44 = 26."
+    },
+    {
+      "text": "Hisoblang: 35 + 45",
+      "options": [
+        "70",
+        "80",
+        "75",
+        "85"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 40 = 70, 5 + 5 = 10. 70 + 10 = 80."
+    },
+    {
+      "text": "Hisoblang: 73 + 17",
+      "options": [
+        "80",
+        "88",
+        "90",
+        "92"
+      ],
+      "correctIndex": 2,
+      "explanation": "70 + 10 = 80, 3 + 7 = 10. 80 + 10 = 90."
+    },
+    {
+      "text": "Taqqoslang: 21 + 39 va 40 + 20",
+      "options": [
+        ">",
+        "<",
+        "+",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "21 + 39 = 60 va 40 + 20 = 60. Ular teng: 60 = 60."
+    },
+    {
+      "text": "Taqqoslang: 36 + 24 va 70 - 15",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "36 + 24 = 60, 70 - 15 = 55. 60 > 55."
+    },
+    {
+      "text": "Hisoblang: 28 + 52",
+      "options": [
+        "70",
+        "80",
+        "78",
+        "82"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 50 = 70, 8 + 2 = 10. 70 + 10 = 80."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 25 + 37 + 15",
+      "options": [
+        "75",
+        "87",
+        "77",
+        "67"
+      ],
+      "correctIndex": 2,
+      "explanation": "(25 + 15) + 37 = 40 + 37 = 77."
+    },
+    {
+      "text": "Geologlar 19 km tog' yo'lidan va 31 km tekislikdan yurdilar. Jami masofa necha kilometr?",
+      "options": [
+        "40",
+        "45",
+        "55",
+        "50"
+      ],
+      "correctIndex": 3,
+      "explanation": "19 + 31 = 50 km."
+    },
+    {
+      "text": "Hisoblang: 47 + 23",
+      "options": [
+        "70",
+        "60",
+        "68",
+        "72"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 + 20 = 60, 7 + 3 = 10. 60 + 10 = 70."
+    },
+    {
+      "text": "Hisoblang: 16 + 54",
+      "options": [
+        "60",
+        "70",
+        "68",
+        "72"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 + 50 = 60, 6 + 4 = 10. 60 + 10 = 70."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 33 + * = 70?",
+      "options": [
+        "47",
+        "33",
+        "37",
+        "27"
+      ],
+      "correctIndex": 2,
+      "explanation": "70 - 33 = 37."
+    },
+    {
+      "text": "Hisoblang: 38 + 42",
+      "options": [
+        "70",
+        "78",
+        "82",
+        "80"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 + 40 = 70, 8 + 2 = 10. 70 + 10 = 80."
+    }
+  ]
+}

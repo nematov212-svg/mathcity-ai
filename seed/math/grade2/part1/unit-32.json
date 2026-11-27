@@ -1,0 +1,279 @@
+{
+  "order": 32,
+  "bookNumber": 31,
+  "unitType": "LESSON",
+  "title": "Qo‘shishning xossalari",
+  "emoji": "🌳",
+  "crossTopic": "Madaniy ekinlar",
+  "shortDesc": "Guruhlash va o'rin almashtirish xossalarini qo'llab qulay hisoblash",
+  "intro": "Bog'da olma, nok va shaftoli daraxtlari parvarishlanadi. Bir nechta sonni qo'shishda qulay sonlarni guruhlash hisoblashni osonlashtiradi: (24 + 17) + 26 = (24 + 26) + 17 = 50 + 17 = 67!",
+  "keyPoints": [
+    "Qo'shishning guruhlash xossasi: (a + b) + c = a + (b + c).",
+    "Birliklari yig'indisi 10 bo'lgan sonlarni birinchi qo'shish juda qulay.",
+    "Madaniy ekinlar hosildorligini hisoblashda qulay usullardan foydalanamiz."
+  ],
+  "miniExample": {
+    "emojis": "🌳 (24 + 26) + 17 = 50 + 17 = 67",
+    "text": "24 bilan 26 ni guruhlasak 50 bo'ladi, 50 + 17 = 67!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Qulay usulda hisoblang: 24 + 17 + 26",
+      "options": [
+        "67",
+        "66",
+        "68",
+        "65"
+      ],
+      "correctIndex": 0,
+      "explanation": "(24 + 26) + 17 = 50 + 17 = 67."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 35 + 18 + 15",
+      "options": [
+        "67",
+        "68",
+        "69",
+        "66"
+      ],
+      "correctIndex": 1,
+      "explanation": "(35 + 15) + 18 = 50 + 18 = 68."
+    },
+    {
+      "text": "Bog'da 22 tup olma, 19 tup nok va 28 tup shaftoli bor. Jami daraxtlar nechta?",
+      "options": [
+        "68",
+        "70",
+        "69",
+        "67"
+      ],
+      "correctIndex": 2,
+      "explanation": "(22 + 28) + 19 = 50 + 19 = 69 ta."
+    }
+  ],
+  "test": [
+    {
+      "text": "Qulay usulda hisoblang: 24 + 17 + 26",
+      "options": [
+        "67",
+        "66",
+        "68",
+        "65"
+      ],
+      "correctIndex": 0,
+      "explanation": "(24 + 26) + 17 = 50 + 17 = 67."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 31 + 25 + 19",
+      "options": [
+        "74",
+        "75",
+        "76",
+        "73"
+      ],
+      "correctIndex": 1,
+      "explanation": "(31 + 19) + 25 = 50 + 25 = 75."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 43 + 18 + 17",
+      "options": [
+        "77",
+        "79",
+        "78",
+        "76"
+      ],
+      "correctIndex": 2,
+      "explanation": "(43 + 17) + 18 = 60 + 18 = 78."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 52 + 14 + 18",
+      "options": [
+        "83",
+        "85",
+        "82",
+        "84"
+      ],
+      "correctIndex": 3,
+      "explanation": "(52 + 18) + 14 = 70 + 14 = 84."
+    },
+    {
+      "text": "Fermer 27 qop bug'doy, 16 qop arpa va 23 qop makkajo'xori yig'di. Jami qoplar nechta?",
+      "options": [
+        "66",
+        "65",
+        "67",
+        "64"
+      ],
+      "correctIndex": 0,
+      "explanation": "(27 + 23) + 16 = 50 + 16 = 66 qop."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 36 + 29 + 14",
+      "options": [
+        "78",
+        "79",
+        "80",
+        "77"
+      ],
+      "correctIndex": 1,
+      "explanation": "(36 + 14) + 29 = 50 + 29 = 79."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 45 + 23 + 15",
+      "options": [
+        "82",
+        "84",
+        "83",
+        "81"
+      ],
+      "correctIndex": 2,
+      "explanation": "(45 + 15) + 23 = 60 + 23 = 83."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 18 + 37 + 32",
+      "options": [
+        "86",
+        "88",
+        "85",
+        "87"
+      ],
+      "correctIndex": 3,
+      "explanation": "(18 + 32) + 37 = 50 + 37 = 87."
+    },
+    {
+      "text": "Tenglamani yeching: x - 17 = 50",
+      "options": [
+        "67",
+        "66",
+        "68",
+        "65"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 50 + 17 = 67."
+    },
+    {
+      "text": "Tenglamani yeching: y - 25 = 50",
+      "options": [
+        "74",
+        "75",
+        "76",
+        "73"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 50 + 25 = 75."
+    },
+    {
+      "text": "Taqqoslang: (24 + 26) + 15 va 65",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "(24 + 26) + 15 = 50 + 15 = 65. Ular teng: 65 = 65."
+    },
+    {
+      "text": "Taqqoslang: 32 + 18 + 14 va 65",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "32 + 18 + 14 = 50 + 14 = 64. 64 < 65."
+    },
+    {
+      "text": "Issiqxonada 16 tup pomidor, 24 tup bodring va 35 tup qalampir ko'chatlari bor. Jami nechta?",
+      "options": [
+        "75",
+        "74",
+        "76",
+        "73"
+      ],
+      "correctIndex": 0,
+      "explanation": "(16 + 24) + 35 = 40 + 35 = 75 ta."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 28 + 33 + 12",
+      "options": [
+        "72",
+        "73",
+        "74",
+        "71"
+      ],
+      "correctIndex": 1,
+      "explanation": "(28 + 12) + 33 = 40 + 33 = 73."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 41 + 19 + 27",
+      "options": [
+        "86",
+        "88",
+        "87",
+        "85"
+      ],
+      "correctIndex": 2,
+      "explanation": "(41 + 19) + 27 = 60 + 27 = 87."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 34 + 26 + 28",
+      "options": [
+        "87",
+        "89",
+        "86",
+        "88"
+      ],
+      "correctIndex": 3,
+      "explanation": "(34 + 26) + 28 = 60 + 28 = 88."
+    },
+    {
+      "text": "Qaysi xossaga ko'ra (a + b) + c = a + (b + c) tenglik to'g'ri?",
+      "options": [
+        "Guruhlash xossasi",
+        "Ayirish xossasi",
+        "Ko'paytirish xossasi",
+        "Taqsimot qonuni"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo'shishning guruhlash xossasiga ko'ra qo'shiluvchilarni qulay guruhlash mumkin."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 23 + 45 + 17",
+      "options": [
+        "84",
+        "85",
+        "86",
+        "83"
+      ],
+      "correctIndex": 1,
+      "explanation": "(23 + 17) + 45 = 40 + 45 = 85."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 15 + 48 + 25",
+      "options": [
+        "87",
+        "89",
+        "88",
+        "86"
+      ],
+      "correctIndex": 2,
+      "explanation": "(15 + 25) + 48 = 40 + 48 = 88."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 39 + 24 + 11",
+      "options": [
+        "73",
+        "75",
+        "72",
+        "74"
+      ],
+      "correctIndex": 3,
+      "explanation": "(39 + 11) + 24 = 50 + 24 = 74."
+    }
+  ]
+}

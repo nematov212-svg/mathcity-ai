@@ -1,0 +1,279 @@
+{
+  "order": 8,
+  "bookNumber": 8,
+  "unitType": "LESSON",
+  "title": "Takrorlash",
+  "emoji": "🐝",
+  "crossTopic": "Foydali va zararli hasharotlar",
+  "shortDesc": "Tengliklar oilasi, kesmani bo‘laklarga bo‘lish va ifodalarni taqqoslash",
+  "intro": "Tabiatda asalarilar gul changlatib asal beradi, ba’zi hasharotlar esa ekinlarga ziyon yetkazadi. Ushbu darsda 1-bobning yakuniy takrorlashini o‘tamiz: tengliklar oilasi, kesmalar va mantiqiy masalalar.",
+  "keyPoints": [
+    "Uchta sondan tengliklar oilasi tuziladi: 40 + 6 = 46, 6 + 40 = 46, 46 - 6 = 40, 46 - 40 = 6.",
+    "Kesmani 2 ta nuqta bilan bo‘lsak, 3 ta bo‘lak hosil bo‘ladi.",
+    "Harfiy ifodalarni taqqoslash: a - 3 < a (chunki ayirma sondan kichik)."
+  ],
+  "miniExample": {
+    "emojis": "🐝 40 + 6 = 46 | 46 - 6 = 40",
+    "text": "Qo‘shish va ayirish amallari o‘zaro bog‘liq: 40 + 6 = 46 bo‘lsa, 46 - 6 = 40 bo‘ladi!"
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "40 + 6 = 46 tenglikdan qaysi ayirish amalini hosil qilish mumkin?",
+      "options": [
+        "46 - 6 = 40",
+        "46 + 6 = 52",
+        "40 - 6 = 34",
+        "46 - 46 = 0"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yig‘indidan qo‘shiluvchini ayirsak: 46 - 6 = 40."
+    },
+    {
+      "text": "Taqqoslang: a - 3 ... a (bu yerda a musbat son)",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sondan 3 ni ayirsak, u kamayadi, demak a - 3 < a."
+    },
+    {
+      "text": "Taqqoslang: b + 14 ... b + 25",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "-"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 soni 25 dan kichik bo‘lgani uchun b + 14 < b + 25."
+    }
+  ],
+  "test": [
+    {
+      "text": "40 va 6 sonlaridan qaysi tengliklar oilasini tuzish mumkin?",
+      "options": [
+        "40 + 6 = 46, 6 + 40 = 46, 46 - 6 = 40",
+        "40 + 6 = 46, 40 - 6 = 34, 46 + 6 = 52",
+        "40 + 6 = 50, 50 - 6 = 44",
+        "Faqat 40 + 6 = 46"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shish va ayirishning o‘zaro bog‘liqligi: 40+6=46, 6+40=46, 46-6=40."
+    },
+    {
+      "text": "Uzunligi 1 dm (10 cm) bo‘lgan AB kesmada C va D nuqtalar belgilandi. Bu kesma nechta bo‘lakka bo‘lindi?",
+      "options": [
+        "2 ta bo‘lakka",
+        "3 ta bo‘lakka",
+        "4 ta bo‘lakka",
+        "1 ta bo‘lakka"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kesma ustidagi 2 ta nuqta uni 3 ta bo‘lakka ajratadi."
+    },
+    {
+      "text": "Taqqoslang: a - 3 ... a (a > 3 bo‘lsa)",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "a - 3 har doim a dan kichik bo‘ladi: <."
+    },
+    {
+      "text": "Taqqoslang: b + 14 ... b + 25",
+      "options": [
+        ">",
+        "=",
+        "-",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 < 25 bo‘lgani uchun b + 14 < b + 25."
+    },
+    {
+      "text": "Taqqoslang: c - 0 ... c + 0",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "≠"
+      ],
+      "correctIndex": 0,
+      "explanation": "c - 0 = c va c + 0 = c, ikkala tomon teng."
+    },
+    {
+      "text": "50 + 8 = 58 tenglikka teskari bo‘lgan ayirish amali qaysi?",
+      "options": [
+        "58 + 8 = 66",
+        "58 - 8 = 50",
+        "50 - 8 = 42",
+        "58 - 58 = 0"
+      ],
+      "correctIndex": 1,
+      "explanation": "58 - 8 = 50."
+    },
+    {
+      "text": "Gulzorda 49 ta hasharot bor edi: 12 tasi kapalak, 14 tasi asalari, qolgani esa qo‘ng‘iz. Gulzorda nechta qo‘ng‘iz bor?",
+      "options": [
+        "21 ta",
+        "22 ta",
+        "23 ta qo‘ng‘iz",
+        "25 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kapalak va asalarilar: 12 + 14 = 26 ta. Qo‘ng‘izlar: 49 - 26 = 23 ta."
+    },
+    {
+      "text": "1 dm kesma C va D nuqtalar bilan 3 cm, 4 cm va noma’lum x cm bo‘laklarga bo‘lindi. x necha cm ga teng? (1 dm = 10 cm)",
+      "options": [
+        "2 cm",
+        "4 cm",
+        "5 cm",
+        "3 cm (10 - 7 = 3)"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 + 4 = 7 cm; 10 - 7 = 3 cm."
+    },
+    {
+      "text": "Taqqoslang: x + 10 ... x - 10",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shilganda son ortadi, ayirilganda kamayadi, demak x + 10 > x - 10."
+    },
+    {
+      "text": "70 + 5 = 75 bo‘lsa, 75 - 70 nechaga teng bo‘ladi?",
+      "options": [
+        "70",
+        "5",
+        "75",
+        "10"
+      ],
+      "correctIndex": 1,
+      "explanation": "75 - 70 = 5."
+    },
+    {
+      "text": "Uya atrofida 16 ta asalari uchib yurgan edi. Yana 14 ta asalari guldan qaytib keldi. Asalarilar jami nechta bo‘ldi?",
+      "options": [
+        "28 ta",
+        "32 ta",
+        "30 ta",
+        "20 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "16 + 14 = 30 ta asalari."
+    },
+    {
+      "text": "Tenglamani yeching: y + 23 = 50",
+      "options": [
+        "26",
+        "28",
+        "73",
+        "27"
+      ],
+      "correctIndex": 3,
+      "explanation": "y = 50 - 23 = 27."
+    },
+    {
+      "text": "Hisoblang: 100 - 40 - 30",
+      "options": [
+        "30",
+        "40",
+        "20",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "100 - 40 = 60, 60 - 30 = 30."
+    },
+    {
+      "text": "1-bob bo‘yicha to‘g‘ri xulosani toping:",
+      "options": [
+        "Ayirish amali faqat sonlarni ko‘paytiradi",
+        "Yig‘indi va ayirma o‘zaro bog‘liq, qismlar yig‘indisi butunni beradi",
+        "Tenglamalarda har doim faqat 10 soni chiqadi",
+        "Perimetr faqat uchburchakda bo‘ladi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qo‘shish va ayirish amallari butun va uning qismlari o‘rtasidagi bog‘liqlikdir."
+    },
+    {
+      "text": "Kuzgi bog‘da 26 ta xonqizi va 14 ta ninachi bor edi. Qushlardan qo‘rqib 10 ta hasharot uchib ketdi. Nechta hasharot qoldi?",
+      "options": [
+        "28 ta",
+        "32 ta",
+        "30 ta hasharot",
+        "40 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "26 + 14 = 40 ta, 40 - 10 = 30 ta hasharot qoldi."
+    },
+    {
+      "text": "Tenglamani yeching: 85 - x = 45",
+      "options": [
+        "35",
+        "45",
+        "130",
+        "40"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 85 - 45 = 40."
+    },
+    {
+      "text": "Taqqoslang: m - 8 ... m - 12 (m > 12 bo‘lsa)",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kamroq son (8) ayirilsa, ayirma kattaroq bo‘ladi: >."
+    },
+    {
+      "text": "Kesmaning uzunligi 12 cm. U 3 ta teng bo‘lakka bo‘lindi. Har bir bo‘lak necha cm?",
+      "options": [
+        "3 cm",
+        "4 cm (4 + 4 + 4 = 12)",
+        "5 cm",
+        "6 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 + 4 + 4 = 12 cm."
+    },
+    {
+      "text": "Asalari oilasi uch kunda asal yig‘di: dushanba kuni 14 kg, seshanba kuni 16 kg, chorshanba kuni esa dushanba va seshanba kunlari birgalikda yig‘ilganidan 10 kg kam asal yig‘ildi. Chorshanba kuni necha kg asal yig‘ilgan?",
+      "options": [
+        "18 kg",
+        "22 kg",
+        "20 kg",
+        "30 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "Dushanba va seshanba: 14 + 16 = 30 kg. Chorshanba: 30 - 10 = 20 kg."
+    },
+    {
+      "text": "Uch kunda asalari oilasi jami necha kg asal to‘plagan (oldingi masala shartiga ko‘ra)?",
+      "options": [
+        "40 kg",
+        "45 kg",
+        "60 kg",
+        "50 kg (30 + 20 = 50)"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 + 20 = 50 kg asal."
+    }
+  ]
+}

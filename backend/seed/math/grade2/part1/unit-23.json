@@ -1,0 +1,279 @@
+{
+  "order": 23,
+  "bookNumber": 23,
+  "unitType": "LESSON",
+  "title": "Sonlarni ayirish (33 - 7)",
+  "emoji": "🏫",
+  "crossTopic": "Maktab",
+  "shortDesc": "Xonadan o'tib ayirish: bo'lib-bo'lib ayirish usuli",
+  "intro": "Maktabda har kuni yangi fanlarni o'rganamiz. Xonadan o'tib ayirishda ayiriluvchi sonni qulay qismlarga ajratamiz: 33 - 7 = (33 - 3) - 4 = 30 - 4 = 26!",
+  "keyPoints": [
+    "7 sonini 3 va 4 ga ajratamiz, chunki 33 dan 3 ni ayirsak yaxlit 30 qoladi.",
+    "Hosil bo'lgan 30 dan qolgan 4 ni ayiramiz: 30 - 4 = 26.",
+    "Demak: 33 - 7 = 26."
+  ],
+  "miniExample": {
+    "emojis": "🏫 33 - 7 = (33 - 3) - 4 = 26",
+    "text": "33 dan 7 ni ayirish: 33 - 3 = 30, so'ng 30 - 4 = 26!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 33 - 7",
+      "options": [
+        "26",
+        "25",
+        "27",
+        "24"
+      ],
+      "correctIndex": 0,
+      "explanation": "33 - 3 = 30, 30 - 4 = 26."
+    },
+    {
+      "text": "Hisoblang: 32 - 5",
+      "options": [
+        "26",
+        "27",
+        "28",
+        "25"
+      ],
+      "correctIndex": 1,
+      "explanation": "32 - 2 = 30, 30 - 3 = 27."
+    },
+    {
+      "text": "Sinfda 34 ta daftar bor edi. 8 tasi tarqatildi. Nechta daftar qoldi?",
+      "options": [
+        "25",
+        "27",
+        "26",
+        "24"
+      ],
+      "correctIndex": 2,
+      "explanation": "34 - 8 = 34 - 4 - 4 = 26 ta daftar."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 33 - 7",
+      "options": [
+        "26",
+        "25",
+        "27",
+        "24"
+      ],
+      "correctIndex": 0,
+      "explanation": "33 - 3 = 30, 30 - 4 = 26."
+    },
+    {
+      "text": "Hisoblang: 35 - 8",
+      "options": [
+        "26",
+        "27",
+        "28",
+        "25"
+      ],
+      "correctIndex": 1,
+      "explanation": "35 - 5 = 30, 30 - 3 = 27."
+    },
+    {
+      "text": "Hisoblang: 32 - 6",
+      "options": [
+        "25",
+        "27",
+        "26",
+        "24"
+      ],
+      "correctIndex": 2,
+      "explanation": "32 - 2 = 30, 30 - 4 = 26."
+    },
+    {
+      "text": "Hisoblang: 34 - 9",
+      "options": [
+        "24",
+        "26",
+        "23",
+        "25"
+      ],
+      "correctIndex": 3,
+      "explanation": "34 - 4 = 30, 30 - 5 = 25."
+    },
+    {
+      "text": "Kutubxonada 31 ta kitobdan 5 tasi o'qishga berildi. Nechta kitob qoldi?",
+      "options": [
+        "26",
+        "25",
+        "27",
+        "24"
+      ],
+      "correctIndex": 0,
+      "explanation": "31 - 5 = 26 ta kitob."
+    },
+    {
+      "text": "Hisoblang: 36 - 8",
+      "options": [
+        "27",
+        "28",
+        "29",
+        "26"
+      ],
+      "correctIndex": 1,
+      "explanation": "36 - 6 = 30, 30 - 2 = 28."
+    },
+    {
+      "text": "Hisoblang: 33 - 5",
+      "options": [
+        "27",
+        "29",
+        "28",
+        "26"
+      ],
+      "correctIndex": 2,
+      "explanation": "33 - 3 = 30, 30 - 2 = 28."
+    },
+    {
+      "text": "Hisoblang: 31 - 7",
+      "options": [
+        "23",
+        "25",
+        "22",
+        "24"
+      ],
+      "correctIndex": 3,
+      "explanation": "31 - 1 = 30, 30 - 6 = 24."
+    },
+    {
+      "text": "Tenglamani yeching: 33 - x = 25",
+      "options": [
+        "8",
+        "7",
+        "9",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 33 - 25 = 8."
+    },
+    {
+      "text": "Tenglamani yeching: y + 7 = 33",
+      "options": [
+        "25",
+        "26",
+        "27",
+        "24"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 33 - 7 = 26."
+    },
+    {
+      "text": "Taqqoslang: 33 - 7 va 20 + 6",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "33 - 7 = 26 va 20 + 6 = 26. Ular teng: 26 = 26."
+    },
+    {
+      "text": "Taqqoslang: 32 - 8 va 25",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "32 - 8 = 24. 24 < 25."
+    },
+    {
+      "text": "Sinf xonasida 35 ta parta bor. 9 ta parta bo'yaldi. Bo'yalmagan partalar nechta?",
+      "options": [
+        "26",
+        "25",
+        "27",
+        "24"
+      ],
+      "correctIndex": 0,
+      "explanation": "35 - 9 = 26 ta."
+    },
+    {
+      "text": "Hisoblang: 34 - 7",
+      "options": [
+        "26",
+        "27",
+        "28",
+        "25"
+      ],
+      "correctIndex": 1,
+      "explanation": "34 - 4 = 30, 30 - 3 = 27."
+    },
+    {
+      "text": "Hisoblang: 36 - 9",
+      "options": [
+        "26",
+        "28",
+        "27",
+        "25"
+      ],
+      "correctIndex": 2,
+      "explanation": "36 - 6 = 30, 30 - 3 = 27."
+    },
+    {
+      "text": "Hisoblang: 32 - 7",
+      "options": [
+        "24",
+        "26",
+        "23",
+        "25"
+      ],
+      "correctIndex": 3,
+      "explanation": "32 - 2 = 30, 30 - 5 = 25."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 33 - * = 27?",
+      "options": [
+        "6",
+        "5",
+        "7",
+        "8"
+      ],
+      "correctIndex": 0,
+      "explanation": "33 - 27 = 6."
+    },
+    {
+      "text": "Hisoblang: 35 - 6",
+      "options": [
+        "28",
+        "29",
+        "30",
+        "27"
+      ],
+      "correctIndex": 1,
+      "explanation": "35 - 5 = 30, 30 - 1 = 29."
+    },
+    {
+      "text": "Hisoblang: 31 - 4",
+      "options": [
+        "26",
+        "28",
+        "27",
+        "25"
+      ],
+      "correctIndex": 2,
+      "explanation": "31 - 1 = 30, 30 - 3 = 27."
+    },
+    {
+      "text": "Hisoblang: 33 - 9",
+      "options": [
+        "23",
+        "25",
+        "22",
+        "24"
+      ],
+      "correctIndex": 3,
+      "explanation": "33 - 3 = 30, 30 - 6 = 24."
+    }
+  ]
+}

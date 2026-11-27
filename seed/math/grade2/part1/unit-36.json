@@ -1,0 +1,279 @@
+{
+  "order": 36,
+  "bookNumber": 35,
+  "unitType": "LESSON",
+  "title": "Yig‘indidan sonni ayirish",
+  "emoji": "🐮",
+  "crossTopic": "Uy hayvonlari",
+  "shortDesc": "Yig'indidan sonni ayirish usulini mustahkamlash va ferma masalalari",
+  "intro": "Fermada sigirlar, qo'ylar va otlar boqiladi. Hayvonlar soni bo'yicha masalalarni yechishda (42 + 28) - 18 kabi ifodalarni qulay ayirish usuli bilan hisoblaymiz: 42 + (28 - 18) = 42 + 10 = 52!",
+  "keyPoints": [
+    "Qaysi qo'shiluvchidan ayirish oson bo'lsa, o'shandan ayirish qulay.",
+    "28 dan 18 ni ayirsa 10 qoladi, 42 ga 10 ni qo'shish juda oson.",
+    "Uy hayvonlari parvarishi va mahsulotlar hisob-kitobida tezkor usullar."
+  ],
+  "miniExample": {
+    "emojis": "🐮 (42 + 28) - 18 = 42 + 10 = 52",
+    "text": "28 dan 18 ni ayirsak 10 qoladi, 42 ga 10 ni qo'shsak 52 ta hayvon!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Qulay usulda hisoblang: (42 + 28) - 18",
+      "options": [
+        "52",
+        "51",
+        "53",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "42 + (28 - 18) = 42 + 10 = 52."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (53 + 37) - 23",
+      "options": [
+        "66",
+        "67",
+        "68",
+        "65"
+      ],
+      "correctIndex": 1,
+      "explanation": "(53 - 23) + 37 = 30 + 37 = 67."
+    },
+    {
+      "text": "Fermada 34 ta buzoq va 26 ta qo'zichoq bor edi. 14 ta hayvon ko'chaga chiqarildi. Nechtasi qoldi?",
+      "options": [
+        "45",
+        "47",
+        "46",
+        "44"
+      ],
+      "correctIndex": 2,
+      "explanation": "(34 - 14) + 26 = 20 + 26 = 46 ta."
+    }
+  ],
+  "test": [
+    {
+      "text": "Qulay usulda hisoblang: (42 + 28) - 18",
+      "options": [
+        "52",
+        "51",
+        "53",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "42 + (28 - 18) = 42 + 10 = 52."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (53 + 37) - 23",
+      "options": [
+        "66",
+        "67",
+        "68",
+        "65"
+      ],
+      "correctIndex": 1,
+      "explanation": "(53 - 23) + 37 = 30 + 37 = 67."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (64 + 25) - 34",
+      "options": [
+        "54",
+        "56",
+        "55",
+        "53"
+      ],
+      "correctIndex": 2,
+      "explanation": "(64 - 34) + 25 = 30 + 25 = 55."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (38 + 46) - 26",
+      "options": [
+        "57",
+        "59",
+        "56",
+        "58"
+      ],
+      "correctIndex": 3,
+      "explanation": "38 + (46 - 26) = 38 + 20 = 58."
+    },
+    {
+      "text": "Fermada 45 ta oq qo'y va 28 ta qora qo'y bor edi. 18 ta qo'y yaylovga haydaldi. Qo'rada nechtasi qoldi?",
+      "options": [
+        "55",
+        "54",
+        "56",
+        "53"
+      ],
+      "correctIndex": 0,
+      "explanation": "45 + (28 - 18) = 45 + 10 = 55 ta."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (75 + 18) - 35",
+      "options": [
+        "57",
+        "58",
+        "59",
+        "56"
+      ],
+      "correctIndex": 1,
+      "explanation": "(75 - 35) + 18 = 40 + 18 = 58."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (49 + 33) - 23",
+      "options": [
+        "58",
+        "60",
+        "59",
+        "57"
+      ],
+      "correctIndex": 2,
+      "explanation": "49 + (33 - 23) = 49 + 10 = 59."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (61 + 29) - 19",
+      "options": [
+        "70",
+        "72",
+        "69",
+        "71"
+      ],
+      "correctIndex": 3,
+      "explanation": "61 + (29 - 19) = 61 + 10 = 71."
+    },
+    {
+      "text": "Tenglamani yeching: a + 18 = 70",
+      "options": [
+        "52",
+        "51",
+        "53",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "a = 70 - 18 = 52."
+    },
+    {
+      "text": "Tenglamani yeching: b + 23 = 90",
+      "options": [
+        "66",
+        "67",
+        "68",
+        "65"
+      ],
+      "correctIndex": 1,
+      "explanation": "b = 90 - 23 = 67."
+    },
+    {
+      "text": "Taqqoslang: (42 + 28) - 18 va 50",
+      "options": [
+        "<",
+        "=",
+        ">",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "(42 + 28) - 18 = 52. 52 > 50."
+    },
+    {
+      "text": "Taqqoslang: (53 + 37) - 23 va 70",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "(53 + 37) - 23 = 67. 67 < 70."
+    },
+    {
+      "text": "Tovuqxonada 32 ta oq tovuq va 25 ta qizil tovuq bor edi. 12 ta tovuq sotildi. Nechtasi qoldi?",
+      "options": [
+        "45",
+        "44",
+        "46",
+        "43"
+      ],
+      "correctIndex": 0,
+      "explanation": "(32 - 12) + 25 = 20 + 25 = 45 ta."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (86 + 13) - 46",
+      "options": [
+        "52",
+        "53",
+        "54",
+        "51"
+      ],
+      "correctIndex": 1,
+      "explanation": "(86 - 46) + 13 = 40 + 13 = 53."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (57 + 34) - 24",
+      "options": [
+        "66",
+        "68",
+        "67",
+        "65"
+      ],
+      "correctIndex": 2,
+      "explanation": "57 + (34 - 24) = 57 + 10 = 67."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (68 + 22) - 38",
+      "options": [
+        "51",
+        "53",
+        "50",
+        "52"
+      ],
+      "correctIndex": 3,
+      "explanation": "(68 - 38) + 22 = 30 + 22 = 52."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: (50 + 35) - * = 65?",
+      "options": [
+        "20",
+        "19",
+        "21",
+        "18"
+      ],
+      "correctIndex": 0,
+      "explanation": "85 - 65 = 20."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (79 + 16) - 39",
+      "options": [
+        "55",
+        "56",
+        "57",
+        "54"
+      ],
+      "correctIndex": 1,
+      "explanation": "(79 - 39) + 16 = 40 + 16 = 56."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (44 + 38) - 18",
+      "options": [
+        "63",
+        "65",
+        "64",
+        "62"
+      ],
+      "correctIndex": 2,
+      "explanation": "44 + (38 - 18) = 44 + 20 = 64."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (58 + 25) - 28",
+      "options": [
+        "54",
+        "56",
+        "53",
+        "55"
+      ],
+      "correctIndex": 3,
+      "explanation": "(58 - 28) + 25 = 30 + 25 = 55."
+    }
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "order": 13,
+  "bookNumber": 13,
+  "unitType": "LESSON",
+  "title": "Yaxlit sondan ayirish",
+  "emoji": "⛷️",
+  "crossTopic": "Qishki sport turlari",
+  "shortDesc": "Yaxlit o‘nlikdan bir xonali sonni ayirish usuli: 50 - 6, 70 - 8, 90 - 1",
+  "intro": "Qishda chang‘i va konki uchish insonni baquvvat qiladi. Muz maydonlarida tezlik va aniqlik muhim bo‘lganidek, matematikada ham yaxlit sondan o‘nlikni maydalab ayirishni aniq bajarish zarur.",
+  "keyPoints": [
+    "50 - 6 amali: 50 dan 1 ta o‘nlik (10) olamiz va 10 dan 6 ni ayiramiz: 10 - 6 = 4.",
+    "Qolgan 4 ta o‘nlikka 4 ni qo‘shamiz: 40 + 4 = 44.",
+    "4 o‘nl. - 4 birl. = 3 o‘nl. 6 birl. = 36."
+  ],
+  "miniExample": {
+    "emojis": "⛷️ 50 - 6 = 40 + (10 - 6) = 44",
+    "text": "50 ni 40 va 10 ga ajratamiz: 10 dan 6 ni ayirsak 4 qoladi. 40 + 4 = 44!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 50 - 6",
+      "options": [
+        "44",
+        "46",
+        "45",
+        "43"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 - 6 = 4, 40 + 4 = 44."
+    },
+    {
+      "text": "Hisoblang: 70 - 8",
+      "options": [
+        "68",
+        "62",
+        "60",
+        "63"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 - 8 = 2, 60 + 2 = 62."
+    },
+    {
+      "text": "Hisoblang: 90 - 1",
+      "options": [
+        "80",
+        "91",
+        "89",
+        "88"
+      ],
+      "correctIndex": 2,
+      "explanation": "90 - 1 = 89."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 50 - 6",
+      "options": [
+        "44",
+        "46",
+        "45",
+        "43"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 6 = 44."
+    },
+    {
+      "text": "Hisoblang: 70 - 8",
+      "options": [
+        "68",
+        "62",
+        "60",
+        "63"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 8 = 62."
+    },
+    {
+      "text": "Hisoblang: 90 - 1",
+      "options": [
+        "80",
+        "91",
+        "89",
+        "88"
+      ],
+      "correctIndex": 2,
+      "explanation": "90 - 1 = 89."
+    },
+    {
+      "text": "Hisoblang: 80 - 1",
+      "options": [
+        "78",
+        "81",
+        "70",
+        "79"
+      ],
+      "correctIndex": 3,
+      "explanation": "80 - 1 = 79."
+    },
+    {
+      "text": "Hisoblang: 30 - 3",
+      "options": [
+        "27",
+        "26",
+        "28",
+        "23"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 - 3 = 27."
+    },
+    {
+      "text": "Hisoblang: 20 - 4",
+      "options": [
+        "15",
+        "16",
+        "17",
+        "14"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 - 4 = 16."
+    },
+    {
+      "text": "4 o‘nl. - 4 birl. amali natijasi nechaga teng?",
+      "options": [
+        "4 o‘nl. 4 birl. = 44",
+        "3 o‘nl. 4 birl. = 34",
+        "3 o‘nl. 6 birl. = 36",
+        "40"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 - 4 = 36 = 3 o‘nlik 6 birlik."
+    },
+    {
+      "text": "Muz maydonining bo‘yi 20 m, eni esa bo‘yidan 6 m kam. Maydonning eni necha metr?",
+      "options": [
+        "13 metr",
+        "15 metr",
+        "16 metr",
+        "14 metr (20 - 6 = 14)"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 - 6 = 14 metr."
+    },
+    {
+      "text": "Ushbu muz maydonining perimetrini hisoblang (bo‘yi 20 m, eni 14 m):",
+      "options": [
+        "68 metr (20 + 14 + 20 + 14 = 68)",
+        "64 metr",
+        "66 metr",
+        "70 metr"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 + 14 + 20 + 14 = 68 metr."
+    },
+    {
+      "text": "Hisoblang: 60 - 7",
+      "options": [
+        "52",
+        "53",
+        "54",
+        "57"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 7 = 53."
+    },
+    {
+      "text": "Hisoblang: 40 - 9",
+      "options": [
+        "30",
+        "32",
+        "31",
+        "39"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 - 9 = 31."
+    },
+    {
+      "text": "Chang‘i bazasida 50 juft chang‘i bor edi. Ertalab 8 juft chang‘i ijaraga berildi. Bazada necha juft chang‘i qoldi?",
+      "options": [
+        "40 juft",
+        "43 juft",
+        "44 juft",
+        "42 juft"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 8 = 42 juft."
+    },
+    {
+      "text": "Jadvalni to‘ldiring: kamayuvchi 80, ayriluvchi 5. Ayirmani toping:",
+      "options": [
+        "75",
+        "74",
+        "76",
+        "85"
+      ],
+      "correctIndex": 0,
+      "explanation": "80 - 5 = 75."
+    },
+    {
+      "text": "Hisoblang: 100 - 6",
+      "options": [
+        "92",
+        "94",
+        "95",
+        "96"
+      ],
+      "correctIndex": 1,
+      "explanation": "100 - 6 = 94."
+    },
+    {
+      "text": "Tenglamani yeching: 60 - x = 54",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 60 - 54 = 6."
+    },
+    {
+      "text": "Tenglamani yeching: 80 - y = 72",
+      "options": [
+        "7",
+        "9",
+        "12",
+        "8"
+      ],
+      "correctIndex": 3,
+      "explanation": "y = 80 - 72 = 8."
+    },
+    {
+      "text": "Hisoblang: (70 - 4) - 20",
+      "options": [
+        "46",
+        "44",
+        "48",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "70 - 4 = 66, 66 - 20 = 46."
+    },
+    {
+      "text": "50 dan 7 ni ayirish uchun qaysi ifoda to‘g‘ri?",
+      "options": [
+        "50 - 10 + 7",
+        "40 + (10 - 7) = 43",
+        "40 - (10 - 7)",
+        "30 + 17"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 dan bitta 10 lik ajratiladi: 40 + (10 - 7) = 43."
+    },
+    {
+      "text": "Qishki sport musobaqasida 40 nafar chang‘ichi startga chiqdi. Birinchi marraga 15 nafar, ikkinchi marraga 9 nafar sportchi yetib keldi. Yo‘lda yana necha nafar sportchi harakatlanmoqda?",
+      "options": [
+        "14 nafar",
+        "18 nafar",
+        "16 nafar ((40 - 15) - 9 = 16)",
+        "24 nafar"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 - 15 = 25 nafar. Qolganlar: 25 - 9 = 16 nafar."
+    },
+    {
+      "text": "Konkichilar maydonchasi to‘g‘ri to‘rtburchak shaklida: perimetri 70 metr. Agar maydonchaning ikkita bo‘yi yig‘indisi 40 metr bo‘lsa, maydonchaning eni necha metr bo‘ladi?",
+      "options": [
+        "14 metr",
+        "16 metr",
+        "30 metr",
+        "15 metr ((70 - 40) / 2 = 15)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ikkita eni: 70 - 40 = 30 metr. Eni: 30 / 2 = 15 metr."
+    }
+  ]
+}

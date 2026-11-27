@@ -1,0 +1,279 @@
+{
+  "order": 3,
+  "bookNumber": 3,
+  "unitType": "LESSON",
+  "title": "Takrorlash",
+  "emoji": "🌸",
+  "crossTopic": "Xonaki gullar",
+  "shortDesc": "To‘g‘ri va egri chiziqlar, nuqtalar, kesmalar va sodda tenglamalar",
+  "intro": "Xonaki gullar uylarimizga ko‘rk bag‘ishlaydi. Ushbu darsda geometriya asoslari — to‘g‘ri va egri chiziqlar, nuqtalar hamda sodda tenglamalarni yechishni takrorlaymiz.",
+  "keyPoints": [
+    "To‘g‘ri chiziq cheksiz bo‘lib, chizg‘ich yordamida chiziladi.",
+    "Egri chiziq to‘g‘ri emas, u to‘lqinsimon yoki aylanma bo‘lishi mumkin.",
+    "Nuqtalar lotin bosh harflari bilan belgilanadi: A, B, C."
+  ],
+  "miniExample": {
+    "emojis": "🌸 x - 15 = 54 -> x = 69",
+    "text": "Qaysi sondan 15 ni ayirsak 54 qoladi? 54 ga 15 ni qo‘shamiz: x = 69!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Tenglamani yeching: x - 15 = 54",
+      "options": [
+        "69",
+        "39",
+        "68",
+        "70"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 54 + 15 = 69."
+    },
+    {
+      "text": "Tenglamani yeching: 18 + z = 79",
+      "options": [
+        "51",
+        "61",
+        "62",
+        "97"
+      ],
+      "correctIndex": 1,
+      "explanation": "z = 79 - 18 = 61."
+    },
+    {
+      "text": "Nuqta qanday harflar bilan belgilanadi?",
+      "options": [
+        "Kichik harflar bilan",
+        "Raqamlar bilan",
+        "Lotin bosh harflari bilan (A, B, C)",
+        "Ranglar bilan"
+      ],
+      "correctIndex": 2,
+      "explanation": "Geometriyada nuqtalar A, B, C kabi bosh harflar bilan belgilanadi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Tenglamani yeching: x - 15 = 54",
+      "options": [
+        "69",
+        "39",
+        "68",
+        "70"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 54 + 15 = 69."
+    },
+    {
+      "text": "Tenglamani yeching: 18 + z = 79",
+      "options": [
+        "51",
+        "61",
+        "62",
+        "97"
+      ],
+      "correctIndex": 1,
+      "explanation": "z = 79 - 18 = 61."
+    },
+    {
+      "text": "Tenglamani yeching: 61 - b = 40",
+      "options": [
+        "19",
+        "20",
+        "21",
+        "101"
+      ],
+      "correctIndex": 2,
+      "explanation": "b = 61 - 40 = 21."
+    },
+    {
+      "text": "Ikki nuqta orqali nechta to‘g‘ri chiziq o‘tkazish mumkin?",
+      "options": [
+        "2 ta",
+        "Cheksiz ko‘p",
+        "Umuman o‘tkazib bo‘lmaydi",
+        "Faqat 1 ta"
+      ],
+      "correctIndex": 3,
+      "explanation": "Har qanday ikki nuqta orqali faqat bitta to‘g‘ri chiziq o‘tadi."
+    },
+    {
+      "text": "Chizg‘ichsiz erkin qo‘l bilan chizilgan chiziq ko‘pincha qanday chiziq bo‘ladi?",
+      "options": [
+        "Egri chiziq",
+        "To‘g‘ri chiziq",
+        "Kesma",
+        "Nur"
+      ],
+      "correctIndex": 0,
+      "explanation": "Chizg‘ichsiz chizilgan chiziq to‘g‘ri bo‘lmay, egri chiziq hosil qiladi."
+    },
+    {
+      "text": "Kesma to‘g‘ri chiziqdan nima bilan farq qiladi?",
+      "options": [
+        "Rangi bilan",
+        "Ikki tomondan nuqtalar bilan chegaralangani bilan",
+        "Cheksizligi bilan",
+        "Farqi yo‘q"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kesma — ikki nuqta bilan chegaralangan to‘g‘ri chiziq bo‘lagidir."
+    },
+    {
+      "text": "Uzunliklarni hisoblang: 7 dm + 2 dm + 4 dm + 3 dm",
+      "options": [
+        "15 dm",
+        "17 dm",
+        "16 dm",
+        "14 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 2 + 4 + 3 = 16 dm."
+    },
+    {
+      "text": "Guldon balandligi 3 dm 4 cm. Bu necha santimetrga teng?",
+      "options": [
+        "43 cm",
+        "30 cm",
+        "7 cm",
+        "34 cm"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 dm = 30 cm, 30 + 4 = 34 cm."
+    },
+    {
+      "text": "Tenglamani yeching: a + 24 = 65",
+      "options": [
+        "41",
+        "39",
+        "40",
+        "89"
+      ],
+      "correctIndex": 0,
+      "explanation": "a = 65 - 24 = 41."
+    },
+    {
+      "text": "Tenglamani yeching: 75 - x = 32",
+      "options": [
+        "41",
+        "43",
+        "42",
+        "107"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 75 - 32 = 43."
+    },
+    {
+      "text": "AB to‘g‘ri chiziq ustida C nuqta belgilandi. C nuqta to‘g‘ri chiziqni nechta nurga ajratadi?",
+      "options": [
+        "1 ta nurga",
+        "3 ta nurga",
+        "2 ta nurga",
+        "4 ta nurga"
+      ],
+      "correctIndex": 2,
+      "explanation": "Nuqta to‘g‘ri chiziqni ikki qarama-qarshi nurga ajratadi."
+    },
+    {
+      "text": "To‘g‘ri chiziqni kesib o‘tuvchi kesma u bilan nechta umumiy nuqtaga ega bo‘ladi?",
+      "options": [
+        "2 ta",
+        "Cheksiz ko‘p",
+        "0 ta",
+        "1 ta umumiy nuqtaga"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kesishuvchi ikkita chiziq faqat bitta umumiy nuqtada kesishadi."
+    },
+    {
+      "text": "Hisoblang: 14 dm + 6 dm - 8 dm",
+      "options": [
+        "12 dm",
+        "10 dm",
+        "11 dm",
+        "13 dm"
+      ],
+      "correctIndex": 0,
+      "explanation": "14 + 6 = 20, 20 - 8 = 12 dm."
+    },
+    {
+      "text": "Derazada 15 tuvak binafsha va 12 tuvak fikus guli bor edi. Yana 5 tuvak atirgul qo‘yildi. Jami gullar nechta bo‘ldi?",
+      "options": [
+        "30 tuvak",
+        "32 tuvak",
+        "31 tuvak",
+        "27 tuvak"
+      ],
+      "correctIndex": 1,
+      "explanation": "15 + 12 = 27, 27 + 5 = 32 tuvak."
+    },
+    {
+      "text": "Tenglamani yeching: y - 27 = 43",
+      "options": [
+        "16",
+        "60",
+        "70",
+        "69"
+      ],
+      "correctIndex": 2,
+      "explanation": "y = 43 + 27 = 70."
+    },
+    {
+      "text": "Gulzorda 48 ta oq atirgul va undan 16 ta kam qizil atirgul ochildi. Gulzorda nechta qizil atirgul ochilgan?",
+      "options": [
+        "30 ta",
+        "34 ta",
+        "64 ta",
+        "32 ta"
+      ],
+      "correctIndex": 3,
+      "explanation": "48 - 16 = 32 ta."
+    },
+    {
+      "text": "Gulzorda jami nechta atirgul ochilgan (oldingi masala shartiga ko‘ra)?",
+      "options": [
+        "80 ta (48 + 32 = 80)",
+        "70 ta",
+        "78 ta",
+        "82 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "48 + 32 = 80 ta atirgul."
+    },
+    {
+      "text": "Nuqta to‘g‘ri chiziqda yotadimi yoki yo‘qligini qanday bilamiz?",
+      "options": [
+        "Doim yotadi",
+        "Nuqta chiziqning ustida joylashgan bo‘lsa yotadi, chetda bo‘lsa yotmaydi",
+        "Faqat qizil bo‘lsa yotadi",
+        "Nuqta chiziqdan kattaroq bo‘lishi kerak"
+      ],
+      "correctIndex": 1,
+      "explanation": "Agar nuqta chiziq ustiga to‘g‘ri kelsa, u chiziqda yotadi deyiladi."
+    },
+    {
+      "text": "Gulzordagi atirgul ko‘chatlari soni noma’lum edi. Bog‘bon yana 18 tup ko‘chat o‘tqazgach, jami 60 tup bo‘ldi. Gulzorda avval nechta atirgul ko‘chati bo‘lgan?",
+      "options": [
+        "40 tup",
+        "44 tup",
+        "42 tup (x + 18 = 60)",
+        "78 tup"
+      ],
+      "correctIndex": 2,
+      "explanation": "x + 18 = 60 -> x = 60 - 18 = 42 tup."
+    },
+    {
+      "text": "Gulchi ayol ertalab 45 ta guldasta yasadi. Tushlikkacha bir nechta guldasta sotilgach, 19 ta guldasta qoldi. Nechta guldasta sotilgan?",
+      "options": [
+        "24 ta",
+        "25 ta",
+        "64 ta",
+        "26 ta (45 - x = 19)"
+      ],
+      "correctIndex": 3,
+      "explanation": "45 - x = 19 -> x = 45 - 19 = 26 ta."
+    }
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "order": 5,
+  "bookNumber": 5,
+  "unitType": "LESSON",
+  "title": "Takrorlash",
+  "emoji": "🐄",
+  "crossTopic": "Uy hayvonlari",
+  "shortDesc": "Sonli va harfiy ifodalar, ularning qiymatini hisoblash",
+  "intro": "Uy hayvonlarining soni va ulardan olinadigan mahsulotlarni ifodalar orqali yozish juda qulay. Ushbu darsda a + b va a - b ko‘rinishidagi harfiy ifodalarni takrorlaymiz.",
+  "keyPoints": [
+    "a + b ifodasi ikki miqdorning yig‘indisini, a - b esa ularning ayirmasini bildiradi.",
+    "Agar harf o‘rniga son berilsa, harf o‘rniga o‘sha son qo‘yilib, ifoda qiymati topiladi.",
+    "Harfiy ifoda yordamida umumiy matematik qoidalar yoziladi."
+  ],
+  "miniExample": {
+    "emojis": "🐄 a = 15 bo‘lsa, a + 10 = 25",
+    "text": "Ertalab a ta chelak sut sog‘ildi. Agar a = 15 bo‘lsa, a + 10 = 15 + 10 = 25 chelak!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Agar a = 12 bo‘lsa, a + 7 ifodaning qiymatini toping:",
+      "options": [
+        "19",
+        "18",
+        "20",
+        "17"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + 7 = 19."
+    },
+    {
+      "text": "Agar x = 20 bo‘lsa, x - 8 ifodaning qiymati nechaga teng?",
+      "options": [
+        "11",
+        "12",
+        "13",
+        "28"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 - 8 = 12."
+    },
+    {
+      "text": "'x va 19 ning yig‘indisi' qanday yoziladi?",
+      "options": [
+        "x - 19",
+        "19 - x",
+        "x + 19",
+        "x = 19"
+      ],
+      "correctIndex": 2,
+      "explanation": "Yig‘indi qo‘shish amali bilan yoziladi: x + 19."
+    }
+  ],
+  "test": [
+    {
+      "text": "a + b ifodasi nimani bildiradi?",
+      "options": [
+        "a va b sonlarining yig‘indisini",
+        "a va b ning ayirmasini",
+        "a va b ning tengligini",
+        "Faqat a sonini"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shish belgisi bo‘lgani uchun a + b yig‘indini bildiradi."
+    },
+    {
+      "text": "a - b ifodasi nimani bildiradi?",
+      "options": [
+        "Yig‘indisini",
+        "a va b sonlarining ayirmasini",
+        "Taqqoslanishini",
+        "Birligini"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ayirish amali qatnashgan ifoda ayirma deyiladi."
+    },
+    {
+      "text": "'27 va m sonlarining ayirmasi' qanday yoziladi?",
+      "options": [
+        "27 + m",
+        "m - 27",
+        "27 - m",
+        "27 = m"
+      ],
+      "correctIndex": 2,
+      "explanation": "27 dan m ayriladi: 27 - m."
+    },
+    {
+      "text": "Agar a = 16 bo‘lsa, b = a - 7 ifodasida b nimaga teng?",
+      "options": [
+        "8",
+        "10",
+        "23",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "b = 16 - 7 = 9."
+    },
+    {
+      "text": "Agar x = 25 bo‘lsa, x + 5 ifodaning qiymatini toping:",
+      "options": [
+        "30",
+        "20",
+        "35",
+        "29"
+      ],
+      "correctIndex": 0,
+      "explanation": "25 + 5 = 30."
+    },
+    {
+      "text": "Sonlar nurida a = 40 nuqtadan 15 qadam o‘ngga yursak, qaysi nuqtaga yetamiz?",
+      "options": [
+        "25 ga",
+        "55 ga (40 + 15)",
+        "50 ga",
+        "60 ga"
+      ],
+      "correctIndex": 1,
+      "explanation": "O‘ngga yurish qo‘shish demakdir: 40 + 15 = 55."
+    },
+    {
+      "text": "Tovuqxona tokchasida 43 ta tuxum bor edi. Ikkinchi tokchada undan 2 ta ko‘p tuxum bor. Ikkinchi tokchadagi tuxumlar sonini bildiruvchi ifoda qaysi?",
+      "options": [
+        "43 - 2",
+        "43 + 20",
+        "43 + 2",
+        "43 = 2"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 ta ko‘p bo‘lsa, qo‘shiladi: 43 + 2."
+    },
+    {
+      "text": "Bu ifodaning qiymati nechaga teng (43 + 2)?",
+      "options": [
+        "41",
+        "44",
+        "46",
+        "45"
+      ],
+      "correctIndex": 3,
+      "explanation": "43 + 2 = 45 ta tuxum."
+    },
+    {
+      "text": "Agar c = 34 bo‘lsa, c - 14 ifodaning natijasini hisoblang:",
+      "options": [
+        "20",
+        "18",
+        "22",
+        "48"
+      ],
+      "correctIndex": 0,
+      "explanation": "34 - 14 = 20."
+    },
+    {
+      "text": "Agar k = 50 bo‘lsa, 80 - k ifodaning qiymati qancha bo‘ladi?",
+      "options": [
+        "20",
+        "30",
+        "40",
+        "130"
+      ],
+      "correctIndex": 1,
+      "explanation": "80 - 50 = 30."
+    },
+    {
+      "text": "Jadvalda m = 18 bo‘lsa, 40 - m ifodaning qiymatini toping:",
+      "options": [
+        "21",
+        "23",
+        "22",
+        "58"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 - 18 = 22."
+    },
+    {
+      "text": "Fermer ertalab a litr, kechqurun b litr sut sog‘di. Kun davomida jami necha litr sut sog‘ilganini qaysi ifoda ko‘rsatadi?",
+      "options": [
+        "a - b",
+        "b - a",
+        "a + 10",
+        "a + b"
+      ],
+      "correctIndex": 3,
+      "explanation": "Jami sut miqdori: a + b."
+    },
+    {
+      "text": "Agar a = 35 va b = 25 bo‘lsa, a + b necha litr bo‘ladi?",
+      "options": [
+        "60 litr",
+        "50 litr",
+        "55 litr",
+        "10 litr"
+      ],
+      "correctIndex": 0,
+      "explanation": "35 + 25 = 60 litr."
+    },
+    {
+      "text": "Agar n = 7 bo‘lsa, (n + 8) + 10 ifodaning qiymatini hisoblang:",
+      "options": [
+        "24",
+        "25",
+        "26",
+        "23"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 8 = 15, 15 + 10 = 25."
+    },
+    {
+      "text": "Sonlar nurida x nuqta 30 va 50 ning qoq o‘rtasida joylashgan. x soni nechaga teng?",
+      "options": [
+        "35",
+        "45",
+        "40",
+        "38"
+      ],
+      "correctIndex": 2,
+      "explanation": "30 va 50 o‘rtasidagi son: (30 + 50) / 2 = 40."
+    },
+    {
+      "text": "Agar y = 14 bo‘lsa, 50 - (y + 6) ifodaning qiymatini toping:",
+      "options": [
+        "28",
+        "32",
+        "42",
+        "30"
+      ],
+      "correctIndex": 3,
+      "explanation": "y + 6 = 14 + 6 = 20. 50 - 20 = 30."
+    },
+    {
+      "text": "Savatda x ta olma bor edi. Undan 8 tasi olindi va 5 tasi qo‘shildi. Savatdagi olmalar soni qanday o‘zgardi?",
+      "options": [
+        "3 taga kamaydi (x - 3)",
+        "3 taga ko‘paydi",
+        "13 taga kamaydi",
+        "O‘zgarmadi"
+      ],
+      "correctIndex": 0,
+      "explanation": "-8 + 5 = -3, demak 3 taga kamaydi."
+    },
+    {
+      "text": "Quyidagi ifodalardan qaysi biri harfiy ifoda hisoblanadi?",
+      "options": [
+        "18 + 12",
+        "18 + d",
+        "45 - 20",
+        "30 + 40 = 70"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 + d ifodasida 'd' harfi qatnashgan."
+    },
+    {
+      "text": "Molxonada 28 ta sigir va buzoq bor edi. Agar sigirlar soni a ta bo‘lsa, buzoqlar sonini topish uchun qaysi ifoda tuziladi va a = 16 bo‘lganda buzoqlar nechta?",
+      "options": [
+        "28 + a ifodasi; 44 ta buzoq",
+        "a - 28 ifodasi; 12 ta",
+        "28 - a ifodasi; 12 ta buzoq",
+        "28 - a ifodasi; 14 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Buzoqlar: 28 - a. Agar a = 16 bo‘lsa: 28 - 16 = 12 ta."
+    },
+    {
+      "text": "Parrandachilik fermasida dushanba kuni x dona, seshanba kuni esa undan 15 dona ko‘p tuxum olindi. Agar dushanba kuni x = 40 dona tuxum olingan bo‘lsa, ikki kunda jami nechta tuxum olingan?",
+      "options": [
+        "85 dona",
+        "90 dona",
+        "55 dona",
+        "95 dona (40 + 55 = 95)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Seshanba kuni: 40 + 15 = 55 dona. Jami: 40 + 55 = 95 dona."
+    }
+  ]
+}

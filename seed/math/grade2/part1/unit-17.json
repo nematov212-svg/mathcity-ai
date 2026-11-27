@@ -1,0 +1,279 @@
+{
+  "order": 17,
+  "bookNumber": 17,
+  "unitType": "LESSON",
+  "title": "Ayirish (50 - 22)",
+  "emoji": "🧭",
+  "crossTopic": "Kompas",
+  "shortDesc": "Yaxlit sondan ikki xonali sonni ayirish usuli",
+  "intro": "Sayohatchilar kompas bilan to'g'ri yo'nalishni topishadi. Biz esa 50 - 22 kabi ayirish amallarini bosqichma-bosqich yechishni o'rganamiz.",
+  "keyPoints": [
+    "22 sonini o'nlik va birliklarga ajratamiz: 20 va 2.",
+    "1-qadam: Yaxlit sondan o'nlikni ayiramiz: 50 - 20 = 30.",
+    "2-qadam: Chiqqan natijadan birlikni ayiramiz: 30 - 2 = 28."
+  ],
+  "miniExample": {
+    "emojis": "🧭 50 - 22 = 28",
+    "text": "50 dan 22 ni ayirish: 50 - 20 = 30, so'ngra 30 - 2 = 28!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 50 - 22",
+      "options": [
+        "28",
+        "38",
+        "26",
+        "32"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 20 = 30, 30 - 2 = 28."
+    },
+    {
+      "text": "Hisoblang: 60 - 27",
+      "options": [
+        "43",
+        "33",
+        "37",
+        "35"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 20 = 40, 40 - 7 = 33."
+    },
+    {
+      "text": "Sayyohlar 40 km yo'ldan 18 km yurgach, yana necha kilometr qoldi?",
+      "options": [
+        "20",
+        "24",
+        "22",
+        "32"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 - 18 = 40 - 10 - 8 = 22 km."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 50 - 22",
+      "options": [
+        "28",
+        "38",
+        "26",
+        "32"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 20 = 30, 30 - 2 = 28."
+    },
+    {
+      "text": "Hisoblang: 60 - 27",
+      "options": [
+        "43",
+        "33",
+        "37",
+        "35"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 20 = 40, 40 - 7 = 33."
+    },
+    {
+      "text": "Hisoblang: 40 - 15",
+      "options": [
+        "35",
+        "20",
+        "25",
+        "30"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 - 10 = 30, 30 - 5 = 25."
+    },
+    {
+      "text": "Sayohatchilar 50 km yo'lning 34 km qismini bosib o'tdilar. Qolgan masofani toping.",
+      "options": [
+        "14",
+        "26",
+        "18",
+        "16"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 34 = 50 - 30 - 4 = 16 km."
+    },
+    {
+      "text": "Hisoblang: 70 - 43",
+      "options": [
+        "27",
+        "37",
+        "23",
+        "33"
+      ],
+      "correctIndex": 0,
+      "explanation": "70 - 40 = 30, 30 - 3 = 27."
+    },
+    {
+      "text": "Hisoblang: 80 - 36",
+      "options": [
+        "54",
+        "44",
+        "46",
+        "56"
+      ],
+      "correctIndex": 1,
+      "explanation": "80 - 30 = 50, 50 - 6 = 44."
+    },
+    {
+      "text": "Hisoblang: 90 - 52",
+      "options": [
+        "48",
+        "32",
+        "38",
+        "42"
+      ],
+      "correctIndex": 2,
+      "explanation": "90 - 50 = 40, 40 - 2 = 38."
+    },
+    {
+      "text": "Hisoblang: 50 - 18",
+      "options": [
+        "42",
+        "28",
+        "38",
+        "32"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 10 = 40, 40 - 8 = 32."
+    },
+    {
+      "text": "Hisoblang: 30 - 14",
+      "options": [
+        "16",
+        "26",
+        "14",
+        "18"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 - 10 = 20, 20 - 4 = 16."
+    },
+    {
+      "text": "Tenglamani yeching: 50 - x = 28",
+      "options": [
+        "32",
+        "22",
+        "18",
+        "24"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 50 - 28 = 22."
+    },
+    {
+      "text": "Tenglamani yeching: 70 - y = 35",
+      "options": [
+        "45",
+        "25",
+        "35",
+        "40"
+      ],
+      "correctIndex": 2,
+      "explanation": "y = 70 - 35 = 35."
+    },
+    {
+      "text": "Taqqoslang: 50 - 22 va 60 - 32",
+      "options": [
+        ">",
+        "<",
+        "+",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 22 = 28 va 60 - 32 = 28. Ular teng: 28 = 28."
+    },
+    {
+      "text": "Taqqoslang: 50 - 22 va 30",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 22 = 28. 28 < 30."
+    },
+    {
+      "text": "Hisoblang: 60 - 19",
+      "options": [
+        "51",
+        "41",
+        "39",
+        "49"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 10 = 50, 50 - 9 = 41."
+    },
+    {
+      "text": "Hisoblang: 80 - 64",
+      "options": [
+        "26",
+        "18",
+        "16",
+        "24"
+      ],
+      "correctIndex": 2,
+      "explanation": "80 - 60 = 20, 20 - 4 = 16."
+    },
+    {
+      "text": "Sayyohlar 100 km yo'ldan 45 km yurishdi. Qolgan masofani toping.",
+      "options": [
+        "45",
+        "65",
+        "50",
+        "55"
+      ],
+      "correctIndex": 3,
+      "explanation": "100 - 45 = 55 km."
+    },
+    {
+      "text": "Hisoblang: 50 - 27",
+      "options": [
+        "23",
+        "33",
+        "27",
+        "17"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 20 = 30, 30 - 7 = 23."
+    },
+    {
+      "text": "Hisoblang: 70 - 58",
+      "options": [
+        "22",
+        "12",
+        "14",
+        "18"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 50 = 20, 20 - 8 = 12."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 60 - * = 37?",
+      "options": [
+        "33",
+        "27",
+        "23",
+        "17"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 - 37 = 23."
+    },
+    {
+      "text": "Hisoblang: 40 - 23",
+      "options": [
+        "27",
+        "13",
+        "23",
+        "17"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 - 20 = 20, 20 - 3 = 17."
+    }
+  ]
+}

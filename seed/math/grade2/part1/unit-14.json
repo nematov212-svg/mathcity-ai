@@ -1,0 +1,279 @@
+{
+  "order": 14,
+  "bookNumber": 14,
+  "unitType": "LESSON",
+  "title": "Sonlarni ayirish (30 - 7)",
+  "emoji": "📅",
+  "crossTopic": "Taqvim",
+  "shortDesc": "Yaxlit o'nlikdan bir xonali sonni ayirish usuli",
+  "intro": "Taqvimda 30 kun bor. 7 kun o'tgach qancha kun qolishini bilish uchun yaxlit o'nlikdan birlikni ayirishni o'rganamiz.",
+  "keyPoints": [
+    "30 sonini 20 va 10 ga ajratamiz: 10 - 7 = 3, 20 + 3 = 23.",
+    "Yaxlit sondan bir xonali son ayirilganda o'nlik 1 taga kamayadi.",
+    "Taqvim va sanalarni hisoblashda o'nlikdan ayirish qulay yordam beradi."
+  ],
+  "miniExample": {
+    "emojis": "📅 30 - 7 = 23",
+    "text": "30 dan 7 ni ayirish: 10 dan 7 ni ayirsak 3, qolgan 2 ta o'nlik bilan 23 bo'ladi."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 30 - 7",
+      "options": [
+        "23",
+        "27",
+        "24",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 - 7 = 20 + (10 - 7) = 23."
+    },
+    {
+      "text": "Hisoblang: 40 - 6",
+      "options": [
+        "36",
+        "34",
+        "32",
+        "44"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 - 6 = 30 + (10 - 6) = 34."
+    },
+    {
+      "text": "Taqvimda bir oy 30 kun. 8 kuni dam olish bo'lsa, ish kunlari nechta?",
+      "options": [
+        "20",
+        "24",
+        "22",
+        "26"
+      ],
+      "correctIndex": 2,
+      "explanation": "30 - 8 = 22 ta ish kuni."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 30 - 7",
+      "options": [
+        "23",
+        "27",
+        "24",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 - 7 = 20 + (10 - 7) = 23."
+    },
+    {
+      "text": "Hisoblang: 40 - 6",
+      "options": [
+        "36",
+        "34",
+        "32",
+        "44"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 - 6 = 30 + (10 - 6) = 34."
+    },
+    {
+      "text": "Hisoblang: 50 - 8",
+      "options": [
+        "48",
+        "38",
+        "42",
+        "44"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 - 8 = 40 + (10 - 8) = 42."
+    },
+    {
+      "text": "Taqvimda oy 30 kun. 9 kun o'tgach yana necha kun qoldi?",
+      "options": [
+        "19",
+        "22",
+        "20",
+        "21"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 - 9 = 21 kun qoldi."
+    },
+    {
+      "text": "Hisoblang: 60 - 5",
+      "options": [
+        "55",
+        "50",
+        "45",
+        "65"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 - 5 = 55."
+    },
+    {
+      "text": "Hisoblang: 70 - 4",
+      "options": [
+        "64",
+        "66",
+        "65",
+        "56"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 4 = 66."
+    },
+    {
+      "text": "Hisoblang: 80 - 9",
+      "options": [
+        "79",
+        "69",
+        "71",
+        "72"
+      ],
+      "correctIndex": 2,
+      "explanation": "80 - 9 = 71."
+    },
+    {
+      "text": "Hisoblang: 90 - 3",
+      "options": [
+        "83",
+        "93",
+        "77",
+        "87"
+      ],
+      "correctIndex": 3,
+      "explanation": "90 - 3 = 87."
+    },
+    {
+      "text": "Hisoblang: 30 - 2",
+      "options": [
+        "28",
+        "27",
+        "29",
+        "18"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 - 2 = 28."
+    },
+    {
+      "text": "Haftada 7 kun bor. 30 kunda 4 to'liq hafta (28 kun) va yana necha kun bor?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 - 28 = 2 kun ortiqcha."
+    },
+    {
+      "text": "Hisoblang: 20 - 7",
+      "options": [
+        "17",
+        "14",
+        "13",
+        "15"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 - 7 = 13."
+    },
+    {
+      "text": "Tenglamani yeching: 30 - x = 24",
+      "options": [
+        "5",
+        "7",
+        "4",
+        "6"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 30 - 24 = 6."
+    },
+    {
+      "text": "Tenglamani yeching: y + 8 = 40",
+      "options": [
+        "32",
+        "38",
+        "48",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "y = 40 - 8 = 32."
+    },
+    {
+      "text": "Taqqoslang: 30 - 7 va 20 + 4",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 - 7 = 23, 20 + 4 = 24. 23 < 24."
+    },
+    {
+      "text": "Taqqoslang: 50 - 6 va 40 + 4",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 - 6 = 44, 40 + 4 = 44. Ular teng: 44 = 44."
+    },
+    {
+      "text": "Kutubxonadagi 30 ta yangi taqvimdan 5 tasi tarqatildi. Nechta taqvim qoldi?",
+      "options": [
+        "20",
+        "24",
+        "26",
+        "25"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 - 5 = 25 ta taqvim qoldi."
+    },
+    {
+      "text": "40 - 3 amalini bajarishda 40 soni qanday ikkita songa ajratiladi?",
+      "options": [
+        "30 va 10",
+        "20 va 20",
+        "35 va 5",
+        "38 va 2"
+      ],
+      "correctIndex": 0,
+      "explanation": "Birlikni ayirish uchun 40 soni 30 va 10 ga ajratiladi."
+    },
+    {
+      "text": "Hisoblang: 60 - 8",
+      "options": [
+        "51",
+        "52",
+        "54",
+        "48"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 8 = 52."
+    },
+    {
+      "text": "Hisoblang: 100 - 4",
+      "options": [
+        "94",
+        "95",
+        "96",
+        "86"
+      ],
+      "correctIndex": 2,
+      "explanation": "100 - 4 = 96."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 50 - * = 41?",
+      "options": [
+        "8",
+        "7",
+        "11",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 41 = 9."
+    }
+  ]
+}

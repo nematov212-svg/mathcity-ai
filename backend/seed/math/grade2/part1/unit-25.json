@@ -1,0 +1,279 @@
+{
+  "order": 25,
+  "bookNumber": 25,
+  "unitType": "LESSON",
+  "title": "Sonlarni ayirish (43 - 7)",
+  "emoji": "🎲",
+  "crossTopic": "O‘yinlar",
+  "shortDesc": "Xonadan o'tib ayirishni mustahkamlash va mantiqiy o'yinlar",
+  "intro": "Shaxmat, shashka va mantiqiy o'yinlar diqqatni oshiradi. Ayirish amallarini tez va to'g'ri bajarish o'yinda g'alaba qozonishga yordam beradi!",
+  "keyPoints": [
+    "Amallar zanjirida ketma-ket hisoblash: 43 - 7 = 36, 36 - 6 = 30.",
+    "Ayirishni qo'shish bilan tekshirish: 36 + 7 = 43.",
+    "O'yin ballari va yutuqlarni hisoblashda xonadan o'tib ayirish."
+  ],
+  "miniExample": {
+    "emojis": "🎲 43 - 7 = 36 | 36 + 7 = 43",
+    "text": "Tekshirish: 36 + 7 = 43. Amallar to'g'ri bajarilgan!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 43 - 7",
+      "options": [
+        "36",
+        "35",
+        "37",
+        "34"
+      ],
+      "correctIndex": 0,
+      "explanation": "43 - 7 = 36."
+    },
+    {
+      "text": "Shaxmat musobaqasida 44 ishtirokchidan 9 nafari keyingi bosqichga chiqmadi. Nechta o'yinchi qoldi?",
+      "options": [
+        "34",
+        "35",
+        "36",
+        "33"
+      ],
+      "correctIndex": 1,
+      "explanation": "44 - 9 = 35 nafar."
+    },
+    {
+      "text": "Hisoblang: 63 - 8",
+      "options": [
+        "54",
+        "56",
+        "55",
+        "53"
+      ],
+      "correctIndex": 2,
+      "explanation": "63 - 3 = 60, 60 - 5 = 55."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 43 - 7",
+      "options": [
+        "36",
+        "35",
+        "37",
+        "34"
+      ],
+      "correctIndex": 0,
+      "explanation": "43 - 7 = 36."
+    },
+    {
+      "text": "Hisoblang: 51 - 5",
+      "options": [
+        "45",
+        "46",
+        "47",
+        "44"
+      ],
+      "correctIndex": 1,
+      "explanation": "51 - 1 = 50, 50 - 4 = 46."
+    },
+    {
+      "text": "Hisoblang: 65 - 8",
+      "options": [
+        "56",
+        "58",
+        "57",
+        "55"
+      ],
+      "correctIndex": 2,
+      "explanation": "65 - 5 = 60, 60 - 3 = 57."
+    },
+    {
+      "text": "Stol o'yinida Ahmad 42 ochkodan 6 ochko yo'qotdi. Unda necha ochko qoldi?",
+      "options": [
+        "35",
+        "37",
+        "34",
+        "36"
+      ],
+      "correctIndex": 3,
+      "explanation": "42 - 6 = 36 ochko."
+    },
+    {
+      "text": "Hisoblang: 73 - 9",
+      "options": [
+        "64",
+        "63",
+        "65",
+        "62"
+      ],
+      "correctIndex": 0,
+      "explanation": "73 - 3 = 70, 70 - 6 = 64."
+    },
+    {
+      "text": "Hisoblang: 82 - 7",
+      "options": [
+        "74",
+        "75",
+        "76",
+        "73"
+      ],
+      "correctIndex": 1,
+      "explanation": "82 - 2 = 80, 80 - 5 = 75."
+    },
+    {
+      "text": "Hisoblang: 93 - 5",
+      "options": [
+        "87",
+        "89",
+        "88",
+        "86"
+      ],
+      "correctIndex": 2,
+      "explanation": "93 - 3 = 90, 90 - 2 = 88."
+    },
+    {
+      "text": "Hisoblang: 44 - 6",
+      "options": [
+        "37",
+        "39",
+        "36",
+        "38"
+      ],
+      "correctIndex": 3,
+      "explanation": "44 - 4 = 40, 40 - 2 = 38."
+    },
+    {
+      "text": "Tenglamani yeching: z + 8 = 42",
+      "options": [
+        "34",
+        "33",
+        "35",
+        "32"
+      ],
+      "correctIndex": 0,
+      "explanation": "z = 42 - 8 = 34."
+    },
+    {
+      "text": "Tenglamani yeching: 64 - x = 58",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 64 - 58 = 6."
+    },
+    {
+      "text": "Taqqoslang: 43 - 7 va 52 - 16",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "43 - 7 = 36 va 52 - 16 = 36. Ular teng: 36 = 36."
+    },
+    {
+      "text": "Taqqoslang: 61 - 7 va 55",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "61 - 7 = 54. 54 < 55."
+    },
+    {
+      "text": "Shashka to'plamida 48 ta donadan 9 tasi yo'qoldi. Nechta dona qolgan?",
+      "options": [
+        "39",
+        "38",
+        "40",
+        "37"
+      ],
+      "correctIndex": 0,
+      "explanation": "48 - 9 = 39 ta."
+    },
+    {
+      "text": "Hisoblang: 74 - 8",
+      "options": [
+        "65",
+        "66",
+        "67",
+        "64"
+      ],
+      "correctIndex": 1,
+      "explanation": "74 - 4 = 70, 70 - 4 = 66."
+    },
+    {
+      "text": "Hisoblang: 86 - 9",
+      "options": [
+        "76",
+        "78",
+        "77",
+        "75"
+      ],
+      "correctIndex": 2,
+      "explanation": "86 - 6 = 80, 80 - 3 = 77."
+    },
+    {
+      "text": "Hisoblang: 52 - 4",
+      "options": [
+        "47",
+        "49",
+        "46",
+        "48"
+      ],
+      "correctIndex": 3,
+      "explanation": "52 - 2 = 50, 50 - 2 = 48."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 71 - * = 64?",
+      "options": [
+        "7",
+        "6",
+        "8",
+        "9"
+      ],
+      "correctIndex": 0,
+      "explanation": "71 - 64 = 7."
+    },
+    {
+      "text": "Hisoblang: 95 - 8",
+      "options": [
+        "86",
+        "87",
+        "88",
+        "85"
+      ],
+      "correctIndex": 1,
+      "explanation": "95 - 5 = 90, 90 - 3 = 87."
+    },
+    {
+      "text": "Hisoblang: 41 - 5",
+      "options": [
+        "35",
+        "37",
+        "36",
+        "34"
+      ],
+      "correctIndex": 2,
+      "explanation": "41 - 1 = 40, 40 - 4 = 36."
+    },
+    {
+      "text": "Hisoblang: 62 - 7",
+      "options": [
+        "54",
+        "56",
+        "53",
+        "55"
+      ],
+      "correctIndex": 3,
+      "explanation": "62 - 2 = 60, 60 - 5 = 55."
+    }
+  ]
+}

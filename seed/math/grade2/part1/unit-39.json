@@ -1,0 +1,279 @@
+{
+  "order": 39,
+  "bookNumber": 38,
+  "unitType": "LESSON",
+  "title": "Masalalar yechish va o‘tilgan mavzularni mustahkamlash",
+  "emoji": "🏥",
+  "crossTopic": "Tibbiyot",
+  "shortDesc": "Ikki amalli murakkab matnli masalalar yechish ko'nikmasi",
+  "intro": "Shifokorlar insonlar salomatligini asraydi. Dori-darmonlar va vitaminlar miqdorini aniq hisoblashda ikki amalli masalalar va ularning qisqa shartini to'g'ri tuzishni mashq qilamiz.",
+  "keyPoints": [
+    "Masalaning shartini diqqat bilan o'qish va qisqa shartini yozish.",
+    "Savolga javob berish uchun qaysi oraliq amal kerakligini aniqlash.",
+    "Yechimni ifoda ko'rinishida yozish va natijani tekshirish."
+  ],
+  "miniExample": {
+    "emojis": "🏥 (25 + 18) - 13 = 30",
+    "text": "Dorixonaga 25 ta vitamin va 18 ta sirop keldi, 13 tasi berildi: 43 - 13 = 30 ta qoldi!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Dorixonada 25 quti vitamin va 18 quti sirop bor edi. 13 quti dori berildi. Nechta quti qoldi?",
+      "options": [
+        "30",
+        "29",
+        "31",
+        "28"
+      ],
+      "correctIndex": 0,
+      "explanation": "25 + 18 = 43, 43 - 13 = 30 quti."
+    },
+    {
+      "text": "Shifoxonada 1-qavatda 32 ta, 2-qavatda 28 ta xona bor. 45 ta xonada bemorlar bor. Bo'sh xonalar nechta?",
+      "options": [
+        "14",
+        "15",
+        "16",
+        "13"
+      ],
+      "correctIndex": 1,
+      "explanation": "32 + 28 = 60, 60 - 45 = 15 ta bo'sh xona."
+    },
+    {
+      "text": "Hisoblang: (36 + 24) - 25",
+      "options": [
+        "34",
+        "36",
+        "35",
+        "33"
+      ],
+      "correctIndex": 2,
+      "explanation": "36 + 24 = 60, 60 - 25 = 35."
+    }
+  ],
+  "test": [
+    {
+      "text": "Dorixonada 25 quti vitamin va 18 quti sirop bor edi. 13 quti dori berildi. Nechta quti qoldi?",
+      "options": [
+        "30",
+        "29",
+        "31",
+        "28"
+      ],
+      "correctIndex": 0,
+      "explanation": "25 + 18 = 43, 43 - 13 = 30."
+    },
+    {
+      "text": "Shifoxonada 32 ta katta va 28 ta kichik palata bor. 45 ta palata band bo'lsa, nechta bo'sh palata bor?",
+      "options": [
+        "14",
+        "15",
+        "16",
+        "13"
+      ],
+      "correctIndex": 1,
+      "explanation": "32 + 28 = 60, 60 - 45 = 15."
+    },
+    {
+      "text": "Hisoblang: (45 + 35) - 28",
+      "options": [
+        "51",
+        "53",
+        "52",
+        "50"
+      ],
+      "correctIndex": 2,
+      "explanation": "45 + 35 = 80, 80 - 28 = 52."
+    },
+    {
+      "text": "Poliklinikaga bir kunda 46 ta bola va 38 ta katta yoshli fuqaro keldi. Ulardan 54 nafari ko'rikdan o'tdi. Qolganlar nechta?",
+      "options": [
+        "29",
+        "31",
+        "28",
+        "30"
+      ],
+      "correctIndex": 3,
+      "explanation": "46 + 38 = 84, 84 - 54 = 30 nafar."
+    },
+    {
+      "text": "Hisoblang: 70 - (24 + 16)",
+      "options": [
+        "30",
+        "29",
+        "31",
+        "28"
+      ],
+      "correctIndex": 0,
+      "explanation": "24 + 16 = 40, 70 - 40 = 30."
+    },
+    {
+      "text": "Tibbiyot xodimida 50 ta shprits bor edi. Ertalab 18 ta, tushdan keyin 15 ta ishlatildi. Nechta shprits qoldi?",
+      "options": [
+        "16",
+        "17",
+        "18",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 - (18 + 15) = 50 - 33 = 17 ta."
+    },
+    {
+      "text": "Hisoblang: (52 + 18) - 34",
+      "options": [
+        "35",
+        "37",
+        "36",
+        "34"
+      ],
+      "correctIndex": 2,
+      "explanation": "52 + 18 = 70, 70 - 34 = 36."
+    },
+    {
+      "text": "Hisoblang: 85 - (35 + 25)",
+      "options": [
+        "24",
+        "26",
+        "23",
+        "25"
+      ],
+      "correctIndex": 3,
+      "explanation": "85 - 60 = 25."
+    },
+    {
+      "text": "Tenglamani yeching: x + 25 = 80",
+      "options": [
+        "55",
+        "54",
+        "56",
+        "53"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 80 - 25 = 55."
+    },
+    {
+      "text": "Tenglamani yeching: y - 18 = 60",
+      "options": [
+        "77",
+        "78",
+        "79",
+        "76"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 60 + 18 = 78."
+    },
+    {
+      "text": "Taqqoslang: (25 + 18) - 13 va 30",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "(25 + 18) - 13 = 30. Ular teng: 30 = 30."
+    },
+    {
+      "text": "Taqqoslang: (45 + 35) - 28 va 50",
+      "options": [
+        "<",
+        "=",
+        "+",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "(45 + 35) - 28 = 52. 52 > 50."
+    },
+    {
+      "text": "Tez yordam mashinasida 40 litr yonilg'i bor edi. 1-chaqiruvga 12 litr, 2-chaqiruvga 14 litr sarflandi. Qancha yonilg'i qoldi?",
+      "options": [
+        "14",
+        "13",
+        "15",
+        "12"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 - (12 + 14) = 40 - 26 = 14 litr."
+    },
+    {
+      "text": "Hisoblang: (63 + 27) - 45",
+      "options": [
+        "44",
+        "45",
+        "46",
+        "43"
+      ],
+      "correctIndex": 1,
+      "explanation": "63 + 27 = 90, 90 - 45 = 45."
+    },
+    {
+      "text": "Hisoblang: 90 - (38 + 22)",
+      "options": [
+        "29",
+        "31",
+        "30",
+        "28"
+      ],
+      "correctIndex": 2,
+      "explanation": "38 + 22 = 60, 90 - 60 = 30."
+    },
+    {
+      "text": "Hisoblang: (41 + 29) - 36",
+      "options": [
+        "33",
+        "35",
+        "32",
+        "34"
+      ],
+      "correctIndex": 3,
+      "explanation": "41 + 29 = 70, 70 - 36 = 34."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: (30 + 40) - * = 45?",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "23"
+      ],
+      "correctIndex": 0,
+      "explanation": "70 - 45 = 25."
+    },
+    {
+      "text": "Hisoblang: 75 - (25 + 18)",
+      "options": [
+        "31",
+        "32",
+        "33",
+        "30"
+      ],
+      "correctIndex": 1,
+      "explanation": "75 - 25 = 50, 50 - 18 = 32."
+    },
+    {
+      "text": "Hisoblang: (54 + 26) - 48",
+      "options": [
+        "31",
+        "33",
+        "32",
+        "30"
+      ],
+      "correctIndex": 2,
+      "explanation": "54 + 26 = 80, 80 - 48 = 32."
+    },
+    {
+      "text": "Hisoblang: 100 - (45 + 35)",
+      "options": [
+        "19",
+        "21",
+        "18",
+        "20"
+      ],
+      "correctIndex": 3,
+      "explanation": "100 - 80 = 20."
+    }
+  ]
+}

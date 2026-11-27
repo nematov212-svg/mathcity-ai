@@ -1,0 +1,279 @@
+{
+  "order": 41,
+  "bookNumber": null,
+  "unitType": "FINAL_LESSON",
+  "title": "Mavzu bo'yicha yakuniy dars",
+  "emoji": "💡",
+  "crossTopic": "Men va texnologiyalar",
+  "shortDesc": "V bob bo'yicha umumlashtiruvchi yakuniy sinov",
+  "intro": "Zamonaviy texnologiyalar insoniyat bilimlarining mahsulidir. V bobda yig'indidan sonni ayirish, sondan yig'indini ayirish va matnli masalalarni o'rgandik. Bilimlarimizni sinovdan o'tkazamiz!",
+  "keyPoints": [
+    "(a + b) - c va a - (b + c) qoidalarini to'g'ri qo'llash.",
+    "Ikki amalli masalalarni qisqa shart orqali tezkor yechish.",
+    "Rim raqamlarida amallar va ularni taqqoslash."
+  ],
+  "miniExample": {
+    "emojis": "💡 (35 + 25) - 20 = 40 | XVI < XX",
+    "text": "V bob xulosasi: barcha xossalar va hisoblash ko'nikmalari mustahkamlandi!"
+  },
+  "xpReward": 130,
+  "coinReward": 15,
+  "estMinutes": 10,
+  "practice": [
+    {
+      "text": "Qulay usulda hisoblang: (36 + 24) - 16",
+      "options": [
+        "44",
+        "43",
+        "45",
+        "42"
+      ],
+      "correctIndex": 0,
+      "explanation": "(36 - 16) + 24 = 20 + 24 = 44."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 70 - (20 + 15)",
+      "options": [
+        "34",
+        "35",
+        "36",
+        "33"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 20 = 50, 50 - 15 = 35."
+    },
+    {
+      "text": "Rim raqamlarini taqqoslang: XXX ... XL",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "XXX = 30, XL = 40. 30 < 40."
+    }
+  ],
+  "test": [
+    {
+      "text": "Qulay usulda hisoblang: (36 + 24) - 16",
+      "options": [
+        "44",
+        "43",
+        "45",
+        "42"
+      ],
+      "correctIndex": 0,
+      "explanation": "(36 - 16) + 24 = 20 + 24 = 44."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 70 - (20 + 15)",
+      "options": [
+        "34",
+        "35",
+        "36",
+        "33"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 20 = 50, 50 - 15 = 35."
+    },
+    {
+      "text": "Rim raqamlarini taqqoslang: XXX ... XL",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "XXX = 30, XL = 40. 30 < 40."
+    },
+    {
+      "text": "Hisoblang: (48 + 32) - 25",
+      "options": [
+        "54",
+        "56",
+        "53",
+        "55"
+      ],
+      "correctIndex": 3,
+      "explanation": "48 + 32 = 80, 80 - 25 = 55."
+    },
+    {
+      "text": "Hisoblang: 85 - (35 + 20)",
+      "options": [
+        "30",
+        "29",
+        "31",
+        "28"
+      ],
+      "correctIndex": 0,
+      "explanation": "85 - 35 = 50, 50 - 20 = 30."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XI + IX",
+      "options": [
+        "XIX",
+        "XX",
+        "XXI",
+        "XVIII"
+      ],
+      "correctIndex": 1,
+      "explanation": "11 + 9 = 20 (XX)."
+    },
+    {
+      "text": "Kutubxonada 80 ta kitob bor edi. 24 ta darslik va 26 ta ertak olindi. Nechta kitob qoldi?",
+      "options": [
+        "29",
+        "31",
+        "30",
+        "28"
+      ],
+      "correctIndex": 2,
+      "explanation": "80 - (24 + 26) = 80 - 50 = 30 ta."
+    },
+    {
+      "text": "Hisoblang: (54 + 26) - 34",
+      "options": [
+        "45",
+        "47",
+        "44",
+        "46"
+      ],
+      "correctIndex": 3,
+      "explanation": "(54 - 34) + 26 = 20 + 26 = 46."
+    },
+    {
+      "text": "Tenglamani yeching: x + 24 = 60",
+      "options": [
+        "36",
+        "35",
+        "37",
+        "34"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 60 - 24 = 36."
+    },
+    {
+      "text": "Tenglamani yeching: 70 - y = 35",
+      "options": [
+        "34",
+        "35",
+        "36",
+        "33"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 70 - 35 = 35."
+    },
+    {
+      "text": "Taqqoslang: (36 + 24) - 16 va 44",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "(36 + 24) - 16 = 44. Ular teng: 44 = 44."
+    },
+    {
+      "text": "Taqqoslang: 70 - (20 + 15) va 40",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "70 - (20 + 15) = 35. 35 < 40."
+    },
+    {
+      "text": "Do'konga 90 ta telefon keldi. Ertalab 32 ta, tushdan keyin 28 ta sotildi. Qancha qoldi?",
+      "options": [
+        "30",
+        "29",
+        "31",
+        "28"
+      ],
+      "correctIndex": 0,
+      "explanation": "90 - (32 + 28) = 90 - 60 = 30 ta."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XL - X",
+      "options": [
+        "XX",
+        "XXX",
+        "L",
+        "XXXV"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 - 10 = 30 (XXX)."
+    },
+    {
+      "text": "Hisoblang: (63 + 17) - 38",
+      "options": [
+        "41",
+        "43",
+        "42",
+        "40"
+      ],
+      "correctIndex": 2,
+      "explanation": "63 + 17 = 80, 80 - 38 = 42."
+    },
+    {
+      "text": "Hisoblang: 95 - (45 + 23)",
+      "options": [
+        "26",
+        "28",
+        "25",
+        "27"
+      ],
+      "correctIndex": 3,
+      "explanation": "95 - 45 = 50, 50 - 23 = 27."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: (50 + 30) - * = 45?",
+      "options": [
+        "35",
+        "34",
+        "36",
+        "33"
+      ],
+      "correctIndex": 0,
+      "explanation": "80 - 45 = 35."
+    },
+    {
+      "text": "Rim raqamlarini taqqoslang: XVIII ... XX",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "XVIII = 18, XX = 20. 18 < 20."
+    },
+    {
+      "text": "Hisoblang: (72 + 18) - 46",
+      "options": [
+        "43",
+        "45",
+        "44",
+        "42"
+      ],
+      "correctIndex": 2,
+      "explanation": "72 + 18 = 90, 90 - 46 = 44."
+    },
+    {
+      "text": "Hisoblang: 100 - (35 + 35)",
+      "options": [
+        "29",
+        "31",
+        "28",
+        "30"
+      ],
+      "correctIndex": 3,
+      "explanation": "100 - 70 = 30."
+    }
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "order": 1,
+  "bookNumber": 1,
+  "unitType": "LESSON",
+  "title": "Takrorlash",
+  "emoji": "🍂",
+  "crossTopic": "Kuzgi hodisalar",
+  "shortDesc": "20 gacha bo‘lgan sonlar, ularning tarkibi, yig‘indi va ayirma",
+  "intro": "Kuz faslida tabiat o‘zgaradi: barglar sarg‘ayadi, havo salqinlashadi. Ushbu darsda 1-sinfda o‘rgangan 20 ichida qo‘shish va ayirish amallarini takrorlaymiz.",
+  "keyPoints": [
+    "20 gacha sonlar 1 ta o‘nlik va birliklardan tashkil topadi.",
+    "Qo‘shish amali natijasi yig‘indi, ayirish amali natijasi esa ayirma deyiladi.",
+    "Sonlarni taqqoslashda >, < va = belgilaridan foydalanamiz."
+  ],
+  "miniExample": {
+    "emojis": "🍁 10 + 4 = 14 | 14 > 12",
+    "text": "Daraxt ostida 10 ta sariq va 4 ta qizil barg tushdi. Jami 14 ta barg: 10 + 4 = 14!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 12 + 5",
+      "options": [
+        "17",
+        "16",
+        "18",
+        "15"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + 5 = 17."
+    },
+    {
+      "text": "Hisoblang: 19 - 7",
+      "options": [
+        "11",
+        "12",
+        "13",
+        "10"
+      ],
+      "correctIndex": 1,
+      "explanation": "19 - 7 = 12."
+    },
+    {
+      "text": "14 ... 19 taqqoslashga mos belgini tanlang:",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 soni 19 dan kichik: 14 < 19."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 13 + 4",
+      "options": [
+        "17",
+        "16",
+        "18",
+        "15"
+      ],
+      "correctIndex": 0,
+      "explanation": "13 + 4 = 17."
+    },
+    {
+      "text": "Hisoblang: 18 - 5",
+      "options": [
+        "12",
+        "13",
+        "14",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 - 5 = 13."
+    },
+    {
+      "text": "10 + 10 ... 19 ifodasiga qaysi belgi mos keladi?",
+      "options": [
+        "<",
+        "=",
+        ">",
+        "-"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 10 = 20, 20 soni 19 dan katta (20 > 19)."
+    },
+    {
+      "text": "20 - 5 ... 10 + 2 ifodalarini taqqoslang:",
+      "options": [
+        "<",
+        "=",
+        "+",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 - 5 = 15 va 10 + 2 = 12. 15 > 12."
+    },
+    {
+      "text": "16 sonida nechta o‘nlik va nechta birlik bor?",
+      "options": [
+        "1 ta o‘nlik va 6 ta birlik",
+        "6 ta o‘nlik va 1 ta birlik",
+        "16 ta o‘nlik",
+        "2 ta o‘nlik"
+      ],
+      "correctIndex": 0,
+      "explanation": "16 soni 1 ta o‘nlik (10) va 6 ta birlikdan iborat."
+    },
+    {
+      "text": "Qaysi qatorda sonlar o‘sish tartibida to‘g‘ri joylashtirilgan?",
+      "options": [
+        "19, 15, 11, 7",
+        "7, 11, 15, 19",
+        "11, 7, 15, 19",
+        "7, 15, 11, 19"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 < 11 < 15 < 19 — sonlar kichikdan kattaga qarab o‘sish tartibida."
+    },
+    {
+      "text": "Kuzgi bog‘da 6 tup terak, 7 tup chinor va 4 tup eman ekildi. Jami nechta daraxt ekilgan?",
+      "options": [
+        "16 ta",
+        "18 ta",
+        "17 ta",
+        "15 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 4 + 7 = 10 + 7 = 17 ta daraxt."
+    },
+    {
+      "text": "Hisoblang: 7 + 8",
+      "options": [
+        "14",
+        "16",
+        "13",
+        "15"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 + 8 = 15."
+    },
+    {
+      "text": "Hisoblang: 14 - 8",
+      "options": [
+        "6",
+        "5",
+        "7",
+        "8"
+      ],
+      "correctIndex": 0,
+      "explanation": "14 - 8 = 6."
+    },
+    {
+      "text": "Kuz faslida sentabr oyida 12 kun quyoshli, 8 kun tumanli bo‘ldi. Quyoshli kunlar tumanli kunlardan nechtaga ko‘p?",
+      "options": [
+        "3 kunga",
+        "4 kunga ko‘p",
+        "5 kunga",
+        "20 kunga"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 - 8 = 4 kunga ko‘p."
+    },
+    {
+      "text": "Oktabr oyida 10 kun yomg‘ir yog‘di, 9 kun havo ochiq bo‘ldi. Jami necha kun hisobga olindi?",
+      "options": [
+        "18 kun",
+        "20 kun",
+        "19 kun",
+        "1 kun"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 9 = 19 kun."
+    },
+    {
+      "text": "Jadvaldagi yig‘indini toping: 1-qo‘shiluvchi 9, 2-qo‘shiluvchi 5. Yig‘indi nechaga teng?",
+      "options": [
+        "13",
+        "15",
+        "4",
+        "14"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 + 5 = 14."
+    },
+    {
+      "text": "Kamayuvchi 16, ayriluvchi 9 bo‘lsa, ayirmani hisoblang:",
+      "options": [
+        "7",
+        "6",
+        "8",
+        "25"
+      ],
+      "correctIndex": 0,
+      "explanation": "16 - 9 = 7."
+    },
+    {
+      "text": "15 - 6 ... 16 - 7 ifodalariga mos belgini toping:",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "15 - 6 = 9 va 16 - 7 = 9. Ikkala tomon teng (9 = 9)."
+    },
+    {
+      "text": "Noma’lum sonni toping: 11 + x = 19",
+      "options": [
+        "7",
+        "9",
+        "8",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 19 - 11 = 8."
+    },
+    {
+      "text": "Noma’lum sonni toping: x - 6 = 8",
+      "options": [
+        "12",
+        "13",
+        "2",
+        "14"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 8 + 6 = 14."
+    },
+    {
+      "text": "14 □ 19 taqqoslashiga to‘g‘ri belgi qaysi?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "14 soni 19 dan kichik: 14 < 19."
+    },
+    {
+      "text": "Bolalar parkda 8 ta qizil va 5 ta sariq barg yig‘ishdi. Ulardan 4 tasini daftarga yopishtirishdi. Nechta barg qoldi?",
+      "options": [
+        "8 ta",
+        "9 ta",
+        "10 ta",
+        "17 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 5 = 13, 13 - 4 = 9 ta barg qoldi."
+    },
+    {
+      "text": "Toshkentdagi botanika bog‘ida maktab o‘quvchilari sayr qilishdi. Birinchi guruhda 9 nafar, ikkinchi guruhda 8 nafar o‘quvchi bor edi. Tushdan keyin 7 nafar bola uyga qaytdi. Bog‘da necha nafar o‘quvchi qoldi?",
+      "options": [
+        "11 nafar",
+        "9 nafar",
+        "10 nafar",
+        "12 nafar"
+      ],
+      "correctIndex": 2,
+      "explanation": "Jami o‘quvchilar: 9 + 8 = 17 nafar. Qolganlar: 17 - 7 = 10 nafar."
+    },
+    {
+      "text": "Maktab hovlisiga ekish uchun 20 tup gul ko‘chati keltirildi. Ertalab 6 tup, kechki payt 7 tup ko‘chat o‘tqazildi. Ekish uchun yana nechta gul ko‘chati qoldi?",
+      "options": [
+        "6 tup",
+        "8 tup",
+        "13 tup",
+        "7 tup"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ekilgan ko‘chatlar: 6 + 7 = 13 tup. Qolgani: 20 - 13 = 7 tup."
+    }
+  ]
+}

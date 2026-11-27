@@ -1,0 +1,279 @@
+{
+  "order": 10,
+  "bookNumber": 10,
+  "unitType": "LESSON",
+  "title": "Sonlarni qo‘shish va ayirish",
+  "emoji": "🗺️",
+  "crossTopic": "Xaritalar",
+  "shortDesc": "Xona birliklari, ifodalar ma’nosi va shartli masalalar",
+  "intro": "Xaritalar yordamida shaharlar, tog‘lar va daryolarning masofalarini aniqlash mumkin. Ushbu darsda xona birliklari bo‘yicha amallar bajarish va ifodalarga savol qo‘yishni o‘rganamiz.",
+  "keyPoints": [
+    "Masalada ikkita son yig‘indisi jami miqdorni, ayirmasi esa farqni bildiradi.",
+    "41 - 11 ifodasi 'nechtaga kam yoki nechtaga ortiq' ekanligini ko‘rsatadi.",
+    "2 dm = 20 cm bo‘lib, masofalarni o‘lchashda birliklarni o‘zaro aylantiramiz."
+  ],
+  "miniExample": {
+    "emojis": "🗺️ 41 - 11 = 30 | 41 + 11 = 52",
+    "text": "Toshkentdan Samarqandgacha yo‘lda 41 ta va 11 ta belgi bor. Farqi: 41 - 11 = 30, jami: 41 + 11 = 52!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 41 + 11",
+      "options": [
+        "52",
+        "50",
+        "51",
+        "53"
+      ],
+      "correctIndex": 0,
+      "explanation": "41 + 11 = 52."
+    },
+    {
+      "text": "Hisoblang: 41 - 11",
+      "options": [
+        "31",
+        "30",
+        "29",
+        "20"
+      ],
+      "correctIndex": 1,
+      "explanation": "41 - 11 = 30."
+    },
+    {
+      "text": "2 dm necha santimetrga teng?",
+      "options": [
+        "2 cm",
+        "200 cm",
+        "20 cm",
+        "12 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 dm = 10 cm, 2 dm = 20 cm."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 41 + 11",
+      "options": [
+        "52",
+        "50",
+        "51",
+        "53"
+      ],
+      "correctIndex": 0,
+      "explanation": "41 + 11 = 52."
+    },
+    {
+      "text": "Hisoblang: 41 - 11",
+      "options": [
+        "29",
+        "30",
+        "31",
+        "20"
+      ],
+      "correctIndex": 1,
+      "explanation": "41 - 11 = 30."
+    },
+    {
+      "text": "41 + 11 ifodasi qanday savolga javob beradi?",
+      "options": [
+        "Birinchi miqdor ikkinchisidan qancha kam?",
+        "Noma’lum son nechaga teng?",
+        "Ikkala miqdor birgalikda jami qancha?",
+        "Faqat birinchi miqdor qancha?"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qo‘shish amali (41 + 11) jami miqdorni aniqlaydi."
+    },
+    {
+      "text": "41 - 11 ifodasi qanday savolga javob beradi?",
+      "options": [
+        "Jami miqdor qancha?",
+        "Ular tengmi?",
+        "Hech qanday savolga",
+        "Birinchi miqdor ikkinchisidan nechtaga ko‘p?"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ayirish amali (41 - 11) ikki miqdor orasidagi farqni topadi."
+    },
+    {
+      "text": "2 dm li kesmaga nechta 10 cm li bo‘lak sig‘adi?",
+      "options": [
+        "2 ta (chunki 2 dm = 20 cm)",
+        "1 ta",
+        "3 ta",
+        "4 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 / 10 = 2 ta bo‘lak."
+    },
+    {
+      "text": "Tenglamani yeching: x + 11 = 41",
+      "options": [
+        "29",
+        "30",
+        "31",
+        "52"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 41 - 11 = 30."
+    },
+    {
+      "text": "Uzunligi 2 dm (20 cm) bo‘lgan qog‘oz tasmasiga har biri 2 cm li belgilardan 7 tasi oraliqlari 1 cm qilib sig‘adimi? (7 ta belgi 14 cm, 6 ta oraliq 6 cm: 14 + 6 = 20 cm)",
+      "options": [
+        "Yo‘q, sig‘maydi",
+        "Faqat 5 tasi sig‘adi",
+        "Ha, to‘liq sig‘adi (20 cm = 2 dm)",
+        "1 cm ortib qoladi"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 × 2 cm = 14 cm belgilar, 6 ta oraliq × 1 cm = 6 cm. Jami: 14 + 6 = 20 cm = 2 dm. To‘liq sig‘adi!"
+    },
+    {
+      "text": "Xaritada A shahardan B shahargacha 35 cm, B dan C gacha 24 cm. A dan C gacha jami necha cm?",
+      "options": [
+        "58 cm",
+        "60 cm",
+        "11 cm",
+        "59 cm"
+      ],
+      "correctIndex": 3,
+      "explanation": "35 + 24 = 59 cm."
+    },
+    {
+      "text": "Xaritadagi A shahardan B shahargacha masofa B dan C gacha masofadan necha cm ortiq (oldingi masala bo‘yicha)?",
+      "options": [
+        "11 cm ga ortiq (35 - 24 = 11)",
+        "10 cm",
+        "12 cm",
+        "59 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "35 - 24 = 11 cm."
+    },
+    {
+      "text": "Hisoblang: 68 - 25 + 14",
+      "options": [
+        "55",
+        "57",
+        "56",
+        "58"
+      ],
+      "correctIndex": 1,
+      "explanation": "68 - 25 = 43, 43 + 14 = 57."
+    },
+    {
+      "text": "Tenglamani yeching: 55 - y = 22",
+      "options": [
+        "31",
+        "34",
+        "33",
+        "77"
+      ],
+      "correctIndex": 2,
+      "explanation": "y = 55 - 22 = 33."
+    },
+    {
+      "text": "Xaritada sayyoh yo‘li 3 bo‘lakdan iborat: 12 cm, 15 cm va 21 cm. Yo‘lning umumiy uzunligi qancha?",
+      "options": [
+        "46 cm",
+        "47 cm",
+        "50 cm",
+        "48 cm"
+      ],
+      "correctIndex": 3,
+      "explanation": "12 + 15 + 21 = 48 cm."
+    },
+    {
+      "text": "Qaysi ifodaga mantiqiy savol berib bo‘lmaydi?",
+      "options": [
+        "5 ta daryo minus 3 ta daftar",
+        "41 km - 11 km",
+        "15 ta shahar + 12 ta shahar",
+        "30 cm + 20 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "Bir xil bo‘lmagan har xil narsalarni bir-biridan ayirib bo‘lmaydi."
+    },
+    {
+      "text": "O‘zaro teskari uchta masala tuzish uchun qanday sonlar kerak bo‘ladi?",
+      "options": [
+        "Istalgan har xil sonlar",
+        "Bir-biri bilan qo‘shish va ayirish orqali bog‘langan uchta son",
+        "Faqat juft sonlar",
+        "Faqat bitta son"
+      ],
+      "correctIndex": 1,
+      "explanation": "Teskari masalalar bir xil uchta sonlar bog‘lanishiga tayanadi."
+    },
+    {
+      "text": "Sayyoh tog‘ xaritasida 14 cm yo‘l yurdi, bu butun yo‘lning yarmidan 6 cm kam. Butun yo‘lning yarmi necha cm?",
+      "options": [
+        "18 cm",
+        "22 cm",
+        "20 cm (14 + 6 = 20)",
+        "8 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 + 6 = 20 cm."
+    },
+    {
+      "text": "Tenglamani yeching: z - 34 = 43",
+      "options": [
+        "75",
+        "76",
+        "9",
+        "77"
+      ],
+      "correctIndex": 3,
+      "explanation": "z = 43 + 34 = 77."
+    },
+    {
+      "text": "Hisoblang: 96 - 42 - 24",
+      "options": [
+        "30",
+        "28",
+        "32",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "96 - 42 = 54, 54 - 24 = 30."
+    },
+    {
+      "text": "Xarita masshtabida 1 dm uzunlik 10 km ni bildirsa, 5 dm necha km ni bildiradi?",
+      "options": [
+        "40 km",
+        "50 km",
+        "60 km",
+        "15 km"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 ta 10 km = 50 km."
+    },
+    {
+      "text": "O‘zbekiston xaritasida Toshkent va Guliston oralig‘i 12 cm, Guliston va Jizzax oralig‘i 10 cm, Jizzax va Samarqand oralig‘i 14 cm qilib chizilgan. Sayyoh Toshkentdan chiqib Samarqandgacha barcha shaharlardan o‘tsa, xaritada necha cm masofani bosib o‘tgan bo‘ladi?",
+      "options": [
+        "34 cm",
+        "38 cm",
+        "36 cm (12 + 10 + 14 = 36)",
+        "40 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 + 10 + 14 = 36 cm."
+    },
+    {
+      "text": "Geografiya darsida o‘quvchilar xaritadan 48 ta tog‘ cho‘qqisini va 35 ta ko‘lni belgilashdi. Shulardan 23 ta obekt qizil rang bilan, qolganlari esa ko‘k rang bilan belgilandi. Ko‘k rang bilan nechta obekt belgilangan?",
+      "options": [
+        "58 ta",
+        "62 ta",
+        "83 ta",
+        "60 ta obekt (48 + 35 - 23 = 60)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Jami obektlar: 48 + 35 = 83 ta. Ko‘k rangdagilar: 83 - 23 = 60 ta."
+    }
+  ]
+}

@@ -23,6 +23,7 @@ class ModuleLessonsScreen extends ConsumerStatefulWidget {
 }
 
 class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
+  
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   bool _isLoading = true;
@@ -83,10 +84,34 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
   }
 
   ModuleModel _createFallbackModule() {
+    final isG2P1 = widget.moduleId == 'module-g2-p1' || widget.moduleId.contains('g2');
     final isP4 = widget.moduleId.contains('p4');
     final isP3 = widget.moduleId.contains('p3');
     final isP2 = widget.moduleId.contains('p2');
     final completedCount = _lessons.where((l) => l.isCompleted).length;
+
+    if (isG2P1) {
+      final total = _lessons.isEmpty ? 44 : _lessons.length;
+      final pct = (completedCount / total * 100).round();
+      final earnedXp = _lessons.fold(0, (acc, l) => acc + (l.isCompleted ? l.rewardXP : 0));
+      final totalXp = _lessons.fold(0, (acc, l) => acc + l.rewardXP);
+      return ModuleModel(
+        id: widget.moduleId,
+        grade: 2,
+        subject: 'Matematika',
+        part: 1,
+        title: 'Matematika · 1-qism',
+        orderIndex: 1,
+        comingSoon: false,
+        lessonCount: total,
+        questionCount: 880,
+        totalMinutes: 318,
+        percent: pct,
+        earnedXp: earnedXp,
+        totalXp: totalXp > 0 ? totalXp : 4095,
+      );
+    }
+
     final total = _lessons.isEmpty ? (isP4 ? 33 : (isP3 ? 40 : (isP2 ? 33 : 41))) : _lessons.length;
     final pct = (completedCount / total * 100).round();
     final earnedXp = _lessons.fold(0, (acc, l) => acc + (l.isCompleted ? l.rewardXP : 0));
@@ -115,9 +140,106 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
   }
 
   void _loadFallbackData() {
+    final isG2P1 = widget.moduleId == 'module-g2-p1' || widget.moduleId.contains('g2');
     final isP4 = widget.moduleId.contains('p4');
     final isP3 = widget.moduleId.contains('p3');
     final isP2 = widget.moduleId.contains('p2');
+
+    if (isG2P1) {
+      final partG2P1Def = [
+        {'order': 1, 'num': 1, 'rev': false, 'title': 'Takrorlash', 'emoji': '🎒', 'ch': 'I bob. Takrorlash'},
+        {'order': 2, 'num': 2, 'rev': false, 'title': 'Bir xonali sonlarni qo‘shish', 'emoji': '🧮', 'ch': 'I bob. Takrorlash'},
+        {'order': 3, 'num': 3, 'rev': false, 'title': 'Bir xonali sonlarni ayirish', 'emoji': '➖', 'ch': 'I bob. Takrorlash'},
+        {'order': 4, 'num': 4, 'rev': false, 'title': 'Geometrik shakllar', 'emoji': '📐', 'ch': 'I bob. Takrorlash'},
+        {'order': 5, 'num': 5, 'rev': false, 'title': '20 ichida qo‘shish va ayirish', 'emoji': '🎯', 'ch': 'I bob. Takrorlash'},
+        {'order': 6, 'num': 6, 'rev': false, 'title': '20 ichida qo‘shish va ayirish', 'emoji': '⚽', 'ch': 'I bob. Takrorlash'},
+        {'order': 7, 'num': 7, 'rev': false, 'title': 'Sonlarni taqqoslash', 'emoji': '⚖️', 'ch': 'I bob. Takrorlash'},
+        {'order': 8, 'num': 8, 'rev': false, 'title': 'Masalalar yechish', 'emoji': '📝', 'ch': 'I bob. Takrorlash'},
+        {'order': 9, 'num': 9, 'rev': false, 'title': 'Sonlarni qo‘shish va ayirish', 'emoji': '🐪', 'ch': 'II bob. Xona birliklari va yaxlit sonlar bilan amallar'},
+        {'order': 10, 'num': 10, 'rev': false, 'title': 'O‘nliklar', 'emoji': '🗺️', 'ch': 'II bob. Xona birliklari va yaxlit sonlar bilan amallar'},
+        {'order': 11, 'num': 11, 'rev': false, 'title': '100 ichida sonlar', 'emoji': '🦩', 'ch': 'II bob. Xona birliklari va yaxlit sonlar bilan amallar'},
+        {'order': 12, 'num': 12, 'rev': false, 'title': '100 ichida sonlar', 'emoji': '💧', 'ch': 'II bob. Xona birliklari va yaxlit sonlar bilan amallar'},
+        {'order': 13, 'num': 13, 'rev': false, 'title': 'Sonlarni taqqoslash', 'emoji': '⛸️', 'ch': 'II bob. Xona birliklari va yaxlit sonlar bilan amallar'},
+        {'order': 14, 'num': 14, 'rev': false, 'title': 'Sonlarni ayirish (30 - 7)', 'emoji': '📅', 'ch': 'II bob. Xona birliklari va yaxlit sonlar bilan amallar'},
+        {'order': 15, 'num': 15, 'rev': false, 'title': 'Sonlarni qo‘shish (21 + 39)', 'emoji': '🤝', 'ch': 'II bob. Xona birliklari va yaxlit sonlar bilan amallar'},
+        {'order': 16, 'num': 16, 'rev': false, 'title': 'Sonlarni qo‘shish (21 + 39)', 'emoji': '⛏️', 'ch': 'II bob. Xona birliklari va yaxlit sonlar bilan amallar'},
+        {'order': 17, 'num': 17, 'rev': false, 'title': 'Ayirish (50 - 22)', 'emoji': '🧭', 'ch': 'II bob. Xona birliklari va yaxlit sonlar bilan amallar'},
+        {'order': 18, 'num': 18, 'rev': false, 'title': 'Ayirish (50 - 22)', 'emoji': '🌱', 'ch': 'II bob. Xona birliklari va yaxlit sonlar bilan amallar'},
+        {'order': 19, 'num': 0, 'rev': true, 'title': 'Mavzu bo‘yicha yakuniy dars', 'emoji': '🌍', 'ch': 'II bob. Xona birliklari va yaxlit sonlar bilan amallar', 'xp': 130, 'coin': 15},
+        {'order': 20, 'num': 20, 'rev': false, 'title': 'Sonlarni qo‘shish (25 + 6)', 'emoji': '🏗️', 'ch': 'III bob. Xonadan o‘tib qo‘shish va ayirish'},
+        {'order': 21, 'num': 21, 'rev': false, 'title': 'Sonlarni qo‘shish (25 + 6)', 'emoji': '🚇', 'ch': 'III bob. Xonadan o‘tib qo‘shish va ayirish'},
+        {'order': 22, 'num': 22, 'rev': false, 'title': 'Sonlarni qo‘shish (6 + 25)', 'emoji': '🍳', 'ch': 'III bob. Xonadan o‘tib qo‘shish va ayirish'},
+        {'order': 23, 'num': 23, 'rev': false, 'title': 'Sonlarni ayirish (33 - 7)', 'emoji': '🏫', 'ch': 'III bob. Xonadan o‘tib qo‘shish va ayirish'},
+        {'order': 24, 'num': 24, 'rev': false, 'title': 'Sonlarni ayirish (43 - 7)', 'emoji': '🧸', 'ch': 'III bob. Xonadan o‘tib qo‘shish va ayirish'},
+        {'order': 25, 'num': 25, 'rev': false, 'title': 'Sonlarni ayirish (43 - 7)', 'emoji': '🎲', 'ch': 'III bob. Xonadan o‘tib qo‘shish va ayirish'},
+        {'order': 26, 'num': 26, 'rev': false, 'title': 'Sonlarni qo‘shish (28 + 14)', 'emoji': '📱', 'ch': 'III bob. Xonadan o‘tib qo‘shish va ayirish'},
+        {'order': 27, 'num': 26, 'rev': false, 'title': 'Sonlarni qo‘shish (28 + 14)', 'emoji': '💻', 'ch': 'III bob. Xonadan o‘tib qo‘shish va ayirish'},
+        {'order': 28, 'num': 27, 'rev': false, 'title': 'Ustun ko‘rinishida qo‘shish va ayirish', 'emoji': '🤖', 'ch': 'IV bob. Ustun ko‘rinishida hisoblash'},
+        {'order': 29, 'num': 28, 'rev': false, 'title': 'Sonlarni ayirish (43 - 16)', 'emoji': '🎨', 'ch': 'IV bob. Ustun ko‘rinishida hisoblash'},
+        {'order': 30, 'num': 29, 'rev': false, 'title': 'Sonlarni ayirish (43 - 16)', 'emoji': '🍰', 'ch': 'IV bob. Ustun ko‘rinishida hisoblash'},
+        {'order': 31, 'num': 30, 'rev': false, 'title': 'Ustun ko‘rinishida qo‘shish', 'emoji': '🗣️', 'ch': 'IV bob. Ustun ko‘rinishida hisoblash'},
+        {'order': 32, 'num': 31, 'rev': false, 'title': 'Qo‘shishning xossalari', 'emoji': '🌳', 'ch': 'IV bob. Ustun ko‘rinishida hisoblash'},
+        {'order': 33, 'num': 32, 'rev': false, 'title': 'Ustun ko‘rinishida ayirish', 'emoji': '🛎️', 'ch': 'IV bob. Ustun ko‘rinishida hisoblash'},
+        {'order': 34, 'num': 33, 'rev': false, 'title': 'Og‘zaki hisoblash usullari', 'emoji': '🧠', 'ch': 'IV bob. Ustun ko‘rinishida hisoblash'},
+        {'order': 35, 'num': 34, 'rev': false, 'title': 'Yig‘indidan sonni ayirish', 'emoji': '✈️', 'ch': 'V bob. Yig‘indi va ayirma xossalari, masalalar'},
+        {'order': 36, 'num': 35, 'rev': false, 'title': 'Yig‘indidan sonni ayirish', 'emoji': '🐮', 'ch': 'V bob. Yig‘indi va ayirma xossalari, masalalar'},
+        {'order': 37, 'num': 36, 'rev': false, 'title': 'Sondan yig‘indini ayirish', 'emoji': '🖥️', 'ch': 'V bob. Yig‘indi va ayirma xossalari, masalalar'},
+        {'order': 38, 'num': 37, 'rev': false, 'title': 'Sondan yig‘indini ayirish', 'emoji': '🎓', 'ch': 'V bob. Yig‘indi va ayirma xossalari, masalalar'},
+        {'order': 39, 'num': 38, 'rev': false, 'title': 'Masalalar yechish va o‘tilgan mavzularni mustahkamlash', 'emoji': '🏥', 'ch': 'V bob. Yig‘indi va ayirma xossalari, masalalar'},
+        {'order': 40, 'num': 39, 'rev': false, 'title': 'Masalalar yechish', 'emoji': '💳', 'ch': 'V bob. Yig‘indi va ayirma xossalari, masalalar'},
+        {'order': 41, 'num': 0, 'rev': true, 'title': 'Mavzu bo‘yicha yakuniy dars', 'emoji': '💡', 'ch': 'V bob. Yig‘indi va ayirma xossalari, masalalar', 'xp': 130, 'coin': 15},
+        {'order': 42, 'num': 40, 'rev': false, 'title': 'Amaliy topshiriqlar', 'emoji': '🏃', 'ch': 'VI bob. Amaliy topshiriqlar'},
+        {'order': 43, 'num': 41, 'rev': false, 'title': 'Amaliy topshiriqlar', 'emoji': '🏅', 'ch': 'VI bob. Amaliy topshiriqlar'},
+        {'order': 44, 'num': 0, 'rev': true, 'title': 'Amaliy topshiriqlar', 'emoji': '🧩', 'ch': 'VI bob. Amaliy topshiriqlar', 'xp': 140, 'coin': 15},
+      ];
+
+      final list = List.generate(partG2P1Def.length, (index) {
+        final item = partG2P1Def[index];
+        final order = item['order'] as int;
+        final bookNum = item['num'] as int;
+        final isRev = item['rev'] as bool;
+        final title = item['title'] as String;
+        final emoji = item['emoji'] as String;
+        final ch = item['ch'] as String;
+        final xp = (item['xp'] as int?) ?? 90;
+        final coin = (item['coin'] as int?) ?? 10;
+        final pad = order.toString().padLeft(2, '0');
+
+        return LessonModel(
+          id: 'lesson-g2-$pad',
+          courseId: 'course-g2-p1',
+          moduleId: widget.moduleId,
+          grade: 2,
+          mode: 'KIDS',
+          title: title,
+          chapterTitle: ch,
+          topicKey: 'topic-g2-$pad',
+          description: isRev
+              ? 'Mavzular bo‘yicha 20 ta savolli yakuniy test.'
+              : '2-sinf matematika 1-qism bo‘yicha $order-dars.',
+          emoji: emoji,
+          rewardXP: xp,
+          rewardCoins: coin,
+          orderIndex: order,
+          bookNumber: bookNum,
+          isReview: isRev,
+          sectionCount: 20,
+          isCompleted: false,
+          isLocked: order > 1,
+          completedSteps: 0,
+          percent: 0,
+          bestPercent: 0,
+          estMinutes: isRev ? 10 : 7,
+        );
+      });
+
+      setState(() {
+        _lessons = list;
+        _module = _createFallbackModule();
+        _isLoading = false;
+      });
+      return;
+    }
 
     if (isP4) {
       final part4Def = [
@@ -480,7 +602,15 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              '1-sinf • Barcha 41 ta mavzu',
+                              widget.moduleId.contains('g2')
+                                  ? '2-sinf • Barcha 44 ta mavzu'
+                                  : (widget.moduleId.contains('p4')
+                                      ? '1-sinf • Barcha 33 ta mavzu'
+                                      : (widget.moduleId.contains('p3')
+                                          ? '1-sinf • Barcha 40 ta mavzu'
+                                          : (widget.moduleId.contains('p2')
+                                              ? '1-sinf • Barcha 33 ta mavzu'
+                                              : '1-sinf • Barcha 41 ta mavzu'))),
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
@@ -903,7 +1033,9 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${lesson.bookNumber > 0 ? lesson.bookNumber : lesson.orderIndex}. ${lesson.title}',
+                        (lesson.bookNumber > 0)
+                            ? '${lesson.bookNumber}. ${lesson.title}'
+                            : (lesson.isReview ? lesson.title : '${lesson.orderIndex}. ${lesson.title}'),
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w800,

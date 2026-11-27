@@ -1,0 +1,369 @@
+{
+  "order": 44,
+  "bookNumber": null,
+  "unitType": "PRACTICE",
+  "title": "Amaliy topshiriqlar",
+  "emoji": "🧩",
+  "crossTopic": null,
+  "shortDesc": "Mantiqiy masalalar, qonuniyatlar va yakuniy amaliy mashqlar",
+  "intro": "1-qismning yakuniy amaliy darsi! Mantiqiy topshiriqlar, qonuniyatlar (ketma-ketliklar) va geometrik shakllar bo'yicha mustaqil topshiriqlarni bajaramiz.",
+  "keyPoints": [
+    "Qonuniyatni topish: ketma-ket sonlar orasidagi farqni aniqlash.",
+    "Mantiqiy masalalarni mulohaza va chizma orqali yechish.",
+    "2-sinf 1-qismida egallangan barcha bilimlarni erkin qo'llash."
+  ],
+  "miniExample": {
+    "emojis": "🧩 5, 10, 15, 20, ? (25) | To'g'ri to'rtburchak",
+    "text": "Ketma-ketlik har safar 5 taga ortmoqda, keyingi son 25!"
+  },
+  "xpReward": 140,
+  "coinReward": 15,
+  "estMinutes": 10,
+  "practice": [
+    {
+      "text": "Qonuniyatni aniqlang va keyingi sonni toping: 5, 10, 15, 20, ?",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sonlar 5 tadan ortib bormoqda: 20 + 5 = 25.",
+      "meta": {
+        "seq": [
+          5,
+          10,
+          15,
+          20
+        ],
+        "next": 25
+      }
+    },
+    {
+      "text": "Qonuniyatni aniqlang va keyingi sonni toping: 2, 4, 6, 8, ?",
+      "options": [
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sonlar 2 tadan ortmoqda: 8 + 2 = 10.",
+      "meta": {
+        "seq": [
+          2,
+          4,
+          6,
+          8
+        ],
+        "next": 10
+      }
+    },
+    {
+      "text": "To'g'ri to'rtburchakning nechta burchagi bor?",
+      "options": [
+        "3 ta",
+        "5 ta",
+        "4 ta",
+        "6 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "To'g'ri to'rtburchakning 4 ta to'g'ri burchagi bor."
+    }
+  ],
+  "test": [
+    {
+      "text": "Qonuniyatni aniqlang va keyingi sonni toping: 5, 10, 15, 20, ?",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sonlar 5 tadan ortmoqda: 20 + 5 = 25.",
+      "meta": {
+        "seq": [
+          5,
+          10,
+          15,
+          20
+        ],
+        "next": 25
+      }
+    },
+    {
+      "text": "Qonuniyatni aniqlang va keyingi sonni toping: 10, 20, 30, 40, ?",
+      "options": [
+        "45",
+        "50",
+        "55",
+        "60"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sonlar 10 tadan ortmoqda: 40 + 10 = 50.",
+      "meta": {
+        "seq": [
+          10,
+          20,
+          30,
+          40
+        ],
+        "next": 50
+      }
+    },
+    {
+      "text": "Qonuniyatni aniqlang va keyingi sonni toping: 3, 6, 9, 12, ?",
+      "options": [
+        "14",
+        "16",
+        "15",
+        "18"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sonlar 3 tadan ortmoqda: 12 + 3 = 15.",
+      "meta": {
+        "seq": [
+          3,
+          6,
+          9,
+          12
+        ],
+        "next": 15
+      }
+    },
+    {
+      "text": "Qonuniyatni aniqlang va keyingi sonni toping: 50, 45, 40, 35, ?",
+      "options": [
+        "25",
+        "35",
+        "20",
+        "30"
+      ],
+      "correctIndex": 3,
+      "explanation": "Sonlar 5 tadan kamaymoqda: 35 - 5 = 30.",
+      "meta": {
+        "seq": [
+          50,
+          45,
+          40,
+          35
+        ],
+        "next": 30
+      }
+    },
+    {
+      "text": "Uchburchakning nechta tomoni bor?",
+      "options": [
+        "3 ta",
+        "4 ta",
+        "5 ta",
+        "2 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uchburchakning 3 ta tomoni va 3 ta burchagi bor."
+    },
+    {
+      "text": "Qonuniyatni aniqlang va keyingi sonni toping: 4, 8, 12, 16, ?",
+      "options": [
+        "18",
+        "20",
+        "22",
+        "24"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sonlar 4 tadan ortmoqda: 16 + 4 = 20.",
+      "meta": {
+        "seq": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "next": 20
+      }
+    },
+    {
+      "text": "Kvadratning barcha tomonlari qanday?",
+      "options": [
+        "Har xil",
+        "To'g'ri",
+        "Teng",
+        "Egri"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kvadratning 4 ta tomoni bir-biriga teng."
+    },
+    {
+      "text": "Qonuniyatni aniqlang va keyingi sonni toping: 100, 90, 80, 70, ?",
+      "options": [
+        "50",
+        "65",
+        "55",
+        "60"
+      ],
+      "correctIndex": 3,
+      "explanation": "Sonlar 10 tadan kamaymoqda: 70 - 10 = 60.",
+      "meta": {
+        "seq": [
+          100,
+          90,
+          80,
+          70
+        ],
+        "next": 60
+      }
+    },
+    {
+      "text": "Tenglamani yeching: x + 30 = 75",
+      "options": [
+        "45",
+        "44",
+        "46",
+        "43"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 75 - 30 = 45."
+    },
+    {
+      "text": "Tenglamani yeching: y - 25 = 50",
+      "options": [
+        "74",
+        "75",
+        "76",
+        "73"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 50 + 25 = 75."
+    },
+    {
+      "text": "Taqqoslang: 3 dm 5 cm va 35 cm",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 dm 5 cm = 35 cm. Ular teng: 35 cm = 35 cm."
+    },
+    {
+      "text": "Taqqoslang: 48 - 18 va 35",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "48 - 18 = 30. 30 < 35."
+    },
+    {
+      "text": "Ahmad va Anvar birgalikda 40 ta yong'oq terishdi. Ahmad 24 ta tergan bo'lsa, Anvar nechta tergan?",
+      "options": [
+        "16",
+        "15",
+        "17",
+        "14"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 - 24 = 16 ta yong'oq."
+    },
+    {
+      "text": "Qonuniyatni aniqlang va keyingi sonni toping: 7, 14, 21, 28, ?",
+      "options": [
+        "34",
+        "35",
+        "36",
+        "32"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sonlar 7 tadan ortmoqda: 28 + 7 = 35.",
+      "meta": {
+        "seq": [
+          7,
+          14,
+          21,
+          28
+        ],
+        "next": 35
+      }
+    },
+    {
+      "text": "Hisoblang: 100 - (45 + 25)",
+      "options": [
+        "29",
+        "31",
+        "30",
+        "28"
+      ],
+      "correctIndex": 2,
+      "explanation": "45 + 25 = 70, 100 - 70 = 30."
+    },
+    {
+      "text": "Kesmaning nechta uchi bor?",
+      "options": [
+        "1 ta",
+        "3 ta",
+        "Uchi yo'q",
+        "2 ta"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kesma ikki tomondan nuqta bilan chegaralangan, uning 2 ta uchi bor."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 50 + * = 85?",
+      "options": [
+        "35",
+        "34",
+        "36",
+        "33"
+      ],
+      "correctIndex": 0,
+      "explanation": "85 - 50 = 35."
+    },
+    {
+      "text": "Qonuniyatni aniqlang va keyingi sonni toping: 60, 50, 40, 30, ?",
+      "options": [
+        "10",
+        "20",
+        "25",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sonlar 10 tadan kamaymoqda: 30 - 10 = 20.",
+      "meta": {
+        "seq": [
+          60,
+          50,
+          40,
+          30
+        ],
+        "next": 20
+      }
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XXV + XXV",
+      "options": [
+        "XL",
+        "XXX",
+        "L",
+        "LV"
+      ],
+      "correctIndex": 2,
+      "explanation": "25 + 25 = 50 (L)."
+    },
+    {
+      "text": "To'g'ri to'rtburchakning qarama-qarshi tomonlari qanday bo'ladi?",
+      "options": [
+        "Har xil",
+        "Egri",
+        "Kesişuvchi",
+        "Teng"
+      ],
+      "correctIndex": 3,
+      "explanation": "To'g'ri to'rtburchakning qarama-qarshi tomonlari o'zaro teng bo'ladi."
+    }
+  ]
+}

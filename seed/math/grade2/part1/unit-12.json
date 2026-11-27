@@ -1,0 +1,279 @@
+{
+  "order": 12,
+  "bookNumber": 12,
+  "unitType": "LESSON",
+  "title": "Yaxlit songacha qo‘shish (31 + 9)",
+  "emoji": "💧",
+  "crossTopic": "Suv",
+  "shortDesc": "Guruhlash xossasi yordamida yaxlit songacha to‘ldirib qulay hisoblash",
+  "intro": "Suv — hayot manbai. Biz har kuni suvni tejab ishlatishimiz kerak. Ushbu darsda 72 + 8 = 70 + (2 + 8) = 80 qoidasi asosida bir nechta sonlarni qulay guruhlab qo‘shishni o‘rganamiz.",
+  "keyPoints": [
+    "72 + 8 = 70 + (2 + 8) = 70 + 10 = 80.",
+    "Yig‘indisi 10 bo‘ladigan sonlar: 1+9, 2+8, 3+7, 4+6, 5+5.",
+    "Qulay usulda sonlarni o‘rnini almashtirib, avval yaxlit o‘nlik hosil qilinadi."
+  ],
+  "miniExample": {
+    "emojis": "💧 72 + 8 = 70 + (2 + 8) = 80",
+    "text": "72 ni 70 va 2 deb olamiz: 2 + 8 = 10, keyin 70 + 10 = 80 bo‘ladi!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 72 + 8",
+      "options": [
+        "80",
+        "70",
+        "82",
+        "79"
+      ],
+      "correctIndex": 0,
+      "explanation": "72 + 8 = 80."
+    },
+    {
+      "text": "Hisoblang: 46 + 4",
+      "options": [
+        "40",
+        "50",
+        "48",
+        "52"
+      ],
+      "correctIndex": 1,
+      "explanation": "46 + 4 = 50."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 21 + 9 + 15",
+      "options": [
+        "40",
+        "44",
+        "45 ((21 + 9) + 15 = 45)",
+        "46"
+      ],
+      "correctIndex": 2,
+      "explanation": "21 + 9 = 30, 30 + 15 = 45."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 29 + 1",
+      "options": [
+        "30",
+        "28",
+        "31",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "29 + 1 = 30."
+    },
+    {
+      "text": "Hisoblang: 46 + 4",
+      "options": [
+        "40",
+        "50",
+        "48",
+        "52"
+      ],
+      "correctIndex": 1,
+      "explanation": "46 + 4 = 50."
+    },
+    {
+      "text": "Hisoblang: 54 + 6",
+      "options": [
+        "50",
+        "58",
+        "60",
+        "62"
+      ],
+      "correctIndex": 2,
+      "explanation": "54 + 6 = 60."
+    },
+    {
+      "text": "Hisoblang: 37 + 3",
+      "options": [
+        "30",
+        "39",
+        "42",
+        "40"
+      ],
+      "correctIndex": 3,
+      "explanation": "37 + 3 = 40."
+    },
+    {
+      "text": "Hisoblang: 88 + 2",
+      "options": [
+        "90",
+        "80",
+        "89",
+        "100"
+      ],
+      "correctIndex": 0,
+      "explanation": "88 + 2 = 90."
+    },
+    {
+      "text": "72 + 8 amali qanday qulay guruhlanadi?",
+      "options": [
+        "(70 + 8) + 2 = 80",
+        "70 + (2 + 8) = 80",
+        "72 + 10 - 2 = 80",
+        "70 + 8 = 78"
+      ],
+      "correctIndex": 1,
+      "explanation": "72 ni 70 va 2 ga ajratib: 70 + (2 + 8) = 80."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 21 + 34 + 15 + 6 + 5 + 9",
+      "options": [
+        "80",
+        "85",
+        "90 ((21+9) + (34+6) + (15+5) = 30+40+20 = 90)",
+        "95"
+      ],
+      "correctIndex": 2,
+      "explanation": "(21+9=30) + (34+6=40) + (15+5=20) = 30 + 40 + 20 = 90."
+    },
+    {
+      "text": "Madina tishini tozalashda kranni ochiq qoldirmasdan 4 minut, idish yuvishda undan 3 minut ko‘p, dush qabul qilishda esa idish yuvishdan 2 minut kam vaqt sarfladi. Dush qabul qilishga necha minut ketgan?",
+      "options": [
+        "4 minut",
+        "6 minut",
+        "7 minut",
+        "5 minut (4 + 3 - 2 = 5)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Idish yuvish: 4 + 3 = 7 minut. Dush: 7 - 2 = 5 minut."
+    },
+    {
+      "text": "Madina barcha yumushlarga jami necha minut vaqt sarflagan (oldingi masala shartiga ko‘ra)?",
+      "options": [
+        "16 minut (4 + 7 + 5 = 16)",
+        "15 minut",
+        "17 minut",
+        "18 minut"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 7 + 5 = 16 minut."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 13 + 27 + 18 + 2",
+      "options": [
+        "50",
+        "60 ((13+27=40) + (18+2=20) = 60)",
+        "58",
+        "62"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 + 20 = 60."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 44 + 16 + 25 + 5",
+      "options": [
+        "80",
+        "85",
+        "90 ((44+16=60) + (25+5=30) = 90)",
+        "95"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 + 30 = 90."
+    },
+    {
+      "text": "Suv idishida 63 litr suv bor edi. Unga yana 7 litr suv quyildi. Idishdagi suv necha litr bo‘ldi?",
+      "options": [
+        "69 litr",
+        "71 litr",
+        "80 litr",
+        "70 litr"
+      ],
+      "correctIndex": 3,
+      "explanation": "63 + 7 = 70 litr."
+    },
+    {
+      "text": "Tenglamani yeching: y - 5 = 65",
+      "options": [
+        "70",
+        "60",
+        "69",
+        "72"
+      ],
+      "correctIndex": 0,
+      "explanation": "y = 65 + 5 = 70."
+    },
+    {
+      "text": "Hisoblang: 76 + 4 + 12",
+      "options": [
+        "90",
+        "92",
+        "91",
+        "88"
+      ],
+      "correctIndex": 1,
+      "explanation": "76 + 4 = 80, 80 + 12 = 92."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 12 + 18 + 14 + 16",
+      "options": [
+        "50",
+        "58",
+        "60 ((12+18=30) + (14+16=30) = 60)",
+        "62"
+      ],
+      "correctIndex": 2,
+      "explanation": "30 + 30 = 60."
+    },
+    {
+      "text": "Akvariumga 1-kuni 22 litr, 2-kuni 8 litr suv quyildi. Agar akvarium sig‘imi 50 litr bo‘lsa, uni to‘ldirish uchun yana necha litr suv kerak?",
+      "options": [
+        "18 litr",
+        "25 litr",
+        "30 litr",
+        "20 litr (50 - 30 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "22 + 8 = 30 litr. Qolgani: 50 - 30 = 20 litr."
+    },
+    {
+      "text": "Hisoblang: (81 + 9) - (35 + 5)",
+      "options": [
+        "50 (90 - 40 = 50)",
+        "40",
+        "60",
+        "45"
+      ],
+      "correctIndex": 0,
+      "explanation": "90 - 40 = 50."
+    },
+    {
+      "text": "Qaysi tenglikda guruhlash xossasi to‘g‘ri qo‘llanilgan?",
+      "options": [
+        "63 + 7 + 15 = 63 + (7 - 15)",
+        "63 + 7 + 15 = (63 + 7) + 15 = 70 + 15 = 85",
+        "63 + 7 + 15 = (63 - 7) + 15",
+        "63 + 7 + 15 = 70 - 15"
+      ],
+      "correctIndex": 1,
+      "explanation": "63 va 7 ni qavsga olib avval qo‘shish yaxlit 70 ni beradi."
+    },
+    {
+      "text": "Maktab oshxonasida choy qaynatish uchun 3 ta katta qozonga suv quyildi: 1-qozonga 24 litr, 2-qozonga 16 litr va 3-qozonga 30 litr. Choy uchun jami necha litr suv quyilgan?",
+      "options": [
+        "60 litr",
+        "68 litr",
+        "70 litr ((24 + 16) + 30 = 70)",
+        "80 litr"
+      ],
+      "correctIndex": 2,
+      "explanation": "24 + 16 = 40 litr; 40 + 30 = 70 litr."
+    },
+    {
+      "text": "Bog‘dagi hovuzga suv quyish nasosi ertalab 38 litr, tushda esa 12 litr suv haydadi. Agar hovuzdan 20 litr suv ekinlarni sug‘orishga sarflangan bo‘lsa, hovuzda necha litr suv qoldi?",
+      "options": [
+        "28 litr",
+        "32 litr",
+        "50 litr",
+        "30 litr ((38 + 12) - 20 = 30)"
+      ],
+      "correctIndex": 3,
+      "explanation": "38 + 12 = 50 litr. Qoldi: 50 - 20 = 30 litr."
+    }
+  ]
+}

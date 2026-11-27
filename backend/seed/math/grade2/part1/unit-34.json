@@ -1,0 +1,279 @@
+{
+  "order": 34,
+  "bookNumber": 33,
+  "unitType": "LESSON",
+  "title": "Og‘zaki hisoblash usullari",
+  "emoji": "🧠",
+  "crossTopic": "Transport",
+  "shortDesc": "Og'zaki tez hisoblash usullari va Rim raqamlari bilan amallar",
+  "intro": "Transport harakatida tezkor qaror qabul qilish juda muhim. Og'zaki hisoblash va Rim raqamlarida amallarni bajarish aql charxidir!",
+  "keyPoints": [
+    "Sonlarni yaxlit o'nlikka yaqinlashtirib og'zaki hisoblash.",
+    "Rim raqamlari: I=1, V=5, X=10, L=50, C=100.",
+    "Rim raqamlarida amallar: XI + V = XVI (11 + 5 = 16), XVIII + XVIII = XXXVI (18 + 18 = 36), XXXIII - XIV = XIX (33 - 14 = 19), XXVII - XIV = XIII (27 - 14 = 13)."
+  ],
+  "miniExample": {
+    "emojis": "🧠 XI + V = XVI | XXXIII - XIV = XIX",
+    "text": "11 + 5 = 16 (XVI) va 33 - 14 = 19 (XIX)!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Rim raqamlarida hisoblang: XI + V",
+      "options": [
+        "XVI",
+        "XV",
+        "XVII",
+        "XIV"
+      ],
+      "correctIndex": 0,
+      "explanation": "XI = 11, V = 5; 11 + 5 = 16 (XVI)."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XXVII - XIV",
+      "options": [
+        "XII",
+        "XIII",
+        "XIV",
+        "XI"
+      ],
+      "correctIndex": 1,
+      "explanation": "XXVII = 27, XIV = 14; 27 - 14 = 13 (XIII)."
+    },
+    {
+      "text": "Og'zaki hisoblang: 39 + 25",
+      "options": [
+        "63",
+        "65",
+        "64",
+        "62"
+      ],
+      "correctIndex": 2,
+      "explanation": "39 + 1 = 40, 40 + 24 = 64."
+    }
+  ],
+  "test": [
+    {
+      "text": "Rim raqamlarida hisoblang: XI + V",
+      "options": [
+        "XVI",
+        "XV",
+        "XVII",
+        "XIV"
+      ],
+      "correctIndex": 0,
+      "explanation": "11 + 5 = 16 (XVI)."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XVIII + XVIII",
+      "options": [
+        "XXXV",
+        "XXXVI",
+        "XXXVII",
+        "XXXIV"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 + 18 = 36 (XXXVI)."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XXXIII - XIV",
+      "options": [
+        "XVIII",
+        "XX",
+        "XIX",
+        "XVII"
+      ],
+      "correctIndex": 2,
+      "explanation": "33 - 14 = 19 (XIX)."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XXVII - XIV",
+      "options": [
+        "XII",
+        "XIV",
+        "XI",
+        "XIII"
+      ],
+      "correctIndex": 3,
+      "explanation": "27 - 14 = 13 (XIII)."
+    },
+    {
+      "text": "Og'zaki hisoblang: 49 + 35",
+      "options": [
+        "84",
+        "83",
+        "85",
+        "82"
+      ],
+      "correctIndex": 0,
+      "explanation": "49 + 1 = 50, 50 + 34 = 84."
+    },
+    {
+      "text": "Og'zaki hisoblang: 60 - 28",
+      "options": [
+        "31",
+        "32",
+        "33",
+        "30"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 20 = 40, 40 - 8 = 32."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XV + XV",
+      "options": [
+        "XXV",
+        "XXXV",
+        "XXX",
+        "XX"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 + 15 = 30 (XXX)."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XXV - XI",
+      "options": [
+        "XIII",
+        "XV",
+        "XII",
+        "XIV"
+      ],
+      "correctIndex": 3,
+      "explanation": "25 - 11 = 14 (XIV)."
+    },
+    {
+      "text": "Tenglamani yeching: x + 19 = 50",
+      "options": [
+        "31",
+        "30",
+        "32",
+        "29"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 50 - 19 = 31."
+    },
+    {
+      "text": "Tenglamani yeching: 70 - y = 34",
+      "options": [
+        "35",
+        "36",
+        "37",
+        "34"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 70 - 34 = 36."
+    },
+    {
+      "text": "Taqqoslang: XI + V va XVI",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "XI + V = 16 va XVI = 16. Ular teng: XVI = XVI."
+    },
+    {
+      "text": "Taqqoslang: XXVII - XIV va XV",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "XXVII - XIV = 13 (XIII). 13 < 15."
+    },
+    {
+      "text": "Avtobus 1-bekatdan 29 yo'lovchi, 2-bekatdan 18 yo'lovchi oldi. Jami nechta yo'lovchi bo'ldi?",
+      "options": [
+        "47",
+        "46",
+        "48",
+        "45"
+      ],
+      "correctIndex": 0,
+      "explanation": "29 + 18 = 47 nafar."
+    },
+    {
+      "text": "Og'zaki hisoblang: 58 + 26",
+      "options": [
+        "83",
+        "84",
+        "85",
+        "82"
+      ],
+      "correctIndex": 1,
+      "explanation": "58 + 2 = 60, 60 + 24 = 84."
+    },
+    {
+      "text": "Og'zaki hisoblang: 80 - 43",
+      "options": [
+        "36",
+        "38",
+        "37",
+        "35"
+      ],
+      "correctIndex": 2,
+      "explanation": "80 - 40 = 40, 40 - 3 = 37."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XII + VIII",
+      "options": [
+        "XIX",
+        "XXI",
+        "XVIII",
+        "XX"
+      ],
+      "correctIndex": 3,
+      "explanation": "12 + 8 = 20 (XX)."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 44 + * = 70?",
+      "options": [
+        "26",
+        "25",
+        "27",
+        "24"
+      ],
+      "correctIndex": 0,
+      "explanation": "70 - 44 = 26."
+    },
+    {
+      "text": "Og'zaki hisoblang: 67 + 19",
+      "options": [
+        "85",
+        "86",
+        "87",
+        "84"
+      ],
+      "correctIndex": 1,
+      "explanation": "67 + 20 - 1 = 86."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XL - X",
+      "options": [
+        "XX",
+        "XXXV",
+        "XXX",
+        "L"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 - 10 = 30 (XXX)."
+    },
+    {
+      "text": "Og'zaki hisoblang: 90 - 56",
+      "options": [
+        "33",
+        "35",
+        "32",
+        "34"
+      ],
+      "correctIndex": 3,
+      "explanation": "90 - 50 = 40, 40 - 6 = 34."
+    }
+  ]
+}

@@ -165,3 +165,133 @@ export function saveLessonFile(part: 1 | 2 | 3 | 4, lessonNum: number, data: any
     } catch (_) {}
   }
 }
+
+export interface RawGrade2Question extends RawQuestion {
+  meta?: {
+    seq?: number[];
+    next?: number;
+  };
+}
+
+export interface FinalGrade2Question extends FinalQuestion {
+  meta?: {
+    seq?: number[];
+    next?: number;
+  };
+}
+
+export interface Grade2UnitDef {
+  order: number;
+  bookNumber: number | null;
+  unitType: 'LESSON' | 'FINAL_LESSON' | 'PRACTICE';
+  title: string;
+  emoji: string;
+  crossTopic: string | null;
+  shortDesc: string;
+  intro: string;
+  keyPoints: string[];
+  miniExample: {
+    emojis: string;
+    text: string;
+  };
+  xpReward: number;
+  coinReward: number;
+  estMinutes: number;
+  practice: RawGrade2Question[];
+  test: RawGrade2Question[];
+}
+
+export function buildGrade2UnitSeed(def: Grade2UnitDef): any {
+  if (def.test.length !== 20) {
+    throw new Error(`Unit ${def.order} must have exactly 20 test questions, got ${def.test.length}`);
+  }
+
+  // Desired distribution for 20 questions: 5 of each (0, 1, 2, 3)
+  const targetIndices = [
+    0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3
+  ];
+
+  const finalTest: FinalGrade2Question[] = [];
+  for (let i = 0; i < def.test.length; i++) {
+    const raw = def.test[i];
+    const { correctAnswer, distractors } = extractAnswers(raw);
+    const targetIdx = targetIndices[i];
+    const options: string[] = ['', '', '', ''];
+    options[targetIdx] = correctAnswer;
+    let distractorIdx = 0;
+    for (let slot = 0; slot < 4; slot++) {
+      if (slot !== targetIdx) {
+        options[slot] = distractors[distractorIdx++];
+      }
+    }
+
+    finalTest.push({
+      text: raw.text,
+      options,
+      correctIndex: targetIdx,
+      explanation: raw.explanation,
+      ...(raw.meta ? { meta: raw.meta } : {}),
+    });
+  }
+
+  // Practice questions (typically 3-5)
+  const finalPractice: FinalGrade2Question[] = [];
+  const practiceTargets = [0, 1, 2, 3, 0];
+  for (let i = 0; i < def.practice.length; i++) {
+    const raw = def.practice[i];
+    const { correctAnswer, distractors } = extractAnswers(raw);
+    const targetIdx = practiceTargets[i % practiceTargets.length];
+    const options: string[] = ['', '', '', ''];
+    options[targetIdx] = correctAnswer;
+    let distractorIdx = 0;
+    for (let slot = 0; slot < 4; slot++) {
+      if (slot !== targetIdx) {
+        options[slot] = distractors[distractorIdx++];
+      }
+    }
+    finalPractice.push({
+      text: raw.text,
+      options,
+      correctIndex: targetIdx,
+      explanation: raw.explanation,
+      ...(raw.meta ? { meta: raw.meta } : {}),
+    });
+  }
+
+  return {
+    order: def.order,
+    bookNumber: def.bookNumber,
+    unitType: def.unitType,
+    title: def.title,
+    emoji: def.emoji,
+    crossTopic: def.crossTopic,
+    shortDesc: def.shortDesc,
+    intro: def.intro,
+    keyPoints: def.keyPoints,
+    miniExample: def.miniExample,
+    xpReward: def.xpReward,
+    coinReward: def.coinReward,
+    estMinutes: def.estMinutes,
+    practice: finalPractice,
+    test: finalTest,
+  };
+}
+
+export function saveGrade2UnitFile(order: number, data: any) {
+  const padOrder = order < 10 ? `0${order}` : `${order}`;
+  const filename = `unit-${padOrder}.json`;
+
+  const dirs = [
+    path.resolve(__dirname, `../seed/math/grade2/part1`),
+    path.resolve(__dirname, `../../seed/math/grade2/part1`),
+    path.resolve('/Users/mirzobek/Downloads/mathcity-backend/seed/math/grade2/part1'),
+  ];
+
+  const jsonStr = JSON.stringify(data, null, 2);
+  for (const d of dirs) {
+    try {
+      fs.mkdirSync(d, { recursive: true });
+      fs.writeFileSync(path.join(d, filename), jsonStr, 'utf-8');
+    } catch (_) {}
+  }
+}

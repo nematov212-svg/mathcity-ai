@@ -1,0 +1,279 @@
+{
+  "order": 43,
+  "bookNumber": 41,
+  "unitType": "LESSON",
+  "title": "Amaliy topshiriqlar",
+  "emoji": "🏅",
+  "crossTopic": "Intellektual marafon",
+  "shortDesc": "Ko'p amalli ifodalar va qavsli amallar tartibi",
+  "intro": "Marafonda g'olib bo'lish uchun intizom va tartib kerak. Matematikada amallar tartibi qoidasiga rioya qilib, murakkab ifodalarni yechamiz: avval qavs ichi, so'ngra ketma-ket qo'shish va ayirish!",
+  "keyPoints": [
+    "Qavsli ifodalarda birinchi navbatda qavs ichidagi amal bajariladi.",
+    "Qavssiz ifodalarda amallar chapdan o'ngga qarab tartib bilan bajariladi.",
+    "Amallarni to'g'ri ketma-ketlikda bajarish aniq natijaga olib keladi."
+  ],
+  "miniExample": {
+    "emojis": "🏅 100 - (34 + 26) = 100 - 60 = 40",
+    "text": "Avval qavs: 34 + 26 = 60, so'ng 100 - 60 = 40 medal!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 100 - (34 + 26)",
+      "options": [
+        "40",
+        "39",
+        "41",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "34 + 26 = 60, 100 - 60 = 40."
+    },
+    {
+      "text": "Hisoblang: (45 + 25) - (18 + 12)",
+      "options": [
+        "39",
+        "40",
+        "41",
+        "30"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 30 = 40."
+    },
+    {
+      "text": "Hisoblang: 65 - 25 + 18",
+      "options": [
+        "57",
+        "59",
+        "58",
+        "56"
+      ],
+      "correctIndex": 2,
+      "explanation": "65 - 25 = 40, 40 + 18 = 58."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 100 - (34 + 26)",
+      "options": [
+        "40",
+        "39",
+        "41",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "34 + 26 = 60, 100 - 60 = 40."
+    },
+    {
+      "text": "Hisoblang: (45 + 25) - (18 + 12)",
+      "options": [
+        "39",
+        "40",
+        "41",
+        "30"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 30 = 40."
+    },
+    {
+      "text": "Hisoblang: 65 - 25 + 18",
+      "options": [
+        "57",
+        "59",
+        "58",
+        "56"
+      ],
+      "correctIndex": 2,
+      "explanation": "65 - 25 = 40, 40 + 18 = 58."
+    },
+    {
+      "text": "Hisoblang: 80 - (28 + 22)",
+      "options": [
+        "29",
+        "31",
+        "28",
+        "30"
+      ],
+      "correctIndex": 3,
+      "explanation": "28 + 22 = 50, 80 - 50 = 30."
+    },
+    {
+      "text": "Musobaqada 1-o'rin 50 ball, 2-o'rin 30 ball oldi. Hakamlar jarima sifatida 15 ball ayirdi. Jami nechta ball qoldi?",
+      "options": [
+        "65",
+        "64",
+        "66",
+        "63"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 + 30 = 80, 80 - 15 = 65 ball."
+    },
+    {
+      "text": "Hisoblang: (56 - 16) + (38 - 18)",
+      "options": [
+        "59",
+        "60",
+        "61",
+        "58"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 + 20 = 60."
+    },
+    {
+      "text": "Hisoblang: 90 - (42 + 18)",
+      "options": [
+        "29",
+        "31",
+        "30",
+        "28"
+      ],
+      "correctIndex": 2,
+      "explanation": "42 + 18 = 60, 90 - 60 = 30."
+    },
+    {
+      "text": "Hisoblang: 74 - 34 + 27",
+      "options": [
+        "66",
+        "68",
+        "65",
+        "67"
+      ],
+      "correctIndex": 3,
+      "explanation": "74 - 34 = 40, 40 + 27 = 67."
+    },
+    {
+      "text": "Tenglamani yeching: x + 40 = 70",
+      "options": [
+        "30",
+        "29",
+        "31",
+        "28"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 70 - 40 = 30."
+    },
+    {
+      "text": "Tenglamani yeching: y - 50 = 25",
+      "options": [
+        "74",
+        "75",
+        "76",
+        "73"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 25 + 50 = 75."
+    },
+    {
+      "text": "Taqqoslang: 100 - (34 + 26) va 40",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "100 - 60 = 40. Ular teng: 40 = 40."
+    },
+    {
+      "text": "Taqqoslang: 65 - 25 + 18 va 60",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "65 - 25 + 18 = 58. 58 < 60."
+    },
+    {
+      "text": "Marafonchi 1-soatda 24 km, 2-soatda 18 km yugurdi. U 60 km masofani bosib o'tishi uchun yana necha km yugurishi kerak?",
+      "options": [
+        "18",
+        "17",
+        "19",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 - (24 + 18) = 60 - 42 = 18 km."
+    },
+    {
+      "text": "Hisoblang: (68 + 12) - (25 + 25)",
+      "options": [
+        "29",
+        "30",
+        "31",
+        "28"
+      ],
+      "correctIndex": 1,
+      "explanation": "80 - 50 = 30."
+    },
+    {
+      "text": "Hisoblang: 85 - 35 + 22",
+      "options": [
+        "71",
+        "73",
+        "72",
+        "70"
+      ],
+      "correctIndex": 2,
+      "explanation": "85 - 35 = 50, 50 + 22 = 72."
+    },
+    {
+      "text": "Hisoblang: 70 - (17 + 23)",
+      "options": [
+        "29",
+        "31",
+        "28",
+        "30"
+      ],
+      "correctIndex": 3,
+      "explanation": "17 + 23 = 40, 70 - 40 = 30."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: (40 + 20) - * = 35?",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "23"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 - 35 = 25."
+    },
+    {
+      "text": "Hisoblang: (92 - 42) + (18 - 8)",
+      "options": [
+        "59",
+        "60",
+        "61",
+        "58"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 + 10 = 60."
+    },
+    {
+      "text": "Hisoblang: 100 - (48 + 22)",
+      "options": [
+        "29",
+        "31",
+        "30",
+        "28"
+      ],
+      "correctIndex": 2,
+      "explanation": "48 + 22 = 70, 100 - 70 = 30."
+    },
+    {
+      "text": "Hisoblang: 58 - 18 + 36",
+      "options": [
+        "75",
+        "77",
+        "74",
+        "76"
+      ],
+      "correctIndex": 3,
+      "explanation": "58 - 18 = 40, 40 + 36 = 76."
+    }
+  ]
+}

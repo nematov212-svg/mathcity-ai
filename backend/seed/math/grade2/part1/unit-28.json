@@ -1,0 +1,279 @@
+{
+  "order": 28,
+  "bookNumber": 27,
+  "unitType": "LESSON",
+  "title": "Ustun ko‘rinishida qo‘shish va ayirish",
+  "emoji": "🤖",
+  "crossTopic": "Robotlar",
+  "shortDesc": "Amallarni ustun shaklida xatolarsiz yozish va hisoblash qoidalari",
+  "intro": "Robotlar aniq qoidalar asosida ishlaydi. Ustun ko'rinishida hisoblashda ham qat'iy qoida bor: birliklar tagiga birliklar, o'nliklar tagiga o'nliklar yoziladi!",
+  "keyPoints": [
+    "Qo'shish va ayirish har doim birliklar xonasidan boshlanadi.",
+    "Birliklar birliklarga qo'shiladi yoki ayiriladi.",
+    "O'nliklar o'nliklarga qo'shiladi yoki ayiriladi."
+  ],
+  "miniExample": {
+    "emojis": "🤖 34 + 25 = 59 | 68 - 24 = 44",
+    "text": "Birliklar tagiga birliklar: 4 + 5 = 9, 3 + 2 = 5 o'nlik. Natija: 59!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Ustun shaklida hisoblang: 34 + 25",
+      "options": [
+        "59",
+        "58",
+        "60",
+        "49"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 5 = 9, 3 + 2 = 5. Natija: 59."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 68 - 24",
+      "options": [
+        "43",
+        "44",
+        "45",
+        "42"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 - 4 = 4, 6 - 2 = 4. Natija: 44."
+    },
+    {
+      "text": "Robotlar musobaqasida 1-robot 45 ball, 2-robot 32 ball to'pladi. Jami ballar nechta?",
+      "options": [
+        "76",
+        "78",
+        "77",
+        "75"
+      ],
+      "correctIndex": 2,
+      "explanation": "45 + 32 = 77 ball."
+    }
+  ],
+  "test": [
+    {
+      "text": "Ustun shaklida hisoblang: 34 + 25",
+      "options": [
+        "59",
+        "58",
+        "60",
+        "49"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 5 = 9, 3 + 2 = 5. Natija: 59."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 68 - 24",
+      "options": [
+        "43",
+        "44",
+        "45",
+        "42"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 - 4 = 4, 6 - 2 = 4. Natija: 44."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 42 + 36",
+      "options": [
+        "77",
+        "79",
+        "78",
+        "76"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 + 6 = 8, 4 + 3 = 7. Natija: 78."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 79 - 35",
+      "options": [
+        "43",
+        "45",
+        "42",
+        "44"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 - 5 = 4, 7 - 3 = 4. Natija: 44."
+    },
+    {
+      "text": "Robototexnika to'garagida 24 ta qiz va 35 ta o'g'il bola qatnashmoqda. Jami o'quvchilar nechta?",
+      "options": [
+        "59",
+        "58",
+        "60",
+        "57"
+      ],
+      "correctIndex": 0,
+      "explanation": "24 + 35 = 59 nafar."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 53 + 24",
+      "options": [
+        "76",
+        "77",
+        "78",
+        "75"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 + 4 = 7, 5 + 2 = 7. Natija: 77."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 87 - 43",
+      "options": [
+        "43",
+        "45",
+        "44",
+        "42"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 - 3 = 4, 8 - 4 = 4. Natija: 44."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 31 + 47",
+      "options": [
+        "77",
+        "79",
+        "76",
+        "78"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 + 7 = 8, 3 + 4 = 7. Natija: 78."
+    },
+    {
+      "text": "Tenglamani yeching: x - 32 = 45",
+      "options": [
+        "77",
+        "76",
+        "78",
+        "75"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 45 + 32 = 77."
+    },
+    {
+      "text": "Tenglamani yeching: y + 23 = 68",
+      "options": [
+        "44",
+        "45",
+        "46",
+        "43"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 68 - 23 = 45."
+    },
+    {
+      "text": "Taqqoslang: 34 + 25 va 60",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "34 + 25 = 59. 59 < 60."
+    },
+    {
+      "text": "Taqqoslang: 68 - 24 va 22 + 22",
+      "options": [
+        ">",
+        "<",
+        "+",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "68 - 24 = 44 va 22 + 22 = 44. Ular teng: 44 = 44."
+    },
+    {
+      "text": "Fabrikada robot 56 ta detal yig'di, operator esa 31 ta detal yig'di. Jami detallar nechta?",
+      "options": [
+        "87",
+        "86",
+        "88",
+        "85"
+      ],
+      "correctIndex": 0,
+      "explanation": "56 + 31 = 87 ta detal."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 46 + 33",
+      "options": [
+        "78",
+        "79",
+        "80",
+        "77"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 3 = 9, 4 + 3 = 7. Natija: 79."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 98 - 56",
+      "options": [
+        "41",
+        "43",
+        "42",
+        "40"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 - 6 = 2, 9 - 5 = 4. Natija: 42."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 62 + 25",
+      "options": [
+        "86",
+        "88",
+        "85",
+        "87"
+      ],
+      "correctIndex": 3,
+      "explanation": "2 + 5 = 7, 6 + 2 = 8. Natija: 87."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 54 + * = 78?",
+      "options": [
+        "24",
+        "23",
+        "25",
+        "22"
+      ],
+      "correctIndex": 0,
+      "explanation": "78 - 54 = 24."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 76 - 42",
+      "options": [
+        "33",
+        "34",
+        "35",
+        "32"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 - 2 = 4, 7 - 4 = 3. Natija: 34."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 23 + 54",
+      "options": [
+        "76",
+        "78",
+        "77",
+        "75"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 + 4 = 7, 2 + 5 = 7. Natija: 77."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 89 - 67",
+      "options": [
+        "21",
+        "23",
+        "20",
+        "22"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 - 7 = 2, 8 - 6 = 2. Natija: 22."
+    }
+  ]
+}

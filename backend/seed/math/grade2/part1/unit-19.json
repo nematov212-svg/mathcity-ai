@@ -1,0 +1,279 @@
+{
+  "order": 19,
+  "bookNumber": null,
+  "unitType": "FINAL_LESSON",
+  "title": "Mavzu bo'yicha yakuniy dars",
+  "emoji": "🌍",
+  "crossTopic": "Men va tabiat",
+  "shortDesc": "II bob bo'yicha yakuniy mustahkamlash va test",
+  "intro": "II bobda ikki xonali sonlar, xona birliklari, yaxlit sonlar bilan qo'shish va ayirishni o'rgandik. Tabiatni asrash va bilimlarimizni sinovdan o'tkazamiz!",
+  "keyPoints": [
+    "1 o'nlik = 10 birlik, 1 yuzlik = 100 birlik.",
+    "Yaxlit o'nlikka to'ldirish: 21 + 39 = 60.",
+    "Yaxlit o'nlikdan ayirish: 30 - 7 = 23 va 50 - 22 = 28."
+  ],
+  "miniExample": {
+    "emojis": "🌍 30 - 7 = 23 | 21 + 39 = 60 | 50 - 22 = 28",
+    "text": "II bobdagi barcha asosiy amallarni mustahkamlaymiz!"
+  },
+  "xpReward": 130,
+  "coinReward": 15,
+  "estMinutes": 10,
+  "practice": [
+    {
+      "text": "Hisoblang: 30 - 6",
+      "options": [
+        "24",
+        "26",
+        "34",
+        "14"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 - 6 = 24."
+    },
+    {
+      "text": "Hisoblang: 21 + 39",
+      "options": [
+        "50",
+        "60",
+        "59",
+        "61"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 30 = 50, 1 + 9 = 10. 50 + 10 = 60."
+    },
+    {
+      "text": "Hisoblang: 50 - 22",
+      "options": [
+        "38",
+        "26",
+        "28",
+        "32"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 - 20 = 30, 30 - 2 = 28."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 30 - 6",
+      "options": [
+        "24",
+        "26",
+        "34",
+        "14"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 - 6 = 24."
+    },
+    {
+      "text": "Hisoblang: 21 + 39",
+      "options": [
+        "50",
+        "60",
+        "59",
+        "61"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 30 = 50, 1 + 9 = 10. 50 + 10 = 60."
+    },
+    {
+      "text": "Hisoblang: 50 - 22",
+      "options": [
+        "38",
+        "26",
+        "28",
+        "32"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 - 20 = 30, 30 - 2 = 28."
+    },
+    {
+      "text": "4 o'nlik va 8 birlikdan iborat son qaysi?",
+      "options": [
+        "84",
+        "40",
+        "80",
+        "48"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 o'nlik va 8 birlik = 48."
+    },
+    {
+      "text": "Hisoblang: 60 - 9",
+      "options": [
+        "51",
+        "59",
+        "49",
+        "52"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 - 9 = 51."
+    },
+    {
+      "text": "Hisoblang: 35 + 45",
+      "options": [
+        "70",
+        "80",
+        "75",
+        "85"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 40 = 70, 5 + 5 = 10. 70 + 10 = 80."
+    },
+    {
+      "text": "Hisoblang: 70 - 34",
+      "options": [
+        "46",
+        "34",
+        "36",
+        "44"
+      ],
+      "correctIndex": 2,
+      "explanation": "70 - 30 = 40, 40 - 4 = 36."
+    },
+    {
+      "text": "Qaysi juftlikdagi sonlar yig'indisi 50 ga teng?",
+      "options": [
+        "21 va 39",
+        "18 va 22",
+        "35 va 25",
+        "23 va 27"
+      ],
+      "correctIndex": 3,
+      "explanation": "23 + 27 = 50."
+    },
+    {
+      "text": "Tabiat burchagi uchun 40 tup gul ekish kerak edi. 17 tup ekildi. Yana nechta ekish kerak?",
+      "options": [
+        "23",
+        "21",
+        "27",
+        "33"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 - 17 = 23 ta."
+    },
+    {
+      "text": "Tenglamani yeching: x + 28 = 50",
+      "options": [
+        "32",
+        "22",
+        "24",
+        "18"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 50 - 28 = 22."
+    },
+    {
+      "text": "Tenglamani yeching: 60 - y = 25",
+      "options": [
+        "45",
+        "25",
+        "35",
+        "30"
+      ],
+      "correctIndex": 2,
+      "explanation": "y = 60 - 25 = 35."
+    },
+    {
+      "text": "Taqqoslang: 30 - 8 va 15 + 7",
+      "options": [
+        ">",
+        "<",
+        "+",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "30 - 8 = 22 va 15 + 7 = 22. Ular teng: 22 = 22."
+    },
+    {
+      "text": "Taqqoslang: 50 - 16 va 40 - 5",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 16 = 34, 40 - 5 = 35. 34 < 35."
+    },
+    {
+      "text": "Hisoblang: (50 - 20) - 7",
+      "options": [
+        "25",
+        "23",
+        "33",
+        "27"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 - 20 = 30, 30 - 7 = 23."
+    },
+    {
+      "text": "Bog'da 80 ta daraxt bor: 26 olma, 34 nok, qolgani olcha. Olcha nechta?",
+      "options": [
+        "18",
+        "22",
+        "20",
+        "24"
+      ],
+      "correctIndex": 2,
+      "explanation": "26 + 34 = 60, 80 - 60 = 20 ta olcha."
+    },
+    {
+      "text": "Hisoblang: 48 + 32",
+      "options": [
+        "70",
+        "78",
+        "82",
+        "80"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 + 30 = 70, 8 + 2 = 10. 70 + 10 = 80."
+    },
+    {
+      "text": "Hisoblang: 100 - 47",
+      "options": [
+        "53",
+        "63",
+        "57",
+        "43"
+      ],
+      "correctIndex": 0,
+      "explanation": "100 - 40 = 60, 60 - 7 = 53."
+    },
+    {
+      "text": "Hisoblang: 70 - 46",
+      "options": [
+        "34",
+        "24",
+        "26",
+        "36"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 40 = 30, 30 - 6 = 24."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: * + 36 = 60?",
+      "options": [
+        "34",
+        "26",
+        "24",
+        "36"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 - 36 = 24."
+    },
+    {
+      "text": "Yaxlit sondan ayirishda to'g'ri ifodani toping.",
+      "options": [
+        "50 - 23 = 37",
+        "50 - 23 = 26",
+        "50 - 23 = 33",
+        "50 - 23 = 27"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 20 = 30, 30 - 3 = 27."
+    }
+  ]
+}

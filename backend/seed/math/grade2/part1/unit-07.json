@@ -1,0 +1,279 @@
+{
+  "order": 7,
+  "bookNumber": 7,
+  "unitType": "LESSON",
+  "title": "Takrorlash",
+  "emoji": "🌿",
+  "crossTopic": "O‘simliklar",
+  "shortDesc": "O‘zaro teskari masalalar, xona qo‘shiluvchilari va mantiqiy misollar",
+  "intro": "O‘simliklar dunyosi xilma-xil va qiziqarli. Ushbu darsda o‘zaro teskari masalalarni tuzish, xona qo‘shiluvchilariga ajratish va mantiqiy bog‘lanishlarni takrorlaymiz.",
+  "keyPoints": [
+    "Berilgan masaladagi ma’lum va noma’lumlarning o‘rni almashsa, teskari masala hosil bo‘ladi.",
+    "Har qanday ikki xonali son o‘nlik va birliklar yig‘indisidir: 24 = 20 + 4.",
+    "Teng tomonli uchburchakning barcha tomonlari teng bo‘ladi."
+  ],
+  "miniExample": {
+    "emojis": "🌿 24 = 20 + 4 | P = 4 + 4 + 4 = 12 cm",
+    "text": "Teng tomonli uchburchakning tomoni 4 cm bo‘lsa, uning perimetri 12 cm: 4 + 4 + 4 = 12 cm!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "24 sonini xona qo‘shiluvchilari yig‘indisi ko‘rinishida yozing:",
+      "options": [
+        "20 + 4",
+        "10 + 14",
+        "22 + 2",
+        "20 + 14"
+      ],
+      "correctIndex": 0,
+      "explanation": "24 = 20 + 4."
+    },
+    {
+      "text": "Teng tomonli uchburchakning tomoni 4 cm. Uning perimetri qancha?",
+      "options": [
+        "8 cm",
+        "12 cm",
+        "16 cm",
+        "10 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 + 4 + 4 = 12 cm."
+    },
+    {
+      "text": "Agar tomoni 4 cm bo‘lgan uchburchak tomoni 2 cm ga kamaysa, perimetri necha cm ga kamayadi?",
+      "options": [
+        "2 cm ga",
+        "4 cm ga",
+        "6 cm ga (2 + 2 + 2 = 6)",
+        "8 cm ga"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 ta tomonning har biri 2 cm ga kamaysa, perimetr 2 × 3 = 6 cm ga kamayadi."
+    }
+  ],
+  "test": [
+    {
+      "text": "24 sonini xona qo‘shiluvchilari yig‘indisiga ajrating:",
+      "options": [
+        "20 + 4",
+        "20 + 14",
+        "10 + 14",
+        "22 + 2"
+      ],
+      "correctIndex": 0,
+      "explanation": "24 = 20 + 4."
+    },
+    {
+      "text": "67 sonining xona qo‘shiluvchilari qaysilar?",
+      "options": [
+        "50 va 17",
+        "60 va 7",
+        "60 va 17",
+        "6 va 7"
+      ],
+      "correctIndex": 1,
+      "explanation": "67 = 60 + 7."
+    },
+    {
+      "text": "Teng tomonli uchburchakning tomoni 4 cm bo‘lsa, perimetri nechaga teng?",
+      "options": [
+        "10 cm",
+        "14 cm",
+        "12 cm",
+        "16 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 4 + 4 = 12 cm."
+    },
+    {
+      "text": "Ushbu uchburchak tomoni 2 cm ga kamaytirilsa, yangi perimetr necha cm bo‘ladi?",
+      "options": [
+        "8 cm",
+        "4 cm",
+        "10 cm",
+        "6 cm (2 + 2 + 2 = 6)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Yangi tomon: 4 - 2 = 2 cm. Yangi perimetr: 2 + 2 + 2 = 6 cm."
+    },
+    {
+      "text": "Shunda perimetr necha santimetrga kamaydi?",
+      "options": [
+        "6 cm ga (12 - 6 = 6)",
+        "4 cm ga",
+        "2 cm ga",
+        "8 cm ga"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 - 6 = 6 cm ga kamaydi."
+    },
+    {
+      "text": "2, 5, 7 sonlaridan qaysi to‘g‘ri tenglikni tuzish mumkin?",
+      "options": [
+        "2 + 7 = 5",
+        "2 + 5 = 7",
+        "5 - 2 = 7",
+        "7 + 2 = 5"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 + 5 = 7 to‘g‘ri arifmetik tenglik."
+    },
+    {
+      "text": "Teskari masala nima?",
+      "options": [
+        "Yechimi yo‘q masala",
+        "Faqat ayirish amali qatnashgan masala",
+        "Boshlang‘ich masaladagi ma’lum va noma’lumlar o‘rni almashgan masala",
+        "Noto‘g‘ri tuzilgan masala"
+      ],
+      "correctIndex": 2,
+      "explanation": "Boshlang‘ich masalaning javobi ma’lumga, berilgan sonlardan biri noma’lumga aylansa, teskari masala bo‘ladi."
+    },
+    {
+      "text": "Masala: 'Bog‘da 15 ta olma daraxti va 10 ta nok daraxti bor. Jami nechta daraxt bor? (25 ta)'. Ushbu masalaga qaysi biri teskari masala bo‘ladi?",
+      "options": [
+        "Bog‘da 15 ta olma va 20 ta nok bor",
+        "Olma daraxtlari nokdan nechtaga ko‘p?",
+        "Bog‘da jami necha xil daraxt bor?",
+        "Bog‘da 25 ta daraxt bor. Shundan 15 tasi olma bo‘lsa, noklar nechta?"
+      ],
+      "correctIndex": 3,
+      "explanation": "Jami (25) ma’lum qilinib, nok daraxtlari soni so‘ralsa, bu teskari masaladir."
+    },
+    {
+      "text": "Teng tomonli uchburchakning perimetri 15 cm. Bitta tomoni uzunligini toping:",
+      "options": [
+        "5 cm",
+        "4 cm",
+        "6 cm",
+        "3 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 + 5 + 5 = 15 cm, demak tomoni 5 cm."
+    },
+    {
+      "text": "7, 7, 14 sonlaridan qaysi to‘g‘ri tenglik hosil bo‘ladi?",
+      "options": [
+        "14 + 7 = 7",
+        "7 + 7 = 14",
+        "7 - 7 = 14",
+        "14 - 0 = 7"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 7 = 14."
+    },
+    {
+      "text": "83 sonini xona qo‘shiluvchilariga ajrating:",
+      "options": [
+        "70 + 13",
+        "80 + 13",
+        "80 + 3",
+        "8 + 3"
+      ],
+      "correctIndex": 2,
+      "explanation": "83 = 80 + 3."
+    },
+    {
+      "text": "Jadvaldagi bo‘sh katakni to‘ldiring: qo‘shiluvchi 30, yig‘indi 48. Ikkinchi qo‘shiluvchi nechaga teng?",
+      "options": [
+        "16",
+        "17",
+        "19",
+        "18"
+      ],
+      "correctIndex": 3,
+      "explanation": "48 - 30 = 18."
+    },
+    {
+      "text": "Dala chetida 14 tup terak va 16 tup chinor ekilgan. Dala chetida jami nechta daraxt bor?",
+      "options": [
+        "30 tup",
+        "28 tup",
+        "32 tup",
+        "20 tup"
+      ],
+      "correctIndex": 0,
+      "explanation": "14 + 16 = 30 tup."
+    },
+    {
+      "text": "Ushbu masalaga teskari masala tuzing va uning javobini toping:",
+      "options": [
+        "Jami 40 tup daraxt ekildi",
+        "Jami 30 tup daraxtdan 14 tasi terak, chinorlar 16 tup",
+        "Teraklar chinorlardan 5 taga kam",
+        "Daraxtlar soni noma’lum"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 - 14 = 16 tup chinor — to‘g‘ri teskari masala."
+    },
+    {
+      "text": "Teng tomonli uchburchakning tomoni 8 cm. Agar har bir tomoni 3 cm ga uzaytirilsa, perimetr qanchaga ortadi?",
+      "options": [
+        "3 cm ga",
+        "6 cm ga",
+        "9 cm ga (3 + 3 + 3 = 9)",
+        "8 cm ga"
+      ],
+      "correctIndex": 2,
+      "explanation": "Har biri 3 cm ga oshsa: 3 × 3 = 9 cm ga ortadi."
+    },
+    {
+      "text": "95 sonida nechta o‘nlik va nechta birlik bor?",
+      "options": [
+        "5 ta o‘nlik va 9 ta birlik",
+        "95 ta birlik",
+        "9 ta birlik",
+        "9 ta o‘nlik va 5 ta birlik"
+      ],
+      "correctIndex": 3,
+      "explanation": "95 = 9 o‘nlik va 5 birlik."
+    },
+    {
+      "text": "Hisoblang: (30 + 20) - (15 + 15)",
+      "options": [
+        "20",
+        "10",
+        "30",
+        "0"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 30 = 20."
+    },
+    {
+      "text": "2, 5, 7 sonlari yordamida ikkita qo‘shish va ikkita ayirish amalini tuzish mumkinmi?",
+      "options": [
+        "Yo‘q, faqat 1 ta",
+        "Ha: 2+5=7, 5+2=7, 7-2=5, 7-5=2",
+        "Faqat ayirish mumkin",
+        "Iloji yo‘q"
+      ],
+      "correctIndex": 1,
+      "explanation": "Uchta o‘zaro bog‘liq sondan 4 ta tenglik tuziladi."
+    },
+    {
+      "text": "Maktab tajriba maydonchasida 35 tup pomidor va 25 tup qalampir ko‘chati o‘stirildi. O‘quvchilar ushbu maydonchaga jami necha tup ko‘chat ekishgan va bunga teskari masalada qalampirlar soni qanday topiladi?",
+      "options": [
+        "Jami 50 tup; Teskari masalada: 50 - 25 = 25 tup",
+        "Jami 70 tup; Teskari masalada: 70 - 35 = 35 tup",
+        "Jami 60 tup; Teskari masalada: 60 - 35 = 25 tup",
+        "Jami 60 tup; Teskari masalada: 60 + 35 = 95 tup"
+      ],
+      "correctIndex": 2,
+      "explanation": "35 + 25 = 60 tup ko‘chat. Teskari masalada: 60 - 35 = 25 tup qalampir."
+    },
+    {
+      "text": "Dorivor o‘simliklar to‘plovchi o‘quvchilar 18 kg moychechak va undan 6 kg kam kiyiko‘t yig‘ishdi. Ular jami necha kg dorivor o‘simlik to‘plashgan?",
+      "options": [
+        "24 kg",
+        "28 kg",
+        "36 kg",
+        "30 kg (18 + 12 = 30)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kiyiko‘t: 18 - 6 = 12 kg. Jami: 18 + 12 = 30 kg."
+    }
+  ]
+}

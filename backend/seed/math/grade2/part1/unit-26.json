@@ -1,0 +1,280 @@
+{
+  "order": 26,
+  "bookNumber": 26,
+  "unitType": "LESSON",
+  "title": "Sonlarni qo‘shish (28 + 14)",
+  "emoji": "📱",
+  "crossTopic": "Gadjetlar",
+  "shortDesc": "Ikki xonali sonlarni xonadan o'tib qo'shish usuli",
+  "intro": "Zamonaviy gadjetlar va dasturlar orqali murakkab hisoblashlar bir zumda bajariladi. Biz ham 28 + 14 amalini qulay qismlarga ajratib o'rganamiz: 28 + 10 = 38, so'ng 38 + 4 = 42!",
+  "keyPoints": [
+    "1-qadam: 14 sonini o'nlik va birliklarga ajratamiz: 10 va 4.",
+    "2-qadam: Avval o'nlikni qo'shamiz: 28 + 10 = 38.",
+    "3-qadam: Chiqqan songa birlikni qo'shamiz: 38 + 4 = 42.",
+    "Boshqa usul: 28 + 2 + 12 = 30 + 12 = 42."
+  ],
+  "miniExample": {
+    "emojis": "📱 28 + 14 = (28 + 10) + 4 = 42",
+    "text": "28 ga 14 ni qo'shish: 28 + 10 = 38, so'ng 38 + 4 = 42!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 28 + 14",
+      "options": [
+        "42",
+        "41",
+        "43",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "28 + 10 = 38, 38 + 4 = 42."
+    },
+    {
+      "text": "Hisoblang: 37 + 25",
+      "options": [
+        "61",
+        "62",
+        "63",
+        "60"
+      ],
+      "correctIndex": 1,
+      "explanation": "37 + 20 = 57, 57 + 5 = 62."
+    },
+    {
+      "text": "Do'konda 28 ta telefon va 14 ta planshet sotildi. Jami nechta gadjet sotildi?",
+      "options": [
+        "41",
+        "43",
+        "42",
+        "40"
+      ],
+      "correctIndex": 2,
+      "explanation": "28 + 14 = 42 ta gadjet."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 28 + 14",
+      "options": [
+        "42",
+        "41",
+        "43",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "28 + 10 = 38, 38 + 4 = 42."
+    },
+    {
+      "text": "Hisoblang: 36 + 18",
+      "options": [
+        "53",
+        "54",
+        "55",
+        "52"
+      ],
+      "correctIndex": 1,
+      "explanation": "36 + 10 = 46, 46 + 8 = 54."
+    },
+    {
+      "text": "Hisoblang: 47 + 25",
+      "options": [
+        "71",
+        "73",
+        "72",
+        "70"
+      ],
+      "correctIndex": 2,
+      "explanation": "47 + 20 = 67, 67 + 5 = 72."
+    },
+    {
+      "text": "Hisoblang: 58 + 16",
+      "options": [
+        "73",
+        "75",
+        "72",
+        "74"
+      ],
+      "correctIndex": 3,
+      "explanation": "58 + 10 = 68, 68 + 6 = 74."
+    },
+    {
+      "text": "Servis markazida 29 ta smartfon va 15 ta noutbuk ta'mirlandi. Jami qurilmalar nechta?",
+      "options": [
+        "44",
+        "43",
+        "45",
+        "42"
+      ],
+      "correctIndex": 0,
+      "explanation": "29 + 15 = 44 ta qurilma."
+    },
+    {
+      "text": "Hisoblang: 65 + 17",
+      "options": [
+        "81",
+        "82",
+        "83",
+        "80"
+      ],
+      "correctIndex": 1,
+      "explanation": "65 + 10 = 75, 75 + 7 = 82."
+    },
+    {
+      "text": "Hisoblang: 48 + 26",
+      "options": [
+        "73",
+        "75",
+        "74",
+        "72"
+      ],
+      "correctIndex": 2,
+      "explanation": "48 + 20 = 68, 68 + 6 = 74."
+    },
+    {
+      "text": "Hisoblang: 39 + 33",
+      "options": [
+        "71",
+        "73",
+        "70",
+        "72"
+      ],
+      "correctIndex": 3,
+      "explanation": "39 + 30 = 69, 69 + 3 = 72."
+    },
+    {
+      "text": "Tenglamani yeching: x - 14 = 28",
+      "options": [
+        "42",
+        "41",
+        "43",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 28 + 14 = 42."
+    },
+    {
+      "text": "Tenglamani yeching: y - 18 = 36",
+      "options": [
+        "53",
+        "54",
+        "55",
+        "52"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 36 + 18 = 54."
+    },
+    {
+      "text": "Taqqoslang: 28 + 14 va 30 + 12",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "28 + 14 = 42 va 30 + 12 = 42. Ular teng: 42 = 42."
+    },
+    {
+      "text": "Taqqoslang: 37 + 16 va 55",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "37 + 16 = 53. 53 < 55."
+    },
+    {
+      "text": "Do'konda bir kunda 38 ta aqlli soat va 24 ta quloqchin sotildi. Jami nechta aksessuar sotildi?",
+      "options": [
+        "62",
+        "61",
+        "63",
+        "60"
+      ],
+      "correctIndex": 0,
+      "explanation": "38 + 24 = 62 ta aksessuar."
+    },
+    {
+      "text": "Hisoblang: 56 + 28",
+      "options": [
+        "83",
+        "84",
+        "85",
+        "82"
+      ],
+      "correctIndex": 1,
+      "explanation": "56 + 20 = 76, 76 + 8 = 84."
+    },
+    {
+      "text": "Hisoblang: 27 + 36",
+      "options": [
+        "62",
+        "64",
+        "63",
+        "61"
+      ],
+      "correctIndex": 2,
+      "explanation": "27 + 30 = 57, 57 + 6 = 63."
+    },
+    {
+      "text": "Hisoblang: 49 + 17",
+      "options": [
+        "65",
+        "67",
+        "64",
+        "66"
+      ],
+      "correctIndex": 3,
+      "explanation": "49 + 10 = 59, 59 + 7 = 66."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 28 + * = 45?",
+      "options": [
+        "17",
+        "16",
+        "18",
+        "15"
+      ],
+      "correctIndex": 0,
+      "explanation": "45 - 28 = 17."
+    },
+    {
+      "text": "Hisoblang: 67 + 25",
+      "options": [
+        "91",
+        "92",
+        "93",
+        "90"
+      ],
+      "correctIndex": 1,
+      "explanation": "67 + 20 = 87, 87 + 5 = 92."
+    },
+    {
+      "text": "Hisoblang: 19 + 45",
+      "options": [
+        "63",
+        "65",
+        "64",
+        "62"
+      ],
+      "correctIndex": 2,
+      "explanation": "19 + 40 = 59, 59 + 5 = 64."
+    },
+    {
+      "text": "Hisoblang: 38 + 34",
+      "options": [
+        "71",
+        "73",
+        "70",
+        "72"
+      ],
+      "correctIndex": 3,
+      "explanation": "38 + 30 = 68, 68 + 4 = 72."
+    }
+  ]
+}

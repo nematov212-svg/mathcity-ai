@@ -150,6 +150,42 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
         ];
         _isLoading = false;
       });
+    } else if (_selectedGrade == 2) {
+      setState(() {
+        _modules = [
+          ModuleModel(
+            id: 'module-g2-p1',
+            grade: 2,
+            subject: 'Matematika',
+            part: 1,
+            title: 'Matematika · 1-qism',
+            orderIndex: 1,
+            comingSoon: false,
+            lessonCount: 44,
+            questionCount: 880,
+            totalMinutes: 318,
+            percent: 0,
+            earnedXp: 0,
+            totalXp: 4095,
+          ),
+          ModuleModel(
+            id: 'module-g2-p2',
+            grade: 2,
+            subject: 'Matematika',
+            part: 2,
+            title: 'Matematika · 2-qism',
+            orderIndex: 2,
+            comingSoon: true,
+            lessonCount: 0,
+            questionCount: 0,
+            totalMinutes: 0,
+            percent: 0,
+            earnedXp: 0,
+            totalXp: 0,
+          ),
+        ];
+        _isLoading = false;
+      });
     } else {
       setState(() {
         _modules = [

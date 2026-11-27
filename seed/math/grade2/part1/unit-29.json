@@ -1,0 +1,279 @@
+{
+  "order": 29,
+  "bookNumber": 28,
+  "unitType": "LESSON",
+  "title": "Sonlarni ayirish (43 - 16)",
+  "emoji": "🎨",
+  "crossTopic": "San'at",
+  "shortDesc": "Ikki xonali sondan ikki xonali sonni xonadan o'tib ayirish",
+  "intro": "San'atkor ranglarni aralashtirib ajoyib manzaralar yaratadi. Matematikada esa 43 - 16 kabi ifodalarni xona birliklari orqali qulay ayiramiz: 43 - 10 = 33, so'ngra 33 - 6 = 27!",
+  "keyPoints": [
+    "1-qadam: 16 sonini 10 va 6 ga ajratamiz.",
+    "2-qadam: 43 dan avval o'nlikni ayiramiz: 43 - 10 = 33.",
+    "3-qadam: Chiqqan natijadan birlikni ayiramiz: 33 - 6 = 27."
+  ],
+  "miniExample": {
+    "emojis": "🎨 43 - 16 = (43 - 10) - 6 = 27",
+    "text": "43 dan 16 ni ayirish: 43 - 10 = 33, 33 - 6 = 27 bo'yoq!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 43 - 16",
+      "options": [
+        "27",
+        "26",
+        "28",
+        "25"
+      ],
+      "correctIndex": 0,
+      "explanation": "43 - 10 = 33, 33 - 6 = 27."
+    },
+    {
+      "text": "Hisoblang: 52 - 25",
+      "options": [
+        "26",
+        "27",
+        "28",
+        "25"
+      ],
+      "correctIndex": 1,
+      "explanation": "52 - 20 = 32, 32 - 5 = 27."
+    },
+    {
+      "text": "Rassomda 44 ta qalam bor edi. 18 tasi ishlatildi. Nechta yangi qalam qoldi?",
+      "options": [
+        "25",
+        "27",
+        "26",
+        "24"
+      ],
+      "correctIndex": 2,
+      "explanation": "44 - 18 = 44 - 10 - 8 = 26 ta."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 43 - 16",
+      "options": [
+        "27",
+        "26",
+        "28",
+        "25"
+      ],
+      "correctIndex": 0,
+      "explanation": "43 - 10 = 33, 33 - 6 = 27."
+    },
+    {
+      "text": "Hisoblang: 54 - 27",
+      "options": [
+        "26",
+        "27",
+        "28",
+        "25"
+      ],
+      "correctIndex": 1,
+      "explanation": "54 - 20 = 34, 34 - 7 = 27."
+    },
+    {
+      "text": "Hisoblang: 62 - 35",
+      "options": [
+        "26",
+        "28",
+        "27",
+        "25"
+      ],
+      "correctIndex": 2,
+      "explanation": "62 - 30 = 32, 32 - 5 = 27."
+    },
+    {
+      "text": "Hisoblang: 75 - 38",
+      "options": [
+        "36",
+        "38",
+        "35",
+        "37"
+      ],
+      "correctIndex": 3,
+      "explanation": "75 - 30 = 45, 45 - 8 = 37."
+    },
+    {
+      "text": "San'at ko'rgazmasida 51 ta rasm bor edi. 19 tasi sotildi. Nechta rasm qoldi?",
+      "options": [
+        "32",
+        "31",
+        "33",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "51 - 19 = 32 ta rasm."
+    },
+    {
+      "text": "Hisoblang: 83 - 46",
+      "options": [
+        "36",
+        "37",
+        "38",
+        "35"
+      ],
+      "correctIndex": 1,
+      "explanation": "83 - 40 = 43, 43 - 6 = 37."
+    },
+    {
+      "text": "Hisoblang: 91 - 54",
+      "options": [
+        "36",
+        "38",
+        "37",
+        "35"
+      ],
+      "correctIndex": 2,
+      "explanation": "91 - 50 = 41, 41 - 4 = 37."
+    },
+    {
+      "text": "Hisoblang: 65 - 28",
+      "options": [
+        "36",
+        "38",
+        "35",
+        "37"
+      ],
+      "correctIndex": 3,
+      "explanation": "65 - 20 = 45, 45 - 8 = 37."
+    },
+    {
+      "text": "Tenglamani yeching: x + 16 = 43",
+      "options": [
+        "27",
+        "26",
+        "28",
+        "25"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 43 - 16 = 27."
+    },
+    {
+      "text": "Tenglamani yeching: y + 25 = 62",
+      "options": [
+        "36",
+        "37",
+        "38",
+        "35"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 62 - 25 = 37."
+    },
+    {
+      "text": "Taqqoslang: 43 - 16 va 53 - 26",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "43 - 16 = 27 va 53 - 26 = 27. Ular teng: 27 = 27."
+    },
+    {
+      "text": "Taqqoslang: 52 - 17 va 36",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "52 - 17 = 35. 35 < 36."
+    },
+    {
+      "text": "Albimda 60 ta rasmdan 24 tasi rangli, qolgani oq-qora. Oq-qora rasmlar nechta?",
+      "options": [
+        "36",
+        "35",
+        "37",
+        "34"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 - 24 = 36 ta."
+    },
+    {
+      "text": "Hisoblang: 72 - 36",
+      "options": [
+        "35",
+        "36",
+        "37",
+        "34"
+      ],
+      "correctIndex": 1,
+      "explanation": "72 - 30 = 42, 42 - 6 = 36."
+    },
+    {
+      "text": "Hisoblang: 84 - 47",
+      "options": [
+        "36",
+        "38",
+        "37",
+        "35"
+      ],
+      "correctIndex": 2,
+      "explanation": "84 - 40 = 44, 44 - 7 = 37."
+    },
+    {
+      "text": "Hisoblang: 46 - 19",
+      "options": [
+        "26",
+        "28",
+        "25",
+        "27"
+      ],
+      "correctIndex": 3,
+      "explanation": "46 - 10 = 36, 36 - 9 = 27."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 43 - * = 18?",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "23"
+      ],
+      "correctIndex": 0,
+      "explanation": "43 - 18 = 25."
+    },
+    {
+      "text": "Hisoblang: 66 - 29",
+      "options": [
+        "36",
+        "37",
+        "38",
+        "35"
+      ],
+      "correctIndex": 1,
+      "explanation": "66 - 20 = 46, 46 - 9 = 37."
+    },
+    {
+      "text": "Hisoblang: 93 - 48",
+      "options": [
+        "44",
+        "46",
+        "45",
+        "43"
+      ],
+      "correctIndex": 2,
+      "explanation": "93 - 40 = 53, 53 - 8 = 45."
+    },
+    {
+      "text": "Hisoblang: 55 - 18",
+      "options": [
+        "36",
+        "38",
+        "35",
+        "37"
+      ],
+      "correctIndex": 3,
+      "explanation": "55 - 10 = 45, 45 - 8 = 37."
+    }
+  ]
+}

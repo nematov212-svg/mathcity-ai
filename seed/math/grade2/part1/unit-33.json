@@ -1,0 +1,279 @@
+{
+  "order": 33,
+  "bookNumber": 32,
+  "unitType": "LESSON",
+  "title": "Ustun ko‘rinishida ayirish",
+  "emoji": "🛎️",
+  "crossTopic": "Zamonaviy xizmatlar",
+  "shortDesc": "Xonadan o'tib ustun shaklida ayirish usuli",
+  "intro": "Zamonaviy xizmatlar va yetkazib berish xizmatlari hisob-kitobni daqiqalarda amalga oshiradi. Ustun shaklida xonadan o'tib ayirishda o'nlikdan 1 ta o'nlik maydalanadi!",
+  "keyPoints": [
+    "Birlikdan birlikni ayirishning iloji bo'lmasa, qo'shni o'nlikdan 1 o'nlik (10 birlik) olinadi.",
+    "Olingan 10 birlikka mavjud birlik qo'shiladi va ayiriladi.",
+    "O'nliklar xonasidagi son 1 taga kamayadi."
+  ],
+  "miniExample": {
+    "emojis": "🛎️ 52 - 27 = 25",
+    "text": "2 dan 7 chiqmaydi: 12 - 7 = 5, 5 o'nlikdan 1 ketgach 4 qoladi, 4 - 2 = 2. Natija: 25!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Ustun shaklida hisoblang: 52 - 27",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "23"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 - 7 = 5, 4 - 2 = 2. Natija: 25."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 64 - 38",
+      "options": [
+        "25",
+        "26",
+        "27",
+        "24"
+      ],
+      "correctIndex": 1,
+      "explanation": "14 - 8 = 6, 5 - 3 = 2. Natija: 26."
+    },
+    {
+      "text": "Kuryerda 45 ta buyurtma bor edi. 28 tasi yetkazildi. Nechta buyurtma qoldi?",
+      "options": [
+        "16",
+        "18",
+        "17",
+        "15"
+      ],
+      "correctIndex": 2,
+      "explanation": "45 - 28 = 17 ta buyurtma."
+    }
+  ],
+  "test": [
+    {
+      "text": "Ustun shaklida hisoblang: 52 - 27",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "23"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 - 7 = 5, 4 - 2 = 2. Natija: 25."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 63 - 35",
+      "options": [
+        "27",
+        "28",
+        "29",
+        "26"
+      ],
+      "correctIndex": 1,
+      "explanation": "13 - 5 = 8, 5 - 3 = 2. Natija: 28."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 71 - 44",
+      "options": [
+        "26",
+        "28",
+        "27",
+        "25"
+      ],
+      "correctIndex": 2,
+      "explanation": "11 - 4 = 7, 6 - 4 = 2. Natija: 27."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 84 - 56",
+      "options": [
+        "27",
+        "29",
+        "26",
+        "28"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 - 6 = 8, 7 - 5 = 2. Natija: 28."
+    },
+    {
+      "text": "Mehmonxonada 50 ta xonadan 26 tasi band bo'ldi. Bo'sh xonalar nechta?",
+      "options": [
+        "24",
+        "23",
+        "25",
+        "22"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 26 = 24 ta bo'sh xona."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 93 - 67",
+      "options": [
+        "25",
+        "26",
+        "27",
+        "24"
+      ],
+      "correctIndex": 1,
+      "explanation": "13 - 7 = 6, 8 - 6 = 2. Natija: 26."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 75 - 48",
+      "options": [
+        "26",
+        "28",
+        "27",
+        "25"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 - 8 = 7, 6 - 4 = 2. Natija: 27."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 62 - 39",
+      "options": [
+        "22",
+        "24",
+        "21",
+        "23"
+      ],
+      "correctIndex": 3,
+      "explanation": "12 - 9 = 3, 5 - 3 = 2. Natija: 23."
+    },
+    {
+      "text": "Tenglamani yeching: x + 27 = 52",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "23"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 52 - 27 = 25."
+    },
+    {
+      "text": "Tenglamani yeching: y + 38 = 64",
+      "options": [
+        "25",
+        "26",
+        "27",
+        "24"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 64 - 38 = 26."
+    },
+    {
+      "text": "Taqqoslang: 52 - 27 va 25",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "52 - 27 = 25. Ular teng: 25 = 25."
+    },
+    {
+      "text": "Taqqoslang: 64 - 38 va 30",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "64 - 38 = 26. 26 < 30."
+    },
+    {
+      "text": "Avtoservisga 43 ta mashina keldi. 17 tasi ta'mirdan chiqdi. Nechtasi qoldi?",
+      "options": [
+        "26",
+        "25",
+        "27",
+        "24"
+      ],
+      "correctIndex": 0,
+      "explanation": "43 - 17 = 26 ta mashina."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 81 - 53",
+      "options": [
+        "27",
+        "28",
+        "29",
+        "26"
+      ],
+      "correctIndex": 1,
+      "explanation": "11 - 3 = 8, 7 - 5 = 2. Natija: 28."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 95 - 68",
+      "options": [
+        "26",
+        "28",
+        "27",
+        "25"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 - 8 = 7, 8 - 6 = 2. Natija: 27."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 54 - 29",
+      "options": [
+        "24",
+        "26",
+        "23",
+        "25"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 - 9 = 5, 4 - 2 = 2. Natija: 25."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 73 - * = 48?",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "23"
+      ],
+      "correctIndex": 0,
+      "explanation": "73 - 48 = 25."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 82 - 47",
+      "options": [
+        "34",
+        "35",
+        "36",
+        "33"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 - 7 = 5, 7 - 4 = 3. Natija: 35."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 66 - 38",
+      "options": [
+        "27",
+        "29",
+        "28",
+        "26"
+      ],
+      "correctIndex": 2,
+      "explanation": "16 - 8 = 8, 5 - 3 = 2. Natija: 28."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 91 - 45",
+      "options": [
+        "45",
+        "47",
+        "44",
+        "46"
+      ],
+      "correctIndex": 3,
+      "explanation": "11 - 5 = 6, 8 - 4 = 4. Natija: 46."
+    }
+  ]
+}

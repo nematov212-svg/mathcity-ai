@@ -1,0 +1,279 @@
+{
+  "order": 22,
+  "bookNumber": 22,
+  "unitType": "LESSON",
+  "title": "Sonlarni qo‘shish (6 + 25)",
+  "emoji": "🍳",
+  "crossTopic": "Oshxona",
+  "shortDesc": "Qo'shishning o'rin almashtirish qonuni: 6 + 25 = 25 + 6",
+  "intro": "Oshxonada shirin taomlar tayyorlashda masalliqlar tartibi o'zgarsa ham ta'mi o'zgarmaydi. Matematikada ham qo'shiluvchilarning o'rni almashsa, yig'indi o'zgarmaydi: 6 + 25 = 25 + 6 = 31!",
+  "keyPoints": [
+    "Qo'shishning o'rin almashtirish qonuni: a + b = b + a.",
+    "Kichik songa katta sonni qo'shgandan ko'ra, katta songa kichik sonni qo'shish ancha osonroq.",
+    "6 + 25 amalini bajarishda avval 25 ga 6 ni qo'shib hisoblaymiz: 25 + 6 = 31."
+  ],
+  "miniExample": {
+    "emojis": "🍳 6 + 25 = 25 + 6 = 31",
+    "text": "Katta songa kichik sonni qo'shish osonroq: 25 + 6 = 31!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 6 + 25",
+      "options": [
+        "31",
+        "30",
+        "32",
+        "29"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 25 = 25 + 6 = 31."
+    },
+    {
+      "text": "Hisoblang: 7 + 38",
+      "options": [
+        "44",
+        "45",
+        "46",
+        "43"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 38 = 38 + 7 = 45."
+    },
+    {
+      "text": "Oshxonada 5 ta qoshiq va 27 ta vilka yuvildi. Jami nechta idish yuvildi?",
+      "options": [
+        "31",
+        "33",
+        "32",
+        "30"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 27 = 27 + 5 = 32 ta."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 6 + 25",
+      "options": [
+        "31",
+        "30",
+        "32",
+        "29"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 25 = 25 + 6 = 31."
+    },
+    {
+      "text": "Hisoblang: 7 + 35",
+      "options": [
+        "41",
+        "42",
+        "43",
+        "40"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 35 = 35 + 7 = 42."
+    },
+    {
+      "text": "Hisoblang: 8 + 44",
+      "options": [
+        "51",
+        "53",
+        "52",
+        "50"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 44 = 44 + 8 = 52."
+    },
+    {
+      "text": "Hisoblang: 5 + 57",
+      "options": [
+        "61",
+        "63",
+        "60",
+        "62"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 57 = 57 + 5 = 62."
+    },
+    {
+      "text": "Oshxonada idishga 9 dona olma va 24 dona gilos solindi. Jami mevalar nechta?",
+      "options": [
+        "33",
+        "32",
+        "34",
+        "31"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 + 24 = 24 + 9 = 33."
+    },
+    {
+      "text": "Hisoblang: 4 + 68",
+      "options": [
+        "71",
+        "72",
+        "73",
+        "70"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 + 68 = 68 + 4 = 72."
+    },
+    {
+      "text": "Hisoblang: 8 + 76",
+      "options": [
+        "83",
+        "85",
+        "84",
+        "82"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 76 = 76 + 8 = 84."
+    },
+    {
+      "text": "Hisoblang: 3 + 89",
+      "options": [
+        "91",
+        "93",
+        "90",
+        "92"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 + 89 = 89 + 3 = 92."
+    },
+    {
+      "text": "Tenglamani yeching: 7 + x = 34",
+      "options": [
+        "27",
+        "26",
+        "28",
+        "25"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 34 - 7 = 27."
+    },
+    {
+      "text": "Tenglamani yeching: 6 + y = 52",
+      "options": [
+        "45",
+        "46",
+        "47",
+        "44"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 52 - 6 = 46."
+    },
+    {
+      "text": "Taqqoslang: 6 + 25 va 25 + 6",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qo'shishning o'rin almashtirish qonuniga ko'ra ular teng: 31 = 31."
+    },
+    {
+      "text": "Taqqoslang: 8 + 36 va 45",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 + 36 = 44. 44 < 45."
+    },
+    {
+      "text": "Oshxonada 6 ta kosa va 28 ta likopcha bor. Jami idishlar nechta?",
+      "options": [
+        "34",
+        "33",
+        "35",
+        "32"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 28 = 28 + 6 = 34 ta."
+    },
+    {
+      "text": "Hisoblang: 9 + 45",
+      "options": [
+        "53",
+        "54",
+        "55",
+        "52"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 + 45 = 45 + 9 = 54."
+    },
+    {
+      "text": "Hisoblang: 7 + 55",
+      "options": [
+        "61",
+        "63",
+        "62",
+        "60"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 55 = 55 + 7 = 62."
+    },
+    {
+      "text": "Hisoblang: 8 + 67",
+      "options": [
+        "74",
+        "76",
+        "73",
+        "75"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 + 67 = 67 + 8 = 75."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: * + 26 = 33?",
+      "options": [
+        "7",
+        "6",
+        "8",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "33 - 26 = 7."
+    },
+    {
+      "text": "Hisoblang: 5 + 78",
+      "options": [
+        "82",
+        "83",
+        "84",
+        "81"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 78 = 78 + 5 = 83."
+    },
+    {
+      "text": "Hisoblang: 9 + 17",
+      "options": [
+        "25",
+        "27",
+        "26",
+        "24"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 + 17 = 17 + 9 = 26."
+    },
+    {
+      "text": "Hisoblang: 4 + 88",
+      "options": [
+        "91",
+        "93",
+        "90",
+        "92"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 + 88 = 88 + 4 = 92."
+    }
+  ]
+}

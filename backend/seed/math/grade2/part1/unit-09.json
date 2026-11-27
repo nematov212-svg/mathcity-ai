@@ -1,0 +1,279 @@
+{
+  "order": 9,
+  "bookNumber": 9,
+  "unitType": "LESSON",
+  "title": "Sonlarni qo‘shish va ayirish",
+  "emoji": "🐪",
+  "crossTopic": "Tuyalar",
+  "shortDesc": "Xona birliklari asosida amallar bajarish va sonni yozish usuli",
+  "intro": "Cho‘l kemasi bo‘lmish tuyalar uzoq masofalarni bosib o‘tadi. Ushbu darsda sonlarni o‘nlik va birliklarga ajratib qo‘shish hamda ayirishni o‘rganamiz.",
+  "keyPoints": [
+    "O‘nliklar o‘nliklarga, birliklar birliklarga qo‘shiladi: 24 + 14 = (20 + 10) + (4 + 4) = 38.",
+    "Ayirishda ham o‘nlikdan o‘nlik, birlikdan birlik ayriladi: 76 - 15 = 61.",
+    "Xona birliklari modeli hisoblashni oson va xatosiz bajarishga yordam beradi."
+  ],
+  "miniExample": {
+    "emojis": "🐪 24 + 14 = 38 | 76 - 15 = 61",
+    "text": "24 ga 14 ni qo‘shish: 2 o‘nlikka 1 o‘nlikni qo‘shsak 3 o‘nlik (30), 4 ga 4 ni qo‘shsak 8. Jami 38!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 24 + 14",
+      "options": [
+        "38",
+        "36",
+        "40",
+        "34"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 + 10 = 30, 4 + 4 = 8; 30 + 8 = 38."
+    },
+    {
+      "text": "Hisoblang: 76 - 15",
+      "options": [
+        "60",
+        "61",
+        "62",
+        "51"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 10 = 60, 6 - 5 = 1; 60 + 1 = 61."
+    },
+    {
+      "text": "Taqqoslang: 69 - 15 ... 75 - 14",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "69 - 15 = 54 va 75 - 14 = 61. 54 < 61."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 24 + 14",
+      "options": [
+        "38",
+        "37",
+        "39",
+        "28"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 + 10 = 30, 4 + 4 = 8, 30 + 8 = 38."
+    },
+    {
+      "text": "Hisoblang: 76 - 15",
+      "options": [
+        "60",
+        "61",
+        "62",
+        "51"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 10 = 60, 6 - 5 = 1, 60 + 1 = 61."
+    },
+    {
+      "text": "Hisoblang: 35 + 23",
+      "options": [
+        "57",
+        "59",
+        "58",
+        "48"
+      ],
+      "correctIndex": 2,
+      "explanation": "30 + 20 = 50, 5 + 3 = 8, 50 + 8 = 58."
+    },
+    {
+      "text": "Hisoblang: 58 - 25",
+      "options": [
+        "32",
+        "34",
+        "35",
+        "33"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 20 = 30, 8 - 5 = 3, 30 + 3 = 33."
+    },
+    {
+      "text": "4 ta o‘nlik va 5 ta birlik qaysi sonni hosil qiladi?",
+      "options": [
+        "45",
+        "54",
+        "40",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 ta o‘nlik (40) va 5 ta birlik = 45."
+    },
+    {
+      "text": "Taqqoslang: 42 + 13 ... 32 + 23",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "≠"
+      ],
+      "correctIndex": 1,
+      "explanation": "42 + 13 = 55 va 32 + 23 = 55. 55 = 55."
+    },
+    {
+      "text": "Taqqoslang: 69 - 15 ... 75 - 14",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "69 - 15 = 54 va 75 - 14 = 61. 54 < 61."
+    },
+    {
+      "text": "Tuyalar karvoni birinchi kuni 34 km, ikkinchi kuni 25 km yo‘l bosdi. Karvon ikki kunda jami necha km yo‘l yurgan?",
+      "options": [
+        "58 km",
+        "60 km",
+        "57 km",
+        "59 km"
+      ],
+      "correctIndex": 3,
+      "explanation": "34 + 25 = 59 km."
+    },
+    {
+      "text": "Cho‘l qo‘riqxonasida 48 ta tuya bor edi. Shulardan 16 tasi oq tuya, qolganlari sariq tuya. Sariq tuyalar nechta?",
+      "options": [
+        "32 ta",
+        "30 ta",
+        "34 ta",
+        "64 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "48 - 16 = 32 ta sariq tuya."
+    },
+    {
+      "text": "Chizma bo‘yicha hisoblang: asalarilar 36 ta, sariq arilar ulardan 14 ta kam. Sariq arilar nechta?",
+      "options": [
+        "20 ta",
+        "22 ta",
+        "24 ta",
+        "50 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "36 - 14 = 22 ta."
+    },
+    {
+      "text": "Asalarilar va sariq arilar jami nechta (oldingi masala bo‘yicha)?",
+      "options": [
+        "56 ta",
+        "60 ta",
+        "58 ta (36 + 22 = 58)",
+        "50 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "36 + 22 = 58 ta hasharot."
+    },
+    {
+      "text": "Hisoblang: 87 - 34",
+      "options": [
+        "51",
+        "52",
+        "54",
+        "53"
+      ],
+      "correctIndex": 3,
+      "explanation": "80 - 30 = 50, 7 - 4 = 3, 50 + 3 = 53."
+    },
+    {
+      "text": "Hisoblang: 41 + 38",
+      "options": [
+        "79",
+        "77",
+        "78",
+        "80"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 + 30 = 70, 1 + 8 = 9, 70 + 9 = 79."
+    },
+    {
+      "text": "Hisoblang: 99 - 55",
+      "options": [
+        "42",
+        "44",
+        "45",
+        "34"
+      ],
+      "correctIndex": 1,
+      "explanation": "90 - 50 = 40, 9 - 5 = 4, 40 + 4 = 44."
+    },
+    {
+      "text": "Tenglamani yeching: x + 23 = 57",
+      "options": [
+        "32",
+        "35",
+        "34",
+        "80"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 57 - 23 = 34."
+    },
+    {
+      "text": "Tenglamani yeching: 68 - y = 35",
+      "options": [
+        "31",
+        "34",
+        "103",
+        "33"
+      ],
+      "correctIndex": 3,
+      "explanation": "y = 68 - 35 = 33."
+    },
+    {
+      "text": "Tuyaning bir o‘rkachlisida 45 kg, ikkinchisida 42 kg yuk bor. Ikkala tuyada jami necha kg yuk bor?",
+      "options": [
+        "87 kg",
+        "85 kg",
+        "89 kg",
+        "90 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "45 + 42 = 87 kg."
+    },
+    {
+      "text": "Xona birliklariga ajratib qulay hisoblang: 31 + 15 + 22",
+      "options": [
+        "66",
+        "68",
+        "69",
+        "67"
+      ],
+      "correctIndex": 1,
+      "explanation": "(30 + 10 + 20) + (1 + 5 + 2) = 60 + 8 = 68."
+    },
+    {
+      "text": "Qizilqum cho‘lidagi fermada 56 ta bir o‘rkachli tuya va 32 ta ikki o‘rkachli tuya boqilmoqda. Qo‘shni fermada esa jami tuyalar soni bu fermadagidan 14 taga kam. Qo‘shni fermada nechta tuya bor?",
+      "options": [
+        "72 ta",
+        "76 ta",
+        "74 ta",
+        "88 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Birinchi ferma: 56 + 32 = 88 ta. Qo‘shni ferma: 88 - 14 = 74 ta."
+    },
+    {
+      "text": "Sayyohlar karvoni birinchi haftada 46 km, ikkinchi haftada birinchisidan 12 km kam, uchinchi haftada esa ikkinchi haftadagidan 15 km ortiq yo‘l yurdi. Uchinchi haftada sayyohlar necha km yo‘l yurgan?",
+      "options": [
+        "47 km",
+        "50 km",
+        "34 km",
+        "49 km"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ikkinchi hafta: 46 - 12 = 34 km. Uchinchi hafta: 34 + 15 = 49 km."
+    }
+  ]
+}

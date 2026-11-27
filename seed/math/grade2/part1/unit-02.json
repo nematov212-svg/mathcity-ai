@@ -1,0 +1,279 @@
+{
+  "order": 2,
+  "bookNumber": 2,
+  "unitType": "LESSON",
+  "title": "Takrorlash",
+  "emoji": "🥕",
+  "crossTopic": "Kuzgi hosil",
+  "shortDesc": "100 gacha bo‘lgan sonlar, o‘nliklar va ular ustida amallar",
+  "intro": "Kuz — to‘kin-sochinlik fasli. Dalalardan sabzavot va mevalar yig‘ib olinadi. Bu darsda 100 ichidagi yaxlit o‘nliklar va sonlar ustida amallarni takrorlaymiz.",
+  "keyPoints": [
+    "Yaxlit o‘nliklar: 10, 20, 30, 40, 50, 60, 70, 80, 90, 100.",
+    "4 ta o‘nlik va 3 ta birlik 43 sonini hosil qiladi (4 o‘nl. 3 birl. = 43).",
+    "Ketma-ket amallar chapdan o‘ngga qarab bajariladi."
+  ],
+  "miniExample": {
+    "emojis": "🥕 40 + 50 - 20 = 70",
+    "text": "40 ga 50 ni qo‘shsak 90 bo‘ladi, 90 dan 20 ni ayirsak 70 qoladi!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 40 + 30",
+      "options": [
+        "70",
+        "60",
+        "80",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 o‘nlik + 3 o‘nlik = 7 o‘nlik = 70."
+    },
+    {
+      "text": "Hisoblang: 90 - 40",
+      "options": [
+        "40",
+        "50",
+        "60",
+        "30"
+      ],
+      "correctIndex": 1,
+      "explanation": "90 - 40 = 50."
+    },
+    {
+      "text": "4 o‘nl. 3 birl. qaysi songa teng?",
+      "options": [
+        "34",
+        "40",
+        "43",
+        "430"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 ta o‘nlik (40) va 3 ta birlik = 43."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 40 + 50 - 20",
+      "options": [
+        "70",
+        "60",
+        "80",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 + 50 = 90, 90 - 20 = 70."
+    },
+    {
+      "text": "4 o‘nl. 3 birl. sonini toping:",
+      "options": [
+        "34",
+        "43",
+        "40",
+        "430"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 ta o‘nlik va 3 ta birlik 43 sonini beradi."
+    },
+    {
+      "text": "7 o‘nl. 5 birl. qaysi son?",
+      "options": [
+        "57",
+        "70",
+        "75",
+        "750"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 ta o‘nlik va 5 ta birlik = 75."
+    },
+    {
+      "text": "Hisoblang: 60 + 20",
+      "options": [
+        "70",
+        "90",
+        "40",
+        "80"
+      ],
+      "correctIndex": 3,
+      "explanation": "60 + 20 = 80."
+    },
+    {
+      "text": "Hisoblang: 80 - 30",
+      "options": [
+        "50",
+        "40",
+        "60",
+        "70"
+      ],
+      "correctIndex": 0,
+      "explanation": "80 - 30 = 50."
+    },
+    {
+      "text": "Sonlar nurida 30 dan 20 birlik o‘ngga yursak, qaysi songa boramiz?",
+      "options": [
+        "40 ga",
+        "50 ga",
+        "60 ga",
+        "10 ga"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 20 = 50."
+    },
+    {
+      "text": "Hisoblang: 73 - 40 + 24",
+      "options": [
+        "55",
+        "56",
+        "57",
+        "58"
+      ],
+      "correctIndex": 2,
+      "explanation": "73 - 40 = 33, 33 + 24 = 57."
+    },
+    {
+      "text": "Fermer birinchi maydondan 50 chelak sabzi, ikkinchisidan undan 20 chelak ko‘p sabzi yig‘di. Ikkinchi maydondan necha chelak sabzi olingan?",
+      "options": [
+        "60 chelak",
+        "30 chelak",
+        "80 chelak",
+        "70 chelak"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 + 20 = 70 chelak."
+    },
+    {
+      "text": "Ikkala maydondan jami necha chelak sabzi yig‘ilgan (oldingi masala shartiga ko‘ra)?",
+      "options": [
+        "120 chelak",
+        "100 chelak",
+        "110 chelak",
+        "70 chelak"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 + 70 = 120 chelak (yoki 5 o‘nlik + 7 o‘nlik = 12 o‘nlik)."
+    },
+    {
+      "text": "Hisoblang: 100 - 30 - 20",
+      "options": [
+        "40",
+        "50",
+        "60",
+        "70"
+      ],
+      "correctIndex": 1,
+      "explanation": "100 - 30 = 70, 70 - 20 = 50."
+    },
+    {
+      "text": "6 ta o‘nlik 8 ta birlikdan nechaga katta?",
+      "options": [
+        "68 ga",
+        "50 ga",
+        "52 ga (60 - 8 = 52)",
+        "54 ga"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 ta o‘nlik = 60. 60 - 8 = 52."
+    },
+    {
+      "text": "85 sonida nechta o‘nlik bor?",
+      "options": [
+        "5 ta o‘nlik",
+        "85 ta o‘nlik",
+        "80 ta o‘nlik",
+        "8 ta o‘nlik"
+      ],
+      "correctIndex": 3,
+      "explanation": "85 sonida 8 ta o‘nlik va 5 ta birlik mavjud."
+    },
+    {
+      "text": "Hisoblang: 30 + 30 + 30",
+      "options": [
+        "90",
+        "80",
+        "100",
+        "60"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 + 30 + 30 = 90."
+    },
+    {
+      "text": "Hisoblang: 90 - 50 + 10",
+      "options": [
+        "40",
+        "50",
+        "60",
+        "30"
+      ],
+      "correctIndex": 1,
+      "explanation": "90 - 50 = 40, 40 + 10 = 50."
+    },
+    {
+      "text": "Omborda 80 qop kartoshka bor edi. Ertalab 30 qop, tushdan keyin 20 qop do‘konga yuborildi. Omborda necha qop kartoshka qoldi?",
+      "options": [
+        "40 qop",
+        "20 qop",
+        "30 qop",
+        "50 qop"
+      ],
+      "correctIndex": 2,
+      "explanation": "30 + 20 = 50, 80 - 50 = 30 qop qoldi."
+    },
+    {
+      "text": "Tenglamani yeching: x + 30 = 70",
+      "options": [
+        "30",
+        "50",
+        "100",
+        "40"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 70 - 30 = 40."
+    },
+    {
+      "text": "Tenglamani yeching: 90 - y = 40",
+      "options": [
+        "50",
+        "40",
+        "60",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "y = 90 - 40 = 50."
+    },
+    {
+      "text": "56 sonini xona qo‘shiluvchilari yig‘indisi shaklida yozing:",
+      "options": [
+        "50 + 16",
+        "50 + 6",
+        "40 + 16",
+        "5 + 6"
+      ],
+      "correctIndex": 1,
+      "explanation": "56 = 50 + 6."
+    },
+    {
+      "text": "Samarqand viloyati bog‘bonlari 40 quti olma va 30 quti nok yig‘ishdi. Shundan 50 quti meva bozorga jo‘natildi. Bog‘da necha quti meva qoldi?",
+      "options": [
+        "10 quti",
+        "30 quti",
+        "20 quti",
+        "70 quti"
+      ],
+      "correctIndex": 2,
+      "explanation": "Jami yig‘ilgan: 40 + 30 = 70 quti. Qolgani: 70 - 50 = 20 quti."
+    },
+    {
+      "text": "Issiqxonada pomidor va bodring yetishtirildi. Birinchi kunda 35 kg, ikkinchi kunda esa birinchisidan 15 kg ortiq hosil uzildi. Ikki kunda jami necha kg hosil olingan?",
+      "options": [
+        "50 kg",
+        "75 kg",
+        "80 kg",
+        "85 kg (35 + 50 = 85)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ikkinchi kunda: 35 + 15 = 50 kg. Jami: 35 + 50 = 85 kg."
+    }
+  ]
+}

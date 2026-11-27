@@ -1,0 +1,279 @@
+{
+  "order": 35,
+  "bookNumber": 34,
+  "unitType": "LESSON",
+  "title": "Yig‘indidan sonni ayirish",
+  "emoji": "✈️",
+  "crossTopic": "Uchuvchi vositalar",
+  "shortDesc": "Yig'indidan sonni qulay usulda ayirish: (a + b) - c qoidasi",
+  "intro": "Samolyotlar va vertolyotlar havoda marshrutlarni qisqa yo'llar orqali tanlaydi. Matematikada ham (35 + 24) - 15 ifodasini avval 35 dan 15 ni ayirib, so'ngra 24 ni qo'shish qulay: 20 + 24 = 44!",
+  "keyPoints": [
+    "Qoida: Yig'indidan sonni ayirishda shu sonni qo'shiluvchilarning biridan ayirib, natijaga ikkinchisini qo'shish mumkin.",
+    "(a + b) - c = (a - c) + b (agar a >= c bo'lsa).",
+    "(a + b) - c = a + (b - c) (agar b >= c bo'lsa)."
+  ],
+  "miniExample": {
+    "emojis": "✈️ (35 + 24) - 15 = (35 - 15) + 24 = 44",
+    "text": "35 dan 15 ni ayirsak 20 qoladi, 20 ga 24 ni qo'shsak 44 samolyot!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Qulay usulda hisoblang: (35 + 24) - 15",
+      "options": [
+        "44",
+        "43",
+        "45",
+        "42"
+      ],
+      "correctIndex": 0,
+      "explanation": "(35 - 15) + 24 = 20 + 24 = 44."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (48 + 26) - 18",
+      "options": [
+        "55",
+        "56",
+        "57",
+        "54"
+      ],
+      "correctIndex": 1,
+      "explanation": "(48 - 18) + 26 = 30 + 26 = 56."
+    },
+    {
+      "text": "Aerodromda 28 ta yo'lovchi va 15 ta yuk samolyoti bor edi. 8 ta samolyot havoga ko'tarildi. Qancha samolyot qoldi?",
+      "options": [
+        "34",
+        "36",
+        "35",
+        "33"
+      ],
+      "correctIndex": 2,
+      "explanation": "(28 - 8) + 15 = 20 + 15 = 35 ta."
+    }
+  ],
+  "test": [
+    {
+      "text": "Qulay usulda hisoblang: (35 + 24) - 15",
+      "options": [
+        "44",
+        "43",
+        "45",
+        "42"
+      ],
+      "correctIndex": 0,
+      "explanation": "(35 - 15) + 24 = 20 + 24 = 44."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (48 + 26) - 18",
+      "options": [
+        "55",
+        "56",
+        "57",
+        "54"
+      ],
+      "correctIndex": 1,
+      "explanation": "(48 - 18) + 26 = 30 + 26 = 56."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (57 + 19) - 17",
+      "options": [
+        "58",
+        "60",
+        "59",
+        "57"
+      ],
+      "correctIndex": 2,
+      "explanation": "(57 - 17) + 19 = 40 + 19 = 59."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (64 + 23) - 14",
+      "options": [
+        "72",
+        "74",
+        "71",
+        "73"
+      ],
+      "correctIndex": 3,
+      "explanation": "(64 - 14) + 23 = 50 + 23 = 73."
+    },
+    {
+      "text": "Aeroportda 36 ta samolyot va 14 ta vertolyot bor edi. 16 ta havo vositasi uchib ketdi. Nechtasi qoldi?",
+      "options": [
+        "34",
+        "33",
+        "35",
+        "32"
+      ],
+      "correctIndex": 0,
+      "explanation": "36 + 14 = 50, 50 - 16 = 34 ta."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (72 + 15) - 22",
+      "options": [
+        "64",
+        "65",
+        "66",
+        "63"
+      ],
+      "correctIndex": 1,
+      "explanation": "(72 - 22) + 15 = 50 + 15 = 65."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (43 + 38) - 18",
+      "options": [
+        "62",
+        "64",
+        "63",
+        "61"
+      ],
+      "correctIndex": 2,
+      "explanation": "43 + (38 - 18) = 43 + 20 = 63."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (56 + 27) - 16",
+      "options": [
+        "66",
+        "68",
+        "65",
+        "67"
+      ],
+      "correctIndex": 3,
+      "explanation": "(56 - 16) + 27 = 40 + 27 = 67."
+    },
+    {
+      "text": "Tenglamani yeching: x + 15 = 59",
+      "options": [
+        "44",
+        "43",
+        "45",
+        "42"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 59 - 15 = 44."
+    },
+    {
+      "text": "Tenglamani yeching: y + 18 = 74",
+      "options": [
+        "55",
+        "56",
+        "57",
+        "54"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 74 - 18 = 56."
+    },
+    {
+      "text": "Taqqoslang: (35 + 24) - 15 va 44",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "(35 + 24) - 15 = 44. Ular teng: 44 = 44."
+    },
+    {
+      "text": "Taqqoslang: (48 + 26) - 18 va 60",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "(48 + 26) - 18 = 56. 56 < 60."
+    },
+    {
+      "text": "Dronlar maydonchasida 25 ta oq va 18 ta qora dron bor edi. 15 ta dron parvoz qildi. Nechta dron qoldi?",
+      "options": [
+        "28",
+        "27",
+        "29",
+        "26"
+      ],
+      "correctIndex": 0,
+      "explanation": "(25 - 15) + 18 = 10 + 18 = 28 ta."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (84 + 12) - 34",
+      "options": [
+        "61",
+        "62",
+        "63",
+        "60"
+      ],
+      "correctIndex": 1,
+      "explanation": "(84 - 34) + 12 = 50 + 12 = 62."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (63 + 29) - 19",
+      "options": [
+        "72",
+        "74",
+        "73",
+        "71"
+      ],
+      "correctIndex": 2,
+      "explanation": "63 + (29 - 19) = 63 + 10 = 73."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (51 + 36) - 21",
+      "options": [
+        "65",
+        "67",
+        "64",
+        "66"
+      ],
+      "correctIndex": 3,
+      "explanation": "(51 - 21) + 36 = 30 + 36 = 66."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: (45 + 20) - * = 50?",
+      "options": [
+        "15",
+        "14",
+        "16",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "65 - 50 = 15."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (76 + 18) - 26",
+      "options": [
+        "67",
+        "68",
+        "69",
+        "66"
+      ],
+      "correctIndex": 1,
+      "explanation": "(76 - 26) + 18 = 50 + 18 = 68."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (39 + 45) - 25",
+      "options": [
+        "58",
+        "60",
+        "59",
+        "57"
+      ],
+      "correctIndex": 2,
+      "explanation": "39 + (45 - 25) = 39 + 20 = 59."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (68 + 27) - 38",
+      "options": [
+        "56",
+        "58",
+        "55",
+        "57"
+      ],
+      "correctIndex": 3,
+      "explanation": "(68 - 38) + 27 = 30 + 27 = 57."
+    }
+  ]
+}

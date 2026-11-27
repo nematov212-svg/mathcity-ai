@@ -86,9 +86,28 @@ export const allCurriculumModules: CurriculumModule[] = [
     orderIndex: 4,
     comingSoon: false,
   },
-  // 2-11 sinflar
-  ...Array.from({ length: 10 }, (_, i) => {
-    const grade = i + 2;
+  // 2-sinf
+  {
+    id: 'module-g2-p1',
+    grade: 2,
+    subject: 'Matematika',
+    part: 1,
+    title: 'Matematika · 1-qism',
+    orderIndex: 1,
+    comingSoon: false,
+  },
+  {
+    id: 'module-g2-p2',
+    grade: 2,
+    subject: 'Matematika',
+    part: 2,
+    title: 'Matematika · 2-qism',
+    orderIndex: 2,
+    comingSoon: true,
+  },
+  // 3-11 sinflar
+  ...Array.from({ length: 9 }, (_, i) => {
+    const grade = i + 3;
     return [
       {
         id: `module-g${grade}-p1`,

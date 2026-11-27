@@ -1,0 +1,279 @@
+{
+  "order": 40,
+  "bookNumber": 39,
+  "unitType": "LESSON",
+  "title": "Masalalar yechish",
+  "emoji": "💳",
+  "crossTopic": "Plastik kartalar",
+  "shortDesc": "Moliyaviy hisob-kitoblar va Rim raqamlarini taqqoslash",
+  "intro": "Bank kartalari orqali xaridlar qilish va hisobni tekshirish qulay. Plastik karta balansini hisoblash hamda Rim raqamlarini taqqoslashni o'rganamiz!",
+  "keyPoints": [
+    "Karta hisobiga pul tushishi (+) va sarflanishi (-) amallari.",
+    "Rim raqamlarini taqqoslash: XVI < XX, XXXV < XL, XL > XXX, L > XL.",
+    "Moliyaviy savodxonlik: sarf-xarajatlarni to'g'ri rejalashtirish."
+  ],
+  "miniExample": {
+    "emojis": "💳 XVI < XX | XXXV < XL | 50 - 25 = 25",
+    "text": "XVI (16) kichik XX (20) dan! 50 ming so'mdan 25 ming sarflansa, 25 ming qoladi."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Rim raqamlarini taqqoslang: XVI ... XX",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "XVI = 16, XX = 20. 16 < 20."
+    },
+    {
+      "text": "Rim raqamlarini taqqoslang: XXXV ... XL",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "XXXV = 35, XL = 40. 35 < 40."
+    },
+    {
+      "text": "Kartada 60 ming so'm bor edi. 24 ming so'mga kitob olindi. Kartada qancha pul qoldi?",
+      "options": [
+        "35",
+        "37",
+        "36",
+        "34"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 - 24 = 36 ming so'm."
+    }
+  ],
+  "test": [
+    {
+      "text": "Rim raqamlarini taqqoslang: XVI ... XX",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "XVI = 16, XX = 20. 16 < 20."
+    },
+    {
+      "text": "Rim raqamlarini taqqoslang: XXXV ... XL",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "XXXV = 35, XL = 40. 35 < 40."
+    },
+    {
+      "text": "Rim raqamlarini taqqoslang: XL ... XXX",
+      "options": [
+        "<",
+        "=",
+        ">",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "XL = 40, XXX = 30. 40 > 30."
+    },
+    {
+      "text": "Rim raqamlarini taqqoslang: L ... XL",
+      "options": [
+        "<",
+        "=",
+        "+",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "L = 50, XL = 40. 50 > 40."
+    },
+    {
+      "text": "Kartada 80 ming so'm bor edi. 35 ming so'm sarflandi. Qancha pul qoldi?",
+      "options": [
+        "45",
+        "44",
+        "46",
+        "43"
+      ],
+      "correctIndex": 0,
+      "explanation": "80 - 35 = 45 ming so'm."
+    },
+    {
+      "text": "Kartaga 40 ming so'm va 30 ming so'm tushdi. 25 ming so'm xarid qilindi. Qancha qoldi?",
+      "options": [
+        "44",
+        "45",
+        "46",
+        "43"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 + 30 = 70, 70 - 25 = 45 ming so'm."
+    },
+    {
+      "text": "Rim raqamlarini taqqoslang: XII ... XV",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "XII = 12, XV = 15. 12 < 15."
+    },
+    {
+      "text": "Rim raqamlarini taqqoslang: XXVIII ... XXV",
+      "options": [
+        "<",
+        "=",
+        "+",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "XXVIII = 28, XXV = 25. 28 > 25."
+    },
+    {
+      "text": "Tenglamani yeching: x + 35 = 80",
+      "options": [
+        "45",
+        "44",
+        "46",
+        "43"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 80 - 35 = 45."
+    },
+    {
+      "text": "Tenglamani yeching: y - 24 = 36",
+      "options": [
+        "59",
+        "60",
+        "61",
+        "58"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 36 + 24 = 60."
+    },
+    {
+      "text": "Rim raqamlarini taqqoslang: XVIII ... XVIII",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "18 = 18. XVIII = XVIII."
+    },
+    {
+      "text": "Taqqoslang: 60 - 24 va 35",
+      "options": [
+        "<",
+        "=",
+        "+",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "60 - 24 = 36. 36 > 35."
+    },
+    {
+      "text": "Kartada 90 ming so'm bor edi. 45 ming so'mga darslik, 20 ming so'mga daftar olindi. Qancha qoldi?",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "23"
+      ],
+      "correctIndex": 0,
+      "explanation": "90 - (45 + 20) = 90 - 65 = 25 ming so'm."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XX + XV",
+      "options": [
+        "XXX",
+        "XXXV",
+        "XL",
+        "XXV"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 15 = 35 (XXXV)."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: L - X",
+      "options": [
+        "XXX",
+        "L",
+        "XL",
+        "XXXV"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 - 10 = 40 (XL)."
+    },
+    {
+      "text": "Kartada 75 ming so'm bor edi. 28 ming so'm sarflangach, necha ming so'm qoladi?",
+      "options": [
+        "46",
+        "48",
+        "45",
+        "47"
+      ],
+      "correctIndex": 3,
+      "explanation": "75 - 28 = 47 ming so'm."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: * + 36 = 60?",
+      "options": [
+        "24",
+        "23",
+        "25",
+        "22"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 - 36 = 24."
+    },
+    {
+      "text": "Rim raqamlarini taqqoslang: XXIV ... XXX",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "XXIV = 24, XXX = 30. 24 < 30."
+    },
+    {
+      "text": "Rim raqamlarida hisoblang: XIV + XIV",
+      "options": [
+        "XXVII",
+        "XXIX",
+        "XXVIII",
+        "XXVI"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 + 14 = 28 (XXVIII)."
+    },
+    {
+      "text": "Kartaga 50 ming so'm solindi, so'ngra 18 ming so'm yechib olindi. Qancha pul qoldi?",
+      "options": [
+        "31",
+        "33",
+        "30",
+        "32"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 18 = 32 ming so'm."
+    }
+  ]
+}

@@ -26,6 +26,7 @@ import {
   CurriculumLesson,
   CurriculumQuestion,
 } from './grade1Curriculum.js';
+import { grade2Part1Lessons } from './grade2Curriculum.js';
 
 export interface LessonStepProgress {
   userId: string;
@@ -332,14 +333,66 @@ class DataRepository {
       questions: cl.questions,
     }));
 
-    const list: LessonModel[] = [...grade1Mapped];
+    const grade2Mapped: LessonModel[] = grade2Part1Lessons.map((cl) => ({
+      id: cl.id,
+      courseId: 'course-g2-p1',
+      chapterId: `chapter-${cl.moduleId}-${cl.order}`,
+      chapterTitle: cl.chapterTitle,
+      grade: 2,
+      mode: 'KIDS',
+      title: cl.title,
+      topicKey: `topic-${cl.id}`,
+      description: cl.shortDesc,
+      contentMd: cl.intro,
+      icon: cl.emoji,
+      rewardXP: cl.xpReward,
+      rewardCoins: cl.coinReward,
+      orderIndex: cl.order,
+      bookNumber: cl.bookNumber,
+      isReview: cl.isReview || false,
+      sections: [
+        {
+          id: `${cl.id}-s1`,
+          lessonId: cl.id,
+          title: cl.title,
+          orderIndex: 1,
+          questions: cl.questions.map((q, qIdx) => ({
+            id: q.id,
+            lessonId: cl.id,
+            sectionId: `${cl.id}-s1`,
+            prompt: q.text,
+            type: 'MULTIPLE_CHOICE' as const,
+            options: q.options,
+            correctAnswer: q.options[q.correctIndex] || q.options[0],
+            explanation: q.explanation,
+            hint: '',
+            orderIndex: qIdx + 1,
+          })),
+        },
+      ],
+      status: 'PUBLISHED',
+      moduleId: cl.moduleId,
+      emoji: cl.emoji,
+      intro: cl.intro,
+      keyPoints: cl.keyPoints,
+      miniExample: cl.miniExample,
+      xpReward: cl.xpReward,
+      coinReward: cl.coinReward,
+      estMinutes: cl.estMinutes,
+      questionCount: cl.questionCount,
+      practice: cl.practice,
+      test: cl.test,
+      questions: cl.questions,
+    }));
+
+    const list: LessonModel[] = [...grade1Mapped, ...grade2Mapped];
     for (const curL of curriculum220Lessons) {
-      if (curL.grade !== 1 && !list.some((l) => l.id === curL.id)) {
+      if (curL.grade !== 1 && curL.grade !== 2 && !list.some((l) => l.id === curL.id)) {
         list.push(curL);
       }
     }
     for (const initL of initialLessons) {
-      if (initL.grade !== 1 && !list.some((l) => l.id === initL.id)) {
+      if (initL.grade !== 1 && initL.grade !== 2 && !list.some((l) => l.id === initL.id)) {
         list.push(initL);
       }
     }
@@ -945,7 +998,7 @@ class DataRepository {
       // Pro users have all lessons unlocked!
       let isLocked = false;
       if (!isPro) {
-        if (moduleId === 'module-g1-p1' && index === 0) {
+        if ((moduleId === 'module-g1-p1' || moduleId === 'module-g2-p1') && index === 0) {
           isLocked = false;
         } else {
           isLocked = !prevLessonPassed;
@@ -971,7 +1024,9 @@ class DataRepository {
         moduleId: l.moduleId || moduleId,
         order: l.orderIndex,
         orderIndex: l.orderIndex,
-        bookNumber: l.bookNumber || (moduleId === 'module-g1-p4' ? (l.orderIndex + 111) : moduleId === 'module-g1-p2' ? (l.orderIndex + 41) : l.orderIndex),
+        bookNumber: moduleId === 'module-g2-p1'
+          ? (l.bookNumber ?? null)
+          : (l.bookNumber || (moduleId === 'module-g1-p4' ? (l.orderIndex + 111) : moduleId === 'module-g1-p2' ? (l.orderIndex + 41) : l.orderIndex)),
         isReview: l.isReview || false,
         title: l.title,
         chapterTitle: l.chapterTitle,

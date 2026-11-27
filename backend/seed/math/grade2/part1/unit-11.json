@@ -1,0 +1,279 @@
+{
+  "order": 11,
+  "bookNumber": 11,
+  "unitType": "LESSON",
+  "title": "Yaxlit songacha qo‘shish (31 + 9)",
+  "emoji": "🦢",
+  "crossTopic": "Laylaklar",
+  "shortDesc": "Sonni yaxlit o‘nlikkacha to‘ldirib qo‘shish usuli: 31 + 9 = 40",
+  "intro": "Laylaklar bahorda yurtimizga uchib keladi va baland minoralar ustiga uya quradi. Ushbu darsda birliklarni qo‘shib yangi o‘nlik hosil qilishni (31 + 9 = 40) o‘rganamiz.",
+  "keyPoints": [
+    "31 + 9 amali: 1 birlik va 9 birlik qo‘shilib 1 ta yangi o‘nlik hosil qiladi.",
+    "3 ta o‘nlik + 1 ta yangi o‘nlik = 4 ta o‘nlik = 40.",
+    "Yaxlit songacha to‘ldirish hisob-kitobni ancha tezlashtiradi."
+  ],
+  "miniExample": {
+    "emojis": "🦢 31 + 9 = 3 o‘nl. 10 birl. = 40",
+    "text": "1 ga 9 ni qo‘shsak 10 (1 o‘nlik) bo‘ladi. 30 ga 10 ni qo‘shsak 40 hosil bo‘ladi!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 31 + 9",
+      "options": [
+        "40",
+        "39",
+        "41",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "31 + 9 = 40."
+    },
+    {
+      "text": "Hisoblang: 75 + 5",
+      "options": [
+        "70",
+        "80",
+        "85",
+        "79"
+      ],
+      "correctIndex": 1,
+      "explanation": "75 + 5 = 80."
+    },
+    {
+      "text": "Tenglamani yeching: x - 4 = 36",
+      "options": [
+        "32",
+        "38",
+        "40",
+        "42"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 36 + 4 = 40."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 31 + 9",
+      "options": [
+        "40",
+        "39",
+        "41",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 + 9 = 10, 30 + 10 = 40."
+    },
+    {
+      "text": "Hisoblang: 75 + 5",
+      "options": [
+        "70",
+        "80",
+        "85",
+        "79"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 5 = 10, 70 + 10 = 80."
+    },
+    {
+      "text": "Hisoblang: 34 + 6",
+      "options": [
+        "39",
+        "41",
+        "40",
+        "50"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 6 = 10, 30 + 10 = 40."
+    },
+    {
+      "text": "Hisoblang: 92 + 8",
+      "options": [
+        "99",
+        "90",
+        "98",
+        "100"
+      ],
+      "correctIndex": 3,
+      "explanation": "2 + 8 = 10, 90 + 10 = 100."
+    },
+    {
+      "text": "Tenglamani yeching: x - 4 = 36",
+      "options": [
+        "40",
+        "32",
+        "39",
+        "42"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 36 + 4 = 40."
+    },
+    {
+      "text": "31 + 9 amali xona birliklarida qanday ifodalanadi?",
+      "options": [
+        "3 o‘nl. 9 birl. = 39",
+        "3 o‘nl. 10 birl. = 4 o‘nl. = 40",
+        "4 o‘nl. 1 birl. = 41",
+        "30 o‘nlik"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 ta birlik 1 ta yangi o‘nlik bo‘lib qo‘shiladi."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchakning eni 13 cm, bo‘yi esa undan 7 cm uzun. To‘rtburchakning bo‘yi necha cm?",
+      "options": [
+        "19 cm",
+        "21 cm",
+        "20 cm (13 + 7 = 20)",
+        "6 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "13 + 7 = 20 cm."
+    },
+    {
+      "text": "Ushbu to‘g‘ri to‘rtburchakning perimetrini hisoblang (eni 13 cm, bo‘yi 20 cm):",
+      "options": [
+        "64 cm",
+        "68 cm",
+        "33 cm",
+        "66 cm (13 + 20 + 13 + 20 = 66)"
+      ],
+      "correctIndex": 3,
+      "explanation": "13 + 20 + 13 + 20 = 66 cm."
+    },
+    {
+      "text": "'21 va 9 ning yig‘indisiga 5 ni qo‘shing'. Ifoda qiymatini toping:",
+      "options": [
+        "35 ((21 + 9) + 5 = 35)",
+        "34",
+        "36",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "21 + 9 = 30, 30 + 5 = 35."
+    },
+    {
+      "text": "Hisoblang: 43 + 7 + 10",
+      "options": [
+        "50",
+        "60",
+        "59",
+        "61"
+      ],
+      "correctIndex": 1,
+      "explanation": "43 + 7 = 50, 50 + 10 = 60."
+    },
+    {
+      "text": "Hisoblang: 62 + 8 - 20",
+      "options": [
+        "40",
+        "60",
+        "50",
+        "70"
+      ],
+      "correctIndex": 2,
+      "explanation": "62 + 8 = 70, 70 - 20 = 50."
+    },
+    {
+      "text": "Tenglamani yeching: y - 8 = 52",
+      "options": [
+        "44",
+        "58",
+        "62",
+        "60"
+      ],
+      "correctIndex": 3,
+      "explanation": "y = 52 + 8 = 60."
+    },
+    {
+      "text": "Ko‘l bo‘yida 23 ta laylak qo‘nib turgan edi. Yana 7 ta laylak uchib keldi. Laylaklar nechta bo‘ldi?",
+      "options": [
+        "30 ta",
+        "29 ta",
+        "31 ta",
+        "28 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "23 + 7 = 30 ta laylak."
+    },
+    {
+      "text": "Hisoblang: 56 + 4 + 15",
+      "options": [
+        "70",
+        "75",
+        "74",
+        "76"
+      ],
+      "correctIndex": 1,
+      "explanation": "56 + 4 = 60, 60 + 15 = 75."
+    },
+    {
+      "text": "Tenglamani yeching: a - 6 = 84",
+      "options": [
+        "78",
+        "88",
+        "90",
+        "92"
+      ],
+      "correctIndex": 2,
+      "explanation": "a = 84 + 6 = 90."
+    },
+    {
+      "text": "Bog‘bon 51 tup olma va 9 tup nok ko‘chati o‘tqazdi. Ko‘chatlarning umumiy soni qaysi yaxlit songa teng?",
+      "options": [
+        "50",
+        "70",
+        "59",
+        "60 (51 + 9)"
+      ],
+      "correctIndex": 3,
+      "explanation": "51 + 9 = 60."
+    },
+    {
+      "text": "Hisoblang: (18 + 2) + (27 + 3)",
+      "options": [
+        "50",
+        "48",
+        "52",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 + 30 = 50."
+    },
+    {
+      "text": "Qaysi songa 7 ni qo‘shsak 50 hosil bo‘ladi?",
+      "options": [
+        "42",
+        "43",
+        "44",
+        "41"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 - 7 = 43."
+    },
+    {
+      "text": "Qishloqda laylaklar 3 ta baland binoda uya qurgan. Birinchi binoda 11 ta, ikkinchisida 19 ta laylak bor. Uchinchi binodagi laylaklar esa birinchi va ikkinchi binodagi laylaklar yig‘indisidan 10 taga kam. Uchinchi binoda nechta laylak bor?",
+      "options": [
+        "18 ta",
+        "22 ta",
+        "20 ta laylak ((11 + 19) - 10 = 20)",
+        "30 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "11 + 19 = 30 ta. 30 - 10 = 20 ta laylak."
+    },
+    {
+      "text": "Qishloqda uchala binoda jami nechta laylak yashaydi (oldingi masala shartiga ko‘ra)?",
+      "options": [
+        "40 ta",
+        "48 ta",
+        "60 ta",
+        "50 ta laylak (30 + 20 = 50)"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 + 20 = 50 ta laylak."
+    }
+  ]
+}

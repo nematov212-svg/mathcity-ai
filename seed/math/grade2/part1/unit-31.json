@@ -1,0 +1,279 @@
+{
+  "order": 31,
+  "bookNumber": 30,
+  "unitType": "LESSON",
+  "title": "Ustun ko‘rinishida qo‘shish",
+  "emoji": "🗣️",
+  "crossTopic": "Til o‘rganish",
+  "shortDesc": "Xonadan o'tib ustun ko'rinishida qo'shish algoritmi",
+  "intro": "Yangi til o'rganishda harflar va so'zlar birlashib gap hosil qiladi. Ustun ko'rinishida qo'shishda ham birliklar o'nlikka o'tib yangi xonani hosil qiladi!",
+  "keyPoints": [
+    "Birliklar qo'shiladi: masalan, 7 + 5 = 12.",
+    "2 birliklar tagiga yoziladi, 1 o'nlik esda saqlanadi.",
+    "O'nliklar qo'shiladi va yoddagi 1 qo'shib qo'yiladi."
+  ],
+  "miniExample": {
+    "emojis": "🗣️ 37 + 25 = 62",
+    "text": "7 + 5 = 12 (2 yozamiz, 1 dilda), 3 + 2 = 5, dildagi bilan 6 o'nlik = 62!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Ustun shaklida hisoblang: 37 + 25",
+      "options": [
+        "62",
+        "61",
+        "63",
+        "60"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 5 = 12 (2 yoziladi, 1 dilda), 3 + 2 + 1 = 6. Natija: 62."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 48 + 36",
+      "options": [
+        "83",
+        "84",
+        "85",
+        "82"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 6 = 14 (4 yoziladi, 1 dilda), 4 + 3 + 1 = 8. Natija: 84."
+    },
+    {
+      "text": "Til kursida 28 ta yangi so'z va 15 ta qoida o'rganildi. Jami nechta mavzu o'rganildi?",
+      "options": [
+        "42",
+        "44",
+        "43",
+        "41"
+      ],
+      "correctIndex": 2,
+      "explanation": "28 + 15 = 43."
+    }
+  ],
+  "test": [
+    {
+      "text": "Ustun shaklida hisoblang: 37 + 25",
+      "options": [
+        "62",
+        "61",
+        "63",
+        "60"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 5 = 12, 3 + 2 + 1 = 6. Natija: 62."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 46 + 28",
+      "options": [
+        "73",
+        "74",
+        "75",
+        "72"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 8 = 14, 4 + 2 + 1 = 7. Natija: 74."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 58 + 26",
+      "options": [
+        "83",
+        "85",
+        "84",
+        "82"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 6 = 14, 5 + 2 + 1 = 8. Natija: 84."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 29 + 37",
+      "options": [
+        "65",
+        "67",
+        "64",
+        "66"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 + 7 = 16, 2 + 3 + 1 = 6. Natija: 66."
+    },
+    {
+      "text": "O'quvchi ingliz tilidan 36 ta, fransuz tilidan 18 ta lug'at kartochkasi tayyorladi. Jami kartochkalar nechta?",
+      "options": [
+        "54",
+        "53",
+        "55",
+        "52"
+      ],
+      "correctIndex": 0,
+      "explanation": "36 + 18 = 54 ta."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 67 + 24",
+      "options": [
+        "90",
+        "91",
+        "92",
+        "89"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 4 = 11, 6 + 2 + 1 = 9. Natija: 91."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 48 + 45",
+      "options": [
+        "92",
+        "94",
+        "93",
+        "91"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 5 = 13, 4 + 4 + 1 = 9. Natija: 93."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 35 + 47",
+      "options": [
+        "81",
+        "83",
+        "80",
+        "82"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 7 = 12, 3 + 4 + 1 = 8. Natija: 82."
+    },
+    {
+      "text": "Tenglamani yeching: x - 28 = 45",
+      "options": [
+        "73",
+        "72",
+        "74",
+        "71"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 45 + 28 = 73."
+    },
+    {
+      "text": "Tenglamani yeching: y - 37 = 29",
+      "options": [
+        "65",
+        "66",
+        "67",
+        "64"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 29 + 37 = 66."
+    },
+    {
+      "text": "Taqqoslang: 37 + 25 va 60",
+      "options": [
+        "<",
+        "=",
+        ">",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "37 + 25 = 62. 62 > 60."
+    },
+    {
+      "text": "Taqqoslang: 48 + 26 va 50 + 24",
+      "options": [
+        ">",
+        "<",
+        "+",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "48 + 26 = 74 va 50 + 24 = 74. Ular teng: 74 = 74."
+    },
+    {
+      "text": "Kutubxonada 34 ta chet tili darsligi va 29 ta badiiy kitob bor. Jami kitoblar nechta?",
+      "options": [
+        "63",
+        "62",
+        "64",
+        "61"
+      ],
+      "correctIndex": 0,
+      "explanation": "34 + 29 = 63 ta."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 56 + 38",
+      "options": [
+        "93",
+        "94",
+        "95",
+        "92"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 8 = 14, 5 + 3 + 1 = 9. Natija: 94."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 27 + 45",
+      "options": [
+        "71",
+        "73",
+        "72",
+        "70"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 5 = 12, 2 + 4 + 1 = 7. Natija: 72."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 49 + 34",
+      "options": [
+        "82",
+        "84",
+        "81",
+        "83"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 + 4 = 13, 4 + 3 + 1 = 8. Natija: 83."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 38 + * = 64?",
+      "options": [
+        "26",
+        "25",
+        "27",
+        "24"
+      ],
+      "correctIndex": 0,
+      "explanation": "64 - 38 = 26."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 64 + 18",
+      "options": [
+        "81",
+        "82",
+        "83",
+        "80"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 + 8 = 12, 6 + 1 + 1 = 8. Natija: 82."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 19 + 57",
+      "options": [
+        "75",
+        "77",
+        "76",
+        "74"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 + 7 = 16, 1 + 5 + 1 = 7. Natija: 76."
+    },
+    {
+      "text": "Ustun shaklida hisoblang: 39 + 43",
+      "options": [
+        "81",
+        "83",
+        "80",
+        "82"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 + 3 = 12, 3 + 4 + 1 = 8. Natija: 82."
+    }
+  ]
+}

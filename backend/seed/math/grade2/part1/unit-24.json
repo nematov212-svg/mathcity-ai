@@ -1,0 +1,279 @@
+{
+  "order": 24,
+  "bookNumber": 24,
+  "unitType": "LESSON",
+  "title": "Sonlarni ayirish (43 - 7)",
+  "emoji": "🧸",
+  "crossTopic": "O‘yinchoqlar",
+  "shortDesc": "Ixtiyoriy ikki xonali sondan bir xonali sonni xonadan o'tib ayirish",
+  "intro": "O'yinchoqlar do'konida bolalar uchun xilma-xil o'yinchoqlar bor. 43 - 7 amalini bajarishda 43 = 30 + 13 deb olamiz: 13 - 7 = 6, 30 + 6 = 36!",
+  "keyPoints": [
+    "1-usul: 7 ni 3 va 4 ga ajratish: 43 - 3 = 40, 40 - 4 = 36.",
+    "2-usul: 43 ni 30 va 13 ga ajratish: 13 - 7 = 6, 30 + 6 = 36.",
+    "Ikkala usul ham to'g'ri natijaga olib keladi."
+  ],
+  "miniExample": {
+    "emojis": "🧸 43 - 7 = 36",
+    "text": "43 dan 7 ni ayirish: 43 - 3 = 40, 40 - 4 = 36 o'yinchoq!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 43 - 7",
+      "options": [
+        "36",
+        "35",
+        "37",
+        "34"
+      ],
+      "correctIndex": 0,
+      "explanation": "43 - 3 = 40, 40 - 4 = 36."
+    },
+    {
+      "text": "Hisoblang: 52 - 6",
+      "options": [
+        "45",
+        "46",
+        "47",
+        "44"
+      ],
+      "correctIndex": 1,
+      "explanation": "52 - 2 = 50, 50 - 4 = 46."
+    },
+    {
+      "text": "Do'konda 42 ta ayiqcha bor edi. 8 tasi sotildi. Nechta ayiqcha qoldi?",
+      "options": [
+        "33",
+        "35",
+        "34",
+        "32"
+      ],
+      "correctIndex": 2,
+      "explanation": "42 - 8 = 34 ta ayiqcha."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 43 - 7",
+      "options": [
+        "36",
+        "35",
+        "37",
+        "34"
+      ],
+      "correctIndex": 0,
+      "explanation": "43 - 3 = 40, 40 - 4 = 36."
+    },
+    {
+      "text": "Hisoblang: 54 - 8",
+      "options": [
+        "45",
+        "46",
+        "47",
+        "44"
+      ],
+      "correctIndex": 1,
+      "explanation": "54 - 4 = 50, 50 - 4 = 46."
+    },
+    {
+      "text": "Hisoblang: 62 - 5",
+      "options": [
+        "56",
+        "58",
+        "57",
+        "55"
+      ],
+      "correctIndex": 2,
+      "explanation": "62 - 2 = 60, 60 - 3 = 57."
+    },
+    {
+      "text": "Hisoblang: 75 - 9",
+      "options": [
+        "65",
+        "67",
+        "64",
+        "66"
+      ],
+      "correctIndex": 3,
+      "explanation": "75 - 5 = 70, 70 - 4 = 66."
+    },
+    {
+      "text": "Qutida 45 ta o'yinchoq mashina bor edi. 8 tasi bolalarga berildi. Nechtasi qoldi?",
+      "options": [
+        "37",
+        "36",
+        "38",
+        "35"
+      ],
+      "correctIndex": 0,
+      "explanation": "45 - 8 = 37 ta mashina."
+    },
+    {
+      "text": "Hisoblang: 83 - 6",
+      "options": [
+        "76",
+        "77",
+        "78",
+        "75"
+      ],
+      "correctIndex": 1,
+      "explanation": "83 - 3 = 80, 80 - 3 = 77."
+    },
+    {
+      "text": "Hisoblang: 91 - 4",
+      "options": [
+        "86",
+        "88",
+        "87",
+        "85"
+      ],
+      "correctIndex": 2,
+      "explanation": "91 - 1 = 90, 90 - 3 = 87."
+    },
+    {
+      "text": "Hisoblang: 64 - 7",
+      "options": [
+        "56",
+        "58",
+        "55",
+        "57"
+      ],
+      "correctIndex": 3,
+      "explanation": "64 - 4 = 60, 60 - 3 = 57."
+    },
+    {
+      "text": "Tenglamani yeching: 43 - x = 35",
+      "options": [
+        "8",
+        "7",
+        "9",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 43 - 35 = 8."
+    },
+    {
+      "text": "Tenglamani yeching: y + 9 = 52",
+      "options": [
+        "42",
+        "43",
+        "44",
+        "41"
+      ],
+      "correctIndex": 1,
+      "explanation": "y = 52 - 9 = 43."
+    },
+    {
+      "text": "Taqqoslang: 43 - 7 va 30 + 6",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "43 - 7 = 36 va 30 + 6 = 36. Ular teng: 36 = 36."
+    },
+    {
+      "text": "Taqqoslang: 51 - 6 va 46",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "51 - 6 = 45. 45 < 46."
+    },
+    {
+      "text": "Konstruktor to'plamida 53 ta detal bor. 9 tasi ishlatildi. Ishlatilmagan detallar nechta?",
+      "options": [
+        "44",
+        "43",
+        "45",
+        "42"
+      ],
+      "correctIndex": 0,
+      "explanation": "53 - 9 = 44 ta detal."
+    },
+    {
+      "text": "Hisoblang: 72 - 8",
+      "options": [
+        "63",
+        "64",
+        "65",
+        "62"
+      ],
+      "correctIndex": 1,
+      "explanation": "72 - 2 = 70, 70 - 6 = 64."
+    },
+    {
+      "text": "Hisoblang: 85 - 7",
+      "options": [
+        "77",
+        "79",
+        "78",
+        "76"
+      ],
+      "correctIndex": 2,
+      "explanation": "85 - 5 = 80, 80 - 2 = 78."
+    },
+    {
+      "text": "Hisoblang: 46 - 8",
+      "options": [
+        "37",
+        "39",
+        "36",
+        "38"
+      ],
+      "correctIndex": 3,
+      "explanation": "46 - 6 = 40, 40 - 2 = 38."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: 43 - * = 34?",
+      "options": [
+        "9",
+        "8",
+        "7",
+        "10"
+      ],
+      "correctIndex": 0,
+      "explanation": "43 - 34 = 9."
+    },
+    {
+      "text": "Hisoblang: 66 - 9",
+      "options": [
+        "56",
+        "57",
+        "58",
+        "55"
+      ],
+      "correctIndex": 1,
+      "explanation": "66 - 6 = 60, 60 - 3 = 57."
+    },
+    {
+      "text": "Hisoblang: 94 - 6",
+      "options": [
+        "87",
+        "89",
+        "88",
+        "86"
+      ],
+      "correctIndex": 2,
+      "explanation": "94 - 4 = 90, 90 - 2 = 88."
+    },
+    {
+      "text": "Hisoblang: 55 - 8",
+      "options": [
+        "46",
+        "48",
+        "45",
+        "47"
+      ],
+      "correctIndex": 3,
+      "explanation": "55 - 5 = 50, 50 - 3 = 47."
+    }
+  ]
+}

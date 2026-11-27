@@ -1,0 +1,279 @@
+{
+  "order": 42,
+  "bookNumber": 40,
+  "unitType": "LESSON",
+  "title": "Amaliy topshiriqlar",
+  "emoji": "🏃",
+  "crossTopic": "Intellektual marafon",
+  "shortDesc": "Intellektual marafon: tenglamalar va o'lchov birliklari",
+  "intro": "Intellektual marafonda chaqqonlik va zukkolik sinovdan o'tkaziladi. Ushbu darsda tenglamalar (x - 25 = 25, a - 0 = 15) va uzunlik o'lchov birliklarini (dm, cm) hisoblashni bajaramiz!",
+  "keyPoints": [
+    "Tenglamalarni yechish: x - 25 = 25 bo'lsa x = 25 + 25 = 50.",
+    "0 bilan amallar: a - 0 = 15 bo'lsa a = 15.",
+    "O'lchov birliklari: 1 dm = 10 cm, 4 dm 5 cm = 45 cm."
+  ],
+  "miniExample": {
+    "emojis": "🏃 x - 25 = 25 (x = 50) | 4 dm 5 cm = 45 cm",
+    "text": "x - 25 = 25 tenglamaning yechimi 50! 4 dm 5 cm = 45 cm!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Tenglamani yeching: x - 25 = 25",
+      "options": [
+        "50",
+        "40",
+        "45",
+        "55"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 25 + 25 = 50."
+    },
+    {
+      "text": "Tenglamani yeching: a - 0 = 15",
+      "options": [
+        "0",
+        "15",
+        "14",
+        "16"
+      ],
+      "correctIndex": 1,
+      "explanation": "a = 15 + 0 = 15."
+    },
+    {
+      "text": "Santimetrlarda ifodalang: 4 dm 5 cm necha cm bo'ladi?",
+      "options": [
+        "40 cm",
+        "54 cm",
+        "45 cm",
+        "50 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 dm = 40 cm, 40 + 5 = 45 cm."
+    }
+  ],
+  "test": [
+    {
+      "text": "Tenglamani yeching: x - 25 = 25",
+      "options": [
+        "50",
+        "40",
+        "45",
+        "55"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 25 + 25 = 50."
+    },
+    {
+      "text": "Tenglamani yeching: a - 0 = 15",
+      "options": [
+        "0",
+        "15",
+        "14",
+        "16"
+      ],
+      "correctIndex": 1,
+      "explanation": "a = 15 + 0 = 15."
+    },
+    {
+      "text": "Santimetrlarda ifodalang: 4 dm 5 cm necha cm bo'ladi?",
+      "options": [
+        "40 cm",
+        "54 cm",
+        "45 cm",
+        "50 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 dm = 40 cm, 40 + 5 = 45 cm."
+    },
+    {
+      "text": "Tenglamani yeching: y + 16 = 40",
+      "options": [
+        "23",
+        "25",
+        "22",
+        "24"
+      ],
+      "correctIndex": 3,
+      "explanation": "y = 40 - 16 = 24."
+    },
+    {
+      "text": "Santimetrlarda ifodalang: 6 dm 8 cm necha cm bo'ladi?",
+      "options": [
+        "68 cm",
+        "60 cm",
+        "86 cm",
+        "78 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 dm = 60 cm, 60 + 8 = 68 cm."
+    },
+    {
+      "text": "Tenglamani yeching: 50 - z = 18",
+      "options": [
+        "31",
+        "32",
+        "33",
+        "30"
+      ],
+      "correctIndex": 1,
+      "explanation": "z = 50 - 18 = 32."
+    },
+    {
+      "text": "Santimetrlarda ifodalang: 3 dm 2 cm necha cm bo'ladi?",
+      "options": [
+        "30 cm",
+        "23 cm",
+        "32 cm",
+        "35 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 dm = 30 cm, 30 + 2 = 32 cm."
+    },
+    {
+      "text": "Tenglamani yeching: m - 34 = 34",
+      "options": [
+        "67",
+        "69",
+        "66",
+        "68"
+      ],
+      "correctIndex": 3,
+      "explanation": "m = 34 + 34 = 68."
+    },
+    {
+      "text": "Tenglamani yeching: k + 0 = 28",
+      "options": [
+        "28",
+        "0",
+        "27",
+        "29"
+      ],
+      "correctIndex": 0,
+      "explanation": "k = 28."
+    },
+    {
+      "text": "Tenglamani yeching: 70 - x = 25",
+      "options": [
+        "44",
+        "45",
+        "46",
+        "43"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 70 - 25 = 45."
+    },
+    {
+      "text": "Taqqoslang: 4 dm 5 cm va 50 cm",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 dm 5 cm = 45 cm. 45 cm < 50 cm."
+    },
+    {
+      "text": "Taqqoslang: 6 dm va 60 cm",
+      "options": [
+        ">",
+        "<",
+        "+",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "6 dm = 60 cm. Ular teng: 60 cm = 60 cm."
+    },
+    {
+      "text": "Sportchi 5 dm 4 cm masofaga sakradi. Bu necha santimetrga teng?",
+      "options": [
+        "54 cm",
+        "50 cm",
+        "45 cm",
+        "55 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 dm 4 cm = 54 cm."
+    },
+    {
+      "text": "Tenglamani yeching: x - 18 = 18",
+      "options": [
+        "35",
+        "36",
+        "37",
+        "34"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 18 + 18 = 36."
+    },
+    {
+      "text": "Santimetrlarda ifodalang: 8 dm 3 cm necha cm bo'ladi?",
+      "options": [
+        "80 cm",
+        "38 cm",
+        "83 cm",
+        "85 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 dm = 80 cm, 80 + 3 = 83 cm."
+    },
+    {
+      "text": "Tenglamani yeching: 80 - y = 44",
+      "options": [
+        "35",
+        "37",
+        "34",
+        "36"
+      ],
+      "correctIndex": 3,
+      "explanation": "y = 80 - 44 = 36."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: * - 20 = 20?",
+      "options": [
+        "40",
+        "39",
+        "41",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 + 20 = 40."
+    },
+    {
+      "text": "Santimetrlarda ifodalang: 7 dm 9 cm necha cm bo'ladi?",
+      "options": [
+        "70 cm",
+        "79 cm",
+        "97 cm",
+        "89 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 dm 9 cm = 79 cm."
+    },
+    {
+      "text": "Tenglamani yeching: a - 45 = 45",
+      "options": [
+        "80",
+        "85",
+        "90",
+        "95"
+      ],
+      "correctIndex": 2,
+      "explanation": "a = 45 + 45 = 90."
+    },
+    {
+      "text": "Tenglamani yeching: 60 - b = 27",
+      "options": [
+        "32",
+        "34",
+        "31",
+        "33"
+      ],
+      "correctIndex": 3,
+      "explanation": "b = 60 - 27 = 33."
+    }
+  ]
+}

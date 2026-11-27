@@ -1,0 +1,279 @@
+{
+  "order": 15,
+  "bookNumber": 15,
+  "unitType": "LESSON",
+  "title": "Sonlarni qo‘shish (21 + 39)",
+  "emoji": "🤝",
+  "crossTopic": "Hamkorlikdagi mehnat",
+  "shortDesc": "Birliklar yig'indisi 10 bo'ladigan sonlarni qo'shish usuli",
+  "intro": "Hamkorlikdagi mehnatda kuch birlashadi. Matematikada ham birliklar yig'indisi 10 bo'lganda yangi o'nlik hosil bo'ladi: 21 + 39 = 60!",
+  "keyPoints": [
+    "Birliklar qo'shiladi: 1 + 9 = 10 (bitta o'nlik).",
+    "O'nliklar qo'shiladi: 20 + 30 = 50.",
+    "Hammasi birlashtiriladi: 50 + 10 = 60."
+  ],
+  "miniExample": {
+    "emojis": "🤝 21 + 39 = 60",
+    "text": "21 ga 39 ni qo'shish: 20 + 30 = 50, 1 + 9 = 10; 50 + 10 = 60."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 21 + 39",
+      "options": [
+        "60",
+        "50",
+        "59",
+        "61"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 + 30 = 50, 1 + 9 = 10. 50 + 10 = 60."
+    },
+    {
+      "text": "Hisoblang: 34 + 26",
+      "options": [
+        "58",
+        "60",
+        "62",
+        "50"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 20 = 50, 4 + 6 = 10. 50 + 10 = 60."
+    },
+    {
+      "text": "Hasharda bolalar 14 ta archa va 36 ta terak ko'chati o'tqazdilar. Jami nechta daraxt ekildi?",
+      "options": [
+        "40",
+        "48",
+        "50",
+        "52"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 + 36 = 10 + 30 + 4 + 6 = 40 + 10 = 50."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 21 + 39",
+      "options": [
+        "60",
+        "50",
+        "59",
+        "61"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 + 30 = 50, 1 + 9 = 10. 50 + 10 = 60."
+    },
+    {
+      "text": "Hisoblang: 34 + 26",
+      "options": [
+        "58",
+        "60",
+        "62",
+        "50"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 20 = 50, 4 + 6 = 10. 50 + 10 = 60."
+    },
+    {
+      "text": "Hisoblang: 17 + 43",
+      "options": [
+        "50",
+        "59",
+        "60",
+        "70"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 40 = 50, 7 + 3 = 10. 50 + 10 = 60."
+    },
+    {
+      "text": "Hasharda bir guruh 25 ta, ikkinchi guruh 35 ta daraxt oqladi. Jami nechta daraxt oqlandi?",
+      "options": [
+        "50",
+        "55",
+        "65",
+        "60"
+      ],
+      "correctIndex": 3,
+      "explanation": "25 + 35 = 20 + 30 + 5 + 5 = 50 + 10 = 60."
+    },
+    {
+      "text": "Hisoblang: 48 + 32",
+      "options": [
+        "80",
+        "70",
+        "78",
+        "82"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 + 30 = 70, 8 + 2 = 10. 70 + 10 = 80."
+    },
+    {
+      "text": "Hisoblang: 56 + 24",
+      "options": [
+        "70",
+        "80",
+        "82",
+        "78"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 + 20 = 70, 6 + 4 = 10. 70 + 10 = 80."
+    },
+    {
+      "text": "Hisoblang: 63 + 17",
+      "options": [
+        "70",
+        "79",
+        "80",
+        "83"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 + 10 = 70, 3 + 7 = 10. 70 + 10 = 80."
+    },
+    {
+      "text": "Hisoblang: 72 + 18",
+      "options": [
+        "80",
+        "88",
+        "92",
+        "90"
+      ],
+      "correctIndex": 3,
+      "explanation": "70 + 10 = 80, 2 + 8 = 10. 80 + 10 = 90."
+    },
+    {
+      "text": "Hisoblang: 29 + 41",
+      "options": [
+        "70",
+        "60",
+        "68",
+        "72"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 + 40 = 60, 9 + 1 = 10. 60 + 10 = 70."
+    },
+    {
+      "text": "Bir brigada 31 metr, ikkinchi brigada 49 metr yo'l ta'mirladi. Jami necha metr yo'l ta'mirlandi?",
+      "options": [
+        "70",
+        "80",
+        "75",
+        "85"
+      ],
+      "correctIndex": 1,
+      "explanation": "31 + 49 = 80 metr."
+    },
+    {
+      "text": "Tenglamani yeching: x - 26 = 34",
+      "options": [
+        "50",
+        "58",
+        "60",
+        "62"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 34 + 26 = 60."
+    },
+    {
+      "text": "Tenglamani yeching: y + 38 = 70",
+      "options": [
+        "30",
+        "42",
+        "22",
+        "32"
+      ],
+      "correctIndex": 3,
+      "explanation": "y = 70 - 38 = 32."
+    },
+    {
+      "text": "Hisoblang: 15 + 65",
+      "options": [
+        "80",
+        "70",
+        "75",
+        "85"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 60 = 70, 5 + 5 = 10. 70 + 10 = 80."
+    },
+    {
+      "text": "Taqqoslang: 21 + 39 va 15 + 45",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "21 + 39 = 60 va 15 + 45 = 60. Ular teng: 60 = 60."
+    },
+    {
+      "text": "Taqqoslang: 37 + 23 va 50 + 9",
+      "options": [
+        "<",
+        "=",
+        ">",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "37 + 23 = 60, 50 + 9 = 59. 60 > 59."
+    },
+    {
+      "text": "Hisoblang: 44 + 36",
+      "options": [
+        "70",
+        "78",
+        "82",
+        "80"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 + 30 = 70, 4 + 6 = 10. 70 + 10 = 80."
+    },
+    {
+      "text": "Qaysi juftlikdagi sonlar yig'indisi yaxlit o'nlik bo'ladi?",
+      "options": [
+        "21 va 39",
+        "22 va 35",
+        "14 va 23",
+        "31 va 42"
+      ],
+      "correctIndex": 0,
+      "explanation": "21 + 39 = 60. Birliklari 1 + 9 = 10 bo'lgani uchun natija yaxlit o'nlik."
+    },
+    {
+      "text": "Hisoblang: 53 + 37",
+      "options": [
+        "80",
+        "90",
+        "88",
+        "92"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 + 30 = 80, 3 + 7 = 10. 80 + 10 = 90."
+    },
+    {
+      "text": "Hisoblang: 12 + 68",
+      "options": [
+        "70",
+        "78",
+        "80",
+        "82"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 60 = 70, 2 + 8 = 10. 70 + 10 = 80."
+    },
+    {
+      "text": "Yulduzchaning o'rniga qaysi son mos keladi: * + 27 = 50?",
+      "options": [
+        "25",
+        "33",
+        "27",
+        "23"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 27 = 23."
+    }
+  ]
+}
