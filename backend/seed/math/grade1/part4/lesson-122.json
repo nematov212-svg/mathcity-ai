@@ -1,0 +1,277 @@
+{
+  "bookNumber": 122,
+  "isReview": false,
+  "title": "To‘rtburchaklar",
+  "emoji": "🎭",
+  "shortDesc": "To‘rtburchaklar oilasi: kvadrat, to‘g‘ri to‘rtburchak, romb va ularning belgilari.",
+  "intro": "Bir-biri bilan tutashtirilgan 4 ta kesma (tomon) va 4 ta nuqta (uch)dan iborat yopiq shakl to‘rtburchak deyiladi.",
+  "keyPoints": [
+    "To‘rtburchak 4 ta tomon, 4 ta uch va 4 ta burchakdan iborat.",
+    "To‘rtburchak turlari: to‘g‘ri to‘rtburchak, kvadrat, romb.",
+    "Rombning barcha 4 ta tomoni teng bo‘ladi, lekin burchaklari to‘g‘ri bo‘lmasligi mumkin."
+  ],
+  "miniExample": {
+    "emojis": "🎭 Kvadrat, to‘g‘ri to‘rtburchak, romb",
+    "text": "Bularning barchasi 4 ta tomonga ega bo‘lgani uchun to‘rtburchaklar oilasiga kiradi."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "To‘rtburchakning nechta tomoni va nechta burchagi bor?",
+      "options": [
+        "4 ta tomoni va 4 ta burchagi",
+        "3 ta tomoni va 3 ta burchagi",
+        "5 ta tomoni va 5 ta burchagi",
+        "4 ta tomoni va 2 ta burchagi"
+      ],
+      "correctIndex": 0,
+      "explanation": "To‘rtburchakda 4 ta tomon va 4 ta burchak bo‘ladi."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri to‘rtburchaklar oilasiga kiradi?",
+      "options": [
+        "Uchburchak va doira",
+        "To‘g‘ri to‘rtburchak, kvadrat va romb",
+        "Faqat aylana",
+        "Beshburchak va nur"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bularning barchasi 4 ta tomonga ega to‘rtburchaklardir."
+    },
+    {
+      "text": "Rombning barcha tomonlari qanday bo‘ladi?",
+      "options": [
+        "Har xil bo‘ladi",
+        "Faqat 2 tasi teng bo‘ladi",
+        "O‘zaro teng bo‘ladi",
+        "Tomonlari bo‘lmaydi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Rombning barcha 4 ta tomoni teng bo‘ladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "To‘rtburchakning nechta uchi bor?",
+      "options": [
+        "4 ta uchi",
+        "3 ta uchi",
+        "5 ta uchi",
+        "6 ta uchi"
+      ],
+      "correctIndex": 0,
+      "explanation": "To‘rtburchakda 4 ta uch bor."
+    },
+    {
+      "text": "Quyidagi shakllardan qaysi biri to‘rtburchak?",
+      "options": [
+        "Uchburchak 🔺",
+        "Doira ⭕",
+        "Kvadrat 🟦",
+        "Beshburchak ⬟"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kvadrat 4 ta tomonli shakl — to‘rtburchakdir."
+    },
+    {
+      "text": "Barcha tomonlari teng bo‘lgan to‘rtburchaklar qaysilar?",
+      "options": [
+        "Faqat to‘g‘ri to‘rtburchak",
+        "Kvadrat va romb",
+        "Uchburchak va kvadrat",
+        "Trapetsiya va doira"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kvadrat va rombning barcha 4 ta tomoni teng bo‘ladi."
+    },
+    {
+      "text": "Rombning nechta tomoni bor?",
+      "options": [
+        "3 ta",
+        "5 ta",
+        "6 ta",
+        "4 ta tomoni"
+      ],
+      "correctIndex": 3,
+      "explanation": "Romb to‘rtburchak bo‘lib, 4 ta tomonga ega."
+    },
+    {
+      "text": "Tomonlari 5 sm bo‘lgan rombning perimetrini hisoblang:",
+      "options": [
+        "15 sm",
+        "20 sm (5 + 5 + 5 + 5 = 20)",
+        "25 sm",
+        "10 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 5 + 5 + 5 = 20 sm."
+    },
+    {
+      "text": "To‘rtburchakda nechta qarama-qarshi tomonlar juftligi bor?",
+      "options": [
+        "2 juft (2 ta qarama-qarshi tomonlar jufti)",
+        "1 juft",
+        "3 juft",
+        "4 juft"
+      ],
+      "correctIndex": 0,
+      "explanation": "To‘rtburchakda 2 juft qarama-qarshi tomonlar bo‘ladi."
+    },
+    {
+      "text": "Kvadrat bilan rombning asosiy o‘xshashligi nimada?",
+      "options": [
+        "Ikkalasining ham 3 ta tomoni bor",
+        "Ikkalasi ham doira shaklida",
+        "Burchaklari yo‘q",
+        "Ikkalasining ham barcha 4 ta tomoni teng"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kvadrat va rombning barcha tomonlari o‘zaro tengdir."
+    },
+    {
+      "text": "Kvadrat bilan oddiy rombning asosiy farqi nimada?",
+      "options": [
+        "Rombning 5 ta tomoni bor",
+        "Kvadratning 3 ta tomoni bor",
+        "Kvadratning barcha burchaklari to‘g‘ri, rombda esa o‘tkir va o‘tmas burchaklar bo‘ladi",
+        "Ular bir xil shakl"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kvadratda hamma burchak to‘g‘ri (90°), rombda esa o‘tkir va o‘tmas burchaklar bo‘ladi."
+    },
+    {
+      "text": "Rombning tomoni 8 sm. Uning perimetrini toping:",
+      "options": [
+        "24 sm",
+        "30 sm",
+        "32 sm (8 x 4 = 32)",
+        "16 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 8 + 8 + 8 = 32 sm."
+    },
+    {
+      "text": "Tomonlari 6 sm va 4 sm bo‘lgan to‘g‘ri to‘rtburchak perimetri qancha?",
+      "options": [
+        "18 sm",
+        "22 sm",
+        "24 sm",
+        "20 sm (6 + 4 + 6 + 4 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 4 + 6 + 4 = 20 sm = 2 dm."
+    },
+    {
+      "text": "Quyidagi shakllardan ortiqchasini toping: Kvadrat, To‘g‘ri to‘rtburchak, Romb, Uchburchak",
+      "options": [
+        "Uchburchak (uning 3 ta tomoni bor, qolganlari to‘rtburchak)",
+        "Kvadrat",
+        "To‘g‘ri to‘rtburchak",
+        "Romb"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uchburchak 3 tomonli, qolgan uchtasi esa to‘rtburchakdir."
+    },
+    {
+      "text": "Romb perimetri 28 sm bo‘lsa, uning bitta tomoni necha santimetr?",
+      "options": [
+        "6 sm",
+        "7 sm (7 x 4 = 28)",
+        "8 sm",
+        "9 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "28 / 4 = 7 sm."
+    },
+    {
+      "text": "Bir varaq qog‘ozda 3 ta to‘rtburchak bor. Ularning jami uchlari nechta?",
+      "options": [
+        "10 ta",
+        "14 ta",
+        "16 ta",
+        "12 ta (3 x 4 = 12)"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 x 4 = 12 ta uch."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchakning bo‘yi 11 sm, eni 9 sm. Perimetrini hisoblang:",
+      "options": [
+        "38 sm",
+        "40 sm (11 + 9 + 11 + 9 = 40)",
+        "42 sm",
+        "20 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "11 + 9 = 20 sm, 20 + 20 = 40 sm."
+    },
+    {
+      "text": "Rombning perimetri 36 dm. Uning bitta tomoni necha detsimetr?",
+      "options": [
+        "8 dm",
+        "10 dm",
+        "9 dm (9 + 9 + 9 + 9 = 36)",
+        "12 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "36 / 4 = 9 dm."
+    },
+    {
+      "text": "Ikkita teng kvadrat yonma-yon qo‘yilsa, qanday shakl hosil bo‘ladi?",
+      "options": [
+        "To‘g‘ri to‘rtburchak",
+        "Yana bitta kvadrat",
+        "Uchburchak",
+        "Doira"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ikkita teng kvadrat birlashsa bo‘yi enidan 2 barobar uzun to‘g‘ri to‘rtburchak hosil bo‘ladi."
+    },
+    {
+      "text": "Tomoni 5 sm bo‘lgan ikkita kvadrat yonma-yon qo‘yilib to‘g‘ri to‘rtburchak yasaldi. Yangi to‘rtburchak perimetri qancha?",
+      "options": [
+        "30 sm (Bo‘yi 10 sm, eni 5 sm; 10 + 5 + 10 + 5 = 30)",
+        "40 sm",
+        "25 sm",
+        "35 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "Bo‘yi: 5 + 5 = 10 sm, eni: 5 sm. Perimetr: 10 + 5 + 10 + 5 = 30 sm."
+    },
+    {
+      "text": "Romb va to‘g‘ri to‘rtburchakning perimetrlari teng: P = 24 sm. To‘g‘ri to‘rtburchak bo‘yi 7 sm bo‘lsa, romb tomoni to‘rtburchak enidan necha sm katta?",
+      "options": [
+        "2 sm",
+        "3 sm",
+        "Teng",
+        "1 sm katta (Romb tomoni 6 sm, to‘rtburchak eni 5 sm; 6 - 5 = 1)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Romb tomoni: 24 / 4 = 6 sm. To‘g‘ri to‘rtburchak eni: (24 - 14) / 2 = 5 sm. Farq: 6 - 5 = 1 sm."
+    },
+    {
+      "text": "Usta milliy naqsh uchun 4 ta bir xil romb shaklidagi yog‘och tayyorladi. Har bir romb tomoni 10 sm. To‘rtta rombning hamma tomonlari yig‘indisi necha santimetr?",
+      "options": [
+        "140 sm",
+        "160 sm (Har biri: 40 sm; 40 x 4 = 160 sm = 16 dm)",
+        "150 sm",
+        "180 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 ta romb perimetri: 10 x 4 = 40 sm. 4 ta romb: 40 x 4 = 160 sm."
+    },
+    {
+      "text": "Navro‘z bayramida maydonga kvadrat va to‘g‘ri to‘rtburchak shaklidagi ikkita sahna o‘rnatildi. Kvadrat sahna tomoni 8 metr, to‘g‘ri to‘rtburchak sahna bo‘yi 10 m, eni 6 m. Ikkala sahna perimetrlari yig‘indisi necha metr?",
+      "options": [
+        "60 metr",
+        "62 metr",
+        "64 metr (Kvadrat: 32 m; To‘rtburchak: 32 m; 32 + 32 = 64)",
+        "68 metr"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kvadrat: 8 x 4 = 32 m. To‘g‘ri to‘rtburchak: 10 + 6 + 10 + 6 = 32 m. Jami: 32 + 32 = 64 metr."
+    }
+  ]
+}

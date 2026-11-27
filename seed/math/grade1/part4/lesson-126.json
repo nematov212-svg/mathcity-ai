@@ -1,0 +1,278 @@
+{
+  "bookNumber": 126,
+  "isReview": false,
+  "title": "Simmetriya",
+  "emoji": "🦋",
+  "shortDesc": "Simmetrik shakllar va simmetriya o'qi tushunchasi",
+  "intro": "Agar shaklni to'g'ri chiziq bo'yicha buklaganda uning ikki yarmi bir-biriga to'liq mos tushsa, bunday shakl simmetrik shakl deyiladi. Buklangan chiziq esa simmetriya o'qi deb ataladi.",
+  "keyPoints": [
+    "Simmetriya o'qi shaklni ikki teng va akslangan qismga bo'ladi.",
+    "Kapalak qanotlari, daraxt bargi, inson chehrasi tabiatdagi simmetriyaga misoldir.",
+    "Shaklning chap va o'ng tomonlari ko'zgudagi aks kabi bir-biriga teng bo'ladi.",
+    "Buklanganda qismlar to'liq ustma-ust tushishi shart."
+  ],
+  "miniExample": {
+    "emojis": "🦋 | 🦋",
+    "text": "Kapalak o'rtasidan to'g'ri chiziq o'tkazib buklasak, uning chap qanoti o'ng qanotiga to'liq mos tushadi. Bu — simmetriya!"
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Shakl buklanganda uning ikki yarmi to'liq ustma-ust tushdi. Bu shakl qanday shakl?",
+      "options": [
+        "Simmetrik shakl",
+        "Nodir shakl",
+        "Egik shakl",
+        "Siniq shakl"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ikki yarmi to'liq mos tushadigan shakllar simmetrik shakllar deyiladi."
+    },
+    {
+      "text": "Shaklni ikki teng mos qismga ajratuvchi to'g'ri chiziq nima deyiladi?",
+      "options": [
+        "Balandlik",
+        "Simmetriya o'qi",
+        "Kesma uzunligi",
+        "Radius"
+      ],
+      "correctIndex": 1,
+      "explanation": "Buklanish chizig'i simmetriya o'qi deb ataladi."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri tabiatdagi simmetriyaga misol bo'ladi?",
+      "options": [
+        "Shaklsiz tosh",
+        "Daraxtning singan shoxi",
+        "Kapalak",
+        "Egri yo'l"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kapalakning ikkala qanoti simmetrik joylashgan."
+    }
+  ],
+  "test": [
+    {
+      "text": "Simmetrik shakl deb nimaga aytiladi?",
+      "options": [
+        "Buklaganda ikki yarmi to'liq mos tushadigan shaklga",
+        "Faqat uchburchak shakliga",
+        "Har doim dumaloq shaklga",
+        "Ikki tomoni har xil bo'lgan shaklga"
+      ],
+      "correctIndex": 0,
+      "explanation": "Simmetrik shakl o'q bo'yicha buklanganda uning qismlari to'liq mos tushadi."
+    },
+    {
+      "text": "Simmetriya o'qi nima?",
+      "options": [
+        "Shaklning rangi",
+        "Shaklning eng katta tomoni",
+        "Shaklni ikki teng aks qismga bo'luvchi to'g'ri chiziq",
+        "Aylana radiusi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Simmetriya o'qi shaklni ikki ko'zgudek teng qismga ajratuvchi to'g'ri chiziqdir."
+    },
+    {
+      "text": "Qaysi harf vertikal (tik) simmetriya o'qiga ega?",
+      "options": [
+        "F harfi",
+        "A harfi",
+        "G harfi",
+        "R harfi"
+      ],
+      "correctIndex": 1,
+      "explanation": "A harfini o'rtasidan tik chiziq bilan buklasak, chap va o'ng tomoni to'liq mos tushadi."
+    },
+    {
+      "text": "Qaysi harf gorizontal (yotiq) simmetriya o'qiga ega?",
+      "options": [
+        "L harfi",
+        "P harfi",
+        "Q harfi",
+        "B harfi (yoki H)"
+      ],
+      "correctIndex": 3,
+      "explanation": "B va H harflari o'rtasidan yotiq chiziq bo'yicha simmetrik buklanadi."
+    },
+    {
+      "text": "Kapalakning o'rtasidagi simmetriya o'qi qanday yo'nalgan?",
+      "options": [
+        "Gorizontal (yotiq)",
+        "Vertikal (yuqoridan pastga)",
+        "Aylanma",
+        "Egri"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kapalak tanasi bo'ylab tik simmetriya o'qi o'tadi."
+    },
+    {
+      "text": "Ko'zgu oldida turganingizda nima hosil bo'ladi?",
+      "options": [
+        "Simmetrik aksingiz",
+        "Boshqa odam",
+        "Kvadrat",
+        "Soyangiz"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ko'zgudagi aks — simmetriyaning eng yaqqol hayotiy namunasidir."
+    },
+    {
+      "text": "Ko'zguda o'ng qo'lingizni ko'tarsangiz, aksingiz qaysi qo'lini ko'taradi?",
+      "options": [
+        "O'ng qo'lini",
+        "Ikkala qo'lini",
+        "Hech qaysi",
+        "Uning chap qo'lini (ko'zgu aksi)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ko'zgu aksi chap va o'ngni almashtirib ko'rsatadi (ko'zguli simmetriya)."
+    },
+    {
+      "text": "Yurakcha shakli (❤️) simmetrikmi?",
+      "options": [
+        "Yo'q, simmetrik emas",
+        "Faqat yotiq o'qi bor",
+        "Ha, vertikal simmetriya o'qi bor",
+        "Uchta o'qi bor"
+      ],
+      "correctIndex": 2,
+      "explanation": "Yurakchani o'rtasidan tik buklasak, ikkala yarmi to'liq mos tushadi."
+    },
+    {
+      "text": "Bargning o'rtasidan o'tgan asosiy tomir nima vazifasini o'taydi?",
+      "options": [
+        "Chegara tashqarisi",
+        "Uchburchak uchi",
+        "Simmetriya o'qi",
+        "Aylana markazi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Barg o'rtasidagi asosiy tomir bo'ylab barg ikki simmetrik qismga bo'linadi."
+    },
+    {
+      "text": "Doira shakli simmetrikmi?",
+      "options": [
+        "Yo'q, uning o'qi yo'q",
+        "Faqat 1 ta o'qi bor",
+        "Faqat 2 ta o'qi bor",
+        "Ha, juda ko'p simmetriya o'qlariga ega"
+      ],
+      "correctIndex": 3,
+      "explanation": "Doira simmetrik bo'lib, uning markazidan istalgancha simmetriya o'qi o'tkazish mumkin."
+    },
+    {
+      "text": "Quyidagi sonlardan qaysi biri simmetrik ko'rinishga ega?",
+      "options": [
+        "8",
+        "4",
+        "7",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 soni o'rtasidan gorizontal va vertikal chiziq bo'yicha simmetrik ko'rinadi."
+    },
+    {
+      "text": "0 (nol) raqami simmetrikmi?",
+      "options": [
+        "Yo'q, simmetrik emas",
+        "Ha, simmetrik",
+        "Faqat burchakli",
+        "Faqat egri"
+      ],
+      "correctIndex": 1,
+      "explanation": "0 raqami oval yoki aylana shaklida bo'lib, simmetriya o'qlariga ega."
+    },
+    {
+      "text": "Odam yuzi simmetrik tuzilganmi?",
+      "options": [
+        "Yo'q, mutlaqo simmetriyasiz",
+        "Faqat peshona qismi",
+        "Faqat burni",
+        "Ha, o'rtadan vertikal chiziq bo'yicha"
+      ],
+      "correctIndex": 3,
+      "explanation": "Inson yuzida 2 ta ko'z, 2 ta quloq o'rtadagi tik chiziqqa nisbatan simmetrik joylashgan."
+    },
+    {
+      "text": "Agar shakl simmetriya o'qi bo'yicha buklansa, qismlar orasida nima bo'lmaydi?",
+      "options": [
+        "Moslik bo'lmaydi",
+        "Ortiqcha chiqib turgan qism bo'lmaydi",
+        "Burchak bo'lmaydi",
+        "Nuqta bo'lmaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "To'liq mos tushgani sababli hech qanday ortiqcha qism chiqib qolmaydi."
+    },
+    {
+      "text": "Qaysi geometrik shakl simmetriyaga ega emas (noto'g'ri shakl)?",
+      "options": [
+        "Kvadrat",
+        "Doira",
+        "Tomonlari turlicha bo'lgan ixtiyoriy uchburchak",
+        "Teng tomonli uchburchak"
+      ],
+      "correctIndex": 2,
+      "explanation": "Har xil tomonli ixtiyoriy uchburchakda simmetriya o'qi bo'lmaydi."
+    },
+    {
+      "text": "Qaychi shakli ochilmagan holatda simmetrikmi?",
+      "options": [
+        "Ha, simmetrik",
+        "Yo'q",
+        "Faqat tig'i simmetrik",
+        "Faqat dastasi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qaychi o'rtasidan tik chiziq bo'yicha simmetrik tuzilishga ega."
+    },
+    {
+      "text": "Ko'zoynak simmetrik shaklga egami?",
+      "options": [
+        "Ha, ikkita oynasi o'rtaga nisbatan simmetrik",
+        "Yo'q",
+        "Faqat bir ko'zi",
+        "Faqat bandi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ko'zoynakning chap va o'ng oynalari burun ko'prigiga nisbatan simmetrikdir."
+    },
+    {
+      "text": "Avtomobilning old qismi (faralari, panjarasi) simmetrikmi?",
+      "options": [
+        "Yo'q, har xil",
+        "Faqat bitta farasi bor",
+        "Gorizontal simmetrik",
+        "Ha, vertikal o'q bo'yicha simmetrik"
+      ],
+      "correctIndex": 3,
+      "explanation": "Mashinaning old ko'rinishi markaziy vertikal o'qqa nisbatan simmetrik qilib yasaladi."
+    },
+    {
+      "text": "Qor parchasi (snezhinka) simmetrikmi?",
+      "options": [
+        "Yo'q, qor parchasida o'q yo'q",
+        "Ha, juda go'zal simmetriyaga ega",
+        "Faqat 1 ta nuri bor",
+        "Faqat kvadrat shaklida"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qor parchalari 6 qirrali ajoyib simmetriyaga ega tabiat mo''jizasidir."
+    },
+    {
+      "text": "Simmetriya tushunchasi bizga nima uchun kerak?",
+      "options": [
+        "Faqat qog'ozni yirtish uchun",
+        "Shakllarni buzish uchun",
+        "Go'zallik, uyg'unlik va aniqlikni tushunish uchun",
+        "Raqamlarni yo'qotish uchun"
+      ],
+      "correctIndex": 2,
+      "explanation": "Simmetriya arxitekturada, san'atda va tabiatda uyg'unlik hamda go'zallik asosidir."
+    }
+  ]
+}

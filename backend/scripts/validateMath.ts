@@ -28,19 +28,16 @@ interface LessonSeed {
 }
 
 function evaluateSimpleMath(expr: string): number | null {
-  // Normalize minus signs (en-dash, em-dash, unicode minus to standard -)
   const cleaned = expr
     .replace(/[–—−]/g, '-')
     .replace(/[×*]/g, '*')
     .replace(/\s+/g, '');
 
-  // Only allow digits, +, -, *, (, )
   if (!/^[\d+\-*()]+$/.test(cleaned)) {
     return null;
   }
 
   try {
-    // Safe evaluation using Function or arithmetic parser
     const fn = new Function(`return (${cleaned});`);
     const val = fn();
     if (typeof val === 'number' && !isNaN(val) && isFinite(val)) {
@@ -53,13 +50,41 @@ function evaluateSimpleMath(expr: string): number | null {
 }
 
 function checkArithmetic(questionText: string, options: string[], correctIndex: number): string | null {
-  // If the question is about terms, names, properties, missing terms, equations or fill-in-the-blank, skip numeric calculation
-  if (/nomlanadi|nomi|ataladi|bildiradi|qaysi had|qaysi amal|o‘qiladi|yoziladi|taqqoslang|to‘ldiring|katakdagi|o‘rniga|noma’lum|noma'lum|tengsizlik|tenglik|xossasi/i.test(questionText)) {
+  if (
+    /nomlanadi|nomi|ataladi|bildiradi|qaysi had|qaysi amal|o‘qiladi|o'qiladi|yoziladi|taqqoslang|to‘ldiring|to'ldiring|katakdagi|o‘rniga|o'rniga|noma’lum|noma'lum|tengsizlik|tenglik|xossasi|simmetriya|hajmli|shakl|chegara/i.test(
+      questionText
+    )
+  ) {
     return null;
   }
 
-  // Check patterns like:
-  // "5 + 3 = ?" or "12 - 4 = ?" or "Hisoblang: 7 + 6" or "Ifodani hisoblang: (8 + 2) + 3"
+  // 1. Equation checks: x + a = b, a + x = b, a - x = b, x - a = b
+  const eqPatterns = [
+    { regex: /x\s*\+\s*(\d+)\s*=\s*(\d+)/i, solve: (a: number, b: number) => b - a },
+    { regex: /(\d+)\s*\+\s*x\s*=\s*(\d+)/i, solve: (a: number, b: number) => b - a },
+    { regex: /(\d+)\s*-\s*x\s*=\s*(\d+)/i, solve: (a: number, b: number) => a - b },
+    { regex: /x\s*-\s*(\d+)\s*=\s*(\d+)/i, solve: (a: number, b: number) => b + a },
+  ];
+
+  for (const { regex, solve } of eqPatterns) {
+    const eqMatch = questionText.match(regex);
+    if (eqMatch) {
+      const a = parseInt(eqMatch[1], 10);
+      const b = parseInt(eqMatch[2], 10);
+      const expectedX = solve(a, b);
+      const correctOpt = options[correctIndex]?.trim();
+      const numInOpt = correctOpt.match(/-?\d+/);
+      if (numInOpt) {
+        const actualX = parseInt(numInOpt[0], 10);
+        if (actualX !== expectedX) {
+          return `Tenglama xatosi: "${eqMatch[0]}" yechimi x = ${expectedX} bo'lishi kerak, lekin to'g'ri variant "${correctOpt}" (${actualX}) deb ko'rsatilgan!`;
+        }
+      }
+      return null;
+    }
+  }
+
+  // 2. Standard arithmetic patterns
   const patterns = [
     /([0-9()+\-–—−* ]+)\s*=\s*\?/i,
     /([0-9()+\-–—−* ]+)\s*=\s*□/i,
@@ -70,14 +95,11 @@ function checkArithmetic(questionText: string, options: string[], correctIndex: 
     const match = questionText.match(pat);
     if (match && match[1]) {
       const exprCandidate = match[1].trim();
-      // Ensure candidate has at least an operator
       if (/[+\-–—−*]/.test(exprCandidate)) {
         const expectedVal = evaluateSimpleMath(exprCandidate);
         if (expectedVal !== null) {
           const correctOptionStr = options[correctIndex]?.trim();
-          // Extract number from correct option if it is a pure number or number with unit (e.g. 42, 42 ta, 42 kg)
-          // Exclude ordinals like 1-qo'shiluvchi, 2-qism
-          const optMatch = correctOptionStr.match(/^(-?\d+)(?:\s*(?:ta|dona|kg|sm|metr|so‘m|kishi|nafar|bet|tup|qop))?$/i);
+          const optMatch = correctOptionStr.match(/^(-?\d+)(?:\s*(?:ta|dona|kg|sm|metr|so‘m|so'm|kishi|nafar|bet|tup|qop))?$/i);
           if (optMatch) {
             const actualVal = parseInt(optMatch[1], 10);
             if (actualVal !== expectedVal) {
@@ -105,19 +127,23 @@ export function validateAllMathLessons(): boolean {
   const part1Dir = path.join(targetDir, 'part1');
   const part2Dir = path.join(targetDir, 'part2');
   const part3Dir = path.join(targetDir, 'part3');
+  const part4Dir = path.join(targetDir, 'part4');
 
   const part1Files = fs.existsSync(part1Dir) ? fs.readdirSync(part1Dir).filter((f) => f.endsWith('.json')) : [];
   const part2Files = fs.existsSync(part2Dir) ? fs.readdirSync(part2Dir).filter((f) => f.endsWith('.json')) : [];
   const part3Files = fs.existsSync(part3Dir) ? fs.readdirSync(part3Dir).filter((f) => f.endsWith('.json')) : [];
+  const part4Files = fs.existsSync(part4Dir) ? fs.readdirSync(part4Dir).filter((f) => f.endsWith('.json')) : [];
 
   part1Files.sort();
   part2Files.sort();
   part3Files.sort();
+  part4Files.sort();
 
   console.log(`🔍 Matematika darslarini tekshirish boshlandi:`);
   console.log(`   1-qism fayllari: ${part1Files.length} ta`);
   console.log(`   2-qism fayllari: ${part2Files.length} ta`);
   console.log(`   3-qism fayllari: ${part3Files.length} ta`);
+  console.log(`   4-qism fayllari: ${part4Files.length} ta`);
 
   if (part1Files.length !== 41) {
     console.error(`❌ Xato: 1-qismda aynan 41 ta dars fayli bo'lishi kerak (hozir: ${part1Files.length})!`);
@@ -134,6 +160,11 @@ export function validateAllMathLessons(): boolean {
     process.exit(1);
   }
 
+  if (part4Files.length !== 33) {
+    console.error(`❌ Xato: 4-qismda aynan 33 ta dars fayli bo'lishi kerak (hozir: ${part4Files.length})!`);
+    process.exit(1);
+  }
+
   let totalQuestionsCount = 0;
   let totalPracticeCount = 0;
 
@@ -141,6 +172,7 @@ export function validateAllMathLessons(): boolean {
     ...part1Files.map((f) => ({ file: f, path: path.join(part1Dir, f), part: 1 })),
     ...part2Files.map((f) => ({ file: f, path: path.join(part2Dir, f), part: 2 })),
     ...part3Files.map((f) => ({ file: f, path: path.join(part3Dir, f), part: 3 })),
+    ...part4Files.map((f) => ({ file: f, path: path.join(part4Dir, f), part: 4 })),
   ];
 
   for (const { file, path: filePath } of allLessons) {
@@ -182,7 +214,7 @@ export function validateAllMathLessons(): boolean {
       }
     }
 
-    // Practice check (only required for non-review lessons)
+    // Practice check
     if (!data.isReview) {
       if (!Array.isArray(data.practice) || data.practice.length < 2) {
         console.error(`❌ ${file}: practice kamida 2-3 ta mashqdan iborat bo'lishi kerak!`);
@@ -246,7 +278,7 @@ export function validateAllMathLessons(): boolean {
         process.exit(1);
       }
 
-      // Arithmetic check
+      // Arithmetic & equation check
       const arithErr = checkArithmetic(q.text, q.options, q.correctIndex);
       if (arithErr) {
         console.error(`❌ ${file} (savol ${qNum}): ${arithErr}`);
@@ -267,14 +299,16 @@ export function validateAllMathLessons(): boolean {
     }
   }
 
-  console.log(`✅ TABRIKLAYMIZ! Barcha 114 ta dars tekshiruvdan toza o'tdi:`);
-  console.log(`   - 114 ta dars fayli (1-qism: 41, 2-qism: 33, 3-qism: 40)`);
-  console.log(`   - Jami ${totalQuestionsCount} ta test savoli (har darsda aynan 20 ta)`);
+  const grandTotalLessons = allLessons.length;
+  console.log(`✅ TABRIKLAYMIZ! Barcha ${grandTotalLessons} ta dars tekshiruvdan toza o'tdi:`);
+  console.log(`   - 1-qism: ${part1Files.length} ta dars`);
+  console.log(`   - 2-qism: ${part2Files.length} ta dars`);
+  console.log(`   - 3-qism: ${part3Files.length} ta dars`);
+  console.log(`   - 4-qism: ${part4Files.length} ta dars`);
+  console.log(`   - Jami ${totalQuestionsCount} ta test savoli (har darsda aynan 20 ta, 0 ta LaTeX)`);
   console.log(`   - Jami ${totalPracticeCount} ta mashq savoli`);
-  console.log(`   - Hech qanday xom LaTeX yoki taqiqlangan belgi yo'q`);
   console.log(`   - Variantlar taqsimoti (3–7) va arifmetik to'g'rilik to'liq tasdiqlandi.`);
   return true;
 }
 
 validateAllMathLessons();
-

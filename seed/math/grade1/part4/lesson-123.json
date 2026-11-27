@@ -1,0 +1,278 @@
+{
+  "bookNumber": 123,
+  "isReview": false,
+  "title": "Sohalar va chegaralar",
+  "emoji": "🗺️",
+  "shortDesc": "Yopiq chiziq bilan chegaralangan ichki va tashqi soha hamda chegara",
+  "intro": "Har qanday yopiq chiziq (aylana, ko'pburchak yoki panjara) tekislikni ikki sohaga ajratadi: ichki soha va tashqi soha. Chiziqning o'zi esa chegara hisoblanadi.",
+  "keyPoints": [
+    "Ichki soha — yopiq chiziq ichidagi qism (masalan, hovli ichi).",
+    "Chegara — yopiq chiziqning o'zi (masalan, hovli devori yoki panjara).",
+    "Tashqi soha — yopiq chiziqdan tashqaridagi qism (masalan, ko'cha).",
+    "Nuqta ichki sohada, chegarada yoki tashqi sohada yotishi mumkin."
+  ],
+  "miniExample": {
+    "emojis": "⭕ 🟢 🔴",
+    "text": "Aylana chizilgan. Yashil nuqta aylana ichida (ichki soha), qizil nuqta aylanadan tashqarida (tashqi soha), qora nuqta aylana chizig'ida (chegara)."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Hovli panjara bilan o'ralgan. Bog'dagi daraxt qayerda joylashgan?",
+      "options": [
+        "Ichki sohada",
+        "Tashqi sohada",
+        "Chegarada",
+        "Osmon sohasida"
+      ],
+      "correctIndex": 0,
+      "explanation": "Panjara bilan o'ralgan hovli ichidagi narsalar ichki sohada bo'ladi."
+    },
+    {
+      "text": "Nuqta to'rtburchakning chizig'i ustida turibdi. Bu nuqta qayerda?",
+      "options": [
+        "Ichki sohada",
+        "Chegarada",
+        "Tashqi sohada",
+        "Burchak tashqarisida"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shaklning chizig'i ustida joylashgan nuqta chegarada hisoblanadi."
+    },
+    {
+      "text": "Aylana tashqarisida turgan nuqta qaysi sohaga tegishli?",
+      "options": [
+        "Ichki soha",
+        "Chegara",
+        "Tashqi soha",
+        "Markaz"
+      ],
+      "correctIndex": 2,
+      "explanation": "Aylana chizig'idan tashqaridagi hamma nuqtalar tashqi sohada bo'ladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Yopiq chiziq tekislikni necha sohaga ajratadi?",
+      "options": [
+        "2 ta (ichki va tashqi)",
+        "1 ta",
+        "3 ta",
+        "4 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yopiq chiziq tekislikni ichki va tashqi sohalarga ajratadi."
+    },
+    {
+      "text": "Shaklning ichki va tashqi sohalarini bir-biridan nima ajratib turadi?",
+      "options": [
+        "Markaz",
+        "Balandlik",
+        "Chegara (shakl chizig'i)",
+        "Rang"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ichki va tashqi sohalarni shaklning yopiq chizig'i (chegarasi) ajratadi."
+    },
+    {
+      "text": "Kvadrat ichiga chizilgan nuqta qaysi sohada joylashgan?",
+      "options": [
+        "Tashqi sohada",
+        "Ichki sohada",
+        "Chegarada",
+        "To'g'ri chiziqda"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kvadrat chiziqlari orasidagi maydonda bo'lsa, u ichki sohada."
+    },
+    {
+      "text": "Aylana chizig'ida yotgan A nuqta qayerda hisoblanadi?",
+      "options": [
+        "Ichki sohada",
+        "Tashqi sohada",
+        "Kvadratda",
+        "Chegarada"
+      ],
+      "correctIndex": 3,
+      "explanation": "Shakl chizig'i ustidagi nuqtalar chegarada joylashgan."
+    },
+    {
+      "text": "Futbol maydonining chizig'i nima hisoblanadi?",
+      "options": [
+        "Ichki soha",
+        "Chegara",
+        "Tashqi soha",
+        "Darvoza"
+      ],
+      "correctIndex": 1,
+      "explanation": "Maydon chizig'i maydonning ichi va tashqarisini ajratuvchi chegara."
+    },
+    {
+      "text": "To'p maydon chizig'idan tashqariga chiqib ketdi. U qaysi sohaga o'tdi?",
+      "options": [
+        "Tashqi sohaga",
+        "Ichki sohaga",
+        "Chegaraga",
+        "Darvoza to'riga"
+      ],
+      "correctIndex": 0,
+      "explanation": "Chiziqdan nariga o'tgan narsa tashqi sohada bo'ladi."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri yopiq chiziq chegarasi hisoblanadi?",
+      "options": [
+        "Ochiq kesma",
+        "Nur",
+        "To'g'ri chiziq",
+        "Aylana chizig'i"
+      ],
+      "correctIndex": 3,
+      "explanation": "Aylana yopiq chiziq bo'lib, o'z chegarasiga ega."
+    },
+    {
+      "text": "Nuqta uchburchakdan tashqarida turibdi. U qayerda?",
+      "options": [
+        "Ichki sohada",
+        "Chegarada",
+        "Tashqi sohada",
+        "Uchburchak uchida"
+      ],
+      "correctIndex": 2,
+      "explanation": "Uchburchakdan tashqarida bo'lgan nuqta tashqi sohada."
+    },
+    {
+      "text": "Doira yuzasi (bo'yalgan qismi) qaysi sohaga tegishli?",
+      "options": [
+        "Tashqi sohaga",
+        "Faqat chegaraga",
+        "Ichki sohaga",
+        "Uchburchakka"
+      ],
+      "correctIndex": 2,
+      "explanation": "Doiraning bo'yalgan ichki yuzasi ichki soha hisoblanadi."
+    },
+    {
+      "text": "Chiziq ochiq bo'lsa, tekislikni ichki va tashqi sohaga ajrata oladimi?",
+      "options": [
+        "Ha, ajratadi",
+        "Faqat burchak hosil qiladi",
+        "Faqat 1 ta nuqtada",
+        "Yo'q, ajrata olmaydi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Faqat yopiq chiziq tekislikni to'liq ichki va tashqi sohalarga ajratadi."
+    },
+    {
+      "text": "Akvariumdagi baliqcha qaysi sohada suzmoqda?",
+      "options": [
+        "Ichki sohada",
+        "Tashqi sohada",
+        "Chegarada",
+        "Xonada"
+      ],
+      "correctIndex": 0,
+      "explanation": "Akvarium devorlari ichida suzayotgan baliqcha ichki sohada."
+    },
+    {
+      "text": "Akvariumning shishasi nima vazifasini bajaradi?",
+      "options": [
+        "Ichki soha",
+        "Chegara",
+        "Tashqi soha",
+        "Suv o'ti"
+      ],
+      "correctIndex": 1,
+      "explanation": "Akvariumning shisha devori chegara bo'ladi."
+    },
+    {
+      "text": "Akvarium yonidagi mushuk qaysi sohada turibdi?",
+      "options": [
+        "Ichki sohada",
+        "Chegarada",
+        "Suvda",
+        "Tashqi sohada"
+      ],
+      "correctIndex": 3,
+      "explanation": "Mushuk akvariumdan tashqarida, demak u tashqi sohada."
+    },
+    {
+      "text": "Doira ichida 4 ta nuqta, chegarasida 2 ta nuqta bor. Ichki sohada nechta nuqta bor?",
+      "options": [
+        "2 ta",
+        "4 ta",
+        "6 ta",
+        "0 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Doira ichida 4 ta nuqta bor, demak ichki sohada aynan 4 ta nuqta."
+    },
+    {
+      "text": "Doira ichida 3 ta, chegarasida 1 ta, tashqarisida 5 ta nuqta bor. Tashqi sohada nechta nuqta bor?",
+      "options": [
+        "3 ta",
+        "1 ta",
+        "5 ta",
+        "9 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tashqi sohadagi nuqtalar soni 5 ta."
+    },
+    {
+      "text": "Doira chegarasida nechta nuqta bor (oldingi savoldagi ma'lumotga ko'ra)?",
+      "options": [
+        "1 ta",
+        "3 ta",
+        "5 ta",
+        "4 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Chegarasida 1 ta nuqta yotgani aytilgan edi."
+    },
+    {
+      "text": "Qalam bilan qog'ozga kvadrat chizdik. Kvadrat qog'ozni nechta qismga bo'ldi?",
+      "options": [
+        "Ichki va tashqi qismlarga",
+        "Faqat 1 ta qismga",
+        "3 ta teng qismga",
+        "Hech qanday qismga"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kvadrat yopiq chiziq sifatida ichki va tashqi sohalarga ajratadi."
+    },
+    {
+      "text": "Agar nuqta na ichkarida, na tashqarida bo'lsa, u qayerda joylashgan?",
+      "options": [
+        "Hech qayerda",
+        "Osmon sohasida",
+        "Burchak markazida",
+        "Chegara chizig'ida"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ichkarida ham, tashqarida ham bo'lmagan nuqta aynan chegara chizig'ida yotadi."
+    },
+    {
+      "text": "Uydagi bolalar xonaning qaysi sohasida?",
+      "options": [
+        "Tashqi sohasida",
+        "Ichki sohasida",
+        "Devor ustida",
+        "Ko'chada"
+      ],
+      "correctIndex": 1,
+      "explanation": "Uy ichida turgan bolalar uyning ichki sohasida."
+    },
+    {
+      "text": "Sohalar va chegaralar haqidagi qaysi fikr TO'G'RI?",
+      "options": [
+        "Chegara bo'lmasa ham ichki soha bo'ladi",
+        "Ochiq chiziq ham ichki sohani ajratadi",
+        "Chegara ichki va tashqi sohalarni bir-biridan ajratadi",
+        "Tashqi soha faqat 1 ta nuqtadan iborat"
+      ],
+      "correctIndex": 2,
+      "explanation": "Chegara aynan ichki va tashqi sohani ajratib turuvchi chiziqdir."
+    }
+  ]
+}

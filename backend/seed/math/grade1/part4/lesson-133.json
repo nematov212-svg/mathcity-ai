@@ -1,0 +1,278 @@
+{
+  "bookNumber": 133,
+  "isReview": false,
+  "title": "Ifodaning qiymatini hisoblash",
+  "emoji": "🧮",
+  "shortDesc": "Harfiy ifodadagi harf o'rniga berilgan sonni qo'yib hisoblash",
+  "intro": "Harfiy ifodada harf ma'lum bir songa teng deb berilsa, harf o'rniga o'sha sonni qo'yamiz va hosil bo'lgan sonli ifodaning qiymatini hisoblaymiz.",
+  "keyPoints": [
+    "Agar a + 5 ifodada a = 7 bo'lsa, 7 + 5 = 12 bo'ladi.",
+    "Agar 30 - x ifodada x = 10 bo'lsa, 30 - 10 = 20 bo'ladi.",
+    "Bitta harfiy ifodaning qiymati harfga berilgan songa qarab har xil chiqishi mumkin.",
+    "Masalani yechishda avval ifoda yoziladi, keyin son qo'yiladi."
+  ],
+  "miniExample": {
+    "emojis": "🧮 x = 8 bo'lsa, x + 7 = ?",
+    "text": "x ning o'rniga 8 qo'yamiz: 8 + 7 = 15. Ifodaning qiymati 15 ga teng!"
+  },
+  "xpReward": 110,
+  "coinReward": 12,
+  "estMinutes": 9,
+  "practice": [
+    {
+      "text": "a = 9 bo'lsa, a + 6 ifodaning qiymatini toping:",
+      "options": [
+        "15",
+        "14",
+        "16",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 + 6 = 15."
+    },
+    {
+      "text": "x = 4 bo'lsa, 20 - x ifodaning qiymati nechaga teng?",
+      "options": [
+        "14",
+        "16",
+        "15",
+        "18"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 - 4 = 16."
+    },
+    {
+      "text": "b = 10 bo'lsa, b + b ifodaning qiymati qancha bo'ladi?",
+      "options": [
+        "10",
+        "30",
+        "20",
+        "15"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 10 = 20."
+    }
+  ],
+  "test": [
+    {
+      "text": "a = 8 bo'lsa, a + 7 ifodaning qiymatini hisoblang:",
+      "options": [
+        "15",
+        "14",
+        "16",
+        "17"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 7 = 15."
+    },
+    {
+      "text": "x = 6 bo'lsa, 14 - x ifodaning qiymati nechaga teng?",
+      "options": [
+        "7",
+        "9",
+        "8",
+        "10"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 - 6 = 8."
+    },
+    {
+      "text": "y = 5 bo'lsa, y + 15 ifodaning natijasini toping:",
+      "options": [
+        "18",
+        "20",
+        "22",
+        "25"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 15 = 20."
+    },
+    {
+      "text": "c = 12 bo'lsa, 30 - c ifodaning qiymati qancha bo'ladi?",
+      "options": [
+        "16",
+        "20",
+        "22",
+        "18"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 - 12 = 18."
+    },
+    {
+      "text": "m = 25 bo'lsa, m + 5 ifodaning qiymati nechaga teng?",
+      "options": [
+        "28",
+        "30",
+        "32",
+        "35"
+      ],
+      "correctIndex": 1,
+      "explanation": "25 + 5 = 30."
+    },
+    {
+      "text": "k = 8 bo'lsa, 48 - k ifodaning qiymati qancha?",
+      "options": [
+        "40",
+        "38",
+        "42",
+        "44"
+      ],
+      "correctIndex": 0,
+      "explanation": "48 - 8 = 40."
+    },
+    {
+      "text": "Agar a = 14 bo'lsa, a - 9 ifodaning natijasi nechaga teng?",
+      "options": [
+        "4",
+        "6",
+        "7",
+        "5"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 - 9 = 5."
+    },
+    {
+      "text": "Agar b = 7 bo'lsa, 50 + b ifodaning qiymatini toping:",
+      "options": [
+        "55",
+        "58",
+        "57",
+        "60"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 + 7 = 57."
+    },
+    {
+      "text": "Agar x = 20 bo'lsa, 100 - x ifodaning qiymati nechaga teng?",
+      "options": [
+        "70",
+        "85",
+        "80",
+        "90"
+      ],
+      "correctIndex": 2,
+      "explanation": "100 - 20 = 80."
+    },
+    {
+      "text": "Agar n = 15 bo'lsa, n + n ifodaning qiymati qancha bo'ladi?",
+      "options": [
+        "25",
+        "35",
+        "20",
+        "30"
+      ],
+      "correctIndex": 3,
+      "explanation": "15 + 15 = 30."
+    },
+    {
+      "text": "a = 6, b = 8 bo'lsa, a + b ifodaning qiymatini hisoblang:",
+      "options": [
+        "14",
+        "12",
+        "15",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 8 = 14."
+    },
+    {
+      "text": "x = 20, y = 8 bo'lsa, x - y ifodaning qiymati nechaga teng?",
+      "options": [
+        "10",
+        "12",
+        "14",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 - 8 = 12."
+    },
+    {
+      "text": "c = 30, d = 15 bo'lsa, c + d ifodaning natijasini toping:",
+      "options": [
+        "40",
+        "50",
+        "35",
+        "45"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 + 15 = 45."
+    },
+    {
+      "text": "Agar a = 10 bo'lsa, (a + 5) - 3 ifodasining qiymati nechaga teng?",
+      "options": [
+        "10",
+        "12",
+        "14",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "(10 + 5) - 3 = 15 - 3 = 12."
+    },
+    {
+      "text": "Agar x = 7 bo'lsa, 25 - (x + 3) ifodasining qiymatini hisoblang:",
+      "options": [
+        "13",
+        "17",
+        "15",
+        "18"
+      ],
+      "correctIndex": 2,
+      "explanation": "x + 3 = 7 + 3 = 10. Keyin 25 - 10 = 15."
+    },
+    {
+      "text": "Agar y = 9 bo'lsa, (y - 4) + 10 ifodaning qiymati nechaga teng?",
+      "options": [
+        "15",
+        "13",
+        "14",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 - 4 = 5. So'ngra 5 + 10 = 15."
+    },
+    {
+      "text": "Bir qutida 12 ta, ikkinchisida k ta qalam bor. Agar k = 8 bo'lsa, jami qalamlar nechta?",
+      "options": [
+        "20 ta (12 + 8 = 20)",
+        "18 ta",
+        "22 ta",
+        "19 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + k = 12 + 8 = 20 ta."
+    },
+    {
+      "text": "Avtobusda 35 ta yo'lovchi bor edi. Bekatda p ta yo'lovchi tushdi. Agar p = 15 bo'lsa, nechta yo'lovchi qoldi?",
+      "options": [
+        "18 ta",
+        "22 ta",
+        "25 ta",
+        "20 ta (35 - 15 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "35 - p = 35 - 15 = 20 ta yo'lovchi qoldi."
+    },
+    {
+      "text": "Agar a = 0 bo'lsa, 45 + a ifodaning qiymati nima bo'ladi?",
+      "options": [
+        "0",
+        "45",
+        "40",
+        "50"
+      ],
+      "correctIndex": 1,
+      "explanation": "Nol qo'shilganda sonning o'zi saqlanib qoladi: 45 + 0 = 45."
+    },
+    {
+      "text": "Agar x = 25 bo'lsa, x - x ifodaning natijasi nechaga teng?",
+      "options": [
+        "25",
+        "50",
+        "0",
+        "1"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sondan o'zi ayrilsa natija nol bo'ladi: 25 - 25 = 0."
+    }
+  ]
+}

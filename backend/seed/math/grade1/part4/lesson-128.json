@@ -1,0 +1,280 @@
+{
+  "bookNumber": 128,
+  "isReview": false,
+  "title": "Hajmli shakllar",
+  "emoji": "🧊",
+  "shortDesc": "Yassi va fazoviy shakllar: kub, shar, silindr, konus, piramida",
+  "intro": "Biz yashayotgan olamda buyumlar faqat yassi emas, balki fazoviy (hajmli) bo'ladi. Kub, shar, silindr, konus va piramida fazoviy shakllarga misol bo'ladi. Ular qalinlikka, bo'yga va hajmga ega!",
+  "keyPoints": [
+    "Yassi shakllar qog'ozda chiziladi (kvadrat, doira, uchburchak).",
+    "Fazoviy (hajmli) shakllar fazoda joy egallaydi (kub, shar, silindr, konus, piramida).",
+    "Kubning 6 ta yog'i bo'lib, ularning hammasi bir xil kvadratlardir.",
+    "Sharning uchi va qirrasi yo'q, u hamma tomonga dumalaydi.",
+    "Silindrning 2 ta asosi doira bo'lib, yon tomoni egri sirt.",
+    "Konusning asosi doira, yuqori qismida esa bitta o'tkir uchi bor."
+  ],
+  "miniExample": {
+    "emojis": "🎲 ⚽ 🥫 🍦",
+    "text": "O'yin zarchasi — bu kub. Koptok — bu shar. Konserva qutisi — silindr. Muzqaymoq idishi — konus!"
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Futbol koptogi qaysi fazoviy shaklga misol bo'ladi?",
+      "options": [
+        "Shar",
+        "Kub",
+        "Piramida",
+        "Silindr"
+      ],
+      "correctIndex": 0,
+      "explanation": "Koptok yumaloq fazoviy shakl — shar hisoblanadi."
+    },
+    {
+      "text": "O'yin zarchasi (toshi) qaysi shaklda bo'ladi?",
+      "options": [
+        "Konus",
+        "Kub",
+        "Silindr",
+        "Shar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Zarcha 6 ta kvadrat yoqdan iborat kub shaklidadir."
+    },
+    {
+      "text": "Konserva bankasi qaysi shaklga o'xshaydi?",
+      "options": [
+        "Shar",
+        "Piramida",
+        "Silindr",
+        "Kub"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ikkala asosi doira bo'lgan truba shakli silindr deyiladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Quyidagilardan qaysi biri yassi shakl hisoblanadi?",
+      "options": [
+        "Kvadrat",
+        "Kub",
+        "Shar",
+        "Silindr"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kvadrat qog'ozda chiziladigan yassi shakldir, qolganlari hajmli shakllar."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri hajmli (fazoviy) shakl?",
+      "options": [
+        "Uchburchak",
+        "Doira",
+        "Kub",
+        "To'g'ri to'rtburchak"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kub fazoviy shakl bo'lib, hajmga ega."
+    },
+    {
+      "text": "Kubning nechta yog'i (devori) bor?",
+      "options": [
+        "4 ta",
+        "6 ta",
+        "8 ta",
+        "12 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kubning 6 ta tekis kvadrat yog'i bor."
+    },
+    {
+      "text": "Kubning barcha yoqlari qanday shaklda?",
+      "options": [
+        "Doira shaklida",
+        "Uchburchak shaklida",
+        "Oltiburchak shaklida",
+        "Kvadrat shaklida"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kubning barcha 6 ta yog'i o'zaro teng kvadratlardan iborat."
+    },
+    {
+      "text": "Sharning uchi yoki qirrasi bormi?",
+      "options": [
+        "Ha, 4 ta uchi bor",
+        "Yo'q, uchi ham, qirrasi ham yo'q",
+        "1 ta qirrasi bor",
+        "6 ta uchi bor"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shar silliq dumaloq sirtga ega bo'lib, unda qirra va uchlar bo'lmaydi."
+    },
+    {
+      "text": "Muzqaymoq vafli idishi qaysi shaklga o'xshaydi?",
+      "options": [
+        "Konus",
+        "Kub",
+        "Silindr",
+        "Piramida"
+      ],
+      "correctIndex": 0,
+      "explanation": "Vafli qalpog'i asosi doira va bitta uchi bo'lgan konus shaklidadir."
+    },
+    {
+      "text": "Silindrning asoslari qanday shaklda?",
+      "options": [
+        "Kvadrat shaklida",
+        "Uchburchak shaklida",
+        "Chiziq shaklida",
+        "Doira shaklida"
+      ],
+      "correctIndex": 3,
+      "explanation": "Silindrning pastki va yuqori asoslari doiralardan iborat."
+    },
+    {
+      "text": "Misr ehromlari qaysi fazoviy shaklga misol bo'ladi?",
+      "options": [
+        "Shar",
+        "Silindr",
+        "Piramida",
+        "Kub"
+      ],
+      "correctIndex": 2,
+      "explanation": "Mashhur ehromlar to'rtburchak asosli piramida shaklida qurilgan."
+    },
+    {
+      "text": "G'isht qaysi shaklga o'xshaydi?",
+      "options": [
+        "Shar",
+        "Konus",
+        "To'g'ri burchakli parallelepiped (kuboid)",
+        "Silindr"
+      ],
+      "correctIndex": 2,
+      "explanation": "G'isht yoqlari to'g'ri to'rtburchaklardan iborat parallelepipeddir."
+    },
+    {
+      "text": "Qalamning shakli nimalardan iborat bo'lishi mumkin?",
+      "options": [
+        "Faqat shar",
+        "Kub va piramida",
+        "Doira va kvadrat",
+        "Silindr va konus (uchlangan qismi)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Oddiy qalam tanasi silindrga, uning ochilgan uchi esa konusga o'xshaydi."
+    },
+    {
+      "text": "Qaysi shakl tekis yuzada har tomonga dumalay oladi?",
+      "options": [
+        "Shar",
+        "Kub",
+        "Piramida",
+        "Kvadrat"
+      ],
+      "correctIndex": 0,
+      "explanation": "Shar dumaloq sirtga ega bo'lgani uchun hamma yo'nalishda erkin dumalaydi."
+    },
+    {
+      "text": "Silindr qanday harakatlana oladi?",
+      "options": [
+        "Faqat ucha oladi",
+        "Yonboshlatib dumalatish yoki tik sirg'antirish mumkin",
+        "Umuman qimirlamaydi",
+        "Faqat sakraydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Silindr asosi bilan turganda sirg'aladi, yonboshiga qo'yilganda esa dumalaydi."
+    },
+    {
+      "text": "Kubni dumalatish osonmi?",
+      "options": [
+        "Ha, koptokdek dumalaydi",
+        "Juda oson",
+        "Dumaloq bo'lgani uchun oson",
+        "Yo'q, uning tekis yoqlari va burchaklari bor"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kubning burchaklari va qirralari borligi uchun u koptokdek dumalamaydi."
+    },
+    {
+      "text": "Kubning nechta uchi (burchagi) bor?",
+      "options": [
+        "6 ta",
+        "8 ta uchi bor",
+        "4 ta",
+        "12 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kubning tepasida 4 ta, pastida 4 ta, jami 8 ta uchi bor."
+    },
+    {
+      "text": "Kubning nechta qirrasi (tomon chiziqlari) bor?",
+      "options": [
+        "6 ta",
+        "8 ta",
+        "12 ta qirrasi bor",
+        "16 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kubda jami 12 ta teng qirra mavjud."
+    },
+    {
+      "text": "Hajmli shakllar yassi shakllardan nima bilan farq qiladi?",
+      "options": [
+        "Hajmga (qalinlikka va bo'yga) ega ekanligi bilan",
+        "Rangi bilan",
+        "Nomidagi harflar soni bilan",
+        "Farqi yo'q"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hajmli shakllar fazoda ma'lum hajm va joy egallaydi."
+    },
+    {
+      "text": "Apelsin mevasi qaysi shaklga yaqin?",
+      "options": [
+        "Shar",
+        "Kub",
+        "Piramida",
+        "Konus"
+      ],
+      "correctIndex": 0,
+      "explanation": "Apelsin tabiiy shar shakliga juda yaqin dumaloq shakldadir."
+    },
+    {
+      "text": "Qutidagi choy qadog'i qaysi shaklga misol?",
+      "options": [
+        "Shar",
+        "Konus",
+        "Aylana",
+        "Parallelepiped yoki kub"
+      ],
+      "correctIndex": 3,
+      "explanation": "Choy qutisi to'rtburchak yoqlarga ega kuboid (parallelepiped) shaklida bo'ladi."
+    },
+    {
+      "text": "Yo'l harakatidagi qizil-oq konuslar qaysi shaklda?",
+      "options": [
+        "Shar",
+        "Konus",
+        "Silindr",
+        "Kub"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yo'l belgilash uchun ishlatiladigan uchli moslama konus deb ataladi."
+    },
+    {
+      "text": "Hajmli shakllar haqidagi qaysi tasdiq TO'G'RI?",
+      "options": [
+        "Sharning 4 ta burchagi bor",
+        "Silindrning asoslari uchburchak",
+        "Kubning barcha 6 ta yog'i o'zaro teng kvadratlardir",
+        "Konusning 3 ta uchi bor"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kubning har bir yog'i bir xil kvadrat bo'lib, jami 6 ta yog'i bor."
+    }
+  ]
+}

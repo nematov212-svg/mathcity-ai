@@ -1,0 +1,277 @@
+{
+  "bookNumber": 118,
+  "isReview": false,
+  "title": "Ko‘pburchakning perimetri (2)",
+  "emoji": "📐",
+  "shortDesc": "P belgisi bilan perimetr yozish, muntazam shakllar va noma’lum tomonni topish.",
+  "intro": "Matematikada perimetr lotincha P harfi bilan belgilanadi: P = a + b + c.",
+  "keyPoints": [
+    "Perimetr P harfi bilan belgilanadi: masalan P = 18 sm.",
+    "Teng tomonli uchburchak perimetri: agar tomoni 3 sm bo‘lsa, P = 3 + 3 + 3 = 9 sm.",
+    "Tomonlari yig‘indisidan noma’lum tomonni topish: P − (a + b) = c."
+  ],
+  "miniExample": {
+    "emojis": "📐 P = a + b + c",
+    "text": "Tomonlari 3 sm, 4 sm, 5 sm bo‘lsa: P = 3 + 4 + 5 = 12 sm."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Perimetr qaysi harf bilan belgilanadi?",
+      "options": [
+        "P harfi bilan",
+        "S harfi bilan",
+        "V harfi bilan",
+        "T harfi bilan"
+      ],
+      "correctIndex": 0,
+      "explanation": "Perimetr bosh harf P bilan belgilanadi."
+    },
+    {
+      "text": "Teng tomonli uchburchak tomoni 3 sm. Uning perimetrini toping:",
+      "options": [
+        "P = 6 sm",
+        "P = 9 sm (3 + 3 + 3 = 9)",
+        "P = 12 sm",
+        "P = 8 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "P = 3 + 3 + 3 = 9 sm."
+    },
+    {
+      "text": "Uchburchak perimetri P = 15 sm. Ikki tomoni 5 sm va 6 sm bo‘lsa, 3-tomoni qancha?",
+      "options": [
+        "5 sm",
+        "3 sm",
+        "4 sm (15 - 5 - 6 = 4)",
+        "6 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 - (5 + 6) = 15 - 11 = 4 sm."
+    }
+  ],
+  "test": [
+    {
+      "text": "Perimetrni qisqacha ifodalash uchun qaysi lotin harfi ishlatiladi?",
+      "options": [
+        "P",
+        "A",
+        "B",
+        "C"
+      ],
+      "correctIndex": 0,
+      "explanation": "Perimetr P harfi bilan belgilanadi."
+    },
+    {
+      "text": "Tomoni 4 sm bo‘lgan teng tomonli uchburchak perimetri qancha?",
+      "options": [
+        "P = 8 sm",
+        "P = 16 sm",
+        "P = 12 sm (4 + 4 + 4 = 12)",
+        "P = 10 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "P = 4 + 4 + 4 = 12 sm."
+    },
+    {
+      "text": "Tomoni 3 sm bo‘lgan kvadrat perimetrini toping:",
+      "options": [
+        "P = 9 sm",
+        "P = 12 sm (3 + 3 + 3 + 3 = 12)",
+        "P = 6 sm",
+        "P = 15 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "P = 3 + 3 + 3 + 3 = 12 sm."
+    },
+    {
+      "text": "Tomonlari a = 4 sm, b = 5 sm, c = 6 sm bo‘lsa, P = ?",
+      "options": [
+        "P = 14 sm",
+        "P = 16 sm",
+        "P = 13 sm",
+        "P = 15 sm (4 + 5 + 6 = 15)"
+      ],
+      "correctIndex": 3,
+      "explanation": "P = 4 + 5 + 6 = 15 sm."
+    },
+    {
+      "text": "P = a + b + c formulasi qaysi shaklning perimetriga tegishli?",
+      "options": [
+        "Kvadrat perimetriga",
+        "Uchburchak perimetriga",
+        "Doiraga",
+        "To‘rtburchakka"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 ta tomon (a, b, c) yig‘indisi uchburchakka tegishli."
+    },
+    {
+      "text": "P = a + a + a + a formulasi qaysi shakl perimetriga tegishli?",
+      "options": [
+        "Kvadrat perimetriga (barcha tomonlari teng)",
+        "Uchburchak perimetriga",
+        "Beshburchakka",
+        "Doiraga"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 ta teng tomon kvadratga xosdir."
+    },
+    {
+      "text": "Uchburchak perimetri P = 20 sm. Ikki tomoni 8 sm va 7 sm bo‘lsa, uchinchi tomoni nechaga teng?",
+      "options": [
+        "4 sm",
+        "6 sm",
+        "7 sm",
+        "5 sm (20 - 8 - 7 = 5)"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 + 7 = 15 sm, 20 - 15 = 5 sm."
+    },
+    {
+      "text": "Besh qirrali yulduzning 10 ta tomoni bor va har bir tomoni 2 sm. Yulduz perimetri nechaga teng?",
+      "options": [
+        "P = 10 sm",
+        "P = 15 sm",
+        "P = 20 sm (10 x 2 = 20)",
+        "P = 25 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 ta 2 sm: 10 x 2 = 20 sm = 2 dm."
+    },
+    {
+      "text": "Kvadrat perimetri P = 24 sm. Kvadratning bitta tomoni qancha?",
+      "options": [
+        "5 sm",
+        "7 sm",
+        "6 sm (6 + 6 + 6 + 6 = 24)",
+        "8 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 6 + 6 + 6 = 24 sm."
+    },
+    {
+      "text": "Teng tomonli uchburchak perimetri P = 27 sm. Uning tomoni necha santimetr?",
+      "options": [
+        "8 sm",
+        "10 sm",
+        "7 sm",
+        "9 sm (9 + 9 + 9 = 27)"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 + 9 + 9 = 27 sm."
+    },
+    {
+      "text": "Tomonlari 8 sm, 12 sm, 8 sm, 12 sm bo‘lgan to‘rtburchak perimetri qancha?",
+      "options": [
+        "P = 40 sm (8 + 12 + 8 + 12 = 40)",
+        "P = 38 sm",
+        "P = 42 sm",
+        "P = 20 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 12 + 8 + 12 = 40 sm = 4 dm."
+    },
+    {
+      "text": "Beshburchak perimetri P = 25 sm bo‘lib, hamma tomonlari teng. Bitta tomoni qancha?",
+      "options": [
+        "4 sm",
+        "5 sm (5 x 5 = 25)",
+        "6 sm",
+        "7 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 5 + 5 + 5 + 5 = 25 sm."
+    },
+    {
+      "text": "Oltiburchak perimetri P = 30 sm. Agar barcha tomonlari teng bo‘lsa, har bir tomon necha santimetr?",
+      "options": [
+        "4 sm",
+        "6 sm",
+        "7 sm",
+        "5 sm (6 x 5 = 30)"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 x 5 = 30 sm."
+    },
+    {
+      "text": "To‘rtburchak perimetri P = 36 sm. Uchta tomoni 8 sm, 10 sm va 11 sm bo‘lsa, to‘rtinchi tomoni qancha?",
+      "options": [
+        "6 sm",
+        "7 sm (36 - 8 - 10 - 11 = 7)",
+        "8 sm",
+        "9 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 10 + 11 = 29 sm, 36 - 29 = 7 sm."
+    },
+    {
+      "text": "Kvadrat tomoni a = 1 dm bo‘lsa, uning perimetri necha santimetr bo‘ladi? (1 dm = 10 sm)",
+      "options": [
+        "P = 4 sm",
+        "P = 20 sm",
+        "P = 40 sm (10 + 10 + 10 + 10 = 40)",
+        "P = 100 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 dm = 10 sm. 4 x 10 = 40 sm = 4 dm."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchak perimetri P = 26 sm. Uzunligi 8 sm bo‘lsa, eni necha santimetr?",
+      "options": [
+        "5 sm (8 + 5 + 8 + 5 = 26)",
+        "4 sm",
+        "6 sm",
+        "7 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 8 = 16 sm, 26 - 16 = 10 sm, 10 ning yarmi 5 sm."
+    },
+    {
+      "text": "Teng tomonli uchburchak va kvadratning perimetrlari teng: P = 12 sm. Kvadratning tomoni uchburchakning tomonidan qancha qisqa?",
+      "options": [
+        "1 sm ga qisqa (Uchburchak: 4 sm, Kvadrat: 3 sm; 4 - 3 = 1)",
+        "2 sm ga",
+        "Teng",
+        "3 sm ga"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uchburchak tomoni: 12 / 3 = 4 sm. Kvadrat tomoni: 12 / 4 = 3 sm. Farq: 4 - 3 = 1 sm."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchak perimetri P = 30 sm. Eni 5 sm bo‘lsa, uzunligi necha santimetr?",
+      "options": [
+        "8 sm",
+        "12 sm",
+        "15 sm",
+        "10 sm (5 + 10 + 5 + 10 = 30)"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 5 = 10 sm, 30 - 10 = 20 sm, 20 ning yarmi 10 sm."
+    },
+    {
+      "text": "Bolalar bog‘chasidagi qum maydonchasi kvadrat shaklida. Uning perimetri P = 32 metr. Qum maydonchasining bitta tomoni necha metr?",
+      "options": [
+        "7 metr",
+        "8 metr (8 + 8 + 8 + 8 = 32)",
+        "9 metr",
+        "10 metr"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 8 + 8 + 8 = 32 metr."
+    },
+    {
+      "text": "Shaxmat taxtasi kvadrat shaklida, har bir tomoni 40 sm. Uning perimetrini detsimetrlarda toping: (1 dm = 10 sm)",
+      "options": [
+        "P = 12 dm",
+        "P = 160 dm",
+        "P = 16 dm (40 sm = 4 dm; 4 x 4 = 16 dm)",
+        "P = 8 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 + 40 + 40 + 40 = 160 sm = 16 dm."
+    }
+  ]
+}

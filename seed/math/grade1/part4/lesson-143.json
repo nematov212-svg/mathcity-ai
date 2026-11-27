@@ -1,0 +1,278 @@
+{
+  "bookNumber": 143,
+  "isReview": true,
+  "title": "Takrorlash (2)",
+  "emoji": "📚",
+  "shortDesc": "100 ichida qo'shish, ayirish va arifmetik amallar bo'yicha takrorlash",
+  "intro": "Ushbu takrorlash darsida biz 1-sinfda o'rgangan barcha hisoblash usullarini: 100 ichida o'nliklar va birliklarni qo'shish, ayirish, qavsli ifodalar hamda qulay hisoblash usullarini umumlashtiramiz.",
+  "keyPoints": [
+    "O'nliklar bilan hisoblash: 40 + 30 = 70, 90 - 40 = 50.",
+    "Xonadan o'tmasdan va o'tib hisoblash: 34 + 5 = 39, 27 + 5 = 32.",
+    "Qavsli amallarda birinchi qavs ichi bajariladi: 50 - (20 + 10) = 20.",
+    "Qulay usul: yig'indisi 10 yoki 20 bo'ladigan sonlar birinchi qo'shiladi."
+  ],
+  "miniExample": {
+    "emojis": "📚 38 + 24 = 62 | 70 - 25 = 45",
+    "text": "38 + 24 = (38 + 20) + 4 = 58 + 4 = 62. 70 dan 25 ni ayirish: 70 - 20 = 50, 50 - 5 = 45!"
+  },
+  "xpReward": 120,
+  "coinReward": 12,
+  "estMinutes": 10,
+  "practice": [
+    {
+      "text": "45 + 25 yig'indisini hisoblang:",
+      "options": [
+        "70",
+        "60",
+        "65",
+        "75"
+      ],
+      "correctIndex": 0,
+      "explanation": "45 + 25 = 70."
+    },
+    {
+      "text": "80 - 34 ayirmasini toping:",
+      "options": [
+        "44",
+        "46",
+        "45",
+        "56"
+      ],
+      "correctIndex": 1,
+      "explanation": "80 - 30 = 50, 50 - 4 = 46."
+    },
+    {
+      "text": "17 + 8 + 3 ifodasini qulay usulda hisoblang:",
+      "options": [
+        "26",
+        "27",
+        "28 ((17 + 3) + 8 = 20 + 8 = 28)",
+        "30"
+      ],
+      "correctIndex": 2,
+      "explanation": "17 + 3 = 20, 20 + 8 = 28."
+    }
+  ],
+  "test": [
+    {
+      "text": "30 + 40 yig'indisi nechaga teng?",
+      "options": [
+        "70",
+        "60",
+        "80",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 o'nlik + 4 o'nlik = 7 o'nlik = 70."
+    },
+    {
+      "text": "90 - 50 ayirmasi qancha bo'ladi?",
+      "options": [
+        "30",
+        "50",
+        "40",
+        "60"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 o'nlik - 5 o'nlik = 4 o'nlik = 40."
+    },
+    {
+      "text": "56 + 4 yig'indisini toping:",
+      "options": [
+        "58",
+        "60",
+        "62",
+        "70"
+      ],
+      "correctIndex": 1,
+      "explanation": "56 + 4 = 60."
+    },
+    {
+      "text": "70 - 8 ayirmasi nechaga teng?",
+      "options": [
+        "60",
+        "63",
+        "52",
+        "62"
+      ],
+      "correctIndex": 3,
+      "explanation": "70 - 8 = 62."
+    },
+    {
+      "text": "43 + 25 yig'indisini hisoblang:",
+      "options": [
+        "67",
+        "68",
+        "69",
+        "78"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 + 20 = 60, 3 + 5 = 8; 60 + 8 = 68."
+    },
+    {
+      "text": "67 - 24 ayirmasi nechaga teng?",
+      "options": [
+        "43",
+        "41",
+        "45",
+        "33"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 - 20 = 40, 7 - 4 = 3; 40 + 3 = 43."
+    },
+    {
+      "text": "28 + 15 yig'indisini hisoblang:",
+      "options": [
+        "41",
+        "42",
+        "44",
+        "43"
+      ],
+      "correctIndex": 3,
+      "explanation": "28 + 10 = 38, 38 + 5 = 43."
+    },
+    {
+      "text": "52 - 17 ayirmasini toping:",
+      "options": [
+        "34",
+        "36",
+        "35",
+        "45"
+      ],
+      "correctIndex": 2,
+      "explanation": "52 - 10 = 42, 42 - 7 = 35."
+    },
+    {
+      "text": "35 + 35 yig'indisi nechaga teng?",
+      "options": [
+        "60",
+        "65",
+        "70",
+        "80"
+      ],
+      "correctIndex": 2,
+      "explanation": "35 + 35 = 70."
+    },
+    {
+      "text": "100 - 45 ayirmasini hisoblang:",
+      "options": [
+        "50",
+        "65",
+        "45",
+        "55"
+      ],
+      "correctIndex": 3,
+      "explanation": "100 - 40 = 60, 60 - 5 = 55."
+    },
+    {
+      "text": "16 + 9 + 4 ifodasini qulay usulda hisoblang:",
+      "options": [
+        "29 ((16 + 4) + 9 = 20 + 9 = 29)",
+        "27",
+        "28",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "16 + 4 = 20, 20 + 9 = 29."
+    },
+    {
+      "text": "25 + 18 + 5 ifodasining qiymatini toping:",
+      "options": [
+        "46",
+        "48 ((25 + 5) + 18 = 30 + 18 = 48)",
+        "49",
+        "50"
+      ],
+      "correctIndex": 1,
+      "explanation": "25 + 5 = 30, 30 + 18 = 48."
+    },
+    {
+      "text": "60 - (25 + 15) ifodasining qiymati qancha?",
+      "options": [
+        "30",
+        "10",
+        "25",
+        "20"
+      ],
+      "correctIndex": 3,
+      "explanation": "25 + 15 = 40. Keyin 60 - 40 = 20."
+    },
+    {
+      "text": "40 + (30 - 12) ifodasining natijasi nechaga teng?",
+      "options": [
+        "48",
+        "58",
+        "68",
+        "56"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 - 12 = 18. Keyin 40 + 18 = 58."
+    },
+    {
+      "text": "48 sonida nechta o'nlik va nechta birlik bor?",
+      "options": [
+        "8 ta o'nlik va 4 ta birlik",
+        "48 ta o'nlik",
+        "4 ta o'nlik va 8 ta birlik",
+        "4 ta birlik"
+      ],
+      "correctIndex": 2,
+      "explanation": "48 = 4 o'nlik va 8 birlik."
+    },
+    {
+      "text": "7 o'nlik va 3 birlikdan iborat son qaysi?",
+      "options": [
+        "73",
+        "37",
+        "70",
+        "703"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 o'nlik (70) + 3 birlik = 73."
+    },
+    {
+      "text": "Eng katta ikki xonali son qaysi?",
+      "options": [
+        "99",
+        "100",
+        "90",
+        "98"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ikki xonali sonlarning eng kattasi 99 dir."
+    },
+    {
+      "text": "Eng kichik ikki xonali son qaysi?",
+      "options": [
+        "0",
+        "1",
+        "11",
+        "10"
+      ],
+      "correctIndex": 3,
+      "explanation": "Eng kichik ikki xonali son 10 dir."
+    },
+    {
+      "text": "48 + 32 yig'indisi nechaga teng?",
+      "options": [
+        "70",
+        "80",
+        "78",
+        "82"
+      ],
+      "correctIndex": 1,
+      "explanation": "48 + 32 = 80."
+    },
+    {
+      "text": "Qo'shish va ayirish amallarini to'g'ri bilish bizga nima beradi?",
+      "options": [
+        "Faqat o'yin o'ynashni",
+        "Kitobni yirtishni",
+        "Kundalik hayotda mustaqil va aniq hisob-kitob qilishni",
+        "Amallarni chalkashtirishni"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tez va aniq hisoblash — maktabda va hayotda eng kerakli ko'nikmadir."
+    }
+  ]
+}

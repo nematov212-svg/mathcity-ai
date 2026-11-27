@@ -77,6 +77,15 @@ export const allCurriculumModules: CurriculumModule[] = [
     orderIndex: 3,
     comingSoon: false,
   },
+  {
+    id: 'module-g1-p4',
+    grade: 1,
+    subject: 'Matematika',
+    part: 4,
+    title: 'Matematika · 4-qism',
+    orderIndex: 4,
+    comingSoon: false,
+  },
   // 2-11 sinflar
   ...Array.from({ length: 10 }, (_, i) => {
     const grade = i + 2;
@@ -112,7 +121,7 @@ function getChapterTitle(bookNumber: number): string {
   return 'VI bob. Ikki xonali sonlar ustida amallar va ifodalar';
 }
 
-function resolveSeedDir(part: 1 | 2 | 3): string {
+function resolveSeedDir(part: 1 | 2 | 3 | 4): string {
   const candidates = [
     path.resolve(process.cwd(), `seed/math/grade1/part${part}`),
     path.resolve(process.cwd(), `backend/seed/math/grade1/part${part}`),
@@ -344,11 +353,105 @@ function loadPart3Lessons(): CurriculumLesson[] {
   return lessons;
 }
 
+export function getPart4ChapterTitle(bookNumber: number): string {
+  if (bookNumber <= 115) return 'I bob. Kesma va siniq chiziq';
+  if (bookNumber <= 128) return 'II bob. Geometrik shakllar';
+  if (bookNumber <= 136) return 'III bob. Ifodalar va tengsizliklar';
+  if (bookNumber <= 141) return 'IV bob. Tenglamalar';
+  return 'V bob. Takrorlash';
+}
+
+export const part4Structure = Array.from({ length: 33 }, (_, i) => ({
+  bookNumber: 112 + i,
+  order: i + 1,
+  isReview: false,
+}));
+
+function loadPart4Lessons(): CurriculumLesson[] {
+  const seedDir = resolveSeedDir(4);
+  const moduleId = 'module-g1-p4';
+  const lessons: CurriculumLesson[] = [];
+
+  for (const entry of part4Structure) {
+    const filename = `lesson-${entry.bookNumber}.json`;
+    const filePath = path.join(seedDir, filename);
+
+    if (!fs.existsSync(filePath)) {
+      continue;
+    }
+
+    try {
+      const raw = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      const lessonId = `lesson-g1-p4-${entry.bookNumber}`;
+
+      const practiceQuestions: CurriculumQuestion[] = (raw.practice || []).map((q: any, idx: number) => ({
+        id: `q-${lessonId}-p${idx + 1}`,
+        lessonId,
+        order: idx + 1,
+        step: 4,
+        kind: 'practice' as const,
+        text: q.text,
+        prompt: q.text,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation || '',
+      }));
+
+      const testQuestions: CurriculumQuestion[] = (raw.test || []).map((q: any, idx: number) => ({
+        id: `q-${lessonId}-t${idx + 1}`,
+        lessonId,
+        order: idx + 1,
+        step: 5,
+        kind: 'test' as const,
+        text: q.text,
+        prompt: q.text,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation || '',
+      }));
+
+      const miniExampleStr = typeof raw.miniExample === 'string'
+        ? raw.miniExample
+        : raw.miniExample?.text
+          ? `${raw.miniExample.emojis ? raw.miniExample.emojis + '\n' : ''}${raw.miniExample.text}`
+          : '';
+
+      lessons.push({
+        id: lessonId,
+        moduleId,
+        order: entry.order,
+        bookNumber: entry.bookNumber,
+        isReview: false,
+        title: raw.title,
+        chapterTitle: getPart4ChapterTitle(entry.bookNumber),
+        shortDesc: raw.shortDesc || '',
+        emoji: raw.emoji || '📘',
+        intro: raw.intro || '',
+        keyPoints: raw.keyPoints || [],
+        miniExample: miniExampleStr,
+        xpReward: raw.xpReward || 100,
+        coinReward: raw.coinReward || 10,
+        estMinutes: raw.estMinutes || 8,
+        questionCount: testQuestions.length || 20,
+        practice: practiceQuestions,
+        test: testQuestions,
+        questions: testQuestions,
+      });
+    } catch (e: any) {
+      console.error(`[grade1Curriculum] Error parsing ${filename}:`, e);
+    }
+  }
+
+  return lessons;
+}
+
 export const grade1Part1Lessons: CurriculumLesson[] = loadPartLessons(1, 1, 41);
 export const grade1Part2Lessons: CurriculumLesson[] = loadPartLessons(2, 42, 74);
 export const grade1Part3Lessons: CurriculumLesson[] = loadPart3Lessons();
+export const grade1Part4Lessons: CurriculumLesson[] = loadPart4Lessons();
 export const allGrade1Lessons: CurriculumLesson[] = [
   ...grade1Part1Lessons,
   ...grade1Part2Lessons,
   ...grade1Part3Lessons,
+  ...grade1Part4Lessons,
 ];

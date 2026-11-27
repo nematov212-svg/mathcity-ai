@@ -1,0 +1,277 @@
+{
+  "bookNumber": 112,
+  "isReview": false,
+  "title": "Kesma va uning uzunligi",
+  "emoji": "📏",
+  "shortDesc": "Kesma uzunligini santimetr (sm) va detsimetrlarda (dm) o‘lchash hamda yozish.",
+  "intro": "Kesmaning ikki uchi bo‘lib, uning uzunligi santimetr (sm) va detsimetrlarda (dm) o‘lchanadi.",
+  "keyPoints": [
+    "Kesma ikki nuqtani tutashtiruvchi to‘g‘ri chiziq bo‘lagidir: masalan AB = 5 sm.",
+    "1 dm = 10 sm. 10 ta santimetr 1 detsimetrni tashkil qiladi.",
+    "Kesmalar uzunligini qo‘shish va taqqoslash mumkin: 6 sm + 4 sm = 10 sm = 1 dm."
+  ],
+  "miniExample": {
+    "emojis": "📏 AB = 5 sm, CD = 3 sm",
+    "text": "AB kesma 5 sm, CD kesma 3 sm. Ikkala kesma yig‘indisi: 5 + 3 = 8 sm."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Kesmaning nechta uchi bor?",
+      "options": [
+        "2 ta uchi bor",
+        "1 ta uchi bor",
+        "Uchi yo‘q",
+        "4 ta uchi bor"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kesma ikki tomondan nuqtalar bilan chegaralangan, ya’ni 2 ta uchi bor."
+    },
+    {
+      "text": "1 detsimetr necha santimetrga teng?",
+      "options": [
+        "100 sm",
+        "10 sm",
+        "1 sm",
+        "5 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 dm = 10 sm."
+    },
+    {
+      "text": "AB kesma 6 sm, BC kesma 4 sm. Ularning yig‘indisi necha santimetr?",
+      "options": [
+        "8 sm",
+        "12 sm",
+        "10 sm (6 + 4 = 10)",
+        "2 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 4 = 10 sm."
+    }
+  ],
+  "test": [
+    {
+      "text": "Kesma nima?",
+      "options": [
+        "Ikki nuqta bilan chegaralangan to‘g‘ri chiziq bo‘lagi",
+        "Boshi bor, lekin oxiri yo‘q chiziq",
+        "Cheksiz to‘g‘ri chiziq",
+        "Aylana chizig‘i"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kesma ikki nuqta bilan chegaralangan to‘g‘ri chiziq bo‘lagidir."
+    },
+    {
+      "text": "Kesma uzunligi qaysi asbob yordamida o‘lchanadi?",
+      "options": [
+        "Tarozi",
+        "Soat",
+        "Chizg‘ich",
+        "Termometr"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kesma va masofalar chizg‘ich yordamida o‘lchanadi."
+    },
+    {
+      "text": "1 dm necha santimetrga teng?",
+      "options": [
+        "1 sm",
+        "10 sm",
+        "20 sm",
+        "100 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 dm = 10 sm."
+    },
+    {
+      "text": "20 sm necha detsimetrga teng?",
+      "options": [
+        "1 dm",
+        "20 dm",
+        "10 dm",
+        "2 dm"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 sm = 2 dm."
+    },
+    {
+      "text": "AB = 7 sm va CD = 5 sm kesmalardan qaysi biri uzunroq?",
+      "options": [
+        "CD kesma",
+        "AB kesma (7 sm > 5 sm)",
+        "Ikkalasi teng",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 sm 5 sm dan katta, demak AB kesma uzunroq."
+    },
+    {
+      "text": "3 sm va 5 sm uzunlikdagi kesmalar yig‘indisini toping:",
+      "options": [
+        "8 sm (3 + 5 = 8)",
+        "7 sm",
+        "9 sm",
+        "2 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 + 5 = 8 sm."
+    },
+    {
+      "text": "AB kesma uzunligi 8 sm, CD kesma esa 1 dm. Qaysi kesma qisqaroq? (1 dm = 10 sm)",
+      "options": [
+        "CD kesma",
+        "Ikkalasi teng",
+        "Taqqoslab bo‘lmaydi",
+        "AB kesma (8 sm < 10 sm)"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 dm = 10 sm. 8 sm < 10 sm, demak AB kesma qisqaroq."
+    },
+    {
+      "text": "1 dm 4 sm necha santimetr bo‘ladi?",
+      "options": [
+        "10 sm",
+        "15 sm",
+        "14 sm (10 + 4 = 14)",
+        "40 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 dm = 10 sm, 10 + 4 = 14 sm."
+    },
+    {
+      "text": "25 sm kesmani detsimetr va santimetrlarga ajrating:",
+      "options": [
+        "5 dm 2 sm",
+        "2 dm 0 sm",
+        "2 dm 5 sm",
+        "25 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "25 sm = 20 sm + 5 sm = 2 dm 5 sm."
+    },
+    {
+      "text": "Qizil kesma 12 sm, ko‘k kesma undan 4 sm qisqa. Ko‘k kesma uzunligi qancha?",
+      "options": [
+        "16 sm",
+        "7 sm",
+        "9 sm",
+        "8 sm (12 - 4 = 8)"
+      ],
+      "correctIndex": 3,
+      "explanation": "12 - 4 = 8 sm."
+    },
+    {
+      "text": "Yashil tasma 9 sm, sariq tasma 7 sm. Ikkala tasma birgalikda necha santimetr?",
+      "options": [
+        "16 sm (9 + 7 = 16)",
+        "15 sm",
+        "17 sm",
+        "2 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 + 7 = 16 sm."
+    },
+    {
+      "text": "Daftardagi kesma 1 dm ga teng. Bu necha santimetr?",
+      "options": [
+        "100 sm",
+        "10 sm",
+        "5 sm",
+        "1 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 dm = 10 sm."
+    },
+    {
+      "text": "Kesmaning birinchi bo‘lagi 6 sm, ikkinchi bo‘lagi 7 sm. Butun kesma necha santimetr?",
+      "options": [
+        "12 sm",
+        "14 sm",
+        "1 sm",
+        "13 sm (6 + 7 = 13)"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 7 = 13 sm."
+    },
+    {
+      "text": "Taqqoslang: 1 dm 2 sm va 15 sm",
+      "options": [
+        "1 dm 2 sm > 15 sm",
+        "1 dm 2 sm < 15 sm (12 sm < 15 sm)",
+        "1 dm 2 sm = 15 sm",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 dm 2 sm = 12 sm. 12 sm < 15 sm."
+    },
+    {
+      "text": "Samarqanddagi Registon maydoni maketida yo‘lakcha 18 sm qilib chizilgan. Uni dm va sm da yozing:",
+      "options": [
+        "8 dm 1 sm",
+        "2 dm",
+        "1 dm 8 sm",
+        "18 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "18 sm = 10 sm + 8 sm = 1 dm 8 sm."
+    },
+    {
+      "text": "AB kesma 14 sm. Unda C nuqta belgilandi. Agar AC = 6 sm bo‘lsa, CB kesma necha santimetr?",
+      "options": [
+        "8 sm (14 - 6 = 8)",
+        "7 sm",
+        "9 sm",
+        "20 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "CB = AB - AC = 14 - 6 = 8 sm."
+    },
+    {
+      "text": "Uchta kesmaning uzunliklari: 4 sm, 6 sm va 10 sm. Jami uzunlik necha detsimetr bo‘ladi?",
+      "options": [
+        "2 dm (20 sm = 2 dm)",
+        "1 dm",
+        "3 dm",
+        "20 dm"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 6 + 10 = 20 sm = 2 dm."
+    },
+    {
+      "text": "Birinchi kesma 11 sm, ikkinchisi undan 3 sm uzun. Ikkinchi kesma necha santimetr?",
+      "options": [
+        "8 sm",
+        "13 sm",
+        "15 sm",
+        "14 sm (11 + 3 = 14)"
+      ],
+      "correctIndex": 3,
+      "explanation": "11 + 3 = 14 sm."
+    },
+    {
+      "text": "Anvar 15 sm uzunlikdagi ipdan 7 sm qirqib oldi. Qolgan ipga 4 sm yangi ip uladi. Ipning hozirgi uzunligi necha santimetr?",
+      "options": [
+        "11 sm",
+        "12 sm (15 - 7 + 4 = 12)",
+        "13 sm",
+        "10 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "15 - 7 = 8 sm, 8 + 4 = 12 sm."
+    },
+    {
+      "text": "To‘g‘ri chiziqda ketma-ket uchta kesma joylashgan: AB = 5 sm, BC = 8 sm, CD = 7 sm. AD kesmaning umumiy uzunligi qancha?",
+      "options": [
+        "18 sm",
+        "19 sm",
+        "20 sm (5 + 8 + 7 = 20 sm = 2 dm)",
+        "22 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 8 + 7 = 20 sm."
+    }
+  ]
+}

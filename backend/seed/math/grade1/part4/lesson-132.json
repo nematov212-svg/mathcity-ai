@@ -1,0 +1,278 @@
+{
+  "bookNumber": 132,
+  "isReview": false,
+  "title": "Ifodalarning qiymatlarini taqqoslash",
+  "emoji": "🔍",
+  "shortDesc": "Ikki ifodaning natijasini hisoblab, >, < yoki = belgilari bilan taqqoslash",
+  "intro": "Ikki ifodani taqqoslash uchun avval har bir ifodaning sonli qiymatini alohida hisoblab olamiz. So'ngra chiqqan natijalarni o'zaro taqqoslab, >, < yoki = belgisini qo'yamiz.",
+  "keyPoints": [
+    "1-qadam: Chap tomondagi ifodaning qiymatini hisoblang.",
+    "2-qadam: O'ng tomondagi ifodaning qiymatini hisoblang.",
+    "3-qadam: Natijalarni taqqoslab, >, < yoki = belgisini qo'ying.",
+    "Masalan: 8 + 4 ... 7 + 5 -> 12 ... 12 -> demak 8 + 4 = 7 + 5."
+  ],
+  "miniExample": {
+    "emojis": "🔍 (9 + 5) ... (8 + 7)",
+    "text": "9 + 5 = 14, 8 + 7 = 15. 14 soni 15 dan kichik, demak 9 + 5 < 8 + 7!"
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "7 + 6 ... 8 + 5 ifodalarini taqqoslang:",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "≠"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 6 = 13 va 8 + 5 = 13. Ikkalasi teng: 13 = 13."
+    },
+    {
+      "text": "15 - 5 ... 12 - 4 ifodalariga qaysi belgi mos?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "15 - 5 = 10 va 12 - 4 = 8. 10 > 8 bo'lgani uchun > belgisi mos."
+    },
+    {
+      "text": "20 - 8 ... 10 + 5 ifodalarini taqqoslang:",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "-"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 - 8 = 12 va 10 + 5 = 15. 12 < 15 bo'ladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "6 + 4 ... 5 + 5 ifodasiga qaysi belgi mos?",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "≠"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 4 = 10 va 5 + 5 = 10, natijalar teng: 10 = 10."
+    },
+    {
+      "text": "9 + 3 ... 8 + 2 ifodasiga qaysi belgi to'g'ri?",
+      "options": [
+        "<",
+        "=",
+        ">",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 + 3 = 12 va 8 + 2 = 10. 12 > 10."
+    },
+    {
+      "text": "7 + 4 ... 6 + 6 ifodalarini taqqoslang:",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "≠"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 4 = 11 va 6 + 6 = 12. 11 < 12."
+    },
+    {
+      "text": "14 - 6 ... 15 - 7 ifodalariga qaysi belgi qo'yiladi?",
+      "options": [
+        ">",
+        "<",
+        "+",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "14 - 6 = 8 va 15 - 7 = 8. Ikkala tomon teng: 8 = 8."
+    },
+    {
+      "text": "18 - 9 ... 16 - 8 ifodasini taqqoslang:",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "-"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 - 9 = 9 va 16 - 8 = 8. 9 > 8."
+    },
+    {
+      "text": "25 - 5 ... 15 + 6 ifodasiga qaysi belgi mos?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "25 - 5 = 20 va 15 + 6 = 21. 20 < 21."
+    },
+    {
+      "text": "30 + 10 ... 50 - 10 ifodalarini taqqoslang:",
+      "options": [
+        ">",
+        "<",
+        "≠",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "30 + 10 = 40 va 50 - 10 = 40. Ikkala tomon ham 40 ga teng."
+    },
+    {
+      "text": "45 - 5 ... 30 + 12 ifodasiga qaysi belgi mos?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "-"
+      ],
+      "correctIndex": 2,
+      "explanation": "45 - 5 = 40 va 30 + 12 = 42. 40 < 42."
+    },
+    {
+      "text": "10 + 8 ... 25 - 7 ifodalariga qaysi belgi qo'yiladi?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 8 = 18 va 25 - 7 = 18. Natijalar teng."
+    },
+    {
+      "text": "50 - 20 ... 20 + 5 ifodalarini taqqoslang:",
+      "options": [
+        "<",
+        "=",
+        "+",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 20 = 30 va 20 + 5 = 25. 30 > 25."
+    },
+    {
+      "text": "13 + 7 ... 30 - 8 ifodasiga qaysi belgi mos?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "-"
+      ],
+      "correctIndex": 0,
+      "explanation": "13 + 7 = 20 va 30 - 8 = 22. 20 < 22."
+    },
+    {
+      "text": "16 + 4 ... 12 + 8 ifodasini taqqoslang:",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "≠"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 + 4 = 20 va 12 + 8 = 20. 20 = 20."
+    },
+    {
+      "text": "40 - 15 ... 10 + 14 ifodalariga qaysi belgi mos?",
+      "options": [
+        "<",
+        "=",
+        "+",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 - 15 = 25 va 10 + 14 = 24. 25 > 24."
+    },
+    {
+      "text": "90 - 40 ... 20 + 30 ifodalarini taqqoslang:",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "≠"
+      ],
+      "correctIndex": 1,
+      "explanation": "90 - 40 = 50 va 20 + 30 = 50. 50 = 50."
+    },
+    {
+      "text": "60 + 5 ... 70 - 4 ifodalariga qaysi belgi mos keladi?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 + 5 = 65 va 70 - 4 = 66. 65 < 66."
+    },
+    {
+      "text": "80 - 30 ... 25 + 24 ifodasini taqqoslang:",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "-"
+      ],
+      "correctIndex": 0,
+      "explanation": "80 - 30 = 50 va 25 + 24 = 49. 50 > 49."
+    },
+    {
+      "text": "100 - 50 ... 20 + 30 ifodasiga mos belgi:",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "≠"
+      ],
+      "correctIndex": 0,
+      "explanation": "100 - 50 = 50 va 20 + 30 = 50. Ikkalasi teng."
+    },
+    {
+      "text": "Ali 14 + 6 ta, Vali 12 + 7 ta masalani yechdi. Kim ko'p masala yechgan?",
+      "options": [
+        "Vali ko'p yechgan",
+        "Ikkalasi teng yechgan",
+        "Vali 21 ta yechgan",
+        "Ali ko'p yechgan (20 > 19)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ali: 14 + 6 = 20 ta. Vali: 12 + 7 = 19 ta. 20 > 19, demak Ali ko'p."
+    },
+    {
+      "text": "Daftar 15 - 5 ta, kitob 8 + 3 ta. Narsa sonlarini taqqoslang:",
+      "options": [
+        "Daftar ko'p",
+        "Daftar kam (10 < 11)",
+        "Ikkalasi teng",
+        "Daftar 12 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Daftar: 15 - 5 = 10 ta. Kitob: 8 + 3 = 11 ta. 10 < 11."
+    },
+    {
+      "text": "Ifodalarni taqqoslashda birinchi nima qilish kerak?",
+      "options": [
+        "Faqat birinchi sonni solishtirish",
+        "Tenglik belgisini taxminan qo'yish",
+        "Har bir ifodaning natijasini alohida hisoblab olish",
+        "Amallarni bajarmasdan o'tkazib yuborish"
+      ],
+      "correctIndex": 2,
+      "explanation": "To'g'ri taqqoslash uchun avval ikkala tomonning aniq qiymatini hisoblab olamiz."
+    }
+  ]
+}

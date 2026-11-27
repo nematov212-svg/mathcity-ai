@@ -1,0 +1,278 @@
+{
+  "bookNumber": 140,
+  "isReview": false,
+  "title": "Masalalarni tenglamalar yordamida yechish",
+  "emoji": "🏅",
+  "shortDesc": "Matnli masalalarni tenglama tuzish orqali yechish usullari",
+  "intro": "Ko'pgina qiziqarli masalalarni tenglamalar yordamida juda oson yechish mumkin. Buning uchun masaladagi noma'lum miqdorni x harfi bilan belgilaymiz, matnga qarab tenglama tuzamiz va uni yechamiz.",
+  "keyPoints": [
+    "1-qadam: Noma'lum miqdorni x deb belgilang.",
+    "2-qadam: Masala shartiga mos tenglama tuzing.",
+    "3-qadam: Tenglamani yechib, x ni toping.",
+    "4-qadam: Masala savoliga to'liq javob yozing."
+  ],
+  "miniExample": {
+    "emojis": "🍎 x + 5 = 20 -> x = 15",
+    "text": "Dildorada bir nechta olma bor edi. Onasi 5 ta bergach 20 ta bo'ldi. Avval nechta olma bo'lgan? x + 5 = 20 -> x = 15 ta olma!"
+  },
+  "xpReward": 115,
+  "coinReward": 12,
+  "estMinutes": 9,
+  "practice": [
+    {
+      "text": "Savatda bir nechta nok bor edi. Unga 6 ta nok qo'shilgach, 15 ta bo'ldi. Dastlab nechta nok bo'lgan?",
+      "options": [
+        "9 ta (x + 6 = 15 -> x = 9)",
+        "10 ta",
+        "8 ta",
+        "21 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "x + 6 = 15, x = 15 - 6 = 9 ta."
+    },
+    {
+      "text": "Avtobusda bir nechta yo'lovchi bor edi. Bekatda 7 kishi tushgach, 14 kishi qoldi. Dastlab necha kishi bo'lgan?",
+      "options": [
+        "20 kishi",
+        "21 kishi (x - 7 = 14 -> x = 21)",
+        "18 kishi",
+        "7 kishi"
+      ],
+      "correctIndex": 1,
+      "explanation": "x - 7 = 14, x = 14 + 7 = 21 kishi."
+    },
+    {
+      "text": "Gulshanda 25 ta atirgul bor edi. Bir nechtasi uzilgach, 18 ta qoldi. Nechta atirgul uzilgan?",
+      "options": [
+        "8 ta",
+        "6 ta",
+        "7 ta (25 - x = 18 -> x = 7)",
+        "43 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "25 - x = 18, x = 25 - 18 = 7 ta."
+    }
+  ],
+  "test": [
+    {
+      "text": "Dildorada bir nechta olma bor edi. Unga onasi 5 ta bergach 20 ta bo'ldi. Masala tenglamasi qaysi?",
+      "options": [
+        "x + 5 = 20",
+        "x - 5 = 20",
+        "20 + 5 = x",
+        "x = 20 + 5"
+      ],
+      "correctIndex": 0,
+      "explanation": "Noma'lum olma soniga 5 ta qo'shilganda 20 ta bo'ldi: x + 5 = 20."
+    },
+    {
+      "text": "Bu masalada Dildorada dastlab nechta olma bo'lgan (x + 5 = 20)?",
+      "options": [
+        "25 ta",
+        "14 ta",
+        "15 ta",
+        "16 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 20 - 5 = 15 ta."
+    },
+    {
+      "text": "Avtobusda x nafar yo'lovchi bor edi. 7 kishi tushgach 14 kishi qoldi. Masala tenglamasini toping:",
+      "options": [
+        "x + 7 = 14",
+        "x - 7 = 14",
+        "7 - x = 14",
+        "x = 14 - 7"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 kishi tushgani uchun ayirish: x - 7 = 14."
+    },
+    {
+      "text": "Avtobusda dastlab necha kishi bo'lgan (x - 7 = 14)?",
+      "options": [
+        "7 kishi",
+        "20 kishi",
+        "22 kishi",
+        "21 kishi"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 14 + 7 = 21 kishi."
+    },
+    {
+      "text": "Akmal 30 ta daftar sotib oldi. Bir nechtasini ishlatgach, 12 ta qoldi. Nechta daftar ishlatilgan?",
+      "options": [
+        "16 ta",
+        "18 ta (30 - x = 12)",
+        "20 ta",
+        "42 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 - x = 12, x = 30 - 12 = 18 ta."
+    },
+    {
+      "text": "Sardor o'ylagan songa 10 ni qo'shsa 28 hosil bo'ladi. Sardor qaysi sonni o'ylagan?",
+      "options": [
+        "18 (x + 10 = 28)",
+        "38",
+        "16",
+        "19"
+      ],
+      "correctIndex": 0,
+      "explanation": "x + 10 = 28, x = 28 - 10 = 18."
+    },
+    {
+      "text": "Madina bir sondan 8 ni ayirsa 16 qoldi. Madina qaysi sonni o'ylagan?",
+      "options": [
+        "8",
+        "22",
+        "26",
+        "24 (x - 8 = 16)"
+      ],
+      "correctIndex": 3,
+      "explanation": "x - 8 = 16, x = 16 + 8 = 24."
+    },
+    {
+      "text": "Kutubxonada bir nechta kitob bor edi. Yana 15 ta kitob keltirilgach, 40 ta bo'ldi. Avval nechta kitob bo'lgan?",
+      "options": [
+        "55 ta",
+        "20 ta",
+        "25 ta (x + 15 = 40)",
+        "30 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "x + 15 = 40, x = 40 - 15 = 25 ta."
+    },
+    {
+      "text": "Do'konda 50 quti shokolad bor edi. Bir nechtasi sotilgach, 22 quti qoldi. Nechta quti sotilgan?",
+      "options": [
+        "72 quti",
+        "26 quti",
+        "28 quti (50 - x = 22)",
+        "30 quti"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 - x = 22, x = 50 - 22 = 28 quti."
+    },
+    {
+      "text": "Bir fermada bir nechta buzoq bor edi. Yana 8 ta buzoq tug'ilgach, 24 ta bo'ldi. Avval nechta buzoq bor edi?",
+      "options": [
+        "32 ta",
+        "15 ta",
+        "18 ta",
+        "16 ta (x + 8 = 24)"
+      ],
+      "correctIndex": 3,
+      "explanation": "x + 8 = 24, x = 24 - 8 = 16 ta."
+    },
+    {
+      "text": "Bog'bon daraxtdan 35 ta olma uzdi. Bir nechtasini bolalarga bergach, 20 ta qoldi. Bolalarga nechta berilgan?",
+      "options": [
+        "15 ta (35 - x = 20)",
+        "55 ta",
+        "12 ta",
+        "18 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "35 - x = 20, x = 35 - 20 = 15 ta."
+    },
+    {
+      "text": "O'quvchi bir nechta misol yechdi. Yana 9 ta yechsa jami 25 ta bo'ladi. U nechta misol yechgan?",
+      "options": [
+        "34 ta",
+        "16 ta (x + 9 = 25)",
+        "15 ta",
+        "17 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "x + 9 = 25, x = 25 - 9 = 16 ta."
+    },
+    {
+      "text": "Qutida bir nechta tugma bor edi. Undan 14 ta olingach, 16 ta qoldi. Dastlab qutida nechta tugma bo'lgan?",
+      "options": [
+        "2 ta",
+        "28 ta",
+        "32 ta",
+        "30 ta (x - 14 = 16)"
+      ],
+      "correctIndex": 3,
+      "explanation": "x - 14 = 16, x = 16 + 14 = 30 ta."
+    },
+    {
+      "text": "Sayyoh 18 km yo'l yurdi. U yana bir necha km yursa, jami 30 km bo'ladi. Yana necha km yurishi kerak?",
+      "options": [
+        "48 km",
+        "12 km (18 + x = 30)",
+        "10 km",
+        "14 km"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 + x = 30, x = 30 - 18 = 12 km."
+    },
+    {
+      "text": "Bozorda 45 kg sabzi bor edi. Tushgacha bir necha kg sotilgach, 15 kg qoldi. Necha kg sabzi sotilgan?",
+      "options": [
+        "60 kg",
+        "25 kg",
+        "30 kg (45 - x = 15)",
+        "35 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "45 - x = 15, x = 45 - 15 = 30 kg."
+    },
+    {
+      "text": "Anvarda x ta yong'oq bor edi. Ukasiga 6 ta bergach 12 ta qoldi. Anvarda dastlab nechta bo'lgan?",
+      "options": [
+        "18 ta (x - 6 = 12)",
+        "6 ta",
+        "16 ta",
+        "20 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "x - 6 = 12, x = 12 + 6 = 18 ta."
+    },
+    {
+      "text": "Tikuvchi 60 metr matodan ko'ylaklar tikdi va 25 metr mato ortib qoldi. Necha metr mato ishlatilgan?",
+      "options": [
+        "35 metr (60 - x = 25)",
+        "85 metr",
+        "30 metr",
+        "40 metr"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 - x = 25, x = 60 - 25 = 35 metr."
+    },
+    {
+      "text": "Hovuzda bir nechta o'rdak suzayotgan edi. Yana 12 ta o'rdak uchib kelgach, 28 ta bo'ldi. Dastlab nechta o'rdak bor edi?",
+      "options": [
+        "40 ta",
+        "14 ta",
+        "18 ta",
+        "16 ta (x + 12 = 28)"
+      ],
+      "correctIndex": 3,
+      "explanation": "x + 12 = 28, x = 28 - 12 = 16 ta."
+    },
+    {
+      "text": "Qaysi bosqich masalani tenglama bilan yechishda eng birinchi qilinadi?",
+      "options": [
+        "Javobni darhol taxmin qilish",
+        "Noma'lum miqdorni x harfi bilan belgilash",
+        "Amallarni aralashtirish",
+        "Kitobni yopib qo'yish"
+      ],
+      "correctIndex": 1,
+      "explanation": "Masalani tushunib, qidirilayotgan noma'lumni x deb belgilash — birinchi qadamdir."
+    },
+    {
+      "text": "Tenglama orqali masala yechishning asosiy afzalligi nimada?",
+      "options": [
+        "Masala o'z-o'zidan yo'qolib ketadi",
+        "Faqat bitta raqam yoziladi",
+        "Masalaning yechilish yo'li aniq va tushunarli bo'ladi",
+        "Hech qanday afzalligi yo'q"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tenglama mantiqiy bog'lanishlarni matematik tilda sodda va aniq ko'rsatib beradi."
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "bookNumber": 117,
+  "isReview": false,
+  "title": "Ko‘pburchakning perimetri",
+  "emoji": "🔲",
+  "shortDesc": "Perimetr — barcha tomonlar uzunliklari yig‘indisi ekanligini o‘rganish.",
+  "intro": "Ko‘pburchakning barcha tomonlari uzunliklarining yig‘indisi uning perimetri deb ataladi.",
+  "keyPoints": [
+    "Perimetr — ko‘pburchakning hamma tomonlari uzunliklari yig‘indisidir.",
+    "Muntazam ko‘pburchakning barcha tomonlari bir-biriga teng bo‘ladi.",
+    "Santimetrlarni detsimetrga o‘tkazish: masalan 30 sm = 3 dm."
+  ],
+  "miniExample": {
+    "emojis": "🔲 3 sm + 4 sm + 5 sm = 12 sm",
+    "text": "Tomonlari 3 sm, 4 sm va 5 sm bo‘lgan uchburchakning perimetri: 3 + 4 + 5 = 12 sm."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Ko‘pburchakning perimetri nima?",
+      "options": [
+        "Barcha tomonlari uzunliklarining yig‘indisi",
+        "Faqat bitta tomoni uzunligi",
+        "Tomonlarining ayirmasi",
+        "Burchaklari soni"
+      ],
+      "correctIndex": 0,
+      "explanation": "Perimetr barcha tomonlar yig‘indisidir."
+    },
+    {
+      "text": "Tomonlari 3 sm, 4 sm, 5 sm bo‘lgan uchburchak perimetrini toping:",
+      "options": [
+        "10 sm",
+        "12 sm (3 + 4 + 5 = 12)",
+        "14 sm",
+        "15 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 + 4 + 5 = 12 sm."
+    },
+    {
+      "text": "30 sm necha detsimetrga teng?",
+      "options": [
+        "30 dm",
+        "1 dm",
+        "3 dm",
+        "300 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "30 sm = 3 dm."
+    }
+  ],
+  "test": [
+    {
+      "text": "Perimetr so‘zining ma’nosi nima?",
+      "options": [
+        "Barcha tomonlar uzunliklarining yig‘indisi",
+        "Shaklning rangi",
+        "Burchaklar soni",
+        "Shaklning og‘irligi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Perimetr barcha tomonlar yig‘indisini anglatadi."
+    },
+    {
+      "text": "Tomonlari 2 sm, 3 sm, 4 sm bo‘lgan uchburchak perimetrini hisoblang:",
+      "options": [
+        "8 sm",
+        "10 sm",
+        "9 sm (2 + 3 + 4 = 9)",
+        "7 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 + 3 + 4 = 9 sm."
+    },
+    {
+      "text": "Hamma tomonlari teng bo‘lgan ko‘pburchak qanday ataladi?",
+      "options": [
+        "Noto‘g‘ri ko‘pburchak",
+        "Muntazam ko‘pburchak",
+        "Egri ko‘pburchak",
+        "Aylana"
+      ],
+      "correctIndex": 1,
+      "explanation": "Barcha tomonlari teng ko‘pburchak muntazam ko‘pburchak deb ataladi."
+    },
+    {
+      "text": "40 sm necha detsimetr bo‘ladi?",
+      "options": [
+        "40 dm",
+        "14 dm",
+        "400 dm",
+        "4 dm"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 sm = 4 dm."
+    },
+    {
+      "text": "Tomonlari 5 sm, 5 sm, 5 sm bo‘lgan teng tomonli uchburchak perimetrini toping:",
+      "options": [
+        "10 sm",
+        "15 sm (5 + 5 + 5 = 15)",
+        "12 sm",
+        "20 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 5 + 5 = 15 sm."
+    },
+    {
+      "text": "Tomonlari 2 sm, 3 sm, 2 sm, 3 sm bo‘lgan to‘rtburchak perimetri nechaga teng?",
+      "options": [
+        "10 sm (2 + 3 + 2 + 3 = 10)",
+        "8 sm",
+        "12 sm",
+        "14 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 + 3 + 2 + 3 = 10 sm = 1 dm."
+    },
+    {
+      "text": "Tomonlari 6 sm, 8 sm, 6 sm, 8 sm bo‘lgan to‘g‘ri to‘rtburchak perimetrini toping:",
+      "options": [
+        "26 sm",
+        "30 sm",
+        "14 sm",
+        "28 sm (6 + 8 + 6 + 8 = 28)"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 8 + 6 + 8 = 28 sm."
+    },
+    {
+      "text": "Beshburchakning hamma 5 ta tomoni 4 sm dan. Uning perimetri qancha?",
+      "options": [
+        "16 sm",
+        "24 sm",
+        "20 sm (4 + 4 + 4 + 4 + 4 = 20)",
+        "25 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 4 + 4 + 4 + 4 = 20 sm = 2 dm."
+    },
+    {
+      "text": "Uchburchakning perimetri 18 sm. Ikki tomoni 6 sm va 7 sm bo‘lsa, uchinchi tomoni necha santimetr?",
+      "options": [
+        "4 sm",
+        "6 sm",
+        "5 sm (18 - 6 - 7 = 5)",
+        "8 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 7 = 13 sm, 18 - 13 = 5 sm."
+    },
+    {
+      "text": "Kvadratning har bir tomoni 5 sm. Uning perimetri necha santimetr?",
+      "options": [
+        "15 sm",
+        "25 sm",
+        "10 sm",
+        "20 sm (5 + 5 + 5 + 5 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 5 + 5 + 5 = 20 sm."
+    },
+    {
+      "text": "Tomonlari 10 sm, 10 sm, 10 sm bo‘lgan uchburchak perimetri necha detsimetr bo‘ladi?",
+      "options": [
+        "3 dm (30 sm = 3 dm)",
+        "30 dm",
+        "1 dm",
+        "300 dm"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 10 + 10 = 30 sm = 3 dm."
+    },
+    {
+      "text": "Oltiburchakning hamma tomonlari 2 sm dan. Uning perimetrini toping:",
+      "options": [
+        "10 sm",
+        "12 sm (2 x 6 = 12)",
+        "14 sm",
+        "16 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 x 2 = 12 sm."
+    },
+    {
+      "text": "Tomonlari 7 sm, 8 sm va 9 sm bo‘lgan uchburchak perimetri qancha?",
+      "options": [
+        "22 sm",
+        "25 sm",
+        "26 sm",
+        "24 sm (7 + 8 + 9 = 24)"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 + 8 + 9 = 24 sm."
+    },
+    {
+      "text": "To‘rtburchakning uchta tomoni 5 sm, 4 sm va 6 sm. Perimetri 20 sm bo‘lsa, to‘rtinchi tomoni qancha?",
+      "options": [
+        "4 sm",
+        "5 sm (20 - 5 - 4 - 6 = 5)",
+        "6 sm",
+        "7 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 4 + 6 = 15 sm, 20 - 15 = 5 sm."
+    },
+    {
+      "text": "Teng tomonli uchburchakning perimetri 21 sm. Uning bitta tomoni uzunligi qancha?",
+      "options": [
+        "6 sm",
+        "8 sm",
+        "7 sm (7 + 7 + 7 = 21)",
+        "9 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 7 + 7 = 21 sm."
+    },
+    {
+      "text": "Kvadratning perimetri 16 sm. Uning bitta tomoni necha santimetr?",
+      "options": [
+        "4 sm (4 + 4 + 4 + 4 = 16)",
+        "3 sm",
+        "5 sm",
+        "8 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 4 + 4 + 4 = 16 sm."
+    },
+    {
+      "text": "Tomonlari 1 dm va 2 dm bo‘lgan to‘g‘ri to‘rtburchak perimetri necha detsimetr?",
+      "options": [
+        "6 dm (1 + 2 + 1 + 2 = 6)",
+        "5 dm",
+        "7 dm",
+        "8 dm"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 + 2 + 1 + 2 = 6 dm."
+    },
+    {
+      "text": "Tomonlari 12 sm, 18 sm va 10 sm bo‘lgan uchburchak perimetri necha detsimetrga teng? (1 dm = 10 sm)",
+      "options": [
+        "3 dm",
+        "5 dm",
+        "40 dm",
+        "4 dm (12 + 18 + 10 = 40 sm = 4 dm)"
+      ],
+      "correctIndex": 3,
+      "explanation": "12 + 18 + 10 = 40 sm = 4 dm."
+    },
+    {
+      "text": "Maktab tomorqasi to‘g‘ri to‘rtburchak shaklida: uzunligi 15 m, eni 5 m. Tomorqa atrofini to‘liq o‘rash uchun necha metr sim to‘r kerak?",
+      "options": [
+        "35 metr",
+        "40 metr (15 + 5 + 15 + 5 = 40)",
+        "45 metr",
+        "50 metr"
+      ],
+      "correctIndex": 1,
+      "explanation": "15 + 5 + 15 + 5 = 40 metr."
+    },
+    {
+      "text": "Hovuz to‘rtburchak shaklida bo‘lib, qarama-qarshi tomonlari 14 m va 6 m. Bolalar hovuz atrofini 1 marta aylanib yugurishdi. Ular necha metr masofa bosib o‘tishdi?",
+      "options": [
+        "38 metr",
+        "42 metr",
+        "40 metr (14 + 6 + 14 + 6 = 40)",
+        "20 metr"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 + 6 + 14 + 6 = 40 metr."
+    }
+  ]
+}

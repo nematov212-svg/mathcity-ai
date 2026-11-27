@@ -1,0 +1,278 @@
+{
+  "bookNumber": 141,
+  "isReview": false,
+  "title": "Masalalarni tenglamalar yordamida yechish (2)",
+  "emoji": "🎳",
+  "shortDesc": "Taqqoslashli va murakkabroq matnli masalalarni tenglama orqali yechish",
+  "intro": "Bu darsda biz ikki do'st, ikki savat yoki ikki guruh o'rtasidagi munosabatlarga doir qiziqarli masalalarni tenglamalar yordamida yechamiz. Tenglama tuzish masalani qisqa va qulay yechishga yordam beradi.",
+  "keyPoints": [
+    "Jami son va bitta qism ma'lum bo'lsa, ikkinchi qismni topish: x + a = b.",
+    "Farq va bitta qism ma'lum bo'lganda noma'lumni topish: x - a = b yoki a - x = b.",
+    "Masalani diqqat bilan o'qib, 'kimda ko'p?', 'kimda kam?' ekanligini aniqlash.",
+    "Topilgan javobni tekshirib ko'rish."
+  ],
+  "miniExample": {
+    "emojis": "🎳 x + 12 = 30 -> x = 18",
+    "text": "Akmal va Anvarda jami 30 ta koptok bor. Anvarda 12 ta bo'lsa, Akmalda nechta koptok bor? x + 12 = 30 -> x = 18 ta!"
+  },
+  "xpReward": 115,
+  "coinReward": 12,
+  "estMinutes": 9,
+  "practice": [
+    {
+      "text": "Akmal va Anvarda jami 30 ta koptok bor. Anvarda 12 ta bo'lsa, Akmalda nechta?",
+      "options": [
+        "18 ta (x + 12 = 30 -> x = 18)",
+        "42 ta",
+        "16 ta",
+        "20 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "x + 12 = 30, x = 30 - 12 = 18 ta."
+    },
+    {
+      "text": "Ikkita javonda jami 50 ta kitob bor. Birinchi javonda 28 ta kitob bo'lsa, ikkinchisida nechta?",
+      "options": [
+        "20 ta",
+        "22 ta (28 + x = 50 -> x = 22)",
+        "24 ta",
+        "78 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "28 + x = 50, x = 50 - 28 = 22 ta."
+    },
+    {
+      "text": "Nodirada dugonasidan 7 ta kam qalam bor. Nodirada 14 ta qalam bo'lsa, dugonasida nechta?",
+      "options": [
+        "7 ta",
+        "20 ta",
+        "21 ta (x - 7 = 14 -> x = 21)",
+        "22 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "x - 7 = 14, x = 14 + 7 = 21 ta."
+    }
+  ],
+  "test": [
+    {
+      "text": "Akmal va Anvarda jami 30 ta koptok bor. Anvarda 12 ta bo'lsa, Akmalda nechta koptok bor?",
+      "options": [
+        "18 ta",
+        "42 ta",
+        "16 ta",
+        "19 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "x + 12 = 30, x = 30 - 12 = 18 ta."
+    },
+    {
+      "text": "Ikkita javonda 50 ta kitob bor. Birinchi javonda 28 ta bo'lsa, ikkinchisida nechta?",
+      "options": [
+        "20 ta",
+        "24 ta",
+        "22 ta",
+        "78 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 50 - 28 = 22 ta."
+    },
+    {
+      "text": "Ikkita savatda jami 45 kg uzum bor. Birinchi savatda 20 kg bo'lsa, ikkinchisida necha kg?",
+      "options": [
+        "65 kg",
+        "25 kg (20 + x = 45)",
+        "23 kg",
+        "27 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 45 - 20 = 25 kg."
+    },
+    {
+      "text": "Shahnozada bir nechta stiker bor edi. Dugonasi unga 14 ta bergach, unda 32 ta bo'ldi. Avval nechta bo'lgan?",
+      "options": [
+        "46 ta",
+        "16 ta",
+        "20 ta",
+        "18 ta (x + 14 = 32)"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 32 - 14 = 18 ta."
+    },
+    {
+      "text": "Sinfda 28 nafar o'quvchi bor. Agar o'g'il bolalar 15 nafar bo'lsa, qizlar necha nafar?",
+      "options": [
+        "12 nafar",
+        "13 nafar (15 + x = 28)",
+        "14 nafar",
+        "43 nafar"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 28 - 15 = 13 nafar."
+    },
+    {
+      "text": "Daftar va qalam birgalikda 40 tanga turadi. Qalam 15 tanga bo'lsa, daftar necha tanga?",
+      "options": [
+        "25 tanga (x + 15 = 40)",
+        "55 tanga",
+        "20 tanga",
+        "30 tanga"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 40 - 15 = 25 tanga."
+    },
+    {
+      "text": "Jasur va Rustam baliq ovlashdi. Jasur Rustamdan 8 ta ortiq baliq tutdi. Jasur 20 ta tutgan bo'lsa, Rustam nechta?",
+      "options": [
+        "28 ta",
+        "10 ta",
+        "14 ta",
+        "12 ta (x + 8 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "x + 8 = 20, x = 20 - 8 = 12 ta."
+    },
+    {
+      "text": "Bir dalada ikkinchisiga qaraganda 15 tonna ko'p bug'doy o'rildi. Ikkinchi daladan 30 tonna o'rilgan bo'lsa, birinchisidan qancha?",
+      "options": [
+        "15 tonna",
+        "40 tonna",
+        "45 tonna (x - 15 = 30)",
+        "50 tonna"
+      ],
+      "correctIndex": 2,
+      "explanation": "x - 15 = 30, x = 30 + 15 = 45 tonna."
+    },
+    {
+      "text": "Maktab oshxonasiga 70 litr sut keltirildi. Tushlikda bir necha litr ishlatilgach, 25 litr qoldi. Qancha sut ishlatilgan?",
+      "options": [
+        "95 litr",
+        "40 litr",
+        "45 litr (70 - x = 25)",
+        "50 litr"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 70 - 25 = 45 litr."
+    },
+    {
+      "text": "Temir yo'l vagonida bir nechta yo'lovchi bor edi. Bekatda 20 kishi chiqdi va jami 60 kishi bo'ldi. Avval nechta edi?",
+      "options": [
+        "80 kishi",
+        "35 kishi",
+        "45 kishi",
+        "40 kishi (x + 20 = 60)"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 60 - 20 = 40 kishi."
+    },
+    {
+      "text": "Ikki qutida 80 ta bo'r bor. Birinchi qutida 42 ta bo'lsa, ikkinchi qutida nechta bo'r bor?",
+      "options": [
+        "38 ta (42 + x = 80)",
+        "122 ta",
+        "36 ta",
+        "40 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 80 - 42 = 38 ta."
+    },
+    {
+      "text": "Fotimaning yoshi Zuhroning yoshiga teng. Ikkalasining yoshlari yig'indisi 16 bo'lsa, Fotima necha yoshda?",
+      "options": [
+        "7 yoshda",
+        "8 yoshda (x + x = 16)",
+        "9 yoshda",
+        "10 yoshda"
+      ],
+      "correctIndex": 1,
+      "explanation": "x + x = 16 -> 8 + 8 = 16, demak Fotima 8 yoshda."
+    },
+    {
+      "text": "Bog'da jami 60 ta mevali daraxt bor. Shulardan 35 tasi olma, qolganlari nok. Nok daraxtlari nechta?",
+      "options": [
+        "95 ta",
+        "20 ta",
+        "30 ta",
+        "25 ta (35 + x = 60)"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 60 - 35 = 25 ta."
+    },
+    {
+      "text": "Azizning puli 50 so'm edi. U kitob sotib olgach, 18 so'mi qoldi. Kitob necha so'm?",
+      "options": [
+        "68 so'm",
+        "32 so'm (50 - x = 18)",
+        "30 so'm",
+        "35 so'm"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 50 - 18 = 32 so'm."
+    },
+    {
+      "text": "Sport seksiyasida 36 nafar bola shug'ullanadi. Futbolga 20 nafar qatnashadi, qolganlari basketbolga. Basketbolga nechtasi qatnashadi?",
+      "options": [
+        "56 nafar",
+        "14 nafar",
+        "16 nafar (20 + x = 36)",
+        "18 nafar"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 36 - 20 = 16 nafar."
+    },
+    {
+      "text": "O'ymakor usta 28 ta kosani naqshladi. Yana bir nechtasini naqshlasa, jami 50 ta bo'ladi. U yana nechta kosani naqshlashi kerak?",
+      "options": [
+        "22 ta (28 + x = 50)",
+        "78 ta",
+        "20 ta",
+        "24 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 50 - 28 = 22 ta."
+    },
+    {
+      "text": "Toychoq va qo'zichoqning birgalikdagi vazni 48 kg. Agar qo'zichoq 18 kg bo'lsa, toychoq necha kg?",
+      "options": [
+        "30 kg (x + 18 = 48)",
+        "66 kg",
+        "28 kg",
+        "32 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 48 - 18 = 30 kg."
+    },
+    {
+      "text": "Avtosaroyda 90 ta mashina bor edi. Ertalab bir nechasi yo'lga chiqib ketgach, 35 ta qoldi. Nechta mashina yo'lga chiqqan?",
+      "options": [
+        "125 ta",
+        "50 ta",
+        "60 ta",
+        "55 ta (90 - x = 35)"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 90 - 35 = 55 ta."
+    },
+    {
+      "text": "Masalani tenglama yordamida yechgach nima qilish kerak?",
+      "options": [
+        "Hech narsa qilmaslik",
+        "Javobni masala shartiga qo'yib tekshirib ko'rish",
+        "Javobni o'chirib tashlash",
+        "Boshqa shart o'ylab topish"
+      ],
+      "correctIndex": 1,
+      "explanation": "Topilgan qiymat masala ma'nosiga to'g'ri kelishini tekshirish muhim."
+    },
+    {
+      "text": "Tenglamalar tuzish orqali masala yechish bizga qanday ko'nikma beradi?",
+      "options": [
+        "Faqat tez yozish",
+        "Raqamlarni unutish",
+        "Mantiqiy fikrlash va masalalarni tartibli yechish",
+        "Rasmlar chizish"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tenglama tuzish tizimli mantiq va mustaqil fikrlash qobiliyatini yuksaltiradi."
+    }
+  ]
+}

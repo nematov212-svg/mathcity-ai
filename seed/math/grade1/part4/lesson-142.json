@@ -1,0 +1,278 @@
+{
+  "bookNumber": 142,
+  "isReview": true,
+  "title": "Takrorlash (1)",
+  "emoji": "🏪",
+  "shortDesc": "Geometriya va kattaliklar bo'yicha yakuniy takrorlash",
+  "intro": "1-sinf matematika kursining yakuniy takrorlash darslariga xush kelibsiz! Ushbu darsda biz geometrik shakllar, kesmalar, perimetr, uzunlik, massa va sig'im o'lchov birliklarini takrorlaymiz.",
+  "keyPoints": [
+    "Kesma — ikki tomondan chegaralangan to'g'ri chiziq bo'lagi. 1 dm = 10 sm.",
+    "Perimetr — ko'pburchak barcha tomonlari uzunliklarining yig'indisi.",
+    "Kvadrat (4 ta tomoni teng, 4 ta to'g'ri burchak), to'g'ri to'rtburchak (qarama-qarshi tomonlari teng).",
+    "Massa kilogrammda (kg), sig'im litrda (l) o'lchanadi."
+  ],
+  "miniExample": {
+    "emojis": "📏 P = 4 x a | 1 dm = 10 sm",
+    "text": "Tomoni 5 sm bo'lgan kvadrat perimetri: 5 + 5 + 5 + 5 = 20 sm = 2 dm!"
+  },
+  "xpReward": 120,
+  "coinReward": 12,
+  "estMinutes": 10,
+  "practice": [
+    {
+      "text": "3 dm necha santimetrga teng?",
+      "options": [
+        "30 sm",
+        "3 sm",
+        "300 sm",
+        "13 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 dm = 10 sm bo'lgani uchun 3 dm = 30 sm."
+    },
+    {
+      "text": "Tomoni 6 sm bo'lgan kvadratning perimetrini toping:",
+      "options": [
+        "12 sm",
+        "24 sm",
+        "18 sm",
+        "36 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 6 + 6 + 6 = 24 sm."
+    },
+    {
+      "text": "Suyuqliklar miqdori qaysi birlikda o'lchanadi?",
+      "options": [
+        "Kilogrammda",
+        "Santimetrda",
+        "Litrda (l)",
+        "Detsimetrda"
+      ],
+      "correctIndex": 2,
+      "explanation": "Suv, sut va sharbat litrda o'lchanadi."
+    }
+  ],
+  "test": [
+    {
+      "text": "1 detsimetr necha santimetrga teng?",
+      "options": [
+        "10 sm",
+        "1 sm",
+        "100 sm",
+        "5 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 dm = 10 sm."
+    },
+    {
+      "text": "4 dm 5 sm necha santimetr bo'ladi?",
+      "options": [
+        "40 sm",
+        "54 sm",
+        "45 sm",
+        "9 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 dm = 40 sm, 40 + 5 = 45 sm."
+    },
+    {
+      "text": "70 santimetr necha detsimetrga teng?",
+      "options": [
+        "70 dm",
+        "7 dm",
+        "700 dm",
+        "17 dm"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 sm = 7 dm."
+    },
+    {
+      "text": "Kvadratning tomoni 4 sm. Perimetri qancha?",
+      "options": [
+        "12 sm",
+        "20 sm",
+        "8 sm",
+        "16 sm"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 x 4 = 16 sm."
+    },
+    {
+      "text": "Bo'yi 5 sm, eni 3 sm bo'lgan to'g'ri to'rtburchak perimetrini hisoblang:",
+      "options": [
+        "15 sm",
+        "16 sm (5 + 3 + 5 + 3 = 16)",
+        "18 sm",
+        "8 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 3 + 5 + 3 = 16 sm."
+    },
+    {
+      "text": "Teng tomonli uchburchakning tomoni 5 sm. Uning perimetri qancha?",
+      "options": [
+        "15 sm (5 + 5 + 5 = 15)",
+        "10 sm",
+        "20 sm",
+        "25 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 + 5 + 5 = 15 sm."
+    },
+    {
+      "text": "Kvadratda nechta to'g'ri burchak bor?",
+      "options": [
+        "2 ta",
+        "3 ta",
+        "0 ta",
+        "4 ta"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kvadratning barcha 4 ta burchagi to'g'ri burchakdir."
+    },
+    {
+      "text": "Kubning nechta yog'i bor?",
+      "options": [
+        "4 ta",
+        "8 ta",
+        "6 ta",
+        "12 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kub 6 ta teng kvadrat yoqqa ega."
+    },
+    {
+      "text": "Qaysi shakl dumalay oladi va uning uchi yo'q?",
+      "options": [
+        "Kub",
+        "Piramida",
+        "Shar",
+        "Kvadrat"
+      ],
+      "correctIndex": 2,
+      "explanation": "Shar silliq dumaloq shakl bo'lib, har tomonga dumalaydi."
+    },
+    {
+      "text": "Kvadratda nechta simmetriya o'qi bor?",
+      "options": [
+        "2 ta",
+        "3 ta",
+        "1 ta",
+        "4 ta"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kvadratda 4 ta simmetriya o'qi mavjud."
+    },
+    {
+      "text": "To'g'ri to'rtburchakda nechta simmetriya o'qi bor?",
+      "options": [
+        "2 ta",
+        "4 ta",
+        "1 ta",
+        "3 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "To'g'ri to'rtburchak 2 ta simmetriya o'qiga ega."
+    },
+    {
+      "text": "Doirada nechta simmetriya o'qi mavjud?",
+      "options": [
+        "4 ta",
+        "Cheksiz ko'p",
+        "10 ta",
+        "1 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Doira markazidan o'tuvchi har qanday to'g'ri chiziq simmetriya o'qidir."
+    },
+    {
+      "text": "Bir chelakda 10 l, ikkinchisida 8 l suv bor. Jami necha litr suv bor?",
+      "options": [
+        "16 litr",
+        "20 litr",
+        "2 litr",
+        "18 litr (10 + 8 = 18)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 + 8 = 18 litr."
+    },
+    {
+      "text": "Bir qop kartoshka 25 kg, ikkinchisi 20 kg. Jami necha kg kartoshka bor?",
+      "options": [
+        "40 kg",
+        "45 kg (25 + 20 = 45)",
+        "50 kg",
+        "5 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "25 + 20 = 45 kg."
+    },
+    {
+      "text": "3 ta bo'g'indan iborat siniq chiziq uzunliklari: 4 sm, 6 sm va 5 sm. Siniq chiziq uzunligi qancha?",
+      "options": [
+        "14 sm",
+        "16 sm",
+        "15 sm (4 + 6 + 5 = 15)",
+        "20 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 6 + 5 = 15 sm."
+    },
+    {
+      "text": "Kesmaning uzunligi 12 sm. Undan 4 sm kesib olinsa, necha sm qoladi?",
+      "options": [
+        "8 sm (12 - 4 = 8)",
+        "6 sm",
+        "7 sm",
+        "16 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 - 4 = 8 sm."
+    },
+    {
+      "text": "Qaysi ko'pburchakning 5 ta tomoni va 5 ta uchi bor?",
+      "options": [
+        "Beshburchak",
+        "To'rtburchak",
+        "Oltiburchak",
+        "Uchburchak"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 ta tomonli ko'pburchak beshburchak deyiladi."
+    },
+    {
+      "text": "Silindrning asoslari qanday shaklda?",
+      "options": [
+        "Kvadrat",
+        "Uchburchak",
+        "To'g'ri to'rtburchak",
+        "Doira"
+      ],
+      "correctIndex": 3,
+      "explanation": "Silindrning pastki va yuqori asoslari doiralardan iborat."
+    },
+    {
+      "text": "20 sm necha detsimetr bo'ladi?",
+      "options": [
+        "20 dm",
+        "2 dm",
+        "1 dm",
+        "3 dm"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 sm = 2 dm."
+    },
+    {
+      "text": "Geometrik shakllarni o'rganish bizga hayotda nima uchun kerak?",
+      "options": [
+        "Faqat rasm chizish uchun",
+        "Chalg'ish uchun",
+        "Tevarak-atrofimizdagi narsalarning o'lchami va shaklini to'g'ri anglash uchun",
+        "Faqat kitob o'qish uchun"
+      ],
+      "correctIndex": 2,
+      "explanation": "Geometriya uylar qurish, buyumlar yasash va tabiatni tushunishda asosiy vositadir."
+    }
+  ]
+}

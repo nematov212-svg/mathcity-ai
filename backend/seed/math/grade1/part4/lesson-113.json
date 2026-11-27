@@ -1,0 +1,277 @@
+{
+  "bookNumber": 113,
+  "isReview": false,
+  "title": "Berilgan uzunlikda kesma chizish",
+  "emoji": "✏️",
+  "shortDesc": "Chizg‘ich yordamida berilgan o‘lchamda aniq kesma chizish tartibi.",
+  "intro": "Kesma chizish 0 nuqtadan boshlanadi va kerakli santimetrgacha to‘g‘ri chiziq tortiladi.",
+  "keyPoints": [
+    "Chizish tartibi: 1) boshlang‘ich nuqta qo‘yish, 2) chizg‘ich 0 belgisini qo‘yish, 3) ikkinchi nuqtani belgilash, 4) tutashtirish.",
+    "O‘lchash har doim chizg‘ichning 0 belgisidan boshlanadi.",
+    "Uzunlikni xonalarga yoyish: 32 sm = 30 sm + 2 sm."
+  ],
+  "miniExample": {
+    "emojis": "✏️ 0 dan 7 gacha: 7 sm li kesma",
+    "text": "Daftarga 0 dan boshlab 7 sm gacha chiziq tortsak, uzunligi 7 sm bo‘lgan kesma hosil bo‘ladi."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Kesma chizishda chizg‘ichning qaysi belgisidan boshlanadi?",
+      "options": [
+        "0 belgisidan",
+        "1 belgisidan",
+        "Chekkasidan",
+        "Xohlagan joyidan"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kesma o‘lchash va chizish doimo 0 belgisidan boshlanadi."
+    },
+    {
+      "text": "32 sm uzunlikni o‘nlik va birliklarga ajrating:",
+      "options": [
+        "3 sm + 2 sm",
+        "30 sm + 2 sm",
+        "20 sm + 3 sm",
+        "30 sm + 20 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "32 sm = 30 sm + 2 sm."
+    },
+    {
+      "text": "AB = 27 sm. BC kesma undan 6 sm qisqa bo‘lsa, BC kesma necha santimetr?",
+      "options": [
+        "20 sm",
+        "22 sm",
+        "21 sm (27 - 6 = 21)",
+        "33 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "27 - 6 = 21 sm."
+    }
+  ],
+  "test": [
+    {
+      "text": "Chizg‘ichda kesma chizishni qaysi raqamdan boshlaymiz?",
+      "options": [
+        "0 raqamidan",
+        "1 raqamidan",
+        "5 raqamidan",
+        "10 raqamidan"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kesma chizish chizg‘ichning 0 belgisidan boshlanadi."
+    },
+    {
+      "text": "Berilgan uzunlikdagi kesma chizishning 1-bosqichi nima?",
+      "options": [
+        "Chiziqni bo‘yash",
+        "Nuqtalarni o‘chirish",
+        "Boshlang‘ich nuqta qo‘yish",
+        "Daftarni yopish"
+      ],
+      "correctIndex": 2,
+      "explanation": "Avval boshlang‘ich nuqta belgilanadi."
+    },
+    {
+      "text": "45 sm ni xona birliklariga yoying:",
+      "options": [
+        "4 sm + 5 sm",
+        "40 sm + 5 sm",
+        "40 sm + 50 sm",
+        "30 sm + 15 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "45 sm = 40 sm + 5 sm."
+    },
+    {
+      "text": "Daftarga 6 sm li kesma chizish uchun 0 dan necha sm gacha chizamiz?",
+      "options": [
+        "5 sm gacha",
+        "7 sm gacha",
+        "10 sm gacha",
+        "6 sm gacha"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 sm li kesma uchun 0 dan 6 gacha chiziladi."
+    },
+    {
+      "text": "50 sm + 4 sm necha santimetr bo‘ladi?",
+      "options": [
+        "50 sm",
+        "54 sm",
+        "45 sm",
+        "55 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 + 4 = 54 sm."
+    },
+    {
+      "text": "1 dm 5 sm li kesma chizish uchun necha santimetr chizish kerak?",
+      "options": [
+        "15 sm (10 + 5 = 15)",
+        "12 sm",
+        "14 sm",
+        "50 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 dm 5 sm = 15 sm."
+    },
+    {
+      "text": "AB kesma 27 sm. BC kesma undan 6 sm kichik bo‘lsa, BC kesma uzunligi qancha?",
+      "options": [
+        "20 sm",
+        "22 sm",
+        "33 sm",
+        "21 sm (27 - 6 = 21)"
+      ],
+      "correctIndex": 3,
+      "explanation": "27 - 6 = 21 sm."
+    },
+    {
+      "text": "MN kesma 15 sm. NK kesma undan 5 sm uzun. NK kesma necha santimetr?",
+      "options": [
+        "18 sm",
+        "25 sm",
+        "20 sm (15 + 5 = 20)",
+        "10 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 + 5 = 20 sm."
+    },
+    {
+      "text": "Daftar eni 12 sm. O‘quvchi undan 3 sm qisqa kesma chizdi. Kesma necha santimetr?",
+      "options": [
+        "8 sm",
+        "10 sm",
+        "9 sm (12 - 3 = 9)",
+        "15 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 - 3 = 9 sm."
+    },
+    {
+      "text": "68 sm ni xona qo‘shiluvchilariga ajrating:",
+      "options": [
+        "6 sm + 8 sm",
+        "60 sm + 18 sm",
+        "50 sm + 8 sm",
+        "60 sm + 8 sm"
+      ],
+      "correctIndex": 3,
+      "explanation": "68 sm = 60 sm + 8 sm."
+    },
+    {
+      "text": "Nodir 8 sm li kesma chizdi, Jasur undan 2 sm uzun kesma chizdi. Jasurning kesmasi necha santimetr?",
+      "options": [
+        "10 sm (8 + 2 = 10)",
+        "6 sm",
+        "9 sm",
+        "11 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 2 = 10 sm."
+    },
+    {
+      "text": "Chizg‘ichning 2 belgisidan 8 belgisigacha chizilgan kesmaning uzunligi necha santimetr?",
+      "options": [
+        "8 sm",
+        "6 sm (8 - 2 = 6)",
+        "2 sm",
+        "10 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 - 2 = 6 sm."
+    },
+    {
+      "text": "Chizg‘ichning 3 belgisidan 10 belgisigacha bo‘lgan kesma uzunligi qancha?",
+      "options": [
+        "10 sm",
+        "3 sm",
+        "8 sm",
+        "7 sm (10 - 3 = 7)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 - 3 = 7 sm."
+    },
+    {
+      "text": "O‘quvchi 1 dm li kesma chizmoqchi. U necha santimetr chizishi kerak?",
+      "options": [
+        "1 sm",
+        "10 sm",
+        "20 sm",
+        "100 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 dm = 10 sm."
+    },
+    {
+      "text": "Malika 14 sm li kesma chizdi. So‘ngra uning 5 santimetrini o‘chirib tashladi. Qolgan kesma uzunligi qancha?",
+      "options": [
+        "8 sm",
+        "10 sm",
+        "9 sm (14 - 5 = 9)",
+        "19 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 - 5 = 9 sm."
+    },
+    {
+      "text": "Kesmaning uzunligi 1 dm 3 sm. Uni santimetrlarda ifodalang:",
+      "options": [
+        "13 sm",
+        "10 sm",
+        "15 sm",
+        "30 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 dm 3 sm = 10 + 3 = 13 sm."
+    },
+    {
+      "text": "Toshkent metrosining yer usti liniyasi chizmasida har 1 km ga 1 sm to‘g‘ri kelsa, 16 km masofa necha santimetr chiziladi?",
+      "options": [
+        "16 sm",
+        "10 sm",
+        "6 sm",
+        "26 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "Har 1 km 1 sm bo‘lsa, 16 km = 16 sm chiziladi."
+    },
+    {
+      "text": "AB kesma 18 sm. Unda K nuqta shunday qo‘yildiki, AK = 10 sm bo‘ldi. KB kesma uzunligini toping:",
+      "options": [
+        "7 sm",
+        "9 sm",
+        "28 sm",
+        "8 sm (18 - 10 = 8)"
+      ],
+      "correctIndex": 3,
+      "explanation": "KB = 18 - 10 = 8 sm."
+    },
+    {
+      "text": "Madina avval 7 sm li kesma chizdi, so‘ng unga ulab 6 sm li kesma qo‘shdi. Keyin butun kesmadan 3 sm o‘chirdi. Qolgan kesma necha santimetr?",
+      "options": [
+        "9 sm",
+        "10 sm (7 + 6 - 3 = 10)",
+        "11 sm",
+        "13 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 6 = 13 sm, 13 - 3 = 10 sm."
+    },
+    {
+      "text": "Bir varaqda 22 sm li chiziq bor. Undan 12 sm li va 5 sm li ikkita kesma qirqib olindi. Necha santimetr chiziq qoldi?",
+      "options": [
+        "4 sm",
+        "6 sm",
+        "5 sm (22 - 12 - 5 = 5)",
+        "7 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "22 - 12 = 10 sm, 10 - 5 = 5 sm."
+    }
+  ]
+}

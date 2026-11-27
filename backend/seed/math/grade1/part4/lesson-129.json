@@ -1,0 +1,278 @@
+{
+  "bookNumber": 129,
+  "isReview": false,
+  "title": "Tenglik va tengsizliklar",
+  "emoji": "⚖️",
+  "shortDesc": "Sonli tenglik va tengsizliklar, =, ≠, >, < belgilari",
+  "intro": "Matematikada ikki ifoda yoki son o'rtasiga tenglik (=) yoki tengsizlik (>, <, ≠) belgilari qo'yiladi. Agar ikkala tomon qiymati bir xil bo'lsa — bu tenglik, har xil bo'lsa — tengsizlikdir.",
+  "keyPoints": [
+    "= belgisi tenglikni bildiradi: masalan, 6 + 4 = 10.",
+    "≠ belgisi teng emaslikni bildiradi: masalan, 5 + 2 ≠ 8.",
+    "> belgisi katta, < belgisi kichik ekanligini ko'rsatadi: 9 > 7 va 3 < 8.",
+    "Tengsizlikda belgi doim katta son tomonga ochiladi (ochiq og'iz katta songa qaraydi)."
+  ],
+  "miniExample": {
+    "emojis": "⚖️ 7 + 3 = 10 | 12 > 8",
+    "text": "7 ga 3 ni qo'shsak 10 bo'ladi, demak 7 + 3 = 10 (tenglik). 12 soni 8 dan katta, demak 12 > 8 (tengsizlik)."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "8 + 4 ... 12 ifodaga qaysi belgi mos keladi?",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "≠"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 4 = 12 bo'lgani uchun tenglik (=) belgisi qo'yiladi."
+    },
+    {
+      "text": "15 ... 9 ifodaga qaysi belgi to'g'ri keladi?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "15 soni 9 dan katta, shuning uchun > belgisi qo'yiladi: 15 > 9."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri to'g'ri tenglik?",
+      "options": [
+        "10 + 5 = 16",
+        "8 + 3 = 12",
+        "14 - 4 = 10",
+        "20 - 5 = 14"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 dan 4 ni ayirsak aynan 10 qoladi, demak 14 - 4 = 10 to'g'ri tenglik."
+    }
+  ],
+  "test": [
+    {
+      "text": "7 + 5 ... 12 yozuviga qaysi belgi qo'yiladi?",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "≠"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 5 = 12, shuning uchun tenglik belgisi (=) mos."
+    },
+    {
+      "text": "20 ... 18 ifodaga qaysi belgi to'g'ri?",
+      "options": [
+        "<",
+        "=",
+        ">",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 soni 18 dan katta: 20 > 18."
+    },
+    {
+      "text": "9 ... 14 ifodaga qaysi belgi qo'yilishi kerak?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "-"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 soni 14 dan kichik: 9 < 14."
+    },
+    {
+      "text": "10 + 6 ... 16 yozuviga mos belgini tanlang:",
+      "options": [
+        ">",
+        "<",
+        "≠",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "10 + 6 = 16, ikkala tomon teng."
+    },
+    {
+      "text": "30 - 10 ... 15 ifodada qaysi belgi to'g'ri?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "-"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 - 10 = 20, 20 esa 15 dan katta (20 > 15)."
+    },
+    {
+      "text": "12 + 3 ... 20 ifodada qaysi belgi mos?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + 3 = 15, 15 soni 20 dan kichik (15 < 20)."
+    },
+    {
+      "text": "Quyidagi ifodalardan qaysi biri tenglik hisoblanadi?",
+      "options": [
+        "18 > 10",
+        "15 < 25",
+        "12 ≠ 14",
+        "18 - 8 = 10"
+      ],
+      "correctIndex": 3,
+      "explanation": "Tenglik belgisi (=) bo'lgan ifoda tenglik deyiladi: 18 - 8 = 10."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri tengsizlik hisoblanadi?",
+      "options": [
+        "10 + 5 = 15",
+        "40 - 20 = 20",
+        "25 > 19",
+        "7 + 7 = 14"
+      ],
+      "correctIndex": 2,
+      "explanation": "> belgisi qatnashgan 25 > 19 ifodasi tengsizlikdir."
+    },
+    {
+      "text": "8 + 8 ... 17 ifodaga qaysi belgi mos keladi?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 8 = 16, 16 soni 17 dan kichik (16 < 17)."
+    },
+    {
+      "text": "25 - 5 ... 20 ifodaga qaysi belgi qo'yiladi?",
+      "options": [
+        ">",
+        "<",
+        "≠",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "25 - 5 = 20, demak 25 - 5 = 20 to'g'ri tenglik."
+    },
+    {
+      "text": "40 ... 50 - 5 ifodasiga qaysi belgi mos?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 5 = 45, 40 soni 45 dan kichik (40 < 45)."
+    },
+    {
+      "text": "16 + 4 ... 30 - 10 ifodalarini taqqoslang:",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "≠"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 + 4 = 20 va 30 - 10 = 20. Ikkalasi teng: 20 = 20."
+    },
+    {
+      "text": "50 + 8 ... 60 ifodada qaysi belgi to'g'ri?",
+      "options": [
+        ">",
+        "=",
+        "-",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 + 8 = 58, 58 soni 60 dan kichik (58 < 60)."
+    },
+    {
+      "text": "70 - 20 ... 45 ifodada qaysi belgi mos?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 20 = 50, 50 esa 45 dan katta (50 > 45)."
+    },
+    {
+      "text": "Bir savatda 14 ta olma, ikkinchisida 10 + 4 ta olma bor. Olmalar soni qanday?",
+      "options": [
+        "Birinchisida ko'p",
+        "Ikkinchisida ko'p",
+        "Teng (14 = 14)",
+        "Taqqoslab bo'lmaydi"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 4 = 14, har ikkala savatda ham 14 tadan olma bor."
+    },
+    {
+      "text": "Akramda 35 ta, Sardorda 40 ta daftar bor. Ularni taqqoslang:",
+      "options": [
+        "35 < 40 (Sardorda ko'p)",
+        "35 > 40",
+        "35 = 40",
+        "Sardorda kam"
+      ],
+      "correctIndex": 0,
+      "explanation": "35 soni 40 dan kichik, Sardorning daftari ko'proq."
+    },
+    {
+      "text": "Qaysi tenglik TO'G'RI?",
+      "options": [
+        "13 + 7 = 20",
+        "13 + 7 = 21",
+        "13 + 7 = 19",
+        "13 - 7 = 20"
+      ],
+      "correctIndex": 0,
+      "explanation": "13 + 7 = 20 to'g'ri arifmetik tenglik."
+    },
+    {
+      "text": "Qaysi tengsizlik TO'G'RI?",
+      "options": [
+        "48 < 42",
+        "48 = 42",
+        "42 > 48",
+        "48 > 42"
+      ],
+      "correctIndex": 3,
+      "explanation": "48 soni 42 dan katta bo'lgani uchun 48 > 42 to'g'ri."
+    },
+    {
+      "text": "19 ≠ 20 yozuvi nimani bildiradi?",
+      "options": [
+        "19 soni 20 ga tengligini",
+        "19 soni 20 ga teng emasligini",
+        "19 katta ekanligini",
+        "19 nolga tengligini"
+      ],
+      "correctIndex": 1,
+      "explanation": "≠ belgisi teng emaslikni (not equal) bildiradi."
+    },
+    {
+      "text": "Tenglik va tengsizlik haqidagi to'g'ri xulosani toping:",
+      "options": [
+        "Hamma amallar faqat tenglik bo'ladi",
+        "> belgisi doim kichik sonni bildiradi",
+        "= belgisi bo'lsa tenglik, > yoki < bo'lsa tengsizlik bo'ladi",
+        "Tengsizlikda sonlar doim bir xil bo'ladi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tenglikda = belgisi, tengsizlikda esa > yoki < belgilari ishlatiladi."
+    }
+  ]
+}

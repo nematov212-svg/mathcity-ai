@@ -1,0 +1,277 @@
+{
+  "bookNumber": 115,
+  "isReview": false,
+  "title": "Siniq chiziqning uzunligi",
+  "emoji": "📈",
+  "shortDesc": "Siniq chiziq bo‘g‘inlari va uning umumiy uzunligini hisoblash.",
+  "intro": "Siniq chiziqning uzunligi uning barcha bo‘g‘inlari uzunliklari yig‘indisiga teng.",
+  "keyPoints": [
+    "Siniq chiziq ketma-ket ulangan kesmalardan (bo‘g‘inlardan) iborat.",
+    "Siniq chiziq ochiq yoki yopiq bo‘ladi.",
+    "Siniq chiziq uzunligini topish uchun uning barcha bo‘g‘inlari uzunligi qo‘shiladi."
+  ],
+  "miniExample": {
+    "emojis": "📈 3 sm + 4 sm + 5 sm = 12 sm",
+    "text": "Siniq chiziq 3 ta bo‘g‘indan iborat: 3 sm, 4 sm va 5 sm. Jami uzunligi: 3 + 4 + 5 = 12 sm."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Siniq chiziq nimadan tashkil topadi?",
+      "options": [
+        "Ketma-ket tutashgan kesmalardan (bo‘g‘inlardan)",
+        "Aylanadan",
+        "Bitta to‘g‘ri chiziqdan",
+        "Egri chiziqdan"
+      ],
+      "correctIndex": 0,
+      "explanation": "Siniq chiziq bo‘g‘in deb ataluvchi kesmalardan tashkil topadi."
+    },
+    {
+      "text": "Siniq chiziq 3 ta bo‘g‘indan iborat: 4 sm, 5 sm, 6 sm. Uning umumiy uzunligi qancha?",
+      "options": [
+        "14 sm",
+        "15 sm (4 + 5 + 6 = 15)",
+        "16 sm",
+        "10 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 + 5 + 6 = 15 sm."
+    },
+    {
+      "text": "Siniq chiziqning boshlang‘ich va oxirgi nuqtalari tutashsa, qanday siniq chiziq hosil bo‘ladi?",
+      "options": [
+        "Ochiq siniq chiziq",
+        "To‘g‘ri chiziq",
+        "Yopiq siniq chiziq",
+        "Nur"
+      ],
+      "correctIndex": 2,
+      "explanation": "Boshi va oxiri tutashgan siniq chiziq yopiq siniq chiziq deyiladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Siniq chiziqni tashkil etuvchi kesmalar nima deb ataladi?",
+      "options": [
+        "Bo‘g‘inlar",
+        "Nurlar",
+        "Burchaklar",
+        "Uchlar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Siniq chiziq kesmalari uning bo‘g‘inlari deb ataladi."
+    },
+    {
+      "text": "Siniq chiziq uzunligi qanday topiladi?",
+      "options": [
+        "Faqat birinchi bo‘g‘in o‘lchanadi",
+        "Bo‘g‘inlar ayiriladi",
+        "Barcha bo‘g‘inlari uzunliklari qo‘shiladi",
+        "Faqat eng uzun bo‘g‘in olinadi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Siniq chiziq uzunligi uning hamma bo‘g‘inlari uzunliklari yig‘indisiga teng."
+    },
+    {
+      "text": "Bo‘g‘inlari 3 sm va 7 sm bo‘lgan 2 bo‘g‘inli siniq chiziq uzunligini toping:",
+      "options": [
+        "9 sm",
+        "10 sm (3 + 7 = 10)",
+        "11 sm",
+        "4 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 + 7 = 10 sm."
+    },
+    {
+      "text": "Uchburchak qanday siniq chiziqqa misol bo‘ladi?",
+      "options": [
+        "Ochiq siniq chiziqqa",
+        "Egri chiziqqa",
+        "To‘g‘ri chiziqqa",
+        "Yopiq siniq chiziqqa"
+      ],
+      "correctIndex": 3,
+      "explanation": "Uchburchak 3 ta bo‘g‘inli yopiq siniq chiziqdir."
+    },
+    {
+      "text": "Siniq chiziqning 4 ta bo‘g‘ini bor. Har bir bo‘g‘in 2 sm. Siniq chiziq uzunligi qancha?",
+      "options": [
+        "6 sm",
+        "8 sm (2 + 2 + 2 + 2 = 8)",
+        "10 sm",
+        "4 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 + 2 + 2 + 2 = 8 sm."
+    },
+    {
+      "text": "Siniq chiziq turlarini ko‘rsating:",
+      "options": [
+        "Ochiq va yopiq siniq chiziqlar",
+        "Qora va oq chiziqlar",
+        "Katta va kichik sonlar",
+        "Faqat to‘g‘ri chiziqlar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Siniq chiziqlar ochiq yoki yopiq bo‘ladi."
+    },
+    {
+      "text": "Siniq chiziqning 1-bo‘g‘ini 45 sm, 2-bo‘g‘ini undan 12 sm kalta. 2-bo‘g‘in necha santimetr?",
+      "options": [
+        "32 sm",
+        "35 sm",
+        "57 sm",
+        "33 sm (45 - 12 = 33)"
+      ],
+      "correctIndex": 3,
+      "explanation": "45 - 12 = 33 sm."
+    },
+    {
+      "text": "Toshkent metro yo‘nalishida poyezd 3 ta bekat oralig‘ini bosib o‘tdi: 12 km, 8 km va 15 km. Umumiy masofa qancha?",
+      "options": [
+        "30 km",
+        "33 km",
+        "35 km (12 + 8 + 15 = 35)",
+        "40 km"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 + 8 = 20, 20 + 15 = 35 km."
+    },
+    {
+      "text": "Siniq chiziqning bo‘g‘inlari: 5 sm, 6 sm va 9 sm. Uning uzunligi necha detsimetr bo‘ladi? (1 dm = 10 sm)",
+      "options": [
+        "1 dm",
+        "3 dm",
+        "2 dm (20 sm = 2 dm)",
+        "20 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 6 + 9 = 20 sm = 2 dm."
+    },
+    {
+      "text": "To‘rtburchak hosil qilgan yopiq siniq chiziqning tomonlari: 4 sm, 6 sm, 4 sm, 6 sm. Uning uzunligi qancha?",
+      "options": [
+        "18 sm",
+        "22 sm",
+        "24 sm",
+        "20 sm (4 + 6 + 4 + 6 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 + 6 + 4 + 6 = 20 sm."
+    },
+    {
+      "text": "Siniq chiziq uzunligi 18 sm. U 3 ta teng bo‘g‘indan iborat. Har bir bo‘g‘in necha santimetr?",
+      "options": [
+        "6 sm (6 + 6 + 6 = 18)",
+        "5 sm",
+        "7 sm",
+        "8 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 6 + 6 = 18 sm."
+    },
+    {
+      "text": "1-bo‘g‘in 14 sm, 2-bo‘g‘in 16 sm. Siniq chiziq uzunligini toping:",
+      "options": [
+        "28 sm",
+        "30 sm (14 + 16 = 30)",
+        "32 sm",
+        "20 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "14 + 16 = 30 sm."
+    },
+    {
+      "text": "Chiziqlar orasidan siniq chiziqni toping:",
+      "options": [
+        "Doira aylanasi",
+        "To‘g‘ri chiziq",
+        "Nuqta",
+        "Burchaklar hosil qilib ulangan kesmalar"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kesmalar burchak hosil qilib ulanganda siniq chiziq bo‘ladi."
+    },
+    {
+      "text": "Bo‘g‘inlari 8 sm, 7 sm va 5 sm bo‘lgan siniq chiziq uzunligini toping:",
+      "options": [
+        "19 sm",
+        "20 sm (8 + 7 + 5 = 20)",
+        "21 sm",
+        "15 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 7 + 5 = 20 sm."
+    },
+    {
+      "text": "Siniq chiziqning uzunligi 25 sm. 1-bo‘g‘in 10 sm, 2-bo‘g‘in 8 sm bo‘lsa, 3-bo‘g‘in uzunligi qancha?",
+      "options": [
+        "6 sm",
+        "8 sm",
+        "7 sm (25 - 10 - 8 = 7)",
+        "9 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 8 = 18 sm, 25 - 18 = 7 sm."
+    },
+    {
+      "text": "Siniq chiziq 5 ta bo‘g‘indan iborat: har biri 3 sm dan. Siniq chiziq uzunligi necha santimetr?",
+      "options": [
+        "15 sm (3 + 3 + 3 + 3 + 3 = 15)",
+        "12 sm",
+        "18 sm",
+        "20 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 + 3 + 3 + 3 + 3 = 15 sm."
+    },
+    {
+      "text": "Sayyoh Samarqand shahrida 3 ta ko‘cha bo‘ylab yurdi: 200 m, 300 m va 400 m. Jami necha metr yo‘l bosdi?",
+      "options": [
+        "900 metr (200 + 300 + 400 = 900)",
+        "800 metr",
+        "1000 metr",
+        "700 metr"
+      ],
+      "correctIndex": 0,
+      "explanation": "200 + 300 + 400 = 900 m."
+    },
+    {
+      "text": "Ochiq siniq chiziq 4 ta bo‘g‘indan iborat: 7 sm, 8 sm, 3 sm, 2 sm. Qulay usulda uning uzunligini hisoblang:",
+      "options": [
+        "19 sm",
+        "21 sm",
+        "22 sm",
+        "20 sm ((7 + 3) + (8 + 2) = 10 + 10 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "(7 + 3) + (8 + 2) = 10 + 10 = 20 sm."
+    },
+    {
+      "text": "Chumoli siniq chiziq bo‘ylab harakatlandi: 1-bo‘g‘in 15 sm, 2-bo‘g‘in undan 5 sm kalta, 3-bo‘g‘in esa 2-bo‘g‘indan 2 sm uzun. Chumoli jami necha santimetr yurdi?",
+      "options": [
+        "35 sm",
+        "37 sm (1-bo‘g‘in: 15, 2-bo‘g‘in: 10, 3-bo‘g‘in: 12; 15 + 10 + 12 = 37)",
+        "38 sm",
+        "40 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "1-bo‘g‘in: 15 sm. 2-bo‘g‘in: 15 - 5 = 10 sm. 3-bo‘g‘in: 10 + 2 = 12 sm. Jami: 15 + 10 + 12 = 37 sm."
+    },
+    {
+      "text": "Beshburchak shaklidagi yopiq siniq chiziqning barcha 5 ta bo‘g‘ini teng bo‘lib, har biri 6 sm ga teng. Uning umumiy uzunligi qancha?",
+      "options": [
+        "25 sm",
+        "32 sm",
+        "30 sm (6 + 6 + 6 + 6 + 6 = 30)",
+        "36 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 6 + 6 + 6 + 6 = 30 sm = 3 dm."
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "bookNumber": 120,
+  "isReview": false,
+  "title": "To‘g‘ri to‘rtburchak va kvadrat (2)",
+  "emoji": "🛍️",
+  "shortDesc": "Haqiqiy maydonlarni o‘lchash, perimetrni hisoblash va amaliy masalalar.",
+  "intro": "Bozor maydoni, favvora hovuzi kabi obyektlarning perimetrini amaliy o‘lchab hisoblaymiz.",
+  "keyPoints": [
+    "Amaliy o‘lchash: 6 sm va 3 sm li to‘g‘ri to‘rtburchak perimetri P = 18 sm.",
+    "Kvadrat va to‘g‘ri to‘rtburchak farqi: kvadratning barcha tomoni teng, to‘g‘ri to‘rtburchakning faqat qarama-qarshi tomonlari teng.",
+    "Perimetr bo‘yicha noma’lum tomonni topish va taqqoslash."
+  ],
+  "miniExample": {
+    "emojis": "🛍️ 6 sm va 3 sm => P = 18 sm",
+    "text": "To‘g‘ri to‘rtburchakning bo‘yi 6 sm, eni 3 sm bo‘lsa: P = 6 + 3 + 6 + 3 = 18 sm."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Bo‘yi 6 sm, eni 3 sm bo‘lgan to‘g‘ri to‘rtburchak perimetri qancha?",
+      "options": [
+        "18 sm (6 + 3 + 6 + 3 = 18)",
+        "15 sm",
+        "20 sm",
+        "9 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 3 + 6 + 3 = 18 sm."
+    },
+    {
+      "text": "Bozordagi rastaning bo‘yi 4 metr, eni 2 metr. Uning perimetrini toping:",
+      "options": [
+        "10 metr",
+        "12 metr (4 + 2 + 4 + 2 = 12)",
+        "14 metr",
+        "8 metr"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 + 2 + 4 + 2 = 12 metr."
+    },
+    {
+      "text": "Kvadrat favvora hovuzining har bir tomoni 5 metr. Uning perimetri qancha?",
+      "options": [
+        "15 metr",
+        "25 metr",
+        "20 metr (5 + 5 + 5 + 5 = 20)",
+        "10 metr"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 5 + 5 + 5 = 20 metr."
+    }
+  ],
+  "test": [
+    {
+      "text": "Bo‘yi 6 sm, eni 3 sm li to‘g‘ri to‘rtburchak perimetrini hisoblang:",
+      "options": [
+        "18 sm (6 + 3 + 6 + 3 = 18)",
+        "16 sm",
+        "20 sm",
+        "9 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 3 + 6 + 3 = 18 sm."
+    },
+    {
+      "text": "Bo‘yi 7 sm, eni 3 sm li shakl perimetri nechaga teng?",
+      "options": [
+        "18 sm",
+        "22 sm",
+        "20 sm (7 + 3 + 7 + 3 = 20)",
+        "10 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 3 + 7 + 3 = 20 sm = 2 dm."
+    },
+    {
+      "text": "Kvadrat maydonchaning tomoni 6 m. Perimetri necha metr?",
+      "options": [
+        "20 metr",
+        "24 metr (6 + 6 + 6 + 6 = 24)",
+        "26 metr",
+        "18 metr"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 x 4 = 24 metr."
+    },
+    {
+      "text": "Bo‘yi 8 sm, eni 2 sm li to‘rtburchak perimetri qancha?",
+      "options": [
+        "18 sm",
+        "22 sm",
+        "10 sm",
+        "20 sm (8 + 2 + 8 + 2 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 + 2 + 8 + 2 = 20 sm."
+    },
+    {
+      "text": "Kvadratning tomoni 7 sm. Uning perimetri qancha?",
+      "options": [
+        "24 sm",
+        "28 sm (7 x 4 = 28)",
+        "30 sm",
+        "14 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 x 4 = 28 sm."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchakning bo‘yi 5 dm, eni 4 dm. Perimetri necha detsimetr?",
+      "options": [
+        "18 dm (5 + 4 + 5 + 4 = 18)",
+        "16 dm",
+        "20 dm",
+        "9 dm"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 + 4 + 5 + 4 = 18 dm."
+    },
+    {
+      "text": "Toshkentdagi yangi bog‘da favvora kvadrat shaklida qurilgan, tomoni 9 m. Uning atrofini aylanib chiqish uchun necha metr yurish kerak?",
+      "options": [
+        "32 metr",
+        "40 metr",
+        "18 metr",
+        "36 metr (9 x 4 = 36)"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 + 9 + 9 + 9 = 36 metr."
+    },
+    {
+      "text": "Oshxona stoli to‘g‘ri to‘rtburchak shaklida: uzunligi 12 dm, eni 8 dm. Stol perimetrini toping:",
+      "options": [
+        "38 dm",
+        "42 dm",
+        "40 dm (12 + 8 + 12 + 8 = 40)",
+        "20 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 + 8 + 12 + 8 = 40 dm = 4 m."
+    },
+    {
+      "text": "Kvadrat tomoni 15 sm bo‘lsa, uning perimetri necha detsimetr bo‘ladi? (1 dm = 10 sm)",
+      "options": [
+        "60 dm",
+        "4 dm",
+        "6 dm (60 sm = 6 dm)",
+        "5 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 + 15 + 15 + 15 = 60 sm = 6 dm."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchak perimetri 24 sm. Uzunligi 8 sm bo‘lsa, eni qancha?",
+      "options": [
+        "3 sm",
+        "5 sm",
+        "6 sm",
+        "4 sm (8 + 4 + 8 + 4 = 24)"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 + 8 = 16 sm, 24 - 16 = 8 sm, 8 ning yarmi 4 sm."
+    },
+    {
+      "text": "Kvadrat perimetri 40 sm. Bitta tomoni necha santimetr?",
+      "options": [
+        "10 sm (1 dm)",
+        "8 sm",
+        "12 sm",
+        "20 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 / 4 = 10 sm = 1 dm."
+    },
+    {
+      "text": "Bozor pavilonining bo‘yi 25 m, eni 15 m. Pavilon perimetrini toping:",
+      "options": [
+        "70 metr",
+        "80 metr (25 + 15 + 25 + 15 = 80)",
+        "90 metr",
+        "40 metr"
+      ],
+      "correctIndex": 1,
+      "explanation": "25 + 15 = 40 m, 40 + 40 = 80 metr."
+    },
+    {
+      "text": "Daftar muqovasi 20 sm va 15 sm. Muqova perimetrini hisoblang:",
+      "options": [
+        "65 sm",
+        "75 sm",
+        "35 sm",
+        "70 sm (20 + 15 + 20 + 15 = 70)"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 + 15 + 20 + 15 = 70 sm = 7 dm."
+    },
+    {
+      "text": "Tomoni 8 dm bo‘lgan kvadrat perimetri nechaga teng?",
+      "options": [
+        "30 dm",
+        "32 dm (8 x 4 = 32)",
+        "34 dm",
+        "16 dm"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 x 4 = 32 dm."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchak perimetri 50 sm. Eni 10 sm bo‘lsa, bo‘yi necha santimetr?",
+      "options": [
+        "12 sm",
+        "16 sm",
+        "15 sm (10 + 15 + 10 + 15 = 50)",
+        "20 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 10 = 20 sm, 50 - 20 = 30 sm, 30 ning yarmi 15 sm."
+    },
+    {
+      "text": "Kvadrat va to‘g‘ri to‘rtburchakning perimetri teng: P = 28 sm. To‘g‘ri to‘rtburchakning eni 4 sm bo‘lsa, kvadratning tomoni uning enidan necha sm uzun?",
+      "options": [
+        "3 sm uzun (Kvadrat tomoni 7 sm; 7 - 4 = 3)",
+        "2 sm",
+        "4 sm",
+        "5 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kvadrat tomoni: 28 / 4 = 7 sm. Farq: 7 - 4 = 3 sm."
+    },
+    {
+      "text": "Tomoni 12 m bo‘lgan kvadrat maydon atrofiga har 4 metrda ustun o‘rnatildi. Jami nechta ustun kerak? (P = 48 m)",
+      "options": [
+        "12 ta ustun (48 / 4 = 12)",
+        "10 ta",
+        "14 ta",
+        "16 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Maydon perimetri: 12 x 4 = 48 metr. 48 / 4 = 12 ta ustun."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchak shaklidagi sport zali bo‘yi 22 m, eni 18 m. Zal perimetri qancha?",
+      "options": [
+        "75 metr",
+        "85 metr",
+        "40 metr",
+        "80 metr (22 + 18 + 22 + 18 = 80)"
+      ],
+      "correctIndex": 3,
+      "explanation": "22 + 18 = 40 m, 40 + 40 = 80 metr."
+    },
+    {
+      "text": "Akromjon kvadrat shaklidagi qum maydonchasi atrofini 3 marta aylanib chiqdi. Maydoncha tomoni 5 metr bo‘lsa, Akromjon jami necha metr yugurgan?",
+      "options": [
+        "50 metr",
+        "60 metr (1 aylanish: 20 m; 3 x 20 = 60)",
+        "70 metr",
+        "45 metr"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 aylanish: 5 x 4 = 20 m. 3 marta: 20 x 3 = 60 metr."
+    },
+    {
+      "text": "Fermer to‘g‘ri to‘rtburchak shaklidagi poliz ekinzorining atrofiga sim to‘r tortdi: bo‘yi 30 m, eni 20 m. Agar darvoza uchun 4 metr ochiq qoldirilgan bo‘lsa, necha metr sim to‘r ishlatilgan?",
+      "options": [
+        "100 metr",
+        "94 metr",
+        "96 metr (Perimetr: 100 m; 100 - 4 = 96)",
+        "90 metr"
+      ],
+      "correctIndex": 2,
+      "explanation": "Perimetr: 30 + 20 + 30 + 20 = 100 m. Darvoza chiqarilsa: 100 - 4 = 96 metr."
+    }
+  ]
+}

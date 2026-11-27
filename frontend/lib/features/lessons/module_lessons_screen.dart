@@ -83,28 +83,31 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
   }
 
   ModuleModel _createFallbackModule() {
+    final isP4 = widget.moduleId.contains('p4');
     final isP3 = widget.moduleId.contains('p3');
     final isP2 = widget.moduleId.contains('p2');
     final completedCount = _lessons.where((l) => l.isCompleted).length;
-    final total = _lessons.isEmpty ? (isP3 ? 40 : (isP2 ? 33 : 41)) : _lessons.length;
+    final total = _lessons.isEmpty ? (isP4 ? 33 : (isP3 ? 40 : (isP2 ? 33 : 41))) : _lessons.length;
     final pct = (completedCount / total * 100).round();
     final earnedXp = _lessons.fold(0, (acc, l) => acc + (l.isCompleted ? l.rewardXP : 0));
-    final defaultTotalXp = isP3 ? 4060 : (isP2 ? 3160 : 3440);
+    final defaultTotalXp = isP4 ? 3275 : (isP3 ? 4060 : (isP2 ? 3160 : 3440));
     final totalXp = _lessons.fold(0, (acc, l) => acc + l.rewardXP);
 
     return ModuleModel(
       id: widget.moduleId,
       grade: 1,
       subject: 'Matematika',
-      part: isP3 ? 3 : (isP2 ? 2 : 1),
-      title: isP3
-          ? 'Matematika · 3-qism'
-          : (isP2 ? 'Matematika · 2-qism' : 'Matematika · 1-qism'),
-      orderIndex: isP3 ? 3 : (isP2 ? 2 : 1),
+      part: isP4 ? 4 : (isP3 ? 3 : (isP2 ? 2 : 1)),
+      title: isP4
+          ? 'Matematika · 4-qism'
+          : (isP3
+              ? 'Matematika · 3-qism'
+              : (isP2 ? 'Matematika · 2-qism' : 'Matematika · 1-qism')),
+      orderIndex: isP4 ? 4 : (isP3 ? 3 : (isP2 ? 2 : 1)),
       comingSoon: false,
       lessonCount: total,
-      questionCount: isP3 ? 800 : (isP2 ? 660 : 820),
-      totalMinutes: isP3 ? 341 : (isP2 ? 217 : 244),
+      questionCount: isP4 ? 660 : (isP3 ? 800 : (isP2 ? 660 : 820)),
+      totalMinutes: isP4 ? 266 : (isP3 ? 341 : (isP2 ? 217 : 244)),
       percent: pct,
       earnedXp: earnedXp,
       totalXp: totalXp > 0 ? totalXp : defaultTotalXp,
@@ -112,8 +115,84 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
   }
 
   void _loadFallbackData() {
+    final isP4 = widget.moduleId.contains('p4');
     final isP3 = widget.moduleId.contains('p3');
     final isP2 = widget.moduleId.contains('p2');
+
+    if (isP4) {
+      final part4Def = [
+        {'num': 112, 'title': 'Kesma va uning uzunligi', 'emoji': '📏'},
+        {'num': 113, 'title': 'Berilgan uzunlikda kesma chizish', 'emoji': '✏️'},
+        {'num': 114, 'title': 'Kesma xossalari', 'emoji': '⚖️'},
+        {'num': 115, 'title': 'Siniq chiziqning uzunligi', 'emoji': '📈'},
+        {'num': 116, 'title': 'Ko‘pburchak', 'emoji': '🔷'},
+        {'num': 117, 'title': 'Ko‘pburchakning perimetri', 'emoji': '📐'},
+        {'num': 118, 'title': 'Ko‘pburchakning perimetri (2)', 'emoji': '📏'},
+        {'num': 119, 'title': 'To‘g‘ri to‘rtburchak va kvadrat', 'emoji': '🟨'},
+        {'num': 120, 'title': 'To‘g‘ri to‘rtburchak va kvadrat (2)', 'emoji': '🟧'},
+        {'num': 121, 'title': 'Burchak', 'emoji': '📐'},
+        {'num': 122, 'title': 'To‘rtburchaklar', 'emoji': '🔷'},
+        {'num': 123, 'title': 'Sohalar va chegaralar', 'emoji': '🗺️'},
+        {'num': 124, 'title': 'Teng shakllar', 'emoji': '🟰'},
+        {'num': 125, 'title': 'Alohida berilgan qismlardan shakllar tuzish', 'emoji': '🧩'},
+        {'num': 126, 'title': 'Simmetriya', 'emoji': '🦋'},
+        {'num': 127, 'title': 'Simmetriya o‘qlariga ega bo‘lgan yassi shakllar', 'emoji': '🔶'},
+        {'num': 128, 'title': 'Hajmli shakllar', 'emoji': '🧊'},
+        {'num': 129, 'title': 'Tenglik va tengsizliklar', 'emoji': '⚖️'},
+        {'num': 130, 'title': 'Sonli va harfiy ifodalar', 'emoji': '🔤'},
+        {'num': 131, 'title': 'Ifoda', 'emoji': '✍️'},
+        {'num': 132, 'title': 'Ifodalarning qiymatlarini taqqoslash', 'emoji': '🔍'},
+        {'num': 133, 'title': 'Ifodaning qiymatini hisoblash', 'emoji': '🧮'},
+        {'num': 134, 'title': 'Matematik amallarning xossalari', 'emoji': '🔁'},
+        {'num': 135, 'title': 'Sonli va harfiy tengsizliklar', 'emoji': '↔️'},
+        {'num': 136, 'title': 'Rim raqamlari', 'emoji': '🏛️'},
+        {'num': 137, 'title': 'Tenglamalar', 'emoji': '🧩'},
+        {'num': 138, 'title': 'Tenglamalar (2)', 'emoji': '🪜'},
+        {'num': 139, 'title': 'Tenglamalar (3)', 'emoji': '🌳'},
+        {'num': 140, 'title': 'Masalalarni tenglamalar yordamida yechish', 'emoji': '🏅'},
+        {'num': 141, 'title': 'Masalalarni tenglamalar yordamida yechish (2)', 'emoji': '🎳'},
+        {'num': 142, 'title': 'Takrorlash (1)', 'emoji': '🏪'},
+        {'num': 143, 'title': 'Takrorlash (2)', 'emoji': '📚'},
+        {'num': 144, 'title': 'Takrorlash (3)', 'emoji': '🎓'},
+      ];
+
+      final list = List.generate(part4Def.length, (index) {
+        final item = part4Def[index];
+        final order = index + 1;
+        final bookNum = item['num'] as int;
+        final isRev = bookNum >= 142;
+        return LessonModel(
+          id: 'lesson-g1-p4-$bookNum',
+          courseId: 'course-g1-p4',
+          moduleId: widget.moduleId,
+          grade: 1,
+          mode: 'KIDS',
+          title: item['title'] as String,
+          chapterTitle: _getPart4Chapter(bookNum),
+          topicKey: 'topic-g1-p4-$bookNum',
+          description: '1-sinf matematika 4-qism $bookNum-mavzu.',
+          emoji: item['emoji'] as String,
+          rewardXP: (isRev || bookNum >= 137 || bookNum == 133 || bookNum == 135) ? 115 : 95,
+          rewardCoins: (isRev || bookNum >= 137 || bookNum == 133 || bookNum == 135) ? 12 : 10,
+          orderIndex: order,
+          bookNumber: bookNum,
+          sectionCount: 20,
+          isCompleted: false,
+          isLocked: order > 1,
+          completedSteps: 0,
+          percent: 0,
+          bestPercent: 0,
+          estMinutes: 8,
+        );
+      });
+
+      setState(() {
+        _lessons = list;
+        _module = _createFallbackModule();
+        _isLoading = false;
+      });
+      return;
+    }
 
     if (isP3) {
       final part3Def = [
@@ -241,6 +320,14 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
       _module = _createFallbackModule();
       _isLoading = false;
     });
+  }
+
+  String _getPart4Chapter(int bookNum) {
+    if (bookNum <= 115) return 'I bob. Kesma va siniq chiziq';
+    if (bookNum <= 128) return 'II bob. Geometrik shakllar';
+    if (bookNum <= 136) return 'III bob. Ifodalar va tengsizliklar';
+    if (bookNum <= 141) return 'IV bob. Tenglamalar';
+    return 'V bob. Takrorlash';
   }
 
   String _getPart3Chapter(int bookNum) {

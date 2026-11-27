@@ -279,10 +279,10 @@ class DataRepository {
   private lessonStepProgress: Map<string, LessonStepProgress> = new Map();
   private testAttempts: Map<string, any> = new Map();
   private lessons: LessonModel[] = (() => {
-    // Map Grade 1 curriculum lessons (114 total: 41 in Part 1, 33 in Part 2, 40 in Part 3)
+    // Map Grade 1 curriculum lessons (147 total: 41 in Part 1, 33 in Part 2, 40 in Part 3, 33 in Part 4)
     const grade1Mapped: LessonModel[] = allGrade1Lessons.map((cl) => ({
       id: cl.id,
-      courseId: cl.moduleId === 'module-g1-p3' ? 'course-g1-p3' : cl.moduleId === 'module-g1-p2' ? 'course-g1-p2' : 'course-g1-p1',
+      courseId: cl.moduleId === 'module-g1-p4' ? 'course-g1-p4' : cl.moduleId === 'module-g1-p3' ? 'course-g1-p3' : cl.moduleId === 'module-g1-p2' ? 'course-g1-p2' : 'course-g1-p1',
       chapterId: `chapter-${cl.moduleId}-${cl.order}`,
       chapterTitle: cl.chapterTitle,
       grade: 1,
@@ -920,6 +920,10 @@ class DataRepository {
       const l74Prog = userId ? this.lessonStepProgress.get(`${userId}:lesson-g1-74`) : null;
       const l74Passed = completedLessonIds.includes('lesson-g1-74') || ((l74Prog?.bestPercent ?? 0) >= 60);
       prevLessonPassed = l74Passed;
+    } else if (moduleId === 'module-g1-p4') {
+      const lP3LastProg = userId ? this.lessonStepProgress.get(`${userId}:lesson-g1-p3-43`) : null;
+      const lP3LastPassed = completedLessonIds.includes('lesson-g1-p3-43') || ((lP3LastProg?.bestPercent ?? 0) >= 60);
+      prevLessonPassed = lP3LastPassed;
     }
 
     return moduleLessons.map((l, index) => {
@@ -967,7 +971,7 @@ class DataRepository {
         moduleId: l.moduleId || moduleId,
         order: l.orderIndex,
         orderIndex: l.orderIndex,
-        bookNumber: l.bookNumber || (moduleId === 'module-g1-p2' ? (l.orderIndex + 41) : l.orderIndex),
+        bookNumber: l.bookNumber || (moduleId === 'module-g1-p4' ? (l.orderIndex + 111) : moduleId === 'module-g1-p2' ? (l.orderIndex + 41) : l.orderIndex),
         isReview: l.isReview || false,
         title: l.title,
         chapterTitle: l.chapterTitle,

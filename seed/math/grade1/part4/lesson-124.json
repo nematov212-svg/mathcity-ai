@@ -1,0 +1,278 @@
+{
+  "bookNumber": 124,
+  "isReview": false,
+  "title": "Teng shakllar",
+  "emoji": "🟰",
+  "shortDesc": "Ustma-ust qo'yganda to'liq ustma-ust tushadigan teng shakllar",
+  "intro": "Agar ikki shaklni bir-birining ustiga qo'yganda ular to'liq mos tushsa, bunday shakllar teng shakllar deyiladi. Teng shakllarning o'lchamlari va ko'rinishi bir xil bo'ladi.",
+  "keyPoints": [
+    "Teng shakllar ustma-ust qo'yilganda bir-birini to'liq qoplaydi.",
+    "Teng kesmalarning uzunliklari teng bo'ladi.",
+    "Teng kvadratlarning tomonlari bir xil uzunlikda bo'ladi.",
+    "Shaklning burilgani uning tengligini o'zgartirmaydi (o'lchami o'zgarmasa)."
+  ],
+  "miniExample": {
+    "emojis": "🟦 🟦",
+    "text": "Tomoni 3 sm bo'lgan ikkita ko'k kvadrat. Biri ikkinchisining ustiga qo'yilsa, to'liq mos tushadi — ular teng shakllar!"
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Ikkita shaklni ustma-ust qo'yganda to'liq mos tushdi. Ular qanday shakllar?",
+      "options": [
+        "Teng shakllar",
+        "Har xil shakllar",
+        "Katta va kichik",
+        "To'g'ri chiziqlar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ustma-ust qo'yganda to'liq mos tushadigan shakllar teng shakllar deyiladi."
+    },
+    {
+      "text": "Birinchi kvadratning tomoni 4 sm, ikkinchisiniki ham 4 sm. Ular tengmi?",
+      "options": [
+        "Yo'q, teng emas",
+        "Ha, ular teng",
+        "Faqat ranglari teng",
+        "Biri kattaroq"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tomonlari teng bo'lgan kvadratlar o'zaro teng shakllardir."
+    },
+    {
+      "text": "Kesma A = 5 sm, kesma B = 5 sm. Bu kesmalar haqida nima deyish mumkin?",
+      "options": [
+        "A uzunroq",
+        "B uzunroq",
+        "Ular teng kesmalar",
+        "Ular siniq chiziq"
+      ],
+      "correctIndex": 2,
+      "explanation": "Uzunliklari teng bo'lgan kesmalar teng hisoblanadi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Teng shakllar deb qanday shakllarga aytiladi?",
+      "options": [
+        "Ustma-ust qo'yganda to'liq mos tushadigan shakllarga",
+        "Faqat ranglari bir xil bo'lgan shakllarga",
+        "Biri kattaroq bo'lgan shakllarga",
+        "Har xil shakllarga"
+      ],
+      "correctIndex": 0,
+      "explanation": "Teng shakllar ustma-ust qo'yilganda bir-birini to'liq qoplab, mos tushadi."
+    },
+    {
+      "text": "Tomoni 5 sm bo'lgan kvadrat bilan tomoni 3 sm bo'lgan kvadrat tengmi?",
+      "options": [
+        "Ha, teng",
+        "Faqat burilsa teng",
+        "Yo'q, teng emas",
+        "Burchaklari har xil"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tomonlari har xil (5 sm va 3 sm) bo'lgani uchun ular teng emas."
+    },
+    {
+      "text": "Ikkita doira ustma-ust qo'yildi va to'liq mos tushdi. Bu doiralar haqida nima deyish mumkin?",
+      "options": [
+        "Biri kichikroq",
+        "Ular o'zaro teng",
+        "Biri kattaroq",
+        "Ularning burchaklari teng"
+      ],
+      "correctIndex": 1,
+      "explanation": "To'liq mos tushgan shakllar teng shakllar bo'ladi."
+    },
+    {
+      "text": "Kesma A = 6 sm, Kesma B = 8 sm. Kesmalar tengmi?",
+      "options": [
+        "Teng",
+        "A uzunroq",
+        "Ikkalasi ham 7 sm",
+        "Teng emas, B uzunroq"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 sm va 8 sm teng emas, 8 sm uzunroq."
+    },
+    {
+      "text": "Bir xil o'lchamdagi ikkita tanga o'zaro qanday shakllar?",
+      "options": [
+        "Turlicha shakllar",
+        "Teng shakllar",
+        "Uchburchaklar",
+        "Kvadratlar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bir xil tangalar ustma-ust qo'yilsa to'liq mos tushadi, demak ular teng."
+    },
+    {
+      "text": "Teng tomonli uchburchakning tomoni 4 sm. Unga teng bo'lgan uchburchakning tomoni necha sm?",
+      "options": [
+        "4 sm",
+        "3 sm",
+        "5 sm",
+        "8 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "Teng shaklning tomoni ham xuddi shunday 4 sm bo'ladi."
+    },
+    {
+      "text": "Shaklni o'ngga yoki chapga burib qo'ysak, uning o'lchami o'zgaradimi?",
+      "options": [
+        "Ha, kichrayadi",
+        "Ha, kattalashadi",
+        "Shakli doiraga aylanadi",
+        "Yo'q, o'zgarmaydi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Shaklni burish uning o'lchamini o'zgartirmaydi, u avvalgidek teng bo'lib qoladi."
+    },
+    {
+      "text": "To'g'ri to'rtburchakning bo'yi 4 sm, eni 2 sm. Unga teng to'rtburchakning bo'yi va eni necha sm?",
+      "options": [
+        "Bo'yi 5 sm, eni 1 sm",
+        "Bo'yi 3 sm, eni 3 sm",
+        "Bo'yi 4 sm, eni 2 sm",
+        "Bo'yi 6 sm, eni 4 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "Teng to'g'ri to'rtburchakning tomonlari aynan 4 sm va 2 sm bo'ladi."
+    },
+    {
+      "text": "A shakl B shaklga teng, B shakl C shaklga teng. A shakl C shaklga tengmi?",
+      "options": [
+        "Yo'q, teng emas",
+        "Faqat B katta",
+        "Ha, A va C ham o'zaro teng",
+        "A kichikroq"
+      ],
+      "correctIndex": 2,
+      "explanation": "Agar A=B va B=C bo'lsa, u holda A=C bo'ladi."
+    },
+    {
+      "text": "Daftar varag'i bilan bir xil o'lchamdagi ikkinchi varaq tengmi?",
+      "options": [
+        "Yo'q, teng emas",
+        "Biri qalinroq",
+        "Faqat kataklari teng",
+        "Ha, ular teng"
+      ],
+      "correctIndex": 3,
+      "explanation": "Bir xil o'lchamdagi daftarning varaqlari teng to'rtburchaklardir."
+    },
+    {
+      "text": "Tomonlari 2 sm, 3 sm, 4 sm bo'lgan uchburchakka teng bo'lgan uchburchak tomonlari qanday?",
+      "options": [
+        "2 sm, 3 sm, 4 sm",
+        "2 sm, 2 sm, 2 sm",
+        "3 sm, 3 sm, 3 sm",
+        "4 sm, 4 sm, 4 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "Teng uchburchakning mos tomonlari bir xil bo'ladi: 2 sm, 3 sm va 4 sm."
+    },
+    {
+      "text": "Rangi qizil kvadrat bilan rangi ko'k kvadratning o'lchami bir xil bo'lsa, ular tengmi?",
+      "options": [
+        "Yo'q, ranglari boshqa",
+        "Ha, geometrik jihatdan teng",
+        "Faqat qizili katta",
+        "Faqat ko'ki katta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Geometriyada shakllarning o'lchami va ko'rinishi mos tushsa, ular teng hisoblanadi (rang muhim emas)."
+    },
+    {
+      "text": "Uzunligi 7 sm bo'lgan kesmaga teng kesmani toping:",
+      "options": [
+        "6 sm bo'lgan kesma",
+        "8 sm bo'lgan kesma",
+        "5 sm bo'lgan kesma",
+        "7 sm bo'lgan kesma"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 sm uzunlikdagi kesmaga faqat 7 sm kesma teng bo'ladi."
+    },
+    {
+      "text": "Ikkita teng kvadratning perimetrlari qanday bo'ladi?",
+      "options": [
+        "Biriniki kattaroq",
+        "Perimetrlari ham teng bo'ladi",
+        "Ikkinchisiniki kattaroq",
+        "Har xil bo'ladi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shakllar teng bo'lsa, ularning perimetrlari ham albatta teng bo'ladi."
+    },
+    {
+      "text": "Kvadratning perimetri 16 sm. Unga teng bo'lgan kvadratning perimetri necha sm?",
+      "options": [
+        "12 sm",
+        "20 sm",
+        "16 sm",
+        "8 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "Teng shakllarning perimetri ham bir xil bo'ladi: 16 sm."
+    },
+    {
+      "text": "Bitta kvadratni diagonali bo'yicha teng ikkiga bo'lsak, qanday shakllar hosil bo'ladi?",
+      "options": [
+        "Ikkita teng uchburchak",
+        "Ikkita teng kvadrat",
+        "Bitta doira",
+        "Ikkita har xil shakl"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kvadratni diagonali bo'yicha kessak, ikkita teng to'g'ri burchakli uchburchak hosil bo'ladi."
+    },
+    {
+      "text": "Hosil bo'lgan bu ikki uchburchak ustma-ust qo'yilsa nima bo'ladi?",
+      "options": [
+        "To'liq mos tushadi",
+        "Mos tushmaydi",
+        "Biri chiqib qoladi",
+        "Uchburchak yo'qoladi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ular teng bo'lgani uchun ustma-ust qo'yilganda to'liq mos tushadi."
+    },
+    {
+      "text": "Doirani teng ikkiga buklasak, ikkala yarmi qanday bo'ladi?",
+      "options": [
+        "Biri katta, biri kichik",
+        "Kvadratga aylanadi",
+        "Uchburchak bo'ladi",
+        "O'zaro teng bo'ladi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Teng ikkiga buklanganda ikkala yarim doira o'zaro teng bo'ladi."
+    },
+    {
+      "text": "Agar ikki shakl ustma-ust tushmasa, ularni teng deb bo'ladimi?",
+      "options": [
+        "Ha, baribir teng",
+        "Yo'q, ularni teng deb bo'lmaydi",
+        "Faqat bir tomoni teng",
+        "Rangiga qarab teng"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mos tushmagan shakllar teng shakllar emas."
+    },
+    {
+      "text": "Qaysi xususiyat teng shakllarga xos?",
+      "options": [
+        "Har xil o'lchamga ega bo'lishi",
+        "Burchaklari soni har xil bo'lishi",
+        "Ustma-ust qo'yganda to'liq mos tushishi",
+        "Faqat bir xil rangda bo'lishi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Teng shakllarning asosiy belgisi — ularning to'liq mos tushishidir."
+    }
+  ]
+}

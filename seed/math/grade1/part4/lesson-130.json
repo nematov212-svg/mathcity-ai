@@ -1,0 +1,278 @@
+{
+  "bookNumber": 130,
+  "isReview": false,
+  "title": "Sonli va harfiy ifodalar",
+  "emoji": "🔤",
+  "shortDesc": "Sonli ifodalar va harflar qatnashgan harfiy ifodalar",
+  "intro": "Matematikada ifodalar ikki xil bo'ladi: sonli ifodalar va harfiy ifodalar. Sonli ifodalarda faqat sonlar va amallar qatnashadi (masalan, 7 + 5). Harfiy ifodalarda esa sonlar bilan birga lotin harflari ham qatnashadi (masalan, a + 5, x - 3).",
+  "keyPoints": [
+    "Sonli ifoda — faqat sonlar va amallardan tuzilgan ifoda: 12 + 8, 45 - 5.",
+    "Harfiy ifoda — tarkibida harf qatnashgan ifoda: x + 7, a - 4, b + c.",
+    "Harflar o'rniga turli sonlarni qo'yish mumkin.",
+    "Boshlang'ich sinflarda ko'pincha a, b, c, x, y kabi kichik lotin harflari ishlatiladi."
+  ],
+  "miniExample": {
+    "emojis": "🔢 15 + 5 | 🔤 a + 5",
+    "text": "15 + 5 — bu sonli ifoda. a + 5 — bu harfiy ifoda, bu yerda a harfi istalgan son bo'lishi mumkin."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "8 + 6 ifodasi qanday ifoda?",
+      "options": [
+        "Sonli ifoda",
+        "Harfiy ifoda",
+        "Geometrik ifoda",
+        "Matnli ifoda"
+      ],
+      "correctIndex": 0,
+      "explanation": "Unda faqat sonlar (8 va 6) qatnashgani uchun bu sonli ifoda."
+    },
+    {
+      "text": "a + 10 ifodasi qanday ifoda?",
+      "options": [
+        "Sonli ifoda",
+        "Harfiy ifoda",
+        "Shaklli ifoda",
+        "Oddiy tenglama"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tarkibida 'a' harfi borligi uchun bu harfiy ifoda deyiladi."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri harfiy ifoda?",
+      "options": [
+        "20 - 5",
+        "14 + 6",
+        "x - 5",
+        "10 + 10"
+      ],
+      "correctIndex": 2,
+      "explanation": "x - 5 ifodasida noma'lum 'x' harfi qatnashgan."
+    }
+  ],
+  "test": [
+    {
+      "text": "Sonli ifodada nimalar qatnashadi?",
+      "options": [
+        "Faqat sonlar va amal belgilari",
+        "Faqat harflar",
+        "Harflar va so'zlar",
+        "Geometrik shakllar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sonli ifoda sonlar va amal belgilaridan (+, -) tuziladi."
+    },
+    {
+      "text": "Harfiy ifodada nima albatta qatnashadi?",
+      "options": [
+        "Faqat kasr",
+        "Faqat doira",
+        "Kamida bitta harf",
+        "Hech narsa"
+      ],
+      "correctIndex": 2,
+      "explanation": "Harfiy ifoda bo'lishi uchun unda kamida bitta harf qatnashishi shart."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri sonli ifoda?",
+      "options": [
+        "a + 15",
+        "25 + 15",
+        "x - 4",
+        "b + c"
+      ],
+      "correctIndex": 1,
+      "explanation": "25 + 15 ifodasida harf yo'q, faqat sonlar bor."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri harfiy ifoda?",
+      "options": [
+        "18 - 8",
+        "30 + 20",
+        "50 - 15",
+        "b + 12"
+      ],
+      "correctIndex": 3,
+      "explanation": "b + 12 ifodasida 'b' harfi bor."
+    },
+    {
+      "text": "y - 7 ifodasida 'y' nima hisoblanadi?",
+      "options": [
+        "Amal belgisi",
+        "Noma'lum sonni bildiruvchi harf",
+        "Tenglik belgisi",
+        "Nuqta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Lotin harfi 'y' noma'lum sonni ifodalaydi."
+    },
+    {
+      "text": "14 + 9 sonli ifodasining qiymati nechaga teng?",
+      "options": [
+        "23",
+        "22",
+        "24",
+        "21"
+      ],
+      "correctIndex": 0,
+      "explanation": "14 + 9 = 23."
+    },
+    {
+      "text": "30 - 12 sonli ifodasining qiymati nechaga teng?",
+      "options": [
+        "16",
+        "20",
+        "22",
+        "18"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 - 12 = 18."
+    },
+    {
+      "text": "a + 4 ifodasida a = 6 bo'lsa, qiymat necha bo'ladi?",
+      "options": [
+        "8",
+        "12",
+        "10",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "a o'rniga 6 qo'yamiz: 6 + 4 = 10."
+    },
+    {
+      "text": "x - 3 ifodasida x = 15 bo'lsa, qiymat qancha bo'ladi?",
+      "options": [
+        "10",
+        "14",
+        "12",
+        "18"
+      ],
+      "correctIndex": 2,
+      "explanation": "x o'rniga 15 qo'yamiz: 15 - 3 = 12."
+    },
+    {
+      "text": "c + 20 ifodasida c = 30 bo'lsa, ifodaning qiymati:",
+      "options": [
+        "40",
+        "60",
+        "70",
+        "50"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 + 20 = 50."
+    },
+    {
+      "text": "Qaysi ifoda harfiy ifodalar qatoriga kiradi?",
+      "options": [
+        "m + n",
+        "10 + 20",
+        "40 - 10",
+        "15 + 5"
+      ],
+      "correctIndex": 0,
+      "explanation": "m + n ikkita harfdan tuzilgan harfiy ifodadir."
+    },
+    {
+      "text": "Qaysi ifoda sonli ifodalar qatoriga kiradi?",
+      "options": [
+        "100 - x",
+        "100 - 40",
+        "a + b",
+        "y + 40"
+      ],
+      "correctIndex": 1,
+      "explanation": "100 - 40 faqat sonlardan iborat sonli ifoda."
+    },
+    {
+      "text": "Daftar narxi a so'm, qalam narxi 500 so'm. Jami narx qanday ifodalanadi?",
+      "options": [
+        "a - 500",
+        "500 - a",
+        "a = 500",
+        "a + 500"
+      ],
+      "correctIndex": 3,
+      "explanation": "Jami narxni topish uchun narxlar qo'shiladi: a + 500."
+    },
+    {
+      "text": "Bog'da x ta olma daraxti va 10 ta nok daraxti bor. Daraxtlar jami nechta?",
+      "options": [
+        "x - 10",
+        "x + 10",
+        "10 - x",
+        "10x"
+      ],
+      "correctIndex": 1,
+      "explanation": "Jami daraxtlar soni: x + 10."
+    },
+    {
+      "text": "Savatda 20 ta tuxum bor edi. y tasi ishlatildi. Nechta tuxum qoldi?",
+      "options": [
+        "20 + y",
+        "y - 20",
+        "20 - y",
+        "20y"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qolgan tuxumlar ayirma bilan ifodalanadi: 20 - y."
+    },
+    {
+      "text": "Sonli ifoda bilan harfiy ifodaning asosiy farqi nimada?",
+      "options": [
+        "Harfiy ifodada harf (o'zgaruvchi) qatnashadi",
+        "Sonli ifodada amal bo'lmaydi",
+        "Harfiy ifoda faqat geometriyada bo'ladi",
+        "Hech qanday farqi yo'q"
+      ],
+      "correctIndex": 0,
+      "explanation": "Harfiy ifoda harf qatnashishi bilan sonli ifodadan farqlanadi."
+    },
+    {
+      "text": "k + 8 ifodasida k ning o'rniga qanday sonlarni qo'yish mumkin?",
+      "options": [
+        "Istalgan mos sonlarni (masalan, 1, 2, 5...)",
+        "Faqat 0 sonini",
+        "Faqat manfiy sonlarni",
+        "Hech qanday sonni"
+      ],
+      "correctIndex": 0,
+      "explanation": "O'zgaruvchi k harfi o'rniga turli sonlarni qo'yib hisoblash mumkin."
+    },
+    {
+      "text": "Agar b = 7 bo'lsa, 20 - b ifodaning qiymati necha bo'ladi?",
+      "options": [
+        "11",
+        "15",
+        "14",
+        "13"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 - 7 = 13."
+    },
+    {
+      "text": "Agar a = 8, b = 5 bo'lsa, a + b ifodaning qiymatini toping:",
+      "options": [
+        "12",
+        "13",
+        "14",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 5 = 13."
+    },
+    {
+      "text": "Harfiy ifodalar matematikada nima uchun kerak?",
+      "options": [
+        "Faqat so'z yozish uchun",
+        "Raqamlarni chalg'itish uchun",
+        "Umumiy qoidalarni va noma'lumlarni ifodalash uchun",
+        "Daftarni to'ldirish uchun"
+      ],
+      "correctIndex": 2,
+      "explanation": "Harfiy ifodalar qonuniyatlarni, formulalarni va masalalarni umumiy yozishda qo'llaniladi."
+    }
+  ]
+}

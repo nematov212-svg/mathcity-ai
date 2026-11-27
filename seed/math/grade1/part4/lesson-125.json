@@ -1,0 +1,278 @@
+{
+  "bookNumber": 125,
+  "isReview": false,
+  "title": "Alohida berilgan qismlardan shakllar tuzish",
+  "emoji": "🧩",
+  "shortDesc": "Oddiy qismlar (uchburchak, to'rtburchak) yordamida yangi shakllar yasash",
+  "intro": "Kichik geometrik shakllarni birlashtirib, yangi va murakkabroq shakllar hosil qilish mumkin. Masalan, qadimiy 'Tangram' boshqotirmasi 7 ta geometrik qismdan iborat bo'lib, ulardan minglab turli shakllar yasash mumkin!",
+  "keyPoints": [
+    "2 ta teng uchburchakdan kvadrat yoki to'g'ri to'rtburchak yasash mumkin.",
+    "2 ta kvadratni yonma-yon qo'ysak, to'g'ri to'rtburchak hosil bo'ladi.",
+    "Tangram boshqotirmasi 7 qismdan iborat: 5 ta uchburchak, 1 ta kvadrat va 1 ta to'rtburchak.",
+    "Qismlardan uy, qayiqcha, qush va boshqa ko'plab qiziqarli shakllar yasash mumkin."
+  ],
+  "miniExample": {
+    "emojis": "🔺 + 🔺 = 🟦",
+    "text": "Ikkita teng uchburchakni gipotenuzasi (uzun tomoni) bo'yicha birlashtirsak, chiroyli kvadrat hosil bo'ladi!"
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Ikkita bir xil kvadratni yonma-yon qo'ysak, qanday shakl hosil bo'ladi?",
+      "options": [
+        "To'g'ri to'rtburchak",
+        "Uchburchak",
+        "Doira",
+        "Beshburchak"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 ta kvadrat yonma-yon qo'yilsa, uzun to'g'ri to'rtburchak hosil bo'ladi."
+    },
+    {
+      "text": "Ikkita teng to'g'ri burchakli uchburchakdan qanday shakl yasash mumkin?",
+      "options": [
+        "Doira",
+        "Kvadrat yoki to'g'ri to'rtburchak",
+        "Shar",
+        "Chiziq"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 ta mos uchburchakni birlashtirib kvadrat yoki to'g'ri to'rtburchak yasash mumkin."
+    },
+    {
+      "text": "Qadimiy 'Tangram' o'yini nechta geometrik qismdan iborat?",
+      "options": [
+        "3 ta qismdan",
+        "5 ta qismdan",
+        "7 ta qismdan",
+        "10 ta qismdan"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tangram boshqotirmasi aynan 7 ta geometrik bo'lakdan iborat."
+    }
+  ],
+  "test": [
+    {
+      "text": "Tangram boshqotirmasi jami nechta bo'lakdan iborat?",
+      "options": [
+        "7 ta",
+        "5 ta",
+        "6 ta",
+        "8 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tangram 7 ta geometrik bo'lakdan tashkil topgan."
+    },
+    {
+      "text": "Tangram qismlari orasida nechta uchburchak bor?",
+      "options": [
+        "3 ta",
+        "4 ta",
+        "5 ta",
+        "6 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tangramda 5 ta uchburchak (2 ta katta, 1 ta o'rta, 2 ta kichik) bor."
+    },
+    {
+      "text": "Tangramda nechta kvadrat bor?",
+      "options": [
+        "2 ta",
+        "1 ta",
+        "3 ta",
+        "0 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tangramda aynan 1 ta kichik kvadrat mavjud."
+    },
+    {
+      "text": "Ikkita bir xil to'g'ri burchakli uchburchakdan nima yasash mumkin?",
+      "options": [
+        "Doira",
+        "Silindr",
+        "Konus",
+        "To'g'ri to'rtburchak"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ikkita mos to'g'ri burchakli uchburchakni birlashtirib to'g'ri to'rtburchak hosil qilinadi."
+    },
+    {
+      "text": "Bitta kvadrat va bitta uchburchakni birlashtirib nima tasvirini yasash mumkin?",
+      "options": [
+        "Avtomobil g'ildiragi",
+        "Uycha (tomli uy)",
+        "Doira",
+        "Shar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kvadrat — uyning devori, uchburchak — uning tomi bo'ladi."
+    },
+    {
+      "text": "4 ta bir xil kichik kvadratdan bitta katta shakl yasadik. Bu qanday shakl bo'lishi mumkin?",
+      "options": [
+        "Katta kvadrat",
+        "Doira",
+        "Uchburchak",
+        "Oltiburchak"
+      ],
+      "correctIndex": 0,
+      "explanation": "2x2 qilib 4 ta kvadratni terilsa, katta kvadrat hosil bo'ladi."
+    },
+    {
+      "text": "Qismlardan yangi shakl yasaganda qismlar ustma-ust chiqishi kerakmi?",
+      "options": [
+        "Ha, ustma-ust taxlanadi",
+        "Faqat burchaklari yopiladi",
+        "Hammasi bir joyga qo'yiladi",
+        "Yo'q, qismlar yonma-yon qo'yiladi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Mozaika va tangramda qismlar bir-birining ustiga chiqmasdan yonma-yon birlashtiriladi."
+    },
+    {
+      "text": "Doirani teng 2 qismga bo'lsak, qanday bo'laklar hosil bo'ladi?",
+      "options": [
+        "Ikkita kvadrat",
+        "Ikkita uchburchak",
+        "Ikkita yarim doira",
+        "Bitta to'rtburchak"
+      ],
+      "correctIndex": 2,
+      "explanation": "Doira teng ikkiga bo'linsa, 2 ta yarim doira hosil bo'ladi."
+    },
+    {
+      "text": "Ikkita yarim doirani birlashtirsak nima hosil bo'ladi?",
+      "options": [
+        "Kvadrat",
+        "Uchburchak",
+        "To'liq doira",
+        "Kesma"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ikkita yarim doira qo'shilsa, butun doira hosil bo'ladi."
+    },
+    {
+      "text": "6 ta bir xil teng tomonli uchburchakdan qanday chiroyli shakl yasash mumkin?",
+      "options": [
+        "Doira",
+        "To'g'ri to'rtburchak",
+        "Kesma",
+        "Muntazam oltiburchak"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 ta teng tomonli uchburchak uchi bilan markazda birlashib muntazam oltiburchak hosil qiladi."
+    },
+    {
+      "text": "3 ta bir xil kvadratdan qanday to'rtburchak tuzish mumkin?",
+      "options": [
+        "Uzun to'g'ri to'rtburchak",
+        "Kvadrat",
+        "Uchburchak",
+        "Beshburchak"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 ta kvadratni qator qilib qo'ysak, uzun to'g'ri to'rtburchak chiqadi."
+    },
+    {
+      "text": "Uchburchak qismlaridan qayiqcha yasash mumkinmi?",
+      "options": [
+        "Yo'q, faqat doira yasash mumkin",
+        "Ha, mumkin",
+        "Faqat kvadratdan bo'ladi",
+        "Iloji yo'q"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tangram va geometrik qismlardan qayiqcha, yelkan va korpus osongina yasaladi."
+    },
+    {
+      "text": "Qog'ozdan shakllarni qirqib yangi rasm yasash san'ati nima deyiladi?",
+      "options": [
+        "Tenglama",
+        "Qo'shish",
+        "Perimetr",
+        "Applikatsiya (mozaika)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Geometrik shakllarni qirqib yopishtirish applikatsiya yoki mozaika deyiladi."
+    },
+    {
+      "text": "Bir nechta shaklni birlashtirganda umumiy bo'laklar soni qanday bo'ladi?",
+      "options": [
+        "Kamayadi",
+        "Qismlarning yig'indisiga teng",
+        "Doim 10 ta bo'ladi",
+        "Nolga teng"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qismlar yig'ilib umumiy yangi shaklni tashkil etadi."
+    },
+    {
+      "text": "Kvadratni 4 ta teng bo'lakka bo'lish uchun qanday chiziqlar o'tkazish mumkin?",
+      "options": [
+        "Faqat 1 ta burchakka",
+        "Hech qanday chiziq",
+        "O'rtalaridan ikkita kesuvchi to'g'ri chiziq",
+        "Faqat tashqariga"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kvadrat markazidan o'tuvchi gorizontal va vertikal chiziqlar uni 4 ta teng kvadratga bo'ladi."
+    },
+    {
+      "text": "Yelkanli qayiq yasash uchun qaysi shakl yelkan vazifasini o'taydi?",
+      "options": [
+        "Uchburchak",
+        "Doira",
+        "Nuqta",
+        "Shar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uchburchak yelkan (parus) shakliga juda mos keladi."
+    },
+    {
+      "text": "Avtomobil yasashda g'ildiraklar uchun qaysi shakl qulay?",
+      "options": [
+        "Doiralar",
+        "Kvadratlar",
+        "Uchburchaklar",
+        "Yulduzchalar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Doira dumalash xususiyatiga ega bo'lgani uchun g'ildirak doira shaklida bo'ladi."
+    },
+    {
+      "text": "Shakllardan naqsh (ornament) tuzishda qanday qoida qo'llaniladi?",
+      "options": [
+        "Faqat 1 ta shakl ishlatiladi",
+        "Shakllar aralashtirib tashlanadi",
+        "Faqat nuqta qo'yiladi",
+        "Shakllar ma'lum tartibda takrorlanadi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Naqshda geometrik shakllar chiroyli tartibda va ketma-ket takrorlanadi."
+    },
+    {
+      "text": "Uchburchak va kvadratning jami tomonlari nechta?",
+      "options": [
+        "6 ta",
+        "7 ta (3 + 4)",
+        "8 ta",
+        "5 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Uchburchakda 3 ta, kvadratda 4 ta tomon bor: 3 + 4 = 7 ta."
+    },
+    {
+      "text": "Qismlardan yangi shakl yasash bolada qaysi qobiliyatni rivojlantiradi?",
+      "options": [
+        "Tez yugurishni",
+        "Faqat uxlashni",
+        "Fazoviy tasavvur va ijodkorlikni",
+        "Baland sakrashni"
+      ],
+      "correctIndex": 2,
+      "explanation": "Shakllarni yasash fazoviy tasavvur, mantiq va ijodkorlikni o'stiradi."
+    }
+  ]
+}

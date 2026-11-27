@@ -1,0 +1,278 @@
+{
+  "bookNumber": 131,
+  "isReview": false,
+  "title": "Ifoda",
+  "emoji": "✍️",
+  "shortDesc": "Yig'indi, ayirma va qavsli ifodalarni tuzish hamda hisoblash",
+  "intro": "Sonlar va amallarni birlashtirib turli ifodalar tuzamiz. Qo'shish amali qatnashgan ifoda — yig'indi, ayirish amali qatnashgani — ayirma deyiladi. Qavslar esa amallarning bajarilish tartibini belgilaydi.",
+  "keyPoints": [
+    "Yig'indi: masalan, 9 va 4 ning yig'indisi 9 + 4 = 13.",
+    "Ayirma: masalan, 15 va 7 ning ayirmasi 15 - 7 = 8.",
+    "Qavsli ifodalarda birinchi navbatda qavs ichidagi amal bajariladi.",
+    "Masalan, 20 - (5 + 3) ifodasida avval 5 + 3 = 8, so'ngra 20 - 8 = 12 hisoblanadi."
+  ],
+  "miniExample": {
+    "emojis": "🔢 20 - (6 + 4) = 10",
+    "text": "Qavs ichidagi amal birinchi: 6 + 4 = 10. Keyin ayiramiz: 20 - 10 = 10!"
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "12 va 8 ning yig'indisini toping:",
+      "options": [
+        "20",
+        "18",
+        "22",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + 8 = 20."
+    },
+    {
+      "text": "16 va 9 ning ayirmasi nechaga teng?",
+      "options": [
+        "5",
+        "7",
+        "8",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 - 9 = 7."
+    },
+    {
+      "text": "15 - (3 + 2) ifodasining qiymatini hisoblang:",
+      "options": [
+        "14",
+        "12",
+        "10",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "Avval qavs ichi: 3 + 2 = 5. So'ngra: 15 - 5 = 10."
+    }
+  ],
+  "test": [
+    {
+      "text": "8 va 7 ning yig'indisini hisoblang:",
+      "options": [
+        "15",
+        "14",
+        "16",
+        "1"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 7 = 15."
+    },
+    {
+      "text": "18 va 6 ning ayirmasi nechaga teng?",
+      "options": [
+        "10",
+        "14",
+        "12",
+        "24"
+      ],
+      "correctIndex": 2,
+      "explanation": "18 - 6 = 12."
+    },
+    {
+      "text": "Qavsli ifodalarda qaysi amal birinchi bajariladi?",
+      "options": [
+        "Eng oxirgi amal",
+        "Qavs ichidagi amal",
+        "Xohlagan amal",
+        "Faqat ayirish"
+      ],
+      "correctIndex": 1,
+      "explanation": "Matematika qoidasiga ko'ra, qavs ichidagi amal har doim birinchi bajariladi."
+    },
+    {
+      "text": "14 - (4 + 6) ifodasining qiymati nechaga teng?",
+      "options": [
+        "16",
+        "10",
+        "6",
+        "4"
+      ],
+      "correctIndex": 3,
+      "explanation": "Qavs ichi: 4 + 6 = 10. Keyin: 14 - 10 = 4."
+    },
+    {
+      "text": "20 + (10 - 5) ifodasining qiymatini toping:",
+      "options": [
+        "15",
+        "25",
+        "30",
+        "20"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qavs ichi: 10 - 5 = 5. Keyin: 20 + 5 = 25."
+    },
+    {
+      "text": "30 - (15 - 5) ifodasining qiymati nechaga teng?",
+      "options": [
+        "20",
+        "10",
+        "25",
+        "35"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qavs ichi: 15 - 5 = 10. Keyin: 30 - 10 = 20."
+    },
+    {
+      "text": "50 - (20 + 10) ifodasining natijasi qanday?",
+      "options": [
+        "30",
+        "40",
+        "10",
+        "20"
+      ],
+      "correctIndex": 3,
+      "explanation": "Qavs ichi: 20 + 10 = 30. Keyin: 50 - 30 = 20."
+    },
+    {
+      "text": "(12 + 8) - 10 ifodasining qiymati nechaga teng?",
+      "options": [
+        "20",
+        "30",
+        "10",
+        "5"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qavs ichi: 12 + 8 = 20. Keyin: 20 - 10 = 10."
+    },
+    {
+      "text": "(45 - 5) + 8 ifodasining natijasini toping:",
+      "options": [
+        "40",
+        "50",
+        "48",
+        "42"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qavs ichi: 45 - 5 = 40. Keyin: 40 + 8 = 48."
+    },
+    {
+      "text": "'25 sonidan 5 va 3 ning yig'indisini ayirish' qanday yoziladi?",
+      "options": [
+        "(25 - 5) + 3",
+        "25 + (5 - 3)",
+        "25 - 5 - 3",
+        "25 - (5 + 3)"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 va 3 ning yig'indisi (5 + 3) bo'lib, u 25 dan ayiriladi: 25 - (5 + 3)."
+    },
+    {
+      "text": "25 - (5 + 3) ifodasining qiymati nechaga teng?",
+      "options": [
+        "17",
+        "23",
+        "15",
+        "18"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 + 3 = 8, so'ngra 25 - 8 = 17."
+    },
+    {
+      "text": "'10 ga 8 va 2 ning ayirmasini qo'shish' qanday yoziladi?",
+      "options": [
+        "(10 + 8) - 2",
+        "10 + (8 - 2)",
+        "10 - (8 + 2)",
+        "10 + 8 + 2"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 va 2 ning ayirmasi (8 - 2) bo'lib, u 10 ga qo'shiladi: 10 + (8 - 2)."
+    },
+    {
+      "text": "10 + (8 - 2) ifodasining natijasini toping:",
+      "options": [
+        "20",
+        "14",
+        "18",
+        "16"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 - 2 = 6, 10 + 6 = 16."
+    },
+    {
+      "text": "60 - (30 - 10) ifodasining natijasi qanday?",
+      "options": [
+        "20",
+        "40",
+        "30",
+        "50"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 - 10 = 20, 60 - 20 = 40."
+    },
+    {
+      "text": "(15 - 7) + (6 + 4) ifodasining qiymatini hisoblang:",
+      "options": [
+        "16",
+        "20",
+        "18",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "Birinchi qavs: 15 - 7 = 8. Ikkinchi qavs: 6 + 4 = 10. Jami: 8 + 10 = 18."
+    },
+    {
+      "text": "Qaysi ifoda '17 va 3 ning yig'indisidan 10 ni ayirish' ma'nosini bildiradi?",
+      "options": [
+        "(17 + 3) - 10",
+        "17 + (3 - 10)",
+        "17 - (3 + 10)",
+        "(17 - 3) + 10"
+      ],
+      "correctIndex": 0,
+      "explanation": "(17 + 3) yig'indisidan 10 ayriladi: (17 + 3) - 10."
+    },
+    {
+      "text": "(17 + 3) - 10 ifodasining qiymati nechaga teng?",
+      "options": [
+        "10",
+        "20",
+        "5",
+        "12"
+      ],
+      "correctIndex": 0,
+      "explanation": "17 + 3 = 20, 20 - 10 = 10."
+    },
+    {
+      "text": "40 - (15 + 5) ifodasining natijasi:",
+      "options": [
+        "30",
+        "25",
+        "10",
+        "20"
+      ],
+      "correctIndex": 3,
+      "explanation": "15 + 5 = 20, 40 - 20 = 20."
+    },
+    {
+      "text": "Ifodada qavs bo'lmasa va faqat qo'shish-ayirish bo'lsa, amallar qanday tartibda bajariladi?",
+      "options": [
+        "O'ngdan chapga qarab",
+        "Chapdan o'ngga qarab ketma-ket",
+        "Faqat ayirish avval",
+        "Ixtiyoriy tartibda"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qavssiz bir bosqichli amallar chapdan o'ngga qarab ketma-ket bajariladi."
+    },
+    {
+      "text": "15 - 5 + 4 ifodasini hisoblang (qavssiz):",
+      "options": [
+        "6",
+        "16",
+        "14",
+        "10"
+      ],
+      "correctIndex": 2,
+      "explanation": "Chapdan o'ngga: 15 - 5 = 10, so'ngra 10 + 4 = 14."
+    }
+  ]
+}

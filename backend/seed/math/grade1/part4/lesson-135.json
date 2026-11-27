@@ -1,0 +1,278 @@
+{
+  "bookNumber": 135,
+  "isReview": false,
+  "title": "Sonli va harfiy tengsizliklar",
+  "emoji": "↔️",
+  "shortDesc": "Oraliq tengsizliklar: 18 < x < 22 va harfiy tengsizliklarni yechish",
+  "intro": "Harfiy tengsizliklarda noma'lum son harf bilan belgilanadi. Masalan, x > 5 ifodasi 5 dan katta barcha sonlarni bildiradi. Oraliq tengsizlikda esa (masalan, 18 < x < 22) x soni ikki son orasidagi qatorda joylashadi (19, 20, 21).",
+  "keyPoints": [
+    "Harfiy tengsizlik: masalan, x < 6 (x o'rniga 0, 1, 2, 3, 4, 5 qo'yish mumkin).",
+    "Oraliq tengsizlik: masalan, 18 < x < 22 (x o'rniga 19, 20, 21 sonlari to'g'ri keladi).",
+    "x ning o'rniga qo'yilganda to'g'ri tengsizlik hosil qiladigan sonlar tengsizlikning yechimlari deyiladi.",
+    "18 < x < 22 tengsizlik 'x soni 18 dan katta va 22 dan kichik' deb o'qiladi."
+  ],
+  "miniExample": {
+    "emojis": "↔️ 18 < x < 22",
+    "text": "x soni 18 dan katta, lekin 22 dan kichik. Demak, x soni 19, 20 yoki 21 bo'lishi mumkin!"
+  },
+  "xpReward": 110,
+  "coinReward": 12,
+  "estMinutes": 9,
+  "practice": [
+    {
+      "text": "18 < x < 22 tengsizlikni qanoatlantiruvchi sonlarni toping:",
+      "options": [
+        "19, 20, 21",
+        "18, 19, 20",
+        "20, 21, 22",
+        "17, 18, 19"
+      ],
+      "correctIndex": 0,
+      "explanation": "18 dan katta va 22 dan kichik sonlar: 19, 20 va 21."
+    },
+    {
+      "text": "x < 4 tengsizlikka qaysi sonlar to'g'ri keladi?",
+      "options": [
+        "4, 5, 6",
+        "0, 1, 2, 3",
+        "1, 2, 3, 4",
+        "5, 6, 7"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 dan kichik sonlar: 0, 1, 2 va 3."
+    },
+    {
+      "text": "10 < y < 14 tengsizlikda y nechaga teng bo'lishi mumkin?",
+      "options": [
+        "10, 11, 12",
+        "12, 13, 14",
+        "11, 12, 13",
+        "9, 10, 11"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 dan katta va 14 dan kichik sonlar: 11, 12 va 13."
+    }
+  ],
+  "test": [
+    {
+      "text": "18 < x < 22 tengsizlik qanday o'qiladi?",
+      "options": [
+        "x soni 18 dan katta va 22 dan kichik",
+        "x soni 18 dan kichik va 22 dan katta",
+        "x soni 18 va 22 ga teng",
+        "x faqat 20 ga teng"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo'sh tengsizlik o'rtadagi harfdan boshlab o'qiladi: x soni 18 dan katta va 22 dan kichik."
+    },
+    {
+      "text": "18 < x < 22 tengsizlikka qaysi son mos KELMAYDI?",
+      "options": [
+        "19",
+        "20",
+        "22",
+        "21"
+      ],
+      "correctIndex": 2,
+      "explanation": "22 soni 22 dan kichik emas (22 < 22 noto'g'ri), shuning uchun u kirmaydi."
+    },
+    {
+      "text": "18 < x < 22 tengsizlikka 18 soni kiradimi?",
+      "options": [
+        "Ha, albatta kiradi",
+        "Yo'q, 18 kirmaydi (qat'iy katta)",
+        "Faqat bir marta kiradi",
+        "x=18 bo'lishi shart"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 < x deyilgan, ya'ni x soni 18 dan qat'iy katta bo'lishi kerak."
+    },
+    {
+      "text": "15 < a < 19 tengsizlikning barcha butun yechimlarini toping:",
+      "options": [
+        "15, 16, 17",
+        "17, 18, 19",
+        "16, 18, 20",
+        "16, 17, 18"
+      ],
+      "correctIndex": 3,
+      "explanation": "15 dan katta va 19 dan kichik sonlar: 16, 17 va 18."
+    },
+    {
+      "text": "28 < y < 32 tengsizlikni qanoatlantiruvchi sonlar qatori:",
+      "options": [
+        "28, 29, 30",
+        "29, 30, 31",
+        "30, 31, 32",
+        "27, 28, 29"
+      ],
+      "correctIndex": 1,
+      "explanation": "28 dan keyingi va 32 dan oldingi sonlar: 29, 30, 31."
+    },
+    {
+      "text": "9 < m < 13 tengsizlikda nechta yechim bor?",
+      "options": [
+        "3 ta (10, 11, 12)",
+        "2 ta",
+        "4 ta",
+        "1 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "10, 11 va 12 sonlari, ya'ni jami 3 ta yechim bor."
+    },
+    {
+      "text": "40 < k < 44 oraliqdagi sonlar qaysilar?",
+      "options": [
+        "40, 41, 42",
+        "42, 43, 44",
+        "41, 43, 45",
+        "41, 42, 43"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 va 44 orasidagi sonlar: 41, 42, 43."
+    },
+    {
+      "text": "x + 3 < 7 tengsizlikda x o'rniga qaysi son to'g'ri keladi?",
+      "options": [
+        "4 (chunki 4 + 3 = 7)",
+        "5 (chunki 5 + 3 = 8)",
+        "2 (chunki 2 + 3 = 5 < 7)",
+        "6 (chunki 6 + 3 = 9)"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 2 bo'lsa, 2 + 3 = 5, 5 < 7 to'g'ri."
+    },
+    {
+      "text": "y - 2 > 6 tengsizlikda y qaysi son bo'lishi mumkin?",
+      "options": [
+        "8 (chunki 8 - 2 = 6)",
+        "7 (chunki 7 - 2 = 5)",
+        "10 (chunki 10 - 2 = 8 > 6)",
+        "5 (chunki 5 - 2 = 3)"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 - 2 = 8, 8 esa 6 dan katta, demak y = 10 to'g'ri."
+    },
+    {
+      "text": "50 < x < 55 oralig'idagi eng katta son qaysi?",
+      "options": [
+        "55",
+        "53",
+        "50",
+        "54"
+      ],
+      "correctIndex": 3,
+      "explanation": "55 dan kichik bo'lgan eng katta butun son 54 dir."
+    },
+    {
+      "text": "50 < x < 55 oralig'idagi eng kichik son qaysi?",
+      "options": [
+        "51",
+        "50",
+        "52",
+        "49"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 dan katta bo'lgan eng kichik butun son 51 dir."
+    },
+    {
+      "text": "1 < x < 5 tengsizlikning yechimlari yig'indisini toping:",
+      "options": [
+        "10",
+        "9 (2 + 3 + 4 = 9)",
+        "8",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yechimlar: 2, 3, 4. Yig'indisi: 2 + 3 + 4 = 9."
+    },
+    {
+      "text": "8 < b < 11 tengsizlikda nechta son bor?",
+      "options": [
+        "3 ta",
+        "1 ta",
+        "0 ta",
+        "2 ta (9 va 10)"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 va 11 orasida faqat 9 va 10 sonlari bor, jami 2 ta."
+    },
+    {
+      "text": "70 < z < 73 tengsizlikda z qanday sonlar bo'lishi mumkin?",
+      "options": [
+        "70 va 71",
+        "71 va 72",
+        "72 va 73",
+        "Faqat 71"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 dan katta va 73 dan kichik sonlar: 71 va 72."
+    },
+    {
+      "text": "Dildoraning yoshi 7 dan katta, lekin 10 dan kichik. U necha yoshda bo'lishi mumkin?",
+      "options": [
+        "7 yoki 8 yoshda",
+        "9 yoki 10 yoshda",
+        "8 yoki 9 yoshda",
+        "Faqat 10 yoshda"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 < x < 10 bo'lgani uchun Dildora 8 yoki 9 yoshda."
+    },
+    {
+      "text": "Savatdagi olmalar soni 15 dan ko'p va 18 dan kam. Savatda nechta olma bo'lishi mumkin?",
+      "options": [
+        "16 yoki 17 ta",
+        "15 yoki 16 ta",
+        "17 yoki 18 ta",
+        "Faqat 15 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "15 < x < 18 oraliqdagi sonlar 16 va 17 dir."
+    },
+    {
+      "text": "Qaysi tengsizlik to'g'ri yozilgan?",
+      "options": [
+        "20 < 25 < 30",
+        "30 < 25 < 20",
+        "25 < 20 < 30",
+        "20 > 25 > 30"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 soni 25 dan kichik, 25 soni 30 dan kichik: 20 < 25 < 30 to'g'ri."
+    },
+    {
+      "text": "0 < x < 3 tengsizlikning yechimlari qaysilar?",
+      "options": [
+        "0, 1, 2",
+        "1, 2, 3",
+        "Faqat 2",
+        "1 va 2"
+      ],
+      "correctIndex": 3,
+      "explanation": "0 dan katta va 3 dan kichik sonlar 1 va 2 dir."
+    },
+    {
+      "text": "Agar x = 20 bo'lsa, u 18 < x < 22 tengsizlikni qanoatlantiradimi?",
+      "options": [
+        "Yo'q, qanoatlantirmaydi",
+        "Ha, chunki 18 < 20 < 22 to'g'ri",
+        "Faqat juft bo'lsa",
+        "Faqat toq bo'lsa"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 < 20 va 20 < 22 to'g'ri bo'lgani uchun x = 20 yechim bo'ladi."
+    },
+    {
+      "text": "Oraliq tengsizliklar bizga nima haqida ma'lumot beradi?",
+      "options": [
+        "Faqat bitta sonni",
+        "Hamma sonlar tengligini",
+        "Noma'lum son qaysi ikki chegara orasida joylashganini",
+        "Faqat manfiy sonlarni"
+      ],
+      "correctIndex": 2,
+      "explanation": "Oraliq tengsizlik noma'lum miqdorning quyi va yuqori chegaralarini belgilab beradi."
+    }
+  ]
+}

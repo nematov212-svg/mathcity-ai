@@ -1,0 +1,278 @@
+{
+  "bookNumber": 134,
+  "isReview": false,
+  "title": "Matematik amallarning xossalari",
+  "emoji": "🔁",
+  "shortDesc": "Qo'shishning o'rin almashtirish va guruhlash xossalari, qulay hisoblash",
+  "intro": "Qo'shish amali juda ajoyib xossalarga ega. Qo'shiluvchilarning o'rni almashgani bilan yig'indi o'zgarmaydi (a + b = b + a). Sonlarni qulay guruhlab qo'shish hisoblashni ancha osonlashtiradi!",
+  "keyPoints": [
+    "O'rin almashtirish xossasi: a + b = b + a (masalan, 7 + 3 = 3 + 7 = 10).",
+    "Guruhlash xossasi: (a + b) + c = a + (b + c).",
+    "Qulay usul: yig'indisi 10 yoki 20 bo'ladigan sonlarni avval qo'shib olish yaxshi natija beradi.",
+    "Masalan: 17 + 8 + 3 = (17 + 3) + 8 = 20 + 8 = 28."
+  ],
+  "miniExample": {
+    "emojis": "🔁 16 + 9 + 4 = (16 + 4) + 9",
+    "text": "16 ga 4 ni qo'shsak 20 bo'ladi, keyin 9 ni qo'shamiz: 20 + 9 = 29. Juda oson va tez!"
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "6 + 9 = ? + 6 tenglikda so'roq belgisi o'rnida qaysi son bo'ladi?",
+      "options": [
+        "9",
+        "6",
+        "15",
+        "3"
+      ],
+      "correctIndex": 0,
+      "explanation": "O'rin almashtirish xossasiga ko'ra 6 + 9 = 9 + 6."
+    },
+    {
+      "text": "14 + 7 + 6 ifodasini qulay usulda hisoblang:",
+      "options": [
+        "25",
+        "27 ((14 + 6) + 7 = 20 + 7 = 27)",
+        "28",
+        "26"
+      ],
+      "correctIndex": 1,
+      "explanation": "14 va 6 yig'indisi 20, 20 + 7 = 27."
+    },
+    {
+      "text": "Qo'shiluvchilarning o'rni almashsa yig'indi nima bo'ladi?",
+      "options": [
+        "Kattalashadi",
+        "Kamayadi",
+        "O'zgarmaydi",
+        "Nol bo'ladi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qo'shishning o'rin almashtirish xossasiga ko'ra yig'indi o'zgarmaydi."
+    }
+  ],
+  "test": [
+    {
+      "text": "8 + 5 = 5 + 8 tenglik qaysi xossani ifodalaydi?",
+      "options": [
+        "Qo'shishning o'rin almashtirish xossasi",
+        "Guruhlash xossasi",
+        "Ayirish xossasi",
+        "Tengsizlik qoidasi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo'shiluvchilarning o'rni almashsa yig'indi o'zgarmasligi — o'rin almashtirish xossasidir."
+    },
+    {
+      "text": "12 + 7 ifodasini o'rin almashtirish xossasi bilan yozing:",
+      "options": [
+        "12 - 7",
+        "7 - 12",
+        "7 + 12",
+        "12 + 12"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qo'shiluvchilar o'rni almashadi: 7 + 12."
+    },
+    {
+      "text": "23 + 4 = 4 + ? tenglikda bo'sh joyga qaysi son mos keladi?",
+      "options": [
+        "27",
+        "23",
+        "4",
+        "20"
+      ],
+      "correctIndex": 1,
+      "explanation": "23 + 4 = 4 + 23."
+    },
+    {
+      "text": "15 + 8 + 5 ifodasini qulay usulda hisoblang:",
+      "options": [
+        "26",
+        "30",
+        "27",
+        "28 ((15 + 5) + 8 = 20 + 8 = 28)"
+      ],
+      "correctIndex": 3,
+      "explanation": "15 + 5 = 20, 20 + 8 = 28."
+    },
+    {
+      "text": "18 + 9 + 2 ifodasini qulay usulda hisoblang:",
+      "options": [
+        "27",
+        "29 ((18 + 2) + 9 = 20 + 9 = 29)",
+        "30",
+        "28"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 + 2 = 20, 20 + 9 = 29."
+    },
+    {
+      "text": "24 + 7 + 6 ifodasining qulay hisoblash natijasi qanday?",
+      "options": [
+        "37 ((24 + 6) + 7 = 30 + 7 = 37)",
+        "35",
+        "38",
+        "36"
+      ],
+      "correctIndex": 0,
+      "explanation": "24 + 6 = 30, 30 + 7 = 37."
+    },
+    {
+      "text": "31 + 8 + 9 ifodasini qulay usulda hisoblang:",
+      "options": [
+        "46",
+        "49",
+        "50",
+        "48 ((31 + 9) + 8 = 40 + 8 = 48)"
+      ],
+      "correctIndex": 3,
+      "explanation": "31 + 9 = 40, 40 + 8 = 48."
+    },
+    {
+      "text": "45 + 16 + 5 ifodasining qiymati nechaga teng?",
+      "options": [
+        "64",
+        "65",
+        "66 ((45 + 5) + 16 = 50 + 16 = 66)",
+        "68"
+      ],
+      "correctIndex": 2,
+      "explanation": "45 + 5 = 50, 50 + 16 = 66."
+    },
+    {
+      "text": "(a + b) + c = a + (b + c) tenglik qaysi xossani ifodalaydi?",
+      "options": [
+        "O'rin almashtirish",
+        "Ayirish",
+        "Qo'shishning guruhlash xossasi",
+        "Bo'lish"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qo'shiluvchilarni qavs yordamida guruhlash — guruhlash xossasidir."
+    },
+    {
+      "text": "50 + 0 yig'indi nechaga teng?",
+      "options": [
+        "0",
+        "5",
+        "500",
+        "50"
+      ],
+      "correctIndex": 3,
+      "explanation": "Istalgan songa nol qo'shilsa, sonning o'zi chiqadi."
+    },
+    {
+      "text": "0 + 38 yig'indisi nechaga teng?",
+      "options": [
+        "38",
+        "0",
+        "30",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "Nolga son qo'shilganda yig'indi o'sha songa teng bo'ladi."
+    },
+    {
+      "text": "13 + 25 + 7 ifodasini qulay hisoblang:",
+      "options": [
+        "43",
+        "45 ((13 + 7) + 25 = 20 + 25 = 45)",
+        "47",
+        "50"
+      ],
+      "correctIndex": 1,
+      "explanation": "13 + 7 = 20, 20 + 25 = 45."
+    },
+    {
+      "text": "26 + 14 + 15 ifodasining qiymatini toping:",
+      "options": [
+        "50",
+        "54",
+        "56",
+        "55 ((26 + 14) + 15 = 40 + 15 = 55)"
+      ],
+      "correctIndex": 3,
+      "explanation": "26 + 14 = 40, 40 + 15 = 55."
+    },
+    {
+      "text": "33 + 19 + 7 ifodasini hisoblang:",
+      "options": [
+        "57",
+        "59 ((33 + 7) + 19 = 40 + 19 = 59)",
+        "58",
+        "60"
+      ],
+      "correctIndex": 1,
+      "explanation": "33 + 7 = 40, 40 + 19 = 59."
+    },
+    {
+      "text": "Qaysi tenglik xato tuzilgan?",
+      "options": [
+        "15 + 5 = 5 + 15",
+        "8 + 4 = 4 + 8",
+        "15 - 5 = 5 - 15",
+        "20 + 10 = 10 + 20"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ayirish amalida o'rin almashtirish xossasi bajarilmaydi (15 - 5 ≠ 5 - 15)."
+    },
+    {
+      "text": "Ayirish amali uchun o'rin almashtirish xossasi to'g'rimi?",
+      "options": [
+        "Yo'q, ayirishda o'rinni almashtirib bo'lmaydi",
+        "Ha, doim to'g'ri",
+        "Faqat juft sonlarda",
+        "Faqat nol bo'lganda"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kamayuvchi va ayriluvchi o'rnini almashtirib bo'lmaydi."
+    },
+    {
+      "text": "42 + 28 + 9 ifodasini qulay hisoblang:",
+      "options": [
+        "79 ((42 + 28) + 9 = 70 + 9 = 79)",
+        "78",
+        "80",
+        "89"
+      ],
+      "correctIndex": 0,
+      "explanation": "42 + 28 = 70, 70 + 9 = 79."
+    },
+    {
+      "text": "54 + 8 + 6 ifodasining natijasi qanday?",
+      "options": [
+        "66",
+        "69",
+        "70",
+        "68 ((54 + 6) + 8 = 60 + 8 = 68)"
+      ],
+      "correctIndex": 3,
+      "explanation": "54 + 6 = 60, 60 + 8 = 68."
+    },
+    {
+      "text": "Birinchi savatda 17 ta, ikkinchisida 8 ta, uchinchisida 3 ta olma bor. Jami olmalarni qulay hisoblang:",
+      "options": [
+        "26 ta",
+        "28 ta ((17 + 3) + 8 = 28)",
+        "27 ta",
+        "30 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "17 + 3 = 20, 20 + 8 = 28 ta olma."
+    },
+    {
+      "text": "Qulay hisoblash usuli bizga nima beradi?",
+      "options": [
+        "Javobni kattalashtirib beradi",
+        "Masalani chalkashtiradi",
+        "Tez va oson og'zaki hisoblash imkonini",
+        "Amallarni yo'qotadi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Xossalar yordamida sonlarni yaxlitlab oson va xatosiz hisoblash mumkin."
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "bookNumber": 114,
+  "isReview": false,
+  "title": "Kesma xossalari",
+  "emoji": "⚖️",
+  "shortDesc": "Kesmalarni taqqoslash usullari va bo‘laklar yig‘indisi xossasi.",
+  "intro": "Kesmaning bo‘laklari yig‘indisi butun kesmaga teng: AC + CB = AB.",
+  "keyPoints": [
+    "Kesmalarni taqqoslash usullari: chamalab, ustiga qo‘yib, chizg‘ich yordamida o‘lchab.",
+    "Butun kesma uning bo‘laklari yig‘indisiga teng: AC + CB = AB.",
+    "Teskari misollar: agar AC + CB = AB bo‘lsa, AB − CB = AC va AB − AC = CB."
+  ],
+  "miniExample": {
+    "emojis": "⚖️ AC (4 sm) + CB (3 sm) = AB (7 sm)",
+    "text": "Katta kesma 7 sm. Agar bitta bo‘lagi 4 sm bo‘lsa, ikkinchi bo‘lagi: 7 - 4 = 3 sm."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Kesmalarni taqqoslashning eng aniq usuli qaysi?",
+      "options": [
+        "Chizg‘ich bilan o‘lchash",
+        "Ko‘z bilan chamalash",
+        "Qo‘l bilan ushlab ko‘rish",
+        "Taxmin qilish"
+      ],
+      "correctIndex": 0,
+      "explanation": "Chizg‘ich yordamida aniq santimetrlari o‘lchanadi."
+    },
+    {
+      "text": "Agar AC = 4 sm va CB = 5 sm bo‘lsa, AB kesma uzunligi qancha?",
+      "options": [
+        "8 sm",
+        "9 sm (4 + 5 = 9)",
+        "10 sm",
+        "1 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "AB = AC + CB = 4 + 5 = 9 sm."
+    },
+    {
+      "text": "Agar NM = 12 sm va TM = 4 sm bo‘lsa, NT bo‘lak uzunligini toping (NT + TM = NM):",
+      "options": [
+        "16 sm",
+        "7 sm",
+        "8 sm (12 - 4 = 8)",
+        "9 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "NT = NM - TM = 12 - 4 = 8 sm."
+    }
+  ],
+  "test": [
+    {
+      "text": "Kesmalarni taqqoslash usullarini ko‘rsating:",
+      "options": [
+        "Chamalab, ustiga qo‘yib, chizg‘ich bilan o‘lchab",
+        "Faqat tarozida tortib",
+        "Faqat bo‘yab ko‘rib",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kesmalar ko‘z bilan chamalab, ustiga qo‘yib yoki chizg‘ich bilan taqqoslanadi."
+    },
+    {
+      "text": "AC + CB = AB tenglik nimani bildiradi?",
+      "options": [
+        "Kesmalar har doim teng",
+        "Kesma uchburchak hosil qiladi",
+        "Kesma bo‘laklarining yig‘indisi butun kesmaga teng",
+        "Kesma o‘lchab bo‘lmaydi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Butun kesma uning bo‘laklari yig‘indisiga teng."
+    },
+    {
+      "text": "Agar AC = 5 sm va CB = 3 sm bo‘lsa, butun AB kesma necha santimetr?",
+      "options": [
+        "7 sm",
+        "8 sm (5 + 3 = 8)",
+        "9 sm",
+        "2 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 3 = 8 sm."
+    },
+    {
+      "text": "Butun kesma 10 sm. Birinchi bo‘lagi 6 sm bo‘lsa, ikkinchi bo‘lagi qancha?",
+      "options": [
+        "3 sm",
+        "5 sm",
+        "16 sm",
+        "4 sm (10 - 6 = 4)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 - 6 = 4 sm."
+    },
+    {
+      "text": "NT + TM = NM ifodaga teskari amal qaysi?",
+      "options": [
+        "NM + TM = NT",
+        "NM - TM = NT",
+        "NT - TM = NM",
+        "NM + NT = TM"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qo‘shishga teskari amal ayirishdir: NM - TM = NT."
+    },
+    {
+      "text": "Ikkita kesma bir-birining ustiga qo‘yilganda uchlari to‘liq ustma-ust tushdi. Bu kesmalar qanday kesmalar?",
+      "options": [
+        "Teng kesmalar",
+        "Har xil kesmalar",
+        "Siniq chiziqlar",
+        "Egri chiziqlar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ustma-ust tushgan kesmalar uzunligi bir xil, ya’ni teng bo‘ladi."
+    },
+    {
+      "text": "AB kesma 15 sm. C nuqta uni ikkita teng bo‘lakka bo‘ldi. Har bir bo‘lak necha santimetr bo‘lishi mumkin emas?",
+      "options": [
+        "AC + CB = 15 sm",
+        "AC = 7 sm va CB = 8 sm",
+        "AC = 5 sm va CB = 10 sm",
+        "Har biri 10 sm bo‘lishi mumkin emas"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ikkita bo‘lak yig‘indisi 15 sm bo‘lishi shart, 10 + 10 = 20 sm bo‘lib ketadi."
+    },
+    {
+      "text": "Gilam hoshiyasining bir tomoni 20 dm, ikkinchi tomoni 30 dm. Ikkala tomon yig‘indisi necha detsimetr?",
+      "options": [
+        "40 dm",
+        "60 dm",
+        "50 dm (20 + 30 = 50)",
+        "10 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 + 30 = 50 dm."
+    },
+    {
+      "text": "NM kesma 18 sm, TM = 7 sm bo‘lsa, NT = ?",
+      "options": [
+        "10 sm",
+        "12 sm",
+        "11 sm (18 - 7 = 11)",
+        "25 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "NT = 18 - 7 = 11 sm."
+    },
+    {
+      "text": "AB kesma 1 dm. Unda AC = 4 sm bo‘lsa, CB necha santimetr? (1 dm = 10 sm)",
+      "options": [
+        "5 sm",
+        "7 sm",
+        "14 sm",
+        "6 sm (10 - 4 = 6)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 - 4 = 6 sm."
+    },
+    {
+      "text": "Agar a + b = c bo‘lsa, c − a ifoda nimaga teng?",
+      "options": [
+        "b ga teng",
+        "a ga teng",
+        "c ga teng",
+        "0 ga teng"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shiluvchini topish uchun yig‘indidan ikkinchi qo‘shiluvchi ayiriladi: c - a = b."
+    },
+    {
+      "text": "Kesma uchta bo‘lakka bo‘lindi: 2 sm, 3 sm va 5 sm. Butun kesma necha santimetr?",
+      "options": [
+        "9 sm",
+        "10 sm (2 + 3 + 5 = 10)",
+        "11 sm",
+        "8 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 + 3 + 5 = 10 sm."
+    },
+    {
+      "text": "Uzunligi 16 sm bo‘lgan kesmadan 9 sm li bo‘lak kesib olindi. Qolgan bo‘lak necha santimetr?",
+      "options": [
+        "6 sm",
+        "8 sm",
+        "25 sm",
+        "7 sm (16 - 9 = 7)"
+      ],
+      "correctIndex": 3,
+      "explanation": "16 - 9 = 7 sm."
+    },
+    {
+      "text": "Qaysi tenglik xato?",
+      "options": [
+        "7 sm + 5 sm = 12 sm",
+        "7 sm + 5 sm = 11 sm",
+        "12 sm - 5 sm = 7 sm",
+        "12 sm - 7 sm = 5 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 5 = 12 sm bo‘ladi, 11 sm emas."
+    },
+    {
+      "text": "To‘g‘ri chiziqda A, B, C nuqtalar yotadi. AB = 8 sm, BC = 6 sm. AC kesma uzunligi qancha bo‘ladi?",
+      "options": [
+        "12 sm",
+        "15 sm",
+        "14 sm (8 + 6 = 14)",
+        "2 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "AC = AB + BC = 8 + 6 = 14 sm."
+    },
+    {
+      "text": "Kesmaning yarmi 6 sm ga teng. Butun kesmaning uzunligi necha santimetr?",
+      "options": [
+        "12 sm (6 + 6 = 12)",
+        "10 sm",
+        "14 sm",
+        "3 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 6 = 12 sm."
+    },
+    {
+      "text": "Ip 20 sm edi. Undan teng ikkita bo‘lak kesildi. Har bir bo‘lak necha santimetr?",
+      "options": [
+        "10 sm (10 + 10 = 20)",
+        "5 sm",
+        "15 sm",
+        "8 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 10 = 20 sm."
+    },
+    {
+      "text": "AB kesma 17 sm. C nuqta shunday tanlanganki, AC kesma CB dan 3 sm uzun. AC = 10 sm bo‘lsa, CB = ?",
+      "options": [
+        "6 sm",
+        "8 sm",
+        "14 sm",
+        "7 sm (17 - 10 = 7)"
+      ],
+      "correctIndex": 3,
+      "explanation": "CB = 17 - 10 = 7 sm (10 - 7 = 3 sm, shart to‘g‘ri)."
+    },
+    {
+      "text": "Yog‘och bo‘lagi 24 sm edi. Duradgor undan 8 sm va 6 sm li ikkita bo‘lak kesib oldi. Yog‘ochdan necha santimetr qoldi?",
+      "options": [
+        "12 sm",
+        "10 sm (24 - 8 - 6 = 10)",
+        "9 sm",
+        "14 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "24 - 8 = 16 sm, 16 - 6 = 10 sm."
+    },
+    {
+      "text": "Kesma to‘rtta teng bo‘lakka bo‘lingan. Har bir bo‘lak 5 sm. Butun kesma necha detsimetrga teng? (1 dm = 10 sm)",
+      "options": [
+        "1 dm",
+        "4 dm",
+        "2 dm (5 + 5 + 5 + 5 = 20 sm = 2 dm)",
+        "20 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 5 + 5 + 5 = 20 sm = 2 dm."
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "bookNumber": 138,
+  "isReview": false,
+  "title": "Tenglamalar (2)",
+  "emoji": "🪜",
+  "shortDesc": "Noma'lum ayriluvchi va kamayuvchini topish: a - x = b va x - a = b",
+  "intro": "Ayirish amali qatnashgan tenglamalarda noma'lum son ayriluvchi (a - x = b) yoki kamayuvchi (x - a = b) bo'lishi mumkin. Noma'lum ayriluvchini topish uchun kamayuvchidan ayirma ayriladi. Noma'lum kamayuvchini topish uchun esa ayirmaga ayriluvchi qo'shiladi.",
+  "keyPoints": [
+    "Noma'lum ayriluvchini topish: 45 - x = 22 -> x = 45 - 22 = 23.",
+    "Noma'lum kamayuvchini topish: x - 7 = 10 -> x = 10 + 7 = 17.",
+    "Kamayuvchi doim ayriluvchi va ayirmadan katta bo'ladi.",
+    "Yechimni tekshirish: 45 - 23 = 22 (to'g'ri!)."
+  ],
+  "miniExample": {
+    "emojis": "🪜 45 - x = 22 | x - 7 = 10",
+    "text": "45 dan nechini ayirsak 22 qoladi? 45 - 22 = 23 (x = 23). Qaysi sondan 7 ni ayirsak 10 qoladi? 10 + 7 = 17 (x = 17)!"
+  },
+  "xpReward": 110,
+  "coinReward": 12,
+  "estMinutes": 9,
+  "practice": [
+    {
+      "text": "45 - x = 22 tenglamani yeching:",
+      "options": [
+        "x = 23",
+        "x = 67",
+        "x = 22",
+        "x = 25"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 45 - 22 = 23."
+    },
+    {
+      "text": "x - 7 = 10 tenglamada x nechaga teng?",
+      "options": [
+        "x = 3",
+        "x = 17",
+        "x = 16",
+        "x = 18"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 10 + 7 = 17."
+    },
+    {
+      "text": "20 - x = 8 tenglamaning yechimini toping:",
+      "options": [
+        "x = 28",
+        "x = 10",
+        "x = 12",
+        "x = 14"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 20 - 8 = 12."
+    }
+  ],
+  "test": [
+    {
+      "text": "45 - x = 22 tenglamada x nimaga teng?",
+      "options": [
+        "x = 23",
+        "x = 67",
+        "x = 21",
+        "x = 24"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 45 - 22 = 23."
+    },
+    {
+      "text": "x - 7 = 10 tenglamani yeching:",
+      "options": [
+        "x = 3",
+        "x = 15",
+        "x = 17",
+        "x = 18"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 10 + 7 = 17."
+    },
+    {
+      "text": "15 - x = 9 tenglamada x nechaga teng?",
+      "options": [
+        "x = 24",
+        "x = 6",
+        "x = 5",
+        "x = 7"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 15 - 9 = 6."
+    },
+    {
+      "text": "x - 5 = 15 tenglamaning ildizini toping:",
+      "options": [
+        "x = 10",
+        "x = 25",
+        "x = 15",
+        "x = 20"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 15 + 5 = 20."
+    },
+    {
+      "text": "30 - x = 12 tenglamani yeching:",
+      "options": [
+        "x = 42",
+        "x = 18",
+        "x = 16",
+        "x = 20"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 30 - 12 = 18."
+    },
+    {
+      "text": "x - 10 = 25 tenglamada x nimaga teng?",
+      "options": [
+        "x = 35",
+        "x = 15",
+        "x = 30",
+        "x = 40"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 25 + 10 = 35."
+    },
+    {
+      "text": "Noma'lum kamayuvchini topish uchun nima qilinadi?",
+      "options": [
+        "Ayirmadan ayriluvchi ayriladi",
+        "Ikkala son bir-biriga ko'paytiriladi",
+        "Amal o'zgartirilmaydi",
+        "Ayirmaga ayriluvchi qo'shiladi"
+      ],
+      "correctIndex": 3,
+      "explanation": "x - a = b bo'lsa, kamayuvchi x = b + a bo'ladi."
+    },
+    {
+      "text": "Noma'lum ayriluvchini topish uchun nima qilinadi?",
+      "options": [
+        "Kamayuvchiga ayirma qo'shiladi",
+        "Sonlar bir-biriga bo'linadi",
+        "Kamayuvchidan ayirma ayriladi",
+        "Hech qanday amal bajarilmaydi"
+      ],
+      "correctIndex": 2,
+      "explanation": "a - x = b bo'lsa, ayriluvchi x = a - b bo'ladi."
+    },
+    {
+      "text": "50 - x = 20 tenglamani yeching:",
+      "options": [
+        "x = 70",
+        "x = 25",
+        "x = 30",
+        "x = 35"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 50 - 20 = 30."
+    },
+    {
+      "text": "x - 8 = 12 tenglamada x nechaga teng?",
+      "options": [
+        "x = 4",
+        "x = 18",
+        "x = 22",
+        "x = 20"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 12 + 8 = 20."
+    },
+    {
+      "text": "40 - x = 15 tenglamaning ildizini toping:",
+      "options": [
+        "x = 25",
+        "x = 55",
+        "x = 20",
+        "x = 30"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 40 - 15 = 25."
+    },
+    {
+      "text": "x - 20 = 30 tenglamani yeching:",
+      "options": [
+        "x = 10",
+        "x = 50",
+        "x = 40",
+        "x = 60"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 30 + 20 = 50."
+    },
+    {
+      "text": "60 - x = 35 tenglamada x nimaga teng?",
+      "options": [
+        "x = 95",
+        "x = 20",
+        "x = 30",
+        "x = 25"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 60 - 35 = 25."
+    },
+    {
+      "text": "x - 14 = 16 tenglamaning yechimini toping:",
+      "options": [
+        "x = 2",
+        "x = 30",
+        "x = 28",
+        "x = 32"
+      ],
+      "correctIndex": 1,
+      "explanation": "x = 16 + 14 = 30."
+    },
+    {
+      "text": "75 - x = 50 tenglamani yeching:",
+      "options": [
+        "x = 125",
+        "x = 20",
+        "x = 25",
+        "x = 30"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 75 - 50 = 25."
+    },
+    {
+      "text": "x - 25 = 25 tenglamada x nechaga teng?",
+      "options": [
+        "x = 50",
+        "x = 0",
+        "x = 45",
+        "x = 55"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 25 + 25 = 50."
+    },
+    {
+      "text": "18 - x = 18 tenglamani yeching:",
+      "options": [
+        "x = 0",
+        "x = 36",
+        "x = 1",
+        "x = 18"
+      ],
+      "correctIndex": 0,
+      "explanation": "x = 18 - 18 = 0."
+    },
+    {
+      "text": "x - 0 = 34 tenglamaning ildizi nechaga teng?",
+      "options": [
+        "x = 0",
+        "x = 35",
+        "x = 33",
+        "x = 34"
+      ],
+      "correctIndex": 3,
+      "explanation": "x = 34 + 0 = 34."
+    },
+    {
+      "text": "Agar x = 14 bo'lsa, qaysi tenglama to'g'ri bo'ladi?",
+      "options": [
+        "x - 5 = 8",
+        "20 - x = 6",
+        "30 - x = 15",
+        "x - 10 = 5"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 - 14 = 6 to'g'ri tenglik."
+    },
+    {
+      "text": "100 - x = 40 tenglamani yeching:",
+      "options": [
+        "x = 140",
+        "x = 50",
+        "x = 60",
+        "x = 70"
+      ],
+      "correctIndex": 2,
+      "explanation": "x = 100 - 40 = 60."
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "bookNumber": 136,
+  "isReview": false,
+  "title": "Rim raqamlari",
+  "emoji": "🏛️",
+  "shortDesc": "Rim raqamlari (I, V, X, L, C) va ular ustida arifmetik amallar",
+  "intro": "Qadimiy Rimda sonlarni yozish uchun maxsus harflardan foydalanilgan: I = 1, V = 5, X = 10, L = 50, C = 100. Bugungi kunda ham soat siferblatlarida, kitob fasllarida va asrlarni belgilashda Rim raqamlari keng ishlatiladi!",
+  "keyPoints": [
+    "Asosiy belgilar: I = 1, V = 5, X = 10, L = 50, C = 100.",
+    "Birlashtirish: o'ng tomonga yozilsa qo'shiladi (VI = 6, XI = 11, XV = 15).",
+    "Chap tomonga yozilsa ayriladi (IV = 4, IX = 9, XL = 40, XC = 90).",
+    "Rim raqamlarida amallar: V + V = X (5 + 5 = 10), XX + XL = LX (20 + 40 = 60)."
+  ],
+  "miniExample": {
+    "emojis": "🏛️ V + V = X | XX + XL = LX",
+    "text": "V (5) ga V (5) ni qo'shsak X (10) bo'ladi. XX (20) ga XL (40) ni qo'shsak LX (60) bo'ladi!"
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Rim raqamida X qaysi sonni bildiradi?",
+      "options": [
+        "10",
+        "5",
+        "1",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "X belgisi 10 sonini bildiradi."
+    },
+    {
+      "text": "V + V amali Rim raqamlarida nimaga teng?",
+      "options": [
+        "VV",
+        "X (5 + 5 = 10)",
+        "XV",
+        "L"
+      ],
+      "correctIndex": 1,
+      "explanation": "V = 5 bo'lib, 5 + 5 = 10 (X)."
+    },
+    {
+      "text": "Rim raqamida IV qaysi sonni bildiradi?",
+      "options": [
+        "6",
+        "5",
+        "4 (5 - 1 = 4)",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "I harfi V dan oldin kelgani uchun 5 - 1 = 4 bo'ladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Rim raqami V qaysi songa teng?",
+      "options": [
+        "5",
+        "1",
+        "10",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "V belgisi 5 sonini anglatadi."
+    },
+    {
+      "text": "Rim raqami I nimani bildiradi?",
+      "options": [
+        "2",
+        "5",
+        "1",
+        "10"
+      ],
+      "correctIndex": 2,
+      "explanation": "I belgisi 1 sonini bildiradi."
+    },
+    {
+      "text": "Rim raqami L qaysi sonni ifodalaydi?",
+      "options": [
+        "10",
+        "50",
+        "100",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "L belgisi 50 sonini ifodalaydi."
+    },
+    {
+      "text": "Rim raqami C qaysi songa teng?",
+      "options": [
+        "50",
+        "10",
+        "1000",
+        "100"
+      ],
+      "correctIndex": 3,
+      "explanation": "C belgisi 100 sonini bildiradi (Centum — yuz)."
+    },
+    {
+      "text": "Rim raqamida 7 qanday yoziladi?",
+      "options": [
+        "VI",
+        "VII (5 + 2)",
+        "VIII",
+        "IIIV"
+      ],
+      "correctIndex": 1,
+      "explanation": "V (5) ga ikkita I (2) qo'shiladi: VII = 7."
+    },
+    {
+      "text": "Rim raqamida 9 qanday yoziladi?",
+      "options": [
+        "IX (10 - 1)",
+        "VIIII",
+        "XI",
+        "VIV"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 dan 1 ayriladi: IX = 9."
+    },
+    {
+      "text": "V + V amali natijasi qaysi Rim raqami bo'ladi?",
+      "options": [
+        "XV",
+        "L",
+        "VV",
+        "X (5 + 5 = 10)"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 5 = 10, bu esa Rim raqamida X deb yoziladi."
+    },
+    {
+      "text": "XX + XL amali natijasini toping (20 + 40):",
+      "options": [
+        "L (50)",
+        "LXX (70)",
+        "LX (60)",
+        "XXXX (40)"
+      ],
+      "correctIndex": 2,
+      "explanation": "XX = 20, XL = 40. 20 + 40 = 60, bu Rim raqamida LX dir."
+    },
+    {
+      "text": "X + V amali Rim raqamlarida nimaga teng?",
+      "options": [
+        "XX",
+        "V",
+        "XV (10 + 5 = 15)",
+        "L"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 5 = 15, bu esa XV deb yoziladi."
+    },
+    {
+      "text": "L - X amali natijasi qaysi Rim raqami bo'ladi (50 - 10)?",
+      "options": [
+        "LX (60)",
+        "XXX (30)",
+        "L (50)",
+        "XL (40)"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 10 = 40, Rim raqamida 40 bu XL deb yoziladi."
+    },
+    {
+      "text": "Rim raqamida 12 qanday yoziladi?",
+      "options": [
+        "XII (10 + 2)",
+        "IIX",
+        "IXI",
+        "XIII"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 2 = 12, ya'ni XII."
+    },
+    {
+      "text": "Rim raqamida 20 qanday yoziladi?",
+      "options": [
+        "VVVV",
+        "XX (10 + 10)",
+        "XV",
+        "X"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 soni ikkita o'nlik: XX."
+    },
+    {
+      "text": "Rim raqamida 3 qanday yoziladi?",
+      "options": [
+        "II",
+        "IV",
+        "V",
+        "III"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 ta tayoqcha: III."
+    },
+    {
+      "text": "Rim raqamida 6 qanday yoziladi?",
+      "options": [
+        "IV",
+        "VI (5 + 1)",
+        "VII",
+        "V"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 1 = 6, ya'ni VI."
+    },
+    {
+      "text": "Rim raqamida 11 qanday yoziladi?",
+      "options": [
+        "IX",
+        "XII",
+        "XI (10 + 1)",
+        "X"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 1 = 11, ya'ni XI."
+    },
+    {
+      "text": "Soat siferblatida eng yuqoridagi son odatda qanday yoziladi?",
+      "options": [
+        "XII (12)",
+        "VI (6)",
+        "X (10)",
+        "I (1)"
+      ],
+      "correctIndex": 0,
+      "explanation": "Soatning eng tepasida 12 soni, ya'ni XII turadi."
+    },
+    {
+      "text": "Soatning eng pastki qismida qaysi Rim raqami bo'ladi?",
+      "options": [
+        "VI (6)",
+        "XII",
+        "IX",
+        "III"
+      ],
+      "correctIndex": 0,
+      "explanation": "Soatning pastida 6 soni, ya'ni VI joylashgan."
+    },
+    {
+      "text": "X + X amali nimaga teng?",
+      "options": [
+        "XV (15)",
+        "L (50)",
+        "X (10)",
+        "XX (20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 + 10 = 20, bu XX dir."
+    },
+    {
+      "text": "C - L amali natijasi nechaga teng (100 - 50)?",
+      "options": [
+        "C (100)",
+        "L (50)",
+        "XL (40)",
+        "LX (60)"
+      ],
+      "correctIndex": 1,
+      "explanation": "100 - 50 = 50, Rim raqamida 50 bu L."
+    },
+    {
+      "text": "Rim raqamlarida nol (0) bormi?",
+      "options": [
+        "Ha, 0 deb yoziladi",
+        "Ha, N harfi bor",
+        "Yo'q, Rim raqamlarida nol belgisi yo'q",
+        "Ha, O harfi bor"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qadimgi Rim raqamlari tizimida nol soni uchun alohida belgi bo'lmagan."
+    }
+  ]
+}

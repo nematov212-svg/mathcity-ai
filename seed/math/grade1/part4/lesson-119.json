@@ -1,0 +1,277 @@
+{
+  "bookNumber": 119,
+  "isReview": false,
+  "title": "To‘g‘ri to‘rtburchak va kvadrat",
+  "emoji": "🟦",
+  "shortDesc": "Kvadrat va to‘g‘ri to‘rtburchakning xossalari hamda perimetr jadvali.",
+  "intro": "Kvadratning barcha 4 ta tomoni teng, to‘g‘ri to‘rtburchakning esa qarama-qarshi tomonlari teng bo‘ladi.",
+  "keyPoints": [
+    "Kvadrat: barcha 4 ta tomoni teng va burchaklari to‘g‘ri burchak.",
+    "To‘g‘ri to‘rtburchak: qarama-qarshi tomonlari o‘zaro teng va burchaklari to‘g‘ri burchak.",
+    "Perimetr jadvali: kvadrat tomoni 12 dm bo‘lsa, P = 48 dm; to‘g‘ri to‘rtburchak 20 dm va 4 dm bo‘lsa, P = 48 dm."
+  ],
+  "miniExample": {
+    "emojis": "🟦 Kvadrat: a = 5 sm => P = 20 sm",
+    "text": "Kvadratning hamma tomoni 5 sm: 5 + 5 + 5 + 5 = 20 sm."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Kvadratning qaysi tomonlari teng bo‘ladi?",
+      "options": [
+        "Barcha 4 ta tomoni teng",
+        "Faqat 2 ta tomoni",
+        "Qarama-qarshi tomonlari teng, qolgani har xil",
+        "Tomonlari teng emas"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kvadratning hamma 4 ta tomoni teng bo‘ladi."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchakning qaysi tomonlari teng?",
+      "options": [
+        "Barcha 4 ta tomoni teng",
+        "Qarama-qarshi tomonlari o‘zaro teng",
+        "Hech qaysi tomoni teng emas",
+        "Faqat bitta tomoni teng"
+      ],
+      "correctIndex": 1,
+      "explanation": "To‘g‘ri to‘rtburchakda qarama-qarshi tomonlar teng bo‘ladi."
+    },
+    {
+      "text": "Tomonlari 20 dm va 4 dm bo‘lgan to‘g‘ri to‘rtburchak perimetrini toping:",
+      "options": [
+        "24 dm",
+        "44 dm",
+        "48 dm (20 + 4 + 20 + 4 = 48)",
+        "50 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 + 4 + 20 + 4 = 48 dm."
+    }
+  ],
+  "test": [
+    {
+      "text": "Kvadratning nechta tomoni bor va ular qanday?",
+      "options": [
+        "4 ta tomoni bor va hammasi teng",
+        "3 ta tomoni bor",
+        "4 ta tomoni bor va hammasi har xil",
+        "2 ta tomoni bor"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kvadratning 4 ta tomoni bor va barchasi o‘zaro teng."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchakning qarama-qarshi tomonlari haqida qaysi fikr to‘g‘ri?",
+      "options": [
+        "Qarama-qarshi tomonlari har xil",
+        "Barcha tomonlari har xil",
+        "Qarama-qarshi tomonlari o‘zaro teng",
+        "Uchburchakka o‘xshaydi"
+      ],
+      "correctIndex": 2,
+      "explanation": "To‘g‘ri to‘rtburchakda qarama-qarshi tomonlar tengdir."
+    },
+    {
+      "text": "Tomoni 6 sm bo‘lgan kvadrat perimetrini toping:",
+      "options": [
+        "18 sm",
+        "24 sm (6 + 6 + 6 + 6 = 24)",
+        "20 sm",
+        "36 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 6 + 6 + 6 = 24 sm."
+    },
+    {
+      "text": "Tomonlari 5 sm va 2 sm bo‘lgan to‘g‘ri to‘rtburchak perimetri qancha?",
+      "options": [
+        "10 sm",
+        "12 sm",
+        "7 sm",
+        "14 sm (5 + 2 + 5 + 2 = 14)"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 2 + 5 + 2 = 14 sm."
+    },
+    {
+      "text": "Kvadratning barcha burchaklari qanday burchak hisoblanadi?",
+      "options": [
+        "O‘tkir burchaklar",
+        "To‘g‘ri burchaklar",
+        "O‘tmas burchaklar",
+        "Yoyiq burchaklar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kvadratning barcha 4 ta burchagi to‘g‘ri burchakdir."
+    },
+    {
+      "text": "Qaysi shakl kvadrat: tomonlari 4 sm, 4 sm, 4 sm, 4 sm bo‘lgan shaklmi?",
+      "options": [
+        "Ha, kvadrat (barcha tomonlari teng)",
+        "Yo‘q, uchburchak",
+        "Yo‘q, beshburchak",
+        "Doira"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 ta tomoni teng va to‘g‘ri burchakli shakl kvadratdir."
+    },
+    {
+      "text": "Kvadrat tomoni 12 dm bo‘lsa, uning perimetri qancha?",
+      "options": [
+        "44 dm",
+        "50 dm",
+        "24 dm",
+        "48 dm (12 + 12 + 12 + 12 = 48)"
+      ],
+      "correctIndex": 3,
+      "explanation": "12 + 12 + 12 + 12 = 48 dm."
+    },
+    {
+      "text": "Tomonlari 15 sm va 5 sm bo‘lgan to‘g‘ri to‘rtburchak perimetri nechaga teng?",
+      "options": [
+        "35 sm",
+        "45 sm",
+        "40 sm (15 + 5 + 15 + 5 = 40)",
+        "20 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 + 5 + 15 + 5 = 40 sm = 4 dm."
+    },
+    {
+      "text": "Milliy gilamning bo‘yi 3 m, eni 2 m. Uning perimetrini toping:",
+      "options": [
+        "8 metr",
+        "12 metr",
+        "10 metr (3 + 2 + 3 + 2 = 10)",
+        "5 metr"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 + 2 + 3 + 2 = 10 metr."
+    },
+    {
+      "text": "Kvadrat perimetri 28 sm. Uning bitta tomoni qancha?",
+      "options": [
+        "6 sm",
+        "8 sm",
+        "9 sm",
+        "7 sm (7 + 7 + 7 + 7 = 28)"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 x 4 = 28 sm."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchakning perimetri 20 sm. Uzunligi 7 sm bo‘lsa, eni qancha?",
+      "options": [
+        "3 sm (7 + 3 + 7 + 3 = 20)",
+        "4 sm",
+        "5 sm",
+        "6 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 7 = 14 sm, 20 - 14 = 6 sm, 6 ning yarmi 3 sm."
+    },
+    {
+      "text": "Kvadrat tomoni 10 sm bo‘lsa, perimetri necha detsimetr bo‘ladi?",
+      "options": [
+        "40 dm",
+        "4 dm (40 sm = 4 dm)",
+        "1 dm",
+        "2 dm"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 + 10 + 10 + 10 = 40 sm = 4 dm."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchakning bo‘yi 9 sm, eni undan 4 sm kalta. Eni necha santimetr?",
+      "options": [
+        "4 sm",
+        "6 sm",
+        "13 sm",
+        "5 sm (9 - 4 = 5)"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 - 4 = 5 sm."
+    },
+    {
+      "text": "Har qanday kvadrat to‘g‘ri to‘rtburchak hisoblanadimi?",
+      "options": [
+        "Yo‘q, ular butunlay boshqa shakllar",
+        "Ha, kvadrat — bu barcha tomonlari teng to‘g‘ri to‘rtburchak",
+        "Faqat aylana bilan birga",
+        "Faqat uchburchak bo‘lsa"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kvadrat to‘g‘ri to‘rtburchakning xususiy (barcha tomoni teng) holidir."
+    },
+    {
+      "text": "Kvadratning tomoni 8 sm. To‘g‘ri to‘rtburchakning bo‘yi 10 sm, eni 6 sm. Qaysi shaklning perimetri katta?",
+      "options": [
+        "Kvadratniki katta",
+        "To‘g‘ri to‘rtburchakniki katta",
+        "Ikkalasining perimetri teng (32 sm = 32 sm)",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kvadrat: 8 x 4 = 32 sm. To‘g‘ri to‘rtburchak: 10 + 6 + 10 + 6 = 32 sm. Teng!"
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchak perimetri 34 sm. Eni 7 sm bo‘lsa, uzunligi necha santimetr?",
+      "options": [
+        "10 sm (7 + 10 + 7 + 10 = 34)",
+        "9 sm",
+        "11 sm",
+        "12 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 7 = 14 sm, 34 - 14 = 20 sm, 20 ning yarmi 10 sm."
+    },
+    {
+      "text": "Kvadrat shaklidagi ro‘molchaning tomoni 25 sm. Uning to‘rt tomoniga lenta tikish uchun necha sm lenta kerak?",
+      "options": [
+        "100 sm (25 + 25 + 25 + 25 = 100 sm = 1 metr)",
+        "50 sm",
+        "75 sm",
+        "90 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "25 + 25 + 25 + 25 = 100 sm = 1 metr."
+    },
+    {
+      "text": "Kvadratning perimetri 36 dm. Uning tomoni necha detsimetr?",
+      "options": [
+        "8 dm",
+        "10 dm",
+        "12 dm",
+        "9 dm (9 + 9 + 9 + 9 = 36)"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 x 4 = 36 dm."
+    },
+    {
+      "text": "Mehmonxonadagi to‘g‘ri to‘rtburchak zalning uzunligi 16 metr, eni 8 metr. Zal perimetri bo‘ylab plintus qo‘yish uchun necha metr plintus kerak?",
+      "options": [
+        "44 metr",
+        "48 metr (16 + 8 + 16 + 8 = 48)",
+        "50 metr",
+        "24 metr"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 + 8 = 24 metr, 24 + 24 = 48 metr."
+    },
+    {
+      "text": "Bog‘bon kvadrat shaklidagi gulzorni to‘sib chiqdi. Bitta tomoni 11 metr bo‘lsa, jami to‘siq uzunligi necha metr?",
+      "options": [
+        "40 metr",
+        "42 metr",
+        "44 metr (11 + 11 + 11 + 11 = 44)",
+        "48 metr"
+      ],
+      "correctIndex": 2,
+      "explanation": "11 x 4 = 44 metr."
+    }
+  ]
+}

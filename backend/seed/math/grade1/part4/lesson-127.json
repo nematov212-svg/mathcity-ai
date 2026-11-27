@@ -1,0 +1,279 @@
+{
+  "bookNumber": 127,
+  "isReview": false,
+  "title": "Simmetriya o'qlariga ega bo'lgan yassi shakllar",
+  "emoji": "🔶",
+  "shortDesc": "Kvadrat, to'g'ri to'rtburchak va uchburchaklarning simmetriya o'qlari soni",
+  "intro": "Turli yassi shakllar turlicha sondagi simmetriya o'qlariga ega. Kvadratda 4 ta, to'g'ri to'rtburchakda 2 ta, teng tomonli uchburchakda 3 ta simmetriya o'qi bor. Doirada esa ularning soni cheksiz ko'p!",
+  "keyPoints": [
+    "Kvadratda 4 ta simmetriya o'qi bor (2 ta tomonlar o'rtasidan, 2 ta burchaklardan).",
+    "To'g'ri to'rtburchakda 2 ta simmetriya o'qi bor (qarama-qarshi tomonlar o'rtasidan).",
+    "Teng tomonli uchburchakda 3 ta simmetriya o'qi bor.",
+    "Teng yonli uchburchakda 1 ta simmetriya o'qi bor.",
+    "Doirada cheksiz ko'p simmetriya o'qlari mavjud."
+  ],
+  "miniExample": {
+    "emojis": "🟦 (4) | 🟨 (2)",
+    "text": "Kvadratni 4 xil usulda buklab teng mos keltirish mumkin (4 ta o'q). To'g'ri to'rtburchakni esa faqat 2 xil usulda (2 ta o'q)."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Kvadratda nechta simmetriya o'qi bor?",
+      "options": [
+        "4 ta",
+        "2 ta",
+        "3 ta",
+        "1 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kvadratda 4 ta simmetriya o'qi bor: 2 ta to'g'ri va 2 ta diagonal."
+    },
+    {
+      "text": "To'g'ri to'rtburchakda nechta simmetriya o'qi bor?",
+      "options": [
+        "4 ta",
+        "2 ta",
+        "3 ta",
+        "1 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "To'g'ri to'rtburchak qarama-qarshi tomonlari o'rtasidan o'tuvchi 2 ta simmetriya o'qiga ega."
+    },
+    {
+      "text": "Doirada nechta simmetriya o'qi bor?",
+      "options": [
+        "Faqat 1 ta",
+        "Faqat 4 ta",
+        "Cheksiz ko'p",
+        "10 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Doira markazidan o'tuvchi har qanday to'g'ri chiziq simmetriya o'qi bo'ladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Kvadratning simmetriya o'qlari soni nechta?",
+      "options": [
+        "4 ta",
+        "2 ta",
+        "3 ta",
+        "5 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kvadrat 4 ta simmetriya o'qiga ega."
+    },
+    {
+      "text": "To'g'ri to'rtburchakning nechta simmetriya o'qi bor?",
+      "options": [
+        "4 ta",
+        "1 ta",
+        "2 ta",
+        "3 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "To'g'ri to'rtburchakda faqat 2 ta simmetriya o'qi bor."
+    },
+    {
+      "text": "To'g'ri to'rtburchakning diagonallari simmetriya o'qi bo'la oladimi?",
+      "options": [
+        "Ha, albatta bo'ladi",
+        "Yo'q, diagonali bo'yicha buklansa mos tushmaydi",
+        "Faqat kichik to'rtburchakda bo'ladi",
+        "Ha, 4 ta bo'ladi"
+      ],
+      "correctIndex": 1,
+      "explanation": "To'g'ri to'rtburchak diagonal bo'yicha buklanganda uchlari chetga chiqib qoladi, mos tushmaydi."
+    },
+    {
+      "text": "Kvadratning diagonallari simmetriya o'qi bo'la oladimi?",
+      "options": [
+        "Yo'q, bo'la olmaydi",
+        "Faqat bittasi bo'ladi",
+        "Faqat eni bo'ladi",
+        "Ha, kvadrat diagonallari simmetriya o'qidir"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kvadrat barcha tomonlari teng bo'lgani uchun diagonali bo'yicha to'liq mos tushadi."
+    },
+    {
+      "text": "Teng tomonli uchburchakda nechta simmetriya o'qi bor?",
+      "options": [
+        "1 ta",
+        "3 ta",
+        "2 ta",
+        "4 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Teng tomonli uchburchakning 3 ta uchidan qarama-qarshi tomonga tushirilgan 3 ta simmetriya o'qi bor."
+    },
+    {
+      "text": "Teng yonli (ikki tomoni teng) uchburchakda nechta simmetriya o'qi bor?",
+      "options": [
+        "1 ta",
+        "2 ta",
+        "3 ta",
+        "0 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Teng yonli uchburchakda faqat tepa burchagidan tushirilgan 1 ta simmetriya o'qi bo'ladi."
+    },
+    {
+      "text": "Turli tomonli ixtiyoriy uchburchakda nechta simmetriya o'qi bor?",
+      "options": [
+        "1 ta",
+        "2 ta",
+        "3 ta",
+        "0 ta (simmetriya o'qi yo'q)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Tomonlari turlicha bo'lgan uchburchakda hech qanday simmetriya o'qi yo'q."
+    },
+    {
+      "text": "Doiraning barcha simmetriya o'qlari qayerdan o'tadi?",
+      "options": [
+        "Doiraning chetidan",
+        "Doiradan tashqaridan",
+        "Doiraning markazidan",
+        "Faqat yuqorisidan"
+      ],
+      "correctIndex": 2,
+      "explanation": "Doiraning barcha simmetriya o'qlari uning markazidan o'tuvchi to'g'ri chiziqlardir."
+    },
+    {
+      "text": "Doirada simmetriya o'qlari soni nechta?",
+      "options": [
+        "100 ta",
+        "4 ta",
+        "Cheksiz ko'p",
+        "360 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Doira markazidan cheksiz ko'p to'g'ri chiziq o'tkazish mumkin, demak simmetriya o'qlari cheksiz ko'p."
+    },
+    {
+      "text": "Qaysi shaklda simmetriya o'qlari ko'proq: kvadratdami yoki to'g'ri to'rtburchakdami?",
+      "options": [
+        "To'g'ri to'rtburchakda",
+        "Ikkalasida teng",
+        "Barchasida 1 ta",
+        "Kvadratda (4 > 2)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kvadratda 4 ta, to'g'ri to'rtburchakda esa 2 ta simmetriya o'qi bor."
+    },
+    {
+      "text": "Romb (barcha tomonlari teng) shaklida nechta simmetriya o'qi bor?",
+      "options": [
+        "2 ta (diagonallari)",
+        "4 ta",
+        "1 ta",
+        "3 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Romb o'zining ikkita diagonali bo'ylab simmetrikdir (2 ta o'q)."
+    },
+    {
+      "text": "Kvadratni to'g'ri to'rtburchakka aylantirsak, simmetriya o'qlari nima bo'ladi?",
+      "options": [
+        "Ko'payadi",
+        "Kamayadi (4 tadan 2 taga)",
+        "O'zgarmaydi",
+        "Nolga aylanadi"
+      ],
+      "correctIndex": 1,
+      "explanation": "To'g'ri to'rtburchakda diagonallar simmetriya o'qi bo'lmay qoladi, shuning uchun 2 taga kamayadi."
+    },
+    {
+      "text": "Besh qirrali muntazam yulduzchada nechta simmetriya o'qi bor?",
+      "options": [
+        "3 ta",
+        "4 ta",
+        "10 ta",
+        "5 ta"
+      ],
+      "correctIndex": 3,
+      "explanation": "Besh qirrali muntazam yulduzchaning har bir uchidan 1 tadan, jami 5 ta simmetriya o'qi o'tadi."
+    },
+    {
+      "text": "Muntazam oltiburchakda nechta simmetriya o'qi bor?",
+      "options": [
+        "4 ta",
+        "6 ta",
+        "5 ta",
+        "8 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Muntazam oltiburchakda 6 ta simmetriya o'qi mavjud."
+    },
+    {
+      "text": "Doiraning yarmi bo'lgan yarim doirada nechta simmetriya o'qi bor?",
+      "options": [
+        "2 ta",
+        "Cheksiz ko'p",
+        "1 ta",
+        "0 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Yarim doirani faqat o'rtasidan tik chiziq bo'yicha buklab tenglashtirish mumkin (1 ta o'q)."
+    },
+    {
+      "text": "Kvadratning simmetriya o'qlari soni bilan uchburchakning (teng tomonli) simmetriya o'qlari soni ayirmasi nechaga teng?",
+      "options": [
+        "1 ga (4 - 3 = 1)",
+        "2 ga",
+        "0 ga",
+        "3 ga"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kvadratda 4 ta, teng tomonli uchburchakda 3 ta: 4 - 3 = 1."
+    },
+    {
+      "text": "Quyidagi shakllardan qaysi biri eng ko'p simmetriya o'qiga ega?",
+      "options": [
+        "Doira",
+        "Kvadrat",
+        "Uchburchak",
+        "To'g'ri to'rtburchak"
+      ],
+      "correctIndex": 0,
+      "explanation": "Doira cheksiz ko'p simmetriya o'qiga ega bo'lib, eng ko'p o'qqa ega shakldir."
+    },
+    {
+      "text": "Burchakning simmetriya o'qi qayerdan o'tadi?",
+      "options": [
+        "Burchak tashqarisidan",
+        "Faqat bir tomoni bo'ylab",
+        "Burchak uchidan narida",
+        "Burchakni teng ikkiga bo'luvchi nurlan"
+      ],
+      "correctIndex": 3,
+      "explanation": "Burchak uchidan chiquvchi va uni teng ikkiga bo'luvchi nur (bissektrisa) uning simmetriya o'qidir."
+    },
+    {
+      "text": "Kesmaning simmetriya o'qi qanday o'tadi?",
+      "options": [
+        "Kesma bo'ylab o'tadi",
+        "Kesma o'rtasidan perpendikulyar (tik) o'tadi",
+        "Kesma uchidan o'tadi",
+        "Kesmadan chetda"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kesmaning o'rtasidan tik o'tuvchi to'g'ri chiziq kesmani teng ikkiga buklash imkonini beradi."
+    },
+    {
+      "text": "Simmetriya o'qlariga ega bo'lgan shakllar qanday ko'rinadi?",
+      "options": [
+        "Qiyshiq va xunuk",
+        "Faqat kichkina",
+        "Chiroyli, tartibli va mutanosib",
+        "Ko'rinmas"
+      ],
+      "correctIndex": 2,
+      "explanation": "Simmetrik shakllar doimo tartibli, mutanosib va chiroyli ko'rinadi."
+    }
+  ]
+}

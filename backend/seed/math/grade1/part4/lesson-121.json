@@ -1,0 +1,277 @@
+{
+  "bookNumber": 121,
+  "isReview": false,
+  "title": "Burchak",
+  "emoji": "📐",
+  "shortDesc": "Burchak turlari: to‘g‘ri, o‘tkir va o‘tmas burchaklar hamda nur tushunchasi.",
+  "intro": "Bir nuqtadan chiquvchi ikkita nur burchak hosil qiladi: to‘g‘ri, o‘tkir va o‘tmas burchaklar mavjud.",
+  "keyPoints": [
+    "Boshi bor, lekin oxiri yo‘q to‘g‘ri chiziq nur deb ataladi.",
+    "To‘g‘ri burchak — kvadrat yoki kitob burchagiga o‘xshaydi.",
+    "O‘tkir burchak to‘g‘ri burchakdan kichik, o‘tmas burchak esa to‘g‘ri burchakdan katta bo‘ladi."
+  ],
+  "miniExample": {
+    "emojis": "📐 To‘g‘ri burchak |_ , O‘tkir burchak /_ , O‘tmas burchak \\_",
+    "text": "To‘g‘ri burchak — chizg‘ich burchagi. Undan kichigi o‘tkir, kattasi o‘tmas burchakdir."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "To‘g‘ri burchakdan kichik bo‘lgan burchak qanday ataladi?",
+      "options": [
+        "O‘tkir burchak",
+        "O‘tmas burchak",
+        "To‘g‘ri burchak",
+        "Yoyiq burchak"
+      ],
+      "correctIndex": 0,
+      "explanation": "To‘g‘ri burchakdan kichik burchak o‘tkir burchak deyiladi."
+    },
+    {
+      "text": "Boshi bor, lekin oxiri yo‘q chiziq nima deb ataladi?",
+      "options": [
+        "Kesma",
+        "Nur",
+        "Siniq chiziq",
+        "Aylana"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bir nuqtadan boshlanib cheksiz davom etuvchi to‘g‘ri chiziq nur deyiladi."
+    },
+    {
+      "text": "Kitob yoki daftarning burchagi qanday burchak hisoblanadi?",
+      "options": [
+        "O‘tkir burchak",
+        "O‘tmas burchak",
+        "To‘g‘ri burchak",
+        "Dumaloq burchak"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kitob va daftar burchaklari to‘g‘ri burchakdir."
+    }
+  ],
+  "test": [
+    {
+      "text": "To‘g‘ri chiziqning boshi bor, lekin oxiri yo‘q qismi nima deyiladi?",
+      "options": [
+        "Nur",
+        "Kesma",
+        "Siniq chiziq",
+        "Nuqta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Boshi bor, oxiri yo‘q chiziq nur deyiladi."
+    },
+    {
+      "text": "Burchak qanday hosil bo‘ladi?",
+      "options": [
+        "Ikkita parallel chiziqdan",
+        "Bitta doiradan",
+        "Bitta nuqtadan chiquvchi ikkita nurdan",
+        "Uchta nuqtadan"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bitta umumiy nuqtadan chiquvchi ikkita nur burchak hosil qiladi."
+    },
+    {
+      "text": "To‘g‘ri burchakdan katta bo‘lgan burchak qanday ataladi?",
+      "options": [
+        "O‘tkir burchak",
+        "O‘tmas burchak",
+        "To‘g‘ri burchak",
+        "Kichik burchak"
+      ],
+      "correctIndex": 1,
+      "explanation": "To‘g‘ri burchakdan kattasi o‘tmas burchak deyiladi."
+    },
+    {
+      "text": "To‘g‘ri burchakdan kichik bo‘lgan burchak qaysi?",
+      "options": [
+        "O‘tmas burchak",
+        "Katta burchak",
+        "Yassi burchak",
+        "O‘tkir burchak"
+      ],
+      "correctIndex": 3,
+      "explanation": "To‘g‘ri burchakdan kichigi o‘tkir burchak deyiladi."
+    },
+    {
+      "text": "Kvadratda nechta to‘g‘ri burchak bor?",
+      "options": [
+        "3 ta",
+        "4 ta to‘g‘ri burchak",
+        "2 ta",
+        "5 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kvadratning barcha 4 ta burchagi to‘g‘ri burchakdir."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchakda nechta to‘g‘ri burchak bor?",
+      "options": [
+        "4 ta to‘g‘ri burchak",
+        "2 ta",
+        "3 ta",
+        "5 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "To‘g‘ri to‘rtburchakda 4 ta to‘g‘ri burchak bor."
+    },
+    {
+      "text": "Soat millari roppa-rosa soat 3:00 ni ko‘rsatganda ular orasida qanday burchak hosil bo‘ladi?",
+      "options": [
+        "O‘tkir burchak",
+        "O‘tmas burchak",
+        "Burchak hosil bo‘lmaydi",
+        "To‘g‘ri burchak"
+      ],
+      "correctIndex": 3,
+      "explanation": "Soat 3:00 da soat va minut millari to‘g‘ri burchak (90 gradus) hosil qiladi."
+    },
+    {
+      "text": "Soat millari 2:00 ni ko‘rsatganda ular orasida qanday burchak bo‘ladi?",
+      "options": [
+        "To‘g‘ri burchak",
+        "O‘tmas burchak",
+        "O‘tkir burchak (to‘g‘ri burchakdan kichik)",
+        "Yoyiq burchak"
+      ],
+      "correctIndex": 2,
+      "explanation": "2:00 da millar orasi 3:00 dan kichik, demak o‘tkir burchak."
+    },
+    {
+      "text": "Soat millari 4:00 ni ko‘rsatganda ular orasida qanday burchak bo‘ladi?",
+      "options": [
+        "To‘g‘ri burchak",
+        "O‘tkir burchak",
+        "O‘tmas burchak (to‘g‘ri burchakdan katta)",
+        "Yassi burchak"
+      ],
+      "correctIndex": 2,
+      "explanation": "4:00 da millar orasi 3:00 dan katta, demak o‘tmas burchak."
+    },
+    {
+      "text": "Qaychi birozgina ochilganda uning tig‘lari qanday burchak hosil qiladi?",
+      "options": [
+        "O‘tmas burchak",
+        "Dumaloq burchak",
+        "To‘g‘ri burchak",
+        "O‘tkir burchak"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kichik ochilgan qaychi o‘tkir burchak hosil qiladi."
+    },
+    {
+      "text": "Uchburchakda eng ko‘pi bilan nechta to‘g‘ri burchak bo‘lishi mumkin?",
+      "options": [
+        "Faqat 1 ta to‘g‘ri burchak",
+        "2 ta",
+        "3 ta",
+        "4 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uchburchakda faqat 1 ta to‘g‘ri burchak bo‘lishi mumkin."
+    },
+    {
+      "text": "Burchakning uchidan chiquvchi nurlar nima deb ataladi?",
+      "options": [
+        "Burchakning markazi",
+        "Burchakning tomonlari",
+        "Perimetr",
+        "Siniq chiziq"
+      ],
+      "correctIndex": 1,
+      "explanation": "Burchakni hosil qiluvchi nurlar uning tomonlari deyiladi."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchak shaklidagi partada nechta burchak bor?",
+      "options": [
+        "3 ta",
+        "5 ta",
+        "6 ta",
+        "4 ta burchak"
+      ],
+      "correctIndex": 3,
+      "explanation": "To‘rtburchakda 4 ta burchak bor."
+    },
+    {
+      "text": "Ochiq eshik devor bilan qanday burchak hosil qilishi mumkin?",
+      "options": [
+        "Faqat doira",
+        "O‘tkir, to‘g‘ri yoki o‘tmas burchak",
+        "Faqat kesma",
+        "Burchak hosil qilmaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Eshikning ochilish darajasiga qarab o‘tkir, to‘g‘ri yoki o‘tmas burchak bo‘ladi."
+    },
+    {
+      "text": "To‘g‘ri burchakli uchburchakda 1 ta to‘g‘ri burchak va 2 ta ... burchak bo‘ladi:",
+      "options": [
+        "O‘tmas burchak",
+        "To‘g‘ri burchak",
+        "O‘tkir burchak",
+        "Yoyiq burchak"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qolgan 2 ta burchak har doim o‘tkir burchak bo‘ladi."
+    },
+    {
+      "text": "Romb shaklida qanday burchaklar bo‘ladi?",
+      "options": [
+        "2 ta o‘tkir va 2 ta o‘tmas burchak",
+        "Barchasi to‘g‘ri burchak",
+        "Faqat o‘tkir burchaklar",
+        "Burchaklari yo‘q"
+      ],
+      "correctIndex": 0,
+      "explanation": "Oddiy rombda 2 ta o‘tkir va 2 ta o‘tmas burchak bo‘ladi."
+    },
+    {
+      "text": "Quyidagi ifodani hisoblang va natijasi burchaklar soni bilan bog‘liq bo‘lsin: 15 - (7 + 4)",
+      "options": [
+        "4 (to‘rtburchak burchaklari soni)",
+        "3 (uchburchak)",
+        "5 (beshburchak)",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 4 = 11, 15 - 11 = 4 ta burchak."
+    },
+    {
+      "text": "Uchburchakda 1 ta o‘tmas burchak bo‘lsa, qolgan 2 ta burchak qanday bo‘ladi?",
+      "options": [
+        "To‘g‘ri burchaklar",
+        "O‘tmas burchaklar",
+        "Burchak bo‘lmaydi",
+        "Ikkalasi ham o‘tkir burchak"
+      ],
+      "correctIndex": 3,
+      "explanation": "Uchburchakda faqat 1 ta o‘tmas burchak bo‘lishi mumkin, qolgani o‘tkir bo‘ladi."
+    },
+    {
+      "text": "Sinfdagi 5 ta to‘rtburchak va 4 ta uchburchak shakllarida jami nechta to‘g‘ri burchak bo‘lishi mumkin, agar har bir uchburchak to‘g‘ri burchakli bo‘lsa?",
+      "options": [
+        "20 ta",
+        "24 ta (5 x 4 = 20; 4 x 1 = 4; 20 + 4 = 24)",
+        "22 ta",
+        "26 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 ta to‘rtburchakda: 5 x 4 = 20 ta. 4 ta uchburchakda: 4 x 1 = 4 ta. Jami: 20 + 4 = 24 ta."
+    },
+    {
+      "text": "Arxitektor Samarqand darvozasining peshtoq chizmasida 2 ta to‘g‘ri burchak, 4 ta o‘tkir burchak va 2 ta o‘tmas burchak chizdi. Chizmada jami nechta burchak bor?",
+      "options": [
+        "6 ta",
+        "10 ta",
+        "8 ta burchak (2 + 4 + 2 = 8)",
+        "7 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 + 4 + 2 = 8 ta burchak."
+    }
+  ]
+}

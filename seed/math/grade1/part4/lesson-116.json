@@ -1,0 +1,277 @@
+{
+  "bookNumber": 116,
+  "isReview": false,
+  "title": "Ko‘pburchak",
+  "emoji": "🔷",
+  "shortDesc": "Yopiq siniq chiziq bilan chegaralangan ko‘pburchaklar va ularning turlari.",
+  "intro": "Hamma tomondan yopiq siniq chiziq bilan chegaralangan tekis shakl ko‘pburchak deyiladi.",
+  "keyPoints": [
+    "Ko‘pburchak nomi uning burchaklari (uchlari) va tomonlari soniga bog‘liq.",
+    "3 ta tomoni bo‘lsa — uchburchak 🔺, 4 ta tomoni bo‘lsa — to‘rtburchak 🟦, 5 ta tomoni bo‘lsa — beshburchak ⬟.",
+    "Ko‘pburchak chegarasi har doim yopiq siniq chiziqdan iborat bo‘ladi."
+  ],
+  "miniExample": {
+    "emojis": "🔺 Uchburchak: 3 ta tomon, 3 ta burchak",
+    "text": "Uchburchakda 3 ta tomon va 3 ta burchak bor. To‘rtburchakda 4 ta tomon va 4 ta burchak bor."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "3 ta tomoni va 3 ta burchagi bo‘lgan ko‘pburchak qanday ataladi?",
+      "options": [
+        "Uchburchak 🔺",
+        "To‘rtburchak 🟦",
+        "Beshburchak",
+        "Doira ⭕"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 ta tomon va 3 ta uchga ega shakl uchburchak deyiladi."
+    },
+    {
+      "text": "Ko‘pburchak chegarasi qanday chiziqdan iborat?",
+      "options": [
+        "Ochiq siniq chiziqdan",
+        "Yopiq siniq chiziqdan",
+        "Egri chiziqdan",
+        "Nurdan"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ko‘pburchak yopiq siniq chiziq bilan chegaralanadi."
+    },
+    {
+      "text": "Beshburchakning nechta tomoni va nechta uchi bor?",
+      "options": [
+        "4 ta tomoni va 4 ta uchi",
+        "6 ta tomoni va 6 ta uchi",
+        "5 ta tomoni va 5 ta uchi",
+        "3 ta tomoni va 3 ta uchi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Beshburchakda 5 ta tomon va 5 ta uch (burchak) bo‘ladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Ko‘pburchak nima?",
+      "options": [
+        "Yopiq siniq chiziq bilan chegaralangan shakl",
+        "Istalgan to‘g‘ri chiziq",
+        "Aylana shakli",
+        "Ochiq siniq chiziq"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ko‘pburchak yopiq siniq chiziq bilan chegaralangan tekis shakldir."
+    },
+    {
+      "text": "To‘rtburchakning nechta tomoni bor?",
+      "options": [
+        "3 ta tomoni",
+        "5 ta tomoni",
+        "4 ta tomoni",
+        "6 ta tomoni"
+      ],
+      "correctIndex": 2,
+      "explanation": "To‘rtburchakda 4 ta tomon bor."
+    },
+    {
+      "text": "Uchburchakning nechta uchi bor?",
+      "options": [
+        "2 ta uchi",
+        "3 ta uchi",
+        "4 ta uchi",
+        "5 ta uchi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Uchburchakda 3 ta uch bor."
+    },
+    {
+      "text": "Qaysi shakl ko‘pburchak hisoblanmaydi?",
+      "options": [
+        "Uchburchak 🔺",
+        "Kvadrat 🟦",
+        "Oltiburchak",
+        "Doira ⭕ (aylana)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Doira to‘g‘ri kesmalardan (siniq chiziqdan) iborat emas, shuning uchun ko‘pburchak emas."
+    },
+    {
+      "text": "6 ta tomoni va 6 ta burchagi bo‘lgan shakl qanday ataladi?",
+      "options": [
+        "Beshburchak",
+        "Oltiburchak",
+        "Yettiburchak",
+        "To‘rtburchak"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 ta burchakka ega shakl oltiburchak deyiladi."
+    },
+    {
+      "text": "Ko‘pburchakning uchi deb nimaga aytiladi?",
+      "options": [
+        "Ikkita tomon tutashgan nuqtaga",
+        "Shaklning o‘rtasiga",
+        "Faqat pastki tomoniga",
+        "Aylananing markaziga"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tomonlar tutashgan nuqtalar ko‘pburchakning uchlari deyiladi."
+    },
+    {
+      "text": "Uchburchak va to‘rtburchakning jami tomonlari soni nechta?",
+      "options": [
+        "6 ta",
+        "8 ta",
+        "12 ta",
+        "7 ta (3 + 4 = 7)"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 + 4 = 7 ta tomon."
+    },
+    {
+      "text": "Quyidagi shakllardan ortiqchasini toping: Uchburchak, To‘rtburchak, Doira, Beshburchak",
+      "options": [
+        "Uchburchak",
+        "To‘rtburchak",
+        "Doira (u ko‘pburchak emas)",
+        "Beshburchak"
+      ],
+      "correctIndex": 2,
+      "explanation": "Doira burchak va to‘g‘ri tomonlarga ega emas."
+    },
+    {
+      "text": "Ikkita uchburchakni yonma-yon birlashtirsak, qanday ko‘pburchak hosil bo‘lishi mumkin?",
+      "options": [
+        "Aylana ⭕",
+        "Nuqta",
+        "To‘rtburchak 🟦",
+        "To‘g‘ri chiziq"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ikkita uchburchak birlashsa 4 ta tomonli to‘rtburchak hosil bo‘lishi mumkin."
+    },
+    {
+      "text": "Yettiburchakning nechta tomoni va burchagi bor?",
+      "options": [
+        "6 ta tomoni va 7 ta burchagi",
+        "8 ta tomoni va 8 ta burchagi",
+        "5 ta tomoni",
+        "7 ta tomoni va 7 ta burchagi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Yettiburchakda 7 ta tomon va 7 ta burchak bo‘ladi."
+    },
+    {
+      "text": "3 ta to‘rtburchakning jami nechta tomoni bor?",
+      "options": [
+        "12 ta (4 + 4 + 4 = 12)",
+        "10 ta",
+        "14 ta",
+        "16 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 4 + 4 = 12 ta tomon."
+    },
+    {
+      "text": "2 ta beshburchakning jami nechta uchi bor?",
+      "options": [
+        "8 ta",
+        "10 ta (5 + 5 = 10)",
+        "12 ta",
+        "15 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 5 = 10 ta uch."
+    },
+    {
+      "text": "Uchburchakning bir tomoni 5 sm, ikkinchi tomoni 4 sm, uchinchi tomoni 3 sm. Bu qanday shakl?",
+      "options": [
+        "Kvadrat",
+        "Doira",
+        "Beshburchak",
+        "Ko‘pburchak (uchburchak)"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 ta tomoni bo‘lgan shakl uchburchakdir."
+    },
+    {
+      "text": "Tangram o‘yinidagi 7 ta shaklning nechtasi uchburchak?",
+      "options": [
+        "2 tasi",
+        "5 tasi uchburchak",
+        "3 tasi",
+        "7 tasi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tangramda 5 ta uchburchak, 1 ta kvadrat va 1 ta parallelogramm bo‘ladi."
+    },
+    {
+      "text": "To‘rtburchakning bitta burchagi to‘g‘ri chiziq bilan kesib tashlansa, qanday ko‘pburchak hosil bo‘ladi?",
+      "options": [
+        "Uchburchak",
+        "Oltiburchak",
+        "Beshburchak ⬟ (yangi burchak paydo bo‘ladi)",
+        "To‘rtburchak"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bitta burchak kesilganda 2 ta yangi burchak paydo bo‘lib, jami 5 ta burchak hosil bo‘ladi."
+    },
+    {
+      "text": "Uchburchakning bitta burchagi kesib tashlansa, qanday shakl hosil bo‘ladi?",
+      "options": [
+        "To‘rtburchak 🟦",
+        "Uchburchak",
+        "Ikki burchak",
+        "Doira"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 - 1 + 2 = 4 ta burchakli to‘rtburchak hosil bo‘ladi."
+    },
+    {
+      "text": "Sinf doskasida 4 ta uchburchak va 2 ta to‘rtburchak chizilgan. Jami burchaklar soni nechta?",
+      "options": [
+        "20 ta (4 x 3 = 12; 2 x 4 = 8; 12 + 8 = 20)",
+        "18 ta",
+        "22 ta",
+        "24 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + 8 = 20 ta burchak."
+    },
+    {
+      "text": "Ko‘pburchakning tomonlari soni har doim nimaning soniga teng?",
+      "options": [
+        "Bo‘g‘inlar ayirmasiga",
+        "Har doim 4 ga",
+        "Nolga",
+        "Uchlari (burchaklari) soniga"
+      ],
+      "correctIndex": 3,
+      "explanation": "Istalgan ko‘pburchakda tomonlar soni burchaklar (uchlar) soniga teng bo‘ladi."
+    },
+    {
+      "text": "Jasur gugurt cho‘plaridan 2 ta alohida kvadrat va 3 ta alohida uchburchak yasadi. U jami nechta gugurt cho‘pini ishlatgan?",
+      "options": [
+        "15 ta",
+        "17 ta (Kvadratlar: 4 + 4 = 8; Uchburchaklar: 3 + 3 + 3 = 9; 8 + 9 = 17)",
+        "16 ta",
+        "18 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 ta kvadratga: 2 x 4 = 8 ta. 3 ta uchburchakka: 3 x 3 = 9 ta. Jami: 8 + 9 = 17 ta cho‘p."
+    },
+    {
+      "text": "Alisher qog‘ozdan 3 ta to‘rtburchak va 4 ta beshburchak qirqib oldi. Bu shakllarning jami uchlari soni nechta?",
+      "options": [
+        "30 ta",
+        "34 ta",
+        "32 ta (3 x 4 = 12; 4 x 5 = 20; 12 + 20 = 32)",
+        "28 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 x 4 = 12, 4 x 5 = 20. Jami: 12 + 20 = 32 ta uch."
+    }
+  ]
+}
