@@ -1,0 +1,277 @@
+{
+  "bookNumber": 7,
+  "isReview": false,
+  "title": "Butunni topishga doir masalalar (2)",
+  "emoji": "🧹",
+  "shortDesc": "Xonalar bo‘yicha va qulay usulda qo‘shish orqali butunni topish.",
+  "intro": "Sonlarni xonalariga ajratib: o‘nliklarni o‘nliklarga, birliklarni birliklarga qo‘shish butunni tez topish imkonini beradi.",
+  "keyPoints": [
+    "Xonalar bo‘yicha qo‘shish: 3 o‘nlik 4 birlik + 2 o‘nlik 1 birlik = 5 o‘nlik 5 birlik (55).",
+    "Qulay usulda qo‘shish: yaxlit o‘nliklarni alohida qo‘shib olinadi.",
+    "Shartdagi qismlarni to‘ldirib, so‘ng butun topiladi."
+  ],
+  "miniExample": {
+    "emojis": "🧹 22 xona + 36 xona = 58 xona tozalash",
+    "text": "Tozalovchi robot 22 ta va 36 ta xonani tozaladi. Qulay qo‘shish: 20 + 30 = 50, 2 + 6 = 8, jami 58 ta."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "3 o‘nlik 4 birlik va 2 o‘nlik 1 birlik yig‘indisi nechaga teng?",
+      "options": [
+        "55 (5 o‘nlik 5 birlik)",
+        "54",
+        "45",
+        "65"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 + 20 = 50, 4 + 1 = 5. Jami: 55."
+    },
+    {
+      "text": "22 + 36 yig‘indisini qulay usulda hisoblang:",
+      "options": [
+        "56",
+        "58 (20 + 30 = 50, 2 + 6 = 8)",
+        "60",
+        "48"
+      ],
+      "correctIndex": 1,
+      "explanation": "O‘nliklar 50, birliklar 8, jami 58."
+    },
+    {
+      "text": "Maktab binosida 1-qavatda 24 ta, 2-qavatda 25 ta xona bor. Binoda jami nechta xona bor?",
+      "options": [
+        "48 ta",
+        "50 ta",
+        "49 ta (24 + 25 = 49)",
+        "39 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "24 + 25 = 49 ta xona."
+    }
+  ],
+  "test": [
+    {
+      "text": "4 o‘nlik 2 birlik va 3 o‘nlik 5 birlik yig‘indisi necha bo‘ladi?",
+      "options": [
+        "77 (7 o‘nlik 7 birlik)",
+        "75",
+        "87",
+        "67"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 + 30 = 70, 2 + 5 = 7. Natija: 77."
+    },
+    {
+      "text": "Qulay hisoblash usuli: 31 + 45 = ?",
+      "options": [
+        "75",
+        "86",
+        "76 (30 + 40 = 70, 1 + 5 = 6)",
+        "66"
+      ],
+      "correctIndex": 2,
+      "explanation": "70 + 6 = 76."
+    },
+    {
+      "text": "Bir xaltada 23 ta, ikkinchi xaltada 34 ta yong‘oq bor. Ikkala xaltada jami nechta yong‘oq bor?",
+      "options": [
+        "55 ta",
+        "57 ta (23 + 34 = 57)",
+        "59 ta",
+        "11 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "23 + 34 = 57 ta yong‘oq."
+    },
+    {
+      "text": "52 + 16 ifodaning qiymati nechaga teng?",
+      "options": [
+        "66",
+        "70",
+        "58",
+        "68"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 + 10 = 60, 2 + 6 = 8. Natija: 68."
+    },
+    {
+      "text": "«1 o‘nlik 8 birlik + 2 o‘nlik 1 birlik = ?»",
+      "options": [
+        "29",
+        "39 (3 o‘nlik 9 birlik)",
+        "49",
+        "38"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 + 20 = 30, 8 + 1 = 9. Jami 39."
+    },
+    {
+      "text": "Sinfdagi kitob javonida 41 ta ertak va 27 ta she’riy kitob bor. Javonda jami nechta kitob bor?",
+      "options": [
+        "68 ta (41 + 27 = 68)",
+        "67 ta",
+        "69 ta",
+        "14 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "41 + 27 = 68 ta kitob."
+    },
+    {
+      "text": "22 + 36 misolini yechishda o‘nliklar yig‘indisi nechaga teng bo‘ladi?",
+      "options": [
+        "40",
+        "60",
+        "8",
+        "50 (20 + 30 = 50)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2 ta o‘nlik va 3 ta o‘nlik: 20 + 30 = 50."
+    },
+    {
+      "text": "Robot-tozalagich 1-binoda 34 xona, 2-binoda 44 xonani tozaladi. Robot jami nechta xona tozalagan?",
+      "options": [
+        "76 ta",
+        "80 ta",
+        "78 ta (34 + 44 = 78)",
+        "10 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "34 + 44 = 78 ta xona."
+    },
+    {
+      "text": "Qaysi ifoda 6 o‘nlik 8 birlikni ifodalaydi?",
+      "options": [
+        "40 + 20",
+        "50 + 15",
+        "45 + 23 (chunki 45 + 23 = 68)",
+        "30 + 30"
+      ],
+      "correctIndex": 2,
+      "explanation": "45 + 23 = 68 = 6 o‘nlik 8 birlik."
+    },
+    {
+      "text": "O‘quvchilar bog‘ga 33 tup qayrag‘och va 25 tup terak ekishdi. Bog‘ga jami nechta daraxt ekildi?",
+      "options": [
+        "57 tup",
+        "60 tup",
+        "8 tup",
+        "58 tup (33 + 25 = 58)"
+      ],
+      "correctIndex": 3,
+      "explanation": "33 + 25 = 58 tup ko‘chat."
+    },
+    {
+      "text": "61 + 27 yig‘indisini hisoblang:",
+      "options": [
+        "88",
+        "87",
+        "89",
+        "78"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 + 20 = 80, 1 + 7 = 8. Natija: 88."
+    },
+    {
+      "text": "Dukonda 1-kuni 26 qop un, 2-kuni 32 qop un sotildi. Ikki kunda jami necha qop un sotilgan?",
+      "options": [
+        "56 qop",
+        "58 qop (26 + 32 = 58)",
+        "60 qop",
+        "6 qop"
+      ],
+      "correctIndex": 1,
+      "explanation": "26 + 32 = 58 qop un."
+    },
+    {
+      "text": "Bo‘sh katakni to‘ldiring: 43 + □ = 75",
+      "options": [
+        "30",
+        "35",
+        "118",
+        "32 (75 - 43 = 32)"
+      ],
+      "correctIndex": 3,
+      "explanation": "75 - 43 = 32."
+    },
+    {
+      "text": "Toshkent shahrida 1-avtobus saroyiga 35 ta, 2-saroyga 42 ta yangi avtobus berildi. Jami nechta yangi avtobus berildi?",
+      "options": [
+        "75 ta",
+        "77 ta (35 + 42 = 77)",
+        "80 ta",
+        "7 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "35 + 42 = 77 ta avtobus."
+    },
+    {
+      "text": "Qisqa yozuv: I qism — 3 o‘nlik 2 birlik, II qism — 4 o‘nlik 6 birlik. Butun miqdor qancha?",
+      "options": [
+        "76",
+        "80",
+        "78 (7 o‘nlik 8 birlik)",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "32 + 46 = 78."
+    },
+    {
+      "text": "Maktab oshxonasiga 24 kg pishloq va 45 kg go‘sht keltirildi. Jami necha kg oziq-ovqat keltirildi?",
+      "options": [
+        "69 kg (24 + 45 = 69)",
+        "65 kg",
+        "70 kg",
+        "21 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "24 + 45 = 69 kg."
+    },
+    {
+      "text": "Bog‘bon 53 tup anjir va 24 tup anor ko‘chati o‘tqazdi. Jami ko‘chatlar soni nechta?",
+      "options": [
+        "77 tup (53 + 24 = 77)",
+        "75 tup",
+        "80 tup",
+        "29 tup"
+      ],
+      "correctIndex": 0,
+      "explanation": "53 + 24 = 77 tup."
+    },
+    {
+      "text": "Sport musobaqasida 1-guruhda 36 nafar, 2-guruhda 43 nafar bola qatnashdi. Musobaqada jami necha bola qatnashgan?",
+      "options": [
+        "77 nafar",
+        "80 nafar",
+        "7 nafar",
+        "79 nafar (36 + 43 = 79)"
+      ],
+      "correctIndex": 3,
+      "explanation": "36 + 43 = 79 nafar bola."
+    },
+    {
+      "text": "Pochta droni 1-reysda 23 ta, 2-reysda 31 ta va 3-reysda 25 ta xat tashidi. Dron uchala reysda jami nechta xat tashigan?",
+      "options": [
+        "75 ta",
+        "79 ta (23 + 31 + 25 = 79)",
+        "80 ta",
+        "69 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "23 + 31 = 54, 54 + 25 = 79 ta xat."
+    },
+    {
+      "text": "Qurilish maydoniga 1-kuni 32 ta, 2-kuni 24 ta va 3-kuni 22 ta temir-beton plita olib kelindi. Jami nechta plita olib kelindi?",
+      "options": [
+        "76 ta",
+        "80 ta",
+        "78 ta (32 + 24 + 22 = 78)",
+        "68 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "32 + 24 = 56, 56 + 22 = 78 ta plita."
+    }
+  ]
+}

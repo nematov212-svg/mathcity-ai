@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "lessons" ADD COLUMN IF NOT EXISTS "isReview" BOOLEAN NOT NULL DEFAULT false;

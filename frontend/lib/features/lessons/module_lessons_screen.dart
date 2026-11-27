@@ -83,25 +83,28 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
   }
 
   ModuleModel _createFallbackModule() {
+    final isP3 = widget.moduleId.contains('p3');
     final isP2 = widget.moduleId.contains('p2');
     final completedCount = _lessons.where((l) => l.isCompleted).length;
-    final total = _lessons.isEmpty ? (isP2 ? 33 : 41) : _lessons.length;
+    final total = _lessons.isEmpty ? (isP3 ? 40 : (isP2 ? 33 : 41)) : _lessons.length;
     final pct = (completedCount / total * 100).round();
     final earnedXp = _lessons.fold(0, (acc, l) => acc + (l.isCompleted ? l.rewardXP : 0));
-    final defaultTotalXp = isP2 ? 3160 : 3440;
+    final defaultTotalXp = isP3 ? 4060 : (isP2 ? 3160 : 3440);
     final totalXp = _lessons.fold(0, (acc, l) => acc + l.rewardXP);
 
     return ModuleModel(
       id: widget.moduleId,
       grade: 1,
       subject: 'Matematika',
-      part: isP2 ? 2 : 1,
-      title: isP2 ? 'Matematika · 2-qism' : 'Matematika · 1-qism',
-      orderIndex: isP2 ? 2 : 1,
+      part: isP3 ? 3 : (isP2 ? 2 : 1),
+      title: isP3
+          ? 'Matematika · 3-qism'
+          : (isP2 ? 'Matematika · 2-qism' : 'Matematika · 1-qism'),
+      orderIndex: isP3 ? 3 : (isP2 ? 2 : 1),
       comingSoon: false,
       lessonCount: total,
-      questionCount: isP2 ? 660 : 820,
-      totalMinutes: isP2 ? 217 : 244,
+      questionCount: isP3 ? 800 : (isP2 ? 660 : 820),
+      totalMinutes: isP3 ? 341 : (isP2 ? 217 : 244),
       percent: pct,
       earnedXp: earnedXp,
       totalXp: totalXp > 0 ? totalXp : defaultTotalXp,
@@ -109,7 +112,99 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
   }
 
   void _loadFallbackData() {
+    final isP3 = widget.moduleId.contains('p3');
     final isP2 = widget.moduleId.contains('p2');
+
+    if (isP3) {
+      final part3Def = [
+        // I bob (1-11) + Nazorat (12)
+        {'num': 1, 'rev': false, 'title': 'Masalaning tarkibi'},
+        {'num': 2, 'rev': false, 'title': 'Masala yechish'},
+        {'num': 3, 'rev': false, 'title': 'Masala yechish (2)'},
+        {'num': 4, 'rev': false, 'title': 'Teskari masalalar'},
+        {'num': 5, 'rev': false, 'title': 'Teskari masalalar (2)'},
+        {'num': 6, 'rev': false, 'title': 'Masalalar yechish (mustahkamlash)'},
+        {'num': 7, 'rev': false, 'title': 'Bir necha birlikka orttirish'},
+        {'num': 8, 'rev': false, 'title': 'Bir necha birlikka kamaytirish'},
+        {'num': 9, 'rev': false, 'title': 'Qavsli ifodalar'},
+        {'num': 10, 'rev': false, 'title': 'Qavsli ifodalar (2)'},
+        {'num': 11, 'rev': false, 'title': 'Masalalar yechish (takrorlash)'},
+        {'num': 12, 'rev': true, 'title': '1-nazorat ishi'},
+        // II bob (14-26) + Nazorat (27)
+        {'num': 14, 'rev': false, 'title': 'Bir necha birlik ortiq sonni topish'},
+        {'num': 15, 'rev': false, 'title': 'Bir necha birlik ortiq sonni topish (2)'},
+        {'num': 16, 'rev': false, 'title': 'Bir necha birlik kam sonni topish'},
+        {'num': 17, 'rev': false, 'title': 'Bir necha birlik kam sonni topish (2)'},
+        {'num': 18, 'rev': false, 'title': 'Taqqoslashga doir masalalar'},
+        {'num': 19, 'rev': false, 'title': 'Taqqoslashga doir masalalar (2)'},
+        {'num': 20, 'rev': false, 'title': 'Taqqoslashga doir masalalar (3)'},
+        {'num': 21, 'rev': false, 'title': 'Taqqoslashga doir masalalar (4)'},
+        {'num': 22, 'rev': false, 'title': 'Vaqt. Hafta kunlari'},
+        {'num': 23, 'rev': false, 'title': 'Soat. Minut'},
+        {'num': 24, 'rev': false, 'title': 'Soat. Minut (2)'},
+        {'num': 25, 'rev': false, 'title': 'Kombinatorik masalalar'},
+        {'num': 26, 'rev': false, 'title': 'Masalalar yechish (takrorlash)'},
+        {'num': 27, 'rev': true, 'title': '2-nazorat ishi'},
+        // III bob (30-42) + Nazorat (43)
+        {'num': 30, 'rev': false, 'title': 'Uzunlik va uzunlik birliklari'},
+        {'num': 31, 'rev': false, 'title': 'Santimetr va detsimetr'},
+        {'num': 32, 'rev': false, 'title': 'Detsimetr ustida amallar'},
+        {'num': 33, 'rev': false, 'title': 'Massa va massa birliklari'},
+        {'num': 34, 'rev': false, 'title': 'Massa va massa birliklari (2)'},
+        {'num': 35, 'rev': false, 'title': 'Kilogramm ustida amallar'},
+        {'num': 36, 'rev': false, 'title': 'Tarozi va toshlar'},
+        {'num': 37, 'rev': false, 'title': 'Hajm va hajm birliklari'},
+        {'num': 38, 'rev': false, 'title': 'Hajm va hajm birliklari (2)'},
+        {'num': 39, 'rev': false, 'title': 'Kattaliklar: uzunlik, massa, hajm'},
+        {'num': 40, 'rev': false, 'title': 'Kattaliklar va ularning xossalari'},
+        {'num': 41, 'rev': false, 'title': 'Kattaliklar va ularning xossalari (2)'},
+        {'num': 42, 'rev': false, 'title': 'Masalalar yechish (takrorlash)'},
+        {'num': 43, 'rev': true, 'title': '3-nazorat ishi'},
+      ];
+
+      final list = List.generate(part3Def.length, (index) {
+        final item = part3Def[index];
+        final order = index + 1;
+        final bookNum = item['num'] as int;
+        final isRev = item['rev'] as bool;
+        final title = item['title'] as String;
+
+        return LessonModel(
+          id: 'lesson-g1-p3-${bookNum.toString().padLeft(2, '0')}',
+          courseId: 'course-g1-p3',
+          moduleId: widget.moduleId,
+          grade: 1,
+          mode: 'KIDS',
+          title: title,
+          chapterTitle: _getPart3Chapter(bookNum),
+          topicKey: 'topic-g1-p3-$bookNum',
+          description: isRev
+              ? 'Mavzular bo‘yicha 20 ta savolli nazorat testi.'
+              : '1-sinf matematika 3-qism bo‘yicha $bookNum-mavzu.',
+          emoji: isRev ? '📝' : _getPart3Emoji(bookNum),
+          rewardXP: isRev ? 120 : 100,
+          rewardCoins: isRev ? 12 : 10,
+          orderIndex: order,
+          bookNumber: bookNum,
+          isReview: isRev,
+          sectionCount: 20,
+          isCompleted: false,
+          isLocked: order > 1,
+          completedSteps: 0,
+          percent: 0,
+          bestPercent: 0,
+          estMinutes: isRev ? 15 : 8,
+        );
+      });
+
+      setState(() {
+        _lessons = list;
+        _module = _createFallbackModule();
+        _isLoading = false;
+      });
+      return;
+    }
+
     final count = isP2 ? 33 : 41;
     final startBookNum = isP2 ? 42 : 1;
 
@@ -146,6 +241,29 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
       _module = _createFallbackModule();
       _isLoading = false;
     });
+  }
+
+  String _getPart3Chapter(int bookNum) {
+    if (bookNum <= 11) return 'I bob. Masala va uning yechilishi';
+    if (bookNum == 12) return 'I bob. 1-nazorat ishi';
+    if (bookNum <= 26) return 'II bob. Orttirish, kamaytirish va taqqoslash';
+    if (bookNum == 27) return 'II bob. 2-nazorat ishi';
+    if (bookNum <= 42) return 'III bob. Kattaliklar (uzunlik, massa, hajm)';
+    return 'III bob. 3-nazorat ishi';
+  }
+
+  String _getPart3Emoji(int bookNum) {
+    const emojis = {
+      1: '🧩', 2: '💡', 3: '✍️', 4: '🔄', 5: '🔁',
+      6: '🏆', 7: '➕', 8: '➖', 9: '🧮', 10: '🎯',
+      11: '📚', 12: '📝', 14: '📈', 15: '📊', 16: '📉',
+      17: '📉', 18: '🔍', 19: '🔎', 20: '⚖️', 21: '🔍',
+      22: '📅', 23: '⏰', 24: '⏱️', 25: '🎲', 26: '🏆',
+      27: '📝', 30: '📏', 31: '📐', 32: '📏', 33: '⚖️',
+      34: '⚖️', 35: '🎒', 36: '⚖️', 37: '🛢️', 38: '🥤',
+      39: '📦', 40: '🎂', 41: '🧪', 42: '🏆', 43: '📝',
+    };
+    return emojis[bookNum] ?? '📘';
   }
 
   String _getFallbackChapter(int bookNum) {
@@ -539,11 +657,11 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
               ),
               _buildMiniChip(
                 icon: Icons.help_outline_rounded,
-                text: '${_module?.questionCount ?? (totalCount == 33 ? 660 : 820)} ta savol',
+                text: '${_module?.questionCount ?? (totalCount == 40 ? 800 : (totalCount == 33 ? 660 : 820))} ta savol',
               ),
               _buildMiniChip(
                 icon: Icons.timer_outlined,
-                text: '~${_module?.totalMinutes ?? (totalCount == 33 ? 217 : 244)} daqiqa',
+                text: '~${_module?.totalMinutes ?? (totalCount == 40 ? 341 : (totalCount == 33 ? 217 : 244))} daqiqa',
               ),
             ],
           ),
@@ -654,8 +772,10 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
                 ? const Color(0xFF2EB67D).withOpacity(0.35)
                 : (effectiveLocked
                     ? colors.border.withOpacity(0.5)
-                    : const Color(0xFF6C3CE0).withOpacity(0.2)),
-            width: lesson.isCompleted ? 1.5 : 1.2,
+                    : (lesson.isReview
+                        ? const Color(0xFFFFC83D).withOpacity(0.4)
+                        : const Color(0xFF6C3CE0).withOpacity(0.2))),
+            width: lesson.isCompleted || lesson.isReview ? 1.5 : 1.2,
           ),
           boxShadow: [
             BoxShadow(
@@ -718,6 +838,25 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
+                      if (lesson.isReview) ...[
+                        const SizedBox(height: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFC83D).withOpacity(0.18),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFFFFC83D).withOpacity(0.5)),
+                          ),
+                          child: const Text(
+                            '📝 Nazorat ishi',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFFB45309),
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

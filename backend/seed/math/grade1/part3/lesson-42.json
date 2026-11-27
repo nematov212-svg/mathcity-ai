@@ -1,0 +1,277 @@
+{
+  "bookNumber": 42,
+  "isReview": false,
+  "title": "Masalalar yechish (takrorlash)",
+  "emoji": "🏆",
+  "shortDesc": "3-qism bo‘yicha o‘rganilgan barcha amallar va masalalarni mustahkamlash.",
+  "intro": "Ikki xonali sonlar, amallar, tenglamasimon noma’lum son masalalari (□ + 33 = 76), zanjirli amallar va matnli masalalarni mustahkamlaymiz.",
+  "keyPoints": [
+    "Amallarni hisoblash: 25 + 43 = 68, 80 − 60 = 20.",
+    "Noma’lum qo‘shiluvchini topish: □ + 33 = 76 bo‘lsa, □ = 76 − 33 = 43.",
+    "Uchta qo‘shiluvchili amallar: 12 + 8 + □ = 27 bo‘lsa, 20 + 7 = 27."
+  ],
+  "miniExample": {
+    "emojis": "🏆 □ + 33 = 76 => □ = 76 - 33 = 43",
+    "text": "O‘ylangan songa 33 qo‘shilsa 76 bo‘ldi. O‘ylangan son: 76 - 33 = 43."
+  },
+  "xpReward": 100,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "25 + 43 amalini hisoblang:",
+      "options": [
+        "68",
+        "67",
+        "69",
+        "58"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 + 40 = 60, 5 + 3 = 8. 60 + 8 = 68."
+    },
+    {
+      "text": "80 - 60 amalini hisoblang:",
+      "options": [
+        "10",
+        "20",
+        "30",
+        "140"
+      ],
+      "correctIndex": 1,
+      "explanation": "80 - 60 = 20."
+    },
+    {
+      "text": "O‘ylangan songa 33 qo‘shilsa, 76 hosil bo‘ldi (□ + 33 = 76). O‘ylangan son nechaga teng?",
+      "options": [
+        "40",
+        "45",
+        "43 (76 - 33 = 43)",
+        "109"
+      ],
+      "correctIndex": 2,
+      "explanation": "76 - 33 = 43."
+    }
+  ],
+  "test": [
+    {
+      "text": "25 + 43 amalini hisoblang:",
+      "options": [
+        "68",
+        "67",
+        "69",
+        "58"
+      ],
+      "correctIndex": 0,
+      "explanation": "25 + 43 = 68."
+    },
+    {
+      "text": "80 - 60 amalini hisoblang:",
+      "options": [
+        "10",
+        "30",
+        "20",
+        "140"
+      ],
+      "correctIndex": 2,
+      "explanation": "80 - 60 = 20."
+    },
+    {
+      "text": "54 + 20 amalini hisoblang:",
+      "options": [
+        "70",
+        "74",
+        "75",
+        "34"
+      ],
+      "correctIndex": 1,
+      "explanation": "54 + 20 = 74."
+    },
+    {
+      "text": "76 - 30 amalini hisoblang:",
+      "options": [
+        "40",
+        "56",
+        "36",
+        "46"
+      ],
+      "correctIndex": 3,
+      "explanation": "76 - 30 = 46."
+    },
+    {
+      "text": "12 + 8 + □ = 27 bo‘lsa, bo‘sh katakdagi son nechaga teng?",
+      "options": [
+        "5",
+        "7 (20 + 7 = 27)",
+        "8",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 + 8 = 20. 27 - 20 = 7."
+    },
+    {
+      "text": "45 + □ = 55 bo‘lsa, noma’lum sonni toping:",
+      "options": [
+        "10 (55 - 45 = 10)",
+        "5",
+        "15",
+        "20"
+      ],
+      "correctIndex": 0,
+      "explanation": "55 - 45 = 10."
+    },
+    {
+      "text": "O‘ylangan songa 33 qo‘shilsa 76 hosil bo‘ladi (□ + 33 = 76). O‘ylangan son nechaga teng?",
+      "options": [
+        "40",
+        "42",
+        "109",
+        "43 (76 - 33 = 43)"
+      ],
+      "correctIndex": 3,
+      "explanation": "76 - 33 = 43."
+    },
+    {
+      "text": "68 - □ = 25 tenglikdagi noma’lum sonni toping:",
+      "options": [
+        "40",
+        "45",
+        "43 (68 - 25 = 43)",
+        "93"
+      ],
+      "correctIndex": 2,
+      "explanation": "68 - 25 = 43."
+    },
+    {
+      "text": "□ - 24 = 32 tenglikdagi noma’lum son nechaga teng?",
+      "options": [
+        "54",
+        "58",
+        "56 (32 + 24 = 56)",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "32 + 24 = 56."
+    },
+    {
+      "text": "15 + 15 + □ = 40 bo‘lsa, bo‘sh katakdagi son nechaga teng?",
+      "options": [
+        "5",
+        "15",
+        "20",
+        "10 (30 + 10 = 40)"
+      ],
+      "correctIndex": 3,
+      "explanation": "15 + 15 = 30. 40 - 30 = 10."
+    },
+    {
+      "text": "34 + 23 ifodani hisoblang:",
+      "options": [
+        "57",
+        "55",
+        "59",
+        "67"
+      ],
+      "correctIndex": 0,
+      "explanation": "34 + 23 = 57."
+    },
+    {
+      "text": "89 - 46 amalini hisoblang:",
+      "options": [
+        "45",
+        "43",
+        "41",
+        "33"
+      ],
+      "correctIndex": 1,
+      "explanation": "89 - 46 = 43."
+    },
+    {
+      "text": "Akromda 34 ta yong‘oq bor edi. Ukasiga 12 ta berdi. Akromda nechta yong‘oq qoldi?",
+      "options": [
+        "20 ta",
+        "24 ta",
+        "46 ta",
+        "22 ta (34 - 12 = 22)"
+      ],
+      "correctIndex": 3,
+      "explanation": "34 - 12 = 22 ta."
+    },
+    {
+      "text": "Zanjirli amalni bajaring: 50 + 20 - 30",
+      "options": [
+        "30",
+        "40 (70 - 30 = 40)",
+        "50",
+        "60"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 + 20 = 70, 70 - 30 = 40."
+    },
+    {
+      "text": "Taqqoslang: 35 + 24 va 70 - 10",
+      "options": [
+        "Birinchisi katta",
+        "Ikkalasi teng",
+        "35 + 24 < 70 - 10 (59 < 60)",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 2,
+      "explanation": "35 + 24 = 59, 70 - 10 = 60. 59 < 60."
+    },
+    {
+      "text": "Kutubxonada 42 ta ertak kitobi va undan 15 ta ko‘p darslik bor. Kutubxonada nechta darslik bor?",
+      "options": [
+        "57 ta (42 + 15 = 57)",
+        "55 ta",
+        "59 ta",
+        "27 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "42 + 15 = 57 ta."
+    },
+    {
+      "text": "28 + □ + 12 = 65 bo‘lsa, □ o‘rnidagi sonni toping:",
+      "options": [
+        "25 (28 + 12 = 40; 65 - 40 = 25)",
+        "20",
+        "30",
+        "35"
+      ],
+      "correctIndex": 0,
+      "explanation": "28 + 12 = 40. 65 - 40 = 25."
+    },
+    {
+      "text": "Maktab bog‘ida 26 ta olma daraxti va 14 ta nok daraxti bor. Yana 20 ta o‘rik ko‘chati ekildi. Bog‘da jami nechta daraxt bo‘ldi?",
+      "options": [
+        "50 ta",
+        "55 ta",
+        "65 ta",
+        "60 ta ((26 + 14) + 20 = 40 + 20 = 60)"
+      ],
+      "correctIndex": 3,
+      "explanation": "26 + 14 = 40, 40 + 20 = 60 ta."
+    },
+    {
+      "text": "Avtobusda 38 yo‘lovchi bor edi. Bekatda 12 yo‘lovchi tushdi va 14 yangi yo‘lovchi chiqdi. Avtobusda endi necha yo‘lovchi bo‘ldi?",
+      "options": [
+        "36 nafar",
+        "40 nafar (38 - 12 + 14 = 40)",
+        "42 nafar",
+        "50 nafar"
+      ],
+      "correctIndex": 1,
+      "explanation": "38 - 12 = 26 nafar, 26 + 14 = 40 nafar."
+    },
+    {
+      "text": "Bir qutida 35 ta, ikkinchi qutida undan 10 ta kam qalam bor. Ikkala qutida jami nechta qalam bor?",
+      "options": [
+        "50 ta",
+        "55 ta",
+        "60 ta (2-quti: 25; 35 + 25 = 60)",
+        "70 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "2-qutida: 35 - 10 = 25 ta. Jami: 35 + 25 = 60 ta."
+    }
+  ]
+}

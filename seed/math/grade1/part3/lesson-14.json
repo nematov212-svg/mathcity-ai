@@ -1,0 +1,277 @@
+{
+  "bookNumber": 14,
+  "isReview": false,
+  "title": "Sonni orttirish va kamaytirishga doir masalalar",
+  "emoji": "⬆️",
+  "shortDesc": "«Necha birlik ko‘p» va «necha birlik kam» munosabatlari.",
+  "intro": "«Ko‘p» so‘zi sonni orttirishni (qo‘shish), «kam» so‘zi esa sonni kamaytirishni (ayirish) bildiradi.",
+  "keyPoints": [
+    "«Biror sondan n ta ko‘p» — son ustiga n qo‘shiladi (+).",
+    "«Biror sondan n ta kam» — sondan n ayiriladi (-).",
+    "Sxema yordamida ikkinchi miqdor aniq belgilanadi."
+  ],
+  "miniExample": {
+    "emojis": "✏️ 6 ta qalam + 4 ta ko‘p = 10 ta qalam",
+    "text": "Jasurda 6 ta qalam bor, Anvarda undan 4 ta ko‘p. Anvarda: 6 + 4 = 10 ta qalam."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Jasurda 6 ta qalam bor. Anvarda undan 4 ta ko‘p qalam bor. Anvarda nechta qalam bor?",
+      "options": [
+        "10 ta (6 + 4 = 10)",
+        "2 ta (6 - 4 = 2)",
+        "9 ta",
+        "12 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 ta ko‘p bo‘lgani uchun qo‘shamiz: 6 + 4 = 10 ta qalam."
+    },
+    {
+      "text": "«Sondir n ta kam» jumlasi qaysi arifmetik amalni bildiradi?",
+      "options": [
+        "Qo‘shish amali (+)",
+        "Ayirish amali (-)",
+        "Taqqoslash amali",
+        "O‘zgarmaslik"
+      ],
+      "correctIndex": 1,
+      "explanation": "«Kam» so‘zi miqdorning kamayishini, ya’ni ayirishni bildiradi."
+    },
+    {
+      "text": "Madinada 15 ta daftar bor, singlisida undan 5 ta kam. Singlisida nechta daftar bor?",
+      "options": [
+        "20 ta (15 + 5 = 20)",
+        "12 ta",
+        "10 ta (15 - 5 = 10)",
+        "8 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 ta kam: 15 - 5 = 10 ta daftar."
+    }
+  ],
+  "test": [
+    {
+      "text": "«7 dan 3 ta ko‘p» sonni toping:",
+      "options": [
+        "10 (7 + 3 = 10)",
+        "4 (7 - 3 = 4)",
+        "9",
+        "11"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 3 = 10."
+    },
+    {
+      "text": "«12 dan 4 ta kam» son nechaga teng?",
+      "options": [
+        "16 (12 + 4 = 16)",
+        "7",
+        "8 (12 - 4 = 8)",
+        "9"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 - 4 = 8."
+    },
+    {
+      "text": "Daftarda 10 ta stiker bor, albomda undan 5 ta ko‘p stiker bor. Albomda nechta stiker bor?",
+      "options": [
+        "5 ta (10 - 5 = 5)",
+        "15 ta (10 + 5 = 15)",
+        "14 ta",
+        "16 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 + 5 = 15 ta."
+    },
+    {
+      "text": "Savatchada 18 ta nok bor, likopchada undan 8 ta kam. Likopchada nechta nok bor?",
+      "options": [
+        "26 ta",
+        "8 ta",
+        "12 ta",
+        "10 ta (18 - 8 = 10)"
+      ],
+      "correctIndex": 3,
+      "explanation": "18 - 8 = 10 ta."
+    },
+    {
+      "text": "«20 dan 6 ta ortiq» son qaysi?",
+      "options": [
+        "14 (20 - 6 = 14)",
+        "26 (20 + 6 = 26)",
+        "24",
+        "28"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 6 = 26."
+    },
+    {
+      "text": "«30 dan 10 ta kam» son nechaga teng?",
+      "options": [
+        "20 (30 - 10 = 20)",
+        "40 (30 + 10 = 40)",
+        "25",
+        "15"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 - 10 = 20."
+    },
+    {
+      "text": "Akmal 1-kuni 14 ta misol yechdi, 2-kuni undan 5 ta ko‘p yechdi. Akmal 2-kuni nechta misol yechgan?",
+      "options": [
+        "9 ta (14 - 5 = 9)",
+        "18 ta",
+        "20 ta",
+        "19 ta (14 + 5 = 19)"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 + 5 = 19 ta misol."
+    },
+    {
+      "text": "Bog‘da 35 tup olma daraxti bor, nok daraxti undan 12 tup kam. Bog‘da nechta nok daraxti bor?",
+      "options": [
+        "47 tup (35 + 12 = 47)",
+        "20 tup",
+        "23 tup (35 - 12 = 23)",
+        "25 tup"
+      ],
+      "correctIndex": 2,
+      "explanation": "35 - 12 = 23 tup."
+    },
+    {
+      "text": "Sxema: I son = 40, II son undan 15 ta ortiq. II sonni toping:",
+      "options": [
+        "25 (40 - 15 = 25)",
+        "50",
+        "55 (40 + 15 = 55)",
+        "60"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 + 15 = 55."
+    },
+    {
+      "text": "Poyezdning 1-vagonida 48 yo‘lovchi bor, 2-vagonida undan 16 ta kam yo‘lovchi bor. 2-vagonda necha yo‘lovchi bor?",
+      "options": [
+        "64 nafar",
+        "30 nafar",
+        "34 nafar",
+        "32 nafar (48 - 16 = 32)"
+      ],
+      "correctIndex": 3,
+      "explanation": "48 - 16 = 32 nafar."
+    },
+    {
+      "text": "Maktab kutubxonasiga 54 ta ertak kitobi keltirildi, darsliklar esa undan 20 ta ko‘p. Nechta darslik keltirilgan?",
+      "options": [
+        "74 ta (54 + 20 = 74)",
+        "34 ta (54 - 20 = 34)",
+        "70 ta",
+        "76 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "54 + 20 = 74 ta darslik."
+    },
+    {
+      "text": "Do‘konda 60 kg kartoshka bor, piyoz undan 25 kg kam. Do‘konda necha kg piyoz bor?",
+      "options": [
+        "85 kg (60 + 25 = 85)",
+        "35 kg (60 - 25 = 35)",
+        "30 kg",
+        "40 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 25 = 35 kg."
+    },
+    {
+      "text": "«45 sonini 14 taga orttiring». Natija necha bo‘ladi?",
+      "options": [
+        "31 (45 - 14 = 31)",
+        "58",
+        "60",
+        "59 (45 + 14 = 59)"
+      ],
+      "correctIndex": 3,
+      "explanation": "45 + 14 = 59."
+    },
+    {
+      "text": "«78 sonini 23 taga kamaytiring». Natija qanday bo‘ladi?",
+      "options": [
+        "101",
+        "55 (78 - 23 = 55)",
+        "50",
+        "56"
+      ],
+      "correctIndex": 1,
+      "explanation": "78 - 23 = 55."
+    },
+    {
+      "text": "Zuhra 24 ta she’r yod oldi. Fotima undan 6 ta ko‘p, Salim esa Zuhra yod olgandan 4 ta kam yod oldi. Salim nechta she’r yod olgan?",
+      "options": [
+        "30 ta (24 + 6 = 30)",
+        "18 ta",
+        "20 ta (24 - 4 = 20)",
+        "22 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Salim Zuhra yod olgandan 4 ta kam: 24 - 4 = 20 ta she’r."
+    },
+    {
+      "text": "Avtosaroyda 36 ta yengil mashina bor. Yuk mashinalari undan 14 ta kam, avtobuslar esa yengil mashinadan 10 ta ko‘p. Avtobuslar nechta?",
+      "options": [
+        "46 ta (36 + 10 = 46)",
+        "22 ta (36 - 14 = 22)",
+        "40 ta",
+        "50 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Avtobuslar yengil mashinadan 10 ta ko‘p: 36 + 10 = 46 ta."
+    },
+    {
+      "text": "1-qutida 32 ta qalam bor, 2-qutida undan 13 ta ko‘p qalam bor. Ikkala qutida birgalikda nechta qalam bor?",
+      "options": [
+        "77 ta (2-quti: 45; 32 + 45 = 77)",
+        "45 ta",
+        "64 ta",
+        "75 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "2-qutida: 32 + 13 = 45 ta. Ikkala qutida: 32 + 45 = 77 ta."
+    },
+    {
+      "text": "Maktab bog‘ida 40 tup terak bor. Qayrag‘ochlar undan 15 tup kam. Bog‘dagi jami terak va qayrag‘ochlar soni nechta?",
+      "options": [
+        "25 tup",
+        "55 tup",
+        "70 tup",
+        "65 tup (Qayrag‘och: 25; 40 + 25 = 65)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Qayrag‘och: 40 - 15 = 25 tup. Jami: 40 + 25 = 65 tup."
+    },
+    {
+      "text": "Omborda 50 qop guruch bor edi. Bug‘doy undan 20 qop ko‘p, arpa esa guruchdan 15 qop kam. Omborda jami necha qop don bor?",
+      "options": [
+        "140 qop",
+        "155 qop (Bug‘doy: 70, Arpa: 35; 50 + 70 + 35 = 155)",
+        "150 qop",
+        "160 qop"
+      ],
+      "correctIndex": 1,
+      "explanation": "Guruch: 50. Bug‘doy: 50 + 20 = 70. Arpa: 50 - 15 = 35. Jami: 50 + 70 + 35 = 155 qop."
+    },
+    {
+      "text": "Dukonga 1-kuni 25 quti shokolad keltirildi. 2-kuni undan 10 quti ko‘p keltirildi. Dukonga ikki kunda jami necha quti shokolad keltirilgan?",
+      "options": [
+        "35 quti",
+        "55 quti",
+        "60 quti (2-kun: 35; 25 + 35 = 60)",
+        "70 quti"
+      ],
+      "correctIndex": 2,
+      "explanation": "2-kun: 25 + 10 = 35 quti. Jami: 25 + 35 = 60 quti."
+    }
+  ]
+}

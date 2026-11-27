@@ -1,0 +1,277 @@
+{
+  "bookNumber": 30,
+  "isReview": false,
+  "title": "Uzunlik. Santimetr",
+  "emoji": "📏",
+  "shortDesc": "Uzunlik o‘lchovi, santimetr (cm) va chizg‘ichda o‘lchash.",
+  "intro": "Predmetlarning uzunligini o‘lchash uchun santimetr (cm) birligi va chizg‘ichdan foydalaniladi.",
+  "keyPoints": [
+    "Chizg‘ichda 0 dan 1 gacha bo‘lgan oraliq 1 santimetr (1 cm) deyiladi.",
+    "Qadimda uzunlik duym (bosh barmoq eni), tirsak va fut (qadam) bilan o‘lchangan.",
+    "Uzunlikni aniq o‘lchashda o‘lchov birligi sifatida santimetr (cm) ishlatiladi."
+  ],
+  "miniExample": {
+    "emojis": "📏 [ 0 —— 1 —— 2 —— 3 —— 4 —— 5 ] cm",
+    "text": "Chizg‘ichda 0 dan 5 gacha bo‘lgan kesma uzunligi 5 cm ga teng."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Santimetr qisqacha qanday yoziladi?",
+      "options": [
+        "cm",
+        "kg",
+        "litr",
+        "dm"
+      ],
+      "correctIndex": 0,
+      "explanation": "Santimetr qisqacha «cm» deb belgilanadi."
+    },
+    {
+      "text": "Chizg‘ichda kesmaning boshi qaysi songa to‘g‘rilanadi?",
+      "options": [
+        "1 soniga",
+        "0 soniga",
+        "10 soniga",
+        "Ixtiyoriy songa"
+      ],
+      "correctIndex": 1,
+      "explanation": "O‘lchash har doim 0 chizig‘idan boshlanadi."
+    },
+    {
+      "text": "Qadimda odamlar uzunlikni nimalar bilan o‘lchaganlar?",
+      "options": [
+        "Soat va daqiqa bilan",
+        "Tarozi bilan",
+        "Qadam, tirsak va barmoq bilan",
+        "Telefon bilan"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qadimda inson tana a’zolari (qadam, tirsak, quloch) o‘lchov bo‘lgan."
+    }
+  ],
+  "test": [
+    {
+      "text": "Uzunlik o‘lchov birligini toping:",
+      "options": [
+        "Santimetr (cm)",
+        "Kilogramm (kg)",
+        "Litr (l)",
+        "Soat"
+      ],
+      "correctIndex": 0,
+      "explanation": "Santimetr uzunlik birligidir."
+    },
+    {
+      "text": "Chizg‘ichda 0 dan 7 gacha chizilgan kesmaning uzunligi necha santimetr?",
+      "options": [
+        "6 cm",
+        "8 cm",
+        "7 cm",
+        "5 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "0 dan 7 gacha bo‘lgan masofa 7 cm bo‘ladi."
+    },
+    {
+      "text": "Qalamning uzunligi 12 cm, o‘chirg‘ich 4 cm. Qalam o‘chirg‘ichdan qancha uzun?",
+      "options": [
+        "16 cm",
+        "8 cm (12 - 4 = 8)",
+        "6 cm",
+        "10 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 - 4 = 8 cm."
+    },
+    {
+      "text": "5 cm va 4 cm uzunlikdagi ikkita kesma birlashtirilsa, jami uzunlik qancha bo‘ladi?",
+      "options": [
+        "1 cm",
+        "8 cm",
+        "10 cm",
+        "9 cm (5 + 4 = 9)"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 4 = 9 cm."
+    },
+    {
+      "text": "Chizg‘ichda 0 dan 10 gacha bo‘lgan oraliq necha cm?",
+      "options": [
+        "9 cm",
+        "10 cm",
+        "11 cm",
+        "1 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "0 dan 10 gacha oraliq 10 cm ga teng."
+    },
+    {
+      "text": "Qaysi asbob yordamida kesma uzunligi o‘lchanadi?",
+      "options": [
+        "Chizg‘ich",
+        "Tarozi",
+        "Termometr",
+        "Soat"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kesmalar chizg‘ich yordamida o‘lchanadi."
+    },
+    {
+      "text": "Qizil tasma 15 cm, ko‘k tasma 10 cm. Qizil tasma ko‘k tasmadan necha cm uzun?",
+      "options": [
+        "25 cm",
+        "4 cm",
+        "6 cm",
+        "5 cm (15 - 10 = 5)"
+      ],
+      "correctIndex": 3,
+      "explanation": "15 - 10 = 5 cm."
+    },
+    {
+      "text": "Daftarning bo‘yi 20 cm, eni 15 cm. Daftarning bo‘yi enidan qancha uzun?",
+      "options": [
+        "35 cm",
+        "10 cm",
+        "5 cm (20 - 15 = 5)",
+        "4 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 - 15 = 5 cm."
+    },
+    {
+      "text": "Chizg‘ichda kesma 2 dan boshlanib 9 da tugadi. Kesmaning uzunligi necha cm?",
+      "options": [
+        "9 cm",
+        "2 cm",
+        "7 cm (9 - 2 = 7)",
+        "11 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 - 2 = 7 cm."
+    },
+    {
+      "text": "Uzunligi 14 cm bo‘lgan ipdan 6 cm kesib olindi. Necha cm ip qoldi?",
+      "options": [
+        "20 cm",
+        "7 cm",
+        "9 cm",
+        "8 cm (14 - 6 = 8)"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 - 6 = 8 cm."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 12 cm + 7 cm = □ cm",
+      "options": [
+        "19 cm",
+        "18 cm",
+        "20 cm",
+        "5 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + 7 = 19 cm."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 18 cm - 8 cm = □ cm",
+      "options": [
+        "26 cm",
+        "10 cm",
+        "8 cm",
+        "12 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 - 8 = 10 cm."
+    },
+    {
+      "text": "1-kesma 11 cm, 2-kesma undan 4 cm uzun. 2-kesma uzunligini toping:",
+      "options": [
+        "7 cm",
+        "14 cm",
+        "16 cm",
+        "15 cm (11 + 4 = 15)"
+      ],
+      "correctIndex": 3,
+      "explanation": "11 + 4 = 15 cm."
+    },
+    {
+      "text": "Ipning uzunligi 25 cm. Undan 15 cm ishlatildi. Necha cm ip qoldi?",
+      "options": [
+        "40 cm",
+        "10 cm (25 - 15 = 10)",
+        "12 cm",
+        "8 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "25 - 15 = 10 cm."
+    },
+    {
+      "text": "Uchta kesmaning uzunliklari: 6 cm, 4 cm va 8 cm. Ularning umumiy uzunligi qancha?",
+      "options": [
+        "16 cm",
+        "20 cm",
+        "18 cm (6 + 4 + 8 = 18)",
+        "14 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 4 = 10, 10 + 8 = 18 cm."
+    },
+    {
+      "text": "Chizg‘ichda 3 dan boshlanib 15 da tugagan kesma uzunligini toping:",
+      "options": [
+        "12 cm (15 - 3 = 12)",
+        "15 cm",
+        "18 cm",
+        "11 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "15 - 3 = 12 cm."
+    },
+    {
+      "text": "Mixning uzunligi 9 cm, vintning uzunligi undan 3 cm qisqa. Ikkala buyumning umumiy uzunligi qancha?",
+      "options": [
+        "15 cm (Vint: 6 cm; 9 + 6 = 15)",
+        "6 cm",
+        "12 cm",
+        "18 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "Vint: 9 - 3 = 6 cm. Jami: 9 + 6 = 15 cm."
+    },
+    {
+      "text": "Uzunligi 30 cm bo‘lgan lentadan 1-marta 10 cm, 2-marta 12 cm kesib olindi. Necha cm lenta qoldi?",
+      "options": [
+        "10 cm",
+        "6 cm",
+        "22 cm",
+        "8 cm (30 - 10 - 12 = 8)"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 - 22 = 8 cm."
+    },
+    {
+      "text": "Chizg‘ichda AB kesma 8 cm, BC kesma 7 cm, CD kesma 5 cm. AD kesmaning umumiy uzunligi qancha bo‘ladi?",
+      "options": [
+        "19 cm",
+        "20 cm (8 + 7 + 5 = 20)",
+        "21 cm",
+        "18 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 7 = 15, 15 + 5 = 20 cm."
+    },
+    {
+      "text": "Jasur 1-kuni qog‘ozdan 25 cm, 2-kuni undan 5 cm kam lenta qirqdi. Jasur ikki kunda jami necha cm lenta qirqqan?",
+      "options": [
+        "40 cm",
+        "50 cm",
+        "45 cm (2-kun: 20 cm; 25 + 20 = 45)",
+        "35 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "2-kun: 25 - 5 = 20 cm. Jami: 25 + 20 = 45 cm."
+    }
+  ]
+}

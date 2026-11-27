@@ -279,10 +279,10 @@ class DataRepository {
   private lessonStepProgress: Map<string, LessonStepProgress> = new Map();
   private testAttempts: Map<string, any> = new Map();
   private lessons: LessonModel[] = (() => {
-    // Map Grade 1 curriculum lessons (74 total: 41 in Part 1, 33 in Part 2)
+    // Map Grade 1 curriculum lessons (114 total: 41 in Part 1, 33 in Part 2, 40 in Part 3)
     const grade1Mapped: LessonModel[] = allGrade1Lessons.map((cl) => ({
       id: cl.id,
-      courseId: cl.moduleId === 'module-g1-p2' ? 'course-g1-p2' : 'course-g1-p1',
+      courseId: cl.moduleId === 'module-g1-p3' ? 'course-g1-p3' : cl.moduleId === 'module-g1-p2' ? 'course-g1-p2' : 'course-g1-p1',
       chapterId: `chapter-${cl.moduleId}-${cl.order}`,
       chapterTitle: cl.chapterTitle,
       grade: 1,
@@ -296,6 +296,7 @@ class DataRepository {
       rewardCoins: cl.coinReward,
       orderIndex: cl.order,
       bookNumber: cl.bookNumber,
+      isReview: cl.isReview || false,
       sections: [
         {
           id: `${cl.id}-s1`,
@@ -871,8 +872,9 @@ class DataRepository {
       const questionCount = lessons.reduce((acc, l) => acc + (l.questionCount || 20), 0);
       const totalMinutes = lessons.reduce((acc, l) => acc + (l.estMinutes || 7), 0);
       const totalXp = lessons.reduce((acc, l) => acc + (l.rewardXP || 100), 0);
-      const completedCount = lessons.filter((l) => l.isCompleted).length;
-      const percent = lessonCount > 0 ? Math.round((completedCount / lessonCount) * 100) : 0;
+      const completedCount = lessons.filter((l) => l.isCompleted || (l.bestPercent && l.bestPercent >= 60)).length;
+      const totalBestPercent = lessons.reduce((acc, l) => acc + (l.bestPercent || 0), 0);
+      const percent = lessonCount > 0 ? Math.round(totalBestPercent / lessonCount) : 0;
       const earnedXp = lessons.reduce((acc, l) => acc + (l.earnedXp || 0), 0);
 
       return {
@@ -914,6 +916,10 @@ class DataRepository {
       const l41Prog = userId ? this.lessonStepProgress.get(`${userId}:lesson-g1-41`) : null;
       const l41Passed = completedLessonIds.includes('lesson-g1-41') || ((l41Prog?.bestPercent ?? 0) >= 60);
       prevLessonPassed = l41Passed;
+    } else if (moduleId === 'module-g1-p3') {
+      const l74Prog = userId ? this.lessonStepProgress.get(`${userId}:lesson-g1-74`) : null;
+      const l74Passed = completedLessonIds.includes('lesson-g1-74') || ((l74Prog?.bestPercent ?? 0) >= 60);
+      prevLessonPassed = l74Passed;
     }
 
     return moduleLessons.map((l, index) => {
@@ -962,6 +968,7 @@ class DataRepository {
         order: l.orderIndex,
         orderIndex: l.orderIndex,
         bookNumber: l.bookNumber || (moduleId === 'module-g1-p2' ? (l.orderIndex + 41) : l.orderIndex),
+        isReview: l.isReview || false,
         title: l.title,
         chapterTitle: l.chapterTitle,
         shortDesc: l.description,
@@ -1021,7 +1028,7 @@ class DataRepository {
           questionOrder: JSON.stringify(questions.map((q) => q.id)),
           optionOrder: '{}',
         },
-      }).catch(() => {});
+      }).catch(() => { });
     }
 
     // Strip out correct answers and explanations for anti-cheat
@@ -1029,6 +1036,7 @@ class DataRepository {
       id: q.id || `q-${lesson.id}-${idx + 1}`,
       order: q.order || idx + 1,
       text: q.text || (q as any).prompt,
+      prompt: q.text || (q as any).prompt,
       options: q.options,
     }));
 
@@ -1115,10 +1123,11 @@ class DataRepository {
     }
 
     // Proportional XP calculation:
-    // Steps 1-4 cover 40% of xpReward.
-    // Step 5 (Test) covers 60% of xpReward, scaled by bestPercent.
+    // For review lessons (isReview = true), 100% of xpReward comes from the test scaled by bestPercent.
+    // For regular lessons, Steps 1-4 cover 40% and Step 5 (Test) covers 60%.
     const totalXp = lesson.rewardXP || lesson.xpReward || 100;
-    const testMaxXp = Math.round(totalXp * 0.6);
+    const isReviewLesson = !!(lesson as any).isReview;
+    const testMaxXp = isReviewLesson ? totalXp : Math.round(totalXp * 0.6);
     const targetTestXp = Math.round(testMaxXp * (prog.bestPercent || 0) / 100);
     const prevTestXp = (prog as any).testXpGiven || 0;
     const incrementalXp = Math.max(0, targetTestXp - prevTestXp);
@@ -1167,7 +1176,7 @@ class DataRepository {
           total: totalCount,
           percent,
         },
-      }).catch(() => {});
+      }).catch(() => { });
 
       const coinGivenInt = prog.coinGiven ? 1 : 0;
       prisma.lessonProgress.upsert({
@@ -1192,9 +1201,9 @@ class DataRepository {
           isCompleted: prog.isCompleted,
           xpGiven: prog.xpGiven,
         },
-      }).catch(() => {});
+      }).catch(() => { });
 
-      this.persistUserToDatabase(user).catch(() => {});
+      this.persistUserToDatabase(user).catch(() => { });
     }
 
     return {
@@ -1241,6 +1250,18 @@ class DataRepository {
 
     const lesson = this.getLessonById(lessonId);
     if (!lesson) throw new Error('Dars topilmadi.');
+
+    if (lesson.isReview) {
+      return {
+        lessonId,
+        completedSteps: step,
+        percent: 0,
+        xpAwarded: 0,
+        coinsAwarded: 0,
+        isFirstCompletion: false,
+        isCompleted: false,
+      };
+    }
 
     const clampedStep = Math.max(1, Math.min(5, Math.floor(step)));
     const key = `${userId}:${lessonId}`;
@@ -1319,8 +1340,8 @@ class DataRepository {
             completedAt: prog.completedAt ? new Date(prog.completedAt) : undefined,
           },
         })
-        .catch(() => {});
-      this.persistUserToDatabase(user).catch(() => {});
+        .catch(() => { });
+      this.persistUserToDatabase(user).catch(() => { });
     }
 
     return {
@@ -2441,7 +2462,7 @@ class DataRepository {
     act.updatedAt = new Date().toISOString();
 
     this.calculateStreak(userId, referenceDate);
-    this.persistDailyActivity(act).catch(() => {});
+    this.persistDailyActivity(act).catch(() => { });
 
     return { activity: act, isNew: true };
   }
@@ -2489,7 +2510,7 @@ class DataRepository {
     act.updatedAt = new Date().toISOString();
 
     this.calculateStreak(userId, referenceDate);
-    this.persistDailyActivity(act).catch(() => {});
+    this.persistDailyActivity(act).catch(() => { });
 
     return { activity: act, isNew: true };
   }
@@ -2541,9 +2562,9 @@ class DataRepository {
         act.score !== undefined
           ? act.score
           : calculateActivityScore(
-              act.correctAnswers || act.problemsSolved || 0,
-              act.lessonsCompleted || act.lessonsDone || 0
-            );
+            act.correctAnswers || act.problemsSolved || 0,
+            act.lessonsCompleted || act.lessonsDone || 0
+          );
       return score >= 1;
     };
 
@@ -3685,7 +3706,7 @@ class DataRepository {
     state.ownedItems.push(itemId);
     state.lastUpdated = new Date().toISOString();
 
-    this.persistUserToDatabase(user).catch(() => {});
+    this.persistUserToDatabase(user).catch(() => { });
 
     return {
       success: true,
@@ -3785,7 +3806,7 @@ class DataRepository {
     state.placedItems.push(newPlacedItem);
     const stageInfo = this.recalculateHouseStages(userId);
 
-    this.persistUserToDatabase(user).catch(() => {});
+    this.persistUserToDatabase(user).catch(() => { });
 
     return {
       success: true,
@@ -3814,7 +3835,7 @@ class DataRepository {
     state.placedItems[itemIdx].cellY = newCellY;
     state.lastUpdated = new Date().toISOString();
 
-    this.persistUserToDatabase(user).catch(() => {});
+    this.persistUserToDatabase(user).catch(() => { });
     return { success: true, item: state.placedItems[itemIdx] };
   }
 
@@ -3832,7 +3853,7 @@ class DataRepository {
     state.placedItems[itemIdx].rotation = nextRot;
     state.lastUpdated = new Date().toISOString();
 
-    this.persistUserToDatabase(user).catch(() => {});
+    this.persistUserToDatabase(user).catch(() => { });
     return { success: true, item: state.placedItems[itemIdx], rotation: nextRot };
   }
 
@@ -3863,7 +3884,7 @@ class DataRepository {
     this.creditCoins(userId, refundCoins, `Uy qurish: ${catalogItem?.name || 'buyum'} sotildi (50% qaytim)`);
     const stageInfo = this.recalculateHouseStages(userId);
 
-    this.persistUserToDatabase(user).catch(() => {});
+    this.persistUserToDatabase(user).catch(() => { });
 
     return {
       success: true,

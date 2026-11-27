@@ -1,0 +1,277 @@
+{
+  "bookNumber": 22,
+  "isReview": false,
+  "title": "Murakkab masalalar yechish",
+  "emoji": "🎤",
+  "shortDesc": "Murakkab ifodalar, qavslar, amallar tartibi va qulay hisoblash.",
+  "intro": "Bir necha amalli murakkab ifodalarda amallar tartibi (avval qavs ichi) va qulay hisoblash usullarini qo‘llaymiz.",
+  "keyPoints": [
+    "Amallar tartibi: har doim birinchi bo‘lib qavs ichidagi amal bajariladi.",
+    "Uch miqdor yig‘indisi: 3 + 2 + 4 daqiqa = 9 daqiqa.",
+    "Qulay hisoblash: yaxlit sonlarni hosil qiluvchi qo‘shiluvchilar birinchi qo‘shiladi."
+  ],
+  "miniExample": {
+    "emojis": "🎤 3 daqiqa + 2 daqiqa + 4 daqiqa = 9 daqiqa",
+    "text": "Sahna nutqi: 3 daqiqa, qo‘shiq: 2 daqiqa, raqs: 4 daqiqa. Jami: 3 + 2 + 4 = 9 daqiqa."
+  },
+  "xpReward": 110,
+  "coinReward": 11,
+  "estMinutes": 9,
+  "practice": [
+    {
+      "text": "Konsertda qo‘shiq 3 daqiqa, raqs 2 daqiqa, sahna ko‘rinishi 4 daqiqa davom etdi. Konsert jami necha daqiqa davom etdi?",
+      "options": [
+        "9 daqiqa (3 + 2 + 4 = 9)",
+        "8 daqiqa",
+        "10 daqiqa",
+        "7 daqiqa"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 + 2 + 4 = 9 daqiqa."
+    },
+    {
+      "text": "Ifodada qavs bo‘lsa, qaysi amal birinchi bajariladi?",
+      "options": [
+        "Chapdan o‘ngga qarab istalgani",
+        "Qavs ichidagi amal",
+        "Eng oxirgi amal",
+        "Faqat ayirish amali"
+      ],
+      "correctIndex": 1,
+      "explanation": "Matematik qoidaga ko‘ra, har doim avval qavs ichidagi amal bajariladi."
+    },
+    {
+      "text": "15 + (10 - 4) ifodaning qiymatini hisoblang:",
+      "options": [
+        "25",
+        "19",
+        "21 (qavs ichi: 6; 15 + 6 = 21)",
+        "29"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qavs ichi: 10 - 4 = 6. So‘ng: 15 + 6 = 21."
+    }
+  ],
+  "test": [
+    {
+      "text": "3 + 2 + 4 ifodaning qiymati nechaga teng?",
+      "options": [
+        "9",
+        "8",
+        "10",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 + 2 = 5, 5 + 4 = 9."
+    },
+    {
+      "text": "20 + (15 - 5) ifodada birinchi qaysi amal bajariladi?",
+      "options": [
+        "20 + 15 qo‘shish amali",
+        "Ixtiyoriy amal",
+        "Qavs ichidagi 15 - 5 ayirish amali",
+        "Hech biri"
+      ],
+      "correctIndex": 2,
+      "explanation": "Avval qavs ichidagi amal bajariladi."
+    },
+    {
+      "text": "20 + (15 - 5) ifodaning yakuniy qiymatini toping:",
+      "options": [
+        "25",
+        "30 (15 - 5 = 10, 20 + 10 = 30)",
+        "35",
+        "40"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qavs ichi 10, 20 + 10 = 30."
+    },
+    {
+      "text": "50 - (20 + 10) ifodaning qiymati necha bo‘ladi?",
+      "options": [
+        "40",
+        "30",
+        "10",
+        "20 (20 + 10 = 30, 50 - 30 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 30 = 20."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (14 + 6) + 15",
+      "options": [
+        "30",
+        "35 (20 + 15 = 35)",
+        "40",
+        "25"
+      ],
+      "correctIndex": 1,
+      "explanation": "14 + 6 = 20, 20 + 15 = 35."
+    },
+    {
+      "text": "Maktab festivalida 4 ta she’r, 3 ta qo‘shiq va 5 ta raqs ijro etildi. Jami nechta chiqish bo‘ldi?",
+      "options": [
+        "12 ta (4 + 3 + 5 = 12)",
+        "10 ta",
+        "11 ta",
+        "13 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 3 + 5 = 12 ta chiqish."
+    },
+    {
+      "text": "Qulay hisoblash usulini qo‘llang: 27 + 13 + 30",
+      "options": [
+        "60",
+        "80",
+        "65",
+        "70 (27 + 13 = 40, 40 + 30 = 70)"
+      ],
+      "correctIndex": 3,
+      "explanation": "27 + 13 = 40 (yaxlit son). 40 + 30 = 70."
+    },
+    {
+      "text": "68 - (18 + 20) ifodaning qiymatini toping:",
+      "options": [
+        "20",
+        "40",
+        "30 (18 + 20 = 38, 68 - 38 = 30)",
+        "50"
+      ],
+      "correctIndex": 2,
+      "explanation": "68 - 38 = 30."
+    },
+    {
+      "text": "Xonandaning 1-qo‘shig‘i 4 daqiqa, 2-qo‘shig‘i 3 daqiqa, 3-qo‘shig‘i 5 daqiqa davom etdi. Qo‘shiqlar jami necha daqiqa yangragan?",
+      "options": [
+        "10 daqiqa",
+        "11 daqiqa",
+        "12 daqiqa (4 + 3 + 5 = 12)",
+        "14 daqiqa"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 3 = 7, 7 + 5 = 12 daqiqa."
+    },
+    {
+      "text": "(45 + 25) - 30 ifodaning qiymatini hisoblang:",
+      "options": [
+        "30",
+        "50",
+        "60",
+        "40 (45 + 25 = 70, 70 - 30 = 40)"
+      ],
+      "correctIndex": 3,
+      "explanation": "70 - 30 = 40."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 50 ga teng?",
+      "options": [
+        "80 - (20 + 10)",
+        "80 - (20 - 10)",
+        "80 + (20 - 10)",
+        "50 - (20 + 10)"
+      ],
+      "correctIndex": 0,
+      "explanation": "80 - 30 = 50."
+    },
+    {
+      "text": "Bog‘bon 1-daraxtdan 18 kg, 2-daraxtdan 12 kg, 3-daraxtdan 25 kg meva uzdi. Qulay usulda jami hosilni toping:",
+      "options": [
+        "50 kg",
+        "55 kg (18 + 12 = 30, 30 + 25 = 55)",
+        "60 kg",
+        "45 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 + 12 = 30, 30 + 25 = 55 kg."
+    },
+    {
+      "text": "90 - (45 + 15) ifodaning qiymatini hisoblang:",
+      "options": [
+        "20",
+        "40",
+        "50",
+        "30 (45 + 15 = 60, 90 - 60 = 30)"
+      ],
+      "correctIndex": 3,
+      "explanation": "90 - 60 = 30."
+    },
+    {
+      "text": "34 + (56 - 26) ifodaning qiymatini toping:",
+      "options": [
+        "60",
+        "64 (56 - 26 = 30, 34 + 30 = 64)",
+        "70",
+        "54"
+      ],
+      "correctIndex": 1,
+      "explanation": "34 + 30 = 64."
+    },
+    {
+      "text": "Konsert zalida 100 ta joy bor. 1-qatorga 25 ta, 2-qatorga 25 ta, 3-qatorga 30 ta tomoshabin o‘tirdi. Nechta bo‘sh joy qoldi?",
+      "options": [
+        "15 ta",
+        "25 ta",
+        "20 ta (25 + 25 + 30 = 80; 100 - 80 = 20)",
+        "30 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Jami tomoshabinlar: 25 + 25 + 30 = 80. Bo‘sh joylar: 100 - 80 = 20 ta."
+    },
+    {
+      "text": "(36 + 14) + (28 + 12) ifodani qulay usulda hisoblang:",
+      "options": [
+        "90 (50 + 40 = 90)",
+        "80",
+        "100",
+        "85"
+      ],
+      "correctIndex": 0,
+      "explanation": "36 + 14 = 50, 28 + 12 = 40. Jami: 50 + 40 = 90."
+    },
+    {
+      "text": "100 - (35 + 25 + 10) ifodaning qiymatini toping:",
+      "options": [
+        "30 (35 + 25 + 10 = 70; 100 - 70 = 30)",
+        "20",
+        "40",
+        "25"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qavs ichi: 70. 100 - 70 = 30."
+    },
+    {
+      "text": "Avtobusda 45 yo‘lovchi bor edi. 1-bekatda (10 - 2) nafar tushdi, 2-bekatda 12 nafar chiqdi. Yo‘lovchilar soni qancha bo‘ldi?",
+      "options": [
+        "47 nafar",
+        "50 nafar",
+        "45 nafar",
+        "49 nafar (45 - 8 + 12 = 49)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Tushganlar: 10 - 2 = 8 nafar. 45 - 8 = 37 nafar. 37 + 12 = 49 nafar."
+    },
+    {
+      "text": "Sahna pardasi uchun 3 ta bo‘lak mato olindi: 1-bo‘lak 16 metr, 2-bo‘lak 14 metr va 3-bo‘lak 20 metr. Tikuvchi 40 metr ishlatdi. Necha metr mato qoldi?",
+      "options": [
+        "15 metr",
+        "10 metr (16 + 14 + 20 = 50; 50 - 40 = 10)",
+        "5 metr",
+        "20 metr"
+      ],
+      "correctIndex": 1,
+      "explanation": "Jami mato: 16 + 14 + 20 = 50 metr. Qolgani: 50 - 40 = 10 metr."
+    },
+    {
+      "text": "Kutubxonada 3 ta sinf o‘quvchilari kitob o‘qishmoqda: 1-sinfdan 22 nafar, 2-sinfdan 18 nafar, 3-sinfdan 25 nafar. 30 nafar bola uyiga ketgach, kutubxonada necha bola qoldi?",
+      "options": [
+        "30 nafar",
+        "40 nafar",
+        "35 nafar (22 + 18 + 25 = 65; 65 - 30 = 35)",
+        "25 nafar"
+      ],
+      "correctIndex": 2,
+      "explanation": "Jami bolalar: 22 + 18 + 25 = 65 nafar. Qolgani: 65 - 30 = 35 nafar bola."
+    }
+  ]
+}

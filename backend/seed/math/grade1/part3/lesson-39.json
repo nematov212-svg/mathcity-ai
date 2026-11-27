@@ -1,0 +1,278 @@
+{
+  "bookNumber": 39,
+  "isReview": false,
+  "title": "Kattaliklar: uzunlik, massa, hajm",
+  "emoji": "📦",
+  "shortDesc": "Uzunlik (sm, dm), massa (kg) va hajm (l) birliklarini umumlashtirish va moslashtirish.",
+  "intro": "Biz o‘rgangan uchta asosiy kattalik: uzunlik, massa va hajmni bir-biridan farqlashni va to‘g‘ri qo‘llashni o‘rganamiz.",
+  "keyPoints": [
+    "Uzunlik santimetr (sm) va detsimetr (dm)da o‘lchanadi.",
+    "Massa kilogramm (kg)da o‘lchanadi.",
+    "Hajm litr (l)da o‘lchanadi.",
+    "Faqat bir xil birlikdagi kattaliklarni qo‘shish yoki ayirish mumkin (5 kg + 5 kg + 2 kg + 3 kg = 15 kg)."
+  ],
+  "miniExample": {
+    "emojis": "📦 Uzunlik: 10 sm, Massa: 5 kg, Hajm: 2 l",
+    "text": "Har bir narsa o‘z birligiga ega: daftar uzunligi 20 sm, qovun massasi 4 kg, sut hajmi 1 l."
+  },
+  "xpReward": 100,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Tarvuzning og‘irligi (massasi) qaysi birlikda o‘lchanadi?",
+      "options": [
+        "Kilogramm (kg)",
+        "Santimetr (sm)",
+        "Litr (l)",
+        "Minut"
+      ],
+      "correctIndex": 0,
+      "explanation": "Massa kilogrammda (kg) o‘lchanadi."
+    },
+    {
+      "text": "Chizg‘ich bilan nimani o‘lchaymiz?",
+      "options": [
+        "Massani (kg)",
+        "Uzunlikni (sm, dm)",
+        "Hajmni (l)",
+        "Vaqtni (soat)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Chizg‘ich yordamida uzunlik o‘lchanadi."
+    },
+    {
+      "text": "5 kg + 5 kg + 2 kg + 3 kg amalini hisoblang:",
+      "options": [
+        "12 kg",
+        "14 kg",
+        "15 kg",
+        "16 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 5 = 10, 10 + 2 = 12, 12 + 3 = 15 kg."
+    }
+  ],
+  "test": [
+    {
+      "text": "Uzunlik birliklarini ko‘rsating:",
+      "options": [
+        "Santimetr (sm) va detsimetr (dm)",
+        "Kilogramm (kg)",
+        "Litr (l)",
+        "Soat va minut"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uzunlik sm va dm da o‘lchanadi."
+    },
+    {
+      "text": "Massa o‘lchov birligi qaysi?",
+      "options": [
+        "Litr (l)",
+        "Santimetr (sm)",
+        "Kilogramm (kg)",
+        "Detsimetr (dm)"
+      ],
+      "correctIndex": 2,
+      "explanation": "Massa kilogrammda o‘lchanadi."
+    },
+    {
+      "text": "Suyuqliklar hajmi qaysi birlikda o‘lchanadi?",
+      "options": [
+        "Kilogramm (kg)",
+        "Litr (l)",
+        "Santimetr (sm)",
+        "Gramm"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hajm litrda o‘lchanadi."
+    },
+    {
+      "text": "Daftarning eni 15 sm. Bu qaysi kattalikka tegishli?",
+      "options": [
+        "Massa",
+        "Hajm",
+        "Vaqt",
+        "Uzunlik"
+      ],
+      "correctIndex": 3,
+      "explanation": "Santimetr — uzunlik birligi."
+    },
+    {
+      "text": "Bir qop un 50 kg. Bu qaysi kattalikka tegishli?",
+      "options": [
+        "Uzunlik",
+        "Massa",
+        "Hajm",
+        "Tezlik"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kilogramm — massa birligi."
+    },
+    {
+      "text": "Bir chelak suv 10 l. Bu qaysi kattalikka tegishli?",
+      "options": [
+        "Hajm",
+        "Massa",
+        "Uzunlik",
+        "Harorat"
+      ],
+      "correctIndex": 0,
+      "explanation": "Litr — hajm birligi."
+    },
+    {
+      "text": "5 kg + 5 kg + 2 kg + 3 kg ifodaning qiymatini toping:",
+      "options": [
+        "14 kg",
+        "16 kg",
+        "12 kg",
+        "15 kg"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 5 + 2 + 3 = 15 kg."
+    },
+    {
+      "text": "20 l + 15 l + 5 l amalini hisoblang:",
+      "options": [
+        "35 l",
+        "45 l",
+        "40 l",
+        "50 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 + 15 + 5 = 40 l."
+    },
+    {
+      "text": "3 dm + 4 dm + 2 dm amalini hisoblang:",
+      "options": [
+        "8 dm",
+        "10 dm",
+        "9 dm",
+        "7 dm"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 + 4 + 2 = 9 dm."
+    },
+    {
+      "text": "Qaysi qo‘shish to‘g‘ri ma’noga ega?",
+      "options": [
+        "5 kg + 3 sm = 8 kg",
+        "4 l + 2 dm = 6 l",
+        "7 sm + 1 kg = 8 sm",
+        "5 kg + 3 kg = 8 kg"
+      ],
+      "correctIndex": 3,
+      "explanation": "Faqat bir xil birlikdagi kattaliklarni qo‘shish mumkin."
+    },
+    {
+      "text": "1 detsimetr necha santimetrga teng?",
+      "options": [
+        "10 sm",
+        "100 sm",
+        "1 sm",
+        "5 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 dm = 10 sm."
+    },
+    {
+      "text": "Savatda 4 kg olma va 3 kg nok bor. Savatdagi mevalar massasi qancha?",
+      "options": [
+        "6 kg",
+        "7 kg (4 + 3 = 7)",
+        "8 kg",
+        "1 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 + 3 = 7 kg."
+    },
+    {
+      "text": "Bochkadan 12 l suv olindi, keyin yana 8 l olindi. Jami necha litr suv olingan?",
+      "options": [
+        "18 l",
+        "22 l",
+        "4 l",
+        "20 l (12 + 8 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "12 + 8 = 20 l."
+    },
+    {
+      "text": "Tasmadan avval 25 sm, so‘ng 15 sm qirqib olindi. Jami necha santimetr qirqib olingan?",
+      "options": [
+        "35 sm",
+        "40 sm (25 + 15 = 40)",
+        "45 sm",
+        "10 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "25 + 15 = 40 sm."
+    },
+    {
+      "text": "Sutkasiga sigir 18 l sut beradi. 2 kunda necha litr sut beradi?",
+      "options": [
+        "34 l",
+        "38 l",
+        "36 l (18 + 18 = 36)",
+        "20 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "18 + 18 = 36 l."
+    },
+    {
+      "text": "Bir qop shakar 25 kg, ikkinchisi 30 kg. Ikkala qop jami necha kilogramm?",
+      "options": [
+        "55 kg (25 + 30 = 55)",
+        "50 kg",
+        "60 kg",
+        "5 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "25 + 30 = 55 kg."
+    },
+    {
+      "text": "Mubina 4 dm, Dilnoza esa 50 sm uzunlikda tasma sotib oldi. Kimning tasmasi uzunroq? (1 dm = 10 sm)",
+      "options": [
+        "Dilnozaniki (4 dm = 40 sm; 50 sm > 40 sm)",
+        "Mubinani",
+        "Ikkalasi teng",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 dm = 40 sm. 50 sm > 40 sm, demak Dilnozaniki uzunroq."
+    },
+    {
+      "text": "Uchta toshning massasi: 10 kg, 5 kg va 2 kg. Ularning umumiy massasi qancha?",
+      "options": [
+        "16 kg",
+        "18 kg",
+        "15 kg",
+        "17 kg (10 + 5 + 2 = 17)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 + 5 + 2 = 17 kg."
+    },
+    {
+      "text": "Do‘konga 45 kg kartoshka va 35 kg sabzi keltirildi. Kun davomida 50 kg sabzavot sotildi. Do‘konda necha kilogramm sabzavot qoldi?",
+      "options": [
+        "25 kg",
+        "30 kg (45 + 35 = 80; 80 - 50 = 30)",
+        "35 kg",
+        "40 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "Jami: 45 + 35 = 80 kg. Qoldi: 80 - 50 = 30 kg."
+    },
+    {
+      "text": "Idishda 28 l suv bor edi. Undan 8 l gul sug‘orishga, 10 l ovqatga ishlatildi. Idishda necha litr suv qoldi?",
+      "options": [
+        "12 l",
+        "8 l",
+        "10 l (28 - 8 - 10 = 10)",
+        "15 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "28 - 8 = 20 l, 20 - 10 = 10 l."
+    }
+  ]
+}

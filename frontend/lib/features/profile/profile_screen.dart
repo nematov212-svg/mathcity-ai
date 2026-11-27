@@ -1485,10 +1485,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                 title: 'Tungi rejim',
                                 subtitle: () {
                                   final mode = ref.watch(themeModeProvider);
-                                  if (mode == ThemeMode.dark)
+                                  if (mode == ThemeMode.dark) {
                                     return 'Tungi rejim (Faol)';
-                                  if (mode == ThemeMode.light)
+                                  }
+                                  if (mode == ThemeMode.light) {
                                     return 'Kunduzgi rejim (Faol)';
+                                  }
                                   return 'Tizim bo‘yicha (Avtomatik)';
                                 }(),
                                 colors: colors,

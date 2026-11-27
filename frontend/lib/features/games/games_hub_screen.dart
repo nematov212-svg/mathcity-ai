@@ -123,12 +123,15 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen>
 
     return _games.where((g) {
       if (_selectedFilter == 'Barchasi') return true;
-      if (_selectedFilter == 'Oson')
+      if (_selectedFilter == 'Oson') {
         return (g['difficulty'] as String? ?? '').contains('Oson');
-      if (_selectedFilter == 'O‘rta')
+      }
+      if (_selectedFilter == 'O‘rta') {
         return (g['difficulty'] as String? ?? '').contains('O‘rta');
-      if (_selectedFilter == 'Qiyin')
+      }
+      if (_selectedFilter == 'Qiyin') {
         return (g['difficulty'] as String? ?? '').contains('Qiyin');
+      }
       return true;
     }).toList();
   }

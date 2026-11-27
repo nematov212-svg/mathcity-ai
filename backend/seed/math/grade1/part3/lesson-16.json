@@ -1,0 +1,277 @@
+{
+  "bookNumber": 16,
+  "isReview": false,
+  "title": "Sonni orttirish va kamaytirishga doir masalalar (3)",
+  "emoji": "🧮",
+  "shortDesc": "Sxemalar bo‘yicha ifoda tuzish va hisoblashni mustahkamlash.",
+  "intro": "Sxemalarga qarab, sonning orttirilgan yoki kamaytirilgan qismini aniq ifoda orqali ifodalashni o‘rganamiz.",
+  "keyPoints": [
+    "Sxemadagi qo‘shimcha bo‘lak orttirishni bildiradi (+).",
+    "Sxemada kesib olingan yoki tushirilgan bo‘lak kamaytirishni bildiradi (-).",
+    "Noma’lum ikkinchi son topilgach, shart to‘liq yechiladi."
+  ],
+  "miniExample": {
+    "emojis": "🧮 I son: 18, II son: undan 7 ta ortiq = 25",
+    "text": "Sxema bo‘yicha: I kesma 18 sm, II kesma 7 sm uzun. II kesma: 18 + 7 = 25 sm."
+  },
+  "xpReward": 100,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Sxema: I kesma = 18 sm, II kesma 7 sm ortiq. II kesma uzunligini toping:",
+      "options": [
+        "25 sm (18 + 7 = 25)",
+        "11 sm (18 - 7 = 11)",
+        "24 sm",
+        "26 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "18 + 7 = 25 sm."
+    },
+    {
+      "text": "Sxema: I kesma = 30 sm, II kesma 10 sm qisqa. II kesma uzunligi qancha?",
+      "options": [
+        "40 sm (30 + 10 = 40)",
+        "20 sm (30 - 10 = 20)",
+        "25 sm",
+        "15 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 - 10 = 20 sm."
+    },
+    {
+      "text": "Birinchi son 45, ikkinchi son undan 15 ta kam. Ikkinchi sonni toping:",
+      "options": [
+        "60 (45 + 15 = 60)",
+        "25",
+        "30 (45 - 15 = 30)",
+        "35"
+      ],
+      "correctIndex": 2,
+      "explanation": "45 - 15 = 30."
+    }
+  ],
+  "test": [
+    {
+      "text": "Sxemada birinchi son 25, ikkinchisi 10 ta ortiq deb ko‘rsatilgan. Ikkinchi son nechaga teng?",
+      "options": [
+        "35 (25 + 10 = 35)",
+        "15 (25 - 10 = 15)",
+        "30",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "25 + 10 = 35."
+    },
+    {
+      "text": "Sxemada birinchi son 40, ikkinchisi 15 ta kam ko‘rsatilgan. Ikkinchi son qaysi?",
+      "options": [
+        "55 (40 + 15 = 55)",
+        "20",
+        "25 (40 - 15 = 25)",
+        "30"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 - 15 = 25."
+    },
+    {
+      "text": "«50 sonini 12 taga orttiring». Natija qancha?",
+      "options": [
+        "38",
+        "62 (50 + 12 = 62)",
+        "60",
+        "65"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 + 12 = 62."
+    },
+    {
+      "text": "«64 sonini 20 taga kamaytiring». Natija qanday?",
+      "options": [
+        "84",
+        "40",
+        "50",
+        "44 (64 - 20 = 44)"
+      ],
+      "correctIndex": 3,
+      "explanation": "64 - 20 = 44."
+    },
+    {
+      "text": "Daftar qalamdan 8 ta ko‘p. Agar qalam 12 ta bo‘lsa, daftar nechta?",
+      "options": [
+        "4 ta",
+        "20 ta (12 + 8 = 20)",
+        "18 ta",
+        "22 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 + 8 = 20 ta."
+    },
+    {
+      "text": "Savatdagi olma nokdan 10 ta kam. Agar nok 35 ta bo‘lsa, olma nechta?",
+      "options": [
+        "25 ta (35 - 10 = 25)",
+        "45 ta",
+        "20 ta",
+        "30 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "35 - 10 = 25 ta."
+    },
+    {
+      "text": "Sxema: I qism = 33, II qism undan 21 ta ortiq. II qismni hisoblang:",
+      "options": [
+        "12 (33 - 21 = 12)",
+        "50",
+        "55",
+        "54 (33 + 21 = 54)"
+      ],
+      "correctIndex": 3,
+      "explanation": "33 + 21 = 54."
+    },
+    {
+      "text": "Sxema: I qism = 76, II qism undan 34 ta kam. II qismni hisoblang:",
+      "options": [
+        "110",
+        "40",
+        "42 (76 - 34 = 42)",
+        "45"
+      ],
+      "correctIndex": 2,
+      "explanation": "76 - 34 = 42."
+    },
+    {
+      "text": "1-javonda 42 ta kitob bor. 2-javonda undan 15 ta ko‘p kitob bor. 2-javonda nechta kitob bor?",
+      "options": [
+        "27 ta",
+        "55 ta",
+        "57 ta (42 + 15 = 57)",
+        "60 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "42 + 15 = 57 ta kitob."
+    },
+    {
+      "text": "Dukonga 88 kg un keltirildi. Guruch undan 26 kg kam keltirildi. Necha kg guruch keltirilgan?",
+      "options": [
+        "114 kg",
+        "60 kg",
+        "65 kg",
+        "62 kg (88 - 26 = 62)"
+      ],
+      "correctIndex": 3,
+      "explanation": "88 - 26 = 62 kg guruch."
+    },
+    {
+      "text": "Sxema bo‘yicha: I chiziq 55 sm, II chiziq undan 23 sm qisqa. II chiziq uzunligini toping:",
+      "options": [
+        "32 sm (55 - 23 = 32)",
+        "78 sm",
+        "30 sm",
+        "35 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "55 - 23 = 32 sm."
+    },
+    {
+      "text": "Toshkent - Guliston yo‘nalishida 1-avtobusda 36 yo‘lovchi, 2-avtobusda undan 11 nafar ko‘p yo‘lovchi bor. 2-avtobusda necha yo‘lovchi bor?",
+      "options": [
+        "25 nafar",
+        "47 nafar (36 + 11 = 47)",
+        "45 nafar",
+        "50 nafar"
+      ],
+      "correctIndex": 1,
+      "explanation": "36 + 11 = 47 nafar."
+    },
+    {
+      "text": "Noma’lum sonni toping: □ soni 37 dan 12 ta ortiq.",
+      "options": [
+        "25 (37 - 12 = 25)",
+        "48",
+        "50",
+        "49 (37 + 12 = 49)"
+      ],
+      "correctIndex": 3,
+      "explanation": "37 + 12 = 49."
+    },
+    {
+      "text": "Noma’lum sonni toping: □ soni 85 dan 31 ta kam.",
+      "options": [
+        "116",
+        "54 (85 - 31 = 54)",
+        "50",
+        "55"
+      ],
+      "correctIndex": 1,
+      "explanation": "85 - 31 = 54."
+    },
+    {
+      "text": "Sxema bo‘yicha: I son = 24, II son undan 12 ta ortiq. Ikkala sonning yig‘indisi nechaga teng?",
+      "options": [
+        "36",
+        "48",
+        "60 (II son: 36; 24 + 36 = 60)",
+        "55"
+      ],
+      "correctIndex": 2,
+      "explanation": "II son: 24 + 12 = 36. Yig‘indi: 24 + 36 = 60."
+    },
+    {
+      "text": "Sxema: I son = 58, II son undan 16 ta kam. Ikkala sonning yig‘indisini toping:",
+      "options": [
+        "100 (II son: 42; 58 + 42 = 100)",
+        "42",
+        "90",
+        "116"
+      ],
+      "correctIndex": 0,
+      "explanation": "II son: 58 - 16 = 42. Yig‘indi: 58 + 42 = 100."
+    },
+    {
+      "text": "G‘olib 40 ta misol yechdi. Umid undan 10 ta kam, Jasur esa Umiddan 5 ta ko‘p yechdi. Jasur nechta misol yechgan?",
+      "options": [
+        "35 ta (Umid: 30; 30 + 5 = 35)",
+        "30 ta",
+        "45 ta",
+        "25 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Umid: 40 - 10 = 30 ta. Jasur: 30 + 5 = 35 ta."
+    },
+    {
+      "text": "1-kun do‘konda 34 ta velosiped sotildi. 2-kuni undan 12 ta ko‘p sotildi. Ikki kunda jami nechta velosiped sotilgan?",
+      "options": [
+        "46 ta",
+        "70 ta",
+        "86 ta",
+        "80 ta (2-kun: 46; 34 + 46 = 80)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2-kun: 34 + 12 = 46 ta. Jami: 34 + 46 = 80 ta."
+    },
+    {
+      "text": "Bog‘bon 60 tup gilos ekdi. Olma gilosdan 20 tup kam, shaftoli esa olmadan 10 tup ortiq ekildi. Bog‘da jami nechta daraxt ekilgan?",
+      "options": [
+        "140 tup",
+        "150 tup (Olma: 40, Shaftoli: 50; 60 + 40 + 50 = 150)",
+        "160 tup",
+        "130 tup"
+      ],
+      "correctIndex": 1,
+      "explanation": "Olma: 60 - 20 = 40. Shaftoli: 40 + 10 = 50. Jami: 60 + 40 + 50 = 150 tup."
+    },
+    {
+      "text": "O‘quvchilar daryo bo‘yiga sayohatga chiqishdi. 1-avtobusda 32 bola, 2-avtobusda undan 6 nafar ko‘p, 3-avtobusda 1-avtobusdagidan 4 nafar kam bola bordi. Jami necha bola borgan?",
+      "options": [
+        "90 nafar",
+        "95 nafar",
+        "98 nafar (2-avtobus: 38, 3-avtobus: 28; 32 + 38 + 28 = 98)",
+        "100 nafar"
+      ],
+      "correctIndex": 2,
+      "explanation": "2-avtobus: 38 nafar. 3-avtobus: 32 - 4 = 28 nafar. Jami: 32 + 38 + 28 = 98 nafar."
+    }
+  ]
+}

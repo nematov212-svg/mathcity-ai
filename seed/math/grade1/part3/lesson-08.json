@@ -1,0 +1,277 @@
+{
+  "bookNumber": 8,
+  "isReview": false,
+  "title": "Butunni topishga doir masalalar (3)",
+  "emoji": "🏥",
+  "shortDesc": "Qonuniyatlar, qo‘shni sonlar va kasalxona robotlari masalalari.",
+  "intro": "Aqlli robotlar xizmati orqali butunni hisoblash, qonuniyatli ketma-ketliklar va qo‘shni sonlar yig‘indisini o‘rganamiz.",
+  "keyPoints": [
+    "Kasalxona roboti palatalarni tozalashida qismlar: 22 ta va 24 ta palata = 46 ta.",
+    "Qo‘shni sonlar: biri ikkinchisidan 1 ga farq qiladigan sonlar (masalan, 7 va 8).",
+    "Qonuniyatni aniqlash butunni oldindan hisoblashga yordam beradi."
+  ],
+  "miniExample": {
+    "emojis": "🏥 22 palata + 24 palata = 46 palata",
+    "text": "Robot shifoxonaning 1-qavatida 22 ta, 2-qavatida 24 ta palatani tozaladi. Jami: 22 + 24 = 46 palata."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Robot palatalarni tozalaydi: 1-bo‘limda 22 ta, 2-bo‘limda 24 ta palata. Jami palatalar soni nechta?",
+      "options": [
+        "46 ta (22 + 24 = 46)",
+        "44 ta",
+        "48 ta",
+        "2 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "22 + 24 = 46 ta palata."
+    },
+    {
+      "text": "7 va uning o‘ng qo‘shnisi (8) yig‘indisi nechaga teng?",
+      "options": [
+        "14",
+        "15 (7 + 8 = 15)",
+        "16",
+        "13"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 ning o‘ng qo‘shnisi 8, 7 + 8 = 15."
+    },
+    {
+      "text": "Shifoxonada 7 ta o‘g‘il bola va 4 ta qiz bola davolanmoqda. Jami nechta bola davolanmoqda?",
+      "options": [
+        "10 nafar",
+        "12 nafar",
+        "11 nafar (7 + 4 = 11)",
+        "3 nafar"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 4 = 11 nafar bola."
+    }
+  ],
+  "test": [
+    {
+      "text": "22 va 24 sonlarining yig‘indisini hisoblang:",
+      "options": [
+        "46",
+        "44",
+        "48",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "22 + 24 = 46."
+    },
+    {
+      "text": "7 va 4 sonlarining yig‘indisi nechaga teng?",
+      "options": [
+        "10",
+        "12",
+        "11",
+        "3"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 4 = 11."
+    },
+    {
+      "text": "9 sonining ikkala qo‘shnisi (8 va 10) yig‘indisi nechaga teng?",
+      "options": [
+        "17",
+        "18 (8 + 10 = 18)",
+        "19",
+        "16"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 ning chap qo‘shnisi 8, o‘ng qo‘shnisi 10. 8 + 10 = 18."
+    },
+    {
+      "text": "Kasalxonada ertalab 14 nafar, tushdan keyin 15 nafar bemor qabul qilindi. Jami nechta bemor qabul qilindi?",
+      "options": [
+        "28 nafar",
+        "30 nafar",
+        "1 nafar",
+        "29 nafar (14 + 15 = 29)"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 + 15 = 29 nafar bemor."
+    },
+    {
+      "text": "Robot birinchi xonada 10 daqiqa, ikkinchi xonada 20 daqiqa ishladi. Robot jami necha daqiqa ishlagan?",
+      "options": [
+        "25 daqiqa",
+        "30 daqiqa (10 + 20 = 30)",
+        "35 daqiqa",
+        "10 daqiqa"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 + 20 = 30 daqiqa."
+    },
+    {
+      "text": "25 + 23 yig‘indisini toping:",
+      "options": [
+        "48",
+        "46",
+        "50",
+        "2"
+      ],
+      "correctIndex": 0,
+      "explanation": "25 + 23 = 48."
+    },
+    {
+      "text": "Robot-hamshira 1-qavatdagi 31 bemorga, 2-qavatdagi 27 bemorga dori tarqatdi. Jami necha bemorga dori tarqatildi?",
+      "options": [
+        "56 nafar",
+        "60 nafar",
+        "4 nafar",
+        "58 nafar (31 + 27 = 58)"
+      ],
+      "correctIndex": 3,
+      "explanation": "31 + 27 = 58 nafar bemor."
+    },
+    {
+      "text": "Qonuniyatni davom ettiring: 10, 20, 30, □. Bo‘sh o‘rindagi son nechaga teng?",
+      "options": [
+        "35",
+        "50",
+        "40",
+        "45"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sonlar 10 tadan ortib bormoqda, keyingi son 40."
+    },
+    {
+      "text": "15 sonining chap (14) va o‘ng (16) qo‘shnilari yig‘indisi nechaga teng?",
+      "options": [
+        "29",
+        "31",
+        "30 (14 + 16 = 30)",
+        "28"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 + 16 = 30."
+    },
+    {
+      "text": "Kasalxonada 42 ta oq karavot va 35 ta ko‘k karavot bor. Kasalxonada jami nechta karavot bor?",
+      "options": [
+        "75 ta",
+        "80 ta",
+        "7 ta",
+        "77 ta (42 + 35 = 77)"
+      ],
+      "correctIndex": 3,
+      "explanation": "42 + 35 = 77 ta karavot."
+    },
+    {
+      "text": "Qonuniyatni toping: 2, 5, 8, 11, □. Keyingi son qaysi?",
+      "options": [
+        "14 (chunki 3 tadan ortmoqda)",
+        "13",
+        "15",
+        "12"
+      ],
+      "correctIndex": 0,
+      "explanation": "Har bir son 3 taga ortmoqda: 11 + 3 = 14."
+    },
+    {
+      "text": "Dorixonada 36 quti vitamin va 23 quti malham bor. Dorixonada jami nechta quti dori bor?",
+      "options": [
+        "57 quti",
+        "59 quti (36 + 23 = 59)",
+        "60 quti",
+        "13 quti"
+      ],
+      "correctIndex": 1,
+      "explanation": "36 + 23 = 59 quti."
+    },
+    {
+      "text": "Tenglikni to‘g‘rilang: 54 + 25 = □",
+      "options": [
+        "77",
+        "80",
+        "29",
+        "79"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 + 20 = 70, 4 + 5 = 9. Yig‘indi 79."
+    },
+    {
+      "text": "Shifokor birinchi kuni 16 ta, ikkinchi kuni 13 ta operatsiya o‘tkazdi. Shifokor jami nechta operatsiya o‘tkazgan?",
+      "options": [
+        "28 ta",
+        "29 ta (16 + 13 = 29)",
+        "30 ta",
+        "3 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 + 13 = 29 ta."
+    },
+    {
+      "text": "Robot-tozalagich ertalab 33 ta xona, tushda 24 ta xona, kechqurun 12 ta xona tozaladi. Kun davomida jami nechta xona tozalangan?",
+      "options": [
+        "67 ta",
+        "70 ta",
+        "69 ta (33 + 24 + 12 = 69)",
+        "57 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "33 + 24 = 57, 57 + 12 = 69 ta xona."
+    },
+    {
+      "text": "Uchta ketma-ket son berilgan: 19, 20, 21. Ularning eng kichigi va eng kattasining yig‘indisi nechaga teng?",
+      "options": [
+        "40 (19 + 21 = 40)",
+        "39",
+        "41",
+        "42"
+      ],
+      "correctIndex": 0,
+      "explanation": "Eng kichigi 19, eng kattasi 21. 19 + 21 = 40."
+    },
+    {
+      "text": "Qonuniyat bo‘yicha keyingi ikkita sonni toping: 4, 8, 12, 16, □, □",
+      "options": [
+        "20 va 24 (4 tadan ortmoqda)",
+        "18 va 22",
+        "20 va 22",
+        "19 va 23"
+      ],
+      "correctIndex": 0,
+      "explanation": "Har bir qadam 4 taga ortadi: 16 + 4 = 20, 20 + 4 = 24."
+    },
+    {
+      "text": "Tibbiyot markazida 45 ta katta va 34 ta kichik tibbiy apparat bor. Markazda jami nechta apparat bor?",
+      "options": [
+        "77 ta",
+        "80 ta",
+        "11 ta",
+        "79 ta (45 + 34 = 79)"
+      ],
+      "correctIndex": 3,
+      "explanation": "45 + 34 = 79 ta apparat."
+    },
+    {
+      "text": "Tez yordam mashinasi 1-chaqiruvga 15 km, 2-chaqiruvga 14 km, 3-chaqiruvga 20 km yo‘l bosdi. Jami necha km yo‘l bosilgan?",
+      "options": [
+        "48 km",
+        "49 km (15 + 14 + 20 = 49)",
+        "50 km",
+        "39 km"
+      ],
+      "correctIndex": 1,
+      "explanation": "15 + 14 = 29, 29 + 20 = 49 km."
+    },
+    {
+      "text": "Shifoxona oshxonasiga 30 kg olma, 25 kg nok va 14 kg uzum keltirildi. Oshxonaga jami necha kg meva keltirilgan?",
+      "options": [
+        "65 kg",
+        "70 kg",
+        "69 kg (30 + 25 + 14 = 69)",
+        "59 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "30 + 25 = 55, 55 + 14 = 69 kg."
+    }
+  ]
+}

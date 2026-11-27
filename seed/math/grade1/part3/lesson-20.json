@@ -1,0 +1,277 @@
+{
+  "bookNumber": 20,
+  "isReview": false,
+  "title": "Taqqoslashga doir masalalar (3)",
+  "emoji": "⭐",
+  "shortDesc": "Yulduz turkumlari, sonlarni orttirish/kamaytirish va farqini topish.",
+  "intro": "Yulduz turkumlari va yulduzlar sonini hisoblash orqali taqqoslash ko‘nikmalarini chuqurlashtiramiz.",
+  "keyPoints": [
+    "7 dan 8 ta ortiq son: 7 + 8 = 15.",
+    "16 dan 9 ta kam son: 16 − 9 = 7.",
+    "70 soni 85 dan qancha kam: 85 − 70 = 15 ga kam."
+  ],
+  "miniExample": {
+    "emojis": "⭐ Katta Ayiq: 7 ta yulduz, Kichik Ayiq: 7 ta yulduz",
+    "text": "70 soni 85 dan qancha kam? Farqni topamiz: 85 - 70 = 15 ga kam."
+  },
+  "xpReward": 100,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "«7 dan 8 ta ortiq» sonni toping:",
+      "options": [
+        "15 (7 + 8 = 15)",
+        "1 (8 - 7 = 1)",
+        "14",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 8 = 15."
+    },
+    {
+      "text": "«16 dan 9 ta kam» son nechaga teng?",
+      "options": [
+        "25 (16 + 9 = 25)",
+        "7 (16 - 9 = 7)",
+        "6",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 - 9 = 7."
+    },
+    {
+      "text": "70 soni 85 sonidan qancha kam?",
+      "options": [
+        "155 ga",
+        "10 ga",
+        "15 ga (85 - 70 = 15)",
+        "20 ga"
+      ],
+      "correctIndex": 2,
+      "explanation": "85 - 70 = 15 ga kam."
+    }
+  ],
+  "test": [
+    {
+      "text": "7 sonini 8 taga orttirsak, necha hosil bo‘ladi?",
+      "options": [
+        "15",
+        "1",
+        "14",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 8 = 15."
+    },
+    {
+      "text": "16 sonini 9 taga kamaytirsak, qaysi son chiqadi?",
+      "options": [
+        "25",
+        "6",
+        "7",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "16 - 9 = 7."
+    },
+    {
+      "text": "70 soni 85 dan qancha kam?",
+      "options": [
+        "10 ga kam",
+        "15 ga kam",
+        "20 ga kam",
+        "25 ga kam"
+      ],
+      "correctIndex": 1,
+      "explanation": "85 - 70 = 15."
+    },
+    {
+      "text": "Katta Ayiq yulduz turkumida 7 ta yorqin yulduz bor. Kichik Ayiqda ham 7 ta yulduz bor. Ular soni tengmi?",
+      "options": [
+        "Yo‘q, Katta Ayiqda ko‘p",
+        "Yo‘q, Kichik Ayiqda ko‘p",
+        "Bilib bo‘lmaydi",
+        "Ha, ikkalasi teng (7 = 7)"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 = 7, ikkala yulduz turkumi yulduzlari soni teng."
+    },
+    {
+      "text": "«50 soni 70 dan qancha kichik?»",
+      "options": [
+        "120 ga",
+        "20 ga kichik (70 - 50 = 20)",
+        "15 ga",
+        "25 ga"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 50 = 20."
+    },
+    {
+      "text": "12 sonidan 6 ta ortiq son qaysi?",
+      "options": [
+        "18 (12 + 6 = 18)",
+        "6 (12 - 6 = 6)",
+        "16",
+        "20"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + 6 = 18."
+    },
+    {
+      "text": "Orion yulduz turkumida 14 ta, Qavs turkumida 20 ta yulduz sanaldi. Qavsda nechta ko‘p yulduz sanalgan?",
+      "options": [
+        "34 ta",
+        "5 ta",
+        "7 ta",
+        "6 ta (20 - 14 = 6)"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 - 14 = 6 ta."
+    },
+    {
+      "text": "Rasaddan 48 ta yulduz kuzatildi. Ertasi kuni 16 ta kam yulduz ko‘rindi. 2-kuni nechta yulduz ko‘ringan?",
+      "options": [
+        "64 ta",
+        "30 ta",
+        "32 ta (48 - 16 = 32)",
+        "34 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "48 - 16 = 32 ta yulduz."
+    },
+    {
+      "text": "65 soni 90 sonidan qancha kam?",
+      "options": [
+        "155 ga",
+        "20 ga",
+        "25 ga (90 - 65 = 25)",
+        "30 ga"
+      ],
+      "correctIndex": 2,
+      "explanation": "90 - 65 = 25."
+    },
+    {
+      "text": "«35 dan 18 ta ortiq» bo‘lgan sonni toping:",
+      "options": [
+        "17 (35 - 18 = 17)",
+        "50",
+        "55",
+        "53 (35 + 18 = 53)"
+      ],
+      "correctIndex": 3,
+      "explanation": "35 + 18 = 53."
+    },
+    {
+      "text": "Ulug‘bek rasadxonasida birinchi guruh 36 ta, ikkinchi guruh 24 ta yulduzni xaritaga tushirdi. 1-guruh nechtaga ko‘p yulduz tushirgan?",
+      "options": [
+        "12 ta (36 - 24 = 12)",
+        "60 ta",
+        "10 ta",
+        "14 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "36 - 24 = 12 ta."
+    },
+    {
+      "text": "Qaysi guruhda yulduzlar soni eng ko‘p: A guruhda 45 ta, B guruhda 38 ta, C guruhda 52 ta?",
+      "options": [
+        "A guruhda (45 ta)",
+        "C guruhda (52 ta)",
+        "B guruhda (38 ta)",
+        "Hammasi teng"
+      ],
+      "correctIndex": 1,
+      "explanation": "52 soni 45 va 38 dan katta."
+    },
+    {
+      "text": "40 soni 68 sonidan qancha kam?",
+      "options": [
+        "108 ga",
+        "20 ga",
+        "30 ga",
+        "28 ga (68 - 40 = 28)"
+      ],
+      "correctIndex": 3,
+      "explanation": "68 - 40 = 28."
+    },
+    {
+      "text": "«42 dan 19 ta kam» bo‘lgan sonni toping:",
+      "options": [
+        "61 (42 + 19 = 61)",
+        "23 (42 - 19 = 23)",
+        "20",
+        "25"
+      ],
+      "correctIndex": 1,
+      "explanation": "42 - 19 = 23."
+    },
+    {
+      "text": "Astronom 1-kuni 25 ta, 2-kuni undan 10 ta ko‘p yulduz qayd etdi. Ikkala kunda jami nechta yulduz qayd etilgan?",
+      "options": [
+        "35 ta",
+        "55 ta",
+        "60 ta (2-kun: 35; 25 + 35 = 60)",
+        "70 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "2-kuni: 25 + 10 = 35 ta. Jami: 25 + 35 = 60 ta."
+    },
+    {
+      "text": "Planetariyga ertalab 45 o‘quvchi, tushda undan 15 nafar kam o‘quvchi keldi. Kun davomida jami necha o‘quvchi kelgan?",
+      "options": [
+        "75 nafar (Tushda: 30; 45 + 30 = 75)",
+        "30 nafar",
+        "70 nafar",
+        "80 nafar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tushda: 45 - 15 = 30 nafar. Jami: 45 + 30 = 75 nafar."
+    },
+    {
+      "text": "Sonlarni kamayish tartibida joylashtiring: 85, 70, 90, 65",
+      "options": [
+        "90, 85, 70, 65",
+        "65, 70, 85, 90",
+        "90, 70, 85, 65",
+        "85, 90, 70, 65"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kamayish tartibi eng kattasidan eng kichigiga qarab: 90 > 85 > 70 > 65."
+    },
+    {
+      "text": "70 soni 95 sonidan qancha kam bo‘lsa, 40 soni 65 sonidan shuncha kammi?",
+      "options": [
+        "Yo‘q, biri 20 ga, biri 30 ga kam",
+        "Yo‘q, teng emas",
+        "Bilib bo‘lmaydi",
+        "Ha, ikkalasida ham 25 ga kam (95 - 70 = 25, 65 - 40 = 25)"
+      ],
+      "correctIndex": 3,
+      "explanation": "95 - 70 = 25 va 65 - 40 = 25. Farqlari teng."
+    },
+    {
+      "text": "Teleskop orqali 3 ta yulduz turkumi kuzatildi: 1-sida 15 ta, 2-sida 20 ta, 3-sida esa 1-sidagidan 5 ta ko‘p yulduz bor. Jami nechta yulduz kuzatildi?",
+      "options": [
+        "50 ta",
+        "55 ta (3-turkum: 20 ta; 15 + 20 + 20 = 55)",
+        "60 ta",
+        "45 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "3-turkumda: 15 + 5 = 20 ta. Jami: 15 + 20 + 20 = 55 ta yulduz."
+    },
+    {
+      "text": "Sayyohlar rasadxonada 50 ta yulduzni ko‘rishdi. Agar ular yana 25 ta ko‘rishsa, jami soni 100 tadan qancha kam bo‘ladi?",
+      "options": [
+        "20 taga kam",
+        "30 taga kam",
+        "25 taga kam (50 + 25 = 75; 100 - 75 = 25)",
+        "15 taga kam"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ko‘rilgani: 50 + 25 = 75 ta. 100 tagacha farq: 100 - 75 = 25 ta kam."
+    }
+  ]
+}

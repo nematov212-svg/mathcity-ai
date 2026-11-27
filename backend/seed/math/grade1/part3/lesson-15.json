@@ -1,0 +1,277 @@
+{
+  "bookNumber": 15,
+  "isReview": false,
+  "title": "Sonni orttirish va kamaytirishga doir masalalar (2)",
+  "emoji": "⬇️",
+  "shortDesc": "Katta sonlarni orttirish va kamaytirish, o‘g‘il va qiz bolalar masalalari.",
+  "intro": "«52 dan 17 ta ortiq» yoki «49 dan 18 ta kam» kabi ikki xonali sonlarni qo‘shish va ayirish orqali hisoblaymiz.",
+  "keyPoints": [
+    "52 dan 17 ta ortiq: 52 + 17 = 69.",
+    "49 dan 18 ta kam: 49 − 18 = 31.",
+    "70 dan 20 ta ortiq: 70 + 20 = 90."
+  ],
+  "miniExample": {
+    "emojis": "👦 52 o‘g‘il bola, qizlar undan 17 ta ortiq 👧",
+    "text": "Oromgohda 52 o‘g‘il bola bor, qizlar undan 17 ta ortiq. Qizlar: 52 + 17 = 69 nafar."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "«52 dan 17 ta ortiq» sonni toping:",
+      "options": [
+        "69 (52 + 17 = 69)",
+        "35 (52 - 17 = 35)",
+        "68",
+        "70"
+      ],
+      "correctIndex": 0,
+      "explanation": "52 + 17 = 69."
+    },
+    {
+      "text": "«49 dan 18 ta kam» son nechaga teng?",
+      "options": [
+        "67 (49 + 18 = 67)",
+        "31 (49 - 18 = 31)",
+        "30",
+        "32"
+      ],
+      "correctIndex": 1,
+      "explanation": "49 - 18 = 31."
+    },
+    {
+      "text": "«70 dan 20 ta ortiq» sonni toping:",
+      "options": [
+        "50 (70 - 20 = 50)",
+        "80",
+        "90 (70 + 20 = 90)",
+        "100"
+      ],
+      "correctIndex": 2,
+      "explanation": "70 + 20 = 90."
+    }
+  ],
+  "test": [
+    {
+      "text": "52 sonini 17 taga orttirsak, qaysi son hosil bo‘ladi?",
+      "options": [
+        "69",
+        "35",
+        "68",
+        "70"
+      ],
+      "correctIndex": 0,
+      "explanation": "52 + 17 = 69."
+    },
+    {
+      "text": "49 sonini 18 taga kamaytirsak, qaysi son hosil bo‘ladi?",
+      "options": [
+        "67",
+        "30",
+        "31",
+        "32"
+      ],
+      "correctIndex": 2,
+      "explanation": "49 - 18 = 31."
+    },
+    {
+      "text": "70 sonini 20 taga orttiring:",
+      "options": [
+        "50",
+        "90",
+        "80",
+        "100"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 + 20 = 90."
+    },
+    {
+      "text": "80 sonini 30 taga kamaytiring:",
+      "options": [
+        "110",
+        "40",
+        "60",
+        "50"
+      ],
+      "correctIndex": 3,
+      "explanation": "80 - 30 = 50."
+    },
+    {
+      "text": "Sinfda 16 nafar o‘g‘il bola bor, qizlar undan 3 nafar ko‘p. Qizlar nechta?",
+      "options": [
+        "13 nafar",
+        "19 nafar (16 + 3 = 19)",
+        "18 nafar",
+        "20 nafar"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 + 3 = 19 nafar qiz."
+    },
+    {
+      "text": "Maktab hovlisida 28 ta o‘g‘il bola o‘ynayapti, qizlar undan 6 nafar kam. Qizlar nechta?",
+      "options": [
+        "22 nafar (28 - 6 = 22)",
+        "34 nafar",
+        "20 nafar",
+        "24 nafar"
+      ],
+      "correctIndex": 0,
+      "explanation": "28 - 6 = 22 nafar qiz."
+    },
+    {
+      "text": "Oromgohda 52 nafar o‘g‘il bola dam olyapti. Qizlar esa o‘g‘il bolalardan 17 nafar ortiq. Qizlar soni qancha?",
+      "options": [
+        "35 nafar",
+        "68 nafar",
+        "70 nafar",
+        "69 nafar (52 + 17 = 69)"
+      ],
+      "correctIndex": 3,
+      "explanation": "52 + 17 = 69 nafar qiz."
+    },
+    {
+      "text": "Kinoteatrda 65 ta o‘rin bor. Tomoshabinlar o‘rindiqlar sonidan 14 ta kam. Tomoshabinlar nechta?",
+      "options": [
+        "79 nafar",
+        "50 nafar",
+        "51 nafar (65 - 14 = 51)",
+        "52 nafar"
+      ],
+      "correctIndex": 2,
+      "explanation": "65 - 14 = 51 nafar."
+    },
+    {
+      "text": "Bog‘bon 43 kg shaftoli uzdi, nok esa undan 24 kg ortiq uzildi. Qancha nok uzilgan?",
+      "options": [
+        "19 kg",
+        "65 kg",
+        "67 kg (43 + 24 = 67)",
+        "70 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "43 + 24 = 67 kg nok."
+    },
+    {
+      "text": "Kutubxonada 86 ta o‘zbekcha kitob bor, ruscha kitoblar undan 32 ta kam. Ruscha kitoblar nechta?",
+      "options": [
+        "118 ta",
+        "50 ta",
+        "55 ta",
+        "54 ta (86 - 32 = 54)"
+      ],
+      "correctIndex": 3,
+      "explanation": "86 - 32 = 54 ta kitob."
+    },
+    {
+      "text": "34 sonidan 25 ta ortiq bo‘lgan sonni toping:",
+      "options": [
+        "59 (34 + 25 = 59)",
+        "9 (34 - 25 = 9)",
+        "58",
+        "60"
+      ],
+      "correctIndex": 0,
+      "explanation": "34 + 25 = 59."
+    },
+    {
+      "text": "76 sonidan 42 ta kam bo‘lgan sonni toping:",
+      "options": [
+        "118",
+        "34 (76 - 42 = 34)",
+        "30",
+        "35"
+      ],
+      "correctIndex": 1,
+      "explanation": "76 - 42 = 34."
+    },
+    {
+      "text": "Boks to‘garagiga 38 nafar bola qatnashadi. Dzyudo to‘garagiga esa undan 11 nafar kam bola qatnashadi. Dzyudochilar nechta?",
+      "options": [
+        "49 nafar",
+        "25 nafar",
+        "28 nafar",
+        "27 nafar (38 - 11 = 27)"
+      ],
+      "correctIndex": 3,
+      "explanation": "38 - 11 = 27 nafar bola."
+    },
+    {
+      "text": "Birinchi savatda 26 kg anor bor, ikkinchi savatda undan 13 kg ortiq. Ikkinchi savatda necha kg anor bor?",
+      "options": [
+        "13 kg",
+        "39 kg (26 + 13 = 39)",
+        "38 kg",
+        "40 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "26 + 13 = 39 kg anor."
+    },
+    {
+      "text": "Maktabda 45 nafar o‘g‘il bola va ulardan 12 nafar ortiq qiz bola bor. Maktabda jami necha nafar o‘quvchi bor?",
+      "options": [
+        "57 nafar",
+        "90 nafar",
+        "102 nafar (Qizlar: 57; 45 + 57 = 102)",
+        "100 nafar"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qizlar: 45 + 12 = 57 nafar. Jami: 45 + 57 = 102 nafar."
+    },
+    {
+      "text": "Tikuvchilik sexida 68 metr oq mato bor. Moviy mato undan 25 metr kam. Sexda jami necha metr mato bor?",
+      "options": [
+        "111 metr (Moviy: 43; 68 + 43 = 111)",
+        "43 metr",
+        "100 metr",
+        "110 metr"
+      ],
+      "correctIndex": 0,
+      "explanation": "Moviy mato: 68 - 25 = 43 metr. Jami: 68 + 43 = 111 metr."
+    },
+    {
+      "text": "Fermada 54 ta sigir bor. Qo‘ylar sigirlardan 30 ta ortiq, echkilar esa sigirlardan 20 ta kam. Qo‘ylar soni echkilar sonidan qancha ko‘p?",
+      "options": [
+        "50 ta (Qo‘y: 84, Echki: 34; 84 - 34 = 50)",
+        "10 ta",
+        "40 ta",
+        "60 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘ylar: 54 + 30 = 84. Echkilar: 54 - 20 = 34. Farq: 84 - 34 = 50 ta."
+    },
+    {
+      "text": "Bir qutida 48 dona qalam bor, ikkinchi qutida undan 15 dona kam. Ikkala qutida jami nechta qalam bor?",
+      "options": [
+        "33 dona",
+        "70 dona",
+        "85 dona",
+        "81 dona (2-quti: 33; 48 + 33 = 81)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2-quti: 48 - 15 = 33 dona. Jami: 48 + 33 = 81 dona."
+    },
+    {
+      "text": "Avtobusda 35 yo‘lovchi bor edi. Bekatda 15 kishi tushdi va 20 kishi chiqdi. Avtobusda necha yo‘lovchi bo‘ldi?",
+      "options": [
+        "30 nafar",
+        "40 nafar (35 - 15 + 20 = 40)",
+        "45 nafar",
+        "50 nafar"
+      ],
+      "correctIndex": 1,
+      "explanation": "35 - 15 = 20, 20 + 20 = 40 nafar yo‘lovchi."
+    },
+    {
+      "text": "Kutubxonadagi 90 ta kitobdan 1-kuni 25 ta, 2-kuni undan 5 ta kam kitob olindi. Kutubxonada nechta kitob qoldi?",
+      "options": [
+        "40 ta",
+        "50 ta",
+        "45 ta (2-kuni: 20 ta; 90 - 25 - 20 = 45)",
+        "35 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "2-kuni: 25 - 5 = 20 ta kitob. Qolgani: 90 - 25 - 20 = 45 ta."
+    }
+  ]
+}

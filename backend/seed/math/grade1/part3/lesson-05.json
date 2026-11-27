@@ -1,0 +1,277 @@
+{
+  "bookNumber": 5,
+  "isReview": false,
+  "title": "Masalalar yechish",
+  "emoji": "🤖",
+  "shortDesc": "Butun va qismlar, 2 xonali sonlarni qo‘shish va ayirish.",
+  "intro": "Ikki xonali sonlar ishtirokidagi amaliy masalalarni butun va qismlar munosabatiga tayanib yechamiz.",
+  "keyPoints": [
+    "O‘nliklar o‘nliklarga, birliklar birliklarga qo‘shiladi yoki ayiriladi.",
+    "Masalani yechishda avval berilgan miqdorlar aniqlanadi.",
+    "Natija har doim mantiqiy jihatdan tekshirib ko‘riladi."
+  ],
+  "miniExample": {
+    "emojis": "🤖 46 qop bug‘doy + 42 qop arpa = 88 qop don",
+    "text": "Omborda 46 qop bug‘doy va 42 qop arpa bor. Jami: 46 + 42 = 88 qop don."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Omborda 46 qop bug‘doy va 42 qop arpa bor. Omborda jami necha qop don bor?",
+      "options": [
+        "88 qop (46 + 42 = 88)",
+        "84 qop",
+        "90 qop",
+        "78 qop"
+      ],
+      "correctIndex": 0,
+      "explanation": "O‘nliklar: 40 + 40 = 80, birliklar: 6 + 2 = 8. Jami: 88 qop."
+    },
+    {
+      "text": "Bolalar bog‘chasida 12 ta o‘yinchoqdan 8 tasi olindi. Nechta o‘yinchoq qoldi?",
+      "options": [
+        "5 ta",
+        "4 ta (12 - 8 = 4)",
+        "6 ta",
+        "20 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qolgan o‘yinchoqlar: 12 - 8 = 4 ta."
+    },
+    {
+      "text": "Robot 35 ta qizil va 23 ta ko‘k detalni yig‘di. U jami nechta detal yig‘di?",
+      "options": [
+        "57 ta",
+        "68 ta",
+        "58 ta (35 + 23 = 58)",
+        "12 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Jami detallar: 35 + 23 = 58 ta."
+    }
+  ],
+  "test": [
+    {
+      "text": "46 + 42 ifodaning qiymatini hisoblang:",
+      "options": [
+        "88",
+        "84",
+        "90",
+        "78"
+      ],
+      "correctIndex": 0,
+      "explanation": "46 + 42 = 88."
+    },
+    {
+      "text": "Omborga 30 qop guruch va 20 qop shakar keltirildi. Jami necha qop mahsulot keltirildi?",
+      "options": [
+        "40 qop",
+        "60 qop",
+        "50 qop (30 + 20 = 50)",
+        "10 qop"
+      ],
+      "correctIndex": 2,
+      "explanation": "30 + 20 = 50 qop mahsulot."
+    },
+    {
+      "text": "56 - 24 ifodaning qiymatini hisoblang:",
+      "options": [
+        "30",
+        "32",
+        "34",
+        "22"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 - 20 = 30, 6 - 4 = 2. Natija: 32."
+    },
+    {
+      "text": "Kutubxonada 45 ta darslik bor edi. 15 tasi berildi. Nechta darslik qoldi?",
+      "options": [
+        "25 ta",
+        "35 ta",
+        "60 ta",
+        "30 ta (45 - 15 = 30)"
+      ],
+      "correctIndex": 3,
+      "explanation": "45 - 15 = 30 ta darslik qoldi."
+    },
+    {
+      "text": "Robot maydonchada 14 qadam oldinga, yana 15 qadam oldinga yurdi. Jami necha qadam yurdi?",
+      "options": [
+        "28 qadam",
+        "29 qadam (14 + 15 = 29)",
+        "30 qadam",
+        "1 qadam"
+      ],
+      "correctIndex": 1,
+      "explanation": "14 + 15 = 29 qadam."
+    },
+    {
+      "text": "77 - 30 ifodaning qiymati nechaga teng?",
+      "options": [
+        "47",
+        "37",
+        "57",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "70 - 30 = 40, yana 7 birlik: 47."
+    },
+    {
+      "text": "Muzeyga ertalab 34 nafar, tushdan keyin esa 43 nafar sayyoh keldi. Kun davomida jami necha nafar sayyoh kelgan?",
+      "options": [
+        "75 nafar",
+        "87 nafar",
+        "67 nafar",
+        "77 nafar (34 + 43 = 77)"
+      ],
+      "correctIndex": 3,
+      "explanation": "34 + 43 = 77 nafar sayyoh."
+    },
+    {
+      "text": "Fermada 68 ta qo‘y bor edi. Ulardan 25 tasi yaylovga chiqarildi. Qo‘rada nechta qo‘y qoldi?",
+      "options": [
+        "40 ta",
+        "45 ta",
+        "43 ta (68 - 25 = 43)",
+        "33 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "68 - 25 = 43 ta qo‘y qoldi."
+    },
+    {
+      "text": "Dardona 24 bet ertak o‘qidi. Sardor esa undan 13 bet ko‘p o‘qidi. Sardor necha bet o‘qigan?",
+      "options": [
+        "11 bet (24 - 13 = 11)",
+        "35 bet",
+        "37 bet (24 + 13 = 37)",
+        "47 bet"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sardor 13 bet ko‘p o‘qigan: 24 + 13 = 37 bet."
+    },
+    {
+      "text": "Dukonga 95 kg un keltirildi. 1-kuni 40 kg, 2-kuni 30 kg sotildi. Necha kg un qoldi?",
+      "options": [
+        "35 kg",
+        "20 kg",
+        "15 kg",
+        "25 kg (95 - 40 - 30 = 25)"
+      ],
+      "correctIndex": 3,
+      "explanation": "95 - 70 = 25 kg un qoldi."
+    },
+    {
+      "text": "Avtobusda 48 nafar yo‘lovchi bor edi. Bekatda 16 kishi tushdi. Nechta yo‘lovchi qoldi?",
+      "options": [
+        "32 nafar (48 - 16 = 32)",
+        "34 nafar",
+        "30 nafar",
+        "64 nafar"
+      ],
+      "correctIndex": 0,
+      "explanation": "48 - 16 = 32 nafar yo‘lovchi."
+    },
+    {
+      "text": "Toshkent - Samarqand poyezdining 1-vagonida 36 yo‘lovchi, 2-vagonida 31 yo‘lovchi bor. Ikkala vagonda jami qancha yo‘lovchi bor?",
+      "options": [
+        "65 nafar",
+        "67 nafar (36 + 31 = 67)",
+        "77 nafar",
+        "5 nafar"
+      ],
+      "correctIndex": 1,
+      "explanation": "36 + 31 = 67 nafar yo‘lovchi."
+    },
+    {
+      "text": "Noma’lum sonni toping: □ + 24 = 66",
+      "options": [
+        "40",
+        "90",
+        "44",
+        "42 (chunki 66 - 24 = 42)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Noma’lum qo‘shiluvchini topish uchun yig‘indidan ayiramiz: 66 - 24 = 42."
+    },
+    {
+      "text": "Noma’lum sonni toping: 89 - □ = 54",
+      "options": [
+        "25",
+        "35 (chunki 89 - 54 = 35)",
+        "45",
+        "143"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ayriluvchini topish uchun kamayuvchidan ayirmani ayiramiz: 89 - 54 = 35."
+    },
+    {
+      "text": "Sinf kutubxonasida 78 ta kitob bor edi. 1-hafta 23 ta, 2-hafta 21 ta kitob o‘qishga olindi. Nechta kitob qoldi?",
+      "options": [
+        "44 ta",
+        "30 ta",
+        "34 ta (78 - 23 - 21 = 34)",
+        "35 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Jami olingan kitoblar: 23 + 21 = 44 ta. Qolgani: 78 - 44 = 34 ta."
+    },
+    {
+      "text": "Dron Toshkent bo‘ylab 44 km, so‘ng Samarqandda 35 km parvoz qildi. Dron jami necha km parvoz qilgan?",
+      "options": [
+        "79 km (44 + 35 = 79)",
+        "69 km",
+        "89 km",
+        "9 km"
+      ],
+      "correctIndex": 0,
+      "explanation": "44 + 35 = 79 km."
+    },
+    {
+      "text": "Tikuvchi 58 metr matodan 24 metr ko‘ylakka, 12 metr yubkaga ishlatdi. Necha metr mato qoldi?",
+      "options": [
+        "22 metr (58 - 24 - 12 = 22)",
+        "20 metr",
+        "24 metr",
+        "36 metr"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ishlatilgan mato: 24 + 12 = 36 metr. Qolgani: 58 - 36 = 22 metr."
+    },
+    {
+      "text": "Do‘konda 38 ta planshet bor edi. Kun davomida 15 tasi sotildi, kechqurun yana 10 ta yangi planshet keltirildi. Do‘konda nechta planshet bo‘ldi?",
+      "options": [
+        "30 ta",
+        "35 ta",
+        "28 ta",
+        "33 ta (38 - 15 + 10 = 33)"
+      ],
+      "correctIndex": 3,
+      "explanation": "38 - 15 = 23 ta, 23 + 10 = 33 ta planshet."
+    },
+    {
+      "text": "Sayyohlar 1-kuni 25 km, 2-kuni undan 10 km kam yo‘l yurishdi. Sayyohlar ikki kunda jami necha km yo‘l yurishgan?",
+      "options": [
+        "35 km",
+        "40 km (2-kun: 15 km; 25 + 15 = 40)",
+        "45 km",
+        "50 km"
+      ],
+      "correctIndex": 1,
+      "explanation": "2-kun: 25 - 10 = 15 km. Ikki kunda: 25 + 15 = 40 km."
+    },
+    {
+      "text": "Bog‘bon 50 kg shaftoli va 40 kg o‘rik uzdi. U 30 kg mevani bozorga sotishga jo‘natdi. Bog‘bonda necha kg meva qoldi?",
+      "options": [
+        "50 kg",
+        "70 kg",
+        "60 kg (50 + 40 - 30 = 60)",
+        "80 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "Jami mevalar: 50 + 40 = 90 kg. Sotishga ketgach: 90 - 30 = 60 kg qoldi."
+    }
+  ]
+}

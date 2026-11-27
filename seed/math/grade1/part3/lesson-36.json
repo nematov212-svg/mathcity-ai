@@ -1,0 +1,277 @@
+{
+  "bookNumber": 36,
+  "isReview": false,
+  "title": "Massa va massa birliklari (2)",
+  "emoji": "🌾",
+  "shortDesc": "Tegirmon, uchtalab sanash (3, 6, 9, 12, 15 kg) va noma’lum massani topish.",
+  "intro": "Don mahsulotlarini uchtalab sanash, noma’lum dastlabki massani topish va amallarni o‘rganamiz.",
+  "keyPoints": [
+    "Uchtalab sanash: 3, 6, 9, 12, 15, 18 kg.",
+    "Dastlabki massani topish: 8 kg olindi va 6 kg qoldi ➔ Dastlab 8 + 6 = 14 kg bo‘lgan.",
+    "«30 kg va undan 2 kg ortiq» ifodasi: 30 + 2 = 32 kg."
+  ],
+  "miniExample": {
+    "emojis": "🌾 8 kg olindi ➔ 6 kg qoldi ➔ Dastlab: 8 + 6 = 14 kg",
+    "text": "Qopdan 8 kg un olindi va 6 kg qoldi. Dastlab: 8 + 6 = 14 kg un bo‘lgan."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Qopdan 8 kg bug‘doy olingach, 6 kg qoldi. Dastlab qopda necha kg bug‘doy bo‘lgan?",
+      "options": [
+        "14 kg (8 + 6 = 14)",
+        "2 kg (8 - 6 = 2)",
+        "12 kg",
+        "16 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "Dastlabki massani topish uchun qo‘shamiz: 8 + 6 = 14 kg."
+    },
+    {
+      "text": "Uchtalab sanang: 3, 6, 9, 12, □ kg. Bo‘sh o‘rindagi son qaysi?",
+      "options": [
+        "14 kg",
+        "15 kg",
+        "16 kg",
+        "13 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "Har safar 3 kg ga ortadi: 12 + 3 = 15 kg."
+    },
+    {
+      "text": "«30 kg va undan 2 kg ortiq» massa necha kg bo‘ladi?",
+      "options": [
+        "28 kg (30 - 2 = 28)",
+        "35 kg",
+        "32 kg (30 + 2 = 32)",
+        "30 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "30 + 2 = 32 kg."
+    }
+  ],
+  "test": [
+    {
+      "text": "Qopdan 8 kg un olingach, 6 kg un qoldi. Dastlab qopda qancha un bo‘lgan?",
+      "options": [
+        "14 kg",
+        "2 kg",
+        "12 kg",
+        "16 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 6 = 14 kg."
+    },
+    {
+      "text": "Uchtalab sanash ketma-ketligini davom ettiring: 3, 6, 9, □",
+      "options": [
+        "10",
+        "11",
+        "12",
+        "15"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 + 3 = 12."
+    },
+    {
+      "text": "30 kg dan 2 kg ortiq massa necha kg bo‘ladi?",
+      "options": [
+        "28 kg",
+        "32 kg",
+        "34 kg",
+        "30 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 2 = 32 kg."
+    },
+    {
+      "text": "40 kg dan 5 kg kam massa necha kg?",
+      "options": [
+        "45 kg",
+        "30 kg",
+        "38 kg",
+        "35 kg"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 - 5 = 35 kg."
+    },
+    {
+      "text": "3 kg dan bo‘lgan 4 ta xaltada jami necha kg don bor? (3 + 3 + 3 + 3)",
+      "options": [
+        "10 kg",
+        "12 kg",
+        "15 kg",
+        "9 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 + 3 + 3 + 3 = 12 kg."
+    },
+    {
+      "text": "Idishdan 5 kg shakar olingach, 10 kg qoldi. Dastlab necha kg shakar bo‘lgan?",
+      "options": [
+        "15 kg (5 + 10 = 15)",
+        "5 kg",
+        "20 kg",
+        "12 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 + 10 = 15 kg."
+    },
+    {
+      "text": "Tegirmonchi 1-qopga 15 kg, 2-qopga 18 kg un soldi. Ikkala qopda necha kg un bor?",
+      "options": [
+        "30 kg",
+        "35 kg",
+        "3 kg",
+        "33 kg (15 + 18 = 33)"
+      ],
+      "correctIndex": 3,
+      "explanation": "15 + 18 = 33 kg."
+    },
+    {
+      "text": "Uchtalab sanash: 9, 12, 15, 18, □. Keyingi son qaysi?",
+      "options": [
+        "20 kg",
+        "22 kg",
+        "21 kg",
+        "24 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "18 + 3 = 21 kg."
+    },
+    {
+      "text": "Qutidan 14 kg mix olingach, 12 kg mix qoldi. Dastlab qutida necha kg mix bo‘lgan?",
+      "options": [
+        "2 kg",
+        "24 kg",
+        "26 kg (14 + 12 = 26)",
+        "28 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 + 12 = 26 kg."
+    },
+    {
+      "text": "Bir xaltada 25 kg, ikkinchisida undan 5 kg ortiq un bor. Ikkinchi xaltada necha kg un bor?",
+      "options": [
+        "20 kg",
+        "35 kg",
+        "28 kg",
+        "30 kg (25 + 5 = 30)"
+      ],
+      "correctIndex": 3,
+      "explanation": "25 + 5 = 30 kg."
+    },
+    {
+      "text": "Ombordan 22 kg guruch olindi va 18 kg qoldi. Dastlab omborda necha kg guruch bo‘lgan?",
+      "options": [
+        "40 kg (22 + 18 = 40)",
+        "4 kg",
+        "38 kg",
+        "42 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "22 + 18 = 40 kg."
+    },
+    {
+      "text": "3 kg lik 5 ta qutining umumiy massasi qancha? (3 + 3 + 3 + 3 + 3)",
+      "options": [
+        "12 kg",
+        "15 kg",
+        "18 kg",
+        "14 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 x 5 = 15 kg."
+    },
+    {
+      "text": "Fermer 48 kg olma terdi. 18 kg sotilgach, necha kg olma qoldi?",
+      "options": [
+        "66 kg",
+        "28 kg",
+        "32 kg",
+        "30 kg (48 - 18 = 30)"
+      ],
+      "correctIndex": 3,
+      "explanation": "48 - 18 = 30 kg."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: □ kg - 15 kg = 20 kg",
+      "options": [
+        "5 kg",
+        "35 kg (20 + 15 = 35)",
+        "30 kg",
+        "40 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 15 = 35 kg."
+    },
+    {
+      "text": "Tegirmonda 3 ta xalta un tortildi: 1-xalta 12 kg, 2-xalta 15 kg, 3-xalta 18 kg. Uchala xaltaning umumiy massasi necha kg?",
+      "options": [
+        "40 kg",
+        "48 kg",
+        "45 kg (12 + 15 + 18 = 45)",
+        "42 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 + 18 = 30, 30 + 15 = 45 kg."
+    },
+    {
+      "text": "Qopdagi bug‘doydan ertalab 15 kg, tushda 15 kg olingach, 20 kg bug‘doy qoldi. Dastlab qopda necha kg bug‘doy bo‘lgan?",
+      "options": [
+        "50 kg (15 + 15 + 20 = 50)",
+        "40 kg",
+        "45 kg",
+        "55 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "Olingani: 30 kg. Qolgani: 20 kg. Jami: 30 + 20 = 50 kg."
+    },
+    {
+      "text": "Uchtalab sanashda 3 dan 18 gacha nechta son aytiladi? (3, 6, 9, 12, 15, 18)",
+      "options": [
+        "6 ta son",
+        "5 ta son",
+        "7 ta son",
+        "4 ta son"
+      ],
+      "correctIndex": 0,
+      "explanation": "3, 6, 9, 12, 15, 18 — jami 6 ta son."
+    },
+    {
+      "text": "1-qopda 34 kg, 2-qopda undan 12 kg kam shakar bor. Ikkala qopda jami necha kg shakar bor?",
+      "options": [
+        "22 kg",
+        "54 kg",
+        "60 kg",
+        "56 kg (2-qop: 22 kg; 34 + 22 = 56)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2-qop: 34 - 12 = 22 kg. Jami: 34 + 22 = 56 kg."
+    },
+    {
+      "text": "Tegirmon omborida 80 kg don bor edi. 1-kuni 25 kg, 2-kuni 25 kg tortildi. Qolgan don har biri 3 kg dan bo‘lgan necha xaltaga to‘g‘ri keladi? (30 kg qoldi)",
+      "options": [
+        "8 ta xaltaga",
+        "10 ta xaltaga (30 kg = 10 x 3 kg)",
+        "12 ta xaltaga",
+        "9 ta xaltaga"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qoldi: 80 - 50 = 30 kg. 30 kg ni 3 kg lik qilsak, 10 ta xalta bo‘ladi."
+    },
+    {
+      "text": "Novvoyxonaga ertalab 40 kg, tushda 35 kg un keltirildi. Kun davomida 50 kg un ishlatildi. Necha kg un qoldi?",
+      "options": [
+        "20 kg",
+        "30 kg",
+        "25 kg (40 + 35 - 50 = 25)",
+        "35 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "Jami keltirilgan: 75 kg. Qolgani: 75 - 50 = 25 kg."
+    }
+  ]
+}

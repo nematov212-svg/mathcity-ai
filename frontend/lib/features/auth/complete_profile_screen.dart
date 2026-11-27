@@ -142,8 +142,9 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
 
   int _maxDaysInMonth(int? year, int? month) {
     if (month == null) return 31;
-    if (year == null)
+    if (year == null) {
       return [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+    }
     final isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
     final days = [
       31,
@@ -163,8 +164,9 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
   }
 
   int? get _calculatedAge {
-    if (_selectedYear == null || _selectedMonth == null || _selectedDay == null)
+    if (_selectedYear == null || _selectedMonth == null || _selectedDay == null) {
       return null;
+    }
     final now = DateTime.now();
     int age = now.year - _selectedYear!;
     final monthDiff = now.month - _selectedMonth!;
@@ -175,8 +177,9 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
   }
 
   bool get _isDateValid {
-    if (_selectedYear == null || _selectedMonth == null || _selectedDay == null)
+    if (_selectedYear == null || _selectedMonth == null || _selectedDay == null) {
       return false;
+    }
     final maxDays = _maxDaysInMonth(_selectedYear, _selectedMonth);
     if (_selectedDay! > maxDays || _selectedDay! < 1) return false;
 

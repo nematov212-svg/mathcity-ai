@@ -20,6 +20,7 @@ export interface FinalQuestion {
 export interface LessonDataDef {
   bookNumber: number;
   order?: number;
+  isReview?: boolean;
   title: string;
   emoji: string;
   shortDesc: string;
@@ -131,6 +132,7 @@ export function buildLessonSeed(def: LessonDataDef): any {
 
   return {
     bookNumber: def.bookNumber,
+    isReview: def.isReview || false,
     title: def.title,
     emoji: def.emoji,
     shortDesc: def.shortDesc,
@@ -145,17 +147,21 @@ export function buildLessonSeed(def: LessonDataDef): any {
   };
 }
 
-export function saveLessonFile(part: 1 | 2, lessonNum: number, data: any) {
+export function saveLessonFile(part: 1 | 2 | 3, lessonNum: number, data: any, isReview = false) {
   const padNum = lessonNum < 10 ? `0${lessonNum}` : `${lessonNum}`;
-  const filename = `lesson-${padNum}.json`;
+  const filename = isReview ? `review-${lessonNum}.json` : `lesson-${padNum}.json`;
 
-  const backendPartDir = path.resolve(process.cwd(), `backend/seed/math/grade1/part${part}`);
-  const rootPartDir = path.resolve(process.cwd(), `seed/math/grade1/part${part}`);
-
-  fs.mkdirSync(backendPartDir, { recursive: true });
-  fs.mkdirSync(rootPartDir, { recursive: true });
+  const dirs = [
+    path.resolve(__dirname, `../seed/math/grade1/part${part}`),
+    path.resolve(__dirname, `../../seed/math/grade1/part${part}`),
+    path.resolve('/Users/mirzobek/Downloads/mathcity-backend/seed/math/grade1', `part${part}`),
+  ];
 
   const jsonStr = JSON.stringify(data, null, 2);
-  fs.writeFileSync(path.join(backendPartDir, filename), jsonStr, 'utf-8');
-  fs.writeFileSync(path.join(rootPartDir, filename), jsonStr, 'utf-8');
+  for (const d of dirs) {
+    try {
+      fs.mkdirSync(d, { recursive: true });
+      fs.writeFileSync(path.join(d, filename), jsonStr, 'utf-8');
+    } catch (_) {}
+  }
 }

@@ -1,0 +1,277 @@
+{
+  "bookNumber": 17,
+  "isReview": false,
+  "title": "Sonni orttirish va kamaytirishga doir masalalar (4)",
+  "emoji": "📐",
+  "shortDesc": "Sxemalar bo‘yicha ikkala sonning yig‘indisini topish.",
+  "intro": "Birinchi son berilgan, ikkinchisi esa bir necha birlik ortiq yoki kam bo‘lsa, avval ikkinchi son, so‘ng ularning yig‘indisi topiladi.",
+  "keyPoints": [
+    "Sxema: Birinchi son 12, ikkinchisi 7 ta ortiq ➔ Ikkinchi son 12 + 7 = 19.",
+    "Ikkala son yig‘indisi: 12 + 19 = 31.",
+    "Sxema: Birinchi son 46, ikkinchisi 13 ta kam ➔ 46 − 13 = 33; jami 46 + 33 = 79."
+  ],
+  "miniExample": {
+    "emojis": "📐 I son = 12, II son = 12 + 7 = 19 ➔ Jami = 31",
+    "text": "Birinchi son 12, ikkinchisi 7 ta ortiq. Ikkala son yig‘indisi: 12 + 19 = 31."
+  },
+  "xpReward": 100,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Birinchi son 12, ikkinchisi undan 7 ta ortiq. Ikkinchi son nechaga teng?",
+      "options": [
+        "19 (12 + 7 = 19)",
+        "5 (12 - 7 = 5)",
+        "18",
+        "20"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + 7 = 19."
+    },
+    {
+      "text": "Birinchi son 12, ikkinchisi 19 bo‘lsa, ularning yig‘indisi nechaga teng?",
+      "options": [
+        "30",
+        "31 (12 + 19 = 31)",
+        "32",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 + 19 = 31."
+    },
+    {
+      "text": "Birinchi son 46, ikkinchisi undan 13 ta kam. Ikkinchi sonni toping:",
+      "options": [
+        "59 (46 + 13 = 59)",
+        "30",
+        "33 (46 - 13 = 33)",
+        "35"
+      ],
+      "correctIndex": 2,
+      "explanation": "46 - 13 = 33."
+    }
+  ],
+  "test": [
+    {
+      "text": "Birinchi son 10, ikkinchisi undan 5 ta ortiq. Ikkinchi sonni toping:",
+      "options": [
+        "15 (10 + 5 = 15)",
+        "5 (10 - 5 = 5)",
+        "14",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 5 = 15."
+    },
+    {
+      "text": "Birinchi son 20, ikkinchisi undan 6 ta kam. Ikkinchi son nechaga teng?",
+      "options": [
+        "26 (20 + 6 = 26)",
+        "15",
+        "14 (20 - 6 = 14)",
+        "13"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 - 6 = 14."
+    },
+    {
+      "text": "Birinchi son 15, ikkinchi son 25. Ularning yig‘indisi necha bo‘ladi?",
+      "options": [
+        "10 (25 - 15 = 10)",
+        "40 (15 + 25 = 40)",
+        "35",
+        "45"
+      ],
+      "correctIndex": 1,
+      "explanation": "15 + 25 = 40."
+    },
+    {
+      "text": "Birinchi son 46, ikkinchisi 33 bo‘lsa, ularning yig‘indisi nechaga teng?",
+      "options": [
+        "13 (46 - 33 = 13)",
+        "78",
+        "80",
+        "79 (46 + 33 = 79)"
+      ],
+      "correctIndex": 3,
+      "explanation": "46 + 33 = 79."
+    },
+    {
+      "text": "«Birinchi son 30, ikkinchisi undan 10 ta ortiq». Ikkinchi son qaysi?",
+      "options": [
+        "20 (30 - 10 = 20)",
+        "40 (30 + 10 = 40)",
+        "35",
+        "50"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 10 = 40."
+    },
+    {
+      "text": "«Birinchi son 50, ikkinchisi undan 20 ta kam». Ikkinchi son nechaga teng?",
+      "options": [
+        "30 (50 - 20 = 30)",
+        "70 (50 + 20 = 70)",
+        "35",
+        "25"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 20 = 30."
+    },
+    {
+      "text": "Sxema: I son = 12, II son undan 7 ta ortiq. Ikkala sonning yig‘indisi qancha?",
+      "options": [
+        "19",
+        "30",
+        "32",
+        "31 (12 + 19 = 31)"
+      ],
+      "correctIndex": 3,
+      "explanation": "II son = 12 + 7 = 19. Yig‘indi: 12 + 19 = 31."
+    },
+    {
+      "text": "Sxema: I son = 46, II son undan 13 ta kam. Ikkala sonning yig‘indisini toping:",
+      "options": [
+        "33",
+        "75",
+        "79 (46 + 33 = 79)",
+        "80"
+      ],
+      "correctIndex": 2,
+      "explanation": "II son = 46 - 13 = 33. Yig‘indi: 46 + 33 = 79."
+    },
+    {
+      "text": "Alida 15 ta yong‘oq bor, Valida undan 5 ta ko‘p yong‘oq bor. Ikkala bolada jami nechta yong‘oq bor?",
+      "options": [
+        "20 ta",
+        "30 ta",
+        "35 ta (Valida: 20; 15 + 20 = 35)",
+        "40 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Vali: 15 + 5 = 20 ta. Jami: 15 + 20 = 35 ta."
+    },
+    {
+      "text": "Birinchi savatda 24 ta olma bor, ikkinchi savatda undan 10 ta kam. Ikkala savatda birgalikda nechta olma bor?",
+      "options": [
+        "14 ta",
+        "34 ta",
+        "40 ta",
+        "38 ta (2-savat: 14; 24 + 14 = 38)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2-savat: 24 - 10 = 14 ta. Jami: 24 + 14 = 38 ta."
+    },
+    {
+      "text": "Sxema bo‘yicha: I kesma 25 sm, II kesma undan 12 sm uzun. Ikkala kesma birgalikda necha sm bo‘ladi?",
+      "options": [
+        "62 sm (II kesma: 37 sm; 25 + 37 = 62)",
+        "37 sm",
+        "60 sm",
+        "65 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "II kesma: 25 + 12 = 37 sm. Jami: 25 + 37 = 62 sm."
+    },
+    {
+      "text": "Do‘konda 35 ta koptok bor edi. Chanoqlar koptokdan 11 ta kam. Do‘konda jami nechta o‘yinchoq bor?",
+      "options": [
+        "24 ta",
+        "59 ta (Chanoq: 24; 35 + 24 = 59)",
+        "55 ta",
+        "60 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Chanoqlar: 35 - 11 = 24 ta. Jami: 35 + 24 = 59 ta."
+    },
+    {
+      "text": "1-qutida 30 dona konfet bor, 2-qutida undan 15 dona ko‘p. Ikkala qutida jami nechta konfet bor?",
+      "options": [
+        "45 dona",
+        "70 dona",
+        "80 dona",
+        "75 dona (2-quti: 45; 30 + 45 = 75)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2-quti: 30 + 15 = 45 dona. Jami: 30 + 45 = 75 dona."
+    },
+    {
+      "text": "Bir xaltada 40 kg kartoshka bor, ikkinchisida undan 12 kg kam. Ikkala xaltada necha kg kartoshka bor?",
+      "options": [
+        "28 kg",
+        "68 kg (2-xalta: 28; 40 + 28 = 68)",
+        "65 kg",
+        "70 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "2-xalta: 40 - 12 = 28 kg. Jami: 40 + 28 = 68 kg."
+    },
+    {
+      "text": "Sxema: I son = 35, II son undan 15 ta ortiq, III son esa I sondan 10 ta kam. Uchala sonning yig‘indisi nechaga teng?",
+      "options": [
+        "100",
+        "105",
+        "110 (II son: 50, III son: 25; 35 + 50 + 25 = 110)",
+        "115"
+      ],
+      "correctIndex": 2,
+      "explanation": "II: 35 + 15 = 50. III: 35 - 10 = 25. Jami: 35 + 50 + 25 = 110."
+    },
+    {
+      "text": "Kutubxonada 1-javonda 44 ta kitob bor. 2-javonda undan 14 ta kam kitob bor. Ikkala javonda jami nechta kitob bor?",
+      "options": [
+        "74 ta (2-javon: 30; 44 + 30 = 74)",
+        "30 ta",
+        "70 ta",
+        "80 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "2-javon: 44 - 14 = 30 ta. Jami: 44 + 30 = 74 ta."
+    },
+    {
+      "text": "Avtosaroyda 28 ta avtobus bor, yengil mashinalar undan 14 ta ortiq. Saroyda jami nechta transport vositasi bor?",
+      "options": [
+        "70 ta (Yengil: 42; 28 + 42 = 70)",
+        "42 ta",
+        "68 ta",
+        "75 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yengil mashina: 28 + 14 = 42 ta. Jami: 28 + 42 = 70 ta."
+    },
+    {
+      "text": "Bir guruhda 36 nafar sayyoh bor, ikkinchi guruhda undan 12 nafar kam. Ikkala guruhda jami necha sayyoh bor?",
+      "options": [
+        "24 nafar",
+        "58 nafar",
+        "64 nafar",
+        "60 nafar (2-guruh: 24; 36 + 24 = 60)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2-guruh: 36 - 12 = 24 nafar. Jami: 36 + 24 = 60 nafar."
+    },
+    {
+      "text": "Sport maktabida 1-zalda 45 ta to‘p bor. 2-zalda undan 15 ta kam, 3-zalda esa 2-zaldagidan 10 ta ko‘p to‘p bor. Uchala zalda jami nechta to‘p bor?",
+      "options": [
+        "105 ta",
+        "115 ta (2-zal: 30, 3-zal: 40; 45 + 30 + 40 = 115)",
+        "110 ta",
+        "120 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "2-zal: 45 - 15 = 30 ta. 3-zal: 30 + 10 = 40 ta. Jami: 45 + 30 + 40 = 115 ta."
+    },
+    {
+      "text": "Fermer xo‘jaligida 1-brigada 50 tonna, 2-brigada undan 15 tonna kam, 3-brigada esa 2-brigadadan 10 tonna ortiq paxta terdi. Uchala brigada jami necha tonna paxta tergan?",
+      "options": [
+        "120 tonna",
+        "125 tonna",
+        "130 tonna (2-brigada: 35, 3-brigada: 45; 50 + 35 + 45 = 130)",
+        "135 tonna"
+      ],
+      "correctIndex": 2,
+      "explanation": "2-brigada: 50 - 15 = 35 t. 3-brigada: 35 + 10 = 45 t. Jami: 50 + 35 + 45 = 130 t."
+    }
+  ]
+}

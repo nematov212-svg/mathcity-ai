@@ -1,0 +1,277 @@
+{
+  "bookNumber": 32,
+  "isReview": false,
+  "title": "Santimetr. Detsimetr",
+  "emoji": "🧶",
+  "shortDesc": "Detsimetr (dm) tushunchasi va 1 dm = 10 cm qoidasi.",
+  "intro": "Kattaroq predmetlarni o‘lchashda detsimetr (dm) birligi ishlatiladi: 1 dm = 10 cm.",
+  "keyPoints": [
+    "Asosiy qoida: 1 dm = 10 cm.",
+    "10 santimetr birlashib, 1 detsimetrni hosil qiladi.",
+    "Katta predmetlar (parta, kitob, doska) ko‘pincha detsimetrda o‘lchanadi."
+  ],
+  "miniExample": {
+    "emojis": "🧶 1 dm = 10 cm ➔ 2 dm = 20 cm",
+    "text": "1 detsimetr 10 santimetrga teng. 2 dm = 20 cm, 3 dm = 30 cm."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "1 detsimetr necha santimetrga teng?",
+      "options": [
+        "10 cm",
+        "100 cm",
+        "1 cm",
+        "5 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 dm = 10 cm qat’iy qoidadir."
+    },
+    {
+      "text": "20 santimetr necha detsimetr bo‘ladi?",
+      "options": [
+        "20 dm",
+        "2 dm",
+        "1 dm",
+        "200 dm"
+      ],
+      "correctIndex": 1,
+      "explanation": "Har 10 cm = 1 dm, demak 20 cm = 2 dm."
+    },
+    {
+      "text": "Qaysi predmetni detsimetrda o‘lchash qulayroq?",
+      "options": [
+        "Chumolining uzunligini",
+        "Tugmaning enini",
+        "Partaning bo‘yini",
+        "Qalam uchini"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kattaroq buyumlar (parta, doska) detsimetrda o‘lchanadi."
+    }
+  ],
+  "test": [
+    {
+      "text": "1 dm necha santimetr?",
+      "options": [
+        "10 cm",
+        "100 cm",
+        "1 cm",
+        "50 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 dm = 10 cm."
+    },
+    {
+      "text": "2 dm necha santimetrga teng?",
+      "options": [
+        "2 cm",
+        "200 cm",
+        "20 cm",
+        "12 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 dm = 20 cm."
+    },
+    {
+      "text": "30 cm necha detsimetr bo‘ladi?",
+      "options": [
+        "30 dm",
+        "3 dm",
+        "300 dm",
+        "13 dm"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 cm = 3 dm."
+    },
+    {
+      "text": "Detsimetr qisqacha qanday belgilanadi?",
+      "options": [
+        "cm",
+        "kg",
+        "m",
+        "dm"
+      ],
+      "correctIndex": 3,
+      "explanation": "Detsimetr qisqacha «dm» deb yoziladi."
+    },
+    {
+      "text": "5 dm necha santimetrga teng?",
+      "options": [
+        "5 cm",
+        "50 cm",
+        "500 cm",
+        "15 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 dm = 50 cm."
+    },
+    {
+      "text": "40 cm necha detsimetr?",
+      "options": [
+        "4 dm",
+        "40 dm",
+        "14 dm",
+        "400 dm"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 cm = 4 dm."
+    },
+    {
+      "text": "Taqqoslang: 1 dm va 9 cm. Qaysi biri katta?",
+      "options": [
+        "9 cm katta",
+        "Ikkalasi teng",
+        "Bilib bo‘lmaydi",
+        "1 dm katta (chunki 1 dm = 10 cm, 10 > 9)"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 dm = 10 cm bo‘lgani uchun 9 cm dan katta."
+    },
+    {
+      "text": "Taqqoslang: 2 dm va 25 cm. Qaysi biri katta?",
+      "options": [
+        "2 dm katta",
+        "Ikkalasi teng",
+        "25 cm katta (chunki 2 dm = 20 cm, 20 < 25)",
+        "Bilib bo‘lmaydi"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 dm = 20 cm, 25 cm esa 20 cm dan katta."
+    },
+    {
+      "text": "6 dm necha santimetr bo‘ladi?",
+      "options": [
+        "6 cm",
+        "16 cm",
+        "60 cm",
+        "600 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 dm = 60 cm."
+    },
+    {
+      "text": "70 cm necha detsimetrga teng?",
+      "options": [
+        "70 dm",
+        "17 dm",
+        "700 dm",
+        "7 dm"
+      ],
+      "correctIndex": 3,
+      "explanation": "70 cm = 7 dm."
+    },
+    {
+      "text": "Tasmaning uzunligi 1 dm 2 cm. U jami necha santimetr?",
+      "options": [
+        "12 cm (10 + 2 = 12)",
+        "10 cm",
+        "3 cm",
+        "21 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 dm = 10 cm, 10 + 2 = 12 cm."
+    },
+    {
+      "text": "Qalamdonning uzunligi 18 cm. Uni detsimetr va santimetrda yozing:",
+      "options": [
+        "8 dm 1 cm",
+        "1 dm 8 cm",
+        "18 dm",
+        "2 dm"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 cm = 10 cm + 8 cm = 1 dm 8 cm."
+    },
+    {
+      "text": "8 dm necha santimetr?",
+      "options": [
+        "8 cm",
+        "800 cm",
+        "18 cm",
+        "80 cm"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 dm = 80 cm."
+    },
+    {
+      "text": "90 cm necha detsimetr bo‘ladi?",
+      "options": [
+        "90 dm",
+        "9 dm",
+        "19 dm",
+        "900 dm"
+      ],
+      "correctIndex": 1,
+      "explanation": "90 cm = 9 dm."
+    },
+    {
+      "text": "Taqqoslang: 3 dm 5 cm va 32 cm. Qaysi biri uzun?",
+      "options": [
+        "32 cm uzun",
+        "Ikkalasi teng",
+        "3 dm 5 cm uzun (chunki 35 cm > 32 cm)",
+        "Bilib bo‘lmaydi"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 dm 5 cm = 35 cm. 35 cm > 32 cm."
+    },
+    {
+      "text": "Kitobning bo‘yi 2 dm, eni 1 dm 5 cm. Kitobning bo‘yi enidan necha santimetr uzun?",
+      "options": [
+        "5 cm (20 cm - 15 cm = 5 cm)",
+        "10 cm",
+        "15 cm",
+        "1 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "Bo‘yi: 20 cm, eni: 15 cm. Farq: 20 - 15 = 5 cm."
+    },
+    {
+      "text": "Tasma 1 dm bo‘lishi uchun 7 cm uzunlikdagi ipga yana necha santimetr qo‘shish kerak?",
+      "options": [
+        "3 cm (10 - 7 = 3)",
+        "2 cm",
+        "4 cm",
+        "17 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 dm = 10 cm. 10 - 7 = 3 cm kerak."
+    },
+    {
+      "text": "Partaning uzunligi 8 dm, eni 5 dm. Partaning uzunligi enidan necha dm ortiq?",
+      "options": [
+        "13 dm",
+        "2 dm",
+        "4 dm",
+        "3 dm (8 - 5 = 3)"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 - 5 = 3 dm ortiq."
+    },
+    {
+      "text": "O‘quvchi 1-kesmani 1 dm, 2-kesmani undan 4 cm uzun qilib chizdi. Ikkala kesmaning umumiy uzunligi necha santimetr?",
+      "options": [
+        "20 cm",
+        "24 cm (1-kesma: 10 cm, 2-kesma: 14 cm; 10 + 14 = 24)",
+        "25 cm",
+        "18 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "1-kesma: 10 cm. 2-kesma: 10 + 4 = 14 cm. Jami: 10 + 14 = 24 cm."
+    },
+    {
+      "text": "Duradgor 6 dm uzunlikdagi taxtadan 2 dm 5 cm kesib oldi. Necha santimetr taxta qoldi?",
+      "options": [
+        "40 cm",
+        "30 cm",
+        "35 cm (60 cm - 25 cm = 35 cm)",
+        "45 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 dm = 60 cm. Kesildi: 25 cm. Qoldi: 60 - 25 = 35 cm."
+    }
+  ]
+}

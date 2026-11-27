@@ -1,0 +1,277 @@
+{
+  "bookNumber": 41,
+  "isReview": false,
+  "title": "Kattaliklar va ularning xossalari (2)",
+  "emoji": "🧪",
+  "shortDesc": "Guruhlash xossasi va jadval asosida kattaliklarga doir masalalar yechish.",
+  "intro": "Uch yoki undan ortiq kattalikni qo‘shishda qulaylarini guruhlab qo‘shishni o‘rganamiz: (10 + 20) + 30 = 60.",
+  "keyPoints": [
+    "Guruhlash xossasi: (a + b) + c = a + (b + c).",
+    "Qulay usulda hisoblash: (12 kg + 8 kg) + 15 kg = 20 kg + 15 kg = 35 kg.",
+    "Jadval va diagrammalardagi kattaliklarni tahlil qilib amallar bajarish."
+  ],
+  "miniExample": {
+    "emojis": "🧪 (10 l + 20 l) + 30 l = 30 l + 30 l = 60 l",
+    "text": "Avval 10 va 20 litrni qo‘shamiz (30 l), so‘ng 30 litrni qo‘shamiz (60 l)."
+  },
+  "xpReward": 100,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "(12 kg + 8 kg) + 15 kg ifodaning qiymatini hisoblang:",
+      "options": [
+        "35 kg (20 + 15 = 35)",
+        "30 kg",
+        "40 kg",
+        "25 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + 8 = 20 kg, 20 + 15 = 35 kg."
+    },
+    {
+      "text": "Qaysi guruhlash qulayroq: 27 + 13 + 30 ifoda uchun?",
+      "options": [
+        "27 + (13 + 30) = 27 + 43",
+        "(27 + 13) + 30 = 40 + 30 = 70",
+        "Barchasi bir xil qiyin",
+        "Guruhlab bo‘lmaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "27 + 13 = 40 (yaxlit son hosil bo‘ladi), 40 + 30 = 70."
+    },
+    {
+      "text": "Jadvalda: 1-kuni 20 l, 2-kuni 25 l, 3-kuni 10 l sut berilgan. Jami necha litr sut berilgan?",
+      "options": [
+        "50 l",
+        "60 l",
+        "55 l (20 + 25 + 10 = 55)",
+        "45 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 + 10 = 30, 30 + 25 = 55 l."
+    }
+  ],
+  "test": [
+    {
+      "text": "(10 l + 20 l) + 30 l ifodani hisoblang:",
+      "options": [
+        "60 l",
+        "50 l",
+        "70 l",
+        "40 l"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 20 = 30 l, 30 + 30 = 60 l."
+    },
+    {
+      "text": "(5 kg + 15 kg) + 10 kg ifodani hisoblang:",
+      "options": [
+        "25 kg",
+        "35 kg",
+        "30 kg",
+        "20 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 15 = 20 kg, 20 + 10 = 30 kg."
+    },
+    {
+      "text": "Qo‘shishning guruhlash xossasini ko‘rsating:",
+      "options": [
+        "a - b = b - a",
+        "(a + b) + c = a + (b + c)",
+        "a + b = a - b",
+        "a + 0 = 0"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qo‘shishning guruhlash qonuni: (a + b) + c = a + (b + c)."
+    },
+    {
+      "text": "(14 sm + 6 sm) + 20 sm nechaga teng?",
+      "options": [
+        "35 sm",
+        "45 sm",
+        "30 sm",
+        "40 sm"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 + 6 = 20 sm, 20 + 20 = 40 sm."
+    },
+    {
+      "text": "20 dm + (10 dm + 30 dm) ifodani hisoblang:",
+      "options": [
+        "50 dm",
+        "60 dm",
+        "70 dm",
+        "40 dm"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 + 30 = 40 dm, 20 + 40 = 60 dm."
+    },
+    {
+      "text": "(25 kg + 25 kg) + 15 kg ifodani hisoblang:",
+      "options": [
+        "65 kg",
+        "60 kg",
+        "70 kg",
+        "55 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "25 + 25 = 50 kg, 50 + 15 = 65 kg."
+    },
+    {
+      "text": "Qulay usulda guruhlang va hisoblang: 17 l + 40 l + 3 l",
+      "options": [
+        "50 l",
+        "55 l",
+        "65 l",
+        "60 l ((17 + 3) + 40 = 20 + 40 = 60)"
+      ],
+      "correctIndex": 3,
+      "explanation": "17 + 3 = 20 l, 20 + 40 = 60 l."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 36 kg + 20 kg + 4 kg",
+      "options": [
+        "50 kg",
+        "56 kg",
+        "60 kg ((36 + 4) + 20 = 40 + 20 = 60)",
+        "65 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "36 + 4 = 40 kg, 40 + 20 = 60 kg."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 21 sm + 50 sm + 9 sm",
+      "options": [
+        "70 sm",
+        "85 sm",
+        "80 sm ((21 + 9) + 50 = 30 + 50 = 80)",
+        "75 sm"
+      ],
+      "correctIndex": 2,
+      "explanation": "21 + 9 = 30 sm, 30 + 50 = 80 sm."
+    },
+    {
+      "text": "Jadval: 1-javonda 15 ta, 2-javonda 25 ta, 3-javonda 18 ta kitob bor. Jami kitoblar sonini toping:",
+      "options": [
+        "55 ta",
+        "60 ta",
+        "48 ta",
+        "58 ta ((15 + 25) + 18 = 40 + 18 = 58)"
+      ],
+      "correctIndex": 3,
+      "explanation": "15 + 25 = 40 ta, 40 + 18 = 58 ta."
+    },
+    {
+      "text": "Jadval: Dushanba 30 kg, Seshanba 22 kg, Chorshanba 8 kg sabzi sotildi. Uch kunda jami necha kg sabzi sotilgan?",
+      "options": [
+        "60 kg ((22 + 8) + 30 = 30 + 30 = 60)",
+        "50 kg",
+        "65 kg",
+        "55 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "22 + 8 = 30 kg, 30 + 30 = 60 kg."
+    },
+    {
+      "text": "(28 l + 12 l) + (15 l + 5 l) amalini hisoblang:",
+      "options": [
+        "50 l",
+        "60 l (40 + 20 = 60)",
+        "55 l",
+        "65 l"
+      ],
+      "correctIndex": 1,
+      "explanation": "28 + 12 = 40 l, 15 + 5 = 20 l; 40 + 20 = 60 l."
+    },
+    {
+      "text": "Qaysi ifoda to‘g‘ri guruhlangan: 19 + 25 + 1?",
+      "options": [
+        "(19 + 25) - 1",
+        "(25 - 1) + 19",
+        "19 + 1 - 25",
+        "(19 + 1) + 25"
+      ],
+      "correctIndex": 3,
+      "explanation": "19 ga 1 ni qo‘shib 20 hosil qilish eng qulay."
+    },
+    {
+      "text": "(35 kg + 15 kg) - 20 kg amalini hisoblang:",
+      "options": [
+        "25 kg",
+        "30 kg (50 - 20 = 30)",
+        "35 kg",
+        "40 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "35 + 15 = 50 kg, 50 - 20 = 30 kg."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 16 l + 27 l + 14 l + 13 l",
+      "options": [
+        "60 l",
+        "65 l",
+        "70 l ((16 + 14) + (27 + 13) = 30 + 40 = 70)",
+        "75 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "16 + 14 = 30 l, 27 + 13 = 40 l; 30 + 40 = 70 l."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 31 kg + 24 kg + 9 kg + 16 kg",
+      "options": [
+        "80 kg ((31 + 9) + (24 + 16) = 40 + 40 = 80)",
+        "70 kg",
+        "85 kg",
+        "75 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "31 + 9 = 40 kg, 24 + 16 = 40 kg; 40 + 40 = 80 kg."
+    },
+    {
+      "text": "Jadval: 1-idishda 18 l, 2-idishda 24 l, 3-idishda 12 l sut bor. Sutlar 60 litrli bochkaga quyilsa, bochka to‘ladimi?",
+      "options": [
+        "To‘lmaydi (18 + 12 + 24 = 54 l; 54 l < 60 l)",
+        "To‘ladi (to‘liq 60 l bo‘ladi)",
+        "To‘lib toshadi",
+        "Hisoblab bo‘lmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "18 + 12 = 30 l, 30 + 24 = 54 l. 54 l < 60 l, demak to‘lmaydi."
+    },
+    {
+      "text": "Tenglik to‘g‘ri bo‘lishi uchun bo‘sh joyga son qo‘ying: (15 + □) + 20 = 50",
+      "options": [
+        "10",
+        "20",
+        "25",
+        "15 (15 + 15 = 30; 30 + 20 = 50)"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 20 = 30, 30 - 15 = 15."
+    },
+    {
+      "text": "Bog‘bon dushanba kuni 28 kg, seshanba kuni 15 kg, chorshanba kuni 22 kg olma terdi. Qulay usulda uch kunda terilgan olma massasini toping:",
+      "options": [
+        "60 kg",
+        "65 kg ((28 + 22) + 15 = 50 + 15 = 65)",
+        "70 kg",
+        "55 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "28 + 22 = 50 kg, 50 + 15 = 65 kg."
+    },
+    {
+      "text": "Avtobusda uch guruh sayyohlar bor: 1-guruhda 17 kishi, 2-guruhda 24 kishi, 3-guruhda 13 kishi. Sayyohlar jami necha kishi?",
+      "options": [
+        "50 nafar",
+        "58 nafar",
+        "54 nafar ((17 + 13) + 24 = 30 + 24 = 54)",
+        "48 nafar"
+      ],
+      "correctIndex": 2,
+      "explanation": "17 + 13 = 30 kishi, 30 + 24 = 54 kishi."
+    }
+  ]
+}

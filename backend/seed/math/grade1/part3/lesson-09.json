@@ -1,0 +1,277 @@
+{
+  "bookNumber": 9,
+  "isReview": false,
+  "title": "Qismlarni topishga doir masalalar",
+  "emoji": "🔧",
+  "shortDesc": "Butun va ma’lum qism orqali noma’lum qismni topish (Butun - Qism = Qism).",
+  "intro": "Noma’lum qismni topish uchun butun miqdordan ma’lum qism ayiriladi: Butun − Qism = Qism.",
+  "keyPoints": [
+    "Sxema: Noma’lum qism = Butun − Ma’lum qism.",
+    "Misol: 46 − 36 = 10, 49 − 15 = 34.",
+    "Masalada «ortib qoldi», «qoldi», «ikkinchi qism» so‘zlariga e’tibor beriladi."
+  ],
+  "miniExample": {
+    "emojis": "🔧 46 ta detal bor edi ➔ 36 tasi ishlatildi, 10 tasi qoldi",
+    "text": "Ustaxonada 46 ta detal bor edi, 36 tasi ishlatildi. Qolgan qism: 46 - 36 = 10 ta detal."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Noma’lum qismni topish uchun qaysi formuladan foydalaniladi?",
+      "options": [
+        "Qism = Butun - Ma’lum qism",
+        "Qism = Butun + Ma’lum qism",
+        "Qism = Butun - Butun",
+        "Qism = 0"
+      ],
+      "correctIndex": 0,
+      "explanation": "Noma’lum qism butun miqdordan ma’lum qismni ayirish orqali topiladi."
+    },
+    {
+      "text": "46 - 36 ifodaning qiymatini hisoblang:",
+      "options": [
+        "82",
+        "10",
+        "12",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "46 - 36 = 10."
+    },
+    {
+      "text": "49 ta kitobdan 15 tasi javonga taxlandi. Nechtasi qoldi?",
+      "options": [
+        "30 ta",
+        "35 ta",
+        "34 ta (49 - 15 = 34)",
+        "64 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "49 - 15 = 34 ta kitob qoldi."
+    }
+  ],
+  "test": [
+    {
+      "text": "46 - 36 ifodaning qiymati nechaga teng?",
+      "options": [
+        "10",
+        "12",
+        "8",
+        "82"
+      ],
+      "correctIndex": 0,
+      "explanation": "46 - 36 = 10."
+    },
+    {
+      "text": "49 - 15 ayirmani hisoblang:",
+      "options": [
+        "30",
+        "35",
+        "34",
+        "64"
+      ],
+      "correctIndex": 2,
+      "explanation": "49 - 15 = 34."
+    },
+    {
+      "text": "Sxema: Butun = 50, I qism = 30. II noma’lum qismni toping:",
+      "options": [
+        "80 (50 + 30 = 80)",
+        "20 (50 - 30 = 20)",
+        "15",
+        "25"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 - 30 = 20."
+    },
+    {
+      "text": "Ustaxonada 38 ta mashina bor edi. Ta’mirlashdan so‘ng 18 tasi topshirildi. Nechta mashina qoldi?",
+      "options": [
+        "22 ta",
+        "18 ta",
+        "56 ta",
+        "20 ta (38 - 18 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "38 - 18 = 20 ta mashina."
+    },
+    {
+      "text": "Noma’lum qo‘shiluvchini toping: □ + 20 = 60",
+      "options": [
+        "30",
+        "40 (60 - 20 = 40)",
+        "50",
+        "80"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 20 = 40."
+    },
+    {
+      "text": "75 - 25 ayirmaning qiymati nechaga teng?",
+      "options": [
+        "50",
+        "45",
+        "55",
+        "100"
+      ],
+      "correctIndex": 0,
+      "explanation": "75 - 25 = 50."
+    },
+    {
+      "text": "Avtobusda 36 nafar yo‘lovchi bor edi. Bekatda bir necha kishi tushgach, 16 kishi qoldi. Necha kishi tushgan?",
+      "options": [
+        "22 nafar",
+        "18 nafar",
+        "52 nafar",
+        "20 nafar (36 - 16 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "36 - 16 = 20 nafar tushgan."
+    },
+    {
+      "text": "Sxema: Butun = 68, II qism = 45. I qism nechaga teng?",
+      "options": [
+        "20",
+        "25",
+        "23 (68 - 45 = 23)",
+        "113"
+      ],
+      "correctIndex": 2,
+      "explanation": "68 - 45 = 23."
+    },
+    {
+      "text": "Tenglikdagi so‘roq belgisi o‘rnidagi sonni toping: 58 - ? = 24",
+      "options": [
+        "30",
+        "35",
+        "34 (chunki 58 - 34 = 24)",
+        "82"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ayriluvchini topish: 58 - 24 = 34."
+    },
+    {
+      "text": "Omborda 87 qop bug‘doy bor edi. Tegirmonga 52 qop jo‘natildi. Omborda necha qop bug‘doy qoldi?",
+      "options": [
+        "30 qop",
+        "40 qop",
+        "139 qop",
+        "35 qop (87 - 52 = 35)"
+      ],
+      "correctIndex": 3,
+      "explanation": "87 - 52 = 35 qop."
+    },
+    {
+      "text": "Gulshanda 64 ta atirgul bor edi. Gullardan 31 tasi guldastaga uzildi. Gulshanda nechta atirgul qoldi?",
+      "options": [
+        "33 ta (64 - 31 = 33)",
+        "30 ta",
+        "35 ta",
+        "95 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "64 - 31 = 33 ta atirgul."
+    },
+    {
+      "text": "Noma’lum qo‘shiluvchini toping: 32 + □ = 76",
+      "options": [
+        "40",
+        "44 (76 - 32 = 44)",
+        "46",
+        "108"
+      ],
+      "correctIndex": 1,
+      "explanation": "76 - 32 = 44."
+    },
+    {
+      "text": "Kutubxonadagi 98 ta kitobdan 46 tasi bolalar kitobi, qolgani darsliklar. Darsliklar soni nechta?",
+      "options": [
+        "50 ta",
+        "54 ta",
+        "42 ta",
+        "52 ta (98 - 46 = 52)"
+      ],
+      "correctIndex": 3,
+      "explanation": "98 - 46 = 52 ta darslik."
+    },
+    {
+      "text": "Idishda 48 litr sut bor edi. Bir qismi sotilgach, 14 litr sut qoldi. Necha litr sut sotilgan?",
+      "options": [
+        "30 l",
+        "34 l (48 - 14 = 34)",
+        "36 l",
+        "62 l"
+      ],
+      "correctIndex": 1,
+      "explanation": "48 - 14 = 34 litr sotilgan."
+    },
+    {
+      "text": "Sxema bo‘yicha: Butun = 89, I qism = 35, II qism = 21, III qism = ? Uchinchi qismni toping:",
+      "options": [
+        "30",
+        "35",
+        "33 (89 - 35 - 21 = 33)",
+        "43"
+      ],
+      "correctIndex": 2,
+      "explanation": "89 - 35 = 54, 54 - 21 = 33."
+    },
+    {
+      "text": "Do‘konda 75 ta televizor bor edi. 1-haftada 22 ta, 2-haftada 31 ta sotildi. Do‘konda nechta televizor qoldi?",
+      "options": [
+        "22 ta (75 - 22 - 31 = 22)",
+        "20 ta",
+        "24 ta",
+        "32 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Jami sotilgani: 22 + 31 = 53 ta. Qolgani: 75 - 53 = 22 ta."
+    },
+    {
+      "text": "Balandligi 96 sm bo‘lgan ko‘chatdan 32 sm kesib olindi. Ko‘chatning qolgan bo‘yi necha sm?",
+      "options": [
+        "64 sm (96 - 32 = 64)",
+        "60 sm",
+        "65 sm",
+        "54 sm"
+      ],
+      "correctIndex": 0,
+      "explanation": "96 - 32 = 64 sm."
+    },
+    {
+      "text": "Toshkentdan Buxoroga 88 km yo‘l bosishi kerak bo‘lgan yuk mashinasi 55 km yurdi. Yana necha km yo‘l qoldi?",
+      "options": [
+        "30 km",
+        "35 km",
+        "143 km",
+        "33 km (88 - 55 = 33)"
+      ],
+      "correctIndex": 3,
+      "explanation": "88 - 55 = 33 km."
+    },
+    {
+      "text": "Tikuvchida 90 metr gazlama bor edi. U ko‘ylaklarga 40 metr, kostyumlarga 30 metr ishlatdi. Necha metr gazlama ortib qoldi?",
+      "options": [
+        "25 metr",
+        "20 metr (90 - 40 - 30 = 20)",
+        "15 metr",
+        "30 metr"
+      ],
+      "correctIndex": 1,
+      "explanation": "90 - 70 = 20 metr gazlama qoldi."
+    },
+    {
+      "text": "Fermer xo‘jaligida 85 quti olma bor edi. 1-kuni 30 quti, 2-kuni 25 quti jo‘natildi. Xo‘jalikda necha quti olma qoldi?",
+      "options": [
+        "35 quti",
+        "25 quti",
+        "30 quti (85 - 30 - 25 = 30)",
+        "20 quti"
+      ],
+      "correctIndex": 2,
+      "explanation": "85 - 55 = 30 quti olma qoldi."
+    }
+  ]
+}

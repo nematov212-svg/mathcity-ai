@@ -1,0 +1,244 @@
+{
+  "bookNumber": 27,
+  "isReview": true,
+  "title": "2-nazorat ishi",
+  "emoji": "📝",
+  "shortDesc": "II bob bo‘yicha nazorat mini-testi (orttirish, kamaytirish, taqqoslash, ikki amalli masalalar).",
+  "intro": "II bobda o‘rganilgan barcha mavzular (orttirish, kamaytirish, taqqoslash, murakkab va ikki amalli masalalar) bo‘yicha 20 savolli nazorat testi.",
+  "keyPoints": [
+    "Orttirish: biror sondan n ta ko‘p (+).",
+    "Kamaytirish: biror sondan n ta kam (-).",
+    "Taqqoslash: kattasidan kichigi ayirilib farq topiladi.",
+    "Ikki amalli masalalar: amallar tartibi va qavslar."
+  ],
+  "miniExample": {
+    "emojis": "📝 20 ta nazorat savoli ➔ 60% dan yuqori natija III bobni ochadi!",
+    "text": "II bob mavzulari bo‘yicha 20 ta savolga to‘g‘ri javob berib, bilimingizni sinang."
+  },
+  "xpReward": 120,
+  "coinReward": 12,
+  "estMinutes": 10,
+  "practice": [],
+  "test": [
+    {
+      "text": "«7 dan 3 ta ko‘p» bo‘lgan son nechaga teng?",
+      "options": [
+        "10 (7 + 3 = 10)",
+        "4 (7 - 3 = 4)",
+        "9",
+        "11"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 3 = 10."
+    },
+    {
+      "text": "«12 dan 4 ta kam» bo‘lgan son qaysi?",
+      "options": [
+        "16 (12 + 4 = 16)",
+        "7",
+        "8 (12 - 4 = 8)",
+        "9"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 - 4 = 8."
+    },
+    {
+      "text": "Taqqoslashda farqni topish uchun qaysi amal bajariladi?",
+      "options": [
+        "Sonlar bir-biriga qo‘shiladi",
+        "Katta sondan kichik son ayiriladi",
+        "Sonlar o‘rni almashtiriladi",
+        "Hech qanday amal bajarilmaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qancha ko‘p yoki kamligini topish uchun kattasidan kichigi ayiriladi."
+    },
+    {
+      "text": "1 soat necha minutga teng?",
+      "options": [
+        "100 minut",
+        "30 minut",
+        "24 minut",
+        "60 minut"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 soat = 60 minut."
+    },
+    {
+      "text": "Haftada necha kun bor?",
+      "options": [
+        "5 kun",
+        "7 kun",
+        "6 kun",
+        "8 kun"
+      ],
+      "correctIndex": 1,
+      "explanation": "Haftada 7 kun bor."
+    },
+    {
+      "text": "20 + (15 - 5) ifodaning qiymatini hisoblang:",
+      "options": [
+        "30 (15 - 5 = 10, 20 + 10 = 30)",
+        "25",
+        "35",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "15 - 5 = 10, 20 + 10 = 30."
+    },
+    {
+      "text": "Jasurda 6 ta qalam bor, Anvarda undan 4 ta ko‘p. Anvarda nechta qalam bor?",
+      "options": [
+        "2 ta",
+        "9 ta",
+        "12 ta",
+        "10 ta (6 + 4 = 10)"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 4 = 10 ta qalam."
+    },
+    {
+      "text": "52 sonidan 17 ta ortiq bo‘lgan sonni toping:",
+      "options": [
+        "35",
+        "68",
+        "69 (52 + 17 = 69)",
+        "70"
+      ],
+      "correctIndex": 2,
+      "explanation": "52 + 17 = 69."
+    },
+    {
+      "text": "49 sonidan 18 ta kam bo‘lgan son nechaga teng?",
+      "options": [
+        "67",
+        "30",
+        "31 (49 - 18 = 31)",
+        "32"
+      ],
+      "correctIndex": 2,
+      "explanation": "49 - 18 = 31."
+    },
+    {
+      "text": "8 ta rangli rasm 6 ta oq-qora rasmdan nechta ko‘p?",
+      "options": [
+        "14 ta",
+        "3 ta",
+        "1 ta",
+        "2 ta (8 - 6 = 2)"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 - 6 = 2 ta."
+    },
+    {
+      "text": "Saturnning 82 ta, Yupiterning 79 ta yo‘ldoshi bor. Saturnning yo‘ldoshlari nechta ko‘p?",
+      "options": [
+        "3 ta (82 - 79 = 3)",
+        "2 ta",
+        "4 ta",
+        "161 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "82 - 79 = 3 ta."
+    },
+    {
+      "text": "70 soni 85 sonidan qancha kam?",
+      "options": [
+        "10 ga kam",
+        "15 ga kam (85 - 70 = 15)",
+        "20 ga kam",
+        "25 ga kam"
+      ],
+      "correctIndex": 1,
+      "explanation": "85 - 70 = 15."
+    },
+    {
+      "text": "76 soni 88 sonidan qancha kichik?",
+      "options": [
+        "10 ga",
+        "14 ga",
+        "16 ga",
+        "12 ga kichik (88 - 76 = 12)"
+      ],
+      "correctIndex": 3,
+      "explanation": "88 - 76 = 12."
+    },
+    {
+      "text": "Oshxonada 2 xil sharbat va 2 xil somsa bor. Necha xil tushlik to‘plami tanlash mumkin?",
+      "options": [
+        "2 xil",
+        "4 xil (2 x 2 = 4)",
+        "3 xil",
+        "5 xil"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 x 2 = 4 xil kombinatsiya."
+    },
+    {
+      "text": "Oysha 12 ta ko‘ylak tikdi. Komila undan 2 ta ko‘p tikdi. Ikkala qiz jami nechta ko‘ylak tikkan?",
+      "options": [
+        "14 ta",
+        "24 ta",
+        "26 ta (Komila: 14; 12 + 14 = 26)",
+        "28 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Komila: 12 + 2 = 14 ta. Jami: 12 + 14 = 26 ta."
+    },
+    {
+      "text": "Ketma-ketlikni davom ettiring: 2, 4, 3, 5, 4, 6, □",
+      "options": [
+        "5 (+2, so‘ng -1)",
+        "7",
+        "6",
+        "8"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 - 1 = 5."
+    },
+    {
+      "text": "Agar ertaga juma bo‘lsa, kecha haftaning qaysi kuni edi?",
+      "options": [
+        "Chorshanba (bugun payshanba, kecha chorshanba)",
+        "Seshanba",
+        "Payshanba",
+        "Shanba"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ertaga juma bo‘lsa, bugun payshanba, kecha chorshanba bo‘lgan."
+    },
+    {
+      "text": "Albomda 12 ta oq-qora va 45 ta rangli fotosurat bor. Albomda jami nechta fotosurat bor?",
+      "options": [
+        "55 ta",
+        "58 ta",
+        "33 ta",
+        "57 ta (12 + 45 = 57)"
+      ],
+      "correctIndex": 3,
+      "explanation": "12 + 45 = 57 ta fotosurat."
+    },
+    {
+      "text": "Avtobusda 35 yo‘lovchi bor edi. Bekatda 15 kishi tushdi va 20 kishi chiqdi. Avtobusda necha yo‘lovchi bo‘ldi?",
+      "options": [
+        "30 nafar",
+        "40 nafar (35 - 15 + 20 = 40)",
+        "45 nafar",
+        "50 nafar"
+      ],
+      "correctIndex": 1,
+      "explanation": "35 - 15 = 20, 20 + 20 = 40 nafar."
+    },
+    {
+      "text": "Fermer xo‘jaligida 1-kuni 25 quti, 2-kuni undan 10 quti ko‘p olma terildi. Ikki kunda jami necha quti olma terilgan?",
+      "options": [
+        "35 quti",
+        "55 quti",
+        "60 quti (2-kun: 35; 25 + 35 = 60)",
+        "70 quti"
+      ],
+      "correctIndex": 2,
+      "explanation": "2-kun: 25 + 10 = 35 quti. Jami: 25 + 35 = 60 quti."
+    }
+  ]
+}

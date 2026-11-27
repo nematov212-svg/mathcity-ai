@@ -1,0 +1,277 @@
+{
+  "bookNumber": 26,
+  "isReview": false,
+  "title": "Murakkab masalalar",
+  "emoji": "🏁",
+  "shortDesc": "Ketma-ketliklar, hafta kunlari mantiqi va narxlar tartibi.",
+  "intro": "Mantiqiy ketma-ketliklar, hafta kunlari hisobi va narxlar bo‘yicha taqqoslash masalalarini yechamiz.",
+  "keyPoints": [
+    "Ketma-ketlik qonuniyati: 2, 4, 3, 5, 4, 6, 5... (avval +2, so‘ng -1).",
+    "Hafta kunlari mantiqi: agar ertaga juma bo‘lsa, bugun payshanba, kecha esa chorshanba bo‘lgan.",
+    "Narxlar tartibi: arzonidan qimmatiga yoki qimmatidan arzoniga to‘g‘ri joylashtirish."
+  ],
+  "miniExample": {
+    "emojis": "📅 Ertaga juma ➔ Bugun payshanba ➔ Kecha chorshanba",
+    "text": "Agar ertaga juma bo‘lsa, kecha haftaning qaysi kuni edi? Javob: Chorshanba."
+  },
+  "xpReward": 120,
+  "coinReward": 12,
+  "estMinutes": 10,
+  "practice": [
+    {
+      "text": "Agar ertaga juma bo‘lsa, kecha haftaning qaysi kuni edi?",
+      "options": [
+        "Chorshanba (bugun payshanba, kecha chorshanba)",
+        "Seshanba",
+        "Payshanba",
+        "Shanba"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ertaga juma bo‘lsa, bugun payshanba. Kecha esa chorshanba bo‘lgan."
+    },
+    {
+      "text": "Ketma-ketlikni davom ettiring: 2, 4, 3, 5, 4, 6, □. Keyingi son qaysi?",
+      "options": [
+        "7",
+        "5 (chunki +2, keyin -1 qonuniyati)",
+        "6",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qonuniyat: 2(+2)=4, 4(-1)=3, 3(+2)=5, 5(-1)=4, 4(+2)=6, 6(-1)=5."
+    },
+    {
+      "text": "Daftar 1000 so‘m, qalam 500 so‘m, chizg‘ich 800 so‘m. Eng arzonidan eng qimmatiga tartiblang:",
+      "options": [
+        "Daftar, chizg‘ich, qalam",
+        "Chizg‘ich, qalam, daftar",
+        "Qalam, chizg‘ich, daftar",
+        "Qalam, daftar, chizg‘ich"
+      ],
+      "correctIndex": 2,
+      "explanation": "500 so‘m < 800 so‘m < 1000 so‘m."
+    }
+  ],
+  "test": [
+    {
+      "text": "Agar bugun seshanba bo‘lsa, indinga (2 kundan keyin) haftaning qaysi kuni bo‘ladi?",
+      "options": [
+        "Payshanba (seshanbadan 2 kun keyin)",
+        "Chorshanba",
+        "Juma",
+        "Dushanba"
+      ],
+      "correctIndex": 0,
+      "explanation": "Seshanbadan keyin chorshanba, so‘ng payshanba keladi."
+    },
+    {
+      "text": "Agar bugun shanba bo‘lsa, kecha qaysi kun edi?",
+      "options": [
+        "Payshanba",
+        "Yakshanba",
+        "Juma",
+        "Chorshanba"
+      ],
+      "correctIndex": 2,
+      "explanation": "Shanbadan oldingi kun juma."
+    },
+    {
+      "text": "Ketma-ketlikdagi bo‘sh joyni to‘ldiring: 5, 10, 15, 20, □",
+      "options": [
+        "22",
+        "25 (5 tadan ortmoqda)",
+        "30",
+        "24"
+      ],
+      "correctIndex": 1,
+      "explanation": "Har bir son 5 taga ortmoqda: 20 + 5 = 25."
+    },
+    {
+      "text": "Non 3000 so‘m, sut 8000 so‘m, shokolad 5000 so‘m. Eng qimmat mahsulot qaysi?",
+      "options": [
+        "Non (3000 so‘m)",
+        "Shokolad (5000 so‘m)",
+        "Hammasi teng",
+        "Sut (8000 so‘m)"
+      ],
+      "correctIndex": 3,
+      "explanation": "8000 so‘m eng yuqori narx hisoblanadi."
+    },
+    {
+      "text": "Haftada necha kun bor?",
+      "options": [
+        "5 kun",
+        "7 kun",
+        "6 kun",
+        "8 kun"
+      ],
+      "correctIndex": 1,
+      "explanation": "Haftada 7 kun bor."
+    },
+    {
+      "text": "Ketma-ketlikni davom ettiring: 10, 20, 30, 40, □",
+      "options": [
+        "50 (10 tadan ortmoqda)",
+        "45",
+        "60",
+        "55"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 tadan ortib bormoqda: 40 + 10 = 50."
+    },
+    {
+      "text": "Agar ertaga yakshanba bo‘lsa, kecha qaysi kun edi?",
+      "options": [
+        "Payshanba",
+        "Shanba",
+        "Dushanba",
+        "Juma (bugun shanba, kecha juma)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ertaga yakshanba bo‘lsa, bugun shanba, kecha esa juma bo‘lgan."
+    },
+    {
+      "text": "Ketma-ketlik qoidasini toping va keyingi sonni aniqlang: 1, 3, 2, 4, 3, 5, □",
+      "options": [
+        "6",
+        "5",
+        "4 (+2, so‘ng -1)",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "1(+2)=3, 3(-1)=2, 2(+2)=4, 4(-1)=3, 3(+2)=5, 5(-1)=4."
+    },
+    {
+      "text": "Olma 6000 so‘m, nok 9000 so‘m. Nok olmadan qancha qimmat?",
+      "options": [
+        "15000 so‘m",
+        "2000 so‘m",
+        "3000 so‘m (9000 - 6000 = 3000)",
+        "4000 so‘m"
+      ],
+      "correctIndex": 2,
+      "explanation": "9000 - 6000 = 3000 so‘m qimmat."
+    },
+    {
+      "text": "Agar kecha dushanba bo‘lgan bo‘lsa, ertaga qaysi kun bo‘ladi?",
+      "options": [
+        "Seshanba",
+        "Payshanba",
+        "Juma",
+        "Chorshanba (kecha dushanba ➔ bugun seshanba ➔ ertaga chorshanba)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kecha dushanba bo‘lsa, bugun seshanba, ertaga chorshanba bo‘ladi."
+    },
+    {
+      "text": "Ketma-ketlikdagi keyingi sonni toping: 30, 25, 20, 15, □",
+      "options": [
+        "10 (5 tadan kamaymoqda)",
+        "5",
+        "12",
+        "14"
+      ],
+      "correctIndex": 0,
+      "explanation": "Har bir qadam 5 taga kamaymoqda: 15 - 5 = 10."
+    },
+    {
+      "text": "Kitob 15000 so‘m, daftar 5000 so‘m. 1 ta kitob va 2 ta daftar jami necha so‘m bo‘ladi?",
+      "options": [
+        "20000 so‘m",
+        "25000 so‘m (15000 + 5000 + 5000 = 25000)",
+        "30000 so‘m",
+        "10000 so‘m"
+      ],
+      "correctIndex": 1,
+      "explanation": "15000 + 10000 = 25000 so‘m."
+    },
+    {
+      "text": "Ketma-ketlikdagi tushirib qoldirilgan sonni toping: 2, 5, 8, □, 14",
+      "options": [
+        "10",
+        "12",
+        "9",
+        "11 (3 tadan ortmoqda)"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 + 3 = 11, 11 + 3 = 14."
+    },
+    {
+      "text": "Agar kecha juma bo‘lsa, bugun haftaning nechanchi kuni?",
+      "options": [
+        "Juma (5-kuni)",
+        "Shanba (6-kuni)",
+        "Yakshanba (7-kuni)",
+        "Payshanba (4-kuni)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Jumadan keyingi kun shanba (haftaning 6-kuni)."
+    },
+    {
+      "text": "Ketma-ketlik: 3, 6, 5, 8, 7, 10, □. Keyingi son qaysi?",
+      "options": [
+        "11",
+        "8",
+        "9 (+3, so‘ng -1)",
+        "12"
+      ],
+      "correctIndex": 2,
+      "explanation": "3(+3)=6, 6(-1)=5, 5(+3)=8, 8(-1)=7, 7(+3)=10, 10(-1)=9."
+    },
+    {
+      "text": "Agar indinga seshanba bo‘lsa, kecha haftaning qaysi kuni edi?",
+      "options": [
+        "Shanba (indinga seshanba ➔ ertaga dushanba ➔ bugun yakshanba ➔ kecha shanba)",
+        "Yakshanba",
+        "Juma",
+        "Dushanba"
+      ],
+      "correctIndex": 0,
+      "explanation": "Indinga seshanba bo‘lsa, ertaga dushanba, bugun yakshanba, kecha esa shanba bo‘lgan."
+    },
+    {
+      "text": "Narxlar berilgan: ruchka 2000 so‘m, o‘chirg‘ich 1000 so‘m, albom 7000 so‘m. Azizda 10000 so‘m bor edi. U barcha narsalardan bittadan olsa, qancha qaytim oladi?",
+      "options": [
+        "0 so‘m (jami 10000 so‘m bo‘ladi)",
+        "1000 so‘m",
+        "2000 so‘m",
+        "500 so‘m"
+      ],
+      "correctIndex": 0,
+      "explanation": "2000 + 1000 + 7000 = 10000 so‘m. Qaytim: 0 so‘m."
+    },
+    {
+      "text": "Ketma-ketlik qonuniyatini toping: 10, 12, 11, 13, 12, 14, □",
+      "options": [
+        "15",
+        "16",
+        "12",
+        "13 (+2, so‘ng -1)"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 dan 1 ayirilsa 13 bo‘ladi."
+    },
+    {
+      "text": "O‘quvchi 1-kuni 2 bet, 2-kuni 4 bet, 3-kuni 6 bet kitob o‘qidi. Shu qonuniyat bilan u 4-kuni va 5-kuni jami necha bet o‘qiydi?",
+      "options": [
+        "16 bet",
+        "18 bet (4-kun: 8 bet, 5-kun: 10 bet; 8 + 10 = 18)",
+        "20 bet",
+        "14 bet"
+      ],
+      "correctIndex": 1,
+      "explanation": "4-kuni 8 bet, 5-kuni 10 bet o‘qiydi: 8 + 10 = 18 bet."
+    },
+    {
+      "text": "Dilnozada 20000 so‘m pul bor edi. U 8000 so‘mga kitob va 4000 so‘mga daftar sotib oldi. Qolgan puliga 4000 so‘mlik qalamdan nechta sotib olishi mumkin?",
+      "options": [
+        "1 ta",
+        "3 ta",
+        "2 ta (qolgan pul: 8000 so‘m; 4000 + 4000 = 8000)",
+        "4 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sarflandi: 8000 + 4000 = 12000 so‘m. Qoldi: 20000 - 12000 = 8000 so‘m. 8000 so‘mga 2 ta qalam olish mumkin."
+    }
+  ]
+}

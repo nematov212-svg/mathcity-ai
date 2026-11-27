@@ -1,0 +1,277 @@
+{
+  "bookNumber": 6,
+  "isReview": false,
+  "title": "Butunni topishga doir masalalar",
+  "emoji": "🛸",
+  "shortDesc": "Qismlar yig‘indisi orqali butun miqdorni topish.",
+  "intro": "Barcha qismlar ma’lum bo‘lganda, butun miqdorni topish uchun qo‘shish amali bajariladi: Qism + Qism = Butun.",
+  "keyPoints": [
+    "Butun — bu barcha bo‘laklar yoki qismlarning umumiy yig‘indisi.",
+    "Dron yetkazib berish masalalari: katta va kichik jo‘natmalar birlashtiriladi.",
+    "Agar noma’lum butun bo‘lsa, har doim qo‘shish ifodasi tuziladi."
+  ],
+  "miniExample": {
+    "emojis": "🛸 14 ta katta jo‘natma + 32 ta kichik jo‘natma = 46 ta",
+    "text": "Pochta droni 14 ta katta va 32 ta kichik jo‘natma tashidi. Jami: 14 + 32 = 46 ta jo‘natma."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Dron 14 ta katta va 32 ta kichik jo‘natma yetkazib berdi. Jami jo‘natmalar soni nechta?",
+      "options": [
+        "46 ta (14 + 32 = 46)",
+        "44 ta",
+        "48 ta",
+        "18 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qismlar qo‘shiladi: 14 + 32 = 46 ta jo‘natma."
+    },
+    {
+      "text": "Butunni topish uchun qismlar ustida qaysi amal bajariladi?",
+      "options": [
+        "Ayirish amali (-)",
+        "Qo‘shish amali (+)",
+        "Taqqoslash amali",
+        "Bo‘lish amali"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qismlardan butun hosil qilish uchun ular qo‘shiladi."
+    },
+    {
+      "text": "Birinchi qutida 21 ta, ikkinchi qutida 35 ta qalam bor. Ikkala qutida jami nechta qalam bor?",
+      "options": [
+        "54 ta",
+        "58 ta",
+        "56 ta (21 + 35 = 56)",
+        "14 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "21 + 35 = 56 ta qalam."
+    }
+  ],
+  "test": [
+    {
+      "text": "«Qism + Qism = ?» formulasida so‘roq belgisi o‘rnida nima turadi?",
+      "options": [
+        "Butun",
+        "Yana bir qism",
+        "Nol",
+        "Ayirma"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qismlarning yig‘indisi butunni tashkil qiladi."
+    },
+    {
+      "text": "Pochta droni ertalab 12 ta, tushdan keyin 15 ta xat tashidi. Dron jami nechta xat tashigan?",
+      "options": [
+        "25 ta",
+        "29 ta",
+        "27 ta (12 + 15 = 27)",
+        "3 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 + 15 = 27 ta xat."
+    },
+    {
+      "text": "20 + 35 yig‘indisi butun bo‘lsa, uning qiymati nechaga teng?",
+      "options": [
+        "45",
+        "55",
+        "65",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 35 = 55."
+    },
+    {
+      "text": "Dasturchi bola 1-soatda 11 ta qator kod, 2-soatda 24 ta qator kod yozdi. Jami necha qator kod yozilgan?",
+      "options": [
+        "33 qator",
+        "37 qator",
+        "13 qator",
+        "35 qator (11 + 24 = 35)"
+      ],
+      "correctIndex": 3,
+      "explanation": "11 + 24 = 35 qator kod."
+    },
+    {
+      "text": "Toshkentdagi avtoparkka 30 ta yangi elektrobus va 15 ta oddiy avtobus keltirildi. Jami nechta yangi transport keldi?",
+      "options": [
+        "35 ta",
+        "45 ta (30 + 15 = 45)",
+        "55 ta",
+        "15 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 15 = 45 ta yangi transport."
+    },
+    {
+      "text": "43 + 25 ifodaning qiymatini toping:",
+      "options": [
+        "68",
+        "66",
+        "70",
+        "18"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 + 20 = 60, 3 + 5 = 8. Natija: 68."
+    },
+    {
+      "text": "Pochta xizmatida 23 ta robot va 34 ta dron ishlayapti. Xizmatda jami nechta qurilma ishlamoqda?",
+      "options": [
+        "55 ta",
+        "59 ta",
+        "11 ta",
+        "57 ta (23 + 34 = 57)"
+      ],
+      "correctIndex": 3,
+      "explanation": "23 + 34 = 57 ta qurilma."
+    },
+    {
+      "text": "Sxema: I qism = 42, II qism = 36. Butunni toping:",
+      "options": [
+        "76",
+        "80",
+        "78 (42 + 36 = 78)",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "42 + 36 = 78."
+    },
+    {
+      "text": "Bog‘dan 1-kun 33 quti shaftoli, 2-kun 24 quti shaftoli terildi. Jami necha quti shaftoli terilgan?",
+      "options": [
+        "55 quti",
+        "60 quti",
+        "57 quti (33 + 24 = 57)",
+        "9 quti"
+      ],
+      "correctIndex": 2,
+      "explanation": "33 + 24 = 57 quti."
+    },
+    {
+      "text": "Gulzorga 26 tup atirgul va 21 tup lola ekildi. Gulzordagi jami gullar sonini toping:",
+      "options": [
+        "45 tup",
+        "49 tup",
+        "5 tup",
+        "47 tup (26 + 21 = 47)"
+      ],
+      "correctIndex": 3,
+      "explanation": "26 + 21 = 47 tup gul."
+    },
+    {
+      "text": "Dron Buxoroda 16 ta manzilga, Navoiyda 22 ta manzilga dori yetkazdi. Dron jami nechta manzilga xizmat ko‘rsatdi?",
+      "options": [
+        "38 ta (16 + 22 = 38)",
+        "36 ta",
+        "40 ta",
+        "6 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "16 + 22 = 38 ta manzil."
+    },
+    {
+      "text": "Tenglikni to‘g‘ri qiladigan butunni toping: 35 + 44 = □",
+      "options": [
+        "69",
+        "79",
+        "89",
+        "77"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 40 = 70, 5 + 4 = 9. Butun: 79."
+    },
+    {
+      "text": "Kutubxona uchun 52 ta badiiy kitob va 26 ta ensiklopediya sotib olindi. Jami nechta kitob olingan?",
+      "options": [
+        "76 ta",
+        "80 ta",
+        "26 ta",
+        "78 ta (52 + 26 = 78)"
+      ],
+      "correctIndex": 3,
+      "explanation": "52 + 26 = 78 ta kitob."
+    },
+    {
+      "text": "Sport do‘konida 40 ta futbol to‘pi va 35 ta basketbol to‘pi bor. Do‘konda jami nechta to‘p bor?",
+      "options": [
+        "70 ta",
+        "75 ta (40 + 35 = 75)",
+        "80 ta",
+        "5 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 + 35 = 75 ta to‘p."
+    },
+    {
+      "text": "Pochta markazida uch turdagi jo‘natmalar tayyorlandi: 20 ta xat, 15 ta kichik quti va 12 ta katta posilka. Jami jo‘natmalar nechta?",
+      "options": [
+        "45 ta",
+        "50 ta",
+        "47 ta (20 + 15 + 12 = 47)",
+        "37 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 + 15 = 35, 35 + 12 = 47 ta jo‘natma."
+    },
+    {
+      "text": "Samolyot 1-reysda 42 yo‘lovchi, 2-reysda 37 yo‘lovchi tashidi. Ikkala reysda jami necha kishi uchgan?",
+      "options": [
+        "79 nafar (42 + 37 = 79)",
+        "75 nafar",
+        "80 nafar",
+        "5 nafar"
+      ],
+      "correctIndex": 0,
+      "explanation": "42 + 37 = 79 nafar yo‘lovchi."
+    },
+    {
+      "text": "Sxema bo‘yicha butunni hisoblang: I qism = 15, II qism = 23, III qism = 31. Butun = ?",
+      "options": [
+        "69 (15 + 23 + 31 = 69)",
+        "59",
+        "68",
+        "70"
+      ],
+      "correctIndex": 0,
+      "explanation": "15 + 23 = 38, 38 + 31 = 69."
+    },
+    {
+      "text": "Maktab bog‘ida 34 tup olma, 22 tup gilos va 11 tup o‘rik daraxti bor. Bog‘da jami nechta mevali daraxt bor?",
+      "options": [
+        "65 tup",
+        "69 tup",
+        "57 tup",
+        "67 tup (34 + 22 + 11 = 67)"
+      ],
+      "correctIndex": 3,
+      "explanation": "34 + 22 = 56, 56 + 11 = 67 tup daraxt."
+    },
+    {
+      "text": "Dron uchta shaharchaga xat yetkazdi: 1-shaharchaga 14 ta, 2-shaharchaga 16 ta va 3-shaharchaga 20 ta. Dron jami nechta xat yetkazgan?",
+      "options": [
+        "40 ta",
+        "50 ta (14 + 16 + 20 = 50)",
+        "48 ta",
+        "52 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "14 + 16 = 30, 30 + 20 = 50 ta xat."
+    },
+    {
+      "text": "Akfa romlar fabrikasida ertalab 32 ta, tushda 25 ta, kechqurun 13 ta deraza romi yasaldi. Kun davomida jami nechta rom yasalgan?",
+      "options": [
+        "68 ta",
+        "72 ta",
+        "70 ta (32 + 25 + 13 = 70)",
+        "65 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "32 + 25 = 57, 57 + 13 = 70 ta deraza romi."
+    }
+  ]
+}

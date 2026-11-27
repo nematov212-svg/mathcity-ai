@@ -86,6 +86,7 @@ export interface LessonModel {
   examples?: LessonExample[];
   moduleId?: string;
   bookNumber?: number;
+  isReview?: boolean;
   emoji?: string;
   intro?: string;
   keyPoints?: string[];

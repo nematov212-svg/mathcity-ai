@@ -1,0 +1,277 @@
+{
+  "bookNumber": 21,
+  "isReview": false,
+  "title": "Taqqoslashga doir masalalar (4)",
+  "emoji": "🔍",
+  "shortDesc": "Yig‘indi va ayirmani topish, sonlarni o‘sish tartibida joylashtirish.",
+  "intro": "Bir vaqtning o‘zida yig‘indi va ayirmani hisoblash hamda natijalarni taqqoslab tartiblashni o‘rganamiz.",
+  "keyPoints": [
+    "76 soni 88 dan qancha kichik: 88 − 76 = 12 ga kichik.",
+    "Natijalarni o‘sish tartibida (kichigidan kattasiga) joylashtirish.",
+    "Sonlar orasidagi munosabatlarni aniqlashda hisoblash aniqligi zarur."
+  ],
+  "miniExample": {
+    "emojis": "🔍 76 soni 88 dan: 88 - 76 = 12 ga kichik",
+    "text": "76 soni 88 dan qancha kichik? Ayiramiz: 88 - 76 = 12 ga kichik."
+  },
+  "xpReward": 100,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "76 soni 88 sonidan qancha kichik?",
+      "options": [
+        "12 ga (88 - 76 = 12)",
+        "10 ga",
+        "14 ga",
+        "164 ga"
+      ],
+      "correctIndex": 0,
+      "explanation": "88 - 76 = 12."
+    },
+    {
+      "text": "50 va 30 sonlarining yig‘indisi ularning ayirmasidan qancha katta?",
+      "options": [
+        "50 ga",
+        "60 ga (Yig‘indi: 80, Ayirma: 20; 80 - 20 = 60)",
+        "40 ga",
+        "70 ga"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 + 30 = 80, 50 - 30 = 20. Farq: 80 - 20 = 60."
+    },
+    {
+      "text": "Qaysi son 45 dan 15 ta kichik?",
+      "options": [
+        "60 (45 + 15 = 60)",
+        "25",
+        "30 (45 - 15 = 30)",
+        "35"
+      ],
+      "correctIndex": 2,
+      "explanation": "45 - 15 = 30."
+    }
+  ],
+  "test": [
+    {
+      "text": "76 soni 88 dan qancha kichik?",
+      "options": [
+        "12 ga kichik",
+        "10 ga kichik",
+        "14 ga kichik",
+        "16 ga kichik"
+      ],
+      "correctIndex": 0,
+      "explanation": "88 - 76 = 12."
+    },
+    {
+      "text": "40 va 20 sonlarining yig‘indisini toping:",
+      "options": [
+        "20 (40 - 20 = 20)",
+        "50",
+        "60 (40 + 20 = 60)",
+        "70"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 + 20 = 60."
+    },
+    {
+      "text": "40 va 20 sonlarining ayirmasini toping:",
+      "options": [
+        "60 (40 + 20 = 60)",
+        "20 (40 - 20 = 20)",
+        "10",
+        "30"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 - 20 = 20."
+    },
+    {
+      "text": "55 soni 75 sonidan qancha kam?",
+      "options": [
+        "15 ga kam",
+        "25 ga kam",
+        "130 ga",
+        "20 ga kam (75 - 55 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "75 - 55 = 20."
+    },
+    {
+      "text": "68 soni 48 sonidan qancha katta?",
+      "options": [
+        "18 ga katta",
+        "20 ga katta (68 - 48 = 20)",
+        "22 ga katta",
+        "116 ga"
+      ],
+      "correctIndex": 1,
+      "explanation": "68 - 48 = 20."
+    },
+    {
+      "text": "Natijalarni o‘sish tartibida joylashtiring: 12, 5, 20, 8",
+      "options": [
+        "5, 8, 12, 20",
+        "20, 12, 8, 5",
+        "5, 12, 8, 20",
+        "8, 5, 12, 20"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kichigidan kattasiga: 5 < 8 < 12 < 20."
+    },
+    {
+      "text": "60 va 25 sonlarining yig‘indisi nechaga teng?",
+      "options": [
+        "35 (60 - 25 = 35)",
+        "80",
+        "90",
+        "85 (60 + 25 = 85)"
+      ],
+      "correctIndex": 3,
+      "explanation": "60 + 25 = 85."
+    },
+    {
+      "text": "60 va 25 sonlarining ayirmasi nechaga teng?",
+      "options": [
+        "85 (60 + 25 = 85)",
+        "30",
+        "35 (60 - 25 = 35)",
+        "40"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 - 25 = 35."
+    },
+    {
+      "text": "85 soni 35 sonidan qancha katta?",
+      "options": [
+        "40 ga",
+        "60 ga",
+        "50 ga (85 - 35 = 50)",
+        "120 ga"
+      ],
+      "correctIndex": 2,
+      "explanation": "85 - 35 = 50."
+    },
+    {
+      "text": "34 va 43 sonlarining yig‘indisi ularning ayirmasidan (9) qancha katta?",
+      "options": [
+        "77 ga",
+        "60 ga",
+        "70 ga",
+        "68 ga (77 - 9 = 68)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Yig‘indi: 34 + 43 = 77. Ayirma: 43 - 34 = 9. Farq: 77 - 9 = 68."
+    },
+    {
+      "text": "Quyidagi ifodalarning eng kattasini toping: A) 40 + 30, B) 90 - 30, C) 50 + 15, D) 85 - 10",
+      "options": [
+        "D) 85 - 10 = 75",
+        "A) 40 + 30 = 70",
+        "B) 90 - 30 = 60",
+        "C) 50 + 15 = 65"
+      ],
+      "correctIndex": 0,
+      "explanation": "A=70, B=60, C=65, D=75. Eng kattasi 75."
+    },
+    {
+      "text": "72 soni 96 dan qancha kichik?",
+      "options": [
+        "20 ga",
+        "24 ga (96 - 72 = 24)",
+        "26 ga",
+        "168 ga"
+      ],
+      "correctIndex": 1,
+      "explanation": "96 - 72 = 24."
+    },
+    {
+      "text": "58 va 22 sonlarining yig‘indisi necha bo‘ladi?",
+      "options": [
+        "36 (58 - 22 = 36)",
+        "78",
+        "82",
+        "80 (58 + 22 = 80)"
+      ],
+      "correctIndex": 3,
+      "explanation": "58 + 22 = 80."
+    },
+    {
+      "text": "58 va 22 sonlarining ayirmasi nechaga teng?",
+      "options": [
+        "80",
+        "36 (58 - 22 = 36)",
+        "34",
+        "38"
+      ],
+      "correctIndex": 1,
+      "explanation": "58 - 22 = 36."
+    },
+    {
+      "text": "Ikki sonning yig‘indisi 70 ga, ayirmasi 10 ga teng. Bu qaysi sonlar?",
+      "options": [
+        "50 va 20 (50 - 20 = 30)",
+        "45 va 25 (45 - 25 = 20)",
+        "40 va 30 (40 + 30 = 70, 40 - 30 = 10)",
+        "35 va 35 (35 - 35 = 0)"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 + 30 = 70 va 40 - 30 = 10."
+    },
+    {
+      "text": "Sonlarni kamayish tartibida to‘g‘ri joylashtiring: 35 + 20, 80 - 15, 45 + 30, 90 - 40",
+      "options": [
+        "75, 65, 55, 50",
+        "50, 55, 65, 75",
+        "75, 55, 65, 50",
+        "65, 75, 55, 50"
+      ],
+      "correctIndex": 0,
+      "explanation": "45+30=75, 80-15=65, 35+20=55, 90-40=50. Kamayish tartibi: 75, 65, 55, 50."
+    },
+    {
+      "text": "88 soni 99 dan qancha kichik bo‘lsa, 55 soni 66 dan shuncha kichikmi?",
+      "options": [
+        "Ha, ikkalasi ham 11 ga kichik (99 - 88 = 11, 66 - 55 = 11)",
+        "Yo‘q, biri 10 ga, biri 12 ga kichik",
+        "Yo‘q, teng emas",
+        "Bilib bo‘lmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "99 - 88 = 11 va 66 - 55 = 11. Ikkala farq 11 ga teng."
+    },
+    {
+      "text": "Birinchi son 50, ikkinchi son undan 20 ta kam, uchinchi son esa ikkinchi sondan 15 ta ko‘p. Uchinchi son qaysi?",
+      "options": [
+        "35",
+        "40",
+        "55",
+        "45 (II: 30; 30 + 15 = 45)"
+      ],
+      "correctIndex": 3,
+      "explanation": "II son: 50 - 20 = 30. III son: 30 + 15 = 45."
+    },
+    {
+      "text": "O‘quvchi uchta misol yechdi: 1-misol natijasi 30, 2-misol natijasi 1-dan 15 ta ko‘p, 3-misol natijasi esa 1-va 2-misol yig‘indisidan 25 ta kam. 3-misol natijasi nechaga teng?",
+      "options": [
+        "45",
+        "50 (2-misol: 45; 30 + 45 = 75; 75 - 25 = 50)",
+        "55",
+        "60"
+      ],
+      "correctIndex": 1,
+      "explanation": "2-misol: 30 + 15 = 45. Yig‘indi: 30 + 45 = 75. 3-misol: 75 - 25 = 50."
+    },
+    {
+      "text": "Ahmad 48 ta misol yechdi. Bu Sardor yechganidan 12 ta ko‘p. Ikkala bola birgalikda nechta misol yechgan?",
+      "options": [
+        "60 ta",
+        "72 ta",
+        "84 ta (Sardor: 36; 48 + 36 = 84)",
+        "96 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sardor Ahmadnikidan 12 ta kam: 48 - 12 = 36 ta. Jami: 48 + 36 = 84 ta."
+    }
+  ]
+}

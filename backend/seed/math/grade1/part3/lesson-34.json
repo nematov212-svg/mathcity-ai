@@ -1,0 +1,277 @@
+{
+  "bookNumber": 34,
+  "isReview": false,
+  "title": "Masalalar yechish (uzunlik)",
+  "emoji": "📎",
+  "shortDesc": "Mixlar, tomonlar uzunligi va yaxlit sonlar (10, 20, … 90).",
+  "intro": "Mixlarni taqqoslash, shakllarning tomonlarini hisoblash va yaxlit o‘nliklar bilan amallarni o‘rganamiz.",
+  "keyPoints": [
+    "Mixlar uzunligini taqqoslash: 7 cm va 5 cm mixlar farqi 2 cm.",
+    "Yaxlit sonlar: 10, 20, 30, 40, 50, 60, 70, 80, 90 (birliklari 0 bo‘lgan sonlar).",
+    "Bir xil o‘lchov birligidagi uzunliklar ustida amallar bajariladi."
+  ],
+  "miniExample": {
+    "emojis": "📎 Katta mix: 8 cm, Kichik mix: 5 cm ➔ Farq = 3 cm",
+    "text": "8 cm li mix 5 cm li mixdan 3 cm uzun: 8 - 5 = 3 cm."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Katta mix 8 cm, kichik mix 5 cm. Katta mix kichigidan necha cm uzun?",
+      "options": [
+        "3 cm (8 - 5 = 3)",
+        "13 cm",
+        "2 cm",
+        "4 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 - 5 = 3 cm."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri yaxlit o‘nlik (yaxlit son) hisoblanadi?",
+      "options": [
+        "43",
+        "40",
+        "25",
+        "17"
+      ],
+      "correctIndex": 1,
+      "explanation": "Oxiri 0 bilan tugaydigan o‘nliklar yaxlit sonlar deyiladi."
+    },
+    {
+      "text": "Uchburchakning tomonlari 10 cm, 20 cm va 30 cm. Tomonlari yig‘indisi necha cm?",
+      "options": [
+        "50 cm",
+        "70 cm",
+        "60 cm (10 + 20 + 30 = 60)",
+        "40 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 20 + 30 = 60 cm."
+    }
+  ],
+  "test": [
+    {
+      "text": "8 cm li mix 5 cm li mixdan necha cm uzun?",
+      "options": [
+        "3 cm",
+        "2 cm",
+        "4 cm",
+        "13 cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 - 5 = 3 cm."
+    },
+    {
+      "text": "Qaysi qatorda faqat yaxlit sonlar yozilgan?",
+      "options": [
+        "11, 22, 33, 44",
+        "10, 15, 20, 25",
+        "10, 20, 30, 40, 50",
+        "5, 10, 15, 20"
+      ],
+      "correctIndex": 2,
+      "explanation": "Birliklar xonasi 0 bo‘lgan sonlar yaxlit o‘nliklardir."
+    },
+    {
+      "text": "20 cm + 30 cm yig‘indisi necha santimetr bo‘ladi?",
+      "options": [
+        "10 cm",
+        "50 cm",
+        "60 cm",
+        "40 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 30 = 50 cm."
+    },
+    {
+      "text": "70 cm - 40 cm ayirmaning qiymatini toping:",
+      "options": [
+        "110 cm",
+        "20 cm",
+        "40 cm",
+        "30 cm"
+      ],
+      "correctIndex": 3,
+      "explanation": "70 - 40 = 30 cm."
+    },
+    {
+      "text": "Mixning uzunligi 10 cm, vint 6 cm. Vint mixdan necha cm qisqa?",
+      "options": [
+        "16 cm",
+        "4 cm (10 - 6 = 4)",
+        "3 cm",
+        "5 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 - 6 = 4 cm."
+    },
+    {
+      "text": "50 cm necha detsimetr bo‘ladi?",
+      "options": [
+        "5 dm",
+        "50 dm",
+        "15 dm",
+        "500 dm"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 cm = 5 dm."
+    },
+    {
+      "text": "Quruvchida 90 cm li yog‘och bor edi. U 40 cm kesib oldi. Necha santimetr yog‘och qoldi?",
+      "options": [
+        "130 cm",
+        "40 cm",
+        "60 cm",
+        "50 cm (90 - 40 = 50)"
+      ],
+      "correctIndex": 3,
+      "explanation": "90 - 40 = 50 cm."
+    },
+    {
+      "text": "Uchburchakning uchala tomoni ham 20 cm dan bo‘lsa, uning perimetri (tomonlari yig‘indisi) qancha?",
+      "options": [
+        "40 cm",
+        "50 cm",
+        "60 cm (20 + 20 + 20 = 60)",
+        "80 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 + 20 + 20 = 60 cm."
+    },
+    {
+      "text": "1-mix 12 cm, 2-mix 8 cm, 3-mix 10 cm. Eng uzun va eng qisqa mixlar farqi qancha?",
+      "options": [
+        "2 cm",
+        "6 cm",
+        "4 cm (12 - 8 = 4)",
+        "20 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "Eng uzuni 12 cm, eng qisqasi 8 cm. Farq: 12 - 8 = 4 cm."
+    },
+    {
+      "text": "40 cm + 50 cm - 30 cm ifodaning qiymatini hisoblang:",
+      "options": [
+        "70 cm",
+        "50 cm",
+        "80 cm",
+        "60 cm (40 + 50 = 90, 90 - 30 = 60)"
+      ],
+      "correctIndex": 3,
+      "explanation": "90 - 30 = 60 cm."
+    },
+    {
+      "text": "Kvadratning tomoni 10 cm bo‘lsa, uning 4 ta tomoni yig‘indisi necha detsimetr bo‘ladi?",
+      "options": [
+        "4 dm (40 cm = 4 dm)",
+        "40 dm",
+        "2 dm",
+        "10 dm"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 x 10 cm = 40 cm = 4 dm."
+    },
+    {
+      "text": "Duradgor 80 cm li taxtani 2 ta teng bo‘lakka bo‘ldi. Har bir bo‘lak necha cm?",
+      "options": [
+        "30 cm",
+        "40 cm (40 + 40 = 80)",
+        "50 cm",
+        "20 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 cm dan 2 ta bo‘lak."
+    },
+    {
+      "text": "Ipning uzunligi 100 cm (1 metr). Undan 30 cm va 20 cm kesib olindi. Necha cm ip qoldi?",
+      "options": [
+        "40 cm",
+        "60 cm",
+        "70 cm",
+        "50 cm (100 - 30 - 20 = 50)"
+      ],
+      "correctIndex": 3,
+      "explanation": "100 - 50 = 50 cm."
+    },
+    {
+      "text": "1-sim 35 cm, 2-sim undan 15 cm uzun. 2-simning uzunligi necha dm bo‘ladi?",
+      "options": [
+        "50 dm",
+        "5 dm (35 + 15 = 50 cm = 5 dm)",
+        "4 dm",
+        "6 dm"
+      ],
+      "correctIndex": 1,
+      "explanation": "35 + 15 = 50 cm = 5 dm."
+    },
+    {
+      "text": "To‘g‘ri to‘rtburchakning bo‘yi 30 cm, eni 20 cm. Uning barcha 4 ta tomoni yig‘indisi qancha?",
+      "options": [
+        "50 cm",
+        "80 cm",
+        "100 cm (30 + 20 + 30 + 20 = 100)",
+        "120 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "30 + 20 = 50, 50 + 50 = 100 cm (1 metr)."
+    },
+    {
+      "text": "Usta 1-kuni 30 metr, 2-kuni 40 metr, 3-kuni 20 metr to‘siq o‘rnatdi. Usta jami necha metr to‘siq o‘rnatgan?",
+      "options": [
+        "90 metr (30 + 40 + 20 = 90)",
+        "80 metr",
+        "100 metr",
+        "70 metr"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 + 40 + 20 = 90 metr."
+    },
+    {
+      "text": "Lenta uzunligi 70 cm. Undan 25 cm va 15 cm kesib olindi. Necha detsimetr lenta qoldi?",
+      "options": [
+        "3 dm (70 - 40 = 30 cm = 3 dm)",
+        "4 dm",
+        "2 dm",
+        "30 dm"
+      ],
+      "correctIndex": 0,
+      "explanation": "70 - 40 = 30 cm = 3 dm."
+    },
+    {
+      "text": "Beshta har xil mix uzunliklari berilgan: 4 cm, 6 cm, 8 cm, 10 cm, 12 cm. Ularning barchasi qo‘shilsa necha santimetr bo‘ladi?",
+      "options": [
+        "35 cm",
+        "45 cm",
+        "50 cm",
+        "40 cm (4 + 6 + 8 + 10 + 12 = 40)"
+      ],
+      "correctIndex": 3,
+      "explanation": "4+6=10, 8+12=20, 10+20+10=40 cm."
+    },
+    {
+      "text": "Qurilishda 90 cm li temir truba ishlatildi. Undan 35 cm va 25 cm li bo‘laklar kesib olindi. Qolgan truba uzunligi necha cm bo‘ladi?",
+      "options": [
+        "25 cm",
+        "30 cm (90 - 35 - 25 = 30)",
+        "35 cm",
+        "40 cm"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kesildi: 35 + 25 = 60 cm. Qoldi: 90 - 60 = 30 cm."
+    },
+    {
+      "text": "Bog‘ yo‘lagi 100 metr. 1-brigada 40 metr, 2-brigada undan 10 metr kam yo‘lakka tosh yotqizdi. Yana necha metr yo‘lak qoldi?",
+      "options": [
+        "20 metr",
+        "40 metr",
+        "30 metr (2-brigada: 30 m; 100 - 40 - 30 = 30)",
+        "50 metr"
+      ],
+      "correctIndex": 2,
+      "explanation": "2-brigada: 40 - 10 = 30 m. Jami qilingani: 70 m. Qolgani: 100 - 70 = 30 metr."
+    }
+  ]
+}

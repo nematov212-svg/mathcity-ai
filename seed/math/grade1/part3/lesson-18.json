@@ -1,0 +1,277 @@
+{
+  "bookNumber": 18,
+  "isReview": false,
+  "title": "Taqqoslashga doir masalalar",
+  "emoji": "⚖️",
+  "shortDesc": "«Qancha ko‘p?» va «qancha kam?» savollariga javob berish.",
+  "intro": "Bir son ikkinchisidan qancha ko‘p yoki kamligini bilish uchun har doim katta sondan kichik son ayiriladi.",
+  "keyPoints": [
+    "Qoida: Qancha ko‘p yoki qancha kamligini topish uchun kattasidan kichigi ayiriladi.",
+    "Misol: 8 ta va 6 ta rasm ➔ 8 − 6 = 2 ta ko‘p (yoki kam).",
+    "Taqqoslash masalalarida har doim ayirish amali qo‘llaniladi."
+  ],
+  "miniExample": {
+    "emojis": "🖼️ 8 ta rangli rasm va 6 ta oq-qora rasm ➔ 8 - 6 = 2 ta farq",
+    "text": "8 ta rangli rasm 6 ta oq-qora rasmdan 2 ta ko‘p: 8 - 6 = 2 ta."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Bir son ikkinchisidan qancha ko‘p yoki kamligini topish uchun qaysi amal bajariladi?",
+      "options": [
+        "Katta sondan kichik son ayiriladi",
+        "Sonlar bir-biriga qo‘shiladi",
+        "Sonlar o‘rni almashtiriladi",
+        "Hech qanday amal bajarilmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Taqqoslashda farqni topish uchun katta sondan kichik son ayiriladi."
+    },
+    {
+      "text": "8 ta rangli rasm 6 ta oq-qora rasmdan nechta ko‘p?",
+      "options": [
+        "14 ta (8 + 6 = 14)",
+        "2 ta (8 - 6 = 2)",
+        "3 ta",
+        "1 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 - 6 = 2 ta ko‘p."
+    },
+    {
+      "text": "Anvarda 15 ta, Akmalda 10 ta qalam bor. Akmalning qalamlari Anvarnikidan nechta kam?",
+      "options": [
+        "25 ta (15 + 10 = 25)",
+        "4 ta",
+        "5 ta (15 - 10 = 5)",
+        "6 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 - 10 = 5 ta kam."
+    }
+  ],
+  "test": [
+    {
+      "text": "8 soni 6 sonidan qancha ko‘p?",
+      "options": [
+        "2 ga ko‘p (8 - 6 = 2)",
+        "14 ga ko‘p",
+        "3 ga ko‘p",
+        "1 ga ko‘p"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 - 6 = 2."
+    },
+    {
+      "text": "10 soni 17 sonidan qancha kam?",
+      "options": [
+        "27 ga kam",
+        "6 ga kam",
+        "7 ga kam (17 - 10 = 7)",
+        "8 ga kam"
+      ],
+      "correctIndex": 2,
+      "explanation": "17 - 10 = 7."
+    },
+    {
+      "text": "Sinfda 18 ta qiz va 12 ta o‘g‘il bola bor. Qizlar o‘g‘il bolalardan nechta ko‘p?",
+      "options": [
+        "30 nafar",
+        "6 nafar (18 - 12 = 6)",
+        "5 nafar",
+        "7 nafar"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 - 12 = 6 nafar."
+    },
+    {
+      "text": "Savatda 20 ta olma va 15 ta nok bor. Noklar olmalardan nechta kam?",
+      "options": [
+        "35 ta",
+        "4 ta",
+        "6 ta",
+        "5 ta (20 - 15 = 5)"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 - 15 = 5 ta."
+    },
+    {
+      "text": "«Qaysi biri ko‘p va qancha ko‘p?» 25 ta qalam yoki 20 ta qalam?",
+      "options": [
+        "20 ta qalam 5 taga ko‘p",
+        "25 ta qalam 5 taga ko‘p",
+        "Ikkalasi teng",
+        "45 taga ko‘p"
+      ],
+      "correctIndex": 1,
+      "explanation": "25 soni 20 dan 5 taga ko‘p (25 - 20 = 5)."
+    },
+    {
+      "text": "30 soni 40 sonidan qancha kichik?",
+      "options": [
+        "10 ga kichik (40 - 30 = 10)",
+        "70 ga kichik",
+        "5 ga kichik",
+        "15 ga kichik"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 - 30 = 10."
+    },
+    {
+      "text": "Dardona 38 ta, Madina 25 ta gul terdi. Dardona Madinadan nechta ko‘p gul tergan?",
+      "options": [
+        "63 ta",
+        "10 ta",
+        "15 ta",
+        "13 ta (38 - 25 = 13)"
+      ],
+      "correctIndex": 3,
+      "explanation": "38 - 25 = 13 ta gul."
+    },
+    {
+      "text": "Kutubxonada 76 ta ertak va 42 ta hikoyalar kitobi bor. Ertaklar hikoyalardan nechta ko‘p?",
+      "options": [
+        "118 ta",
+        "30 ta",
+        "34 ta (76 - 42 = 34)",
+        "36 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "76 - 42 = 34 ta kitob."
+    },
+    {
+      "text": "1-xaltada 55 kg, 2-xaltada 32 kg bug‘doy bor. 2-xalta 1-xaltadan necha kg yengil?",
+      "options": [
+        "87 kg",
+        "20 kg",
+        "23 kg (55 - 32 = 23)",
+        "25 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "55 - 32 = 23 kg."
+    },
+    {
+      "text": "Toshkentdan Samarqandgacha poyezdda 48 yo‘lovchi, avtobusda 36 yo‘lovchi ketmoqda. Poyezdda avtobusdagidan necha kishi ko‘p?",
+      "options": [
+        "84 nafar",
+        "10 nafar",
+        "14 nafar",
+        "12 nafar (48 - 36 = 12)"
+      ],
+      "correctIndex": 3,
+      "explanation": "48 - 36 = 12 nafar."
+    },
+    {
+      "text": "89 soni 54 sonidan qancha katta?",
+      "options": [
+        "35 ga (89 - 54 = 35)",
+        "143 ga",
+        "30 ga",
+        "40 ga"
+      ],
+      "correctIndex": 0,
+      "explanation": "89 - 54 = 35."
+    },
+    {
+      "text": "27 soni 68 sonidan qancha kichik?",
+      "options": [
+        "95 ga",
+        "41 ga (68 - 27 = 41)",
+        "40 ga",
+        "43 ga"
+      ],
+      "correctIndex": 1,
+      "explanation": "68 - 27 = 41."
+    },
+    {
+      "text": "Bog‘bon 64 tup shaftoli va 41 tup anor o‘tqazdi. Shaftolilar anordan nechta ko‘p?",
+      "options": [
+        "105 tup",
+        "20 tup",
+        "25 tup",
+        "23 tup (64 - 41 = 23)"
+      ],
+      "correctIndex": 3,
+      "explanation": "64 - 41 = 23 tup."
+    },
+    {
+      "text": "Dukonda 90 ta velosiped va 60 ta samokat sotildi. Samokatlar velosipedlardan nechta kam sotilgan?",
+      "options": [
+        "150 ta",
+        "30 ta (90 - 60 = 30)",
+        "25 ta",
+        "35 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "90 - 60 = 30 ta."
+    },
+    {
+      "text": "Akmal 1-kuni 24 bet, 2-kuni 36 bet kitob o‘qidi. Akmal 2-kuni 1-kunidagidan necha bet ko‘p o‘qigan?",
+      "options": [
+        "60 bet",
+        "10 bet",
+        "12 bet (36 - 24 = 12)",
+        "14 bet"
+      ],
+      "correctIndex": 2,
+      "explanation": "36 - 24 = 12 bet."
+    },
+    {
+      "text": "1-omborga 75 qop guruch, 2-omborga 45 qop guruch keltirildi. 1-omborga necha qop ortiq guruch keltirilgan?",
+      "options": [
+        "30 qop (75 - 45 = 30)",
+        "120 qop",
+        "25 qop",
+        "35 qop"
+      ],
+      "correctIndex": 0,
+      "explanation": "75 - 45 = 30 qop."
+    },
+    {
+      "text": "Pochta droni Toshkentda 58 ta, Samarqandda 35 ta jo‘natma tashidi. Samarqandda Toshkentdagidan nechta kam jo‘natma tashilgan?",
+      "options": [
+        "23 ta (58 - 35 = 23)",
+        "93 ta",
+        "20 ta",
+        "25 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "58 - 35 = 23 ta."
+    },
+    {
+      "text": "Maktabda 96 nafar a’lochi va 64 nafar zarbdor o‘quvchi bor. A’lochilar zarbdorlardan necha nafar ko‘p?",
+      "options": [
+        "160 nafar",
+        "30 nafar",
+        "34 nafar",
+        "32 nafar (96 - 64 = 32)"
+      ],
+      "correctIndex": 3,
+      "explanation": "96 - 64 = 32 nafar."
+    },
+    {
+      "text": "1-fermer 40 tonna, 2-fermer 30 tonna bug‘doy yetishtirdi. 3-fermer esa ikkala fermerning jami hosilidan 20 tonna kam bug‘doy yetishtirdi. 3-fermer necha tonna bug‘doy yetishtirgan?",
+      "options": [
+        "40 tonna",
+        "50 tonna (40 + 30 = 70; 70 - 20 = 50)",
+        "60 tonna",
+        "70 tonna"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ikkala fermer: 40 + 30 = 70 tonna. 3-fermer: 70 - 20 = 50 tonna."
+    },
+    {
+      "text": "Do‘konda 48 ta qizil va 32 ta ko‘k to‘p bor edi. Yashil to‘plar esa qizil va ko‘k to‘plar orasidagi farqdan 10 ta ko‘p. Do‘konda nechta yashil to‘p bor?",
+      "options": [
+        "16 ta",
+        "20 ta",
+        "26 ta (48 - 32 = 16; 16 + 10 = 26)",
+        "30 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Farq: 48 - 32 = 16 ta. Yashil to‘plar: 16 + 10 = 26 ta."
+    }
+  ]
+}

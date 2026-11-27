@@ -1,0 +1,277 @@
+{
+  "bookNumber": 1,
+  "isReview": false,
+  "title": "Masalaning tarkibi",
+  "emoji": "🧩",
+  "shortDesc": "Masalaning sharti, savoli, yechimi va javobi.",
+  "intro": "Har bir masala shart, savol, yechim va javobdan iborat bo‘ladi.",
+  "keyPoints": [
+    "Masala shartida ma’lum sonlar va vaziyat beriladi.",
+    "Masala savoli nimani topish kerakligini ko‘rsatadi.",
+    "Yechim amallar ifodasi, javob esa savolga aniq xulosadir."
+  ],
+  "miniExample": {
+    "emojis": "🔴🔴🔴 + 🔵🔵 = 5 ta",
+    "text": "3 ta qizil va 2 ta ko‘k shar bor. Jami nechta shar bor? Yechim: 3 + 2 = 5 ta shar."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Masalaning qaysi qismida bizga ma’lum bo‘lgan ma’lumotlar aytiladi?",
+      "options": [
+        "Shartida",
+        "Savolida",
+        "Javobida",
+        "Yechimida"
+      ],
+      "correctIndex": 0,
+      "explanation": "Masala shartida berilgan ma’lumotlar bayon qilinadi."
+    },
+    {
+      "text": "«Savatda 5 ta olma bor edi, yana 3 ta solindi. Nechta olma bo‘ldi?» Masalaning savoli qaysi?",
+      "options": [
+        "Savatda 5 ta olma bor edi",
+        "Nechta olma bo‘ldi?",
+        "Yana 3 ta solindi",
+        "Jami 8 ta olma"
+      ],
+      "correctIndex": 1,
+      "explanation": "«Nechta olma bo‘ldi?» jumlasi masala savolidir."
+    },
+    {
+      "text": "Masalada shart va savol bo‘lsa, keyingi bosqich nima?",
+      "options": [
+        "Yangi shart to‘qish",
+        "Kitobni yopish",
+        "Yechimini topish",
+        "Rasm chizmaslik"
+      ],
+      "correctIndex": 2,
+      "explanation": "Shart va savoldan so‘ng ifoda tuzilib, yechim topiladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Masala nechta asosiy tarkibiy qismdan iborat?",
+      "options": [
+        "4 ta (shart, savol, yechim, javob)",
+        "2 ta (faqat sonlar)",
+        "1 ta (faqat javob)",
+        "6 ta (harflar)"
+      ],
+      "correctIndex": 0,
+      "explanation": "Masala to‘rtta asosiy qismdan iborat: shart, savol, yechim, javob."
+    },
+    {
+      "text": "«Bog‘da 7 ta chinor va 3 ta archa ko‘chati ekildi.» Bu jumla masalaning qaysi qismi?",
+      "options": [
+        "Savoli",
+        "Yechimi",
+        "Sharti",
+        "Javobi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bu yerda ma’lumot berilgan, shuning uchun bu masala sharti."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri masala SAVOLI hisoblanadi?",
+      "options": [
+        "Avtobus bekatga to‘xtadi",
+        "Avtobusda jami nechta yo‘lovchi qoldi?",
+        "12 ta bola maktabga bordi",
+        "7 qo‘shilgan 2 teng 9"
+      ],
+      "correctIndex": 1,
+      "explanation": "So‘roq belgisi bilan tugab, noma’lumni so‘ragan jumla savoldir."
+    },
+    {
+      "text": "Masala yechimi ifoda ko‘rinishida qanday yoziladi?",
+      "options": [
+        "Faqat so‘zlar bilan",
+        "Faqat nuqtalar bilan",
+        "Hech narsa yozilmaydi",
+        "Amallar bilan (masalan: 12 + 7 = 19)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Yechim arifmetik ifoda shaklida amallar yordamida yoziladi."
+    },
+    {
+      "text": "Savolsiz berilgan matn to‘liq masala bo‘la oladimi?",
+      "options": [
+        "Ha, har doim masala bo‘ladi",
+        "Yo‘q, savol bo‘lmasa masala hisoblanmaydi",
+        "Faqat darsda bo‘ladi",
+        "Faqat son bo‘lsa bo‘ladi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Savoli bo‘lmagan matn shunchaki hikoya yoki xabar bo‘ladi, masala emas."
+    },
+    {
+      "text": "«Doskada 6 ta misol bor edi, Salim 2 tasini yechdi.» Masala bo‘lishi uchun nima yetishmayapti?",
+      "options": [
+        "Savol",
+        "Shart",
+        "Sonlar",
+        "O‘quvchi ismi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Matnda shart bor, lekin «Nechtasi qoldi?» kabi savol yetishmayapti."
+    },
+    {
+      "text": "Fotimada 12 ta rangli va 7 ta oq-qora rasm bor. Jami nechta rasm bor? Yechim ifodasini toping:",
+      "options": [
+        "12 - 7 = 5 ta",
+        "12 + 10 = 22 ta",
+        "7 + 7 = 14 ta",
+        "12 + 7 = 19 ta"
+      ],
+      "correctIndex": 3,
+      "explanation": "Jami rasmlarni topish uchun qo‘shiladi: 12 + 7 = 19 ta."
+    },
+    {
+      "text": "«Akmal 15 ta daftar sotib oldi. Ulardan 5 tasi katak daftar, qolgani chiziqli daftar.» Savol qanday bo‘lishi kerak?",
+      "options": [
+        "Daftar qayerda sotiladi?",
+        "Akmal nechanchi sinfda o‘qiydi?",
+        "Nechta chiziqli daftar sotib oldi?",
+        "Katak daftar nechta?"
+      ],
+      "correctIndex": 2,
+      "explanation": "Shartda katak daftar ma’lum, qolgan chiziqli daftarlar sonini so‘rash mantiqiydir."
+    },
+    {
+      "text": "Qaysi matn TO‘LIQ masala hisoblanadi?",
+      "options": [
+        "Bog‘da 8 ta olma va 3 ta nok bor.",
+        "Savatchada anorlar juda shirin ekan.",
+        "Bog‘da 8 ta olma bor edi, 3 tasi uzildi. Nechta olma qoldi?",
+        "Nechta qalam bor?"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bu matnda ham shart, ham aniq savol mavjud."
+    },
+    {
+      "text": "Masalaning javobi qanday yoziladi?",
+      "options": [
+        "Javob: 19 daqiqa",
+        "Javob: son",
+        "Javob: noma’lum",
+        "Javob: 19 ta rasm"
+      ],
+      "correctIndex": 3,
+      "explanation": "Javob savolga mos ravishda birligi bilan aniq yoziladi."
+    },
+    {
+      "text": "Agar masalada «jami», «birgalikda» so‘zlari bo‘lsa, ko‘pincha qaysi amal bajariladi?",
+      "options": [
+        "Qo‘shish amali (+)",
+        "Ayirish amali (-)",
+        "Taqqoslash amali",
+        "Amal bajarilmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Jami miqdorni topish uchun butunni hisoblashda qo‘shish amali qo‘llaniladi."
+    },
+    {
+      "text": "Agar masalada «qoldi», «kamaydi» so‘zlari bo‘lsa, qaysi amal tanlanadi?",
+      "options": [
+        "Qo‘shish amali (+)",
+        "Ayirish amali (-)",
+        "O‘rin almashtirish",
+        "Hech qanday amal"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qolgan qismni topish uchun ayirish amali bajariladi."
+    },
+    {
+      "text": "Quyidagi ifodaga qaysi masala sharti mos keladi: 14 - 4 = 10 ta?",
+      "options": [
+        "14 ta qalam va 4 ta o‘chirg‘ich sotib olindi.",
+        "10 ta olmaga 4 ta olma qo‘shildi.",
+        "Doskada 14 ta son bor edi, yana 4 ta yozildi.",
+        "Avtobusda 14 yo‘lovchi bor edi, 4 nafari tushdi. Nechtasi qoldi?"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 dan 4 kamayishi yo‘lovchilar tushib ketishiga to‘g‘ri keladi."
+    },
+    {
+      "text": "Masala shartidagi ma’lumotlarni qisqacha yozib olish qanday nomlanadi?",
+      "options": [
+        "Uzun hikoya",
+        "Qisqa yozuv",
+        "Yechim formulasi",
+        "Lug‘at daftari"
+      ],
+      "correctIndex": 1,
+      "explanation": "Masala berilganlarini qisqa va qulay shaklda yozish qisqa yozuv deyiladi."
+    },
+    {
+      "text": "Qaysi holatda berilgan matn MASALA EMAS?",
+      "options": [
+        "«Dukonda 20 ta non bor edi, 5 tasi sotildi. Nechta non qoldi?»",
+        "«Kutubxonada 30 ta kitob bor, 10 tasi olindi. Qancha qoldi?»",
+        "«Dukonda 20 ta non bor edi. Non juda issiq edi.»",
+        "«Savatda 6 ta shaftoli va 4 ta nok bor. Jami nechta meva bor?»"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bu yerda savol yo‘q, shuning uchun u masala emas."
+    },
+    {
+      "text": "Matnni to‘g‘rilang: «Sinfda 10 ta parta bor. Nechta o‘quvchi o‘tiribdi?» Bu yerda xatolik nimada?",
+      "options": [
+        "Shart yetarli emas (bitta partaga nechtadan o‘tirish aytilmagan)",
+        "Savol juda uzun",
+        "Parta soni noto‘g‘ri",
+        "Hamma narsa to‘liq"
+      ],
+      "correctIndex": 0,
+      "explanation": "Masala yechilishi uchun shartda yetarli ma’lumot bo‘lishi shart."
+    },
+    {
+      "text": "Aziz 8 ta, Said esa undan 4 ta ko‘p misol yechdi. Masalani yechish uchun birinchi qadam qaysi?",
+      "options": [
+        "Said nechta misol yechganini topish (8 + 4)",
+        "Azizdan Saidni ayirish (8 - 4)",
+        "Saidning daftarlarini sanash",
+        "Javobni darhol 8 deb yozish"
+      ],
+      "correctIndex": 0,
+      "explanation": "Oldin noma’lum ikkinchi qism topiladi: 8 + 4 = 12 ta."
+    },
+    {
+      "text": "Masala sharti: «I savatda 16 ta olma, II savatda esa 6 ta olma kam». II savatda nechta olma bor?",
+      "options": [
+        "22 ta (16 + 6 = 22)",
+        "12 ta",
+        "8 ta",
+        "10 ta (16 - 6 = 10)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kam bo‘lgani uchun ayiramiz: 16 - 6 = 10 ta."
+    },
+    {
+      "text": "Gulshanda 15 ta atirgul bor edi. Ertalab 3 ta, tushdan keyin yana 2 ta atirgul ochildi. Jami nechta atirgul bo‘ldi?",
+      "options": [
+        "18 ta",
+        "20 ta (15 + 3 + 2 = 20)",
+        "19 ta",
+        "16 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Barcha ochilgan gullar qo‘shiladi: 15 + 3 + 2 = 20 ta."
+    },
+    {
+      "text": "Kutubxonadagi 18 ta ertak kitobidan 5 tasini Anvar, 3 tasini Malika o‘qishga oldi. Kutubxonada nechta kitob qoldi?",
+      "options": [
+        "12 ta",
+        "13 ta",
+        "10 ta (18 - 5 - 3 = 10)",
+        "8 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Olingan kitoblar ayirib tashlanadi: 18 - 5 = 13, 13 - 3 = 10 ta kitob qoldi."
+    }
+  ]
+}

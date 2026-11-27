@@ -1,0 +1,277 @@
+{
+  "bookNumber": 38,
+  "isReview": false,
+  "title": "Hajm va hajm birliklari (2)",
+  "emoji": "🥤",
+  "shortDesc": "Idishlar sig‘imini taqqoslash, ichimliklar aralashmasi va amaliy masalalar.",
+  "intro": "Turli idishlardagi suyuqliklarni taqqoslash va kundalik hayotdagi hajm masalalarini yechamiz.",
+  "keyPoints": [
+    "Sig‘imlarni taqqoslash: 15 l < 20 l, 45 l > 30 l.",
+    "Farqni topish uchun katta hajmdan kichik hajm ayiriladi.",
+    "Suyuqliklarni quyish va taqsimlashda hisob-kitoblar aniq bo‘lishi lozim."
+  ],
+  "miniExample": {
+    "emojis": "🥤 15 l sharbat < 20 l sharbat",
+    "text": "1-idishda 15 l, 2-idishda 20 l sharbat bor. 2-idishdagi sharbat 5 l ga ko‘p: 20 - 15 = 5 l."
+  },
+  "xpReward": 100,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Taqqoslang: 25 l va 30 l",
+      "options": [
+        "25 l < 30 l",
+        "25 l > 30 l",
+        "25 l = 30 l",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "25 soni 30 dan kichik bo‘lgani uchun 25 l < 30 l."
+    },
+    {
+      "text": "Bir idishda 40 l, ikkinchisida 15 l sharbat bor. 1-idishdagi sharbat ikkinchisidagidan necha litr ko‘p?",
+      "options": [
+        "20 l ga",
+        "25 l ga ko‘p (40 - 15 = 25)",
+        "30 l ga",
+        "55 l ga"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 - 15 = 25 l."
+    },
+    {
+      "text": "10 l li chelakka 3 l suv quysak, to‘lishi uchun yana necha litr kerak?",
+      "options": [
+        "6 l",
+        "8 l",
+        "7 l (10 - 3 = 7)",
+        "13 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 - 3 = 7 l."
+    }
+  ],
+  "test": [
+    {
+      "text": "Taqqoslang: 15 l va 20 l",
+      "options": [
+        "15 l < 20 l",
+        "15 l > 20 l",
+        "15 l = 20 l",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "15 l < 20 l."
+    },
+    {
+      "text": "Taqqoslang: 50 l va 40 l",
+      "options": [
+        "50 l < 40 l",
+        "50 l = 40 l",
+        "50 l > 40 l",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 l > 40 l."
+    },
+    {
+      "text": "Taqqoslang: 30 l + 10 l va 40 l",
+      "options": [
+        "Birinchisi katta",
+        "Teng (30 l + 10 l = 40 l)",
+        "Ikkinchisi katta",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 10 = 40 l, demak teng."
+    },
+    {
+      "text": "20 l suv 12 l suvdan necha litr ko‘p?",
+      "options": [
+        "6 l ga",
+        "10 l ga",
+        "32 l ga",
+        "8 l ga ko‘p (20 - 12 = 8)"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 - 12 = 8 l."
+    },
+    {
+      "text": "14 l sut 20 l sutdan necha litr kam?",
+      "options": [
+        "5 l ga kam",
+        "6 l ga kam (20 - 14 = 6)",
+        "7 l ga kam",
+        "34 l ga"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 - 14 = 6 l."
+    },
+    {
+      "text": "O‘sish tartibida joylashtiring: 30 l, 10 l, 25 l",
+      "options": [
+        "10 l, 25 l, 30 l",
+        "30 l, 25 l, 10 l",
+        "10 l, 30 l, 25 l",
+        "25 l, 10 l, 30 l"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kichigidan kattasiga: 10 < 25 < 30."
+    },
+    {
+      "text": "Bir chelakda 12 l, ikkinchisida 8 l suv bor. Ikkala chelakda necha litr suv bor?",
+      "options": [
+        "18 l",
+        "22 l",
+        "4 l",
+        "20 l (12 + 8 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "12 + 8 = 20 l."
+    },
+    {
+      "text": "Bir idishda 60 l, ikkinchisida 35 l moy bor. Birinchi idishda necha litr ko‘p moy bor?",
+      "options": [
+        "30 l",
+        "20 l",
+        "25 l (60 - 35 = 25)",
+        "95 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 - 35 = 25 l."
+    },
+    {
+      "text": "Konditsionerga har kuni 4 l suv quyiladi. 3 kunda necha litr suv quyiladi?",
+      "options": [
+        "10 l",
+        "14 l",
+        "12 l (4 + 4 + 4 = 12)",
+        "16 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 4 + 4 = 12 l."
+    },
+    {
+      "text": "Bochkadan 15 l suv olgach, unda 25 l suv qoldi. Bochkada avval necha litr suv bo‘lgan?",
+      "options": [
+        "35 l",
+        "45 l",
+        "10 l",
+        "40 l (25 + 15 = 40)"
+      ],
+      "correctIndex": 3,
+      "explanation": "25 + 15 = 40 l."
+    },
+    {
+      "text": "45 l - 15 l ifodaning qiymati 30 l dan kattami yoki tengmi?",
+      "options": [
+        "Teng (45 - 15 = 30 l)",
+        "Katta",
+        "Kichik",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "45 - 15 = 30 l, demak teng."
+    },
+    {
+      "text": "5 litrli idishdan 4 marta to‘ldirib suv olinsa, jami necha litr suv olingan bo‘ladi?",
+      "options": [
+        "15 l",
+        "20 l (5 + 5 + 5 + 5 = 20)",
+        "25 l",
+        "10 l"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 5 + 5 + 5 = 20 l."
+    },
+    {
+      "text": "Oshxonada 34 l sut bor edi. Pishiriqlarga 14 l ishlatildi. Necha litr sut qoldi?",
+      "options": [
+        "18 l",
+        "22 l",
+        "48 l",
+        "20 l (34 - 14 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "34 - 14 = 20 l."
+    },
+    {
+      "text": "75 l - 25 l amalini hisoblang:",
+      "options": [
+        "40 l",
+        "50 l",
+        "60 l",
+        "100 l"
+      ],
+      "correctIndex": 1,
+      "explanation": "75 - 25 = 50 l."
+    },
+    {
+      "text": "Avtomashina baki 60 l. Safarga chiqishdan oldin unda 25 l benzin bor edi. Bak to‘lishi uchun necha litr benzin quyildi?",
+      "options": [
+        "30 l",
+        "40 l",
+        "35 l (60 - 25 = 35)",
+        "85 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 - 25 = 35 l."
+    },
+    {
+      "text": "1-chelakda 14 l, 2-chelakda undan 4 l kam suv bor. Ikkala chelakda jami necha litr suv bor?",
+      "options": [
+        "24 l (2-chelak: 10; 14 + 10 = 24)",
+        "20 l",
+        "26 l",
+        "18 l"
+      ],
+      "correctIndex": 0,
+      "explanation": "2-chelakda: 14 - 4 = 10 l. Jami: 14 + 10 = 24 l."
+    },
+    {
+      "text": "Idishda 80 l sharbat bor edi. Ertalab 25 l, kechqurun 30 l sotildi. Necha litr sharbat qoldi?",
+      "options": [
+        "25 l (80 - 25 - 30 = 25)",
+        "30 l",
+        "20 l",
+        "35 l"
+      ],
+      "correctIndex": 0,
+      "explanation": "80 - 25 = 55 l, 55 - 30 = 25 l."
+    },
+    {
+      "text": "Tenglik to‘g‘ri bo‘lishi uchun bo‘sh katakka mos sonni toping: 40 l + □ l = 75 l",
+      "options": [
+        "30",
+        "45",
+        "25",
+        "35 (75 - 40 = 35)"
+      ],
+      "correctIndex": 3,
+      "explanation": "75 - 40 = 35."
+    },
+    {
+      "text": "Fermadagi 3 ta sigirdan ertalab 15 l, 18 l va 17 l sut sog‘ib olindi. Jami necha litr sut sog‘ilgan?",
+      "options": [
+        "48 l",
+        "50 l (15 + 18 + 17 = 50)",
+        "52 l",
+        "45 l"
+      ],
+      "correctIndex": 1,
+      "explanation": "15 + 18 = 33, 33 + 17 = 50 l."
+    },
+    {
+      "text": "Hovuzdagi 90 l suvdan 1-soatda 30 l, 2-soatda 20 l oqib ketdi. Hovuzda necha litr suv qoldi?",
+      "options": [
+        "50 l",
+        "35 l",
+        "40 l (90 - 30 - 20 = 40)",
+        "45 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "90 - 30 = 60 l, 60 - 20 = 40 l."
+    }
+  ]
+}

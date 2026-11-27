@@ -10,6 +10,7 @@ interface QuestionItem {
 
 interface LessonSeed {
   bookNumber: number;
+  isReview?: boolean;
   title: string;
   emoji: string;
   shortDesc: string;
@@ -103,16 +104,20 @@ export function validateAllMathLessons(): boolean {
 
   const part1Dir = path.join(targetDir, 'part1');
   const part2Dir = path.join(targetDir, 'part2');
+  const part3Dir = path.join(targetDir, 'part3');
 
   const part1Files = fs.existsSync(part1Dir) ? fs.readdirSync(part1Dir).filter((f) => f.endsWith('.json')) : [];
   const part2Files = fs.existsSync(part2Dir) ? fs.readdirSync(part2Dir).filter((f) => f.endsWith('.json')) : [];
+  const part3Files = fs.existsSync(part3Dir) ? fs.readdirSync(part3Dir).filter((f) => f.endsWith('.json')) : [];
 
   part1Files.sort();
   part2Files.sort();
+  part3Files.sort();
 
   console.log(`🔍 Matematika darslarini tekshirish boshlandi:`);
   console.log(`   1-qism fayllari: ${part1Files.length} ta`);
   console.log(`   2-qism fayllari: ${part2Files.length} ta`);
+  console.log(`   3-qism fayllari: ${part3Files.length} ta`);
 
   if (part1Files.length !== 41) {
     console.error(`❌ Xato: 1-qismda aynan 41 ta dars fayli bo'lishi kerak (hozir: ${part1Files.length})!`);
@@ -124,12 +129,18 @@ export function validateAllMathLessons(): boolean {
     process.exit(1);
   }
 
+  if (part3Files.length !== 40) {
+    console.error(`❌ Xato: 3-qismda aynan 40 ta dars fayli bo'lishi kerak (hozir: ${part3Files.length})!`);
+    process.exit(1);
+  }
+
   let totalQuestionsCount = 0;
   let totalPracticeCount = 0;
 
   const allLessons = [
     ...part1Files.map((f) => ({ file: f, path: path.join(part1Dir, f), part: 1 })),
     ...part2Files.map((f) => ({ file: f, path: path.join(part2Dir, f), part: 2 })),
+    ...part3Files.map((f) => ({ file: f, path: path.join(part3Dir, f), part: 3 })),
   ];
 
   for (const { file, path: filePath } of allLessons) {
@@ -171,12 +182,14 @@ export function validateAllMathLessons(): boolean {
       }
     }
 
-    // Practice check
-    if (!Array.isArray(data.practice) || data.practice.length < 2) {
-      console.error(`❌ ${file}: practice kamida 2-3 ta mashqdan iborat bo'lishi kerak!`);
-      process.exit(1);
+    // Practice check (only required for non-review lessons)
+    if (!data.isReview) {
+      if (!Array.isArray(data.practice) || data.practice.length < 2) {
+        console.error(`❌ ${file}: practice kamida 2-3 ta mashqdan iborat bo'lishi kerak!`);
+        process.exit(1);
+      }
+      totalPracticeCount += data.practice.length;
     }
-    totalPracticeCount += data.practice.length;
 
     // Test questions check (EXACTLY 20)
     if (!Array.isArray(data.test) || data.test.length !== 20) {
@@ -254,8 +267,8 @@ export function validateAllMathLessons(): boolean {
     }
   }
 
-  console.log(`✅ TABRIKLAYMIZ! Barcha 74 ta dars tekshiruvdan toza o'tdi:`);
-  console.log(`   - 74 ta dars fayli (1-qism: 41, 2-qism: 33)`);
+  console.log(`✅ TABRIKLAYMIZ! Barcha 114 ta dars tekshiruvdan toza o'tdi:`);
+  console.log(`   - 114 ta dars fayli (1-qism: 41, 2-qism: 33, 3-qism: 40)`);
   console.log(`   - Jami ${totalQuestionsCount} ta test savoli (har darsda aynan 20 ta)`);
   console.log(`   - Jami ${totalPracticeCount} ta mashq savoli`);
   console.log(`   - Hech qanday xom LaTeX yoki taqiqlangan belgi yo'q`);

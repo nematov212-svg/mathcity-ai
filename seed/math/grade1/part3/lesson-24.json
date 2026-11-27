@@ -1,0 +1,277 @@
+{
+  "bookNumber": 24,
+  "isReview": false,
+  "title": "Nostandart masalalar",
+  "emoji": "🧠",
+  "shortDesc": "Mantiqiy masalalar va kombinatsiyalarni sanash.",
+  "intro": "Mantiqiy fikrlash, tanlov variantlarini sanash va nostandart yondashuv talab qiladigan qiziqarli masalalar.",
+  "keyPoints": [
+    "Variantlarni sanash: 2 xil sharbat va 2 xil somsa ➔ 2 × 2 = 4 xil tushlik kombinatsiyasi.",
+    "Finjon tanlash: 4 ta turli finjondan 2 tasini tanlash usullari.",
+    "Mantiqiy xulosalar: qatorlar, o‘rindiqlar va qoidalar asosida to‘g‘ri javob topiladi."
+  ],
+  "miniExample": {
+    "emojis": "🧠 2 xil sharbat (olma, o‘rik) va 2 xil somsa (go‘shtli, qovoqli) ➔ 4 kombinatsiya",
+    "text": "Har bir sharbat bilan somsa tanlansa: 2 x 2 = 4 xil tanlov qilish mumkin."
+  },
+  "xpReward": 115,
+  "coinReward": 11,
+  "estMinutes": 9,
+  "practice": [
+    {
+      "text": "Oshxonada 2 xil sharbat (olma, nok) va 2 xil somsa (go‘shtli, ko‘katli) bor. Necha xil tushlik tanlash mumkin?",
+      "options": [
+        "4 xil (2 x 2 = 4)",
+        "2 xil",
+        "3 xil",
+        "5 xil"
+      ],
+      "correctIndex": 0,
+      "explanation": "Har bir sharbatga 2 xil somsa to‘g‘ri keladi: 2 x 2 = 4 xil kombinatsiya."
+    },
+    {
+      "text": "Stolda 4 ta turli finjon turibdi. Ulardan 2 tasini tanlab olish mumkin bo‘lgan usullar soni nechta?",
+      "options": [
+        "4 ta usul",
+        "6 ta usul",
+        "8 ta usul",
+        "2 ta usul"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 ta finjondan juftliklar: (1,2), (1,3), (1,4), (2,3), (2,4), (3,4) — jami 6 ta usul."
+    },
+    {
+      "text": "3 ta bola (Ali, Vali, G‘ani) bir qatorda necha xil usulda saflanishi mumkin?",
+      "options": [
+        "3 xil",
+        "4 xil",
+        "6 xil usulda",
+        "9 xil"
+      ],
+      "correctIndex": 2,
+      "explanation": "1-o‘ringa 3 ta, 2-o‘ringa 2 ta, 3-o‘ringa 1 ta tanlov: 3 x 2 x 1 = 6 xil usul."
+    }
+  ],
+  "test": [
+    {
+      "text": "Jasurda 2 xil ko‘ylak va 2 xil shim bor. U necha xil kiyim to‘plamini kiyishi mumkin?",
+      "options": [
+        "4 xil (2 x 2 = 4)",
+        "2 xil",
+        "3 xil",
+        "5 xil"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 xil ko‘ylak x 2 xil shim = 4 xil to‘plam."
+    },
+    {
+      "text": "Diloromda qizil va sariq lenta bor. U ularni necha xil tartibda taqishi mumkin?",
+      "options": [
+        "1 xil",
+        "3 xil",
+        "2 xil (qizil-sariq yoki sariq-qizil)",
+        "4 xil"
+      ],
+      "correctIndex": 2,
+      "explanation": "Faqat 2 xil tartib mavjud."
+    },
+    {
+      "text": "Bo‘sh stollar raqamlangan: 1, 2, 3, 4. Ikki do‘st nechanchi stollarga o‘tirishi mumkin?",
+      "options": [
+        "Faqat bitta stolga birga",
+        "Istalgan ikkita bo‘sh stolga (masalan, 1 va 2)",
+        "Faqat 0-stolga",
+        "Stolga o‘tirish mumkin emas"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bo‘sh stollardan istalgan ikkitasini tanlash mumkin."
+    },
+    {
+      "text": "3 xil meva bor: olma, nok, shaftoli. Ulardan 2 xilini tanlashning necha usuli bor?",
+      "options": [
+        "2 ta usul",
+        "4 ta usul",
+        "6 ta usul",
+        "3 ta usul (olma-nok, olma-shaftoli, nok-shaftoli)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Jami 3 ta juftlik hosil qilish mumkin."
+    },
+    {
+      "text": "Shoxruhning 3 ta o‘yinchog‘i bor: mashina, robot, to‘p. U qutiga 1 ta o‘yinchoq solmoqchi. Necha xil tanlov bor?",
+      "options": [
+        "1 xil",
+        "3 xil tanlov",
+        "2 xil",
+        "6 xil"
+      ],
+      "correctIndex": 1,
+      "explanation": "Har bir o‘yinchoq bitta tanlov imkoniyatidir (jami 3 xil)."
+    },
+    {
+      "text": "Tanga tashlanganda necha xil natija chiqishi mumkin?",
+      "options": [
+        "2 xil (gerb yoki raqam)",
+        "1 xil",
+        "3 xil",
+        "4 xil"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tanganing 2 ta tomoni bor: gerb yoki raqam."
+    },
+    {
+      "text": "Oshxonada 3 xil ichimlik (choy, qahva, sharbat) va 2 xil shirinlik (tort, pirog) bor. Necha xil tushlik to‘plami tanlash mumkin?",
+      "options": [
+        "5 xil",
+        "7 xil",
+        "9 xil",
+        "6 xil (3 x 2 = 6)"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 x 2 = 6 xil kombinatsiya."
+    },
+    {
+      "text": "4 ta finjondan 2 tasini tanlash necha xil usulda bo‘ladi?",
+      "options": [
+        "4 xil",
+        "8 xil",
+        "6 xil usulda",
+        "2 xil"
+      ],
+      "correctIndex": 2,
+      "explanation": "Juftliklar soni 6 ta bo‘ladi."
+    },
+    {
+      "text": "Sinfda 4 ta bo‘sh parta bor. 2 nafar yangi o‘quvchi qaysi partalarga o‘tirishi mumkin? Variantlar soni nechta?",
+      "options": [
+        "4 xil",
+        "8 xil",
+        "6 xil partalar juftligi",
+        "2 xil"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 ta partadan 2 tasini tanlash: 6 xil usul."
+    },
+    {
+      "text": "Anvar qora va jigarrang poyabzalga, oq, kulrang va qora paypoqlarga ega. Necha xil kombinatsiya kiyishi mumkin?",
+      "options": [
+        "5 xil",
+        "8 xil",
+        "4 xil",
+        "6 xil (2 x 3 = 6)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2 xil poyabzal x 3 xil paypoq = 6 xil kombinatsiya."
+    },
+    {
+      "text": "Akrom, Botir va Sardor marraga ketma-ket yetib kelishdi. Hech kim bir vaqtda kelmagan bo‘lsa, ular necha xil tartibda kelgan bo‘lishi mumkin?",
+      "options": [
+        "6 xil tartibda (3 x 2 x 1 = 6)",
+        "3 xil",
+        "4 xil",
+        "9 xil"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 kishining o‘rin almashishi: 3 x 2 x 1 = 6 xil tartib."
+    },
+    {
+      "text": "Qutida 1 ta qizil, 1 ta yashil va 1 ta ko‘k shar bor. Ikkita shar olinganda necha xil rang juftligi chiqishi mumkin?",
+      "options": [
+        "2 xil",
+        "3 xil (qizil-yashil, qizil-ko‘k, yashil-ko‘k)",
+        "4 xil",
+        "6 xil"
+      ],
+      "correctIndex": 1,
+      "explanation": "Uchta shardan 2 tasini tanlash 3 xil usulda bo‘ladi."
+    },
+    {
+      "text": "Muzqaymoq do‘konida 2 xil idish (stakan, vafli) va 4 xil ta’m (qulupnay, shokolad, vanil, banan) bor. Necha xil muzqaymoq buyurtma qilish mumkin?",
+      "options": [
+        "6 xil",
+        "10 xil",
+        "12 xil",
+        "8 xil (2 x 4 = 8)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2 x 4 = 8 xil variant."
+    },
+    {
+      "text": "Doskaga 1 va 2 raqamlarini ishlatib, raqamlari takrorlanmaydigan nechta ikki xonali son yozish mumkin?",
+      "options": [
+        "1 ta",
+        "2 ta (12 va 21)",
+        "3 ta",
+        "4 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 va 21 — jami 2 ta son."
+    },
+    {
+      "text": "Doskaga 1, 2 va 3 raqamlarini ishlatib, raqamlari takrorlanmaydigan nechta ikki xonali son yozish mumkin?",
+      "options": [
+        "3 ta",
+        "5 ta",
+        "6 ta (12, 13, 21, 23, 31, 32)",
+        "9 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Birinchi o‘ringa 3 ta, ikkinchi o‘ringa 2 ta raqam: 3 x 2 = 6 ta son."
+    },
+    {
+      "text": "To‘rtta do‘st (A, B, C, D) bir-biri bilan qo‘l berib ko‘rishdi. Jami necha marta qo‘l berib ko‘rishilgan?",
+      "options": [
+        "6 marta (3 + 2 + 1 = 6)",
+        "4 marta",
+        "8 marta",
+        "12 marta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Har bir juftlik 1 marta ko‘rishadi: 3 + 2 + 1 = 6 marta."
+    },
+    {
+      "text": "Pochta qutisiga 2 xil marka yopishtirish kerak. 4 xil turli marka bor bo‘lsa, necha xil usulda 2 ta marka tanlash mumkin?",
+      "options": [
+        "6 xil usulda",
+        "4 xil",
+        "8 xil",
+        "12 xil"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 tadan 2 tasini tanlash: 6 xil usul."
+    },
+    {
+      "text": "Uchta harfdan (A, B, C) foydalanib, harflari takrorlanmaydigan nechta 3 harfli so‘z (kod) tuzish mumkin?",
+      "options": [
+        "3 ta",
+        "4 ta",
+        "9 ta",
+        "6 ta kod"
+      ],
+      "correctIndex": 3,
+      "explanation": "ABC, ACB, BAC, BCA, CAB, CBA — jami 6 ta kod."
+    },
+    {
+      "text": "Restoranda 3 xil birinchi taom, 3 xil ikkinchi taom va 2 xil ichimlik bor. Bir kishi to‘liq tushlik (1-taom, 2-taom, ichimlik) tanlashining necha xil usuli mavjud?",
+      "options": [
+        "8 xil",
+        "18 xil usul (3 x 3 x 2 = 18)",
+        "12 xil",
+        "15 xil"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 x 3 x 2 = 18 xil to‘liq tushlik kombinatsiyasi."
+    },
+    {
+      "text": "5 ta do‘st uchrashib, har biri qolgan barcha do‘stlari bilan bittadan esdalik sovg‘asi almashdi. Jami nechta sovg‘a berilgan?",
+      "options": [
+        "10 ta",
+        "15 ta",
+        "20 ta (har biri 4 tadan: 5 x 4 = 20)",
+        "25 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Har bir bola 4 ta do‘stiga sovg‘a beradi: 5 x 4 = 20 ta sovg‘a beriladi."
+    }
+  ]
+}

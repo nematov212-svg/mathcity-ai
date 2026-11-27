@@ -1,0 +1,277 @@
+{
+  "bookNumber": 4,
+  "isReview": false,
+  "title": "Masala shartining berilish usullari",
+  "emoji": "🖼️",
+  "shortDesc": "Shartning matn, rasm, qisqa yozuv va sxemada berilishi.",
+  "intro": "Masala sharti faqat matn bilan emas, balki rasm, qisqa yozuv, jadval va sxemalar orqali ham berilishi mumkin.",
+  "keyPoints": [
+    "Matnli usul — voqea so‘zlar bilan batafsil hikoya qilinadi.",
+    "Qisqa yozuv — sonlar va kalit so‘zlar qisqartirib yoziladi.",
+    "Sxema va chizma — butun va uning qismlari grafik ko‘rinishda chiziladi."
+  ],
+  "miniExample": {
+    "emojis": "🖼️ Qisqa yozuv: I qism − 12, II qism − 8. Jami = ?",
+    "text": "Qisqa yozuvdan ifoda: 12 + 8 = 20 ta."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Masala sharti qanday usullarda berilishi mumkin?",
+      "options": [
+        "Matn, rasm, qisqa yozuv va sxema orqali",
+        "Faqat telefonda ovoz orqali",
+        "Faqat jim turish orqali",
+        "Faqat raqamsiz so‘zlar bilan"
+      ],
+      "correctIndex": 0,
+      "explanation": "Masala sharti matn, rasm, jadval, qisqa yozuv yoki sxema shaklida berilishi mumkin."
+    },
+    {
+      "text": "Qisqa yozuv: «I — 15 ta, II — 5 ta kam. II = ?» Ifoda qanday bo‘ladi?",
+      "options": [
+        "15 + 5 = 20 ta",
+        "15 - 5 = 10 ta",
+        "15 - 10 = 5 ta",
+        "5 + 5 = 10 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 ta kam bo‘lgani uchun ayirish amali bajariladi: 15 - 5 = 10 ta."
+    },
+    {
+      "text": "Sehrli kvadratda har bir qator, ustun va diagonal yig‘indisi bir xil bo‘ladi. 3x3 kvadratda bu yig‘indi ko‘pincha necha bo‘ladi?",
+      "options": [
+        "10",
+        "20",
+        "15",
+        "30"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 dan 9 gacha sonlardan tuzilgan sehrli kvadratda yig‘indi 15 ga teng."
+    }
+  ],
+  "test": [
+    {
+      "text": "Masala shartini qisqa yozuvda ifodalash nimasi bilan qulay?",
+      "options": [
+        "Keraksiz so‘zlarsiz, asosiy sonlarni aniq ko‘rsatadi",
+        "Daftarda joyni ko‘proq egallaydi",
+        "Chizish shart bo‘lmaydi",
+        "Hech qanday qulayligi yo‘q"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qisqa yozuv asosiy sonlar va bog‘lanishlarni ko‘rgazmali qilib beradi."
+    },
+    {
+      "text": "«I — 20 kg, II — 10 kg ortiq. Jami = ?» Bu qaysi usulda berilgan?",
+      "options": [
+        "Matnli hikoya usulida",
+        "Faqat rasm usulida",
+        "Qisqa yozuv usulida",
+        "Ovozli usulda"
+      ],
+      "correctIndex": 2,
+      "explanation": "Rim raqamlari va qisqartirishlar bilan yozilgan shakl qisqa yozuvdir."
+    },
+    {
+      "text": "Rasmda 5 ta qushchaga yana 3 ta qushcha uchib kelayotgani tasvirlangan. Mos ifodani toping:",
+      "options": [
+        "5 - 3 = 2 ta",
+        "5 + 3 = 8 ta",
+        "8 - 3 = 5 ta",
+        "3 + 3 = 6 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Uchib kelayotgani uchun qushlar qo‘shiladi: 5 + 3 = 8 ta."
+    },
+    {
+      "text": "Sehrli kvadratda har bir yo‘nalishdagi sonlar yig‘indisi qanday bo‘ladi?",
+      "options": [
+        "Har doim turlicha bo‘ladi",
+        "Faqat 0 bo‘ladi",
+        "Hech qachon yig‘indi chiqmaydi",
+        "Har doim teng bo‘ladi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Sehrli kvadratning qator, ustun va diagonallari yig‘indisi bir-biriga teng bo‘ladi."
+    },
+    {
+      "text": "Sxemada butun chiziq ikkiga bo‘lingan: 30 va 20. Butun chiziq uzunligini toping:",
+      "options": [
+        "10 (30 - 20 = 10)",
+        "50 (30 + 20 = 50)",
+        "40",
+        "60"
+      ],
+      "correctIndex": 1,
+      "explanation": "Butun uzunlik qismlar yig‘indisidir: 30 + 20 = 50."
+    },
+    {
+      "text": "Quyidagi qisqa yozuvga qaysi amal mos: «Bor edi: 18 ta, Sotildi: 8 ta, Qoldi: ?»",
+      "options": [
+        "Ayirish (18 - 8)",
+        "Qo‘shish (18 + 8)",
+        "Taqqoslash",
+        "Hech qanday amal"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sotilgan miqdor kamaygani uchun ayirish amali mos keladi."
+    },
+    {
+      "text": "Sehrli kvadrat qatorida 8 va 6 sonlari bor. Yig‘indi 15 bo‘lishi uchun uchinchi son necha bo‘lishi kerak?",
+      "options": [
+        "2",
+        "3",
+        "0",
+        "1 (chunki 8 + 6 = 14, 15 - 14 = 1)"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 + 6 = 14, 15 bo‘lishi uchun yana 1 kerak: 15 - 14 = 1."
+    },
+    {
+      "text": "Sehrli kvadrat ustunida 4 va 9 sonlari turibdi. Yig‘indi 15 bo‘lishi uchun bo‘sh katakka qaysi son qo‘yiladi?",
+      "options": [
+        "3",
+        "1",
+        "2 (chunki 4 + 9 = 13, 15 - 13 = 2)",
+        "4"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 9 = 13. 15 bo‘lishi uchun: 15 - 13 = 2."
+    },
+    {
+      "text": "Qisqa yozuv: «Anor — 16 kg, Behi — 4 kg kam. Behi qancha?» Ifodani toping:",
+      "options": [
+        "16 + 4 = 20 kg",
+        "16 - 12 = 4 kg",
+        "16 - 4 = 12 kg",
+        "12 + 4 = 16 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 kg kam bo‘lgani uchun ayiramiz: 16 - 4 = 12 kg."
+    },
+    {
+      "text": "Qisqa yozuv: «I qism — 40 metr, II qism — 30 metr. Jami — ?»",
+      "options": [
+        "10 metr (40 - 30 = 10)",
+        "60 metr",
+        "80 metr",
+        "70 metr (40 + 30 = 70)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Jami uzunlik: 40 + 30 = 70 metr."
+    },
+    {
+      "text": "Rasmda avtoturargohda 12 ta mashina bor edi. 5 tasi chiqib ketdi. Nechta mashina qolganini bildiruvchi ifoda qaysi?",
+      "options": [
+        "12 - 5 = 7 ta",
+        "12 + 5 = 17 ta",
+        "7 + 5 = 12 ta",
+        "10 - 5 = 5 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ketgan mashinalar soni ayriladi: 12 - 5 = 7 ta."
+    },
+    {
+      "text": "Sxemada butun 60, bir qismi 25 ga teng. Ikkinchi noma’lum qismni toping:",
+      "options": [
+        "85 (60 + 25 = 85)",
+        "35 (60 - 25 = 35)",
+        "45",
+        "30"
+      ],
+      "correctIndex": 1,
+      "explanation": "Noma’lum qism: 60 - 25 = 35."
+    },
+    {
+      "text": "Sehrli kvadratning markazida qaysi son turishi odat tusiga kirgan?",
+      "options": [
+        "1 soni",
+        "9 soni",
+        "0 soni",
+        "5 soni"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 dan 9 gacha bo‘lgan sonlardan tuzilgan 3x3 kvadrat markazida har doim 5 soni turadi."
+    },
+    {
+      "text": "Qisqa yozuv bo‘yicha masala tuzing: «Oq qog‘oz — 14 ta, Sariq qog‘oz — 6 ta ko‘p». Sariq qog‘ozlar nechta?",
+      "options": [
+        "8 ta (14 - 6 = 8)",
+        "20 ta (14 + 6 = 20)",
+        "18 ta",
+        "22 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 ta ko‘p bo‘lgani uchun qo‘shamiz: 14 + 6 = 20 ta."
+    },
+    {
+      "text": "Sehrli kvadrat burchaklarida 2 va 6 sonlari turibdi. Ular orasidagi son necha bo‘lsa, yig‘indi 15 bo‘ladi?",
+      "options": [
+        "5",
+        "8",
+        "7 (chunki 2 + 6 = 8, 15 - 8 = 7)",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 + 6 = 8. Qatordagi uchinchi son: 15 - 8 = 7."
+    },
+    {
+      "text": "Qisqa yozuv: «I kun — 22 bet, II kun — 15 bet, III kun — 10 bet. Jami o‘qilgan betlar soni = ?»",
+      "options": [
+        "47 bet (22 + 15 + 10 = 47)",
+        "37 bet",
+        "45 bet",
+        "50 bet"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uchala kunda o‘qilgan betlar yig‘indisi: 22 + 15 + 10 = 47 bet."
+    },
+    {
+      "text": "Sxema bo‘yicha: Butun 84 ta detal. 1-usta 40 ta, 2-usta 30 ta yasadi. 3-usta nechta detal yasagan?",
+      "options": [
+        "14 ta (84 - 40 - 30 = 14)",
+        "24 ta",
+        "10 ta",
+        "18 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "84 dan 40 va 30 ayriladi: 84 - 70 = 14 ta."
+    },
+    {
+      "text": "Jadvalda do‘kondagi mevalar berilgan: olma 35 kg, nok 20 kg. Olma nokdan necha kg ortiq?",
+      "options": [
+        "55 kg (35 + 20 = 55)",
+        "10 kg",
+        "25 kg",
+        "15 kg (35 - 20 = 15)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ortiq miqdorni topish uchun ayiramiz: 35 - 20 = 15 kg."
+    },
+    {
+      "text": "Sehrli kvadratning bitta diagonalida 8, 5, 2 sonlari bor. Ularning yig‘indisi necha bo‘ladi?",
+      "options": [
+        "14",
+        "15 (chunki 8 + 5 + 2 = 15)",
+        "16",
+        "12"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 5 = 13, 13 + 2 = 15. Diagonal yig‘indisi 15 ga teng."
+    },
+    {
+      "text": "Qisqa yozuv: «Keltirildi: 50 ta ko‘chat. 1-kun ekildi: 20 ta, 2-kun ekildi: 15 ta. Ekilmagan ko‘chatlar qancha?»",
+      "options": [
+        "25 ta",
+        "10 ta",
+        "15 ta (50 - 20 - 15 = 15)",
+        "20 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Jami ekilgani: 20 + 15 = 35 ta. Qolgani: 50 - 35 = 15 ta ko‘chat."
+    }
+  ]
+}

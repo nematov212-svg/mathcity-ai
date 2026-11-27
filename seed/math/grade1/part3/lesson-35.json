@@ -1,0 +1,277 @@
+{
+  "bookNumber": 35,
+  "isReview": false,
+  "title": "Massa va massa birliklari",
+  "emoji": "⚖️",
+  "shortDesc": "Massa tushunchasi, kilogramm (kg) va tarozi.",
+  "intro": "Predmetlarning massasini (og‘irligini) aniqlash uchun tarozi va kilogramm (kg) birligi qo‘llaniladi.",
+  "keyPoints": [
+    "Massa o‘lchov birligi — kilogramm (kg).",
+    "Tarozi poyalari teng bo‘lsa, ulardagi massalar ham teng bo‘ladi.",
+    "Xarid massasi: 5 kg + 5 kg + 1 kg = 11 kg."
+  ],
+  "miniExample": {
+    "emojis": "⚖️ 5 kg olma + 5 kg nok + 1 kg uzum = 11 kg",
+    "text": "Xarid savatida: 5 kg + 5 kg + 1 kg = 11 kg meva bor."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Massa o‘lchov birligini toping:",
+      "options": [
+        "Kilogramm (kg)",
+        "Santimetr (cm)",
+        "Litr (l)",
+        "Minut"
+      ],
+      "correctIndex": 0,
+      "explanation": "Massa kilogrammda (kg) o‘lchanadi."
+    },
+    {
+      "text": "Predmetlarning massasi qaysi asbobda o‘lchanadi?",
+      "options": [
+        "Chizg‘ich",
+        "Tarozi",
+        "Termometr",
+        "Soat"
+      ],
+      "correctIndex": 1,
+      "explanation": "Massa tarozi yordamida o‘lchanadi."
+    },
+    {
+      "text": "Xaridor 5 kg un, 5 kg shakar va 1 kg tuz oldi. Jami xarid necha kg?",
+      "options": [
+        "10 kg",
+        "12 kg",
+        "11 kg (5 + 5 + 1 = 11)",
+        "15 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 5 + 1 = 11 kg."
+    }
+  ],
+  "test": [
+    {
+      "text": "Kilogramm qisqacha qanday yoziladi?",
+      "options": [
+        "kg",
+        "km",
+        "cm",
+        "l"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kilogramm qisqacha «kg» deb yoziladi."
+    },
+    {
+      "text": "5 kg + 3 kg yig‘indisi necha kilogramm bo‘ladi?",
+      "options": [
+        "2 kg",
+        "7 kg",
+        "8 kg",
+        "9 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 3 = 8 kg."
+    },
+    {
+      "text": "Tarozining bir pallasida 6 kg tosh, ikkinchi pallasida tarvuz turibdi va tarozi muvozanatda. Tarvuzning massasi qancha?",
+      "options": [
+        "5 kg",
+        "6 kg",
+        "7 kg",
+        "12 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tarozi muvozanatda bo‘lsa, tarvuz massasi tosh massasiga teng: 6 kg."
+    },
+    {
+      "text": "10 kg un bor edi. 4 kg ishlatildi. Necha kg un qoldi?",
+      "options": [
+        "14 kg",
+        "5 kg",
+        "7 kg",
+        "6 kg (10 - 4 = 6)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 - 4 = 6 kg."
+    },
+    {
+      "text": "Qaysi biri og‘ir: 4 kg temir yoki 3 kg paxta?",
+      "options": [
+        "3 kg paxta",
+        "4 kg temir (chunki 4 kg > 3 kg)",
+        "Ikkalasi teng",
+        "Bilib bo‘lmaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 kg har doim 3 kg dan og‘ir."
+    },
+    {
+      "text": "2 kg + 2 kg + 2 kg yig‘indisi necha kg?",
+      "options": [
+        "6 kg",
+        "5 kg",
+        "8 kg",
+        "4 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 + 2 + 2 = 6 kg."
+    },
+    {
+      "text": "Onam 5 kg kartoshka, 3 kg sabzi va 2 kg piyoz sotib oldilar. Xaridning jami massasi necha kg?",
+      "options": [
+        "9 kg",
+        "11 kg",
+        "8 kg",
+        "10 kg (5 + 3 + 2 = 10)"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 3 + 2 = 10 kg."
+    },
+    {
+      "text": "Qovun 8 kg, tarvuz undan 4 kg og‘ir. Tarvuzning massasi necha kg?",
+      "options": [
+        "4 kg",
+        "10 kg",
+        "12 kg (8 + 4 = 12)",
+        "14 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 4 = 12 kg."
+    },
+    {
+      "text": "Qopda 45 kg shakar bor edi. 20 kg sotildi. Necha kg shakar qoldi?",
+      "options": [
+        "65 kg",
+        "20 kg",
+        "25 kg (45 - 20 = 25)",
+        "30 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "45 - 20 = 25 kg."
+    },
+    {
+      "text": "Tarozi pallasida 10 kg tosh bor. Ikkinchi pallasida 6 kg guruch va kichik toshcha turibdi. Tarozi teng bo‘lishi uchun toshcha necha kg bo‘lishi kerak?",
+      "options": [
+        "16 kg",
+        "5 kg",
+        "3 kg",
+        "4 kg (10 - 6 = 4)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 - 6 = 4 kg."
+    },
+    {
+      "text": "1-yeshikda 14 kg olma, 2-yeshikda 12 kg nok bor. Ikkala yeshikdagi mevalar jami necha kg?",
+      "options": [
+        "26 kg (14 + 12 = 26)",
+        "24 kg",
+        "28 kg",
+        "2 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "14 + 12 = 26 kg."
+    },
+    {
+      "text": "Bozordan 18 kg meva olindi. Ulardan 10 kg olma, qolgani uzum. Necha kg uzum olingan?",
+      "options": [
+        "28 kg",
+        "8 kg (18 - 10 = 8)",
+        "7 kg",
+        "9 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 - 10 = 8 kg."
+    },
+    {
+      "text": "50 kg bug‘doy 20 kg bug‘doydan necha kg og‘ir?",
+      "options": [
+        "70 kg",
+        "25 kg",
+        "35 kg",
+        "30 kg (50 - 20 = 30)"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 20 = 30 kg."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 22 kg + 16 kg = □ kg",
+      "options": [
+        "36 kg",
+        "38 kg",
+        "40 kg",
+        "6 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "22 + 16 = 38 kg."
+    },
+    {
+      "text": "Xarid savatida 5 kg olma, 5 kg nok, 3 kg shaftoli va 2 kg anor bor. Savatdagi mevalar jami necha kg?",
+      "options": [
+        "14 kg",
+        "16 kg",
+        "15 kg (5 + 5 + 3 + 2 = 15)",
+        "13 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 5 = 10, 3 + 2 = 5, 10 + 5 = 15 kg."
+    },
+    {
+      "text": "Qopda 50 kg un bor edi. 1-kun 15 kg, 2-kun 20 kg ishlatildi. Qopda necha kg un qoldi?",
+      "options": [
+        "15 kg (50 - 15 - 20 = 15)",
+        "20 kg",
+        "10 kg",
+        "25 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 35 = 15 kg."
+    },
+    {
+      "text": "Qo‘zichoq 12 kg, buzoqcha esa undan 25 kg og‘ir. Buzoqchaning massasi qancha?",
+      "options": [
+        "37 kg (12 + 25 = 37)",
+        "13 kg",
+        "35 kg",
+        "40 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + 25 = 37 kg."
+    },
+    {
+      "text": "Tarozining bir pallasida 20 kg tosh, ikkinchi pallasida esa 5 kg dan bo‘lgan 3 ta quticha turibdi. Tarozi teng bo‘lishi uchun yana necha kg qo‘yish kerak?",
+      "options": [
+        "10 kg",
+        "15 kg",
+        "2 kg",
+        "5 kg (20 - 15 = 5)"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 x 5 = 15 kg. 20 bo‘lishi uchun: 20 - 15 = 5 kg kerak."
+    },
+    {
+      "text": "Fermer 60 kg uzum uzdi. U 25 kg uzumni bozorga sotishga jo‘natdi, 15 kg uzumdan mayiz qildi. Necha kg uzum qoldi?",
+      "options": [
+        "25 kg",
+        "20 kg (60 - 25 - 15 = 20)",
+        "15 kg",
+        "30 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 40 = 20 kg uzum qoldi."
+    },
+    {
+      "text": "Omborga 35 kg kartoshka va 25 kg sabzi keltirildi. Oshxona 30 kg sabzavot ishlatdi. Omborda necha kg sabzavot qoldi?",
+      "options": [
+        "25 kg",
+        "35 kg",
+        "30 kg (35 + 25 - 30 = 30)",
+        "40 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "Jami: 35 + 25 = 60 kg. Qolgani: 60 - 30 = 30 kg."
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "bookNumber": 25,
+  "isReview": false,
+  "title": "Ikki amalli masalalar yechish",
+  "emoji": "🪆",
+  "shortDesc": "Tarkibli masalalar va ikki amalli murakkab ifodalar.",
+  "intro": "Bir vaqtning o‘zida ikkita savolga javob beruvchi ikki amalli tarkibli masalalarni yechishni o‘rganamiz.",
+  "keyPoints": [
+    "Tarkibli masala: savoliga javob berish uchun kamida 2 ta amal bajariladi.",
+    "Misol: 12 ta ko‘ylak, Komila undan 2 ta ko‘p tikdi ➔ 12 + (12 + 2) = 26 ta.",
+    "Avval oraliq noma’lum miqdor, so‘ng masalaning asosiy savoli topiladi."
+  ],
+  "miniExample": {
+    "emojis": "🪆 Oysha: 12 ta ko‘ylak, Komila: 12 + 2 = 14 ta ➔ Jami = 26 ta",
+    "text": "Oysha 12 ta ko‘ylak tikdi. Komila undan 2 ta ko‘p tikdi. Ikkalasi birgalikda: 12 + (12 + 2) = 26 ta."
+  },
+  "xpReward": 115,
+  "coinReward": 11,
+  "estMinutes": 9,
+  "practice": [
+    {
+      "text": "Oysha 12 ta ko‘ylak tikdi. Komila undan 2 ta ko‘p tikdi. Ikkala qiz jami nechta ko‘ylak tikdi?",
+      "options": [
+        "26 ta (Komila: 14; 12 + 14 = 26)",
+        "14 ta",
+        "24 ta",
+        "28 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Komila: 12 + 2 = 14 ta. Jami: 12 + 14 = 26 ta."
+    },
+    {
+      "text": "Bir amalda yechib bo‘lmaydigan, kamida ikkita amal talab qiluvchi masala nima deb ataladi?",
+      "options": [
+        "Sodda masala",
+        "Tarkibli (ikki amalli) masala",
+        "Amalsiz masala",
+        "Boshqotirma"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ikki yoki undan ortiq amal bilan yechiladigan masala tarkibli masala deyiladi."
+    },
+    {
+      "text": "Anvarda 10 ta yong‘oq bor. Akmalda undan 4 ta ko‘p. Ikkala bolada jami nechta yong‘oq bor?",
+      "options": [
+        "14 ta",
+        "20 ta",
+        "24 ta (Akmal: 14; 10 + 14 = 24)",
+        "28 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Akmal: 10 + 4 = 14 ta. Jami: 10 + 14 = 24 ta."
+    }
+  ],
+  "test": [
+    {
+      "text": "Tarkibli masalada kamida nechta amal bajariladi?",
+      "options": [
+        "Kamida 2 ta amal",
+        "Faqat 1 ta amal",
+        "Hech qanday amal",
+        "Faqat taqqoslash"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tarkibli masalalar 2 yoki undan ortiq amal yordamida yechiladi."
+    },
+    {
+      "text": "12 + (12 + 2) ifodaning qiymatini hisoblang:",
+      "options": [
+        "24",
+        "28",
+        "26",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qavs ichi 14, 12 + 14 = 26."
+    },
+    {
+      "text": "Jasur 8 ta rasm chizdi, ukasi esa undan 2 ta kam chizdi. Ikkala bola jami nechta rasm chizgan?",
+      "options": [
+        "6 ta",
+        "14 ta (Ukasi: 6; 8 + 6 = 14)",
+        "16 ta",
+        "12 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ukasi: 8 - 2 = 6 ta. Jami: 8 + 6 = 14 ta rasm."
+    },
+    {
+      "text": "1-javonda 15 ta kitob, 2-javonda undan 5 ta ko‘p kitob bor. Ikkala javonda jami nechta kitob bor?",
+      "options": [
+        "20 ta",
+        "30 ta",
+        "40 ta",
+        "35 ta (2-javon: 20; 15 + 20 = 35)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2-javon: 15 + 5 = 20 ta. Jami: 15 + 20 = 35 ta."
+    },
+    {
+      "text": "10 + (10 - 3) ifodaning qiymati necha bo‘ladi?",
+      "options": [
+        "7",
+        "17",
+        "20",
+        "13"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 - 3 = 7, 10 + 7 = 17."
+    },
+    {
+      "text": "Dardona 7 ta gul terdi, singlisi undan 3 ta ko‘p terdi. Ikkalasi birgalikda nechta gul tergan?",
+      "options": [
+        "17 ta (Singlisi: 10; 7 + 10 = 17)",
+        "10 ta",
+        "14 ta",
+        "20 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Singlisi: 7 + 3 = 10 ta. Jami: 7 + 10 = 17 ta."
+    },
+    {
+      "text": "Tikuvchi 1-kuni 16 ta, 2-kuni undan 4 ta ko‘p ko‘ylak tikdi. Tikuvchi ikki kunda jami nechta ko‘ylak tikkan?",
+      "options": [
+        "20 ta",
+        "32 ta",
+        "40 ta",
+        "36 ta (2-kun: 20; 16 + 20 = 36)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2-kun: 16 + 4 = 20 ta. Jami: 16 + 20 = 36 ta."
+    },
+    {
+      "text": "Savatda 25 ta qizil olma bor. Yashil olmalar qizil olmalardan 10 ta kam. Savatda jami nechta olma bor?",
+      "options": [
+        "15 ta",
+        "35 ta",
+        "40 ta (Yashil: 15; 25 + 15 = 40)",
+        "50 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Yashil: 25 - 10 = 15 ta. Jami: 25 + 15 = 40 ta."
+    },
+    {
+      "text": "20 + (20 + 15) ifodaning qiymatini hisoblang:",
+      "options": [
+        "35",
+        "50",
+        "55",
+        "60"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qavs ichi 35, 20 + 35 = 55."
+    },
+    {
+      "text": "Avtobusda 30 yo‘lovchi bor edi. Bekatda 10 kishi tushdi va 5 kishi chiqdi. Avtobusda necha yo‘lovchi qoldi?",
+      "options": [
+        "20 nafar",
+        "35 nafar",
+        "15 nafar",
+        "25 nafar (30 - 10 + 5 = 25)"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 - 10 = 20, 20 + 5 = 25 nafar."
+    },
+    {
+      "text": "Do‘konda 34 ta qalam bor edi. Ertalab 12 ta, tushda 10 ta qalam sotildi. Nechta qalam qoldi?",
+      "options": [
+        "12 ta (34 - 12 - 10 = 12)",
+        "22 ta",
+        "14 ta",
+        "10 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "34 - 22 = 12 ta qalam qoldi."
+    },
+    {
+      "text": "1-idishda 18 litr sharbat bor, 2-idishda undan 6 litr kam. Ikkala idishda jami necha litr sharbat bor?",
+      "options": [
+        "12 l",
+        "30 l (2-idish: 12 l; 18 + 12 = 30)",
+        "24 l",
+        "36 l"
+      ],
+      "correctIndex": 1,
+      "explanation": "2-idish: 18 - 6 = 12 l. Jami: 18 + 12 = 30 litr."
+    },
+    {
+      "text": "Usta 1-kuni 22 ta stul yasadi, 2-kuni undan 6 ta ko‘p yasadi. Usta ikki kunda jami nechta stul yasagan?",
+      "options": [
+        "28 ta",
+        "44 ta",
+        "56 ta",
+        "50 ta (2-kun: 28; 22 + 28 = 50)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2-kun: 22 + 6 = 28 ta. Jami: 22 + 28 = 50 ta."
+    },
+    {
+      "text": "Madina 30 bet kitob o‘qidi. Nodira undan 10 bet kam o‘qidi. Ikkala qiz jami necha bet o‘qigan?",
+      "options": [
+        "20 bet",
+        "50 bet (Nodira: 20; 30 + 20 = 50)",
+        "40 bet",
+        "60 bet"
+      ],
+      "correctIndex": 1,
+      "explanation": "Nodira: 30 - 10 = 20 bet. Jami: 30 + 20 = 50 bet."
+    },
+    {
+      "text": "Bog‘bon 40 kg olma terdi. Nok olmadan 15 kg kam, shaftoli esa nokdan 5 kg ko‘p terildi. Shaftoli necha kg terilgan?",
+      "options": [
+        "25 kg",
+        "35 kg",
+        "30 kg (Nok: 25 kg; 25 + 5 = 30)",
+        "20 kg"
+      ],
+      "correctIndex": 2,
+      "explanation": "Nok: 40 - 15 = 25 kg. Shaftoli: 25 + 5 = 30 kg."
+    },
+    {
+      "text": "Fermada 45 ta sigir bor. Qo‘ylar sigirlardan 20 ta ko‘p, otlar esa qo‘ylardan 30 ta kam. Fermada nechta ot bor?",
+      "options": [
+        "35 ta (Qo‘y: 65; 65 - 30 = 35)",
+        "65 ta",
+        "25 ta",
+        "40 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘y: 45 + 20 = 65 ta. Otlar: 65 - 30 = 35 ta."
+    },
+    {
+      "text": "Pochta xizmatida 1-mashina 28 ta posilka, 2-mashina undan 12 ta ko‘p posilka yetkazdi. Ikkala mashina birgalikda nechta posilka yetkazgan?",
+      "options": [
+        "68 ta (2-mashina: 40; 28 + 40 = 68)",
+        "40 ta",
+        "56 ta",
+        "70 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "2-mashina: 28 + 12 = 40 ta. Jami: 28 + 40 = 68 ta."
+    },
+    {
+      "text": "Kutubxonaga 50 ta yangi kitob keldi. 1-kun 15 tasi, 2-kun undan 5 ta ko‘p kitob javonga qo‘yildi. Yana nechta kitob qo‘yilishi kerak?",
+      "options": [
+        "20 ta",
+        "10 ta",
+        "25 ta",
+        "15 ta (2-kun: 20; 50 - 15 - 20 = 15)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2-kuni: 15 + 5 = 20 ta. Jami qo‘yilgani: 15 + 20 = 35 ta. Qolgani: 50 - 35 = 15 ta."
+    },
+    {
+      "text": "Maktab oshxonasiga ertalab 30 kg kartoshka va 20 kg piyoz keltirildi. Tushgacha 15 kg kartoshka va 10 kg piyoz ishlatildi. Oshxonada jami necha kg sabzavot qoldi?",
+      "options": [
+        "20 kg",
+        "25 kg (Kartoshka: 15 kg, Piyoz: 10 kg; 15 + 10 = 25)",
+        "30 kg",
+        "35 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kartoshka qoldi: 30 - 15 = 15 kg. Piyoz qoldi: 20 - 10 = 10 kg. Jami: 15 + 10 = 25 kg."
+    },
+    {
+      "text": "Alisher 1-kuni 20 ta, 2-kuni 1-kunidagidan 10 ta ko‘p, 3-kuni esa 2-kunidagidan 5 ta kam misol yechdi. Alisher uch kunda jami nechta misol yechgan?",
+      "options": [
+        "65 ta",
+        "70 ta",
+        "75 ta (2-kun: 30, 3-kun: 25; 20 + 30 + 25 = 75)",
+        "80 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "2-kun: 20 + 10 = 30 ta. 3-kun: 30 - 5 = 25 ta. Jami: 20 + 30 + 25 = 75 ta misol."
+    }
+  ]
+}

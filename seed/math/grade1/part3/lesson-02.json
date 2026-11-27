@@ -1,0 +1,278 @@
+{
+  "bookNumber": 2,
+  "isReview": false,
+  "title": "Masalani yechish algoritmi",
+  "emoji": "📋",
+  "shortDesc": "Masalani reja va qadamlar asosida yechish.",
+  "intro": "Masalani to‘g‘ri yechish uchun 4 qadamdan iborat rejaga rioya qilinadi.",
+  "keyPoints": [
+    "1-qadam: Shartni o‘qish va berilganlarni ajratish.",
+    "2-qadam: Savolni aniqlash va qidirilayotgan narsani tushunish.",
+    "3-qadam: Ifoda tuzish va hisoblash.",
+    "4-qadam: Javobni yozish va tekshirish."
+  ],
+  "miniExample": {
+    "emojis": "📋 1) O‘qi ➔ 2) Savol ➔ 3) Ifoda ➔ 4) Javob",
+    "text": "Reja: Berilganlar ajratiladi, ifoda tuziladi va javob tekshirib yoziladi."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Masalani yechish rejasining birinchi bandi nima?",
+      "options": [
+        "Berilganlarni ajratish va tushunish",
+        "Darhol javobni yozish",
+        "Faqat sonlarni qo‘shish",
+        "Savolni o‘chirish"
+      ],
+      "correctIndex": 0,
+      "explanation": "Masala shartini sinchkovlik bilan o‘qib, ma’lumotlarni ajratish 1-qadamdir."
+    },
+    {
+      "text": "Ifoda tuzish va hisoblash masalani yechish rejasining nechanchi bandi?",
+      "options": [
+        "1-bandi",
+        "3-bandi",
+        "2-bandi",
+        "4-bandi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shart va savoldan so‘ng 3-bandda ifoda tuziladi va hisoblanadi."
+    },
+    {
+      "text": "Masala yechib bo‘lingach, oxirgi qadamda nima qilinadi?",
+      "options": [
+        "Yana boshidan boshlanadi",
+        "Kitob yirtiladi",
+        "Javob yoziladi va tekshiriladi",
+        "Savol o‘zgartiriladi"
+      ],
+      "correctIndex": 2,
+      "explanation": "To‘rtinchi yakuniy qadamda natija tekshirilib, javob yoziladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Masala yechish algoritmi deganda nima tushuniladi?",
+      "options": [
+        "Masalani yechishning tartibli rejasi",
+        "Faqat daftarning chizig‘i",
+        "Faqatgina bitta son",
+        "O‘yin qoidasi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Algoritm — bu maqsadga yetaklovchi ketma-ket qadamlar va reja."
+    },
+    {
+      "text": "Masala shartini o‘qiyotganda eng avvalo nimalarga e’tibor berish kerak?",
+      "options": [
+        "Harflarning chiroyliligiga",
+        "Matn qanchalik uzunligiga",
+        "Nimalar ma’lum va nimani topish kerakligiga",
+        "Rasmning rangiga"
+      ],
+      "correctIndex": 2,
+      "explanation": "Masalada ma’lum kattaliklar va savolga asosiy e’tibor qaratiladi."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri 2-qadam: «Savolni aniqlash»ga misol bo‘ladi?",
+      "options": [
+        "«10 ga 5 ni qo‘shdim»",
+        "«Mendan nima so‘ralyapti: jami miqdormi yoki qolgani?»",
+        "«Javob: 15 ta»",
+        "«Kitobni ochdim»"
+      ],
+      "correctIndex": 1,
+      "explanation": "Nimani topish kerakligini aniqlash savolni tushunishdir."
+    },
+    {
+      "text": "«12 + 6 = 18» yozuvi rejaning qaysi bosqichiga tegishli?",
+      "options": [
+        "Shartni o‘qish",
+        "Savol tanlash",
+        "Daftarni yopish",
+        "Ifoda tuzish va hisoblash (3-qadam)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Arifmetik amalni yozib hisoblash 3-bosqich hisoblanadi."
+    },
+    {
+      "text": "Nima uchun masalaning javobini tekshirish muhim?",
+      "options": [
+        "Vaqtni cho‘zish uchun",
+        "Xatoga yo‘l qo‘yilmaganiga ishonch hosil qilish uchun",
+        "Doskani bo‘yash uchun",
+        "Tekshirish shart emas"
+      ],
+      "correctIndex": 1,
+      "explanation": "Javobni tekshirish hisob-kitobning to‘g‘riligini kafolatlaydi."
+    },
+    {
+      "text": "Reja bo‘yicha to‘g‘ri ketma-ketlikni ko‘rsating:",
+      "options": [
+        "Shart ➔ Savol ➔ Yechim ➔ Javob",
+        "Javob ➔ Yechim ➔ Savol ➔ Shart",
+        "Yechim ➔ Shart ➔ Javob ➔ Savol",
+        "Savol ➔ Javob ➔ Shart ➔ Yechim"
+      ],
+      "correctIndex": 0,
+      "explanation": "Klassik algoritm: Shart, keyin Savol, so‘ng Yechim va nihoyat Javob."
+    },
+    {
+      "text": "Masala: «Akbar 14 ta yong‘oq terdi, ukasiga 4 tasini berdi. Akbarda nechta qoldi?» Reja bo‘yicha ifoda qanday bo‘ladi?",
+      "options": [
+        "14 + 4 = 18 ta",
+        "10 + 4 = 14 ta",
+        "14 - 10 = 4 ta",
+        "14 - 4 = 10 ta"
+      ],
+      "correctIndex": 3,
+      "explanation": "Akbar ukasiga bergani uchun uning yong‘oqlari kamayadi: 14 - 4 = 10 ta."
+    },
+    {
+      "text": "«Toshkentdan Samarqandga 25 ta poyezd yo‘lovchisi, Samarqanddan Buxoroga yana 12 ta yo‘lovchi chiqdi.» Jami yo‘lovchilarni topish uchun rejaning qaysi amali qo‘llanadi?",
+      "options": [
+        "Ayirish: 25 - 12",
+        "Taqqoslash: 25 > 12",
+        "Qo‘shish: 25 + 12",
+        "Bo‘lish"
+      ],
+      "correctIndex": 2,
+      "explanation": "Jami yo‘lovchilar sonini topishda qo‘shish amali ishlatiladi."
+    },
+    {
+      "text": "O‘quvchi masalani o‘qimasdan darhol sonlarni qo‘shib yubordi. U rejaning qaysi qoidasini buzdi?",
+      "options": [
+        "Daftar chetini chizish qoidasini",
+        "Ruchkani to‘g‘ri ushlashni",
+        "Shart va savolni diqqat bilan o‘rganish qoidasini",
+        "Qoidani buzmagan"
+      ],
+      "correctIndex": 2,
+      "explanation": "Shart va savolni to‘liq tushunmasdan turib yechishga o‘tish xatolikka olib keladi."
+    },
+    {
+      "text": "Masalani qisqa yozuv bilan ifodalash rejaning qaysi bosqichiga yordam beradi?",
+      "options": [
+        "Faqat daftarni bezashga",
+        "Darsni tezroq tugatishga",
+        "Hech qanday foydasi yo‘q",
+        "Shartni tushunish va ifoda tuzishga"
+      ],
+      "correctIndex": 3,
+      "explanation": "Qisqa yozuv berilganlarni ko‘rgazmali qilib, to‘g‘ri ifoda tanlashga yordam beradi."
+    },
+    {
+      "text": "Masala savoli: «Avtobusda qancha yo‘lovchi QOLDI?» Qaysi ifoda to‘g‘ri keladi?",
+      "options": [
+        "Dastlabki yo‘lovchilar soni - tushganlar soni",
+        "Dastlabki yo‘lovchilar soni + tushganlar soni",
+        "Tushganlar soni + 10",
+        "Dastlabki yo‘lovchilar soni"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qolgan miqdorni topish uchun butundan ketgan qism ayiriladi."
+    },
+    {
+      "text": "Nodirada 20 ta stiker bor edi. Dugonasi unga yana 10 ta sovg‘a qildi. Nodirada jami nechta stiker bo‘ldi?",
+      "options": [
+        "10 ta (20 - 10 = 10)",
+        "30 ta (20 + 10 = 30)",
+        "25 ta",
+        "35 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Stikerlar soni ortgani sababli qo‘shiladi: 20 + 10 = 30 ta."
+    },
+    {
+      "text": "Qaysi savolga «18 - 8 = 10» yechimi mos keladi?",
+      "options": [
+        "Do‘konda 18 ta to‘p bor edi, yana 8 ta keltirildi. Nechta bo‘ldi?",
+        "18 ta to‘p 8 ta qutiga bo‘lindi.",
+        "Do‘konda 10 ta to‘p bor edi.",
+        "Do‘konda 18 ta to‘p bor edi, 8 tasi sotildi. Nechta to‘p qoldi?"
+      ],
+      "correctIndex": 3,
+      "explanation": "18 dan 8 ayrilishi to‘plar sotilib kamayishiga mos keladi."
+    },
+    {
+      "text": "Reja bo‘yicha javob yozishda nima ko‘rsatilishi shart?",
+      "options": [
+        "Faqat harflar",
+        "Son va uning o‘lchov birligi (masalan: 15 ta qalam)",
+        "Faqat plyus belgisi",
+        "Faqat o‘quvchining ismi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Javobda olingan son va uning birligi aniq yoziladi."
+    },
+    {
+      "text": "Sinfda 28 ta o‘quvchi bor. Ulardan 14 nafari o‘g‘il bola. Qizlar sonini topish rejasi qanday?",
+      "options": [
+        "Jami o‘quvchilarga o‘g‘il bolalarni qo‘shish: 28 + 14 = 42",
+        "O‘g‘il bolalarni ikkiga ko‘paytirish",
+        "Jami o‘quvchilardan o‘g‘il bolalar sonini ayirish: 28 - 14 = 14",
+        "Faqat 28 ni yozish"
+      ],
+      "correctIndex": 2,
+      "explanation": "Butundan ma’lum qism ayrilsa, ikkinchi qism topiladi: 28 - 14 = 14 nafar qiz."
+    },
+    {
+      "text": "Bog‘bon 36 tup olma va 20 tup nok ko‘chati o‘tqazdi. Olma ko‘chatlari nok ko‘chatlaridan nechta ko‘p?",
+      "options": [
+        "16 ta (36 - 20 = 16)",
+        "56 ta (36 + 20 = 56)",
+        "10 ta",
+        "26 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qancha ko‘pligini bilish uchun kattasidan kichigi ayiriladi: 36 - 20 = 16 ta."
+    },
+    {
+      "text": "Robota buyruq berildi: 15 qadam oldinga, so‘ng 5 qadam orqaga yuring. Robot boshlang‘ich nuqtadan necha qadam uzoqlashdi?",
+      "options": [
+        "10 qadam (15 - 5 = 10)",
+        "20 qadam (15 + 5 = 20)",
+        "5 qadam",
+        "15 qadam"
+      ],
+      "correctIndex": 0,
+      "explanation": "Oldinga va orqaga harakatlar qarama-qarshi bo‘lgani uchun ayiriladi: 15 - 5 = 10 qadam."
+    },
+    {
+      "text": "Daftarda 40 ta katak bor edi. Jasur 12 tasini bo‘yadi. Nechta bo‘yalmagan katak qoldi?",
+      "options": [
+        "52 ta (40 + 12 = 52)",
+        "20 ta",
+        "38 ta",
+        "28 ta (40 - 12 = 28)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Jami kataklardan bo‘yalganlari ayiriladi: 40 - 12 = 28 ta."
+    },
+    {
+      "text": "Avtobusda 30 yo‘lovchi bor edi. Birinchi bekatda 6 kishi tushdi, ikkinchi bekatda 4 kishi tushdi. Avtobusda nechta yo‘lovchi qoldi?",
+      "options": [
+        "24 nafar",
+        "20 nafar (30 - 6 - 4 = 20)",
+        "22 nafar",
+        "18 nafar"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 dan 6 ayrilsa 24, undan 4 ayrilsa 20 nafar qoladi."
+    },
+    {
+      "text": "Madinada 12 ta qalam bor edi. Onasi unga 5 ta, otasi esa yana 3 ta qalam olib berdi. Madinada jami nechta qalam bo‘ldi?",
+      "options": [
+        "18 ta",
+        "19 ta",
+        "20 ta (12 + 5 + 3 = 20)",
+        "15 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Barcha qo‘shilgan qalamlar jamlanadi: 12 + 5 + 3 = 20 ta."
+    }
+  ]
+}

@@ -322,7 +322,13 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen>
             _quizQuestions = questions;
             _isLoading = false;
             _errorMessage = null;
+            if (lesson.isReview) {
+              _currentStep = 4;
+            }
           });
+          if (lesson.isReview && _testAttemptId == null) {
+            _startTestAttempt();
+          }
           return;
         }
       } else if (res.statusCode == 404) {
@@ -691,6 +697,53 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen>
   }
 
   Widget _buildStepIndicator(AppThemeColors colors) {
+    if (_lesson?.isReview == true) {
+      return Container(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        decoration: BoxDecoration(
+          color: colors.card,
+          border: Border(bottom: BorderSide(color: colors.border, width: 1)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFC83D).withOpacity(0.18),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Text('📝', style: TextStyle(fontSize: 18)),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _lesson?.title ?? 'Nazorat ishi',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF6C3CE0),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  const Text(
+                    '20 ta test savoli · 120 XP · 12 🪙',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFB45309),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       decoration: BoxDecoration(
@@ -2249,12 +2302,16 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
       ),
       child: Row(
         children: [
-          // "Orqaga" Button
+          // "Orqaga" / "Chiqish" Button
           OutlinedButton(
             onPressed: () {
-              setState(() {
-                _currentStep--;
-              });
+              if (_lesson?.isReview == true) {
+                context.pop();
+              } else {
+                setState(() {
+                  _currentStep--;
+                });
+              }
             },
             style: OutlinedButton.styleFrom(
               foregroundColor: colors.ink,
@@ -2262,7 +2319,10 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
             ),
-            child: const Text('Orqaga', style: TextStyle(fontWeight: FontWeight.w700)),
+            child: Text(
+              _lesson?.isReview == true ? 'Chiqish' : 'Orqaga',
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
           ),
           const SizedBox(width: 12),
 

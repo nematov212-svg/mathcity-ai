@@ -1,0 +1,277 @@
+{
+  "bookNumber": 3,
+  "isReview": false,
+  "title": "Sodda masalalar",
+  "emoji": "🚆",
+  "shortDesc": "Bir amalli masalalar va butun-qism sxemasi.",
+  "intro": "Birgina arifmetik amal (qo‘shish yoki ayirish) bilan yechiladigan masalalar sodda masalalardir.",
+  "keyPoints": [
+    "Sxema: Butun = Qism + Qism.",
+    "Butunni topish uchun qismlar qo‘shiladi.",
+    "Noma’lum qismni topish uchun butundan ma’lum qism ayiriladi."
+  ],
+  "miniExample": {
+    "emojis": "📦 [ 88 ta darslik ] ➔ 30 tasi olindi, 58 tasi qoldi",
+    "text": "88 ta darslikdan 30 tasi olindi. Qolganini topish: 88 - 30 = 58 ta."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Bir amalli masala nima deb ataladi?",
+      "options": [
+        "Sodda masala",
+        "Murakkab masala",
+        "Mantiqiy jumboq",
+        "Geometrik shakl"
+      ],
+      "correctIndex": 0,
+      "explanation": "Faqat bitta amal yordamida yechiladigan masalalar sodda masalalar deyiladi."
+    },
+    {
+      "text": "Sxemada butun 50 ga, birinchi qism 20 ga teng bo‘lsa, ikkinchi qism qanday topiladi?",
+      "options": [
+        "50 + 20 = 70",
+        "50 - 20 = 30",
+        "50 - 50 = 0",
+        "20 + 20 = 40"
+      ],
+      "correctIndex": 1,
+      "explanation": "Noma’lum qismni topish uchun butundan ma’lum qism ayiriladi: 50 - 20 = 30."
+    },
+    {
+      "text": "Avtobusda 64 ta o‘rindiq bor. Shulardan 42 tasi band. Nechta bo‘sh o‘rindiq bor?",
+      "options": [
+        "20 ta",
+        "106 ta",
+        "22 ta (64 - 42 = 22)",
+        "12 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bo‘sh o‘rindiqlar: 64 - 42 = 22 ta."
+    }
+  ],
+  "test": [
+    {
+      "text": "Sodda masalani yechish uchun nechta amal bajariladi?",
+      "options": [
+        "Faqat 1 ta amal",
+        "Kamida 3 ta amal",
+        "2 ta amal",
+        "Hech qanday amal"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sodda masalalar bitta arifmetik amal (qo‘shish yoki ayirish) bilan yechiladi."
+    },
+    {
+      "text": "Sxemadagi ikki qism ma’lum: 10 va 7. Butunni qanday topamiz?",
+      "options": [
+        "Ayiramiz: 10 - 7 = 3",
+        "Taqqoslaymiz: 10 > 7",
+        "Qo‘shamiz: 10 + 7 = 17",
+        "Nolga tenglaymiz"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qism + Qism = Butun. Shuning uchun: 10 + 7 = 17."
+    },
+    {
+      "text": "Poyezd vagonida 30 nafar yo‘lovchi bor edi, yana 10 nafar chiqdi. Yo‘lovchilar nechta bo‘ldi?",
+      "options": [
+        "20 nafar",
+        "40 nafar (30 + 10 = 40)",
+        "35 nafar",
+        "25 nafar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yo‘lovchilar soni ortdi: 30 + 10 = 40 nafar."
+    },
+    {
+      "text": "Kutubxonada 88 ta darslik bor edi. 30 tasi o‘quvchilarga tarqatildi. Nechta darslik qoldi?",
+      "options": [
+        "50 ta",
+        "60 ta",
+        "48 ta",
+        "58 ta (88 - 30 = 58)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Darsliklar kamaygani uchun ayiramiz: 88 - 30 = 58 ta."
+    },
+    {
+      "text": "Idishda 25 litr suv bor edi. Undan 5 litr ishlatildi. Qancha suv qoldi?",
+      "options": [
+        "30 l",
+        "20 l (25 - 5 = 20)",
+        "15 l",
+        "22 l"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ishlatilgan suv ayiriladi: 25 - 5 = 20 litr."
+    },
+    {
+      "text": "Guldastada 9 ta oq va 6 ta qizil chinnigul bor. Jami nechta gul bor?",
+      "options": [
+        "15 ta (9 + 6 = 15)",
+        "12 ta",
+        "14 ta",
+        "16 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Jami gullar soni: 9 + 6 = 15 ta."
+    },
+    {
+      "text": "Samolyotda 64 ta o‘rindiqdan 42 tasi band bo‘lsa, bo‘sh o‘rindiqlar soni nechta?",
+      "options": [
+        "24 ta",
+        "18 ta",
+        "26 ta",
+        "22 ta (64 - 42 = 22)"
+      ],
+      "correctIndex": 3,
+      "explanation": "64 dan 42 ayirilsa: 64 - 42 = 22 ta bo‘sh joy."
+    },
+    {
+      "text": "Sxema: Butun = 75, I qism = 25, II qism = ? II qismni toping:",
+      "options": [
+        "100 (75 + 25 = 100)",
+        "45",
+        "50 (75 - 25 = 50)",
+        "55"
+      ],
+      "correctIndex": 2,
+      "explanation": "Butundan ma’lum qism ayiriladi: 75 - 25 = 50."
+    },
+    {
+      "text": "Sxema: I qism = 34, II qism = 23, Butun = ? Butunni toping:",
+      "options": [
+        "11 (34 - 23 = 11)",
+        "55",
+        "57 (34 + 23 = 57)",
+        "60"
+      ],
+      "correctIndex": 2,
+      "explanation": "Butunni topish uchun qismlar qo‘shiladi: 34 + 23 = 57."
+    },
+    {
+      "text": "Quruvchilar 48 ta g‘ishtdan 18 tasini ishlatishdi. Nechta g‘isht ortib qoldi?",
+      "options": [
+        "28 ta",
+        "32 ta",
+        "66 ta",
+        "30 ta (48 - 18 = 30)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ortib qolgan g‘ishtlar: 48 - 18 = 30 ta."
+    },
+    {
+      "text": "Sinfdagi 15 nafar o‘quvchidan 8 nafari shaxmat to‘garagiga qatnashadi. Qolganlari esa rasm to‘garagiga. Nechtasi rasm to‘garagiga qatnashadi?",
+      "options": [
+        "7 nafar (15 - 8 = 7)",
+        "8 nafar",
+        "6 nafar",
+        "23 nafar"
+      ],
+      "correctIndex": 0,
+      "explanation": "15 dan 8 ayirilsa, rasm to‘garagidagilar chiqadi: 15 - 8 = 7 nafar."
+    },
+    {
+      "text": "Bozorda birinchi xaridor 14 kg, ikkinchi xaridor esa 12 kg meva sotib oldi. Ikkala xaridor jami necha kg meva oldi?",
+      "options": [
+        "2 kg (14 - 12 = 2)",
+        "26 kg (14 + 12 = 26)",
+        "24 kg",
+        "28 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ikkala xaridor birgalikda: 14 + 12 = 26 kg meva olgan."
+    },
+    {
+      "text": "Nonvoyxonada 90 ta issiq non yopildi. Tushgacha 50 tasi sotildi. Nechta non qoldi?",
+      "options": [
+        "50 ta",
+        "30 ta",
+        "140 ta",
+        "40 ta (90 - 50 = 40)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Qolgan nonlar: 90 - 50 = 40 ta."
+    },
+    {
+      "text": "Daftarda 16 ta misol bor edi. Sardor bir nechtasini yechgach, 6 ta misol qoldi. Sardor nechta misol yechgan?",
+      "options": [
+        "22 ta (16 + 6 = 22)",
+        "10 ta (16 - 6 = 10)",
+        "8 ta",
+        "12 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yechilgan misollar noma’lum qismdir: 16 - 6 = 10 ta."
+    },
+    {
+      "text": "Sxemada butun 96 ga teng. I qism 40 bo‘lsa, II qism I qismdan qancha katta?",
+      "options": [
+        "56 ga katta",
+        "10 ga katta",
+        "16 ga katta (II qism = 56, 56 - 40 = 16)",
+        "20 ga katta"
+      ],
+      "correctIndex": 2,
+      "explanation": "II qism = 96 - 40 = 56. Ular orasidagi farq: 56 - 40 = 16."
+    },
+    {
+      "text": "Avtosaroyda 55 ta avtomobil bor edi. Ertalab bir nechta mashina chiqib ketgach, 25 ta mashina qoldi. Nechta mashina yo‘lga chiqqan?",
+      "options": [
+        "30 ta (55 - 25 = 30)",
+        "35 ta",
+        "20 ta",
+        "80 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Chiqib ketgan mashinalar: 55 - 25 = 30 ta."
+    },
+    {
+      "text": "Bir tup uzumdan 32 kg, ikkinchisidan 15 kg uzum uzildi. Jami necha kg uzum uzilgan?",
+      "options": [
+        "47 kg (32 + 15 = 47)",
+        "17 kg (32 - 15 = 17)",
+        "45 kg",
+        "50 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "Jami hosil: 32 + 15 = 47 kg."
+    },
+    {
+      "text": "Toshkent - Samarqand poyezdida 80 ta bo‘sh joy bor edi. Toshkentdan 60 kishi chiqdi. Poyezdda nechta bo‘sh joy qoldi?",
+      "options": [
+        "30 ta",
+        "140 ta",
+        "10 ta",
+        "20 ta (80 - 60 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Qolgan bo‘sh joylar: 80 - 60 = 20 ta."
+    },
+    {
+      "text": "Stadionda 70 ta to‘p bor edi. Futbolchilar 20 ta, voleybolchilar 10 ta to‘p olishdi. Nechta to‘p qoldi?",
+      "options": [
+        "50 ta",
+        "40 ta (70 - 20 - 10 = 40)",
+        "30 ta",
+        "45 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ketma-ket ayiramiz: 70 - 20 = 50, 50 - 10 = 40 ta to‘p qoldi."
+    },
+    {
+      "text": "Omborga 25 qop un keltirildi. So‘ng yana 15 qop un keltirildi. Nonvoyxona 10 qop ishlatdi. Omborda nechta qop un qoldi?",
+      "options": [
+        "40 qop",
+        "20 qop",
+        "30 qop (25 + 15 - 10 = 30)",
+        "35 qop"
+      ],
+      "correctIndex": 2,
+      "explanation": "Dastlab: 25 + 15 = 40 qop bo‘ldi. Ishlatilgach: 40 - 10 = 30 qop qoldi."
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "bookNumber": 23,
+  "isReview": false,
+  "title": "Shartni yetishmayotgan ma’lumotlar bilan to‘ldirish",
+  "emoji": "📝",
+  "shortDesc": "To‘liqsiz shartni aniqlash, savol qo‘yish va vaqt birliklari (60 minut).",
+  "intro": "Masalani yechish uchun yetishmayotgan son yoki ma’lumotni aniqlash va shartni to‘ldirishni o‘rganamiz.",
+  "keyPoints": [
+    "To‘liqsiz shart: ma’lumot yetarli bo‘lmasa, masalani yechib bo‘lmaydi.",
+    "Shartni to‘ldirish: fotosuratlar masalasi (12 ta oq-qora va 45 ta rangli).",
+    "Vaqt birliklari munosabati: 1 soat = 60 minut."
+  ],
+  "miniExample": {
+    "emojis": "📸 12 ta oq-qora + 45 ta rangli fotosurat = 57 ta",
+    "text": "Albomda 12 ta oq-qora fotosurat bor. Yana 45 ta rangli surat qo‘shildi. Jami: 12 + 45 = 57 ta."
+  },
+  "xpReward": 110,
+  "coinReward": 11,
+  "estMinutes": 9,
+  "practice": [
+    {
+      "text": "«Savatda 15 ta olma bor edi, bir nechtasi yeyildi. Nechta olma qoldi?» Masalani yechish uchun nima yetishmayapti?",
+      "options": [
+        "Nechta olma yeyilgani (son ma’lumoti)",
+        "Olmaning rangi",
+        "Savatning kattaligi",
+        "Savol yetishmayapti"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yeyilgan olmalar soni aytilmagani sababli masalani yechib bo‘lmaydi."
+    },
+    {
+      "text": "Albomda 12 ta oq-qora va 45 ta rangli fotosurat bor. Albomda jami nechta fotosurat bor?",
+      "options": [
+        "55 ta",
+        "57 ta (12 + 45 = 57)",
+        "60 ta",
+        "33 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 + 45 = 57 ta fotosurat."
+    },
+    {
+      "text": "1 soat necha minutga teng?",
+      "options": [
+        "100 minut",
+        "30 minut",
+        "60 minut",
+        "24 minut"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 soat 60 minutdan iborat."
+    }
+  ],
+  "test": [
+    {
+      "text": "1 soat necha minutdan iborat?",
+      "options": [
+        "60 minut",
+        "30 minut",
+        "100 minut",
+        "24 minut"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 soat = 60 minut."
+    },
+    {
+      "text": "«Anvar 10 ta qalam sotib oldi. U qancha pul to‘ladi?» Bu masalani yechish uchun nima yetishmayapti?",
+      "options": [
+        "Anvarning yoshi",
+        "Qalamning rangi",
+        "Bitta qalamning narxi",
+        "Do‘konning nomi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bitta qalam narxi ma’lum bo‘lsa, umumiy to‘lovni hisoblash mumkin."
+    },
+    {
+      "text": "12 ta oq-qora va 45 ta rangli fotosurat jami nechta bo‘ladi?",
+      "options": [
+        "55 ta",
+        "57 ta (12 + 45 = 57)",
+        "58 ta",
+        "33 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 + 45 = 57 ta."
+    },
+    {
+      "text": "Dars 45 minut davom etdi. Tanaffus 15 minut bo‘ldi. Ikkalasi birgalikda necha minut bo‘ladi?",
+      "options": [
+        "50 minut",
+        "70 minut",
+        "30 minut",
+        "60 minut (1 soat)"
+      ],
+      "correctIndex": 3,
+      "explanation": "45 + 15 = 60 minut = 1 soat."
+    },
+    {
+      "text": "«Sinfda 25 ta o‘quvchi bor. Bugun bir necha kishi kelmadi.» Masala bo‘lishi uchun qaysi savol mos keladi?",
+      "options": [
+        "Ertaga ob-havo qanday bo‘ladi?",
+        "Necha kishi darsga qatnashmoqda?",
+        "Partalar nechanchi xonada?",
+        "Tanaffus qachon?"
+      ],
+      "correctIndex": 1,
+      "explanation": "Davomatga oid savol masalani to‘ldiradi."
+    },
+    {
+      "text": "Yarim soat necha minutga teng?",
+      "options": [
+        "30 minut (60 minutning yarmi)",
+        "15 minut",
+        "45 minut",
+        "50 minut"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 minutning yarmi 30 minutdir."
+    },
+    {
+      "text": "Sayyoh Toshkentdan poyezdda 40 minut, so‘ng avtobusda 20 minut yurdi. U jami necha soat yo‘l yurgan?",
+      "options": [
+        "2 soat",
+        "yarim soat",
+        "60 soat",
+        "1 soat (40 + 20 = 60 minut = 1 soat)"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 + 20 = 60 minut = 1 soat."
+    },
+    {
+      "text": "«Fotogalereyada 30 ta tabiat manzarasi bor edi. Yana bir qancha shahar suratlari osildi va jami 50 ta surat bo‘ldi.» Shahar suratlari nechta?",
+      "options": [
+        "80 ta",
+        "15 ta",
+        "20 ta (50 - 30 = 20)",
+        "25 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 - 30 = 20 ta shahar surati."
+    },
+    {
+      "text": "Albomdagi 60 ta rasmdan 25 tasi rangli, qolgani oq-qora. Oq-qora suratlar nechta?",
+      "options": [
+        "85 ta",
+        "30 ta",
+        "35 ta (60 - 25 = 35)",
+        "40 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 - 25 = 35 ta."
+    },
+    {
+      "text": "«Gulnoza 20 ta misol yechdi. Nodira esa undan □ ta ortiq yechdi. Nodira nechta misol yechgan?» Masala to‘liq bo‘lishi uchun bo‘sh katakka nima kerak?",
+      "options": [
+        "Rangli rasm",
+        "Nuqta belgisi",
+        "So‘roq belgisi",
+        "Aniq son (masalan, 5)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Shart to‘liq bo‘lishi uchun qancha ortiqligi aniq son bilan ifodalanishi kerak."
+    },
+    {
+      "text": "1 soatdan 15 minut kam vaqt necha minut bo‘ladi?",
+      "options": [
+        "45 minut (60 - 15 = 45)",
+        "50 minut",
+        "40 minut",
+        "75 minut"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 - 15 = 45 minut."
+    },
+    {
+      "text": "1 soatdan 20 minut kam vaqt qancha bo‘ladi?",
+      "options": [
+        "35 minut",
+        "40 minut (60 - 20 = 40)",
+        "50 minut",
+        "80 minut"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 20 = 40 minut."
+    },
+    {
+      "text": "Albomga 1-kuni 14 ta, 2-kuni 22 ta surat joylandi. Yana 10 ta surat joylansa, jami suratlar soni nechta bo‘ladi?",
+      "options": [
+        "44 ta",
+        "48 ta",
+        "36 ta",
+        "46 ta (14 + 22 + 10 = 46)"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 + 22 = 36, 36 + 10 = 46 ta."
+    },
+    {
+      "text": "Poyezd bekatda 25 minut turdi. 1 soat bo‘lishi uchun yana necha minut turishi kerak edi?",
+      "options": [
+        "30 minut",
+        "35 minut (60 - 25 = 35)",
+        "40 minut",
+        "85 minut"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 25 = 35 minut."
+    },
+    {
+      "text": "Film 1 soat (60 minut) davom etadi. Dilorom filmning 35 minutini ko‘rdi. Film tugashiga yana necha minut qoldi?",
+      "options": [
+        "20 minut",
+        "30 minut",
+        "25 minut (60 - 35 = 25)",
+        "15 minut"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 - 35 = 25 minut."
+    },
+    {
+      "text": "Shartni to‘ldiring: «Avtobusda 50 yo‘lovchi bor edi. Bekatda bir nechta tushib, 10 tasi chiqdi va 40 kishi bo‘ldi». Necha kishi tushgan?",
+      "options": [
+        "20 nafar (50 + 10 - 40 = 20)",
+        "10 nafar",
+        "15 nafar",
+        "25 nafar"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 + 10 = 60 nafar bo‘lardi, lekin 40 nafar qoldi. Demak 60 - 40 = 20 nafar tushgan."
+    },
+    {
+      "text": "Akmal uy vazifasini bajarishga 1 soat (60 minut) sarfladi: 25 minut matematika, 20 minut ona tili, qolgan vaqtda rasm chizdi. Rasm chizishga necha minut ketgan?",
+      "options": [
+        "15 minut (60 - 25 - 20 = 15)",
+        "10 minut",
+        "20 minut",
+        "25 minut"
+      ],
+      "correctIndex": 0,
+      "explanation": "25 + 20 = 45 minut. Rasmga: 60 - 45 = 15 minut."
+    },
+    {
+      "text": "Albomdagi 80 ta rasmdan 30 tasi oq-qora, 35 tasi rangli, qolgani esa chizilgan rasmlar. Chizilgan rasmlar nechta?",
+      "options": [
+        "10 ta",
+        "20 ta",
+        "25 ta",
+        "15 ta (80 - 30 - 35 = 15)"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 + 35 = 65 ta. Chizilgan rasmlar: 80 - 65 = 15 ta."
+    },
+    {
+      "text": "Sportchi 1 soat (60 minut) mashg‘ulot o‘tkazdi: 20 minut yugurdi, 15 minut sakradi, 10 minut dam oldi va qolgan vaqtda suzdi. Sportchi necha minut suzgan?",
+      "options": [
+        "10 minut",
+        "15 minut (60 - 20 - 15 - 10 = 15)",
+        "20 minut",
+        "25 minut"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 15 + 10 = 45 minut. Suzishga: 60 - 45 = 15 minut sarflagan."
+    },
+    {
+      "text": "Fotoapparat xotirasida 90 ta rasm bor edi. Ulardan 40 tasi Toshkentda, 25 tasi Samarqandda, qolgani Buxoroda olingan. Buxoroda nechta rasm olingan?",
+      "options": [
+        "20 ta",
+        "30 ta",
+        "25 ta (90 - 40 - 25 = 25)",
+        "35 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 + 25 = 65 ta. Buxoroda: 90 - 65 = 25 ta rasm olingan."
+    }
+  ]
+}

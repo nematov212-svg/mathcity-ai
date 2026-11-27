@@ -1,0 +1,277 @@
+{
+  "bookNumber": 19,
+  "isReview": false,
+  "title": "Taqqoslashga doir masalalar (2)",
+  "emoji": "🪐",
+  "shortDesc": "Sayyoralar yo‘ldoshlari jadvali bo‘yicha taqqoslash.",
+  "intro": "Quyosh tizimi sayyoralarining yo‘ldoshlari jadvali orqali sonlarni taqqoslash va farqini hisoblashni o‘rganamiz.",
+  "keyPoints": [
+    "Jadval: Yupiter 79, Saturn 82, Uran 27, Neptun 14, Mars 2, Yer 1, Merkuriy va Venera 0 ta.",
+    "Eng ko‘p yo‘ldoshga ega sayyora: Saturn (82 ta).",
+    "Yo‘ldoshi yo‘q sayyoralar: Merkuriy va Venera (0 ta)."
+  ],
+  "miniExample": {
+    "emojis": "🪐 Saturn: 82 ta, Yupiter: 79 ta ➔ Farq: 82 - 79 = 3 ta",
+    "text": "Saturnning yo‘ldoshlari Yupiterdan nechta ko‘p? 82 - 79 = 3 ta ko‘p."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "Jadvalga ko‘ra Saturnning 82 ta, Yupiterning 79 ta yo‘ldoshi bor. Saturnning yo‘ldoshlari Yupiterdan nechta ko‘p?",
+      "options": [
+        "3 ta (82 - 79 = 3)",
+        "2 ta",
+        "4 ta",
+        "161 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "82 - 79 = 3 ta."
+    },
+    {
+      "text": "Qaysi sayyoralarning yo‘ldoshlari umuman yo‘q (0 ta)?",
+      "options": [
+        "Yer va Mars",
+        "Merkuriy va Venera",
+        "Uran va Neptun",
+        "Yupiter va Saturn"
+      ],
+      "correctIndex": 1,
+      "explanation": "Merkuriy va Venera sayyoralarining tabiiy yo‘ldoshi yo‘q (0 ta)."
+    },
+    {
+      "text": "Uranning 27 ta, Neptunning 14 ta yo‘ldoshi bor. Uranning yo‘ldoshlari Neptunnikidan nechta ko‘p?",
+      "options": [
+        "41 ta",
+        "10 ta",
+        "13 ta (27 - 14 = 13)",
+        "15 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "27 - 14 = 13 ta."
+    }
+  ],
+  "test": [
+    {
+      "text": "Jadval bo‘yicha Saturn (82 ta) Yupiterdan (79 ta) nechta ko‘p yo‘ldoshga ega?",
+      "options": [
+        "3 ta (82 - 79 = 3)",
+        "2 ta",
+        "4 ta",
+        "5 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "82 - 79 = 3 ta."
+    },
+    {
+      "text": "Uranning 27 ta va Marsning 2 ta yo‘ldoshi bor. Ular orasidagi farq qancha?",
+      "options": [
+        "29 ta",
+        "24 ta",
+        "25 ta (27 - 2 = 25)",
+        "26 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "27 - 2 = 25 ta."
+    },
+    {
+      "text": "Yerning nechta tabiiy yo‘ldoshi bor?",
+      "options": [
+        "2 ta",
+        "1 ta (Oy)",
+        "0 ta",
+        "4 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yerning bitta tabiiy yo‘ldoshi bor, u Oydir."
+    },
+    {
+      "text": "Marsning (2 ta) Yerdan (1 ta) nechta ko‘p yo‘ldoshi bor?",
+      "options": [
+        "3 ta",
+        "2 ta",
+        "0 ta",
+        "1 ta (2 - 1 = 1)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2 - 1 = 1 ta."
+    },
+    {
+      "text": "Neptunning 14 ta yo‘ldoshi bor. Merkuriyda esa 0 ta. Farq nechaga teng?",
+      "options": [
+        "0 ta",
+        "14 ta (14 - 0 = 14)",
+        "15 ta",
+        "1 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "14 - 0 = 14 ta."
+    },
+    {
+      "text": "Jadvalda eng ko‘p yo‘ldoshga ega bo‘lgan sayyora qaysi?",
+      "options": [
+        "Saturn (82 ta)",
+        "Yupiter (79 ta)",
+        "Uran (27 ta)",
+        "Yer (1 ta)"
+      ],
+      "correctIndex": 0,
+      "explanation": "Jadvalda eng katta son 82, u Saturn sayyorasiga tegishli."
+    },
+    {
+      "text": "Uranning 27 ta, Neptunning 14 ta yo‘ldoshi bor. Neptun Uranga qaraganda nechta kam yo‘ldoshga ega?",
+      "options": [
+        "41 ta",
+        "12 ta",
+        "14 ta",
+        "13 ta (27 - 14 = 13)"
+      ],
+      "correctIndex": 3,
+      "explanation": "27 - 14 = 13 ta."
+    },
+    {
+      "text": "Yupiterning 79 ta, Neptunning 14 ta yo‘ldoshi bor. Yupiterning yo‘ldoshlari Neptundan qancha ko‘p?",
+      "options": [
+        "93 ta",
+        "60 ta",
+        "65 ta (79 - 14 = 65)",
+        "70 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "79 - 14 = 65 ta."
+    },
+    {
+      "text": "Saturn (82 ta) Uranga (27 ta) qaraganda qancha ko‘p yo‘ldoshga ega?",
+      "options": [
+        "109 ta",
+        "50 ta",
+        "55 ta (82 - 27 = 55)",
+        "60 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "82 - 27 = 55 ta."
+    },
+    {
+      "text": "Yer (1 ta) va Mars (2 ta) yo‘ldoshlari soni birgalikda nechta bo‘ladi?",
+      "options": [
+        "1 ta",
+        "2 ta",
+        "4 ta",
+        "3 ta (1 + 2 = 3)"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 + 2 = 3 ta."
+    },
+    {
+      "text": "Neptunning 14 ta yo‘ldoshi Yer va Mars yo‘ldoshlari yig‘indisidan (3 ta) qancha ko‘p?",
+      "options": [
+        "11 ta (14 - 3 = 11)",
+        "17 ta",
+        "10 ta",
+        "12 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "14 - 3 = 11 ta."
+    },
+    {
+      "text": "Uranning 27 ta yo‘ldoshi Marsning 2 ta yo‘ldoshidan qancha ortiq?",
+      "options": [
+        "29 ta",
+        "25 ta (27 - 2 = 25)",
+        "24 ta",
+        "26 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "27 - 2 = 25 ta."
+    },
+    {
+      "text": "Jadvaldagi barcha yo‘ldoshsiz sayyoralar soni nechta?",
+      "options": [
+        "1 ta",
+        "3 ta",
+        "0 ta",
+        "2 ta (Merkuriy va Venera)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Merkuriy va Venera (jami 2 ta sayyora)."
+    },
+    {
+      "text": "Saturn (82 ta) va Neptun (14 ta) yo‘ldoshlari farqi nechaga teng?",
+      "options": [
+        "96 ta",
+        "68 ta (82 - 14 = 68)",
+        "66 ta",
+        "70 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "82 - 14 = 68 ta."
+    },
+    {
+      "text": "Uran (27 ta) va Neptun (14 ta) sayyoralari yo‘ldoshlarining jami soni nechta?",
+      "options": [
+        "13 ta (27 - 14 = 13)",
+        "40 ta",
+        "41 ta (27 + 14 = 41)",
+        "42 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "27 + 14 = 41 ta."
+    },
+    {
+      "text": "Yupiterning 79 ta yo‘ldoshi Uran va Neptun yo‘ldoshlari yig‘indisidan (41 ta) qancha ko‘p?",
+      "options": [
+        "38 ta (79 - 41 = 38)",
+        "120 ta",
+        "35 ta",
+        "40 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "79 - 41 = 38 ta."
+    },
+    {
+      "text": "Sayyoralar yo‘ldoshlari soni o‘sish tartibida qaysi qatorda to‘g‘ri joylashgan?",
+      "options": [
+        "Yer (1), Mars (2), Neptun (14), Uran (27)",
+        "Neptun (14), Uran (27), Mars (2), Yer (1)",
+        "Saturn (82), Yupiter (79), Uran (27)",
+        "Mars (2), Yer (1), Uran (27)"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 < 2 < 14 < 27 — to‘g‘ri o‘sish tartibi."
+    },
+    {
+      "text": "Saturn (82 ta) va Yupiter (79 ta) yo‘ldoshlari yig‘indisi nechaga teng?",
+      "options": [
+        "3 ta (82 - 79 = 3)",
+        "160 ta",
+        "159 ta",
+        "161 ta (82 + 79 = 161)"
+      ],
+      "correctIndex": 3,
+      "explanation": "82 + 79 = 161 ta."
+    },
+    {
+      "text": "Astronomik markaz Uran va Neptun yo‘ldoshlarini o‘rganish uchun 50 ta maxsus teleskop ajratdi. Ularning har bir yo‘ldoshiga bittadan teleskop to‘g‘ri kelsa (27 + 14 = 41), nechta teleskop ortib qoladi?",
+      "options": [
+        "10 ta",
+        "9 ta (50 - 41 = 9)",
+        "8 ta",
+        "11 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Jami yo‘ldoshlar: 27 + 14 = 41 ta. Ortib qolgani: 50 - 41 = 9 ta teleskop."
+    },
+    {
+      "text": "Koinot kemasi Yer, Mars va Neptun sayyoralari atrofida uchib o‘tdi. Bu sayyoralarning jami yo‘ldoshlari soni nechta bo‘ladi? (1 + 2 + 14)",
+      "options": [
+        "16 ta",
+        "18 ta",
+        "17 ta (1 + 2 + 14 = 17)",
+        "15 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 + 2 = 3, 3 + 14 = 17 ta yo‘ldosh."
+    }
+  ]
+}

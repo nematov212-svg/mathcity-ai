@@ -1,0 +1,277 @@
+{
+  "bookNumber": 11,
+  "isReview": false,
+  "title": "Masalalar yechish (butun va qismlar)",
+  "emoji": "📮",
+  "shortDesc": "Butun va qismlarni topishga doir aralash amaliy masalalar.",
+  "intro": "Pochta jo‘natmalari va xonadonlar misolida butun yoki qismni aniqlash amallarini mustahkamlaymiz.",
+  "keyPoints": [
+    "Agar jami miqdor so‘ralsa: Qism + Qism = Butun.",
+    "Agar bir qism so‘ralsa: Butun − Ma’lum qism = Noma’lum qism.",
+    "Shartni to‘g‘ri tahlil qilish to‘g‘ri amalni tanlash kafolatidir."
+  ],
+  "miniExample": {
+    "emojis": "📮 37 ta jo‘natmadan 23 tasi Toshkentga, 14 tasi Samarqandga",
+    "text": "37 ta jo‘natmadan 23 tasi Toshkentga, qolgani Samarqandga. Qolgan jo‘natmalar: 37 - 23 = 14 ta."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "37 ta jo‘natmadan 23 tasi Toshkentga jo‘natildi. Samarqandga nechta jo‘natma qoldi?",
+      "options": [
+        "14 ta (37 - 23 = 14)",
+        "12 ta",
+        "15 ta",
+        "60 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "37 - 23 = 14 ta jo‘natma."
+    },
+    {
+      "text": "Uydagi 78 ta xonadondan 32 tasiga gazeta tarqatildi. Nechta xonadon qoldi?",
+      "options": [
+        "40 ta",
+        "46 ta (78 - 32 = 46)",
+        "48 ta",
+        "110 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "78 - 32 = 46 ta xonadon qoldi."
+    },
+    {
+      "text": "Xat tashuvchi ertalab 25 ta, tushdan keyin 34 ta maktub tarqatdi. Jami nechta maktub tarqatilgan?",
+      "options": [
+        "57 ta",
+        "60 ta",
+        "59 ta (25 + 34 = 59)",
+        "9 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "25 + 34 = 59 ta maktub."
+    }
+  ],
+  "test": [
+    {
+      "text": "Pochtachi sumkasida 37 ta xat bor edi, 23 tasini egalariga berdi. Sumkada nechta xat qoldi?",
+      "options": [
+        "14 ta (37 - 23 = 14)",
+        "12 ta",
+        "15 ta",
+        "60 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "37 - 23 = 14 ta xat."
+    },
+    {
+      "text": "Kop qavatli uydagi 78 xonadondan 32 tasiga gazeta berildi. Yana necha xonadonga berilishi kerak?",
+      "options": [
+        "40 ta",
+        "48 ta",
+        "46 ta (78 - 32 = 46)",
+        "110 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "78 - 32 = 46 ta xonadon."
+    },
+    {
+      "text": "24 ta posilka va 35 ta xat jami nechta jo‘natma bo‘ladi?",
+      "options": [
+        "58 ta",
+        "59 ta (24 + 35 = 59)",
+        "60 ta",
+        "11 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "24 + 35 = 59 ta jo‘natma."
+    },
+    {
+      "text": "Pochta bo‘limiga 50 ta gazeta keltirildi. 30 tasi tarqatilgach, nechta gazeta qoldi?",
+      "options": [
+        "15 ta",
+        "25 ta",
+        "80 ta",
+        "20 ta (50 - 30 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 - 30 = 20 ta gazeta."
+    },
+    {
+      "text": "Noma’lum qismni toping: □ + 21 = 55",
+      "options": [
+        "30",
+        "34 (55 - 21 = 34)",
+        "36",
+        "76"
+      ],
+      "correctIndex": 1,
+      "explanation": "55 - 21 = 34."
+    },
+    {
+      "text": "Xat tashuvchi velosipedda 1-kuni 12 km, 2-kuni 14 km yo‘l yurdi. U jami necha km yo‘l yurgan?",
+      "options": [
+        "26 km (12 + 14 = 26)",
+        "24 km",
+        "28 km",
+        "2 km"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + 14 = 26 km."
+    },
+    {
+      "text": "Pochtada 65 ta posilka bor edi. Ertalab 21 ta, tushdan keyin 24 ta posilka berildi. Nechta posilka qoldi?",
+      "options": [
+        "25 ta",
+        "15 ta",
+        "30 ta",
+        "20 ta (65 - 21 - 24 = 20)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Jami berilgan posilkalar: 21 + 24 = 45 ta. Qolgani: 65 - 45 = 20 ta."
+    },
+    {
+      "text": "Jadval: Toshkentga — 42 ta jo‘natma, Buxoroga — 33 ta jo‘natma. Jami jo‘natmalar soni nechta?",
+      "options": [
+        "70 ta",
+        "80 ta",
+        "75 ta (42 + 33 = 75)",
+        "9 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "42 + 33 = 75 ta jo‘natma."
+    },
+    {
+      "text": "Xat qutisida 48 ta maktub bor edi. Pochtachi undan bir nechtasini olgach, 15 ta maktub qoldi. Pochtachi nechta maktub olgan?",
+      "options": [
+        "30 ta",
+        "35 ta",
+        "33 ta (48 - 15 = 33)",
+        "63 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "48 - 15 = 33 ta maktub."
+    },
+    {
+      "text": "Sxema bo‘yicha ifoda tuzing: Butun = 86, I qism = 54, II qism = ?",
+      "options": [
+        "86 + 54 = 140",
+        "54 - 32 = 22",
+        "86 - 32 = 54",
+        "86 - 54 = 32"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ikkinchi qism: 86 - 54 = 32."
+    },
+    {
+      "text": "Yangi mahallada 94 ta uy bor. Shulardan 61 tasiga pochta qutisi o‘rnatildi. Yana nechta uyga o‘rnatish kerak?",
+      "options": [
+        "33 ta (94 - 61 = 33)",
+        "30 ta",
+        "35 ta",
+        "155 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "94 - 61 = 33 ta uy."
+    },
+    {
+      "text": "Pochta droni 26 ta xat va 23 ta dori qutisini manzilga yetkazdi. Dron jami nechta yuk yetkazgan?",
+      "options": [
+        "47 ta",
+        "49 ta (26 + 23 = 49)",
+        "50 ta",
+        "3 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "26 + 23 = 49 ta yuk."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 87 - □ = 44",
+      "options": [
+        "40",
+        "45",
+        "131",
+        "43 (87 - 44 = 43)"
+      ],
+      "correctIndex": 3,
+      "explanation": "87 - 44 = 43."
+    },
+    {
+      "text": "Jadval: Omborda bor — 76 ta xat, Tarqatildi — 42 ta xat. Omborda qolgan xatlar soni nechta?",
+      "options": [
+        "30 ta",
+        "34 ta (76 - 42 = 34)",
+        "36 ta",
+        "118 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "76 - 42 = 34 ta xat."
+    },
+    {
+      "text": "Pochta xodimi 80 ta bildirishnoma tarqatishi kerak edi. U 1-soatda 25 ta, 2-soatda 30 ta tarqatdi. Yana nechta bildirishnoma qoldi?",
+      "options": [
+        "20 ta",
+        "30 ta",
+        "25 ta (80 - 25 - 30 = 25)",
+        "35 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "80 - 55 = 25 ta bildirishnoma qoldi."
+    },
+    {
+      "text": "Sxema bo‘yicha: Butun = 98 jo‘natma. Toshkentga 40 ta, Samarqandga 30 ta, qolgani Buxoroga. Buxoroga nechta jo‘natma ketadi?",
+      "options": [
+        "28 ta (98 - 40 - 30 = 28)",
+        "25 ta",
+        "30 ta",
+        "38 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "98 - 70 = 28 ta jo‘natma."
+    },
+    {
+      "text": "Kuryer 56 ta manzilga buyurtma yetkazishi kerak. Ertalab 24 ta, tushda 20 ta buyurtma yetkazildi. Nechta buyurtma qoldi?",
+      "options": [
+        "12 ta (56 - 24 - 20 = 12)",
+        "10 ta",
+        "14 ta",
+        "16 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "56 - 44 = 12 ta buyurtma."
+    },
+    {
+      "text": "Xat qutisida 68 ta maktub bor edi. 1-pochta mashinasi 25 ta, 2-mashina 22 ta oldi. Qutida nechta maktub qoldi?",
+      "options": [
+        "20 ta",
+        "23 ta",
+        "25 ta",
+        "21 ta (68 - 25 - 22 = 21)"
+      ],
+      "correctIndex": 3,
+      "explanation": "68 - 47 = 21 ta maktub."
+    },
+    {
+      "text": "Pochtaga 1-kuni 35 ta, 2-kuni 24 ta posilka keldi. Xodimlar 40 ta posilkani egalariga berishdi. Nechta posilka qoldi?",
+      "options": [
+        "18 ta",
+        "19 ta (35 + 24 - 40 = 19)",
+        "20 ta",
+        "29 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Jami kelgan: 35 + 24 = 59 ta. Berilgach: 59 - 40 = 19 ta posilka."
+    },
+    {
+      "text": "Markaziy pochtada 90 ta gazeta bor edi. Ertalab 30 tasi, tushdan keyin 35 tasi tarqatildi. Nechta gazeta qoldi?",
+      "options": [
+        "20 ta",
+        "30 ta",
+        "25 ta (90 - 30 - 35 = 25)",
+        "35 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "90 - 65 = 25 ta gazeta qoldi."
+    }
+  ]
+}

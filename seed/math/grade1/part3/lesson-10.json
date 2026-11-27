@@ -1,0 +1,277 @@
+{
+  "bookNumber": 10,
+  "isReview": false,
+  "title": "Qismlarni topishga doir masalalar (2)",
+  "emoji": "📅",
+  "shortDesc": "Taqvim, jadvallar va necha birlik orttirish kerakligi masalalari.",
+  "intro": "Sonni kerakli miqdorgacha yetkazish uchun necha birlik orttirish kerakligini ayirish orqali aniqlaymiz: 17 − 13 = 4.",
+  "keyPoints": [
+    "13 dan 17 hosil bo‘lishi uchun 4 birlik orttirish kerak (17 − 13 = 4).",
+    "Taqvimdagi sanalar va kunlar farqini topishda ayirish ishlatiladi.",
+    "Jadvaldagi bo‘sh qator va ustunlar noma’lum qism formulasi bilan to‘ldiriladi."
+  ],
+  "miniExample": {
+    "emojis": "📅 13-kun ➔ 17-kunga yetish uchun: 17 - 13 = 4 kun kerak",
+    "text": "Bugun 13-sana bo‘lsa, 17-sanagacha yana necha kun bor? 17 - 13 = 4 kun."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "13 dan 17 hosil bo‘lishi uchun uni necha birlik orttirish kerak?",
+      "options": [
+        "4 birlik (17 - 13 = 4)",
+        "3 birlik",
+        "5 birlik",
+        "30 birlik"
+      ],
+      "correctIndex": 0,
+      "explanation": "17 - 13 = 4 birlik orttirish kerak."
+    },
+    {
+      "text": "48 - 18 ayirmani hisoblang:",
+      "options": [
+        "28",
+        "30",
+        "38",
+        "66"
+      ],
+      "correctIndex": 1,
+      "explanation": "48 - 18 = 30."
+    },
+    {
+      "text": "Taqvimda bugun 12-may, bayram esa 19-mayda. Bayramga necha kun qoldi?",
+      "options": [
+        "6 kun",
+        "8 kun",
+        "7 kun (19 - 12 = 7)",
+        "31 kun"
+      ],
+      "correctIndex": 2,
+      "explanation": "19 - 12 = 7 kun qoldi."
+    }
+  ],
+  "test": [
+    {
+      "text": "48 - 18 ifodaning qiymati nechaga teng?",
+      "options": [
+        "30",
+        "28",
+        "32",
+        "66"
+      ],
+      "correctIndex": 0,
+      "explanation": "48 - 18 = 30."
+    },
+    {
+      "text": "20 dan 28 hosil qilish uchun 20 ni necha birlik orttirish kerak?",
+      "options": [
+        "6 birlik",
+        "10 birlik",
+        "8 birlik (28 - 20 = 8)",
+        "48 birlik"
+      ],
+      "correctIndex": 2,
+      "explanation": "28 - 20 = 8 birlik."
+    },
+    {
+      "text": "Bugun oyning 5-kuni. Oyning 15-kunigacha necha kun bor?",
+      "options": [
+        "9 kun",
+        "10 kun (15 - 5 = 10)",
+        "11 kun",
+        "20 kun"
+      ],
+      "correctIndex": 1,
+      "explanation": "15 - 5 = 10 kun."
+    },
+    {
+      "text": "Jadvalda: Bor edi — 40 ta, Qoldi — 25 ta. Sarflandi — ?",
+      "options": [
+        "65 ta",
+        "10 ta",
+        "20 ta",
+        "15 ta (40 - 25 = 15)"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 - 25 = 15 ta sarflangan."
+    },
+    {
+      "text": "35 dan 40 hosil qilish uchun necha birlik qo‘shish lozim?",
+      "options": [
+        "4 birlik",
+        "5 birlik (40 - 35 = 5)",
+        "6 birlik",
+        "75 birlik"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 - 35 = 5 birlik."
+    },
+    {
+      "text": "59 - 29 ayirmaning qiymati necha bo‘ladi?",
+      "options": [
+        "30",
+        "20",
+        "40",
+        "88"
+      ],
+      "correctIndex": 0,
+      "explanation": "59 - 29 = 30."
+    },
+    {
+      "text": "34 sonini 56 gacha yetkazish uchun unga necha birlik qo‘shish lozim?",
+      "options": [
+        "20",
+        "24",
+        "90",
+        "22 (56 - 34 = 22)"
+      ],
+      "correctIndex": 3,
+      "explanation": "56 - 34 = 22 birlik."
+    },
+    {
+      "text": "Taqvimda haftaning dushanba kuni 7-sana bo‘lsa, yakshanba kuni (7 kundan keyin) nechanchi sana bo‘ladi?",
+      "options": [
+        "14-sana",
+        "12-sana",
+        "13-sana (7 + 6 = 13)",
+        "15-sana"
+      ],
+      "correctIndex": 2,
+      "explanation": "Dushanbadan yakshanbagacha 6 kun o‘tadi: 7 + 6 = 13-sana."
+    },
+    {
+      "text": "Jadval: Reja — 68 ta detal, Tayyorlandi — 45 ta detal. Yana nechta detal tayyorlanishi kerak?",
+      "options": [
+        "20 ta",
+        "25 ta",
+        "23 ta (68 - 45 = 23)",
+        "113 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "68 - 45 = 23 ta detal."
+    },
+    {
+      "text": "Samiraning 14 ta stikeri bor. Unga 25 ta stiker to‘plami bo‘lishi uchun yana nechta kerak?",
+      "options": [
+        "10 ta",
+        "12 ta",
+        "39 ta",
+        "11 ta (25 - 14 = 11)"
+      ],
+      "correctIndex": 3,
+      "explanation": "25 - 14 = 11 ta stiker."
+    },
+    {
+      "text": "78 - 38 ayirmaning qiymatini hisoblang:",
+      "options": [
+        "40",
+        "30",
+        "50",
+        "116"
+      ],
+      "correctIndex": 0,
+      "explanation": "78 - 38 = 40."
+    },
+    {
+      "text": "Shahzod 42 bet kitob o‘qidi. Kitob 75 betli bo‘lsa, u yana necha bet o‘qishi kerak?",
+      "options": [
+        "30 bet",
+        "33 bet (75 - 42 = 33)",
+        "35 bet",
+        "117 bet"
+      ],
+      "correctIndex": 1,
+      "explanation": "75 - 42 = 33 bet."
+    },
+    {
+      "text": "Taqvim bo‘yicha ta’til 20-iyunda boshlanadi. Bugun 8-iyun bo‘lsa, ta’tilgacha necha kun qoldi?",
+      "options": [
+        "10 kun",
+        "14 kun",
+        "28 kun",
+        "12 kun (20 - 8 = 12)"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 - 8 = 12 kun."
+    },
+    {
+      "text": "Jadval: Hammasi — 54 dona, 1-qutida — 31 dona. 2-qutida nechta?",
+      "options": [
+        "20 dona",
+        "23 dona (54 - 31 = 23)",
+        "25 dona",
+        "85 dona"
+      ],
+      "correctIndex": 1,
+      "explanation": "54 - 31 = 23 dona."
+    },
+    {
+      "text": "Kamron 45 sonini o‘yladi. Unga necha qo‘shilsa, 89 hosil bo‘ladi?",
+      "options": [
+        "40",
+        "46",
+        "44 (89 - 45 = 44)",
+        "134"
+      ],
+      "correctIndex": 2,
+      "explanation": "89 - 45 = 44."
+    },
+    {
+      "text": "Avtobus jadvaliga ko‘ra, poyezd yetib kelishiga 48 daqiqa qoldi. 18 daqiqa o‘tgach, poyezdgacha necha daqiqa qoladi?",
+      "options": [
+        "30 daqiqa (48 - 18 = 30)",
+        "25 daqiqa",
+        "35 daqiqa",
+        "66 daqiqa"
+      ],
+      "correctIndex": 0,
+      "explanation": "48 - 18 = 30 daqiqa."
+    },
+    {
+      "text": "Taqvimda 1-iyul chorshanba bo‘lsa, 8-iyul haftaning qaysi kuniga to‘g‘ri keladi?",
+      "options": [
+        "Chorshanba (chunki 7 kundan so‘ng yana shu kun keladi)",
+        "Payshanba",
+        "Seshanba",
+        "Juma"
+      ],
+      "correctIndex": 0,
+      "explanation": "Haftada 7 kun bor, shuning uchun 1 + 7 = 8-sana yana chorshanbaga to‘g‘ri keladi."
+    },
+    {
+      "text": "Jadval bo‘yicha: Uchala ustaxona jami 95 ta buyum yasashi kerak. 1-ustaxona 30 ta, 2-ustaxona 40 ta yasadi. 3-ustaxona nechta yasashi kerak?",
+      "options": [
+        "20 ta",
+        "30 ta",
+        "35 ta",
+        "25 ta (95 - 30 - 40 = 25)"
+      ],
+      "correctIndex": 3,
+      "explanation": "95 - 70 = 25 ta buyum."
+    },
+    {
+      "text": "Botir har kuni 10 betdan kitob o‘qiydi. Kitob 50 bet bo‘lsa, Botir 2 kundan keyin yana necha bet o‘qishi kerak?",
+      "options": [
+        "40 bet",
+        "30 bet (50 - 20 = 30)",
+        "20 bet",
+        "35 bet"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 kunda 20 bet o‘qiydi: 50 - 20 = 30 bet qoladi."
+    },
+    {
+      "text": "Taqvimda ta’til 1-iyuldan 25-iyulgacha davom etadi. Alisher ta’tilning dastlabki 12 kunini qishloqda o‘tkazdi. Ta’tilning necha kuni qoldi?",
+      "options": [
+        "12 kun",
+        "14 kun",
+        "13 kun (25 - 12 = 13)",
+        "15 kun"
+      ],
+      "correctIndex": 2,
+      "explanation": "25 - 12 = 13 kun qoldi."
+    }
+  ]
+}

@@ -315,10 +315,15 @@ class ApiClient {
           if (data is Map && data['error'] is String) {
             return data['error'] as String;
           }
-          if (status == 401)
+          if (status == 401) {
             return 'Sessiya muddati tugadi. Iltimos, qaytadan kiring.';
-          if (status == 403) return 'Ushbu amalni bajarishga ruxsat yo‘q.';
-          if (status == 404) return 'So‘ralgan ma’lumot topilmadi.';
+          }
+          if (status == 403) {
+            return 'Ushbu amalni bajarishga ruxsat yo‘q.';
+          }
+          if (status == 404) {
+            return 'So‘ralgan ma’lumot topilmadi.';
+          }
           if (status == 502 || status == 503 || status == 504) {
             final reqPath = error.requestOptions.path;
             if (reqPath.contains('payment') ||

@@ -295,8 +295,9 @@ class StudentNotifier extends StateNotifier<StudentState> {
     _heartbeatTimer?.cancel();
     _heartbeatTimer =
         Timer.periodic(const Duration(seconds: 15), (timer) async {
-      if (DateTime.now().difference(_lastInteractionTime).inSeconds > 60)
+      if (DateTime.now().difference(_lastInteractionTime).inSeconds > 60) {
         return;
+      }
 
       final token =
           ApiClient().authToken ?? await StorageService.getAuthToken();

@@ -24,6 +24,7 @@ class LessonModel {
   final String? icon;
   final String? accentColor;
   final bool isLocked;
+  final bool isReview;
 
   // Grade 1 & Curriculum additions
   final String? emoji;
@@ -69,6 +70,7 @@ class LessonModel {
     this.icon,
     this.accentColor,
     this.isLocked = false,
+    this.isReview = false,
     this.emoji,
     this.intro,
     this.keyPoints = const [],
@@ -157,6 +159,7 @@ class LessonModel {
       icon: json['icon'] ?? emojiVal,
       accentColor: json['accentColor'],
       isLocked: json['isLocked'] ?? false,
+      isReview: json['isReview'] ?? false,
       emoji: emojiVal,
       intro: json['intro'] ?? json['description'],
       keyPoints: (json['keyPoints'] as List<dynamic>?)

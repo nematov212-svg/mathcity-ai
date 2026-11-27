@@ -1,0 +1,277 @@
+{
+  "bookNumber": 40,
+  "isReview": false,
+  "title": "Kattaliklar va ularning xossalari",
+  "emoji": "🎂",
+  "shortDesc": "Kattaliklarni qo‘shishda o‘rin almashtirish xossasi va xonalar bo‘yicha yoyish.",
+  "intro": "Qo‘shiluvchilarning o‘rni almashgani bilan yig‘indi o‘zgarmaydi: 30 l + 40 l = 40 l + 30 l = 70 l.",
+  "keyPoints": [
+    "Kattaliklarda ham qo‘shishning o‘rin almashtirish xossasi o‘rinli: a + b = b + a.",
+    "Kattaliklarni xona qo‘shiluvchilari yig‘indisi ko‘rinishida yozish: 24 kg = 20 kg + 4 kg.",
+    "Hisoblashda qulay tartibni tanlash vaqтни tejaydi va hisoblashni osonlashtiradi."
+  ],
+  "miniExample": {
+    "emojis": "🎂 30 l + 40 l = 40 l + 30 l = 70 l",
+    "text": "30 l va 40 l yig‘indisi 70 litrga teng. O‘rni almashsa ham natija bir xil: 70 litr."
+  },
+  "xpReward": 100,
+  "coinReward": 10,
+  "estMinutes": 8,
+  "practice": [
+    {
+      "text": "30 l + 40 l yig‘indisi 40 l + 30 l yig‘indisiga tengmi?",
+      "options": [
+        "Ha, ikkalasi ham 70 l ga teng",
+        "Yo‘q, teng emas",
+        "Birinchisi katta",
+        "Ikkinchisi katta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shishning o‘rin almashtirish xossasiga ko‘ra yig‘indi o‘zgarmaydi."
+    },
+    {
+      "text": "24 kg ni xona birliklari yig‘indisiga ajrating:",
+      "options": [
+        "10 kg + 14 kg",
+        "20 kg + 4 kg",
+        "22 kg + 2 kg",
+        "20 kg + 14 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "24 soni 2 ta o‘nlik (20) va 4 ta birlikdan (4) iborat."
+    },
+    {
+      "text": "35 sm = 30 sm + □ sm. Bo‘sh katakdagi sonni toping:",
+      "options": [
+        "3",
+        "15",
+        "5",
+        "30"
+      ],
+      "correctIndex": 2,
+      "explanation": "35 sm = 30 sm + 5 sm."
+    }
+  ],
+  "test": [
+    {
+      "text": "30 l + 40 l nechaga teng?",
+      "options": [
+        "70 l",
+        "60 l",
+        "80 l",
+        "50 l"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 + 40 = 70 l."
+    },
+    {
+      "text": "40 l + 30 l nechaga teng?",
+      "options": [
+        "60 l",
+        "80 l",
+        "70 l",
+        "50 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 + 30 = 70 l."
+    },
+    {
+      "text": "Qo‘shiluvchilarning o‘rni almashsa yig‘indi qanday o‘zgaradi?",
+      "options": [
+        "Kattalashadi",
+        "O‘zgarmaydi",
+        "Kichrayadi",
+        "Nolga teng bo‘ladi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qo‘shishning o‘rin almashtirish qonuni: a + b = b + a."
+    },
+    {
+      "text": "24 kg sonini xonalar bo‘yicha to‘g‘ri yoyilmasini ko‘rsating:",
+      "options": [
+        "2 kg + 4 kg",
+        "20 kg + 40 kg",
+        "24 kg + 0 kg",
+        "20 kg + 4 kg"
+      ],
+      "correctIndex": 3,
+      "explanation": "24 kg = 20 kg + 4 kg."
+    },
+    {
+      "text": "56 sm sonini xonalar bo‘yicha yoying:",
+      "options": [
+        "5 sm + 6 sm",
+        "50 sm + 6 sm",
+        "50 sm + 16 sm",
+        "40 sm + 6 sm"
+      ],
+      "correctIndex": 1,
+      "explanation": "56 sm = 50 sm + 6 sm."
+    },
+    {
+      "text": "68 l sonini xonalar bo‘yicha to‘g‘ri yozing:",
+      "options": [
+        "60 l + 8 l",
+        "6 l + 8 l",
+        "60 l + 18 l",
+        "50 l + 8 l"
+      ],
+      "correctIndex": 0,
+      "explanation": "68 l = 60 l + 8 l."
+    },
+    {
+      "text": "12 kg + 25 kg va 25 kg + 12 kg qiymatlarini taqqoslang:",
+      "options": [
+        "Birinchisi katta",
+        "Ikkinchisi katta",
+        "Taqqoslab bo‘lmaydi",
+        "Teng (ikkalasi ham 37 kg)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Qo‘shiluvchilar o‘rni almashsa ham natija bir xil: 37 kg."
+    },
+    {
+      "text": "73 kg = 70 kg + □ kg. Bo‘sh katakdagi sonni toping:",
+      "options": [
+        "7",
+        "13",
+        "3",
+        "30"
+      ],
+      "correctIndex": 2,
+      "explanation": "73 = 70 + 3."
+    },
+    {
+      "text": "85 dm = □ dm + 5 dm. Bo‘sh katakdagi sonni toping:",
+      "options": [
+        "8",
+        "85",
+        "80",
+        "70"
+      ],
+      "correctIndex": 2,
+      "explanation": "85 = 80 + 5."
+    },
+    {
+      "text": "47 l = 40 l + □ l. Bo‘sh katakdagi sonni toping:",
+      "options": [
+        "4",
+        "17",
+        "47",
+        "7"
+      ],
+      "correctIndex": 3,
+      "explanation": "47 = 40 + 7."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 15 l + 40 l + 5 l",
+      "options": [
+        "60 l (15 + 5 = 20; 20 + 40 = 60)",
+        "55 l",
+        "65 l",
+        "50 l"
+      ],
+      "correctIndex": 0,
+      "explanation": "15 + 5 = 20 l, 20 + 40 = 60 l."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 23 kg + 50 kg + 7 kg",
+      "options": [
+        "75 kg",
+        "80 kg (23 + 7 = 30; 30 + 50 = 80)",
+        "85 kg",
+        "70 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "23 + 7 = 30 kg, 30 + 50 = 80 kg."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 34 sm + 20 sm + 6 sm",
+      "options": [
+        "54 sm",
+        "64 sm",
+        "50 sm",
+        "60 sm (34 + 6 = 40; 40 + 20 = 60)"
+      ],
+      "correctIndex": 3,
+      "explanation": "34 + 6 = 40 sm, 40 + 20 = 60 sm."
+    },
+    {
+      "text": "Tenglik to‘g‘rimi: 18 kg + 4 kg = 4 kg + 18 kg?",
+      "options": [
+        "Noto‘g‘ri",
+        "To‘g‘ri (22 kg = 22 kg)",
+        "Birinchisi katta",
+        "Ikkinchisi katta"
+      ],
+      "correctIndex": 1,
+      "explanation": "O‘rin almashtirish xossasiga ko‘ra har doim teng."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 14 l + 25 l + 6 l + 5 l",
+      "options": [
+        "45 l",
+        "55 l",
+        "50 l (14 + 6 = 20, 25 + 5 = 30; 20 + 30 = 50)",
+        "40 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "(14 + 6) + (25 + 5) = 20 + 30 = 50 l."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 32 kg + 18 kg + 25 kg",
+      "options": [
+        "75 kg (32 + 18 = 50; 50 + 25 = 75)",
+        "70 kg",
+        "80 kg",
+        "65 kg"
+      ],
+      "correctIndex": 0,
+      "explanation": "32 + 18 = 50 kg, 50 + 25 = 75 kg."
+    },
+    {
+      "text": "94 sm = 90 sm + □ sm. Bo‘sh katakdagi son nechaga teng?",
+      "options": [
+        "4",
+        "9",
+        "14",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "94 = 90 + 4."
+    },
+    {
+      "text": "Omborda 23 qop bug‘doy va 17 qop arpa bor edi. Yana 40 qop makkajo‘xori keltirildi. Jami necha qop don bo‘ldi?",
+      "options": [
+        "70 qop",
+        "85 qop",
+        "75 qop",
+        "80 qop (23 + 17 = 40; 40 + 40 = 80)"
+      ],
+      "correctIndex": 3,
+      "explanation": "23 + 17 = 40, 40 + 40 = 80 qop."
+    },
+    {
+      "text": "Do‘konda ertalab 16 kg konfet, tushda 25 kg va kechqurun 14 kg sotildi. Kun davomida qulay usulda jami necha kg konfet sotilganini hisoblang:",
+      "options": [
+        "50 kg",
+        "55 kg (16 + 14 = 30; 30 + 25 = 55)",
+        "60 kg",
+        "45 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 + 14 = 30 kg, 30 + 25 = 55 kg."
+    },
+    {
+      "text": "Uchta idishda 13 l, 27 l va 35 l sharbat bor. Sharbatlarni bitta bochkaga quysak, unda necha litr sharbat bo‘ladi?",
+      "options": [
+        "70 l",
+        "80 l",
+        "75 l (13 + 27 = 40; 40 + 35 = 75)",
+        "65 l"
+      ],
+      "correctIndex": 2,
+      "explanation": "13 + 27 = 40 l, 40 + 35 = 75 l."
+    }
+  ]
+}

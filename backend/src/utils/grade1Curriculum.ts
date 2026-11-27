@@ -31,6 +31,7 @@ export interface CurriculumLesson {
   moduleId: string;
   order: number;
   bookNumber: number;
+  isReview?: boolean;
   title: string;
   chapterTitle: string;
   shortDesc: string;
@@ -65,6 +66,15 @@ export const allCurriculumModules: CurriculumModule[] = [
     part: 2,
     title: 'Matematika · 2-qism',
     orderIndex: 2,
+    comingSoon: false,
+  },
+  {
+    id: 'module-g1-p3',
+    grade: 1,
+    subject: 'Matematika',
+    part: 3,
+    title: 'Matematika · 3-qism',
+    orderIndex: 3,
     comingSoon: false,
   },
   // 2-11 sinflar
@@ -102,12 +112,13 @@ function getChapterTitle(bookNumber: number): string {
   return 'VI bob. Ikki xonali sonlar ustida amallar va ifodalar';
 }
 
-function resolveSeedDir(part: 1 | 2): string {
+function resolveSeedDir(part: 1 | 2 | 3): string {
   const candidates = [
     path.resolve(process.cwd(), `seed/math/grade1/part${part}`),
     path.resolve(process.cwd(), `backend/seed/math/grade1/part${part}`),
     path.resolve(process.cwd(), `../seed/math/grade1/part${part}`),
     path.resolve(process.cwd(), `../../seed/math/grade1/part${part}`),
+    path.resolve('/Users/mirzobek/Downloads/mathcity-backend/seed/math/grade1', `part${part}`),
   ];
   for (const c of candidates) {
     if (fs.existsSync(c)) {
@@ -175,6 +186,7 @@ function loadPartLessons(part: 1 | 2, startNum: number, endNum: number): Curricu
         moduleId,
         order,
         bookNumber: bookNum,
+        isReview: false,
         title: raw.title,
         chapterTitle: getChapterTitle(bookNum),
         shortDesc: raw.shortDesc || '',
@@ -198,6 +210,145 @@ function loadPartLessons(part: 1 | 2, startNum: number, endNum: number): Curricu
   return lessons;
 }
 
+function getPart3ChapterTitle(bookNumber: number): string {
+  if (bookNumber <= 11) return 'I bob. Masala va uning yechilishi';
+  if (bookNumber === 12) return 'I bob. 1-nazorat ishi';
+  if (bookNumber <= 26) return 'II bob. Orttirish, kamaytirish va taqqoslash';
+  if (bookNumber === 27) return 'II bob. 2-nazorat ishi';
+  if (bookNumber <= 42) return 'III bob. Kattaliklar (uzunlik, massa, hajm)';
+  return 'III bob. 3-nazorat ishi';
+}
+
+export const part3Structure = [
+  // I bob: Masala va uning yechilishi (1-11) + Nazorat (12)
+  { bookNumber: 1, isReview: false, order: 1 },
+  { bookNumber: 2, isReview: false, order: 2 },
+  { bookNumber: 3, isReview: false, order: 3 },
+  { bookNumber: 4, isReview: false, order: 4 },
+  { bookNumber: 5, isReview: false, order: 5 },
+  { bookNumber: 6, isReview: false, order: 6 },
+  { bookNumber: 7, isReview: false, order: 7 },
+  { bookNumber: 8, isReview: false, order: 8 },
+  { bookNumber: 9, isReview: false, order: 9 },
+  { bookNumber: 10, isReview: false, order: 10 },
+  { bookNumber: 11, isReview: false, order: 11 },
+  { bookNumber: 12, isReview: true, order: 12 },
+  // II bob: Orttirish, kamaytirish va taqqoslash (14-26) + Nazorat (27)
+  { bookNumber: 14, isReview: false, order: 13 },
+  { bookNumber: 15, isReview: false, order: 14 },
+  { bookNumber: 16, isReview: false, order: 15 },
+  { bookNumber: 17, isReview: false, order: 16 },
+  { bookNumber: 18, isReview: false, order: 17 },
+  { bookNumber: 19, isReview: false, order: 18 },
+  { bookNumber: 20, isReview: false, order: 19 },
+  { bookNumber: 21, isReview: false, order: 20 },
+  { bookNumber: 22, isReview: false, order: 21 },
+  { bookNumber: 23, isReview: false, order: 22 },
+  { bookNumber: 24, isReview: false, order: 23 },
+  { bookNumber: 25, isReview: false, order: 24 },
+  { bookNumber: 26, isReview: false, order: 25 },
+  { bookNumber: 27, isReview: true, order: 26 },
+  // III bob: Kattaliklar (uzunlik, massa, hajm) (30-42) + Nazorat (43)
+  { bookNumber: 30, isReview: false, order: 27 },
+  { bookNumber: 31, isReview: false, order: 28 },
+  { bookNumber: 32, isReview: false, order: 29 },
+  { bookNumber: 33, isReview: false, order: 30 },
+  { bookNumber: 34, isReview: false, order: 31 },
+  { bookNumber: 35, isReview: false, order: 32 },
+  { bookNumber: 36, isReview: false, order: 33 },
+  { bookNumber: 37, isReview: false, order: 34 },
+  { bookNumber: 38, isReview: false, order: 35 },
+  { bookNumber: 39, isReview: false, order: 36 },
+  { bookNumber: 40, isReview: false, order: 37 },
+  { bookNumber: 41, isReview: false, order: 38 },
+  { bookNumber: 42, isReview: false, order: 39 },
+  { bookNumber: 43, isReview: true, order: 40 },
+];
+
+function loadPart3Lessons(): CurriculumLesson[] {
+  const seedDir = resolveSeedDir(3);
+  const moduleId = 'module-g1-p3';
+  const lessons: CurriculumLesson[] = [];
+
+  for (const entry of part3Structure) {
+    const pad = entry.bookNumber < 10 ? `0${entry.bookNumber}` : `${entry.bookNumber}`;
+    const filename = entry.isReview ? `review-${entry.bookNumber}.json` : `lesson-${pad}.json`;
+    const filePath = path.join(seedDir, filename);
+
+    if (!fs.existsSync(filePath)) {
+      continue;
+    }
+
+    try {
+      const raw = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      const lessonId = `lesson-g1-p3-${pad}`;
+
+      const practiceQuestions: CurriculumQuestion[] = (raw.practice || []).map((q: any, idx: number) => ({
+        id: `q-${lessonId}-p${idx + 1}`,
+        lessonId,
+        order: idx + 1,
+        step: 4,
+        kind: 'practice' as const,
+        text: q.text,
+        prompt: q.text,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation || '',
+      }));
+
+      const testQuestions: CurriculumQuestion[] = (raw.test || []).map((q: any, idx: number) => ({
+        id: `q-${lessonId}-t${idx + 1}`,
+        lessonId,
+        order: idx + 1,
+        step: 5,
+        kind: 'test' as const,
+        text: q.text,
+        prompt: q.text,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation || '',
+      }));
+
+      const miniExampleStr = typeof raw.miniExample === 'string'
+        ? raw.miniExample
+        : raw.miniExample?.text
+          ? `${raw.miniExample.emojis ? raw.miniExample.emojis + '\n' : ''}${raw.miniExample.text}`
+          : '';
+
+      lessons.push({
+        id: lessonId,
+        moduleId,
+        order: entry.order,
+        bookNumber: entry.bookNumber,
+        isReview: entry.isReview,
+        title: raw.title,
+        chapterTitle: getPart3ChapterTitle(entry.bookNumber),
+        shortDesc: raw.shortDesc || '',
+        emoji: raw.emoji || (entry.isReview ? '📝' : '📘'),
+        intro: raw.intro || '',
+        keyPoints: raw.keyPoints || [],
+        miniExample: miniExampleStr,
+        xpReward: raw.xpReward || (entry.isReview ? 120 : 100),
+        coinReward: raw.coinReward || 12,
+        estMinutes: raw.estMinutes || 8,
+        questionCount: testQuestions.length || 20,
+        practice: practiceQuestions,
+        test: testQuestions,
+        questions: testQuestions,
+      });
+    } catch (e: any) {
+      console.error(`[grade1Curriculum] Error parsing ${filename}:`, e);
+    }
+  }
+
+  return lessons;
+}
+
 export const grade1Part1Lessons: CurriculumLesson[] = loadPartLessons(1, 1, 41);
 export const grade1Part2Lessons: CurriculumLesson[] = loadPartLessons(2, 42, 74);
-export const allGrade1Lessons: CurriculumLesson[] = [...grade1Part1Lessons, ...grade1Part2Lessons];
+export const grade1Part3Lessons: CurriculumLesson[] = loadPart3Lessons();
+export const allGrade1Lessons: CurriculumLesson[] = [
+  ...grade1Part1Lessons,
+  ...grade1Part2Lessons,
+  ...grade1Part3Lessons,
+];
