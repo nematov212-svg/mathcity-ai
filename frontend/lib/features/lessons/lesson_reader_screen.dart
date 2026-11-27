@@ -24,7 +24,8 @@ class LessonReaderScreen extends ConsumerStatefulWidget {
   ConsumerState<LessonReaderScreen> createState() => _LessonReaderScreenState();
 }
 
-class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
+class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen>
+    with SingleTickerProviderStateMixin {
   LessonModel? _lesson;
   bool _isLoading = true;
   String? _errorMessage;
@@ -38,6 +39,10 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
   bool _quizSubmitted = false;
   bool _isSavingProgress = false;
 
+  late AnimationController _animationController;
+  late Animation<double> _floatAnimation;
+  late Animation<double> _pulseAnimation;
+
   final List<String> _stepTitles = [
     'Kirish',
     'Tushuntirish',
@@ -50,13 +55,49 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
   void initState() {
     super.initState();
     PromoDialogController.instance.onLessonStarted();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+
+    _floatAnimation = Tween<double>(begin: -8, end: 8).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.18).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
     _fetchLesson();
   }
 
   @override
   void dispose() {
+    _animationController.dispose();
     PromoDialogController.instance.onLessonEnded();
     super.dispose();
+  }
+
+  Future<void> _recordStep(int step) async {
+    if (_lesson == null) return;
+    try {
+      final res = await ApiClient().dio.post(
+        '/lessons/${_lesson!.id}/step',
+        data: {'step': step},
+      );
+      if (res.data != null && res.data['success'] == true) {
+        final data = res.data['data'];
+        final xpAwarded = data['xpAwarded'] as int? ?? 0;
+        final coinsAwarded = data['coinsAwarded'] as int? ?? 0;
+        if (xpAwarded > 0) {
+          ref.read(studentProvider.notifier).updateXP(xpAwarded);
+        }
+        if (coinsAwarded > 0) {
+          ref.read(studentProvider.notifier).updateCoins(coinsAwarded);
+        }
+      }
+    } catch (_) {}
   }
 
   void _fetchLesson() async {
@@ -88,9 +129,19 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
         final data = res.data['data'];
         final lesson = LessonModel.fromJson(data);
 
-        // Extract quiz questions from sections if available
+        // Extract quiz questions from lesson.questions or sections
         final questions = <Map<String, dynamic>>[];
-        if (data['sections'] != null && (data['sections'] as List).isNotEmpty) {
+        if (lesson.questions.isNotEmpty) {
+          for (final q in lesson.questions) {
+            questions.add({
+              'id': q.id,
+              'prompt': q.prompt,
+              'options': q.options.isNotEmpty ? q.options : ['A', 'B', 'C', 'D'],
+              'correctAnswer': q.correctAnswer,
+              'explanation': q.explanation,
+            });
+          }
+        } else if (data['sections'] != null && (data['sections'] as List).isNotEmpty) {
           for (final sec in data['sections']) {
             if (sec['questions'] != null &&
                 (sec['questions'] as List).isNotEmpty) {
@@ -140,19 +191,39 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
   }
 
   void _loadFallbackLesson() {
+    final isG1 = widget.lessonId.contains('g1') || widget.lessonId.contains('k1');
     final lesson = LessonModel(
       id: widget.lessonId,
-      courseId: 'course-g4-math',
-      grade: 4,
+      courseId: isG1 ? 'course-g1' : 'course-g4-math',
+      grade: isG1 ? 1 : 4,
       mode: 'KIDS',
-      chapterTitle: 'Kasrlar va Bo‘laklar',
-      title: 'Oddiy kasrlar: Butunning bo‘laklari',
-      topicKey: 'fractions_intro',
-      description:
-          'Kasr nima? Surat va maxraj ma’nosi hamda qismlarga ajratish.',
-      formulaLatex: r'\frac{1}{4} = \text{to‘rtdan bir}',
-      contentMd:
-          'Kasr butunning bir yoki bir nechta teng bo‘laklarini ifodalaydi. Yuqoridagi son surat, pastdagi son esa maxraj deb ataladi.',
+      chapterTitle: isG1 ? 'Narsalar va ularning xossalari' : 'Kasrlar va Bo‘laklar',
+      title: isG1 ? 'Narsalarning xossalari' : 'Oddiy kasrlar: Butunning bo‘laklari',
+      topicKey: isG1 ? 'objects_properties' : 'fractions_intro',
+      description: isG1
+          ? 'Shakl, rang va o‘lcham bo‘yicha taqqoslash va katak daftarga chizish.'
+          : 'Kasr nima? Surat va maxraj ma’nosi hamda qismlarga ajratish.',
+      formulaLatex: isG1 ? null : r'\frac{1}{4} = \text{to‘rtdan bir}',
+      contentMd: isG1
+          ? 'Narsalar o‘z shakli, rangi va o‘lchami bilan bir-biridan farq qiladi.'
+          : 'Kasr butunning bir yoki bir nechta teng bo‘laklarini ifodalaydi. Yuqoridagi son surat, pastdagi son esa maxraj deb ataladi.',
+      emoji: isG1 ? '🔷' : '½',
+      intro: isG1
+          ? 'Narsalar o‘z shakli, rangi va o‘lchami bilan bir-biridan farq qiladi.'
+          : 'Kasr butunning bir yoki bir nechta teng bo‘laklarini ifodalaydi.',
+      keyPoints: isG1
+          ? [
+              'Narsalarni shakli, rangi va o‘lchamiga qarab guruhlaymiz.',
+              'Shakllarni taqqoslab, o‘xshash va farqli tomonlarini topamiz.',
+              'Katak daftarda shakllarni chizish qo‘lni mashq qildiradi.',
+            ]
+          : [
+              'Kasr butunning teng bo‘laklarini ifodalaydi.',
+              'Surat tepada, maxraj pastda bo‘ladi.',
+            ],
+      miniExample: isG1
+          ? '🔴 (doira) va 🟦 (kvadrat) — har xil shakllar!'
+          : '1/4 — to‘rtdan bir qism',
       rewardCoins: 12,
       rewardXP: 100,
       orderIndex: 1,
@@ -478,14 +549,19 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '${_currentStep + 1}-qadam: ${_stepTitles[_currentStep]}',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                  color: colors.primary,
+              Expanded(
+                child: Text(
+                  '${_currentStep + 1}-qadam: ${_stepTitles[_currentStep]}',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF6C3CE0),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              const SizedBox(width: 8),
               Text(
                 '${_currentStep + 1} / ${_stepTitles.length}',
                 style: TextStyle(
@@ -496,15 +572,68 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: LinearProgressIndicator(
-              value: (_currentStep + 1) / _stepTitles.length,
-              backgroundColor: colors.border,
-              valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
-              minHeight: 6,
-            ),
+          const SizedBox(height: 10),
+          // 5 Circular Progress Dots with connecting lines
+          Row(
+            children: [
+              for (int i = 0; i < _stepTitles.length; i++) ...[
+                // Dot
+                AnimatedBuilder(
+                  animation: _pulseAnimation,
+                  builder: (context, child) {
+                    final isPassed = i < _currentStep;
+                    final isCurrent = i == _currentStep;
+
+                    return Transform.scale(
+                      scale: isCurrent ? _pulseAnimation.value : 1.0,
+                      child: Container(
+                        width: isCurrent ? 18 : 12,
+                        height: isCurrent ? 18 : 12,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: isCurrent || isPassed
+                              ? const LinearGradient(
+                                  colors: [Color(0xFF6C3CE0), Color(0xFF7C4DFF)],
+                                )
+                              : null,
+                          color: isCurrent || isPassed ? null : colors.border,
+                          boxShadow: isCurrent
+                              ? [
+                                  BoxShadow(
+                                    color: const Color(0xFF7C4DFF).withOpacity(0.5),
+                                    blurRadius: 8,
+                                    spreadRadius: 1,
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: isPassed
+                            ? const Icon(
+                                Icons.check,
+                                size: 8,
+                                color: Colors.white,
+                              )
+                            : null,
+                      ),
+                    );
+                  },
+                ),
+                // Connector line
+                if (i < _stepTitles.length - 1)
+                  Expanded(
+                    child: Container(
+                      height: 3,
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        color: i < _currentStep
+                            ? const Color(0xFF7C4DFF)
+                            : colors.border,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+              ],
+            ],
           ),
         ],
       ),
@@ -529,88 +658,322 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
   }
 
   Widget _buildStepKirish(AppThemeColors colors, LessonModel lesson) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final emoji = lesson.emoji ?? lesson.icon ?? '🔷';
+    final keyPoints = lesson.keyPoints.isNotEmpty
+        ? lesson.keyPoints
+        : [
+            'Mavzuni diqqat bilan o‘rganamiz.',
+            'Misollarni qadam-baqadam ko‘rib chiqamiz.',
+            'Mashqlarni mustaqil bajarib ko‘ramiz.'
+          ];
+    final miniExample = lesson.miniExample ?? '🔴 (doira) va 🟦 (kvadrat) — har xil shakllar!';
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Grade & Chapter Pill
+        // 1. Hero Card (~220px, radius 28, gradient #7C4DFF -> #5B2EE6)
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          constraints: const BoxConstraints(minHeight: 220),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
           decoration: BoxDecoration(
-            color: colors.primary.withOpacity(0.12),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(
-            '${lesson.grade}-SINF • ${(lesson.chapterTitle ?? 'MATEMATIKA').toUpperCase()}',
-            style: TextStyle(
-              color: colors.primary,
-              fontWeight: FontWeight.w800,
-              fontSize: 12,
+            gradient: const LinearGradient(
+              colors: [Color(0xFF7C4DFF), Color(0xFF5B2EE6)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+            borderRadius: BorderRadius.circular(28),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF5B2EE6).withOpacity(0.35),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Chapter pill
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '${lesson.grade}-SINF • ${(lesson.chapterTitle ?? 'MATEMATIKA').toUpperCase()}',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Floating 2s Animated Emoji
+              AnimatedBuilder(
+                animation: _floatAnimation,
+                builder: (context, child) {
+                  return Transform.translate(
+                    offset: Offset(0, _floatAnimation.value),
+                    child: child,
+                  );
+                },
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.18),
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    emoji,
+                    style: const TextStyle(fontSize: 48),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Title
+              Text(
+                lesson.title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  height: 1.25,
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 18),
 
-        // Title
-        Text(
-          lesson.title,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w900,
-            color: colors.ink,
-            height: 1.3,
-          ),
-        ),
-        const SizedBox(height: 8),
-
-        // Description
-        Text(
-          lesson.description,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: colors.muted,
-            height: 1.45,
-          ),
-        ),
-        const SizedBox(height: 20),
-
-        // Visual Illustration Card
-        _buildVisualDiagram(lesson),
-        const SizedBox(height: 20),
-
-        // Clean Markdown Section
+        // 2. "Bugun nimani o‘rganamiz?" Card
         Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: colors.card,
+            color: isDark ? const Color(0xFF160E36) : Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: colors.border),
+            border: Border.all(color: const Color(0xFF6C3CE0).withOpacity(0.2)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Icon(Icons.explore_rounded, color: colors.primary, size: 22),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF6C3CE0).withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.track_changes_rounded,
+                        color: Color(0xFF6C3CE0), size: 18),
+                  ),
                   const SizedBox(width: 8),
-                  Text(
-                    'Dars maqsadi',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: colors.ink,
+                  const Expanded(
+                    child: Text(
+                      'Bugun nimani o‘rganamiz?',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF6C3CE0),
+                      ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
-              MathMarkdownView(
-                content: lesson.contentMd ??
-                    'Ushbu mavzuda siz yangi matematik tushunchalar bilan tanishasiz. Keyingi bosqichlarda formulalar va ishlangan misollarni o‘rganamiz.',
+              Text(
+                lesson.intro ?? lesson.description,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w800,
+                  color: colors.ink,
+                  height: 1.45,
+                ),
               ),
             ],
           ),
         ),
+        const SizedBox(height: 14),
+
+        // 3. "Esda tuting" Block (#FFF6D6)
+        Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF282010) : const Color(0xFFFFF6D6),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isDark ? const Color(0xFF6B5310) : const Color(0xFFFFE082),
+              width: 1.2,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: const [
+                  Text('💡', style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Esda tuting!',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFFB45309),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              ...keyPoints.map((point) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '• ',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFD97706),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          point,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? const Color(0xFFFDE68A) : const Color(0xFF78350F),
+                            height: 1.4,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ],
+          ),
+        ),
+        const SizedBox(height: 14),
+
+        // 4. "Keling, ko‘ramiz" Visual Example Card
+        Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1E1738) : const Color(0xFFF8F7FF),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0xFF7C4DFF).withOpacity(0.2)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: const [
+                  Text('👀', style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Keling, ko‘ramiz!',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFF6C3CE0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Center(
+                child: Text(
+                  miniExample,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: colors.ink,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // 5. "Boshlaymiz! 🚀" Big Button
+        GestureDetector(
+          onTap: () {
+            _recordStep(1);
+            setState(() {
+              _currentStep = 1;
+            });
+          },
+          child: Container(
+            height: 56,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF6C3CE0), Color(0xFF7C4DFF)],
+              ),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF6C3CE0).withOpacity(0.4),
+                  blurRadius: 14,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            alignment: Alignment.center,
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Boshlaymiz! 🚀',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // Subtext under button
+        Center(
+          child: Text(
+            '~${lesson.estMinutes} daqiqa · +${lesson.rewardXP} XP · +${lesson.rewardCoins} 🪙',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: colors.muted,
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
       ],
     );
   }
@@ -661,6 +1024,10 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
           const SizedBox(height: 18),
         ],
 
+        // Visual Diagram
+        _buildVisualDiagram(lesson),
+        const SizedBox(height: 18),
+
         // Detailed Explanation Card
         Container(
           padding: const EdgeInsets.all(18),
@@ -677,12 +1044,16 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen> {
                   Icon(Icons.menu_book_rounded,
                       color: colors.primary, size: 22),
                   const SizedBox(width: 8),
-                  Text(
-                    'Nazariy tushunchalar',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                        color: colors.ink),
+                  Expanded(
+                    child: Text(
+                      'Nazariy tushunchalar',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: colors.ink),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
@@ -1180,6 +1551,8 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
         ),
       );
     } else {
+      final emoji = lesson.emoji ?? lesson.icon ?? '📐';
+      final example = lesson.miniExample ?? lesson.intro ?? lesson.title;
       return Container(
         width: double.infinity,
         padding: const EdgeInsets.all(20),
@@ -1190,15 +1563,16 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
         ),
         child: Column(
           children: [
-            const Icon(Icons.functions_rounded,
-                size: 40, color: Color(0xFF6C47FF)),
-            const SizedBox(height: 8),
+            Text(emoji, style: const TextStyle(fontSize: 40)),
+            const SizedBox(height: 10),
             Text(
-              lesson.formulaLatex ?? 'a + b = c',
+              example,
+              textAlign: TextAlign.center,
               style: const TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 18,
-                  color: Color(0xFF6C47FF)),
+                fontWeight: FontWeight.w800,
+                fontSize: 16,
+                color: Color(0xFF6C47FF),
+              ),
             ),
           ],
         ),
@@ -1207,6 +1581,10 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
   }
 
   Widget _buildBottomNav(AppThemeColors colors) {
+    if (_currentStep == 0) {
+      return const SizedBox.shrink();
+    }
+
     final isLastStep = _currentStep == _stepTitles.length - 1;
 
     return Container(
@@ -1217,46 +1595,41 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
       ),
       child: Row(
         children: [
-          // "Orqaga" Button (if not first step)
-          if (_currentStep > 0) ...[
-            OutlinedButton(
-              onPressed: () {
-                setState(() {
-                  _currentStep--;
-                });
-              },
-              style: OutlinedButton.styleFrom(
-                foregroundColor: colors.ink,
-                side: BorderSide(color: colors.border),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14)),
-              ),
-              child: const Text('Orqaga',
-                  style: TextStyle(fontWeight: FontWeight.w700)),
+          // "Orqaga" Button
+          OutlinedButton(
+            onPressed: () {
+              setState(() {
+                _currentStep--;
+              });
+            },
+            style: OutlinedButton.styleFrom(
+              foregroundColor: colors.ink,
+              side: BorderSide(color: colors.border),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
             ),
-            const SizedBox(width: 12),
-          ],
+            child: const Text('Orqaga', style: TextStyle(fontWeight: FontWeight.w700)),
+          ),
+          const SizedBox(width: 12),
 
           // "Keyingi" or "Testni tekshirish" or "Yakunlash" Button
           Expanded(
             child: SizedBox(
-              height: 46,
+              height: 48,
               child: ElevatedButton(
                 onPressed: () {
                   if (!isLastStep) {
+                    final nextStep = _currentStep + 1;
+                    _recordStep(nextStep + 1);
                     setState(() {
-                      _currentStep++;
+                      _currentStep = nextStep;
                     });
                   } else {
                     // Mini-test step
                     if (!_quizSubmitted) {
-                      // Check answers
                       int correct = 0;
                       for (int i = 0; i < _quizQuestions.length; i++) {
-                        if (_selectedAnswers[i] ==
-                            _quizQuestions[i]['correctAnswer']) {
+                        if (_selectedAnswers[i] == _quizQuestions[i]['correctAnswer']) {
                           correct++;
                         }
                       }
@@ -1264,6 +1637,7 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                         _quizSubmitted = true;
                         _correctCount = correct;
                       });
+                      _recordStep(5);
                     } else {
                       // Complete lesson
                       _completeLesson();
@@ -1271,20 +1645,16 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: colors.primary,
+                  backgroundColor: const Color(0xFF6C3CE0),
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   elevation: 0,
                 ),
                 child: Text(
                   !isLastStep
                       ? 'Keyingi bosqich'
-                      : (!_quizSubmitted
-                          ? 'Testni tekshirish'
-                          : 'Darsni yakunlash'),
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w800),
+                      : (!_quizSubmitted ? 'Testni tekshirish' : 'Darsni yakunlash'),
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
                 ),
               ),
             ),

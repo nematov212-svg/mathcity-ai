@@ -8,6 +8,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { authRouter } from './modules/auth/auth.routes.js';
 import { eligibilityRouter } from './modules/eligibility/eligibility.routes.js';
 import { lessonsRouter } from './modules/lessons/lessons.routes.js';
+import { modulesRouter } from './modules/lessons/modules.routes.js';
 import { practiceRouter } from './modules/practice/practice.routes.js';
 import { gamesRouter } from './modules/games/games.routes.js';
 import { aiRouter } from './modules/ai_teacher/ai.routes.js';
@@ -141,6 +142,7 @@ app.get('/api/health', async (req: Request, res: Response) => {
 app.use('/api/auth', authRouter);
 app.use('/api/eligibility', eligibilityRouter);
 app.use('/api/lessons', lessonsRouter);
+app.use('/api/modules', modulesRouter);
 app.use('/api/practice', practiceRouter);
 app.use('/api/games', gamesRouter);
 app.use('/api/ai', aiRouter);

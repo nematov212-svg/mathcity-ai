@@ -17,6 +17,23 @@ import {
   initialGameCars,
 } from './dataStore.js';
 import { curriculum220Lessons } from './curriculum220.js';
+import {
+  allCurriculumModules,
+  grade1Part1Lessons,
+  CurriculumModule,
+  CurriculumLesson,
+  CurriculumQuestion,
+} from './grade1Curriculum.js';
+
+export interface LessonStepProgress {
+  userId: string;
+  lessonId: string;
+  completedSteps: number;
+  percent: number;
+  xpGiven: number;
+  isCompleted: boolean;
+  completedAt?: string;
+}
 import { mathQuestionBank, archivedDemoQuestions, QuestionBankItem } from './questionBank.js';
 import { AgeMode } from './age.js';
 import {
@@ -252,10 +269,66 @@ export interface DailyMissionRecord {
 
 class DataRepository {
   private users: Map<string, UserAccount> = new Map();
+  private modules: CurriculumModule[] = [...allCurriculumModules];
+  private lessonStepProgress: Map<string, LessonStepProgress> = new Map();
   private lessons: LessonModel[] = (() => {
-    const list: LessonModel[] = [...curriculum220Lessons];
+    // Map Grade 1 Part 1 curriculum lessons
+    const grade1Mapped: LessonModel[] = grade1Part1Lessons.map((cl) => ({
+      id: cl.id,
+      courseId: 'course-g1',
+      chapterId: `chapter-${cl.moduleId}-${cl.order}`,
+      chapterTitle: cl.chapterTitle,
+      grade: 1,
+      mode: 'KIDS',
+      title: cl.title,
+      topicKey: `topic-${cl.id}`,
+      description: cl.shortDesc,
+      contentMd: cl.intro,
+      icon: cl.emoji,
+      rewardXP: cl.xpReward,
+      rewardCoins: cl.coinReward,
+      orderIndex: cl.order,
+      sections: [
+        {
+          id: `${cl.id}-s1`,
+          lessonId: cl.id,
+          title: cl.title,
+          orderIndex: 1,
+          questions: cl.questions.map((q, qIdx) => ({
+            id: q.id,
+            lessonId: cl.id,
+            sectionId: `${cl.id}-s1`,
+            prompt: q.text,
+            type: 'MULTIPLE_CHOICE' as const,
+            options: q.options,
+            correctAnswer: q.options[q.correctIndex] || q.options[0],
+            explanation: q.explanation,
+            hint: '',
+            orderIndex: qIdx + 1,
+          })),
+        },
+      ],
+      status: 'PUBLISHED',
+      moduleId: cl.moduleId,
+      emoji: cl.emoji,
+      intro: cl.intro,
+      keyPoints: cl.keyPoints,
+      miniExample: cl.miniExample,
+      xpReward: cl.xpReward,
+      coinReward: cl.coinReward,
+      estMinutes: cl.estMinutes,
+      questionCount: cl.questionCount,
+      questions: cl.questions,
+    }));
+
+    const list: LessonModel[] = [...grade1Mapped];
+    for (const curL of curriculum220Lessons) {
+      if (curL.grade !== 1 && !list.some((l) => l.id === curL.id)) {
+        list.push(curL);
+      }
+    }
     for (const initL of initialLessons) {
-      if (!list.some((l) => l.id === initL.id)) {
+      if (initL.grade !== 1 && !list.some((l) => l.id === initL.id)) {
         list.push(initL);
       }
     }
@@ -776,6 +849,244 @@ class DataRepository {
   }
 
   // --- Curriculum Hierarchy Queries ---
+  getModules(grade?: number, userId?: string) {
+    let mods = this.modules;
+    if (grade !== undefined && !isNaN(grade)) {
+      mods = mods.filter((m) => m.grade === grade);
+    }
+
+    return mods.map((m) => {
+      const lessons = this.getModuleLessons(m.id, userId);
+      const lessonCount = lessons.length;
+      const questionCount = lessons.reduce((acc, l) => acc + (l.questionCount || 5), 0);
+      const totalMinutes = lessons.reduce((acc, l) => acc + (l.estMinutes || 7), 0);
+      const totalXp = lessons.reduce((acc, l) => acc + (l.rewardXP || 100), 0);
+      const completedCount = lessons.filter((l) => l.isCompleted).length;
+      const percent = lessonCount > 0 ? Math.round((completedCount / lessonCount) * 100) : 0;
+      const earnedXp = lessons.reduce((acc, l) => acc + (l.earnedXp || 0), 0);
+
+      return {
+        id: m.id,
+        grade: m.grade,
+        subject: m.subject,
+        part: m.part,
+        title: m.title,
+        orderIndex: m.orderIndex,
+        comingSoon: m.comingSoon,
+        lessonCount,
+        questionCount,
+        totalMinutes,
+        percent,
+        earnedXp,
+        totalXp,
+        isCompleted: lessonCount > 0 && completedCount === lessonCount,
+      };
+    });
+  }
+
+  getModuleLessons(moduleId: string, userId?: string) {
+    const user = userId ? this.users.get(userId) : undefined;
+    const isPro = !!(user && (user.subscription?.status === 'PRO_ACTIVE' || (user as any).isPro));
+    const completedLessonIds = user?.completedLessons || [];
+
+    // Filter lessons by moduleId or grade
+    let moduleLessons = this.lessons.filter((l) => l.moduleId === moduleId);
+    if (moduleLessons.length === 0 && (moduleId === 'module-g1-p1' || moduleId.includes('g1'))) {
+      moduleLessons = this.lessons.filter((l) => l.grade === 1);
+    }
+
+    // Sort by orderIndex asc
+    moduleLessons.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+
+    let prevLessonCompleted = true; // Lesson 1 is always unlocked
+
+    return moduleLessons.map((l, index) => {
+      const stepProgKey = userId ? `${userId}:${l.id}` : null;
+      const stepProg = stepProgKey ? this.lessonStepProgress.get(stepProgKey) : null;
+
+      const isCompleted = completedLessonIds.includes(l.id) || (stepProg?.isCompleted ?? false);
+      const completedSteps = stepProg ? stepProg.completedSteps : (isCompleted ? 5 : 0);
+      const percent = isCompleted ? 100 : Math.round((completedSteps / 5) * 100);
+      const earnedXp = stepProg ? stepProg.xpGiven : (isCompleted ? (l.rewardXP || 100) : 0);
+
+      // Sequential unlocking:
+      // Lesson 1 is always unlocked. Lesson k is unlocked if lesson k-1 is completed.
+      // Pro users have all lessons unlocked!
+      let isLocked = false;
+      if (!isPro) {
+        if (index === 0) {
+          isLocked = false;
+        } else {
+          isLocked = !prevLessonCompleted;
+        }
+      }
+
+      // Update for next lesson
+      prevLessonCompleted = isCompleted;
+
+      let status = 'NOT_STARTED';
+      if (isCompleted) {
+        status = 'COMPLETED';
+      } else if (isLocked) {
+        status = 'LOCKED';
+      } else if (completedSteps > 0) {
+        status = 'IN_PROGRESS';
+      }
+
+      return {
+        id: l.id,
+        moduleId: l.moduleId || moduleId,
+        order: l.orderIndex,
+        orderIndex: l.orderIndex,
+        title: l.title,
+        chapterTitle: l.chapterTitle,
+        shortDesc: l.description,
+        description: l.description,
+        emoji: l.emoji || l.icon || '📘',
+        intro: l.intro || l.description,
+        keyPoints: l.keyPoints || [],
+        miniExample: l.miniExample || '',
+        xpReward: l.rewardXP || 100,
+        rewardXP: l.rewardXP || 100,
+        coinReward: l.rewardCoins || 12,
+        rewardCoins: l.rewardCoins || 12,
+        estMinutes: l.estMinutes || 7,
+        questionCount: l.questionCount || (l.sections ? l.sections[0]?.questions.length : 5) || 5,
+        completedSteps,
+        percent,
+        earnedXp,
+        isCompleted,
+        isLocked,
+        status,
+        questions: l.questions || [],
+      };
+    });
+  }
+
+  getLessonStepProgress(userId: string, lessonId: string): LessonStepProgress {
+    const key = `${userId}:${lessonId}`;
+    let prog = this.lessonStepProgress.get(key);
+    if (!prog) {
+      const user = this.users.get(userId);
+      const isCompleted = (user?.completedLessons || []).includes(lessonId);
+      prog = {
+        userId,
+        lessonId,
+        completedSteps: isCompleted ? 5 : 0,
+        percent: isCompleted ? 100 : 0,
+        xpGiven: isCompleted ? 100 : 0,
+        isCompleted,
+      };
+      this.lessonStepProgress.set(key, prog);
+    }
+    return prog;
+  }
+
+  recordLessonStep(userId: string, lessonId: string, step: number) {
+    const user = this.users.get(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi.');
+
+    const lesson = this.getLessonById(lessonId);
+    if (!lesson) throw new Error('Dars topilmadi.');
+
+    const clampedStep = Math.max(1, Math.min(5, Math.floor(step)));
+    const key = `${userId}:${lessonId}`;
+    let prog = this.lessonStepProgress.get(key);
+    if (!prog) {
+      const isCompleted = (user.completedLessons || []).includes(lessonId);
+      prog = {
+        userId,
+        lessonId,
+        completedSteps: isCompleted ? 5 : 0,
+        percent: isCompleted ? 100 : 0,
+        xpGiven: isCompleted ? (lesson.rewardXP || 100) : 0,
+        isCompleted,
+      };
+    }
+
+    const oldSteps = prog.completedSteps;
+    const newSteps = Math.max(oldSteps, clampedStep);
+    prog.completedSteps = newSteps;
+
+    // Proportional XP
+    const totalXp = lesson.rewardXP || 100;
+    const stepXp = Math.round(totalXp / 5);
+    const stepsToReward = newSteps - oldSteps;
+    let xpAwarded = 0;
+    if (stepsToReward > 0) {
+      xpAwarded = stepsToReward * stepXp;
+      user.totalXP += xpAwarded;
+      prog.xpGiven += xpAwarded;
+    }
+
+    let coinsAwarded = 0;
+    let isFirstCompletion = false;
+
+    // Completion at step 5
+    if (newSteps >= 5 && !prog.isCompleted) {
+      prog.isCompleted = true;
+      prog.completedAt = new Date().toISOString();
+      if (!user.completedLessons.includes(lessonId)) {
+        user.completedLessons.push(lessonId);
+        isFirstCompletion = true;
+        coinsAwarded = lesson.rewardCoins || 12;
+        user.coinBalance += coinsAwarded;
+
+        // Daily activity and missions
+        this.advanceMissionProgress(user.id, 'COMPLETE_LESSON', 1);
+        if (!user.unlockedAchievements.includes('ach_first_step')) {
+          user.unlockedAchievements.push('ach_first_step');
+        }
+        this.recordDailyLessonCompleted(user.id, lessonId);
+      }
+    }
+
+    prog.percent = prog.isCompleted ? 100 : Math.round((newSteps / 5) * 100);
+    this.lessonStepProgress.set(key, prog);
+
+    // Sync to PostgreSQL if available
+    if (isDatabaseHealthy()) {
+      prisma.lessonProgress
+        .upsert({
+          where: { userId_lessonId: { userId: user.id, lessonId } },
+          update: {
+            completedSteps: prog.completedSteps,
+            percent: prog.percent,
+            xpGiven: prog.xpGiven,
+            isCompleted: prog.isCompleted,
+            completedAt: prog.completedAt ? new Date(prog.completedAt) : undefined,
+          },
+          create: {
+            userId: user.id,
+            lessonId,
+            completedSteps: prog.completedSteps,
+            percent: prog.percent,
+            xpGiven: prog.xpGiven,
+            isCompleted: prog.isCompleted,
+            completedAt: prog.completedAt ? new Date(prog.completedAt) : undefined,
+          },
+        })
+        .catch(() => {});
+      this.persistUserToDatabase(user).catch(() => {});
+    }
+
+    return {
+      lessonId,
+      step: clampedStep,
+      completedSteps: prog.completedSteps,
+      percent: prog.percent,
+      xpAwarded,
+      coinsAwarded,
+      totalXP: user.totalXP,
+      coinBalance: user.coinBalance,
+      isCompleted: prog.isCompleted,
+      isFirstCompletion,
+      message: prog.isCompleted
+        ? `Tabriklaymiz! "${lesson.title}" darsini to‘liq yakunladingiz! +${coinsAwarded} tanga va +${xpAwarded} XP berildi.`
+        : `${clampedStep}-qadam yakunlandi! +${xpAwarded} XP berildi.`,
+    };
+  }
+
   getLessons(mode?: 'KIDS', grade?: number, includeDrafts: boolean = false): LessonModel[] {
     let list = this.lessons;
     if (!includeDrafts) {

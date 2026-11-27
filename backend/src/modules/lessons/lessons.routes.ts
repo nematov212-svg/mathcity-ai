@@ -140,16 +140,73 @@ lessonsRouter.get('/', optionalAuthMiddleware, (req: AuthenticatedRequest, res: 
 });
 
 /**
+ * GET /api/lessons/modules
+ */
+lessonsRouter.get('/modules', optionalAuthMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const grade = req.query.grade ? parseInt(req.query.grade as string, 10) : undefined;
+  const userId = req.user?.id;
+  const modules = repository.getModules(grade, userId);
+  return res.json({ success: true, data: modules });
+});
+
+/**
+ * GET /api/lessons/modules/:id/lessons
+ */
+lessonsRouter.get('/modules/:id/lessons', optionalAuthMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const moduleId = String(req.params.id);
+  const userId = req.user?.id;
+  const lessons = repository.getModuleLessons(moduleId, userId);
+  return res.json({ success: true, data: lessons });
+});
+
+/**
+ * POST /api/lessons/:id/step
+ * Advances lesson step (1..5), awards proportional XP and coins on completion.
+ */
+lessonsRouter.post('/:id/step', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const lessonId = String(req.params.id);
+  const step = parseInt(req.body.step, 10);
+
+  if (!step || isNaN(step) || step < 1 || step > 5) {
+    return res.status(400).json({ success: false, error: 'Step 1 va 5 oralig‘ida bo‘lishi kerak.' });
+  }
+
+  try {
+    const result = repository.recordLessonStep(user.id, lessonId, step);
+
+    broadcastLessonEvent('lesson_step', {
+      userId: user.id,
+      lessonId,
+      step,
+      completedSteps: result.completedSteps,
+      percent: result.percent,
+      totalXP: result.totalXP,
+      coinBalance: result.coinBalance,
+    });
+
+    return res.json({ success: true, data: result });
+  } catch (err: any) {
+    return res.status(400).json({ success: false, error: err.message || 'Xatolik yuz berdi.' });
+  }
+});
+
+/**
  * GET /api/lessons/:id
  */
 lessonsRouter.get('/:id', optionalAuthMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const user = req.user!;
+  const user = req.user;
   const lessonId = String(req.params.id);
   const lesson = repository.getLessonById(lessonId);
 
   if (!lesson) {
     return res.status(404).json({ success: false, error: 'Dars topilmadi.' });
   }
+
+  const stepProg = user ? repository.getLessonStepProgress(user.id, lesson.id) : null;
+  const isCompleted = (user?.completedLessons || []).includes(lesson.id) || (user?.completedLessons || []).includes(lessonId) || (stepProg?.isCompleted ?? false);
+  const completedSteps = stepProg ? stepProg.completedSteps : (isCompleted ? 5 : 0);
+  const percent = isCompleted ? 100 : (stepProg ? stepProg.percent : Math.round((completedSteps / 5) * 100));
 
   return res.json({
     success: true,
@@ -160,13 +217,32 @@ lessonsRouter.get('/:id', optionalAuthMiddleware, (req: AuthenticatedRequest, re
       videoUrl: lesson.videoUrl || null,
       audioUrl: lesson.audioUrl || null,
       textExplanation: lesson.textExplanation || lesson.contentMd || '',
-      isCompleted: (user?.completedLessons || []).includes(lesson.id) || (user?.completedLessons || []).includes(lessonId),
+      emoji: lesson.emoji || lesson.icon || '📘',
+      intro: lesson.intro || lesson.description,
+      keyPoints: lesson.keyPoints || [],
+      miniExample: lesson.miniExample || '',
+      xpReward: lesson.xpReward || lesson.rewardXP || 100,
+      coinReward: lesson.coinReward || lesson.rewardCoins || 12,
+      estMinutes: lesson.estMinutes || 7,
+      questionCount: lesson.questionCount || (lesson.sections ? lesson.sections[0]?.questions.length : 5) || 5,
+      questions: lesson.questions || [],
+      completedSteps,
+      percent,
+      isCompleted,
       sections: (lesson.sections || []).map((s) => ({
         id: s.id,
         title: s.title,
         orderIndex: s.orderIndex,
         questionCount: s.questions ? s.questions.length : 0,
         isCompleted: (user?.completedSections || []).includes(s.id),
+        questions: (s.questions || []).map((q) => ({
+          id: q.id,
+          prompt: q.prompt,
+          type: q.type,
+          options: q.options,
+          correctAnswer: q.correctAnswer,
+          explanation: q.explanation,
+        })),
       })),
     },
   });

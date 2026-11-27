@@ -15,6 +15,7 @@ import '../features/home/kids_desktop_screen.dart';
 import '../features/home/teen_home_screen.dart';
 import '../features/home/teen_desktop_screen.dart';
 import '../features/lessons/lessons_screen.dart';
+import '../features/lessons/module_lessons_screen.dart';
 import '../features/lessons/lesson_reader_screen.dart';
 import '../features/lessons/lesson_complete_screen.dart';
 import '../features/lessons/teen_course_map_screen.dart';
@@ -109,6 +110,12 @@ final GoRouter appRouter = GoRouter(
       ],
     ),
     // Kids Mode Sub-Routes
+    GoRoute(
+      path: '/kids/lessons/module/:id',
+      builder: (context, state) => ModuleLessonsScreen(
+        moduleId: state.pathParameters['id'] ?? 'module-g1-p1',
+      ),
+    ),
     GoRoute(
       path: '/kids/lesson/:id',
       builder: (context, state) => LessonReaderScreen(

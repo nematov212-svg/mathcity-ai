@@ -1,0 +1,803 @@
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/network/api_client.dart';
+import '../../core/responsive/app_responsive_scaffold.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/widgets/coin_badge.dart';
+import '../../core/widgets/animated_math_background.dart';
+import '../../shared/models/lesson_model.dart';
+import '../../shared/models/module_model.dart';
+import '../../shared/providers/student_provider.dart';
+
+class ModuleLessonsScreen extends ConsumerStatefulWidget {
+  final String moduleId;
+
+  const ModuleLessonsScreen({super.key, required this.moduleId});
+
+  @override
+  ConsumerState<ModuleLessonsScreen> createState() => _ModuleLessonsScreenState();
+}
+
+class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+  bool _isLoading = true;
+  ModuleModel? _module;
+  List<LessonModel> _lessons = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchModuleData();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchModuleData({bool silent = false}) async {
+    final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    if (isTest) {
+      _loadFallbackData();
+      return;
+    }
+
+    if (!silent) {
+      setState(() => _isLoading = true);
+    }
+
+    try {
+      final res = await ApiClient().dio.get('/modules/${widget.moduleId}/lessons');
+      if (res.data != null && res.data['success'] == true) {
+        final list = (res.data['data'] as List<dynamic>? ?? [])
+            .map((item) => LessonModel.fromJson(item as Map<String, dynamic>))
+            .toList();
+
+        // Also fetch module meta
+        final modRes = await ApiClient().dio.get('/modules/${widget.moduleId}');
+        ModuleModel? mod;
+        if (modRes.data != null && modRes.data['success'] == true) {
+          mod = ModuleModel.fromJson(modRes.data['data']);
+        }
+
+        if (mounted) {
+          setState(() {
+            _lessons = list;
+            _module = mod ?? _createFallbackModule();
+            _isLoading = false;
+          });
+          return;
+        }
+      }
+    } catch (_) {}
+
+    if (mounted) {
+      _loadFallbackData();
+    }
+  }
+
+  ModuleModel _createFallbackModule() {
+    final completedCount = _lessons.filterCompleted().length;
+    final total = _lessons.isEmpty ? 41 : _lessons.length;
+    final pct = (completedCount / total * 100).round();
+    final earnedXp = _lessons.fold(0, (acc, l) => acc + (l.isCompleted ? l.rewardXP : 0));
+    final totalXp = _lessons.fold(0, (acc, l) => acc + l.rewardXP);
+
+    return ModuleModel(
+      id: widget.moduleId,
+      grade: 1,
+      subject: 'Matematika',
+      part: 1,
+      title: 'Matematika · 1-qism',
+      orderIndex: 1,
+      comingSoon: false,
+      lessonCount: total,
+      questionCount: total * 5,
+      totalMinutes: total * 7,
+      percent: pct,
+      earnedXp: earnedXp,
+      totalXp: totalXp > 0 ? totalXp : 4120,
+    );
+  }
+
+  void _loadFallbackData() {
+    // 41 fallback lessons for offline or tests
+    final list = List.generate(41, (index) {
+      final order = index + 1;
+      return LessonModel(
+        id: 'lesson-g1-${order.toString().padLeft(2, '0')}',
+        courseId: 'course-g1',
+        moduleId: widget.moduleId,
+        grade: 1,
+        mode: 'KIDS',
+        title: _getFallbackTitle(order),
+        chapterTitle: order <= 8
+            ? 'Narsalar va ularning xossalari'
+            : (order <= 29 ? '1 dan 10 gacha sonlar' : 'Chiziqlar va amallar'),
+        topicKey: 'topic-g1-$order',
+        description: '1-sinf matematika fani bo‘yicha $order-mavzu.',
+        emoji: _getFallbackEmoji(order),
+        rewardXP: 100,
+        rewardCoins: 12,
+        orderIndex: order,
+        sectionCount: 5,
+        isCompleted: order == 1,
+        isLocked: order > 2,
+        completedSteps: order == 1 ? 5 : 0,
+        percent: order == 1 ? 100 : 0,
+        estMinutes: 7,
+      );
+    });
+
+    setState(() {
+      _lessons = list;
+      _module = _createFallbackModule();
+      _isLoading = false;
+    });
+  }
+
+  String _getFallbackEmoji(int order) {
+    const emojis = [
+      '🔷', '🗼', '🧭', '🥕', '🧊', '⏰', '🍎', '⚖️',
+      '🔢', '🐣', '➕', '➖', '🔍', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '✋', '🧮',
+      '6️⃣', '7️⃣', '8️⃣', '9️⃣', '0️⃣', '🔟', '📊', '🌱', '🏠',
+      '✏️', '📐', '🧩', '🧩', '❓', '❓', '❓', '🔄', '🔁', '📋', '⚖️', '🧠'
+    ];
+    if (order >= 1 && order <= emojis.length) {
+      return emojis[order - 1];
+    }
+    return '📘';
+  }
+
+  String _getFallbackTitle(int order) {
+    const titles = [
+      'Narsalarning xossalari', 'Narsalarning o‘lchamlari', 'Fazoviy tasavvurlar',
+      'Taqqoslash va tenglashtirish', 'Geometrik shakllar', 'Vaqt tushunchasi',
+      'Narsalarni sanash', 'Narsalarni guruhlash',
+      '1 dan 10 gacha sonlar', 'Oldin, keyin, o‘rtasida', 'Qo‘shish amali',
+      'Ayirish amali', 'Sonlarni taqqoslash', '1 soni va raqami',
+      '2 soni va raqami', '3 soni va raqami', '4 soni va raqami',
+      '5 soni va raqami', '5 ichida qo‘shish va ayirish', 'Sonlar tarkibi',
+      '6 soni va raqami', '7 soni va raqami', '8 soni va raqami',
+      '9 soni va raqami', '0 soni va raqami', '10 soni',
+      '10 ichida qo‘shish va ayirish', 'Ketma-ketlik va qonuniyatlar', 'Masala va uning qismlari',
+      'To‘g‘ri chiziq, nur, kesma', 'Kesma uzunligini o‘lchash', 'Siniq chiziq va ko‘pburchak',
+      'Qo‘shishning hadlari va yig‘indi', 'Noma’lum qo‘shiluvchini topish', 'Ayirishning hadlari',
+      'Noma’lum kamayuvchini topish', 'Noma’lum ayriluvchini topish', 'Qo‘shishning o‘rin almashtirish qonuni',
+      'Qavsli ifodalar', 'Jadval asosida hisoblash', 'Ifodalar'
+    ];
+    if (order >= 1 && order <= titles.length) {
+      return titles[order - 1];
+    }
+    return '$order-dars';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppThemeColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final studentState = ref.watch(studentProvider);
+    final isPro = studentState.student?.isPro ?? false;
+    final coinBalance = studentState.student?.coinBalance ?? 0;
+
+    final filteredLessons = _lessons.where((l) {
+      if (_searchQuery.isEmpty) return true;
+      final q = _searchQuery.toLowerCase();
+      return l.title.toLowerCase().contains(q) ||
+          (l.chapterTitle ?? '').toLowerCase().contains(q) ||
+          l.description.toLowerCase().contains(q);
+    }).toList();
+
+    final completedLessons = _lessons.where((l) => l.isCompleted).length;
+    final totalLessons = _lessons.isEmpty ? 41 : _lessons.length;
+    final percent = totalLessons > 0 ? ((completedLessons / totalLessons) * 100).round() : 0;
+    final earnedXp = _lessons.fold(0, (acc, l) => acc + (l.isCompleted ? l.rewardXP : 0));
+    final totalXp = _lessons.fold(0, (acc, l) => acc + l.rewardXP);
+
+    return AppResponsiveScaffold(
+      currentNavIndex: -1,
+      phoneBody: Scaffold(
+        backgroundColor: colors.bg,
+        body: Stack(
+          children: [
+            const AnimatedMathBackground(),
+            SafeArea(
+              child: Column(
+                children: [
+                // Top App Bar
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => context.pop(),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? const Color(0xFF1E1738)
+                                : colors.card,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: colors.border),
+                          ),
+                          child: Icon(Icons.arrow_back_ios_new_rounded,
+                              size: 18, color: colors.ink),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _module?.title ?? 'Matematika · 1-qism',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                                color: colors.ink,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '1-sinf • Barcha 41 ta mavzu',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: colors.muted,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      CoinBadge(count: coinBalance),
+                    ],
+                  ),
+                ),
+
+                // Content
+                Expanded(
+                  child: _isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Color(0xFF6C3CE0),
+                          ),
+                        )
+                      : RefreshIndicator(
+                          onRefresh: () => _fetchModuleData(silent: true),
+                          color: const Color(0xFF6C3CE0),
+                          child: ListView(
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                            children: [
+                              // 1. Module Progress Summary Card
+                              _buildSummaryCard(
+                                colors,
+                                isDark,
+                                completedLessons,
+                                totalLessons,
+                                percent,
+                                earnedXp,
+                                totalXp,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // 2. Search Field
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: isDark
+                                      ? const Color(0xFF160E36)
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: colors.border,
+                                    width: 1.2,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.03),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: TextField(
+                                  controller: _searchController,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      _searchQuery = val.trim();
+                                    });
+                                  },
+                                  style: TextStyle(
+                                    color: colors.ink,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText: 'Mavzuni qidirish (masalan: sanash, qo‘shish)...',
+                                    hintStyle: TextStyle(
+                                      color: colors.muted,
+                                      fontSize: 13,
+                                    ),
+                                    prefixIcon: const Icon(
+                                      Icons.search_rounded,
+                                      color: Color(0xFF6C3CE0),
+                                      size: 22,
+                                    ),
+                                    suffixIcon: _searchQuery.isNotEmpty
+                                        ? IconButton(
+                                            icon: Icon(Icons.clear_rounded,
+                                                color: colors.muted, size: 18),
+                                            onPressed: () {
+                                              _searchController.clear();
+                                              setState(() => _searchQuery = '');
+                                            },
+                                          )
+                                        : null,
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 13,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+
+                              // 3. Lessons Section Header
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Darslar (${filteredLessons.length})',
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w900,
+                                      color: colors.ink,
+                                    ),
+                                  ),
+                                  if (isPro)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        gradient: const LinearGradient(
+                                          colors: [Color(0xFFFFB800), Color(0xFFFF8A00)],
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Text(
+                                        'PRO: Barchasi ochiq 👑',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+
+                              // 4. Lessons List
+                              if (filteredLessons.isEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 40),
+                                  child: Center(
+                                    child: Column(
+                                      children: [
+                                        const Icon(Icons.search_off_rounded,
+                                            size: 40, color: Colors.grey),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Mavzu topilmadi',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700,
+                                            color: colors.ink,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              else
+                                ...filteredLessons.map((lesson) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: _buildLessonCard(
+                                      context,
+                                      colors,
+                                      isDark,
+                                      lesson,
+                                      isPro,
+                                    ),
+                                  );
+                                }),
+                            ],
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+  Widget _buildSummaryCard(
+    AppThemeColors colors,
+    bool isDark,
+    int completedCount,
+    int totalCount,
+    int percent,
+    int earnedXp,
+    int totalXp,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF6C3CE0), Color(0xFF7C4DFF)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF6C3CE0).withOpacity(0.35),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  '$completedCount/$totalCount mavzu · $percent%',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              Text(
+                '$earnedXp / $totalXp XP',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFFFFD54F),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Big Smooth Progress Bar
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: totalCount > 0 ? (completedCount / totalCount).clamp(0.0, 1.0) : 0.0,
+              backgroundColor: Colors.white.withOpacity(0.2),
+              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFFFC83D)),
+              minHeight: 10,
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          // Mini Stats Chips
+          Wrap(
+            spacing: 8,
+            runSpacing: 6,
+            children: [
+              _buildMiniChip(
+                icon: Icons.auto_stories_rounded,
+                text: '$totalCount ta mavzu',
+              ),
+              _buildMiniChip(
+                icon: Icons.help_outline_rounded,
+                text: '${totalCount * 5} ta savol',
+              ),
+              _buildMiniChip(
+                icon: Icons.timer_outlined,
+                text: '~${totalCount * 7} daqiqa',
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMiniChip({required IconData icon, required String text}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.18),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: Colors.white),
+          const SizedBox(width: 5),
+          Text(
+            text,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLessonCard(
+    BuildContext context,
+    AppThemeColors colors,
+    bool isDark,
+    LessonModel lesson,
+    bool isPro,
+  ) {
+    // Determine lock state: if isPro, never locked.
+    final effectiveLocked = isPro ? false : lesson.isLocked;
+
+    // Status action details
+    String actionText = '▶ Boshlash';
+    Color actionBg = const Color(0xFF6C3CE0);
+    Color actionTextColor = Colors.white;
+    IconData actionIcon = Icons.play_arrow_rounded;
+
+    if (lesson.isCompleted) {
+      actionText = '✓ Qayta ko‘rish';
+      actionBg = const Color(0xFFE8F8F0);
+      actionTextColor = const Color(0xFF2EB67D);
+      actionIcon = Icons.check_circle_rounded;
+    } else if (effectiveLocked) {
+      actionText = '🔒 Qulflangan';
+      actionBg = isDark ? const Color(0xFF221A3B) : const Color(0xFFF1F2F6);
+      actionTextColor = const Color(0xFF9CA3AF);
+      actionIcon = Icons.lock_rounded;
+    } else if (lesson.completedSteps > 0) {
+      actionText = 'Davom etish (${lesson.completedSteps}/5)';
+      actionBg = const Color(0xFF7C4DFF);
+      actionTextColor = Colors.white;
+      actionIcon = Icons.fast_forward_rounded;
+    }
+
+    return GestureDetector(
+      onTap: () {
+        if (effectiveLocked) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Ushbu dars qulflangan. Oldingi darsni yakunlang yoki Pro obunani faollashtiring! 🔒'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return;
+        }
+        context.push('/kids/lesson/${lesson.id}');
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isDark
+              ? const Color(0xFF160E36).withOpacity(0.9)
+              : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: lesson.isCompleted
+                ? const Color(0xFF2EB67D).withOpacity(0.35)
+                : (effectiveLocked
+                    ? colors.border.withOpacity(0.5)
+                    : const Color(0xFF6C3CE0).withOpacity(0.2)),
+            width: lesson.isCompleted ? 1.5 : 1.2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Top Row: Number + Emoji + Title
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Emoji Icon Container
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: effectiveLocked
+                        ? (isDark ? const Color(0xFF221A3B) : const Color(0xFFF1F2F6))
+                        : const Color(0xFF6C3CE0).withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    effectiveLocked ? '🔒' : (lesson.emoji ?? '📘'),
+                    style: const TextStyle(fontSize: 22),
+                  ),
+                ),
+                const SizedBox(width: 12),
+
+                // Title + Short Description
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${lesson.orderIndex}. ${lesson.title}',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                          color: effectiveLocked ? colors.muted : colors.ink,
+                          height: 1.25,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        lesson.description,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: colors.muted,
+                          height: 1.3,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+
+                // Circular Progress Indicator
+                if (!effectiveLocked)
+                  SizedBox(
+                    width: 38,
+                    height: 38,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          value: (lesson.percent / 100).clamp(0.0, 1.0),
+                          backgroundColor: colors.border,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            lesson.isCompleted
+                                ? const Color(0xFF2EB67D)
+                                : const Color(0xFF6C3CE0),
+                          ),
+                          strokeWidth: 3.5,
+                        ),
+                        Text(
+                          '${lesson.percent}%',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            color: lesson.isCompleted
+                                ? const Color(0xFF2EB67D)
+                                : colors.ink,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Divider
+            Divider(color: colors.border.withOpacity(0.6), height: 1),
+            const SizedBox(height: 10),
+
+            // Bottom Row: Rewards + Action Button
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // +XP chip
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF6C3CE0).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '+${lesson.rewardXP} XP',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF6C3CE0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+
+                    // +Coin chip
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFC83D).withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '+${lesson.rewardCoins} 🪙',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFFB45309),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 6),
+
+                // Action Pill
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: actionBg,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(actionIcon, size: 13, color: actionTextColor),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            actionText,
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                              color: actionTextColor,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+extension on List<LessonModel> {
+  Iterable<LessonModel> filterCompleted() => where((l) => l.isCompleted);
+}

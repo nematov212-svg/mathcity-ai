@@ -53,6 +53,16 @@ export interface LessonModel {
   sections: SectionModel[];
   status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
   examples?: LessonExample[];
+  moduleId?: string;
+  emoji?: string;
+  intro?: string;
+  keyPoints?: string[];
+  miniExample?: string;
+  xpReward?: number;
+  coinReward?: number;
+  estMinutes?: number;
+  questionCount?: number;
+  questions?: any[];
   createdAt?: string;
   updatedAt?: string;
 }

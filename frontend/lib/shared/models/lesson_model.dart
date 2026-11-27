@@ -1,6 +1,7 @@
 class LessonModel {
   final String id;
   final String courseId;
+  final String? moduleId;
   final int grade;
   final String mode;
   final String title;
@@ -24,9 +25,22 @@ class LessonModel {
   final String? accentColor;
   final bool isLocked;
 
+  // Grade 1 & Curriculum additions
+  final String? emoji;
+  final String? intro;
+  final List<String> keyPoints;
+  final String? miniExample;
+  final int completedSteps;
+  final int percent;
+  final int xpReward;
+  final int coinReward;
+  final int estMinutes;
+  final List<QuestionModel> questions;
+
   LessonModel({
     required this.id,
     required this.courseId,
+    this.moduleId,
     required this.grade,
     required this.mode,
     required this.title,
@@ -49,20 +63,43 @@ class LessonModel {
     this.icon,
     this.accentColor,
     this.isLocked = false,
-  });
+    this.emoji,
+    this.intro,
+    this.keyPoints = const [],
+    this.miniExample,
+    this.completedSteps = 0,
+    this.percent = 0,
+    int? xpReward,
+    int? coinReward,
+    this.estMinutes = 7,
+    this.questions = const [],
+  })  : xpReward = xpReward ?? rewardXP,
+        coinReward = coinReward ?? rewardCoins;
 
   factory LessonModel.fromJson(Map<String, dynamic> json) {
+    final rewardXP = json['rewardXP'] ?? json['xpReward'] ?? 80;
+    final rewardCoins = json['rewardCoins'] ?? json['coinReward'] ?? 10;
+    final emojiVal = json['emoji'] ?? json['icon'];
+
+    List<QuestionModel> qList = [];
+    if (json['questions'] != null && json['questions'] is List) {
+      qList = (json['questions'] as List)
+          .map((q) => QuestionModel.fromJson(q))
+          .toList();
+    }
+
     return LessonModel(
       id: json['id'] ?? '',
       courseId: json['courseId'] ?? '',
+      moduleId: json['moduleId'],
       grade: json['grade'] ?? 1,
       mode: json['mode'] ?? 'KIDS',
       title: json['title'] ?? '',
       topicKey: json['topicKey'] ?? '',
-      description: json['description'] ?? '',
+      description: json['description'] ?? json['shortDesc'] ?? '',
       formulaLatex: json['formulaLatex'],
       chapterTitle: json['chapterTitle'],
-      contentMd: json['contentMd'],
+      contentMd: json['contentMd'] ?? json['intro'],
       coverImage: json['coverImage'],
       gallery: (json['gallery'] as List<dynamic>?)
               ?.map((e) => e.toString())
@@ -72,14 +109,27 @@ class LessonModel {
       audioUrl: json['audioUrl'],
       textExplanation: json['textExplanation'],
       status: json['status'] ?? 'PUBLISHED',
-      rewardXP: json['rewardXP'] ?? 50,
-      rewardCoins: json['rewardCoins'] ?? 50,
-      orderIndex: json['orderIndex'] ?? 0,
-      sectionCount: json['sectionCount'] ?? json['questionCount'] ?? 1,
+      rewardXP: rewardXP,
+      rewardCoins: rewardCoins,
+      orderIndex: json['orderIndex'] ?? json['order'] ?? 0,
+      sectionCount: json['sectionCount'] ?? json['questionCount'] ?? (qList.isNotEmpty ? qList.length : 1),
       isCompleted: json['isCompleted'] ?? false,
-      icon: json['icon'],
+      icon: json['icon'] ?? emojiVal,
       accentColor: json['accentColor'],
       isLocked: json['isLocked'] ?? false,
+      emoji: emojiVal,
+      intro: json['intro'] ?? json['description'],
+      keyPoints: (json['keyPoints'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
+      miniExample: json['miniExample'],
+      completedSteps: json['completedSteps'] ?? (json['isCompleted'] == true ? 5 : 0),
+      percent: json['percent'] ?? (json['isCompleted'] == true ? 100 : 0),
+      xpReward: rewardXP,
+      coinReward: rewardCoins,
+      estMinutes: json['estMinutes'] ?? 7,
+      questions: qList,
     );
   }
 }
@@ -110,16 +160,26 @@ class QuestionModel {
   });
 
   factory QuestionModel.fromJson(Map<String, dynamic> json) {
+    final opts = List<String>.from(json['options'] ?? []);
+    int correctIdx = 0;
+    if (json['correctIndex'] is int) {
+      correctIdx = json['correctIndex'];
+    }
+    final correctAns = json['correctAnswer'] ??
+        (opts.isNotEmpty && correctIdx >= 0 && correctIdx < opts.length
+            ? opts[correctIdx]
+            : '');
+
     return QuestionModel(
       id: json['id'] ?? '',
-      prompt: json['prompt'] ?? '',
+      prompt: json['prompt'] ?? json['text'] ?? '',
       type: json['type'] ?? 'MULTIPLE_CHOICE',
-      options: List<String>.from(json['options'] ?? []),
-      correctAnswer: json['correctAnswer'] ?? '',
+      options: opts,
+      correctAnswer: correctAns,
       explanation: json['explanation'] ?? '',
       hint: json['hint'] ?? '',
       formulaLatex: json['formulaLatex'],
-      orderIndex: json['orderIndex'] ?? 1,
+      orderIndex: json['orderIndex'] ?? json['order'] ?? 1,
       isAlreadyRewarded: json['isAlreadyRewarded'] ?? false,
     );
   }

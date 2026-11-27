@@ -203,20 +203,48 @@ model Course {
   @@map("courses")
 }
 
+model Module {
+  id          String   @id @default(uuid())
+  grade       Int      @default(1)
+  subject     String   @default("Matematika")
+  part        Int      @default(1)
+  title       String
+  orderIndex  Int      @default(1)
+  comingSoon  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lessons     Lesson[]
+
+  @@map("modules")
+}
+
 model Lesson {
-  id           String   @id @default(uuid())
-  courseId     String
-  course       Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  title        String
-  topicKey     String
-  description  String
-  contentMd    String
-  formulaLatex String?
-  rewardXP     Int      @default(50)
-  rewardCoins  Int      @default(10)
-  orderIndex   Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id            String   @id @default(uuid())
+  courseId      String?
+  course        Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  moduleId      String?
+  module        Module?  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  title         String
+  topicKey      String   @default("general")
+  description   String   @default("")
+  shortDesc     String?
+  emoji         String?
+  intro         String?
+  keyPoints     String?
+  miniExample   String?
+  contentMd     String   @default("")
+  formulaLatex  String?
+  rewardXP      Int      @default(100)
+  rewardCoins   Int      @default(10)
+  xpReward      Int?     @default(100)
+  coinReward    Int?     @default(10)
+  estMinutes    Int?     @default(7)
+  questionCount Int?     @default(5)
+  grade         Int      @default(1)
+  chapterTitle  String?
+  orderIndex    Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   sections     Section[]
   questions    Question[]
@@ -244,12 +272,16 @@ model Question {
   lesson        Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   sectionId     String?
   section       Section?     @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  step          Int          @default(5)
+  text          String?
   prompt        String
   type          QuestionType @default(MULTIPLE_CHOICE)
   optionsJson   String       // JSON array of strings
+  options       String?
+  correctIndex  Int?
   correctAnswer String
   explanation   String
-  hint          String
+  hint          String?
   formulaLatex  String?
   orderIndex    Int          @default(0)
   createdAt     DateTime     @default(now())
@@ -288,15 +320,18 @@ model ExerciseAttempt {
 }
 
 model LessonProgress {
-  id          String    @id @default(uuid())
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lessonId    String
-  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  isCompleted Boolean   @default(false)
-  score       Int       @default(0)
-  completedAt DateTime?
-  updatedAt   DateTime  @updatedAt
+  id             String    @id @default(uuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId       String
+  lesson         Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  completedSteps Int       @default(0)
+  percent        Int       @default(0)
+  xpGiven        Int       @default(0)
+  isCompleted    Boolean   @default(false)
+  score          Int       @default(0)
+  completedAt    DateTime?
+  updatedAt      DateTime  @updatedAt
 
   @@unique([userId, lessonId])
   @@map("lesson_progress")
