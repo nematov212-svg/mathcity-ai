@@ -1,0 +1,276 @@
+{
+  "bookNumber": 68,
+  "title": "Ikki xonali sonlarni ayirish (3)",
+  "emoji": "➖",
+  "shortDesc": "Ikki xonali sondan ikki xonali sonni ayirish: 48 - 25 = 23.",
+  "intro": "Ikki xonali sondan ikki xonali sonni ayirishda o‘nliklardan o‘nliklar, birliklardan birliklar ayiriladi: 48 - 25 = (40 - 20) + (8 - 5) = 20 + 3 = 23.",
+  "keyPoints": [
+    "O‘nliklarni ayiramiz: 40 - 20 = 20.",
+    "Birliklarni ayiramiz: 8 - 5 = 3.",
+    "Natijalarni qo‘shamiz: 20 + 3 = 23."
+  ],
+  "miniExample": {
+    "emojis": "4️⃣8️⃣ - 2️⃣5️⃣ = 2️⃣3️⃣",
+    "text": "40 - 20 = 20; 8 - 5 = 3; 20 + 3 = 23."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 57 - 24 = ?",
+      "options": [
+        "33",
+        "32",
+        "34",
+        "23"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 20 = 30, 7 - 4 = 3, 30 + 3 = 33."
+    },
+    {
+      "text": "Hisoblang: 68 - 35 = ?",
+      "options": [
+        "32",
+        "33",
+        "34",
+        "43"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 30 = 30, 8 - 5 = 3, 30 + 3 = 33."
+    },
+    {
+      "text": "Hisoblang: 79 - 46 = ?",
+      "options": [
+        "32",
+        "34",
+        "33",
+        "23"
+      ],
+      "correctIndex": 2,
+      "explanation": "70 - 40 = 30, 9 - 6 = 3, 30 + 3 = 33."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 35 - 12 = ?",
+      "options": [
+        "23",
+        "22",
+        "24",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 - 10 = 20, 5 - 2 = 3, 20 + 3 = 23."
+    },
+    {
+      "text": "Hisoblang: 46 - 23 = ?",
+      "options": [
+        "22",
+        "24",
+        "23",
+        "33"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 - 20 = 20, 6 - 3 = 3, 20 + 3 = 23."
+    },
+    {
+      "text": "Hisoblang: 58 - 34 = ?",
+      "options": [
+        "23",
+        "24",
+        "25",
+        "14"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 - 30 = 20, 8 - 4 = 4, 20 + 4 = 24."
+    },
+    {
+      "text": "Hisoblang: 67 - 45 = ?",
+      "options": [
+        "21",
+        "23",
+        "32",
+        "22"
+      ],
+      "correctIndex": 3,
+      "explanation": "60 - 40 = 20, 7 - 5 = 2, 20 + 2 = 22."
+    },
+    {
+      "text": "Hisoblang: 79 - 26 = ?",
+      "options": [
+        "52",
+        "53",
+        "54",
+        "43"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 20 = 50, 9 - 6 = 3, 50 + 3 = 53."
+    },
+    {
+      "text": "Hisoblang: 84 - 51 = ?",
+      "options": [
+        "33",
+        "32",
+        "34",
+        "23"
+      ],
+      "correctIndex": 0,
+      "explanation": "80 - 50 = 30, 4 - 1 = 3, 30 + 3 = 33."
+    },
+    {
+      "text": "Hisoblang: 49 - 27 = ?",
+      "options": [
+        "21",
+        "23",
+        "12",
+        "22"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 - 20 = 20, 9 - 7 = 2, 20 + 2 = 22."
+    },
+    {
+      "text": "Hisoblang: 66 - 33 = ?",
+      "options": [
+        "32",
+        "34",
+        "33",
+        "23"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 - 30 = 30, 6 - 3 = 3, 30 + 3 = 33."
+    },
+    {
+      "text": "Noma’lum sonni toping: 75 - ? = 42",
+      "options": [
+        "32",
+        "34",
+        "33",
+        "23"
+      ],
+      "correctIndex": 2,
+      "explanation": "75 - 42 = 33."
+    },
+    {
+      "text": "Noma’lum sonni toping: ? - 21 = 54",
+      "options": [
+        "74",
+        "76",
+        "65",
+        "75"
+      ],
+      "correctIndex": 3,
+      "explanation": "54 + 21 = 75."
+    },
+    {
+      "text": "Hisoblang: 88 - 56 = ?",
+      "options": [
+        "32",
+        "31",
+        "33",
+        "22"
+      ],
+      "correctIndex": 0,
+      "explanation": "80 - 50 = 30, 8 - 6 = 2, 30 + 2 = 32."
+    },
+    {
+      "text": "Taqqoslang: 65 - 23 va 40",
+      "options": [
+        "65 - 23 < 40",
+        "65 - 23 > 40",
+        "65 - 23 = 40",
+        "65 - 23 + 40"
+      ],
+      "correctIndex": 1,
+      "explanation": "65 - 23 = 42 va 42 > 40."
+    },
+    {
+      "text": "Hisoblang: 96 - 44 = ?",
+      "options": [
+        "51",
+        "53",
+        "42",
+        "52"
+      ],
+      "correctIndex": 3,
+      "explanation": "90 - 40 = 50, 6 - 4 = 2, 50 + 2 = 52."
+    },
+    {
+      "text": "Hisoblang: 77 - 35 = ?",
+      "options": [
+        "41",
+        "42",
+        "43",
+        "32"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 30 = 40, 7 - 5 = 2, 40 + 2 = 42."
+    },
+    {
+      "text": "Hisoblang: 89 - 34 - 23 = ?",
+      "options": [
+        "31",
+        "33",
+        "32",
+        "22"
+      ],
+      "correctIndex": 2,
+      "explanation": "89 - 34 = 55, 55 - 23 = 32."
+    },
+    {
+      "text": "Hisoblang: 78 - 25 - 31 = ?",
+      "options": [
+        "22",
+        "21",
+        "23",
+        "32"
+      ],
+      "correctIndex": 0,
+      "explanation": "78 - 25 = 53, 53 - 31 = 22."
+    },
+    {
+      "text": "Yulduzcha o‘rniga to‘g‘ri belgini qo‘ying: 58 - 24 * 69 - 35",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "58 - 24 = 34 va 69 - 35 = 34, demak teng (=)."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 31 ga teng?",
+      "options": [
+        "65 - 24",
+        "75 - 34",
+        "55 - 14",
+        "65 - 34"
+      ],
+      "correctIndex": 3,
+      "explanation": "65 - 34 = 31."
+    },
+    {
+      "text": "Maktab bog‘ida 56 tup gul bor edi. Bolalar 23 tup gulni sug‘orishdi. Yana necha tup gulni sug‘orish kerak?",
+      "options": [
+        "32 tup",
+        "33 tup",
+        "34 tup",
+        "23 tup"
+      ],
+      "correctIndex": 1,
+      "explanation": "56 - 23 = 33 tup gul qoldi."
+    },
+    {
+      "text": "Karvon 68 km yo‘l bosishi kerak edi. Ular 35 km yo‘l yurishdi. Karvonga yana necha km yo‘l qoldi?",
+      "options": [
+        "32 km",
+        "34 km",
+        "33 km",
+        "23 km"
+      ],
+      "correctIndex": 2,
+      "explanation": "68 - 35 = 33 km qoldi."
+    }
+  ]
+}

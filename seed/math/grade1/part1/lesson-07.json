@@ -1,0 +1,276 @@
+{
+  "bookNumber": 7,
+  "title": "Narsalar guruhi",
+  "emoji": "🍎",
+  "shortDesc": "Umumiy nom, mevalar, hayvonlar, kiyimlar, ortiqchasini topish.",
+  "intro": "Umumiy xossaga ega narsalarni bir guruhga to‘plab, ularga bitta nom beramiz.",
+  "keyPoints": [
+    "Olma, nok va anor — bu mevalar guruhi.",
+    "Mushuk, it va ot — bu hayvonlar guruhi.",
+    "Guruhdagi boshqalarga o‘xshamagan narsaga ortiqcha narsa deyiladi."
+  ],
+  "miniExample": {
+    "emojis": "🍎 🍐 🍇 👟",
+    "text": "Olma, nok, uzum — mevalar. Poyabzal esa ortiqcha!"
+  },
+  "xpReward": 80,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Quyidagilarni bitta so‘z bilan nima deymiz: olma 🍎, o‘rik 🍑, gilos 🍒?",
+      "options": [
+        "Mevalar",
+        "Sabzavotlar",
+        "O‘yinchoqlar",
+        "Idishlar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Olma, o‘rik va gilos mevalar hisoblanadi."
+    },
+    {
+      "text": "Quyidagi guruhda qaysi biri ortiqcha: ko‘ylak 👗, shim 👖, etik 👢, qalam ✏️?",
+      "options": [
+        "Ko‘ylak 👗",
+        "Qalam ✏️ (u o‘quv quroli, kiyim emas)",
+        "Shim 👖",
+        "Etik 👢"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qolgan uchtasi kiyim-kechak, qalam esa kiyim emas."
+    },
+    {
+      "text": "Likopcha 🍽️, piyola 🥣 va qoshiq 🥄 qaysi guruhga kiradi?",
+      "options": [
+        "Mevalar",
+        "Kiyimlar",
+        "Idish-tovoqlar",
+        "Transport"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ovqatlanishda ishlatiladigan narsalar idish-tovoqlar deyiladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Bodring 🥒, pomidor 🍅 va sabzi 🥕 bitta so‘z bilan nima deyiladi?",
+      "options": [
+        "Sabzavotlar",
+        "Mevalar",
+        "Kiyimlar",
+        "O‘yinchoqlar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Bodring, pomidor va sabzi sabzavotlar guruhiga kiradi."
+    },
+    {
+      "text": "Bo‘ri 🐺, tulki 🦊 va ayiq 🐻 qaysi guruhga kiradi?",
+      "options": [
+        "Uy hayvonlari",
+        "Qushlar",
+        "Yovvoyi hayvonlar",
+        "Hasharotlar"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ular o‘rmonda yashaydigan yovvoyi hayvonlardir."
+    },
+    {
+      "text": "Sigir 🐄, qo‘y 🐑 va echki 🐐 qaysi guruhga kiradi?",
+      "options": [
+        "Yovvoyi hayvonlar",
+        "Uy hayvonlari",
+        "Baliqlar",
+        "O‘simliklar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Odamlar parvarish qiladigan hayvonlar uy hayvonlari deyiladi."
+    },
+    {
+      "text": "Chumoli 🐜, kapalak 🦋 va asalari 🐝 qaysi guruhga kiradi?",
+      "options": [
+        "Qushlar",
+        "Baliqlar",
+        "Sutemizuvchilar",
+        "Hasharotlar"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kapalak, asalari va chumoli hasharotlar oilasiga mansub."
+    },
+    {
+      "text": "Avtobus 🚌, metro 🚇 va tramvay 🚋 qaysi guruhga kiradi?",
+      "options": [
+        "Uy jihozlari",
+        "Jamoat transporti",
+        "O‘quv qurollari",
+        "Oziq-ovqat"
+      ],
+      "correctIndex": 1,
+      "explanation": "Odamlarni tashiydigan vositalar transport deyiladi."
+    },
+    {
+      "text": "Daftar 📓, qalam ✏️, o‘chirg‘ich 🧼 va chizg‘ich 📏 nima deyiladi?",
+      "options": [
+        "O‘quv qurollari",
+        "Oshxona anjomlari",
+        "Kiyimlar",
+        "Musiqa asboblari"
+      ],
+      "correctIndex": 0,
+      "explanation": "Maktabda ishlatiladigan narsalar o‘quv qurollaridir."
+    },
+    {
+      "text": "Quyidagi qatorda qaysi narsa ortiqcha: 🍎, 🍌, 🍊, 🪑?",
+      "options": [
+        "Olma 🍎",
+        "Banan 🍌",
+        "Apelsin 🍊",
+        "Stul 🪑 (u mebel, meva emas)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Stul o‘tirish uchun mebel, qolganlari esa mevadir."
+    },
+    {
+      "text": "Quyidagilar ichida qaysi biri ortiqcha: 🚌, 🚗, 🚲, 🦅?",
+      "options": [
+        "Avtobus 🚌",
+        "Mashina 🚗",
+        "Burgut 🦅 (u qush, transport emas)",
+        "Velosiped 🚲"
+      ],
+      "correctIndex": 2,
+      "explanation": "Burgut tirik qush, qolganlari esa texnika vositalaridir."
+    },
+    {
+      "text": "Qaysi guruhdagi barcha narsalar mevalardan iborat?",
+      "options": [
+        "Pomidor 🍅, sabzi 🥕, kartoshka 🥔",
+        "Non 🍞, choy ☕, qand 🍬",
+        "Olma 🍎, anor 🫐, shaftoli 🍑",
+        "Koptok ⚽, qo‘g‘irchoq 🪆, mashina 🚗"
+      ],
+      "correctIndex": 2,
+      "explanation": "Olma, anor va shaftoli shirin mevalardir."
+    },
+    {
+      "text": "Qaysi guruhdagi barcha narsalar idish-tovoqlardan iborat?",
+      "options": [
+        "Etik 👢, do‘ppi 🧢, ro‘mol 🧣",
+        "Kitob 📖, daftar 📓, ruchka 🖊️",
+        "Velosiped 🚲, aravacha 🛒, samolyot ✈️",
+        "Choynak 🫖, piyola 🥣, qoshiq 🥄"
+      ],
+      "correctIndex": 3,
+      "explanation": "Choynak, piyola va qoshiq oshxona idishlaridir."
+    },
+    {
+      "text": "Do‘ppi 🧢, chopon 👘 va kamzul 🦺 qaysi guruhga kiradi?",
+      "options": [
+        "Milliy kiyimlar",
+        "O‘yinchoqlar",
+        "O‘quv anjomlari",
+        "Meva-chevalar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Do‘ppi va chopon o‘zbek xalqining milliy kiyimlaridir."
+    },
+    {
+      "text": "Guruhda nechta meva bor: 🍎, 🍐, 🚗, 🍌?",
+      "options": [
+        "4 ta meva",
+        "3 ta meva (olma, nok, banan)",
+        "2 ta meva",
+        "1 ta meva"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mashina meva emas, mevalar soni 3 ta."
+    },
+    {
+      "text": "Guruhda nechta hayvon bor: 🐶, 🐱, 📱, 🐰?",
+      "options": [
+        "4 ta hayvon",
+        "2 ta hayvon",
+        "5 ta hayvon",
+        "3 ta hayvon (kuchukcha, mushukcha, quyoncha)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Telefon hayvon emas, hayvonlar 3 ta."
+    },
+    {
+      "text": "Dutor, doira va nay qaysi guruhga kiradi?",
+      "options": [
+        "Sport jihozlari",
+        "Milliy musiqa asboblari 🎵",
+        "Oshxona anjomlari",
+        "Bog‘dorchilik asboblari"
+      ],
+      "correctIndex": 1,
+      "explanation": "Dutor va doira o‘zbek milliy musiqa cholg‘ularidir."
+    },
+    {
+      "text": "Koptok ⚽, charxpalak 🎡 va piramida 🪆 o‘yinchog‘i nima deyiladi?",
+      "options": [
+        "Sabzavotlar",
+        "Kiyimlar",
+        "O‘yinchoqlar",
+        "Darsliklar"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bolalar o‘ynaydigan buyumlar o‘yinchoqlar deyiladi."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri ortiqcha: ⚽, 🏀, 🏐, 🥪?",
+      "options": [
+        "Sendvich 🥪 (u yegulik, koptok emas)",
+        "Futbol koptogi ⚽",
+        "Basketbol koptogi 🏀",
+        "Voleybol koptogi 🏐"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uchtasi sport koptoklari, sendvich esa oziq-ovqat."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri 'Uy hayvonlari' guruhiga kirmaydi?",
+      "options": [
+        "Sher (arslon) 🦁",
+        "Kuchukcha 🐕",
+        "Mushukcha 🐈",
+        "Echki 🐐"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sher yirtqich yovvoyi hayvon, uyda boqilmaydi."
+    },
+    {
+      "text": "Ikki guruh berilgan: 1-guruhda 3 ta olma 🍎🍎🍎, 2-guruhda 3 ta nok 🍐🍐🍐. Guruhlar soni tengmi?",
+      "options": [
+        "1-guruh ko‘p",
+        "2-guruh ko‘p",
+        "Taqqoslab bo‘lmaydi",
+        "Teng (ikkalasida ham 3 tadan)"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 ta olma va 3 ta nok miqdor jihatdan bir-biriga tengdir (3 = 3)."
+    },
+    {
+      "text": "Anvar savatga 2 ta daftar, 3 ta qalam va 1 ta olma soldi. Savatda nechta o‘quv quroli bor?",
+      "options": [
+        "6 ta",
+        "5 ta o‘quv quroli (2 ta daftar + 3 ta qalam)",
+        "4 ta",
+        "1 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Olma meva, o‘quv qurollari esa 2 + 3 = 5 ta."
+    },
+    {
+      "text": "Zeboxon xonasini yig‘ishtirib, qo‘g‘irchoqlarni bitta qutiga, kitoblarni esa javonga qo‘ydi. U buyumlarni nima qildi?",
+      "options": [
+        "Hammasini aralashtirib tashladi",
+        "Buzib qo‘ydi",
+        "Guruhlarga ajratib tartibga soldi",
+        "Yo‘qotib qo‘ydi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Buyumlarni xossasiga qarab ajratish tartib-intizom keltiradi."
+    }
+  ]
+}

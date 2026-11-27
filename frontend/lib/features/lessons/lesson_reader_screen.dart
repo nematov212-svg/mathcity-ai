@@ -32,9 +32,14 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen>
   int _currentStep =
       0; // 0: Kirish, 1: Tushuntirish, 2: Misollar, 3: Mashq, 4: Mini-test
 
-  // Quiz state
+  // Quiz & Test state
   List<Map<String, dynamic>> _quizQuestions = [];
   final Map<int, String> _selectedAnswers = {};
+  final Map<int, int> _selectedAnswerIndices = {};
+  String? _testAttemptId;
+  Map<String, dynamic>? _testResult;
+  int? _unansweredHighlightIndex;
+  bool _showErrorsOnly = false;
   int _correctCount = 0;
   bool _quizSubmitted = false;
   bool _isSavingProgress = false;
@@ -98,6 +103,154 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen>
         }
       }
     } catch (_) {}
+  }
+
+  Future<void> _startTestAttempt() async {
+    if (_lesson == null) return;
+    try {
+      final res = await ApiClient().dio.post('/lessons/${_lesson!.id}/test/start');
+      if (res.data != null && res.data['success'] == true) {
+        final data = res.data['data'];
+        final attemptId = data['attemptId'] as String?;
+        final qList = (data['questions'] as List<dynamic>? ?? []).map((q) => {
+          'id': q['id']?.toString() ?? '',
+          'prompt': (q['text'] ?? q['prompt'] ?? '').toString(),
+          'options': List<String>.from(q['options'] ?? []),
+        }).toList();
+
+        if (mounted && qList.isNotEmpty) {
+          setState(() {
+            _testAttemptId = attemptId;
+            _quizQuestions = qList;
+            _selectedAnswerIndices.clear();
+            _quizSubmitted = false;
+            _testResult = null;
+            _unansweredHighlightIndex = null;
+          });
+        }
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _submitTestAttempt() async {
+    if (_lesson == null) return;
+
+    final totalQ = _quizQuestions.length;
+    int firstUnanswered = -1;
+    for (int i = 0; i < totalQ; i++) {
+      if (!_selectedAnswerIndices.containsKey(i) || _selectedAnswerIndices[i] == -1) {
+        firstUnanswered = i;
+        break;
+      }
+    }
+
+    if (firstUnanswered != -1) {
+      setState(() {
+        _unansweredHighlightIndex = firstUnanswered;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Iltimos, barcha $totalQ ta savolga javob bering! (${_selectedAnswerIndices.length}/$totalQ bajarildi)',
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
+          backgroundColor: const Color(0xFFE5484D),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isSavingProgress = true);
+
+    try {
+      final answersMap = <String, int>{};
+      for (int i = 0; i < _quizQuestions.length; i++) {
+        final qId = _quizQuestions[i]['id']?.toString() ?? '$i';
+        answersMap[qId] = _selectedAnswerIndices[i] ?? 0;
+      }
+
+      final res = await ApiClient().dio.post(
+        '/lessons/${_lesson!.id}/test/submit',
+        data: {
+          'attemptId': _testAttemptId ?? 'att_offline',
+          'answers': answersMap,
+        },
+      );
+
+      if (res.data != null && res.data['success'] == true) {
+        final resultData = res.data['data'] as Map<String, dynamic>;
+        final xpAwarded = resultData['xpAwarded'] as int? ?? 0;
+        final coinsAwarded = resultData['coinsAwarded'] as int? ?? 0;
+        final correctCount = resultData['correctCount'] as int? ?? 0;
+
+        if (xpAwarded > 0) {
+          ref.read(studentProvider.notifier).updateXP(xpAwarded);
+        }
+        if (coinsAwarded > 0) {
+          ref.read(studentProvider.notifier).updateCoins(coinsAwarded);
+        }
+
+        if (mounted) {
+          setState(() {
+            _testResult = resultData;
+            _correctCount = correctCount;
+            _quizSubmitted = true;
+            _isSavingProgress = false;
+          });
+        }
+        return;
+      }
+    } catch (_) {}
+
+    // Offline / Test fallback
+    if (mounted) {
+      int correct = 0;
+      final reviews = <Map<String, dynamic>>[];
+      for (int i = 0; i < _quizQuestions.length; i++) {
+        final q = _quizQuestions[i];
+        final selected = _selectedAnswerIndices[i] ?? 0;
+        final opts = List<String>.from(q['options'] ?? []);
+        final correctAns = q['correctAnswer'] ?? (opts.isNotEmpty ? opts[0] : '');
+        final isCorr = opts.isNotEmpty && opts[selected] == correctAns;
+        if (isCorr) correct++;
+        reviews.add({
+          'text': q['prompt'],
+          'options': opts,
+          'selectedOption': selected,
+          'correctOption': opts.indexOf(correctAns),
+          'isCorrect': isCorr,
+          'explanation': q['explanation'] ?? '',
+        });
+      }
+      final pct = totalQ > 0 ? ((correct / totalQ) * 100).round() : 100;
+      setState(() {
+        _correctCount = correct;
+        _quizSubmitted = true;
+        _isSavingProgress = false;
+        _testResult = {
+          'percent': pct,
+          'isPassed': pct >= 60,
+          'correctCount': correct,
+          'totalCount': totalQ,
+          'xpAwarded': pct >= 60 ? 40 : 0,
+          'coinsAwarded': pct >= 60 ? 10 : 0,
+          'questions': reviews,
+        };
+      });
+      _recordStep(5);
+    }
+  }
+
+  void _retryTest() {
+    setState(() {
+      _selectedAnswerIndices.clear();
+      _quizSubmitted = false;
+      _testResult = null;
+      _unansweredHighlightIndex = null;
+      _showErrorsOnly = false;
+    });
+    _startTestAttempt();
   }
 
   void _fetchLesson() async {
@@ -1254,8 +1407,8 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Keyingi bosqichda siz 3–5 ta mini-test savollariga javob berasiz. '
-                      'Har bir to‘g‘ri javob uchun sizga XP va tangalar beriladi. Tayyormisiz?',
+                      'Keyingi bosqichda siz 20 ta nazorat test savollariga javob berasiz. '
+                      '60% dan yuqori natija bilan keyingi mavzuni ochasiz hamda XP va tangalarga ega bo‘lasiz. Tayyormisiz?',
                       style: TextStyle(
                           fontSize: 13,
                           height: 1.4,
@@ -1272,9 +1425,17 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
   }
 
   Widget _buildStepMiniTest(AppThemeColors colors, LessonModel lesson) {
+    if (_quizSubmitted && _testResult != null) {
+      return _buildTestResultView(colors, lesson, _testResult!);
+    }
+
+    final totalCount = _quizQuestions.length;
+    final answeredCount = _selectedAnswerIndices.length;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Header
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -1285,9 +1446,10 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                 Text(
                   'Nazorat mini-testi',
                   style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      color: colors.ink),
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: colors.ink,
+                  ),
                 ),
               ],
             ),
@@ -1298,26 +1460,80 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                '${_quizQuestions.length} ta savol',
+                '$totalCount ta savol',
                 style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                    color: colors.primary),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  color: colors.primary,
+                ),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 14),
+
+        // Sticky progress counter card
+        Container(
+          margin: const EdgeInsets.only(bottom: 18),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: colors.card,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: colors.border),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Javob berildi: $answeredCount/$totalCount',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: colors.ink,
+                    ),
+                  ),
+                  Text(
+                    '${totalCount > 0 ? ((answeredCount / totalCount) * 100).round() : 0}%',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: colors.primary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(999),
+                child: LinearProgressIndicator(
+                  value: totalCount > 0 ? answeredCount / totalCount : 0.0,
+                  backgroundColor: colors.border,
+                  valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
+                  minHeight: 8,
+                ),
+              ),
+            ],
+          ),
+        ),
 
         // Render each question card
         ..._quizQuestions.asMap().entries.map((entry) {
           final qIdx = entry.key;
           final q = entry.value;
           final prompt = q['prompt'] as String;
-          final options = q['options'] as List<String>;
-          final correctAns = q['correctAnswer'] as String;
-          final explanation = q['explanation'] as String;
-          final userSelected = _selectedAnswers[qIdx];
+          final options = List<String>.from(q['options'] ?? []);
+          final userSelectedIdx = _selectedAnswerIndices[qIdx];
+          final isHighlighted = _unansweredHighlightIndex == qIdx;
 
           return Container(
             margin: const EdgeInsets.only(bottom: 18),
@@ -1325,44 +1541,81 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
             decoration: BoxDecoration(
               color: colors.card,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: colors.border),
+              border: Border.all(
+                color: isHighlighted
+                    ? const Color(0xFFE5484D)
+                    : colors.border,
+                width: isHighlighted ? 2.0 : 1.0,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: isHighlighted
+                      ? const Color(0xFFE5484D).withOpacity(0.08)
+                      : Colors.black.withOpacity(0.02),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '${qIdx + 1}. $prompt',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                    color: colors.ink,
-                    height: 1.35,
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 26,
+                      height: 26,
+                      decoration: BoxDecoration(
+                        color: userSelectedIdx != null
+                            ? colors.primary.withOpacity(0.12)
+                            : (isHighlighted ? const Color(0xFFFEE2E2) : colors.bg),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isHighlighted ? const Color(0xFFE5484D) : colors.border,
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        '${qIdx + 1}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          color: userSelectedIdx != null
+                              ? colors.primary
+                              : (isHighlighted ? const Color(0xFFE5484D) : colors.muted),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        prompt,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                          color: colors.ink,
+                          height: 1.35,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 14),
 
                 // Option Cards
-                ...options.map((opt) {
-                  final isSelected = userSelected == opt;
-                  final isCorrect = opt == correctAns;
-                  final showResult = _quizSubmitted;
+                ...options.asMap().entries.map((optEntry) {
+                  final optIdx = optEntry.key;
+                  final optText = optEntry.value;
+                  final isSelected = userSelectedIdx == optIdx;
+                  final optLetter = String.fromCharCode(65 + optIdx);
 
                   Color tileColor = colors.bg;
                   Color borderColor = colors.border;
                   Color textColor = colors.ink;
 
-                  if (showResult) {
-                    if (isCorrect) {
-                      tileColor = const Color(0xFFECFDF5);
-                      borderColor = const Color(0xFF10B981);
-                      textColor = const Color(0xFF047857);
-                    } else if (isSelected && !isCorrect) {
-                      tileColor = const Color(0xFFFEF2F2);
-                      borderColor = const Color(0xFFEF4444);
-                      textColor = const Color(0xFFB91C1C);
-                    }
-                  } else if (isSelected) {
-                    tileColor = colors.primary.withOpacity(0.1);
+                  if (isSelected) {
+                    tileColor = colors.primary.withOpacity(0.08);
                     borderColor = colors.primary;
                     textColor = colors.primary;
                   }
@@ -1371,16 +1624,17 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                     padding: const EdgeInsets.only(bottom: 8),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(12),
-                      onTap: showResult
-                          ? null
-                          : () {
-                              setState(() {
-                                _selectedAnswers[qIdx] = opt;
-                              });
-                            },
+                      onTap: () {
+                        setState(() {
+                          _selectedAnswerIndices[qIdx] = optIdx;
+                          _selectedAnswers[qIdx] = optText;
+                          if (_unansweredHighlightIndex == qIdx) {
+                            _unansweredHighlightIndex = null;
+                          }
+                        });
+                      },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                         decoration: BoxDecoration(
                           color: tileColor,
                           borderRadius: BorderRadius.circular(12),
@@ -1389,30 +1643,32 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                         child: Row(
                           children: [
                             Container(
-                              width: 22,
-                              height: 22,
+                              width: 24,
+                              height: 24,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: isSelected
-                                    ? borderColor
-                                    : Colors.transparent,
-                                border:
-                                    Border.all(color: borderColor, width: 1.5),
+                                color: isSelected ? colors.primary : Colors.transparent,
+                                border: Border.all(color: borderColor, width: 1.5),
                               ),
+                              alignment: Alignment.center,
                               child: isSelected
-                                  ? const Icon(Icons.check,
-                                      size: 14, color: Colors.white)
-                                  : null,
+                                  ? const Icon(Icons.check, size: 14, color: Colors.white)
+                                  : Text(
+                                      optLetter,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w800,
+                                        color: colors.muted,
+                                      ),
+                                    ),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                opt,
+                                optText,
                                 style: TextStyle(
                                   fontSize: 14,
-                                  fontWeight: isSelected
-                                      ? FontWeight.w800
-                                      : FontWeight.w600,
+                                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                                   color: textColor,
                                 ),
                               ),
@@ -1423,8 +1679,400 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                     ),
                   );
                 }),
+              ],
+            ),
+          );
+        }),
+      ],
+    );
+  }
 
-                if (_quizSubmitted) ...[
+  Widget _buildTestResultView(
+    AppThemeColors colors,
+    LessonModel lesson,
+    Map<String, dynamic> result,
+  ) {
+    final percent = result['percent'] as int? ?? 0;
+    final correctCount = result['correctCount'] as int? ?? 0;
+    final totalCount = result['totalCount'] as int? ?? 20;
+    final isPassed = result['isPassed'] as bool? ?? (percent >= 60);
+    final xpAwarded = result['xpAwarded'] as int? ?? 0;
+    final coinsAwarded = result['coinsAwarded'] as int? ?? 0;
+    final rawReviews = result['questions'] as List<dynamic>? ?? [];
+
+    Color ringColor;
+    String tierTitle;
+    if (percent >= 90) {
+      ringColor = const Color(0xFF2EB67D);
+      tierTitle = 'Ajoyib! 🏆';
+    } else if (percent >= 70) {
+      ringColor = const Color(0xFF6C3CE0);
+      tierTitle = 'Zo‘r! 👏';
+    } else if (percent >= 60) {
+      ringColor = const Color(0xFF3B82F6);
+      tierTitle = 'Yaxshi, mavzu o‘tildi ✅';
+    } else {
+      ringColor = const Color(0xFFE5484D);
+      tierTitle = 'Yana bir urinib ko‘ring 💪';
+    }
+
+    final filteredReviews = _showErrorsOnly
+        ? rawReviews.where((r) => r['isCorrect'] != true).toList()
+        : rawReviews;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // 1. Big Circular Percentage Ring
+        Container(
+          width: 140,
+          height: 140,
+          margin: const EdgeInsets.only(top: 8, bottom: 16),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 140,
+                height: 140,
+                child: CircularProgressIndicator(
+                  value: (percent / 100).clamp(0.0, 1.0),
+                  backgroundColor: colors.border.withOpacity(0.5),
+                  valueColor: AlwaysStoppedAnimation<Color>(ringColor),
+                  strokeWidth: 10,
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '$percent%',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w900,
+                      color: ringColor,
+                      letterSpacing: -1,
+                    ),
+                  ),
+                  Text(
+                    '$correctCount / $totalCount',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: colors.muted,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+
+        // 2. Tier Title & Encouragement
+        Text(
+          tierTitle,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w900,
+            color: colors.ink,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 6),
+        Text(
+          isPassed
+              ? 'Tabriklaymiz! Siz 60% dan yuqori natija bilan keyingi mavzuni ochdingiz!'
+              : 'O‘tish bali 60% (12 ta to‘g‘ri javob). Qaytadan urinib ko‘ring va yuqoriroq bal to‘plang!',
+          style: TextStyle(
+            fontSize: 13,
+            color: colors.muted,
+            height: 1.35,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 16),
+
+        // 3. Rewards Banner
+        if (xpAwarded > 0 || coinsAwarded > 0)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFF6C3CE0).withOpacity(0.12),
+                  const Color(0xFFFFC83D).withOpacity(0.15),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: colors.primary.withOpacity(0.2)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (xpAwarded > 0) ...[
+                  const Icon(Icons.bolt_rounded, color: Color(0xFF6C3CE0), size: 20),
+                  const SizedBox(width: 4),
+                  Text(
+                    '+$xpAwarded XP',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF6C3CE0),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                ],
+                if (coinsAwarded > 0) ...[
+                  const Text('🪙', style: TextStyle(fontSize: 16)),
+                  const SizedBox(width: 5),
+                  Text(
+                    '+$coinsAwarded tanga',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFFB45309),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+
+        // 4. Confetti notice for high performers
+        if (percent >= 80)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFECFDF5),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFF10B981).withOpacity(0.3)),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('🎉', style: TextStyle(fontSize: 18)),
+                SizedBox(width: 8),
+                Text(
+                  'Ajoyib yutuq! Maxsus mahorat ko‘rsatildi!',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF047857),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+        // 5. Action Buttons (Apple Style)
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: _retryTest,
+                icon: const Icon(Icons.refresh_rounded, size: 18),
+                label: const Text('Qayta urinish'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isPassed ? colors.bg : const Color(0xFF6C3CE0),
+                  foregroundColor: isPassed ? colors.ink : Colors.white,
+                  elevation: 0,
+                  side: isPassed ? BorderSide(color: colors.border) : BorderSide.none,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+            ),
+            if (isPassed) ...[
+              const SizedBox(width: 10),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    // Navigate to next lesson if available, else back to list
+                    final nextBookNum = lesson.bookNumber + 1;
+                    if (nextBookNum <= 74) {
+                      final pad = nextBookNum < 10 ? '0$nextBookNum' : '$nextBookNum';
+                      context.pushReplacement('/kids/lesson/lesson-g1-$pad');
+                    } else {
+                      context.pop();
+                    }
+                  },
+                  icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+                  label: const Text('Keyingi mavzu'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2EB67D),
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+        const SizedBox(height: 8),
+
+        OutlinedButton.icon(
+          onPressed: () => context.pop(),
+          icon: const Icon(Icons.list_alt_rounded, size: 18),
+          label: const Text('Mavzular ro‘yxatiga qaytish'),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: colors.muted,
+            side: BorderSide(color: colors.border),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // 6. "Xatolarni ko‘rish" (Answers Review)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Savollar tahlili (${filteredReviews.length})',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+                color: colors.ink,
+              ),
+            ),
+            TextButton.icon(
+              onPressed: () {
+                setState(() {
+                  _showErrorsOnly = !_showErrorsOnly;
+                });
+              },
+              icon: Icon(
+                _showErrorsOnly ? Icons.visibility_rounded : Icons.filter_alt_outlined,
+                size: 16,
+                color: colors.primary,
+              ),
+              label: Text(
+                _showErrorsOnly ? 'Barchasini ko‘rish' : 'Faqat xatolar',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  color: colors.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+
+        ...filteredReviews.asMap().entries.map((revEntry) {
+          final rev = revEntry.value as Map<String, dynamic>;
+          final qNum = revEntry.key + 1;
+          final prompt = rev['text']?.toString() ?? '';
+          final options = List<String>.from(rev['options'] ?? []);
+          final selectedIdx = rev['selectedOption'] as int? ?? -1;
+          final correctIdx = rev['correctOption'] as int? ?? 0;
+          final isCorr = rev['isCorrect'] as bool? ?? false;
+          final explanation = rev['explanation']?.toString() ?? '';
+
+          return Container(
+            margin: const EdgeInsets.only(bottom: 14),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colors.card,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isCorr ? const Color(0xFF10B981).withOpacity(0.4) : const Color(0xFFE5484D).withOpacity(0.4),
+                width: 1.2,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      isCorr ? Icons.check_circle_rounded : Icons.cancel_rounded,
+                      color: isCorr ? const Color(0xFF10B981) : const Color(0xFFE5484D),
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '$qNum. $prompt',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          color: colors.ink,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+                // Options review
+                ...options.asMap().entries.map((optEntry) {
+                  final idx = optEntry.key;
+                  final text = optEntry.value;
+                  final wasSelected = selectedIdx == idx;
+                  final isAnswer = correctIdx == idx;
+
+                  Color optBg = colors.bg;
+                  Color optBorder = colors.border;
+                  Color optColor = colors.ink;
+                  IconData? optIcon;
+
+                  if (isAnswer) {
+                    optBg = const Color(0xFFECFDF5);
+                    optBorder = const Color(0xFF10B981);
+                    optColor = const Color(0xFF047857);
+                    optIcon = Icons.check_circle_rounded;
+                  } else if (wasSelected && !isAnswer) {
+                    optBg = const Color(0xFFFEF2F2);
+                    optBorder = const Color(0xFFE5484D);
+                    optColor = const Color(0xFFB91C1C);
+                    optIcon = Icons.cancel_rounded;
+                  }
+
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: optBg,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: optBorder),
+                    ),
+                    child: Row(
+                      children: [
+                        if (optIcon != null) ...[
+                          Icon(optIcon, size: 16, color: optBorder),
+                          const SizedBox(width: 8),
+                        ],
+                        Expanded(
+                          child: Text(
+                            text,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: isAnswer || wasSelected ? FontWeight.w800 : FontWeight.w600,
+                              color: optColor,
+                            ),
+                          ),
+                        ),
+                        if (wasSelected)
+                          Text(
+                            isAnswer ? '(Sizning javobingiz ✓)' : '(Sizning javobingiz ✗)',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: optColor,
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                }),
+
+                if (explanation.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.all(10),
@@ -1435,14 +2083,16 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.info_outline_rounded,
-                            size: 16, color: Colors.grey),
+                        const Icon(Icons.lightbulb_outline_rounded, size: 15, color: Color(0xFFD97706)),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
                             explanation,
-                            style: const TextStyle(
-                                fontSize: 12, color: Colors.grey, height: 1.3),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: colors.muted,
+                              height: 1.35,
+                            ),
                           ),
                         ),
                       ],
@@ -1587,6 +2237,10 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
 
     final isLastStep = _currentStep == _stepTitles.length - 1;
 
+    if (isLastStep && _quizSubmitted && _testResult != null) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
       decoration: BoxDecoration(
@@ -1612,7 +2266,7 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
           ),
           const SizedBox(width: 12),
 
-          // "Keyingi" or "Testni tekshirish" or "Yakunlash" Button
+          // "Keyingi" or "Testni tekshirish" Button
           Expanded(
             child: SizedBox(
               height: 48,
@@ -1621,25 +2275,16 @@ Qoidalarni yodlashdan ko‘ra, ularning kelib chiqish sababini tushunish muhimro
                   if (!isLastStep) {
                     final nextStep = _currentStep + 1;
                     _recordStep(nextStep + 1);
+                    if (nextStep == 4 && _testAttemptId == null) {
+                      _startTestAttempt();
+                    }
                     setState(() {
                       _currentStep = nextStep;
                     });
                   } else {
-                    // Mini-test step
                     if (!_quizSubmitted) {
-                      int correct = 0;
-                      for (int i = 0; i < _quizQuestions.length; i++) {
-                        if (_selectedAnswers[i] == _quizQuestions[i]['correctAnswer']) {
-                          correct++;
-                        }
-                      }
-                      setState(() {
-                        _quizSubmitted = true;
-                        _correctCount = correct;
-                      });
-                      _recordStep(5);
+                      _submitTestAttempt();
                     } else {
-                      // Complete lesson
                       _completeLesson();
                     }
                   }

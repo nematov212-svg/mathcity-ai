@@ -1,0 +1,276 @@
+{
+  "bookNumber": 40,
+  "title": "Taqqoslash xossasi",
+  "emoji": "⚖️",
+  "shortDesc": "Hisoblamay taqqoslash, 6 > 3 bo‘lsa a + 6 > a + 3 qoidasi.",
+  "intro": "Bir xil songa kattaroq son qo‘shilsa, natija ham kattaroq bo‘ladi.",
+  "keyPoints": [
+    "Qoida: Agar b > c bo‘lsa, u holda a + b > a + c bo‘ladi.",
+    "Misol: 6 > 3 bo‘lgani uchun, 2 + 6 > 2 + 3.",
+    "Hisoblab o‘tirmasdan, qo‘shilayotgan sonlarga qarab taqqoslash mumkin."
+  ],
+  "miniExample": {
+    "emojis": "6️⃣ > 3️⃣ ➡️ (2+6) > (2+3)",
+    "text": "6 katta 3 dan, demak 2 ga 6 ni qo‘shsak kattaroq chiqadi!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Hisoblamay taqqoslang: 4 + 5 ... 4 + 2. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "> (chunki 5 > 2)",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ikkalasida ham 4 bor, 5 esa 2 dan katta, demak 4 + 5 > 4 + 2."
+    },
+    {
+      "text": "Hisoblamay taqqoslang: 3 + 1 ... 3 + 4. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "< (chunki 1 < 4)",
+        "=",
+        "−"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 soni 4 dan kichik, demak 3 + 1 < 3 + 4."
+    },
+    {
+      "text": "Hisoblamay taqqoslang: 7 + 2 ... 2 + 7. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "= (o‘rin almashgan, teng)",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qo‘shiluvchilar o‘rni almashgani bilan yig‘indi teng bo‘ladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblamay taqqoslang: 5 + 4 ... 5 + 2. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 > 2 bo‘lgani uchun 5 + 4 > 5 + 2."
+    },
+    {
+      "text": "Hisoblamay taqqoslang: 2 + 6 ... 2 + 8. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "−"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 < 8 bo‘lgani uchun 2 + 6 < 2 + 8."
+    },
+    {
+      "text": "Hisoblamay taqqoslang: 6 + 3 ... 6 + 3. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ikkala tomon aynan bir xil (6 + 3 = 6 + 3)."
+    },
+    {
+      "text": "Hisoblamay taqqoslang: 7 + 1 ... 7 + 3. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "−",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 < 3 bo‘lgani uchun 7 + 1 < 7 + 3."
+    },
+    {
+      "text": "Hisoblamay taqqoslang: 8 + 2 ... 8 + 1. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 > 1 bo‘lgani uchun 8 + 2 > 8 + 1."
+    },
+    {
+      "text": "Hisoblamay taqqoslang: 3 + 4 ... 4 + 3. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "−"
+      ],
+      "correctIndex": 0,
+      "explanation": "O‘rin almashtirish xossasiga ko‘ra ular teng (3 + 4 = 4 + 3)."
+    },
+    {
+      "text": "Hisoblamay taqqoslang: 1 + 9 ... 1 + 7. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        "=",
+        "+",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 > 7 bo‘lgani uchun 1 + 9 > 1 + 7."
+    },
+    {
+      "text": "Hisoblamay taqqoslang: 4 + 2 ... 4 + 6. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "−"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 < 6 bo‘lgani uchun 4 + 2 < 4 + 6."
+    },
+    {
+      "text": "Quyidagi taqqoslashlardan qaysi biri to‘g‘ri?",
+      "options": [
+        "5 + 3 < 5 + 1",
+        "5 + 3 = 5 + 1",
+        "5 + 3 > 5 + 1",
+        "5 + 1 > 5 + 3"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 > 1 bo‘lgani sababli 5 + 3 > 5 + 1."
+    },
+    {
+      "text": "Qaysi taqqoslash to‘g‘ri yozilgan?",
+      "options": [
+        "2 + 7 > 2 + 8",
+        "2 + 7 = 2 + 8",
+        "2 + 8 < 2 + 7",
+        "2 + 7 < 2 + 8"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 < 8 bo‘lgani uchun 2 + 7 < 2 + 8."
+    },
+    {
+      "text": "Agar 5 > 2 bo‘lsa, 4 + 5 bilan 4 + 2 taqqoslanganda qaysi biri katta?",
+      "options": [
+        "4 + 5 katta",
+        "4 + 2 katta",
+        "Ikkalasi teng",
+        "Bilmayman"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kattaroq son qo‘shilgan ifoda katta bo‘ladi."
+    },
+    {
+      "text": "Agar 6 < 9 bo‘lsa, 1 + 6 bilan 1 + 9 taqqoslanganda qaysi biri kichik?",
+      "options": [
+        "1 + 9 kichik",
+        "1 + 6 kichik",
+        "Ikkalasi teng",
+        "1 + 6 katta"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 kichik bo‘lgani uchun 1 + 6 kichikdir."
+    },
+    {
+      "text": "Taqqoslang: 10 − 2 ... 10 − 5. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        "=",
+        "+",
+        "> (kamroq ayirilsa ko‘proq qoladi)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 dan 2 ayirilsa 8, 5 ayirilsa 5 qoladi, demak 8 > 5."
+    },
+    {
+      "text": "Taqqoslang: 8 − 1 ... 8 − 4. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "−"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kamroq son ayirilsa natija kattaroq bo‘ladi: 7 > 4."
+    },
+    {
+      "text": "Taqqoslang: 9 − 6 ... 9 − 2. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ko‘proq son ayirilsa natija kichik bo‘ladi: 3 < 7."
+    },
+    {
+      "text": "Anvar va Sobirda 3 tadan daftar bor edi. Anvarga 5 ta, Sobirga 2 ta berishdi. Kimda ko‘p bo‘ldi?",
+      "options": [
+        "Anvarda ko‘p bo‘ldi (3 + 5 > 3 + 2)",
+        "Sobirda ko‘p bo‘ldi",
+        "Ikkalasida teng",
+        "Anvarda kam bo‘ldi"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 > 2 bo‘lgani uchun Anvarda ko‘p bo‘ladi."
+    },
+    {
+      "text": "Ikkita bir xil likopchada 4 tadan olma bor edi. 1-likopchadan 1 ta, 2-likopchadan 3 ta olindi. Qayerda ko‘p qoldi?",
+      "options": [
+        "1-likopchada ko‘p qoldi (chunki kamroq olindi)",
+        "2-likopchada ko‘p qoldi",
+        "Ikkalasida teng",
+        "Hech qaysisida qolmadi"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 − 1 = 3 ta qoladi, 4 − 3 = 1 ta qoladi. 3 > 1."
+    },
+    {
+      "text": "To‘g‘ri taqqoslashni toping:",
+      "options": [
+        "6 + 4 > 4 + 6",
+        "6 + 4 < 4 + 6",
+        "6 − 4 = 4 − 6",
+        "6 + 4 = 4 + 6"
+      ],
+      "correctIndex": 3,
+      "explanation": "O‘rin almashtirish xossasiga ko‘ra tenglik to‘g‘ri."
+    },
+    {
+      "text": "Hisoblamasdan ayting: 3 + 7 kattami yoki 3 + 5?",
+      "options": [
+        "3 + 5 katta",
+        "3 + 7 katta",
+        "Ikkalasi teng",
+        "Ikkalasi ham kichik"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 soni 5 dan katta bo‘lgani uchun 3 + 7 katta."
+    },
+    {
+      "text": "Hisoblamasdan ayting: 8 + 1 kichikmi yoki 8 + 2?",
+      "options": [
+        "8 + 2 kichik",
+        "Ikkalasi teng",
+        "8 + 1 kichik",
+        "O‘lchab bo‘lmaydi"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 soni 2 dan kichik bo‘lgani uchun 8 + 1 kichik."
+    }
+  ]
+}

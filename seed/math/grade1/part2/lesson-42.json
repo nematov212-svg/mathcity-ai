@@ -1,0 +1,276 @@
+{
+  "bookNumber": 42,
+  "title": "11 dan 20 gacha bo‘lgan sonlar",
+  "emoji": "🔢",
+  "shortDesc": "11 dan 20 gacha nomlari, o‘nlik va birlik, 1 o‘nl. 3 birl. = 13, 10 + 1.",
+  "intro": "10 dan keyin o‘n bir, o‘n ikki, ..., yigirma sonlari keladi. Ular o‘nlik va birliklardan tuziladi.",
+  "keyPoints": [
+    "10 ta birlik 1 ta o‘nlikni tashkil qiladi.",
+    "1 o‘nlik va 3 birlik — bu 13 soni (10 + 3 = 13).",
+    "11 dan 20 gacha bo‘lgan barcha sonlar ikki xonali sonlardir."
+  ],
+  "miniExample": {
+    "emojis": "🔟 + 3️⃣ = 1️⃣3️⃣",
+    "text": "1 o‘nlik va 3 birlik — bu 13 soni! (10 + 3 = 13)"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "1 o‘nlik va 4 birlik qaysi sonni bildiradi?",
+      "options": [
+        "14",
+        "41",
+        "15",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 o‘nlik (10) va 4 birlik (4) yig‘indisi 14 dir."
+    },
+    {
+      "text": "Hisoblang: 10 + 5 = ?",
+      "options": [
+        "14",
+        "15",
+        "16",
+        "51"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 + 5 = 15."
+    },
+    {
+      "text": "12 sonidan keyin qaysi son keladi?",
+      "options": [
+        "11",
+        "14",
+        "13",
+        "21"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 dan keyingi son 13 dir."
+    }
+  ],
+  "test": [
+    {
+      "text": "1 o‘nlik va 1 birlik qaysi son?",
+      "options": [
+        "11",
+        "12",
+        "10",
+        "21"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 1 = 11 (o‘n bir)."
+    },
+    {
+      "text": "1 o‘nlik va 2 birlik qaysi son?",
+      "options": [
+        "11",
+        "13",
+        "12",
+        "20"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 2 = 12 (o‘n ikki)."
+    },
+    {
+      "text": "1 o‘nlik va 5 birlik qaysi son?",
+      "options": [
+        "14",
+        "15",
+        "16",
+        "51"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 + 5 = 15 (o‘n besh)."
+    },
+    {
+      "text": "1 o‘nlik va 7 birlik qaysi son?",
+      "options": [
+        "16",
+        "18",
+        "71",
+        "17"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 + 7 = 17 (o‘n yetti)."
+    },
+    {
+      "text": "1 o‘nlik va 8 birlik qaysi son?",
+      "options": [
+        "17",
+        "18",
+        "19",
+        "81"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 + 8 = 18 (o‘n sakkiz)."
+    },
+    {
+      "text": "2 ta o‘nlik qaysi sonni bildiradi?",
+      "options": [
+        "20 (yigirma)",
+        "12",
+        "2",
+        "200"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 ta o‘nlik 20 ga teng."
+    },
+    {
+      "text": "Misolni hisoblang: 10 + 6 = ?",
+      "options": [
+        "15",
+        "17",
+        "61",
+        "16"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 + 6 = 16."
+    },
+    {
+      "text": "Misolni hisoblang: 10 + 9 = ?",
+      "options": [
+        "18",
+        "20",
+        "19",
+        "91"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 9 = 19."
+    },
+    {
+      "text": "14 sonida nechta o‘nlik va nechta birlik bor?",
+      "options": [
+        "4 ta o‘nlik va 1 ta birlik",
+        "14 ta o‘nlik",
+        "1 ta o‘nlik va 4 ta birlik",
+        "1 ta o‘nlik va 5 ta birlik"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 = 1 o‘nlik + 4 birlik."
+    },
+    {
+      "text": "16 sonida nechta o‘nlik va nechta birlik bor?",
+      "options": [
+        "6 ta o‘nlik va 1 ta birlik",
+        "16 ta birlik faqat",
+        "2 ta o‘nlik",
+        "1 ta o‘nlik va 6 ta birlik"
+      ],
+      "correctIndex": 3,
+      "explanation": "16 = 1 o‘nlik + 6 birlik."
+    },
+    {
+      "text": "15 dan keyingi son qaysi?",
+      "options": [
+        "16",
+        "14",
+        "17",
+        "18"
+      ],
+      "correctIndex": 0,
+      "explanation": "15 dan keyin 16 keladi."
+    },
+    {
+      "text": "18 dan oldingi son qaysi?",
+      "options": [
+        "19",
+        "17",
+        "16",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 dan oldin 17 turadi."
+    },
+    {
+      "text": "13 va 15 orasidagi son qaysi?",
+      "options": [
+        "12",
+        "16",
+        "17",
+        "14"
+      ],
+      "correctIndex": 3,
+      "explanation": "13 va 15 orasida 14 soni joylashgan."
+    },
+    {
+      "text": "17 va 19 orasidagi son qaysi?",
+      "options": [
+        "16",
+        "18",
+        "20",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "17 va 19 orasida 18 soni joylashgan."
+    },
+    {
+      "text": "Sonli chizg‘ichda 12 dan 3 qadam o‘ngga yursak (12 + 3) qaysi songa boramiz?",
+      "options": [
+        "14",
+        "16",
+        "15",
+        "13"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 + 3 = 15."
+    },
+    {
+      "text": "Sonli chizg‘ichda 14 dan 2 qadam o‘ngga yursak qaysi songa boramiz?",
+      "options": [
+        "16",
+        "15",
+        "17",
+        "12"
+      ],
+      "correctIndex": 0,
+      "explanation": "14 + 2 = 16."
+    },
+    {
+      "text": "Daftarga 10 ta katak chizildi, yana 3 ta qo‘shildi. Jami nechta katak bo‘ldi?",
+      "options": [
+        "13 ta katak",
+        "12 ta",
+        "14 ta",
+        "15 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 3 = 13."
+    },
+    {
+      "text": "Sardor 10 ta yong‘oqqa yana 7 ta yong‘oq qo‘shdi. Yong‘oqlar nechta bo‘ldi?",
+      "options": [
+        "16 ta",
+        "18 ta",
+        "71 ta",
+        "17 ta yong‘oq"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 + 7 = 17 ta yong‘oq."
+    },
+    {
+      "text": "Buxorodan Toshkentga kelayotgan poyezdning 19-vagonidan oldingi vagon qaysi?",
+      "options": [
+        "20-vagon",
+        "18-vagon",
+        "17-vagon",
+        "1-vagon"
+      ],
+      "correctIndex": 1,
+      "explanation": "19 dan oldingi vagon — 18-vagondir."
+    },
+    {
+      "text": "2-qismning 1-mavzusi (42-mavzu) muvaffaqiyatli ochildi! 42-dars qaysi modulga tegishli?",
+      "options": [
+        "Matematika · 1-qism",
+        "Alifbe",
+        "Matematika · 2-qism",
+        "Ona tili"
+      ],
+      "correctIndex": 2,
+      "explanation": "42-dars 2-qism modulining birinchi darsidir."
+    }
+  ]
+}

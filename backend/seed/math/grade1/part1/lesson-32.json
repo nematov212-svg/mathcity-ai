@@ -1,0 +1,276 @@
+{
+  "bookNumber": 32,
+  "title": "Qo‘shish hadlari",
+  "emoji": "🧩",
+  "shortDesc": "Qo‘shiluvchi, qo‘shiluvchi, yig‘indi nomlari, jadval to‘ldirish va yig‘indi.",
+  "intro": "Qo‘shish amalida qatnashuvchi sonlar: 1-qo‘shiluvchi, 2-qo‘shiluvchi va yig‘indi deyiladi.",
+  "keyPoints": [
+    "Qo‘shilayotgan sonlar — 'qo‘shiluvchilar'.",
+    "Natijada hosil bo‘lgan son — 'yig‘indi'.",
+    "Masalan: 3 (1-qo‘shiluvchi) + 4 (2-qo‘shiluvchi) = 7 (yig‘indi)."
+  ],
+  "miniExample": {
+    "emojis": "3️⃣ + 4️⃣ = 7️⃣",
+    "text": "3 — qo‘shiluvchi, 4 — qo‘shiluvchi, 7 — yig‘indi!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "5 + 2 = 7 ifodasida 5 nima deyiladi?",
+      "options": [
+        "Qo‘shiluvchi (1-qo‘shiluvchi)",
+        "Yig‘indi",
+        "Ayirma",
+        "Kamayuvchi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shilayotgan sonlar qo‘shiluvchi deyiladi."
+    },
+    {
+      "text": "4 + 3 = 7 ifodasida 7 nima deyiladi?",
+      "options": [
+        "Qo‘shiluvchi",
+        "Yig‘indi (natija)",
+        "Ayriluvchi",
+        "Ayirma"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qo‘shish natijasi yig‘indi deyiladi."
+    },
+    {
+      "text": "1-qo‘shiluvchi 6, 2-qo‘shiluvchi 2. Yig‘indini toping: 6 + 2 = ?",
+      "options": [
+        "7",
+        "9",
+        "8",
+        "4"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 2 = 8."
+    }
+  ],
+  "test": [
+    {
+      "text": "3 + 5 = 8 ifodasida 3 va 5 sonlari nima deb ataladi?",
+      "options": [
+        "Qo‘shiluvchilar",
+        "Ayirmalar",
+        "Kamayuvchilar",
+        "Natijalar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shilayotgan har bir son qo‘shiluvchidir."
+    },
+    {
+      "text": "3 + 5 = 8 ifodasida 8 soni nima deb ataladi?",
+      "options": [
+        "Qo‘shiluvchi",
+        "Ayirma",
+        "Yig‘indi",
+        "Ayriluvchi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qo‘shish natijasidagi son yig‘indi deyiladi."
+    },
+    {
+      "text": "1-qo‘shiluvchi 4, 2-qo‘shiluvchi 3 bo‘lsa, yig‘indi nechaga teng?",
+      "options": [
+        "6",
+        "7 (chunki 4 + 3 = 7)",
+        "8",
+        "1"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 + 3 = 7."
+    },
+    {
+      "text": "1-qo‘shiluvchi 2, 2-qo‘shiluvchi 6 bo‘lsa, yig‘indi nechaga teng?",
+      "options": [
+        "7",
+        "9",
+        "4",
+        "8 (chunki 2 + 6 = 8)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2 + 6 = 8."
+    },
+    {
+      "text": "1-qo‘shiluvchi 5, 2-qo‘shiluvchi 5 bo‘lsa, yig‘indi nechaga teng?",
+      "options": [
+        "9",
+        "10 (chunki 5 + 5 = 10)",
+        "0",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 5 = 10."
+    },
+    {
+      "text": "6 + 1 = 7 ifodasida 1 soni nima?",
+      "options": [
+        "2-qo‘shiluvchi",
+        "Yig‘indi",
+        "Kamayuvchi",
+        "Ayirma"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 — ikkinchi qo‘shiluvchidir."
+    },
+    {
+      "text": "Qaysi ifodada yig‘indi 9 ga teng?",
+      "options": [
+        "5 + 3",
+        "7 + 1",
+        "4 + 4",
+        "6 + 3"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 3 = 9."
+    },
+    {
+      "text": "Qaysi ifodada yig‘indi 6 ga teng?",
+      "options": [
+        "3 + 2",
+        "5 + 2",
+        "4 + 2",
+        "6 + 1"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 2 = 6."
+    },
+    {
+      "text": "Jadval: 1-qo‘shiluvchi 7, 2-qo‘shiluvchi 1. Yig‘indini toping.",
+      "options": [
+        "6",
+        "9",
+        "8",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 1 = 8."
+    },
+    {
+      "text": "Jadval: 1-qo‘shiluvchi 3, 2-qo‘shiluvchi 4. Yig‘indini toping.",
+      "options": [
+        "6",
+        "8",
+        "1",
+        "7"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 + 4 = 7."
+    },
+    {
+      "text": "Qo‘shiluvchilar 2 va 7 bo‘lsa, yig‘indi nechaga teng?",
+      "options": [
+        "9",
+        "8",
+        "10",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 + 7 = 9."
+    },
+    {
+      "text": "Qo‘shiluvchilar 8 va 2 bo‘lsa, yig‘indi nechaga teng?",
+      "options": [
+        "9",
+        "10",
+        "6",
+        "11"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 2 = 10."
+    },
+    {
+      "text": "Qo‘shiluvchilar 1 va 9 bo‘lsa, yig‘indi nechaga teng?",
+      "options": [
+        "8",
+        "9",
+        "0",
+        "10"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 + 9 = 10."
+    },
+    {
+      "text": "Yig‘indisi 5 bo‘lgan qo‘shiluvchilarni toping:",
+      "options": [
+        "2 va 2",
+        "2 va 3 (2 + 3 = 5)",
+        "3 va 3",
+        "1 va 3"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 + 3 = 5."
+    },
+    {
+      "text": "Yig‘indisi 8 bo‘lgan qo‘shiluvchilarni toping:",
+      "options": [
+        "3 va 4",
+        "5 va 4",
+        "4 va 4 (4 + 4 = 8)",
+        "2 va 5"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 4 = 8."
+    },
+    {
+      "text": "Qo‘shish amali qaysi belgi bilan ko‘rsatiladi?",
+      "options": [
+        "+ (qo‘shuv belgisi)",
+        "− (ayiruv)",
+        "= (tenglik)",
+        "> (katta)"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shuv amali '+' belgisi bilan yoziladi."
+    },
+    {
+      "text": "Anvar 4 ta olma, singlisi 2 ta olma uzdi. Yig‘indini toping.",
+      "options": [
+        "6 ta olma (4 + 2 = 6)",
+        "5 ta",
+        "7 ta",
+        "2 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 2 = 6 ta olma."
+    },
+    {
+      "text": "Daftarga 5 ta ko‘k va 3 ta qizil katak bo‘yaldi. Jami bo‘yalgan kataklar yig‘indisi nechta?",
+      "options": [
+        "7 ta",
+        "9 ta",
+        "2 ta",
+        "8 ta katak"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 3 = 8 ta katak."
+    },
+    {
+      "text": "Agar birinchi qo‘shiluvchi 0 bo‘lsa, yig‘indi nimaga teng bo‘ladi?",
+      "options": [
+        "0 ga teng bo‘ladi",
+        "Ikkinchi qo‘shiluvchining o‘ziga teng bo‘ladi",
+        "1 ga teng bo‘ladi",
+        "10 ga teng bo‘ladi"
+      ],
+      "correctIndex": 1,
+      "explanation": "0 + a = a, ya’ni ikkinchi sonning o‘zi chiqadi."
+    },
+    {
+      "text": "Sobir 3 ta, do‘sti ham 3 ta baliq tutdi. Ular tutgan baliqlar yig‘indisi qancha?",
+      "options": [
+        "5 ta",
+        "7 ta",
+        "6 ta baliq",
+        "0 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 + 3 = 6 ta baliq."
+    }
+  ]
+}

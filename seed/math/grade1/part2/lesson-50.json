@@ -1,0 +1,276 @@
+{
+  "bookNumber": 50,
+  "title": "Qavslar",
+  "emoji": "🧩",
+  "shortDesc": "Qavssiz ifodada amallar chapdan o‘ngga, qavs birinchi bajariladigan amalni ko‘rsatadi.",
+  "intro": "Qavslar — birinchi navbatda qaysi amal bajarilishi kerakligini ko‘rsatuvchi maxsus belgidir.",
+  "keyPoints": [
+    "Qavs ichidagi amal birinchi navbatda bajariladi.",
+    "Qavssiz ifodalarda amallar chapdan o‘ngga tartib bilan bajariladi.",
+    "Misol: 6 + (3 + 7) da avval 3 + 7 = 10, so‘ng 6 + 10 = 16 hisoblanadi."
+  ],
+  "miniExample": {
+    "emojis": "6️⃣ + (3️⃣ + 7️⃣) = 1️⃣6️⃣",
+    "text": "Avval qavs ichi: 3 + 7 = 10, keyin 6 + 10 = 16!"
+  },
+  "xpReward": 100,
+  "coinReward": 11,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 4 + (2 + 3) = ?",
+      "options": [
+        "9",
+        "8",
+        "10",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "Avval qavs ichi: 2 + 3 = 5, keyin 4 + 5 = 9."
+    },
+    {
+      "text": "Ifodada qaysi amal birinchi bajariladi: 8 + (6 − 2)?",
+      "options": [
+        "Qo‘shish (8 + 6)",
+        "Qavs ichidagi ayirish (6 − 2)",
+        "Chapdagi 8 soni",
+        "Istalgan amal"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qoida bo‘yicha qavs ichidagi amal doim birinchi bajariladi."
+    },
+    {
+      "text": "Hisoblang: (10 − 4) + 3 = ?",
+      "options": [
+        "8",
+        "10",
+        "9",
+        "3"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 − 4 = 6, 6 + 3 = 9."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 5 + (3 + 2) = ?",
+      "options": [
+        "10",
+        "9",
+        "11",
+        "8"
+      ],
+      "correctIndex": 0,
+      "explanation": "Avval 3 + 2 = 5, keyin 5 + 5 = 10."
+    },
+    {
+      "text": "Hisoblang: 6 + (3 + 7) = ?",
+      "options": [
+        "15",
+        "17",
+        "16",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 + 7 = 10, 6 + 10 = 16."
+    },
+    {
+      "text": "Hisoblang: 10 + (4 + 5) = ?",
+      "options": [
+        "18",
+        "19",
+        "20",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 + 5 = 9, 10 + 9 = 19."
+    },
+    {
+      "text": "Hisoblang: 8 + (10 − 8) = ?",
+      "options": [
+        "9",
+        "11",
+        "12",
+        "10"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 − 8 = 2, 8 + 2 = 10."
+    },
+    {
+      "text": "Hisoblang: (9 − 3) + 4 = ?",
+      "options": [
+        "8",
+        "10",
+        "11",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 − 3 = 6, 6 + 4 = 10."
+    },
+    {
+      "text": "Hisoblang: (7 + 3) − 5 = ?",
+      "options": [
+        "5",
+        "4",
+        "6",
+        "15"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 3 = 10, 10 − 5 = 5."
+    },
+    {
+      "text": "Hisoblang: 15 − (3 + 2) = ?",
+      "options": [
+        "9",
+        "11",
+        "14",
+        "10"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 + 2 = 5, 15 − 5 = 10."
+    },
+    {
+      "text": "Hisoblang: 18 − (6 + 2) = ?",
+      "options": [
+        "9",
+        "11",
+        "10",
+        "12"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 2 = 8, 18 − 8 = 10."
+    },
+    {
+      "text": "Hisoblang: (12 − 2) + 6 = ?",
+      "options": [
+        "15",
+        "17",
+        "16",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 − 2 = 10, 10 + 6 = 16."
+    },
+    {
+      "text": "Hisoblang: 7 + (8 − 5) = ?",
+      "options": [
+        "9",
+        "11",
+        "12",
+        "10"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 − 5 = 3, 7 + 3 = 10."
+    },
+    {
+      "text": "Qavsli ifodalarda birinchi navbatda qaysi amal bajariladi?",
+      "options": [
+        "Qavs ichidagi amal",
+        "Qavsdan tashqaridagi amal",
+        "Faqat qo‘shish",
+        "Faqat oxirgi amal"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qavs amallar tartibini o‘zgartirib, birinchi navbatda bajarilishini talab qiladi."
+    },
+    {
+      "text": "Qavssiz ifodada (masalan, 8 − 3 + 2) amallar qanday tartibda bajariladi?",
+      "options": [
+        "O‘ngdan chapga",
+        "Chapdan o‘ngga qarab ketma-ket",
+        "Faqat avval qo‘shish",
+        "Ixtiyoriy tartibda"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qavs bo‘lmasa amallar chapdan o‘ngga qarab bajariladi."
+    },
+    {
+      "text": "Taqqoslang: 6 + (2 + 1) ... (6 + 2) + 1. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "+",
+        "= (ikkalasi ham 9)"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 3 = 9 va 8 + 1 = 9, demak 9 = 9."
+    },
+    {
+      "text": "Hisoblang: 20 − (5 + 5) = ?",
+      "options": [
+        "9",
+        "10",
+        "11",
+        "0"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 5 = 10, 20 − 10 = 10."
+    },
+    {
+      "text": "Hisoblang: (14 − 4) − 3 = ?",
+      "options": [
+        "6",
+        "8",
+        "7",
+        "5"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 − 4 = 10, 10 − 3 = 7."
+    },
+    {
+      "text": "Akmal 10 ta olmadan avval 2 tasini, keyin 3 tasini yedi: 10 − (2 + 3). Nechta olma qoldi?",
+      "options": [
+        "5 ta olma",
+        "4 ta",
+        "6 ta",
+        "15 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 + 3 = 5 ta yeyildi, 10 − 5 = 5 ta qoldi."
+    },
+    {
+      "text": "Gulshanning 12 ta guli bor edi. U 4 ta qizil va 2 ta oq gul sovg‘a qildi: 12 − (4 + 2). Nechta gul qoldi?",
+      "options": [
+        "6 ta gul",
+        "5 ta",
+        "7 ta",
+        "8 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 2 = 6 ta sovg‘a qilindi, 12 − 6 = 6 ta qoldi."
+    },
+    {
+      "text": "Sardor 5 ta misol yechdi, singlisi esa 3 ta va 2 ta misol yechdi: 5 + (3 + 2). Ular jami nechta misol yechishdi?",
+      "options": [
+        "9 ta",
+        "11 ta",
+        "8 ta",
+        "10 ta misol"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 + 2 = 5, 5 + 5 = 10 ta misol."
+    },
+    {
+      "text": "To‘g‘ri tenglikni toping:",
+      "options": [
+        "7 + (2 + 1) = 9",
+        "7 + (2 + 1) = 10",
+        "7 + (2 + 1) = 8",
+        "7 + (2 + 1) = 11"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 + 1 = 3, 7 + 3 = 10."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 8 ga teng?",
+      "options": [
+        "12 − (3 + 2)",
+        "12 − (1 + 1)",
+        "12 − (2 + 2)",
+        "10 − (4 + 1)"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 + 2 = 4, 12 − 4 = 8."
+    }
+  ]
+}

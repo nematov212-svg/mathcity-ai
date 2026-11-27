@@ -1,0 +1,276 @@
+{
+  "bookNumber": 48,
+  "title": "19 va 20 sonlari",
+  "emoji": "🔢",
+  "shortDesc": "19 va 20 sonlari tarkibi, juft/toq qoidasi (0,2,4,6,8 juft; 1,3,5,7,9 toq).",
+  "intro": "19 va 20 sonlari — ikkinchi o‘nlikning oxirgi sonlaridir. 20 soni to‘liq 2 ta o‘nlikni bildiradi.",
+  "keyPoints": [
+    "Juft sonlar 0, 2, 4, 6, 8 raqamlari bilan tugaydi (masalan, 20 — juft son).",
+    "Toq sonlar 1, 3, 5, 7, 9 raqamlari bilan tugaydi (masalan, 19 — toq son).",
+    "20 = 10 + 10 = 2 ta o‘nlik."
+  ],
+  "miniExample": {
+    "emojis": "1️⃣9️⃣ (toq) va 2️⃣0️⃣ (juft)",
+    "text": "19 toq son (9 bilan tugaydi), 20 esa juft son (0 bilan tugaydi)!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "20 soni juftmi yoki toq son?",
+      "options": [
+        "Juft son (0 bilan tugaydi)",
+        "Toq son",
+        "Nol son",
+        "Bir xonali"
+      ],
+      "correctIndex": 0,
+      "explanation": "0 bilan tugagan har qanday son juft sondir."
+    },
+    {
+      "text": "19 soni juftmi yoki toq son?",
+      "options": [
+        "Juft son",
+        "Toq son (9 bilan tugaydi)",
+        "Ikkalasi ham",
+        "Manfiy son"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 bilan tugagan sonlar toq sondir."
+    },
+    {
+      "text": "Hisoblang: 10 + 10 = ?",
+      "options": [
+        "19",
+        "21",
+        "20",
+        "100"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 10 = 20."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 10 + 9 = ?",
+      "options": [
+        "19",
+        "18",
+        "20",
+        "21"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 9 = 19."
+    },
+    {
+      "text": "Misolni hisoblang: 10 + 10 = ?",
+      "options": [
+        "19",
+        "21",
+        "20",
+        "100"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 10 = 20."
+    },
+    {
+      "text": "Misolni hisoblang: 19 − 9 = ?",
+      "options": [
+        "9",
+        "10",
+        "11",
+        "1"
+      ],
+      "correctIndex": 1,
+      "explanation": "19 − 9 = 10."
+    },
+    {
+      "text": "Misolni hisoblang: 19 − 10 = ?",
+      "options": [
+        "8",
+        "10",
+        "19",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "19 − 10 = 9."
+    },
+    {
+      "text": "Misolni hisoblang: 20 − 10 = ?",
+      "options": [
+        "9",
+        "10",
+        "11",
+        "0"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 − 10 = 10."
+    },
+    {
+      "text": "Misolni hisoblang: 20 − 1 = ?",
+      "options": [
+        "19",
+        "18",
+        "20",
+        "17"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 − 1 = 19."
+    },
+    {
+      "text": "19 dan keyingi son qaysi?",
+      "options": [
+        "18",
+        "21",
+        "22",
+        "20"
+      ],
+      "correctIndex": 3,
+      "explanation": "19 dan keyin 20 keladi."
+    },
+    {
+      "text": "20 dan oldingi son qaysi?",
+      "options": [
+        "18",
+        "21",
+        "19",
+        "10"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 dan oldin 19 turadi."
+    },
+    {
+      "text": "Juft sonlar qaysi raqamlar bilan tugaydi?",
+      "options": [
+        "1, 3, 5, 7, 9 bilan",
+        "Faqat 0 bilan",
+        "0, 2, 4, 6, 8 bilan",
+        "Faqat 2 bilan"
+      ],
+      "correctIndex": 2,
+      "explanation": "Oxiri 0, 2, 4, 6, 8 bo‘lgan sonlar juft sonlardir."
+    },
+    {
+      "text": "Toq sonlar qaysi raqamlar bilan tugaydi?",
+      "options": [
+        "0, 2, 4, 6, 8 bilan",
+        "Faqat 1 bilan",
+        "Faqat 9 bilan",
+        "1, 3, 5, 7, 9 bilan"
+      ],
+      "correctIndex": 3,
+      "explanation": "Oxiri 1, 3, 5, 7, 9 bo‘lgan sonlar toq sonlardir."
+    },
+    {
+      "text": "12 soni juftmi yoki toq?",
+      "options": [
+        "Juft son (chunki 2 bilan tugaydi)",
+        "Toq son",
+        "Nol son",
+        "Manfiy son"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 bilan tugagani uchun juft son."
+    },
+    {
+      "text": "15 soni juftmi yoki toq?",
+      "options": [
+        "Juft son",
+        "Toq son (chunki 5 bilan tugaydi)",
+        "Ikkalasi ham",
+        "Nol son"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 bilan tugagani uchun toq son."
+    },
+    {
+      "text": "18 soni juftmi yoki toq?",
+      "options": [
+        "Toq son",
+        "Nol son",
+        "Bilmayman",
+        "Juft son (chunki 8 bilan tugaydi)"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 bilan tugagani uchun juft son."
+    },
+    {
+      "text": "13 soni juftmi yoki toq?",
+      "options": [
+        "Juft son",
+        "Toq son (chunki 3 bilan tugaydi)",
+        "Ikkalasi ham",
+        "Nol son"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 bilan tugagani uchun toq son."
+    },
+    {
+      "text": "20 sonida nechta o‘nlik bor?",
+      "options": [
+        "1 ta o‘nlik",
+        "20 ta o‘nlik",
+        "2 ta o‘nlik (va 0 ta birlik)",
+        "0 ta o‘nlik"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 da roppa-rosa 2 ta o‘nlik bor."
+    },
+    {
+      "text": "19 soni 20 dan qancha kichik?",
+      "options": [
+        "1 taga kichik (20 − 19 = 1)",
+        "2 taga",
+        "10 taga",
+        "Teng"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 − 19 = 1."
+    },
+    {
+      "text": "Daftarga 20 ta katak chizildi. 10 tasi bo‘yaldi. Nechta ochiq katak qoldi?",
+      "options": [
+        "10 ta katak",
+        "9 ta",
+        "11 ta",
+        "12 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 − 10 = 10."
+    },
+    {
+      "text": "Bog‘bon 20 tup ko‘chat ekdi. 1 tasi qurib qoldi, qolgani ko‘kardi. Nechta ko‘chat ko‘kardi?",
+      "options": [
+        "18 tup",
+        "20 tup",
+        "10 tup",
+        "19 tup ko‘chat"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 − 1 = 19."
+    },
+    {
+      "text": "Quyidagi sonlardan qaysi biri juft son: 11, 13, 17, 20?",
+      "options": [
+        "11",
+        "20",
+        "13",
+        "17"
+      ],
+      "correctIndex": 1,
+      "explanation": "Faqat 20 juft son, qolganlari toq."
+    },
+    {
+      "text": "Quyidagi sonlardan qaysi biri toq son: 12, 14, 16, 19?",
+      "options": [
+        "12",
+        "14",
+        "19",
+        "16"
+      ],
+      "correctIndex": 2,
+      "explanation": "Faqat 19 toq son, qolganlari juft."
+    }
+  ]
+}

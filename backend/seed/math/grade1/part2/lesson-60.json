@@ -1,0 +1,276 @@
+{
+  "bookNumber": 60,
+  "title": "21 dan 100 gacha sonlarning o‘qilishi va yozilishi",
+  "emoji": "📝",
+  "shortDesc": "Sonlarning so‘z bilan ifodalanishi, o‘qilishi va xona birliklari.",
+  "intro": "Ikki xonali sonlarni o‘qishda avval o‘nlik nomi, keyin birlik nomi aytiladi: masalan, yigirma besh (25), qirq yetti (47).",
+  "keyPoints": [
+    "O‘nliklar: o‘n (10), yigirma (20), o‘ttiz (30), qirq (40), ellik (50), oltmish (60), yetmish (70), sakson (80), to‘qson (90), yuz (100).",
+    "Ulug‘ vatandoshimiz Al-Xorazmiy o‘nlik sanoq sistemasini butun dunyoga tanitgan buyuk olimdir.",
+    "O‘qilishi: \"ellik uch\" -> 53, \"sakson olti\" -> 86."
+  ],
+  "miniExample": {
+    "emojis": "🏛️ 📜 ✍️",
+    "text": "\"yetmish sakkiz\" so‘zi raqamlar bilan 78 deb yoziladi."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "\"O‘ttiz to‘rt\" soni qanday yoziladi?",
+      "options": [
+        "34",
+        "43",
+        "304",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "\"O‘ttiz to‘rt\" raqamlar bilan 34 deb yoziladi."
+    },
+    {
+      "text": "59 soni qanday o‘qiladi?",
+      "options": [
+        "Qirq to‘qqiz",
+        "Ellik to‘qqiz",
+        "To‘qson besh",
+        "Oltmish to‘qqiz"
+      ],
+      "correctIndex": 1,
+      "explanation": "59 soni \"ellik to‘qqiz\" deb o‘qiladi."
+    },
+    {
+      "text": "O‘nlik sanoq sistemasini dunyoga tanitgan buyuk vatandoshimiz kim?",
+      "options": [
+        "Ibn Sino",
+        "Amir Temur",
+        "Al-Xorazmiy",
+        "Mirzo Ulug‘bek"
+      ],
+      "correctIndex": 2,
+      "explanation": "Al-Xorazmiy o‘nlik sanoq sistemasi va nol raqamini fanga kiritgan."
+    }
+  ],
+  "test": [
+    {
+      "text": "\"Yigirma olti\" soni raqam bilan qanday yoziladi?",
+      "options": [
+        "26",
+        "62",
+        "206",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "\"Yigirma olti\" soni 26 deb yoziladi."
+    },
+    {
+      "text": "41 soni qanday o‘qiladi?",
+      "options": [
+        "O‘ttiz bir",
+        "Bir yuz qirq",
+        "Qirq bir",
+        "O‘n to‘rt"
+      ],
+      "correctIndex": 2,
+      "explanation": "41 soni \"qirq bir\" deb o‘qiladi."
+    },
+    {
+      "text": "\"Yetmish besh\" soni raqamda qanday yoziladi?",
+      "options": [
+        "57",
+        "75",
+        "705",
+        "85"
+      ],
+      "correctIndex": 1,
+      "explanation": "\"Yetmish besh\" 75 deb yoziladi."
+    },
+    {
+      "text": "88 soni qanday o‘qiladi?",
+      "options": [
+        "Yetmish sakkiz",
+        "To‘qson sakkiz",
+        "Oltmish sakkiz",
+        "Sakson sakkiz"
+      ],
+      "correctIndex": 3,
+      "explanation": "88 soni \"sakson sakkiz\" deb o‘qiladi."
+    },
+    {
+      "text": "\"To‘qson ikki\" soni raqam bilan qanday yoziladi?",
+      "options": [
+        "29",
+        "92",
+        "902",
+        "82"
+      ],
+      "correctIndex": 1,
+      "explanation": "\"To‘qson ikki\" 92 deb yoziladi."
+    },
+    {
+      "text": "63 soni qanday o‘qiladi?",
+      "options": [
+        "Oltmish uch",
+        "Ellik uch",
+        "Yetmish uch",
+        "O‘ttiz olti"
+      ],
+      "correctIndex": 0,
+      "explanation": "63 soni \"oltmish uch\" deb o‘qiladi."
+    },
+    {
+      "text": "\"Ellik\" so‘zi qaysi sonni bildiradi?",
+      "options": [
+        "15",
+        "5",
+        "55",
+        "50"
+      ],
+      "correctIndex": 3,
+      "explanation": "\"Ellik\" so‘zi 50 sonini bildiradi."
+    },
+    {
+      "text": "37 soni qaysi ikkita xona birligidan tashkil topgan?",
+      "options": [
+        "7 ta o‘nlik va 3 ta birlik",
+        "30 ta o‘nlik",
+        "3 ta o‘nlik va 7 ta birlik",
+        "37 ta o‘nlik"
+      ],
+      "correctIndex": 2,
+      "explanation": "37 soni 3 ta o‘nlik va 7 ta birlikdan tashkil topgan."
+    },
+    {
+      "text": "\"Sakson to‘rt\" sonining o‘nliklar xonasida qaysi raqam turadi?",
+      "options": [
+        "4",
+        "80",
+        "8",
+        "84"
+      ],
+      "correctIndex": 2,
+      "explanation": "\"Sakson to‘rt\" (84) sonining o‘nliklar xonasida 8 raqami turadi."
+    },
+    {
+      "text": "\"Qirq sakkiz\" sonining birliklar xonasida qaysi raqam turadi?",
+      "options": [
+        "4",
+        "40",
+        "80",
+        "8"
+      ],
+      "correctIndex": 3,
+      "explanation": "\"Qirq sakkiz\" (48) sonining birliklar xonasida 8 raqami turadi."
+    },
+    {
+      "text": "69 sonidan bitta keyingi son qanday o‘qiladi?",
+      "options": [
+        "Yetmish",
+        "Oltmish sakkiz",
+        "Oltmish o‘n",
+        "Yetmish bir"
+      ],
+      "correctIndex": 0,
+      "explanation": "69 dan keyin 70 keladi va u \"yetmish\" deb o‘qiladi."
+    },
+    {
+      "text": "50 sonidan bitta oldingi son qanday o‘qiladi?",
+      "options": [
+        "Ellik bir",
+        "Qirq to‘qqiz",
+        "Qirq sakkiz",
+        "Oltmish"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 dan bitta oldingi son 49 (\"qirq to‘qqiz\") dir."
+    },
+    {
+      "text": "Al-Xorazmiy qaysi fanga asos solgan buyuk alloma?",
+      "options": [
+        "Faqat geografiya",
+        "Faqat rasm",
+        "Faqat musiqa",
+        "Algebra va matematika"
+      ],
+      "correctIndex": 3,
+      "explanation": "Muhammad al-Xorazmiy algebra fanining asoschisidir."
+    },
+    {
+      "text": "\"To‘qson to‘qqiz\" sonidan keyin qaysi son keladi?",
+      "options": [
+        "To‘qson sakkiz (98)",
+        "Yuz (100)",
+        "To‘qson o‘n",
+        "Sakson (80)"
+      ],
+      "correctIndex": 1,
+      "explanation": "99 dan keyin 100 (yuz) soni keladi."
+    },
+    {
+      "text": "O‘nliklar raqami \"yetti\", birliklar raqami \"nol\" bo‘lgan son qanday o‘qiladi?",
+      "options": [
+        "Yetmish nol",
+        "O‘n yetti",
+        "Yetmish",
+        "Yetti yuz"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 ta o‘nlik va 0 ta birlik 70 (\"yetmish\") bo‘ladi."
+    },
+    {
+      "text": "\"Oltmish besh\" va \"ellik olti\" sonlaridan qaysi biri katta?",
+      "options": [
+        "Oltmish besh (65)",
+        "Ellik olti (56)",
+        "Ikkalasi teng",
+        "Aniqlab bo‘lmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "65 sonining o‘nligi (6) 56 nikidan (5) katta, shuning uchun 65 > 56."
+    },
+    {
+      "text": "Qaysi son \"sakson yetti\" dan 1 taga kam?",
+      "options": [
+        "86",
+        "88",
+        "77",
+        "85"
+      ],
+      "correctIndex": 0,
+      "explanation": "87 dan 1 taga kam son 86 dir."
+    },
+    {
+      "text": "Qaysi son \"qirq to‘qqiz\" dan 1 taga ko‘p?",
+      "options": [
+        "48",
+        "51",
+        "60",
+        "50"
+      ],
+      "correctIndex": 3,
+      "explanation": "49 dan 1 taga ko‘p son 50 dir."
+    },
+    {
+      "text": "Daftarda \"qirq besh\" deb yozilgan edi. Jasur unga 1 ni qo‘shdi. Qanday son hosil bo‘ldi?",
+      "options": [
+        "Qirq to‘rt (44)",
+        "Qirq olti (46)",
+        "Ellik besh (55)",
+        "Qirq yetti (47)"
+      ],
+      "correctIndex": 1,
+      "explanation": "45 + 1 = 46 (\"qirq olti\")."
+    },
+    {
+      "text": "Madina kitobning \"yetmish to‘qqizinchi\" sahifasini o‘qib bo‘ldi. Keyingi sahifa raqami qaysi?",
+      "options": [
+        "Yetmish sakkiz (78)",
+        "Sakson bir (81)",
+        "Sakson (80)",
+        "Yetmish o‘n"
+      ],
+      "correctIndex": 2,
+      "explanation": "79 dan keyingi sahifa 80 (\"sakson\") bo‘ladi."
+    }
+  ]
+}

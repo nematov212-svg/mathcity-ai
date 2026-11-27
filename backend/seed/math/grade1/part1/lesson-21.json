@@ -1,0 +1,276 @@
+{
+  "bookNumber": 21,
+  "title": "6 soni va raqami",
+  "emoji": "6️⃣",
+  "shortDesc": "6 raqami, sanash, tarkibi (1+5, 2+4, 3+3) va qo‘shnilari.",
+  "intro": "6 soni — oltita narsani bildiradi, uning tarkibi 1+5, 2+4 va 3+3 dir.",
+  "keyPoints": [
+    "Hasharotlarning (chumoli, pashsha) 6 ta oyog‘i bo‘ladi.",
+    "6 sonining tarkibi: 1+5=6, 2+4=6, 3+3=6.",
+    "6 ning qo‘shnilari 5 va 7 sonlaridir."
+  ],
+  "miniExample": {
+    "emojis": "🎲 6️⃣",
+    "text": "O‘yin zarcha toshida eng katta son — 6: 3 + 3 = 6!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Hisoblang: 3 + 3 = ?",
+      "options": [
+        "6",
+        "5",
+        "7",
+        "8"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 + 3 = 6."
+    },
+    {
+      "text": "Hasharotlarda nechta oyoq bo‘ladi?",
+      "options": [
+        "4 ta",
+        "6 ta oyoq 🐜",
+        "8 ta",
+        "2 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Barcha hasharotlar 6 ta oyoqqa ega."
+    },
+    {
+      "text": "6 sonining qo‘shnilarini toping:",
+      "options": [
+        "4 va 8",
+        "6 va 7",
+        "5 va 7",
+        "3 va 5"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 ning oldida 5, keyin 7 keladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 5 + 1 = ?",
+      "options": [
+        "6",
+        "5",
+        "7",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 + 1 = 6."
+    },
+    {
+      "text": "Misolni hisoblang: 4 + 2 = ?",
+      "options": [
+        "5",
+        "7",
+        "6",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 2 = 6."
+    },
+    {
+      "text": "Misolni hisoblang: 3 + 3 = ?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 + 3 = 6."
+    },
+    {
+      "text": "Misolni hisoblang: 6 − 1 = ?",
+      "options": [
+        "4",
+        "6",
+        "7",
+        "5"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 − 1 = 5."
+    },
+    {
+      "text": "Misolni hisoblang: 6 − 2 = ?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "2"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 − 2 = 4."
+    },
+    {
+      "text": "Misolni hisoblang: 6 − 3 = ?",
+      "options": [
+        "3",
+        "2",
+        "4",
+        "1"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 − 3 = 3."
+    },
+    {
+      "text": "Misolni hisoblang: 6 − 4 = ?",
+      "options": [
+        "1",
+        "3",
+        "4",
+        "2"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 − 4 = 2."
+    },
+    {
+      "text": "Misolni hisoblang: 6 − 5 = ?",
+      "options": [
+        "2",
+        "0",
+        "1",
+        "3"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 − 5 = 1."
+    },
+    {
+      "text": "Misolni hisoblang: 6 − 6 = ?",
+      "options": [
+        "1",
+        "6",
+        "0",
+        "12"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 − 6 = 0."
+    },
+    {
+      "text": "6 soni juft sonmi yoki toq son?",
+      "options": [
+        "Toq son",
+        "Nol son",
+        "Tub son",
+        "Juft son"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 soni 2 ga qoldiqsiz bo‘linadi, demak juft son."
+    },
+    {
+      "text": "Oltiburchakning nechta tomoni bor?",
+      "options": [
+        "6 ta tomoni ⬡",
+        "5 ta",
+        "7 ta",
+        "8 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Oltiburchak 6 ta burchak va 6 ta tomonga ega."
+    },
+    {
+      "text": "6 sonining tarkibiga kirmaydigan juftlikni toping:",
+      "options": [
+        "1 va 5",
+        "2 va 5 (chunki yig‘indisi 7)",
+        "2 va 4",
+        "3 va 3"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 + 5 = 7, bu 6 ning tarkibi emas."
+    },
+    {
+      "text": "6 sonining oldingi qo‘shnisi kim?",
+      "options": [
+        "4",
+        "7",
+        "3",
+        "5"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 dan oldin 5 turadi."
+    },
+    {
+      "text": "6 sonining keyingi qo‘shnisi kim?",
+      "options": [
+        "5",
+        "7",
+        "8",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 dan keyin 7 keladi."
+    },
+    {
+      "text": "Taqqoslang: 6 ... 5. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        "=",
+        ">",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 soni 5 dan katta (6 > 5)."
+    },
+    {
+      "text": "Taqqoslang: 6 ... 7. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "−"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 soni 7 dan kichik (6 < 7)."
+    },
+    {
+      "text": "Gulshanning 6 ta olmasi bor edi, 2 tasini ukasiga berdi. Nechta olma qoldi?",
+      "options": [
+        "4 ta olma",
+        "3 ta",
+        "5 ta",
+        "2 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 − 2 = 4 ta olma."
+    },
+    {
+      "text": "Daraxtda 4 ta chumchuq bor edi, yana 2 ta uchib keldi. Jami nechta bo‘ldi?",
+      "options": [
+        "5 ta",
+        "7 ta",
+        "8 ta",
+        "6 ta chumchuq"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 + 2 = 6 ta chumchuq."
+    },
+    {
+      "text": "Zar toshida 🎲 eng katta ochko necha?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "10"
+      ],
+      "correctIndex": 1,
+      "explanation": "O‘yin kubigining yuzlarida 1 dan 6 gacha nuqtalar bor."
+    },
+    {
+      "text": "Katakda 6 ta doiracha chizildi. 3 tasi qizil, qolgani ko‘k. Ko‘k doirachalar nechta?",
+      "options": [
+        "2 ta",
+        "4 ta",
+        "3 ta",
+        "1 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 − 3 = 3 ta ko‘k doiracha."
+    }
+  ]
+}

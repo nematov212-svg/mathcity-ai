@@ -1,0 +1,276 @@
+{
+  "bookNumber": 35,
+  "title": "Noma’lum kamayuvchini topish",
+  "emoji": "❓",
+  "shortDesc": "□ − 4 = 5 ko‘rinishidagi amallar, qoida va masalalar.",
+  "intro": "Noma’lum kamayuvchini topish uchun ayirmaga ayriluvchi qo‘shiladi.",
+  "keyPoints": [
+    "Qoida: Noma’lum kamayuvchi = Ayirma + Ayriluvchi.",
+    "Misol: □ − 4 = 5 bo‘lsa, □ = 5 + 4 = 9.",
+    "Kamayuvchi har doim ayriluvchi va ayirmaning yig‘indisiga teng (eng katta son)."
+  ],
+  "miniExample": {
+    "emojis": "□ − 4️⃣ = 5️⃣",
+    "text": "□ = 5 + 4 = 9: dastlab 9 ta narsa bo‘lgan!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Tenglikdagi noma’lum kamayuvchini toping: □ − 3 = 4",
+      "options": [
+        "7",
+        "6",
+        "8",
+        "1"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 3 = 7."
+    },
+    {
+      "text": "Tenglikdagi noma’lum sonni toping: □ − 2 = 5",
+      "options": [
+        "3",
+        "7",
+        "8",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 2 = 7."
+    },
+    {
+      "text": "Noma’lum kamayuvchini qanday qoida bilan topamiz?",
+      "options": [
+        "Ayirmadan ayriluvchini ayiramiz",
+        "Bo‘lamiz",
+        "Ayirmaga ayriluvchini qo‘shamiz",
+        "Faqat taxmin qilamiz"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kamayuvchi = Ayirma + Ayriluvchi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Tenglikdagi noma’lum sonni toping: □ − 1 = 6",
+      "options": [
+        "7",
+        "5",
+        "8",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 1 = 7."
+    },
+    {
+      "text": "Tenglikdagi noma’lum sonni toping: □ − 2 = 6",
+      "options": [
+        "4",
+        "7",
+        "8",
+        "9"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 2 = 8."
+    },
+    {
+      "text": "Tenglikdagi noma’lum sonni toping: □ − 3 = 5",
+      "options": [
+        "2",
+        "8",
+        "7",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 3 = 8."
+    },
+    {
+      "text": "Tenglikdagi noma’lum sonni toping: □ − 4 = 6",
+      "options": [
+        "2",
+        "9",
+        "8",
+        "10"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 4 = 10."
+    },
+    {
+      "text": "Tenglikdagi noma’lum sonni toping: □ − 5 = 2",
+      "options": [
+        "3",
+        "7",
+        "6",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 + 5 = 7."
+    },
+    {
+      "text": "Tenglikdagi noma’lum sonni toping: □ − 2 = 8",
+      "options": [
+        "10",
+        "6",
+        "9",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 2 = 10."
+    },
+    {
+      "text": "Tenglikdagi noma’lum sonni toping: □ − 4 = 3",
+      "options": [
+        "1",
+        "6",
+        "8",
+        "7"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 + 4 = 7."
+    },
+    {
+      "text": "Tenglikdagi noma’lum sonni toping: □ − 3 = 3",
+      "options": [
+        "0",
+        "5",
+        "6",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 + 3 = 6."
+    },
+    {
+      "text": "Tenglikdagi noma’lum sonni toping: □ − 5 = 5",
+      "options": [
+        "0",
+        "8",
+        "10",
+        "9"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 5 = 10."
+    },
+    {
+      "text": "Tenglikdagi noma’lum sonni toping: □ − 1 = 8",
+      "options": [
+        "7",
+        "10",
+        "8",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 + 1 = 9."
+    },
+    {
+      "text": "Noma’lum kamayuvchini topish formulasi qaysi?",
+      "options": [
+        "Kamayuvchi = Ayirma + Ayriluvchi",
+        "Kamayuvchi = Ayirma − Ayriluvchi",
+        "Kamayuvchi = Ayriluvchi − Ayirma",
+        "Kamayuvchi = Yig‘indi + 1"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kamayuvchi ayirma va ayriluvchi yig‘indisiga teng."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: □ − 0 = 7. Katakdagi son nima?",
+      "options": [
+        "0",
+        "7",
+        "6",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 0 = 7."
+    },
+    {
+      "text": "Qaysi tenglikda noma’lum kamayuvchi 9 ga teng?",
+      "options": [
+        "□ − 3 = 5",
+        "□ − 5 = 5",
+        "□ − 2 = 5",
+        "□ − 4 = 5"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 4 = 9."
+    },
+    {
+      "text": "Qaysi tenglikda noma’lum kamayuvchi 8 ga teng?",
+      "options": [
+        "□ − 3 = 6",
+        "□ − 2 = 6",
+        "□ − 1 = 6",
+        "□ − 4 = 6"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 2 = 8."
+    },
+    {
+      "text": "Savatda bir nechta olma bor edi. 3 tasi yeyilgach, 5 ta olma qoldi. Dastlab savatda nechta olma bo‘lgan?",
+      "options": [
+        "2 ta",
+        "7 ta",
+        "8 ta olma (5 + 3 = 8)",
+        "9 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "□ − 3 = 5, demak □ = 5 + 3 = 8 ta olma."
+    },
+    {
+      "text": "Shoxdan 2 ta qush uchib ketdi va 4 ta qush qoldi. Dastlab shoxda nechta qush bo‘lgan?",
+      "options": [
+        "6 ta qush (4 + 2 = 6)",
+        "2 ta",
+        "5 ta",
+        "7 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 2 = 6 ta qush."
+    },
+    {
+      "text": "Botir bir nechta daftar sotib oldi. 2 tasini ishlatgach, 7 ta yangi daftari qoldi. Dastlab nechta daftar bo‘lgan?",
+      "options": [
+        "9 ta daftar",
+        "5 ta",
+        "8 ta",
+        "10 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 2 = 9 ta daftar."
+    },
+    {
+      "text": "Avtobusdan 4 kishi tushgach, ichkarida 6 kishi qoldi. Dastlab avtobusda nechta yo‘lovchi bo‘lgan?",
+      "options": [
+        "2 ta",
+        "8 ta",
+        "9 ta",
+        "10 ta yo‘lovchi"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 4 = 10 ta yo‘lovchi."
+    },
+    {
+      "text": "Kamola dugonalariga 5 ta konfet ulashgach, o‘zida 3 ta qoldi. Dastlab unda nechta konfet bor edi?",
+      "options": [
+        "2 ta",
+        "8 ta konfet",
+        "7 ta",
+        "9 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 + 5 = 8 ta konfet."
+    },
+    {
+      "text": "Akvariumdan 1 ta baliq olib qo‘yilgach, 8 ta baliq qoldi. Dastlab akvariumda nechta baliq bo‘lgan?",
+      "options": [
+        "7 ta",
+        "10 ta",
+        "9 ta baliq",
+        "8 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 1 = 9 ta baliq."
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "bookNumber": 10,
+  "title": "Narsalar sanog‘i (qo‘shnilar)",
+  "emoji": "🐣",
+  "shortDesc": "Sondan oldingi va keyingi son, qo‘shni sonlar va teskari sanash.",
+  "intro": "Har bir sonning chap va o‘ng tomonida o‘z qo‘shni sonlari bo‘ladi.",
+  "keyPoints": [
+    "Oldingi son berilgan sondan 1 taga kichik bo‘ladi.",
+    "Keyingi son berilgan sondan 1 taga katta bo‘ladi.",
+    "Masalan, 5 ning qo‘shnilari — 4 va 6 dir."
+  ],
+  "miniExample": {
+    "emojis": "4️⃣ ⬅️ 5️⃣ ➡️ 6️⃣",
+    "text": "5 ning chap qo‘shnisi 4, o‘ng qo‘shnisi esa 6!"
+  },
+  "xpReward": 80,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "4 sonining qo‘shnilari qaysilar?",
+      "options": [
+        "3 va 5",
+        "2 va 6",
+        "1 va 3",
+        "4 va 5"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 dan oldin 3, keyin esa 5 keladi."
+    },
+    {
+      "text": "6 sonidan oldingi sonni toping.",
+      "options": [
+        "7",
+        "5",
+        "4",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 dan oldin 5 turadi."
+    },
+    {
+      "text": "9 sonining keyingi qo‘shnisi qaysi?",
+      "options": [
+        "8",
+        "7",
+        "10",
+        "11"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 dan keyin 10 keladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "3 sonining qo‘shni sonlarini toping:",
+      "options": [
+        "2 va 4",
+        "1 va 5",
+        "3 va 4",
+        "2 va 5"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 ning chap qo‘shnisi 2, o‘ng qo‘shnisi 4 dir."
+    },
+    {
+      "text": "7 sonining qo‘shni sonlarini toping:",
+      "options": [
+        "5 va 9",
+        "7 va 8",
+        "6 va 8",
+        "6 va 7"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 dan oldin 6, keyin 8 keladi."
+    },
+    {
+      "text": "2 sonidan oldingi son qaysi?",
+      "options": [
+        "3",
+        "1",
+        "0",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 ning oldingi qo‘shnisi 1 dir."
+    },
+    {
+      "text": "8 sonining keyingi qo‘shnisi qaysi?",
+      "options": [
+        "7",
+        "10",
+        "6",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 dan keyin 9 keladi."
+    },
+    {
+      "text": "Qaysi sonning qo‘shnilari 4 va 6 dir?",
+      "options": [
+        "3",
+        "5",
+        "7",
+        "2"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 va 6 orasidagi son 5 dir."
+    },
+    {
+      "text": "Qaysi sonning qo‘shnilari 1 va 3 dir?",
+      "options": [
+        "2",
+        "4",
+        "0",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 va 3 orasida 2 soni joylashgan."
+    },
+    {
+      "text": "Qaysi sonning qo‘shnilari 8 va 10 dir?",
+      "options": [
+        "7",
+        "6",
+        "5",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 va 10 o‘rtasidagi son 9 dir."
+    },
+    {
+      "text": "5 sonining oldingi qo‘shnisi kim?",
+      "options": [
+        "6",
+        "3",
+        "4",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 dan oldin 4 turadi."
+    },
+    {
+      "text": "6 sonining keyingi qo‘shnisi kim?",
+      "options": [
+        "5",
+        "8",
+        "7",
+        "9"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 dan keyingi son 7 dir."
+    },
+    {
+      "text": "1 sonining natural sanoqdagi keyingi qo‘shnisi qaysi?",
+      "options": [
+        "0",
+        "3",
+        "4",
+        "2"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 dan keyin 2 keladi."
+    },
+    {
+      "text": "Quyidagi juftliklardan qaysi biri 6 ning qo‘shnilari emas?",
+      "options": [
+        "4 va 8 (ular qo‘shni emas)",
+        "5 va 7",
+        "Besh va yetti",
+        "5 hamda 7"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 ning haqiqiy qo‘shnilari 5 va 7 dir."
+    },
+    {
+      "text": "Teskari sanoqda: 10, 9, 8, 7, ... keyingi son nima bo‘ladi?",
+      "options": [
+        "5",
+        "6",
+        "8",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 dan oldingi son 6 dir."
+    },
+    {
+      "text": "Teskari sanoqda: 6, 5, 4, 3, ... keyingi son nima bo‘ladi?",
+      "options": [
+        "1",
+        "5",
+        "0",
+        "2"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 dan oldin 2 keladi."
+    },
+    {
+      "text": "Bir xonali sonlar ichida 9 ning o‘ng qo‘shnisi qaysi son?",
+      "options": [
+        "8",
+        "10 (ikki xonali son)",
+        "7",
+        "11"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 dan keyin 10 keladi."
+    },
+    {
+      "text": "Qo‘shnilari 2 va 4 bo‘lgan son qaysi?",
+      "options": [
+        "5",
+        "1",
+        "3",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 va 4 ning o‘rtasida 3 turadi."
+    },
+    {
+      "text": "Qo‘shnilari 7 va 9 bo‘lgan son qaysi?",
+      "options": [
+        "8",
+        "6",
+        "10",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 va 9 ning o‘rtasida 8 turadi."
+    },
+    {
+      "text": "Uy raqamlari qatorda: 4-uy, 5-uy, 6-uy. 5-uyning qo‘shnilari qaysilar?",
+      "options": [
+        "4-uy va 6-uy",
+        "3-uy va 7-uy",
+        "1-uy va 2-uy",
+        "Faqat 6-uy"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 ning qo‘shnilari 4 va 6 dir."
+    },
+    {
+      "text": "Sanobar 7 yoshda. Uning ukasi 1 yoshga kichik, opasi esa 1 yoshga katta. Ukasi va opasi necha yoshda?",
+      "options": [
+        "Ukasi 5 yoshda, opasi 9 yoshda",
+        "Ukasi 7 yoshda, opasi 7 yoshda",
+        "Ukasi 8 yoshda, opasi 6 yoshda",
+        "Ukasi 6 yoshda, opasi 8 yoshda"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 ning qo‘shnilari 6 va 8 dir."
+    },
+    {
+      "text": "Avtobus 3-bekatdan o‘tdi. Undan oldingi va keyingi bekatlar qaysilar?",
+      "options": [
+        "1-bekat va 5-bekat",
+        "2-bekat va 4-bekat",
+        "3-bekat va 4-bekat",
+        "4-bekat va 5-bekat"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 ning oldingi bekati 2, keyingisi 4 dir."
+    },
+    {
+      "text": "Temur poyezdning 5-vagonida ketmoqda. Uning vagoni qaysi vagonlar orasida joylashgan?",
+      "options": [
+        "3-vagon va 7-vagon orasida",
+        "1-vagon va 2-vagon orasida",
+        "4-vagon va 6-vagon orasida",
+        "Faqat lokomotiv orqasida"
+      ],
+      "correctIndex": 2,
+      "explanation": "5-vagon 4 va 6-vagonlar o‘rtasida bo‘ladi."
+    }
+  ]
+}

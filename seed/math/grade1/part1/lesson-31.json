@@ -1,0 +1,276 @@
+{
+  "bookNumber": 31,
+  "title": "To‘g‘ri chiziq kesmasi. Siniq chiziq",
+  "emoji": "📐",
+  "shortDesc": "Kesma nima, kesmaning uchlari (oxirlari), kesmalarni sanash va siniq chiziq.",
+  "intro": "Ikki tomondan nuqtalar bilan chegaralangan to‘g‘ri chiziq bo‘lagi kesma deyiladi.",
+  "keyPoints": [
+    "Kesmaning boshi va oxiri (2 ta uchi) bo‘ladi.",
+    "Kesmani chizg‘ich bilan o‘lchash mumkin (santimetrlarda).",
+    "Bir necha kesmalar ketma-ket tutashsa, siniq chiziq hosil bo‘ladi."
+  ],
+  "miniExample": {
+    "emojis": "•——• 📐",
+    "text": "Nuqtalar orasidagi chiziq — kesma: uning 2 ta uchi bor!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Kesmaning nechta uchi (chegarasi) bo‘ladi?",
+      "options": [
+        "2 ta uchi",
+        "1 ta uchi",
+        "3 ta uchi",
+        "Uchi bo‘lmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kesma ikki chetidan nuqtalar bilan chegaralanadi."
+    },
+    {
+      "text": "Uchburchak 🔺 nechta kesmadan tuzilgan?",
+      "options": [
+        "4 ta",
+        "3 ta kesmadan",
+        "2 ta",
+        "5 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Uchburchakning har bir tomoni bitta kesmadir, jami 3 ta."
+    },
+    {
+      "text": "To‘rtburchak 🔲 nechta kesmadan tuzilgan?",
+      "options": [
+        "3 ta",
+        "5 ta",
+        "4 ta kesmadan",
+        "6 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "To‘rtburchak 4 ta kesmadan iborat."
+    }
+  ],
+  "test": [
+    {
+      "text": "To‘g‘ri chiziqning ikki nuqta bilan chegaralangan qismi nima deyiladi?",
+      "options": [
+        "Kesma",
+        "Nur",
+        "Nuqta",
+        "Aylana"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ikki cheti chegaralangan qism kesma deyiladi."
+    },
+    {
+      "text": "Kesmaning nechta chegaraviy nuqtasi (uchi) bor?",
+      "options": [
+        "1 ta",
+        "3 ta",
+        "2 ta",
+        "Cheksiz"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kesma boshlang‘ich va oxirgi 2 ta nuqtaga ega."
+    },
+    {
+      "text": "Bir nechta kesmalar ulanib, to‘g‘ri chiziq hosil qilmasa nima deyiladi?",
+      "options": [
+        "To‘g‘ri chiziq",
+        "Siniq chiziq",
+        "Egri chiziq",
+        "Doira"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kesmalarning burchak hosil qilib ulanishi siniq chiziq deyiladi."
+    },
+    {
+      "text": "Siniq chiziqni tashkil qiluvchi har bir kesma nima deyiladi?",
+      "options": [
+        "Aylana",
+        "Radius",
+        "Diametr",
+        "Siniq chiziqning bo‘g‘ini"
+      ],
+      "correctIndex": 3,
+      "explanation": "Siniq chiziqdagi kesmalarga uning bo‘g‘inlari deyiladi."
+    },
+    {
+      "text": "3 ta bo‘g‘indan iborat siniq chiziqda nechta kesma bor?",
+      "options": [
+        "2 ta",
+        "3 ta kesma",
+        "4 ta",
+        "5 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 ta bo‘g‘in 3 ta kesmadan iborat."
+    },
+    {
+      "text": "Kvadratning tomonlari qanday chiziqlardan iborat?",
+      "options": [
+        "4 ta teng kesmadan",
+        "4 ta egri chiziqdan",
+        "3 ta kesmadan",
+        "Aylanadan"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kvadrat 4 ta teng kesmaning tutashuvidan hosil bo‘ladi."
+    },
+    {
+      "text": "Kesmaning uzunligini qaysi asbob bilan o‘lchash mumkin?",
+      "options": [
+        "Tarozi bilan",
+        "Soat bilan",
+        "Termometr bilan",
+        "Chizg‘ich bilan (santimetrlarda) 📏"
+      ],
+      "correctIndex": 3,
+      "explanation": "Uzunlik chizg‘ich yordamida santimetrda o‘lchanadi."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri yopiq siniq chiziq hisoblanadi?",
+      "options": [
+        "Ochiq zinasimon chiziq",
+        "Yoy chiziq",
+        "Uchburchak 🔺",
+        "Nuqta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Uchburchak uchi tutashgan yopiq siniq chiziqdir."
+    },
+    {
+      "text": "To‘g‘ri chiziq bilan kesmaning farqi nimada?",
+      "options": [
+        "Kesma egri bo‘ladi",
+        "To‘g‘ri chiziq burchakli bo‘ladi",
+        "To‘g‘ri chiziq cheksiz, kesmaning esa boshi va oxiri bor",
+        "Farqi yo‘q"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kesma chegaralangan, to‘g‘ri chiziq esa cheksiz davom etadi."
+    },
+    {
+      "text": "4 ta bo‘g‘inli siniq chiziqda nechta bo‘g‘in (kesma) bor?",
+      "options": [
+        "3 ta",
+        "5 ta",
+        "2 ta",
+        "4 ta"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 ta bo‘g‘inli siniq chiziqda 4 ta kesma mavjud."
+    },
+    {
+      "text": "Yulduzcha ⭐️ shakli qanday chiziqdan yasalgan?",
+      "options": [
+        "Yopiq siniq chiziqdan",
+        "Bitta to‘g‘ri chiziqdan",
+        "Doiradan",
+        "Nuqtadan"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yulduzcha ko‘plab kesmalarning yopiq tutashuvidir."
+    },
+    {
+      "text": "Kesmaning uzunligi 5 sm bo‘lsa, u haqida nima deymiz?",
+      "options": [
+        "U cheksiz uzun",
+        "U 5 santimetrli aniq o‘lchamga ega",
+        "Uning o‘lchami yo‘q",
+        "U 5 metr"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kesmaning aniq uzunligi bo‘ladi."
+    },
+    {
+      "text": "Beshburchak ⬟ nechta kesmadan tuzilgan?",
+      "options": [
+        "4 ta",
+        "6 ta",
+        "3 ta",
+        "5 ta kesmadan"
+      ],
+      "correctIndex": 3,
+      "explanation": "Beshburchak 5 ta kesmaning yopiq birikmasidir."
+    },
+    {
+      "text": "Agar kesmaning bir uchi o‘chirilsa, u nima bo‘lib qolishi mumkin?",
+      "options": [
+        "Doira",
+        "Bir tomoni cheksiz nur",
+        "Nuqta",
+        "Uchburchak"
+      ],
+      "correctIndex": 1,
+      "explanation": "Boshi bor, lekin cheki yo‘q chiziqqa nur deyiladi."
+    },
+    {
+      "text": "Zina shaklidagi chiziq qanday chiziqqa misol bo‘ladi?",
+      "options": [
+        "Egri chiziqqa",
+        "Aylanaga",
+        "Siniq chiziqqa",
+        "Nuqtaga"
+      ],
+      "correctIndex": 2,
+      "explanation": "Zinapoyaning qirralari to‘g‘ri burchakli siniq chiziq hosil qiladi."
+    },
+    {
+      "text": "Ali qog‘ozga 2 ta nuqta qo‘ydi va ularni chizg‘ich bilan tutashtirdi. U nima chizdi?",
+      "options": [
+        "Kesma chizdi",
+        "Doira chizdi",
+        "Egri chiziq chizdi",
+        "Kub chizdi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ikki nuqta tutashtirilsa kesma hosil bo‘ladi."
+    },
+    {
+      "text": "1-kesma 3 sm, 2-kesma 5 sm. Qaysi kesma uzun?",
+      "options": [
+        "2-kesma uzun (5 sm > 3 sm)",
+        "1-kesma uzun",
+        "Ikkalasi teng",
+        "O‘lchab bo‘lmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 sm 3 sm dan uzun."
+    },
+    {
+      "text": "1-kesma 4 sm, 2-kesma ham 4 sm. Kesmalar haqida nima deymiz?",
+      "options": [
+        "1-kesma uzun",
+        "2-kesma uzun",
+        "Kesmalar har xil",
+        "Ikkala kesma teng uzunlikda (4 sm = 4 sm)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Uzunliklari bir xil bo‘lsa, kesmalar teng deyiladi."
+    },
+    {
+      "text": "Daftar katagining bir tomoni odatda qancha bo‘ladi?",
+      "options": [
+        "1 metr",
+        "Yarim santimetr (5 millimetr)",
+        "10 santimetr",
+        "5 metr"
+      ],
+      "correctIndex": 1,
+      "explanation": "Maktab daftari katagining tomoni 5 mm (yarim sm) bo‘ladi."
+    },
+    {
+      "text": "Oltiburchak nechta kesmadan tuziladi?",
+      "options": [
+        "5 ta",
+        "7 ta",
+        "6 ta kesmadan",
+        "8 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Oltiburchakda 6 ta tomon, ya’ni 6 ta kesma bor."
+    }
+  ]
+}

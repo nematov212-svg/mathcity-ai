@@ -1,0 +1,276 @@
+{
+  "bookNumber": 4,
+  "title": "Narsalar sanog‘i",
+  "emoji": "🥕",
+  "shortDesc": "1–9 emoji sanash, tayoqchalar, kattalashish tartibi va nechanchi.",
+  "intro": "Atrofdagi narsalarni birma-bir sanab, ularning umumiy sonini aniqlaymiz.",
+  "keyPoints": [
+    "Sanashda har bir narsaga bitta son mos keladi.",
+    "Oxirgi aytilgan son narsalarning jami miqdorini bildiradi.",
+    "Narsalarni kattalashish va kichrayish tartibida sanash mumkin."
+  ],
+  "miniExample": {
+    "emojis": "🍎 🍎 🍎",
+    "text": "Bir, ikki, uch — jami 3 ta olma!"
+  },
+  "xpReward": 80,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Nechta yulduzcha bor: ⭐ ⭐ ⭐ ⭐?",
+      "options": [
+        "4 ta",
+        "3 ta",
+        "5 ta",
+        "6 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Bir, ikki, uch, to‘rt — jami 4 ta yulduzcha."
+    },
+    {
+      "text": "Savatchada 2 ta nok bor edi, yana 1 ta solindi. Nechta bo‘ldi?",
+      "options": [
+        "2 ta",
+        "3 ta",
+        "4 ta",
+        "1 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 ga 1 qo‘shilsa 3 ta bo‘ladi."
+    },
+    {
+      "text": "Barmoqlaringizni sanang: bitta qo‘lda nechta barmoq bor?",
+      "options": [
+        "4 ta",
+        "6 ta",
+        "5 ta",
+        "10 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Odamning bir qo‘lida 5 ta barmoq bo‘ladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Nechta olma bor: 🍎 🍎 🍎?",
+      "options": [
+        "3 ta",
+        "2 ta",
+        "4 ta",
+        "5 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sanamiz: 1, 2, 3. Jami 3 ta olma."
+    },
+    {
+      "text": "Nechta koptok bor: ⚽ ⚽ ⚽ ⚽ ⚽?",
+      "options": [
+        "4 ta",
+        "6 ta",
+        "5 ta",
+        "7 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Koptoklar soni roppa-rosa 5 ta."
+    },
+    {
+      "text": "Quyidagi tayoqchalar nechta: ||||||?",
+      "options": [
+        "5 ta",
+        "6 ta",
+        "7 ta",
+        "8 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Birma-bir sanaganda 6 ta tayoqcha bor."
+    },
+    {
+      "text": "Quyidagi mashinalar sonini toping: 🚗 🚗?",
+      "options": [
+        "1 ta",
+        "3 ta",
+        "4 ta",
+        "2 ta"
+      ],
+      "correctIndex": 3,
+      "explanation": "Bu yerda 2 ta mashina turibdi."
+    },
+    {
+      "text": "Nechta gul bor: 🌸 🌸 🌸 🌸?",
+      "options": [
+        "3 ta",
+        "4 ta",
+        "5 ta",
+        "6 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Gullar soni 4 ta."
+    },
+    {
+      "text": "1, 2, 3, 4, 5 sonlaridan qaysi biri eng katta?",
+      "options": [
+        "5",
+        "1",
+        "3",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ushbu qatorda 5 soni eng kattadir."
+    },
+    {
+      "text": "1, 2, 3, 4, 5 sonlaridan qaysi biri eng kichik?",
+      "options": [
+        "2",
+        "3",
+        "5",
+        "1"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 soni sanoq boshidagi eng kichik son."
+    },
+    {
+      "text": "Qatorda: 🦆 🦆 🦆 🦆 🦆 🦆 🦆. Nechta o‘rdakcha bor?",
+      "options": [
+        "6 ta",
+        "8 ta",
+        "7 ta",
+        "9 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sanamiz: 1, 2, 3, 4, 5, 6, 7. Jami 7 ta."
+    },
+    {
+      "text": "Quyidagi kapalaklarni sanang: 🦋 🦋 🦋 🦋 🦋 🦋 🦋 🦋.",
+      "options": [
+        "7 ta",
+        "9 ta",
+        "8 ta",
+        "6 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kapalaklar soni roppa-rosa 8 ta."
+    },
+    {
+      "text": "9 ta olxo‘ri 🫐 sanashda 8 dan keyin qaysi son aytiladi?",
+      "options": [
+        "Yetti (7)",
+        "O‘n (10)",
+        "Olti (6)",
+        "To‘qqiz (9)"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 dan keyin 9 soni keladi."
+    },
+    {
+      "text": "Bitta velosipedda 🚲 nechta g‘ildirak bor?",
+      "options": [
+        "2 ta",
+        "3 ta",
+        "4 ta",
+        "1 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Oddiy velosipedda 2 ta g‘ildirak bo‘ladi."
+    },
+    {
+      "text": "Svetoforda 🚦 nechta chiroq bor?",
+      "options": [
+        "2 ta",
+        "3 ta (qizil, sariq, yashil)",
+        "4 ta",
+        "5 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Svetofor 3 ta rangli chiroqqa ega."
+    },
+    {
+      "text": "Narsalarni sanash qaysi sondan boshlanadi?",
+      "options": [
+        "0 dan",
+        "2 dan",
+        "5 dan",
+        "1 dan"
+      ],
+      "correctIndex": 3,
+      "explanation": "Sanoq 1 sonidan boshlanadi: bir, ikki, uch..."
+    },
+    {
+      "text": "Qatorda turgan quyonchalardan uchinchisi qaysi: 🐇 🐇 🐇 🐇?",
+      "options": [
+        "1-quyoncha",
+        "Chapdan hisoblaganda 3-o‘rindagi quyoncha",
+        "Oxirgi quyoncha",
+        "Barcha quyonchalar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Uchinchi so‘zi tartib bo‘yicha 3-narsani bildiradi."
+    },
+    {
+      "text": "Daftarga 5 ta katak bo‘yash kerak. Nechta katak bo‘yaladi?",
+      "options": [
+        "4 ta katak",
+        "6 ta katak",
+        "5 ta katak",
+        "3 ta katak"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 soni 5 ta katakni bildiradi."
+    },
+    {
+      "text": "Nechta jo‘ja bor: 🐣 🐣 🐣 🐣 🐣 🐣?",
+      "options": [
+        "6 ta",
+        "5 ta",
+        "7 ta",
+        "8 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sanamiz: 1, 2, 3, 4, 5, 6 ta jo‘ja."
+    },
+    {
+      "text": "Stol ustida 4 ta qalam bor edi. Ali yana 1 ta qo‘ydi. Qalamlar nechta bo‘ldi?",
+      "options": [
+        "5 ta",
+        "4 ta",
+        "6 ta",
+        "3 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 ta qalamga 1 ta qo‘shilsa 5 ta bo‘ladi."
+    },
+    {
+      "text": "Kattalashish tartibida to‘g‘ri yozilgan qatorni toping:",
+      "options": [
+        "5, 4, 3, 2, 1",
+        "1, 3, 2, 5, 4",
+        "2, 4, 1, 3, 5",
+        "1, 2, 3, 4, 5"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 dan 5 gacha bo‘lgan sonlar kichigidan kattasiga qarab o‘sadi."
+    },
+    {
+      "text": "Jasur akvariumda 3 ta qizil va 2 ta sariq baliqchani ko‘rdi. Jami nechta baliqcha bor?",
+      "options": [
+        "4 ta",
+        "5 ta",
+        "6 ta",
+        "3 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 + 2 = 5 ta baliqcha."
+    },
+    {
+      "text": "Madina bog‘dan 1 ta nok, 2 ta olma va 1 ta shaftoli uzdi. U jami nechta meva uzdi?",
+      "options": [
+        "3 ta meva",
+        "5 ta meva",
+        "4 ta meva",
+        "6 ta meva"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 + 2 + 1 = 4 ta meva."
+    }
+  ]
+}

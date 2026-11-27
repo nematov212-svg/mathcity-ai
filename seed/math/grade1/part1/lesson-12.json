@@ -1,0 +1,276 @@
+{
+  "bookNumber": 12,
+  "title": "Ayirish",
+  "emoji": "➖",
+  "shortDesc": "Ayirish ma’nosi (olib tashlash), ayirma, − belgisi va masalalar.",
+  "intro": "Ayirish — bu guruhdan bir qismini olib tashlash, kamaytirish amali.",
+  "keyPoints": [
+    "Ayirishda '−' (minus) belgisi ishlatiladi.",
+    "Natijada hosil bo‘lgan son ayirma deyiladi.",
+    "Narsalar olinganda yoki ketganda ularning soni kamayadi."
+  ],
+  "miniExample": {
+    "emojis": "🍎🍎🍎 − 🍎",
+    "text": "3 ta olmadan 1 tasini yesak, 2 ta olma qoladi! (3 − 1 = 2)"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Misolni hisoblang: 5 − 2 = ?",
+      "options": [
+        "3",
+        "4",
+        "2",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 dan 2 ayirilsa 3 qoladi."
+    },
+    {
+      "text": "Ayirish amali qaysi belgi bilan yoziladi?",
+      "options": [
+        "+ (plyus)",
+        "− (minus)",
+        "= (teng)",
+        "× (ko‘paytirish)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ayirish amali '−' belgisi bilan belgilanadi."
+    },
+    {
+      "text": "Likopchada 4 ta olma bor edi, 1 tasi yeyildi. Nechta qoldi?",
+      "options": [
+        "2 ta",
+        "4 ta",
+        "3 ta",
+        "5 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 − 1 = 3 ta olma qoladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 3 − 1 = ?",
+      "options": [
+        "2",
+        "1",
+        "3",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 − 1 = 2."
+    },
+    {
+      "text": "Misolni hisoblang: 4 − 2 = ?",
+      "options": [
+        "1",
+        "3",
+        "2",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 − 2 = 2."
+    },
+    {
+      "text": "Misolni hisoblang: 5 − 1 = ?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 − 1 = 4."
+    },
+    {
+      "text": "Misolni hisoblang: 6 − 3 = ?",
+      "options": [
+        "2",
+        "4",
+        "9",
+        "3"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 − 3 = 3."
+    },
+    {
+      "text": "Misolni hisoblang: 7 − 2 = ?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 − 2 = 5."
+    },
+    {
+      "text": "Misolni hisoblang: 8 − 3 = ?",
+      "options": [
+        "5",
+        "4",
+        "6",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 − 3 = 5."
+    },
+    {
+      "text": "Misolni hisoblang: 9 − 4 = ?",
+      "options": [
+        "4",
+        "6",
+        "3",
+        "5"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 − 4 = 5."
+    },
+    {
+      "text": "Misolni hisoblang: 10 − 2 = ?",
+      "options": [
+        "7",
+        "9",
+        "8",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 − 2 = 8."
+    },
+    {
+      "text": "Misolni hisoblang: 8 − 4 = ?",
+      "options": [
+        "3",
+        "5",
+        "4",
+        "2"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 − 4 = 4."
+    },
+    {
+      "text": "Misolni hisoblang: 10 − 5 = ?",
+      "options": [
+        "4",
+        "6",
+        "7",
+        "5"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 − 5 = 5."
+    },
+    {
+      "text": "Misolni hisoblang: 9 − 2 = ?",
+      "options": [
+        "7",
+        "6",
+        "8",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 − 2 = 7."
+    },
+    {
+      "text": "Misolni hisoblang: 7 − 4 = ?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 − 4 = 3."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 4 ga teng?",
+      "options": [
+        "7 − 2",
+        "5 − 2",
+        "8 − 3",
+        "6 − 2"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 − 2 = 4."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 6 ga teng?",
+      "options": [
+        "9 − 2",
+        "8 − 2",
+        "7 − 2",
+        "10 − 3"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 − 2 = 6."
+    },
+    {
+      "text": "Ayirish natijasi nima deb ataladi?",
+      "options": [
+        "Yig‘indi",
+        "Qo‘shiluvchi",
+        "Ayirma",
+        "Ko‘paytma"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ayirish amali natijasiga ayirma deyiladi."
+    },
+    {
+      "text": "Narsalar guruhidan bir qismi olib tashlansa, qaysi amal bajariladi?",
+      "options": [
+        "Ayirish amali (−)",
+        "Qo‘shish amali (+)",
+        "Taqqoslash amali faqat",
+        "Hech qanday amal"
+      ],
+      "correctIndex": 0,
+      "explanation": "Olib tashlash yoki kamaytirishda ayirish amali qo‘llanadi."
+    },
+    {
+      "text": "Stol ustida 6 ta shaftoli bor edi. Bolalar 2 tasini yeyishdi. Nechta shaftoli qoldi?",
+      "options": [
+        "4 ta shaftoli",
+        "3 ta",
+        "5 ta",
+        "8 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 − 2 = 4 ta shaftoli qoladi."
+    },
+    {
+      "text": "Simda 7 ta qaldirg‘och o‘tirgan edi. 3 tasi uchib ketdi. Nechta qaldirg‘och qoldi?",
+      "options": [
+        "3 ta",
+        "5 ta",
+        "10 ta",
+        "4 ta qaldirg‘och"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 − 3 = 4 ta qaldirg‘och qoladi."
+    },
+    {
+      "text": "Savatchada 9 ta tuxum bor edi. 2 tasi ishlatildi. Nechta tuxum qoldi?",
+      "options": [
+        "6 ta",
+        "7 ta tuxum",
+        "8 ta",
+        "5 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 − 2 = 7 ta tuxum."
+    },
+    {
+      "text": "Avtobusda 10 ta yo‘lovchi bor edi. Bekatda 3 kishi tushdi. Avtobusda nechta yo‘lovchi qoldi?",
+      "options": [
+        "6 ta",
+        "8 ta",
+        "7 ta yo‘lovchi",
+        "5 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 − 3 = 7 ta yo‘lovchi qoladi."
+    }
+  ]
+}

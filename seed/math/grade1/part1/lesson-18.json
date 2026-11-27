@@ -1,0 +1,276 @@
+{
+  "bookNumber": 18,
+  "title": "5 soni va raqami",
+  "emoji": "5️⃣",
+  "shortDesc": "5 raqami, sanash, tarkibi (1 + 4, 2 + 3) va sonlar chizig‘i.",
+  "intro": "5 soni — beshta narsani bildiradi, bitta qo‘lda 5 ta barmoq bor.",
+  "keyPoints": [
+    "Bitta qo‘l panjasida roppa-rosa 5 ta barmoq bo‘ladi.",
+    "5 sonining tarkibi: 1 + 4 = 5 va 2 + 3 = 5.",
+    "Sonlar chizig‘ida 5 soni 4 va 6 ning o‘rtasida turadi."
+  ],
+  "miniExample": {
+    "emojis": "✋ 5️⃣",
+    "text": "Qo‘limizda 5 ta barmoq bor: 2 + 3 = 5!"
+  },
+  "xpReward": 80,
+  "coinReward": 10,
+  "estMinutes": 5,
+  "practice": [
+    {
+      "text": "Misolni hisoblang: 3 + 2 = ?",
+      "options": [
+        "5",
+        "4",
+        "6",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 ga 2 qo‘shilsa 5 bo‘ladi."
+    },
+    {
+      "text": "Bitta qo‘lda nechta barmoq bor?",
+      "options": [
+        "4 ta",
+        "5 ta ✋",
+        "6 ta",
+        "10 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qo‘limizda 5 ta barmoq bor."
+    },
+    {
+      "text": "5 sonining qo‘shnilarini toping:",
+      "options": [
+        "3 va 5",
+        "5 va 6",
+        "4 va 6",
+        "2 va 7"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 ning oldida 4, keyin 6 keladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Quyidagilardan qaysi biri 5 raqamini bildiradi?",
+      "options": [
+        "5",
+        "2",
+        "3",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "'5' — besh raqami."
+    },
+    {
+      "text": "Misolni hisoblang: 4 + 1 = ?",
+      "options": [
+        "4",
+        "6",
+        "5",
+        "3"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 1 = 5."
+    },
+    {
+      "text": "Misolni hisoblang: 2 + 3 = ?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 + 3 = 5."
+    },
+    {
+      "text": "Misolni hisoblang: 5 − 1 = ?",
+      "options": [
+        "3",
+        "5",
+        "6",
+        "4"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 − 1 = 4."
+    },
+    {
+      "text": "Misolni hisoblang: 5 − 2 = ?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "1"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 − 2 = 3."
+    },
+    {
+      "text": "Misolni hisoblang: 5 − 3 = ?",
+      "options": [
+        "2",
+        "3",
+        "1",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 − 3 = 2."
+    },
+    {
+      "text": "Misolni hisoblang: 5 − 4 = ?",
+      "options": [
+        "2",
+        "0",
+        "3",
+        "1"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 − 4 = 1."
+    },
+    {
+      "text": "Misolni hisoblang: 5 − 5 = ?",
+      "options": [
+        "1",
+        "5",
+        "0",
+        "10"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 − 5 = 0."
+    },
+    {
+      "text": "Beshburchakning nechta tomoni bor?",
+      "options": [
+        "4 ta",
+        "6 ta",
+        "5 ta tomoni ⬟",
+        "3 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Beshburchak 5 ta burchak va 5 ta tomonga ega."
+    },
+    {
+      "text": "5 sonining tarkibi qanday?",
+      "options": [
+        "2 va 2",
+        "3 va 3",
+        "1 va 3",
+        "2 va 3 (yoki 1 va 4)"
+      ],
+      "correctIndex": 3,
+      "explanation": "2 + 3 = 5 va 1 + 4 = 5."
+    },
+    {
+      "text": "5 soni toq sonmi yoki juft son?",
+      "options": [
+        "Toq son",
+        "Juft son",
+        "Nol son",
+        "Ikkalasi ham"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 soni toq sondir."
+    },
+    {
+      "text": "5 sonining oldingi qo‘shnisi kim?",
+      "options": [
+        "3",
+        "4",
+        "6",
+        "2"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 dan oldin 4 turadi."
+    },
+    {
+      "text": "5 sonining keyingi qo‘shnisi kim?",
+      "options": [
+        "4",
+        "7",
+        "8",
+        "6"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 dan keyin 6 keladi."
+    },
+    {
+      "text": "Taqqoslang: 5 ... 4. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 soni 4 dan katta (5 > 4)."
+    },
+    {
+      "text": "Taqqoslang: 5 ... 6. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "−"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 soni 6 dan kichik (5 < 6)."
+    },
+    {
+      "text": "Dengiz yulduzining ⭐️ nechta uchi bor?",
+      "options": [
+        "5 ta uchi",
+        "4 ta",
+        "6 ta",
+        "3 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Dengiz yulduzi odatda 5 ta nurlarga ega."
+    },
+    {
+      "text": "Bog‘chada 3 ta o‘g‘il bola va 2 ta qiz bola o‘ynamoqda. Jami nechta bola bor?",
+      "options": [
+        "5 ta bola",
+        "4 ta",
+        "6 ta",
+        "3 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 + 2 = 5 ta bola."
+    },
+    {
+      "text": "Nodir 5 ta qushchani ko‘rdi, 2 tasi uchib ketdi. Nechta qushcha qoldi?",
+      "options": [
+        "2 ta",
+        "4 ta",
+        "1 ta",
+        "3 ta qushcha"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 − 2 = 3 ta qushcha."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 5 ga teng?",
+      "options": [
+        "2 + 2",
+        "1 + 4",
+        "3 + 1",
+        "5 + 1"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 + 4 = 5."
+    },
+    {
+      "text": "O‘quvchi a’lo baho olsa, qaysi bahoni oladi?",
+      "options": [
+        "4",
+        "3",
+        "5 (a’lo)",
+        "2"
+      ],
+      "correctIndex": 2,
+      "explanation": "Maktabda eng yuqori a’lo baho bu — 5 dir."
+    }
+  ]
+}

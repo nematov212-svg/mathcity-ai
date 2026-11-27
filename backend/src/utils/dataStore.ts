@@ -10,6 +10,37 @@ export interface QuestionModel {
   hint: string;
   formulaLatex?: string;
   orderIndex: number;
+  kind?: 'practice' | 'test';
+  order?: number;
+  text?: string;
+  correctIndex?: number;
+}
+
+export interface TestAttemptModel {
+  id: string;
+  userId: string;
+  lessonId: string;
+  questionOrder: string[];
+  optionOrder: { [questionId: string]: number[] };
+  correct: number;
+  total: number;
+  percent: number;
+  createdAt: string;
+  submittedAt?: string;
+}
+
+export interface LessonStepProgress {
+  userId: string;
+  lessonId: string;
+  completedSteps: number;
+  bestPercent: number;
+  lastPercent: number;
+  percent: number;
+  attempts: number;
+  xpGiven: number;
+  coinGiven: number;
+  isCompleted: boolean;
+  completedAt?: string;
 }
 
 export interface SectionModel {
@@ -54,6 +85,7 @@ export interface LessonModel {
   status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
   examples?: LessonExample[];
   moduleId?: string;
+  bookNumber?: number;
   emoji?: string;
   intro?: string;
   keyPoints?: string[];
@@ -62,6 +94,8 @@ export interface LessonModel {
   coinReward?: number;
   estMinutes?: number;
   questionCount?: number;
+  practice?: any[];
+  test?: any[];
   questions?: any[];
   createdAt?: string;
   updatedAt?: string;

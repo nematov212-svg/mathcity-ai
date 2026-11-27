@@ -1,0 +1,276 @@
+{
+  "bookNumber": 55,
+  "title": "Sonlarni ayirish",
+  "emoji": "➖",
+  "shortDesc": "Birliklardan ayirish (18-2 = 10 + (8-2) = 16), 17-4, 15-2 va masalalar.",
+  "intro": "Ikki xonali sondan bir xonali sonni ayirishda birliklar birliklardan ayiriladi, o‘nlik o‘zgarishsiz qoladi.",
+  "keyPoints": [
+    "Qoida: Birliklarni birlikdan ayiramiz: 18 − 2 da 8 − 2 = 6, o‘nlik qo‘shilsa 16 bo‘ladi.",
+    "17 − 4 = 13 (chunki 7 − 4 = 3).",
+    "15 − 2 = 13 (chunki 5 − 2 = 3)."
+  ],
+  "miniExample": {
+    "emojis": "1️⃣8️⃣ − 2️⃣ = 1️⃣6️⃣",
+    "text": "18 − 2 = 10 + (8 − 2) = 10 + 6 = 16!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Hisoblang: 18 − 3 = ?",
+      "options": [
+        "15",
+        "14",
+        "16",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 − 3 = 5, o‘nlik bilan 15."
+    },
+    {
+      "text": "Hisoblang: 17 − 4 = ?",
+      "options": [
+        "12",
+        "13",
+        "14",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 − 4 = 3, o‘nlik bilan 13."
+    },
+    {
+      "text": "Hisoblang: 16 − 5 = ?",
+      "options": [
+        "10",
+        "12",
+        "11",
+        "13"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 − 5 = 1, o‘nlik bilan 11."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 14 − 2 = ?",
+      "options": [
+        "12",
+        "11",
+        "13",
+        "10"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 − 2 = 2, natija 12."
+    },
+    {
+      "text": "Misolni hisoblang: 15 − 3 = ?",
+      "options": [
+        "11",
+        "13",
+        "12",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 − 3 = 2, natija 12."
+    },
+    {
+      "text": "Misolni hisoblang: 16 − 4 = ?",
+      "options": [
+        "11",
+        "12",
+        "13",
+        "10"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 − 4 = 2, natija 12."
+    },
+    {
+      "text": "Misolni hisoblang: 17 − 5 = ?",
+      "options": [
+        "11",
+        "13",
+        "14",
+        "12"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 − 5 = 2, natija 12."
+    },
+    {
+      "text": "Misolni hisoblang: 18 − 6 = ?",
+      "options": [
+        "11",
+        "12",
+        "13",
+        "14"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 − 6 = 2, natija 12."
+    },
+    {
+      "text": "Misolni hisoblang: 19 − 7 = ?",
+      "options": [
+        "12",
+        "11",
+        "13",
+        "14"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 − 7 = 2, natija 12."
+    },
+    {
+      "text": "Misolni hisoblang: 17 − 3 = ?",
+      "options": [
+        "13",
+        "15",
+        "16",
+        "14"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 − 3 = 4, natija 14."
+    },
+    {
+      "text": "Misolni hisoblang: 18 − 4 = ?",
+      "options": [
+        "13",
+        "15",
+        "14",
+        "12"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 − 4 = 4, natija 14."
+    },
+    {
+      "text": "Misolni hisoblang: 19 − 5 = ?",
+      "options": [
+        "13",
+        "15",
+        "14",
+        "16"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 − 5 = 4, natija 14."
+    },
+    {
+      "text": "Misolni hisoblang: 16 − 3 = ?",
+      "options": [
+        "12",
+        "14",
+        "15",
+        "13"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 − 3 = 3, natija 13."
+    },
+    {
+      "text": "Misolni hisoblang: 15 − 2 = ?",
+      "options": [
+        "13",
+        "12",
+        "14",
+        "11"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 − 2 = 3, natija 13."
+    },
+    {
+      "text": "Misolni hisoblang: 18 − 2 = ?",
+      "options": [
+        "15",
+        "16",
+        "17",
+        "14"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 − 2 = 6, natija 16."
+    },
+    {
+      "text": "Misolni hisoblang: 19 − 3 = ?",
+      "options": [
+        "15",
+        "17",
+        "18",
+        "16"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 − 3 = 6, natija 16."
+    },
+    {
+      "text": "Misolni hisoblang: 17 − 2 = ?",
+      "options": [
+        "14",
+        "15",
+        "16",
+        "13"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 − 2 = 5, natija 15."
+    },
+    {
+      "text": "Misolni hisoblang: 19 − 1 = ?",
+      "options": [
+        "17",
+        "19",
+        "18",
+        "20"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 − 1 = 8, natija 18."
+    },
+    {
+      "text": "Birliklardan ayirish qoidasi qaysi javobda to‘g‘ri?",
+      "options": [
+        "Bir xonali son ikki xonali sonning birliklaridan ayiriladi",
+        "O‘nlikdan ayiriladi",
+        "Ikkala raqamdan ham ayiriladi",
+        "Amal bajarilmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "18 − 2 da 2 faqat 8 dan ayiriladi."
+    },
+    {
+      "text": "Savatda 18 ta nok bor edi. 5 tasi yeyildi. Nechta nok qoldi?",
+      "options": [
+        "13 ta nok",
+        "12 ta",
+        "14 ta",
+        "15 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "18 − 5 = 13 ta nok."
+    },
+    {
+      "text": "Avtobusda 16 kishi bor edi. Bekatda 2 kishi tushdi. Nechta kishi qoldi?",
+      "options": [
+        "13 kishi",
+        "15 kishi",
+        "12 kishi",
+        "14 kishi"
+      ],
+      "correctIndex": 3,
+      "explanation": "16 − 2 = 14 kishi."
+    },
+    {
+      "text": "Daftar 19 varaq edi. Anvar 4 varag‘iga rasm chizdi. Nechta toza varaq qoldi?",
+      "options": [
+        "14 ta",
+        "15 ta toza varaq",
+        "16 ta",
+        "17 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "19 − 4 = 15 ta varaq."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 11 ga teng?",
+      "options": [
+        "18 − 6",
+        "16 − 6",
+        "17 − 6",
+        "19 − 6"
+      ],
+      "correctIndex": 2,
+      "explanation": "17 − 6 = 11."
+    }
+  ]
+}

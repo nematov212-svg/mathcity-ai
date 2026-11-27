@@ -1,0 +1,276 @@
+{
+  "bookNumber": 54,
+  "title": "Bir xonali sonlarni o‘nlikdan o‘tib qo‘shish (3)",
+  "emoji": "➕",
+  "shortDesc": "Aralash misollar, sonli qatorda qo‘shish va hayotiy masalalar (daraxtlar, kaptarlar).",
+  "intro": "O‘nlikdan o‘tib qo‘shish malakalarini mustahkamlaymiz va qiziqarli masalalar yechamiz.",
+  "keyPoints": [
+    "Sonli to‘g‘ri chiziqda o‘ngga qarab qadamlab qo‘shish mumkin.",
+    "Masalalarni yechishda qisqa shart tuzib, to‘g‘ri ifoda yozamiz.",
+    "Barcha bir xonali sonlarning o‘nlikdan o‘tib qo‘shilishini tez hisoblaymiz."
+  ],
+  "miniExample": {
+    "emojis": "🌳 8️⃣ + 6️⃣ = 1️⃣4️⃣",
+    "text": "Bog‘da 8 tup chinor va 6 tup terak — jami 14 tup daraxt!"
+  },
+  "xpReward": 110,
+  "coinReward": 12,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 8 + 6 = ?",
+      "options": [
+        "14",
+        "13",
+        "15",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 2 = 10, 10 + 4 = 14."
+    },
+    {
+      "text": "Hisoblang: 7 + 8 = ?",
+      "options": [
+        "14",
+        "15",
+        "16",
+        "17"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 3 = 10, 10 + 5 = 15."
+    },
+    {
+      "text": "Tomda 8 ta kaptar o‘tirgan edi, yana 5 ta qo‘ndi. Jami nechta bo‘ldi?",
+      "options": [
+        "12 ta",
+        "14 ta",
+        "13 ta kaptar",
+        "15 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 5 = 13 ta kaptar."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 9 + 5 = ?",
+      "options": [
+        "14",
+        "13",
+        "15",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 + 5 = 14."
+    },
+    {
+      "text": "Misolni hisoblang: 8 + 7 = ?",
+      "options": [
+        "14",
+        "16",
+        "15",
+        "17"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 7 = 15."
+    },
+    {
+      "text": "Misolni hisoblang: 7 + 6 = ?",
+      "options": [
+        "12",
+        "13",
+        "14",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 6 = 13."
+    },
+    {
+      "text": "Misolni hisoblang: 9 + 8 = ?",
+      "options": [
+        "16",
+        "18",
+        "19",
+        "17"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 + 8 = 17."
+    },
+    {
+      "text": "Misolni hisoblang: 6 + 7 = ?",
+      "options": [
+        "12",
+        "13",
+        "14",
+        "11"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 7 = 13."
+    },
+    {
+      "text": "Misolni hisoblang: 8 + 8 = ?",
+      "options": [
+        "16",
+        "15",
+        "17",
+        "14"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 8 = 16."
+    },
+    {
+      "text": "Misolni hisoblang: 7 + 9 = ?",
+      "options": [
+        "15",
+        "17",
+        "18",
+        "16"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 + 9 = 16."
+    },
+    {
+      "text": "Misolni hisoblang: 9 + 9 = ?",
+      "options": [
+        "17",
+        "19",
+        "18",
+        "20"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 + 9 = 18."
+    },
+    {
+      "text": "Misolni hisoblang: 5 + 8 = ?",
+      "options": [
+        "12",
+        "14",
+        "13",
+        "15"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 8 = 13."
+    },
+    {
+      "text": "Misolni hisoblang: 6 + 8 = ?",
+      "options": [
+        "13",
+        "15",
+        "16",
+        "14"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 8 = 14."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: □ + 7 = 15. Katakdagi son nima?",
+      "options": [
+        "8",
+        "7",
+        "9",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "15 − 7 = 8."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 9 + □ = 16. Katakdagi son nima?",
+      "options": [
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 − 9 = 7."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 8 + □ = 17. Katakdagi son nima?",
+      "options": [
+        "8",
+        "10",
+        "7",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "17 − 8 = 9."
+    },
+    {
+      "text": "Taqqoslang: 8 + 6 ... 9 + 5. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "= (chunki 14 = 14)",
+        "<",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 6 = 14 va 9 + 5 = 14. 14 = 14."
+    },
+    {
+      "text": "Taqqoslang: 7 + 8 ... 9 + 7. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "< (15 < 16)",
+        "−"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 8 = 15 va 9 + 7 = 16. 15 < 16."
+    },
+    {
+      "text": "Maktab hovlisida 8 ta archa va 9 ta kashtan daraxti ekildi. Jami nechta daraxt ekildi?",
+      "options": [
+        "17 ta daraxt",
+        "16 ta",
+        "18 ta",
+        "15 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 9 = 17 ta daraxt."
+    },
+    {
+      "text": "Simda 9 ta qaldirg‘och o‘tirgan edi, yana 7 ta qaldirg‘och qo‘ndi. Jami nechta bo‘ldi?",
+      "options": [
+        "16 ta qaldirg‘och",
+        "15 ta",
+        "17 ta",
+        "18 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 + 7 = 16 ta qaldirg‘och."
+    },
+    {
+      "text": "Anvar 8 ta oq va 6 ta ko‘k sharni shishirdi. U jami nechta shar tayyorladi?",
+      "options": [
+        "13 ta",
+        "15 ta",
+        "16 ta",
+        "14 ta shar"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 + 6 = 14 ta shar."
+    },
+    {
+      "text": "Bog‘dan 7 ta shaftoli va 8 ta nok uzildi. Jami mevalar soni nechta?",
+      "options": [
+        "14 ta",
+        "15 ta meva",
+        "16 ta",
+        "17 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 8 = 15 ta meva."
+    },
+    {
+      "text": "To‘g‘ri tenglikni toping:",
+      "options": [
+        "9 + 6 = 14",
+        "9 + 6 = 16",
+        "9 + 6 = 15",
+        "9 + 6 = 17"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 + 6 = 15 to‘g‘ri."
+    }
+  ]
+}

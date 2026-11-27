@@ -1,0 +1,276 @@
+{
+  "bookNumber": 69,
+  "title": "Qo‘shish va ayirishning o‘zaro bog‘lanishi",
+  "emoji": "🔄",
+  "shortDesc": "Qo‘shish va ayirish o‘zaro teskari amallardir: a + b = c bo‘lsa, c - b = a va c - a = b.",
+  "intro": "Qo‘shish amalini ayirish orqali, ayirish amalini esa qo‘shish orqali tekshirish mumkin. Masalan, 34 + 12 = 46 bo‘lsa, 46 - 12 = 34 bo‘ladi.",
+  "keyPoints": [
+    "Agar yig‘indidan qo‘shiluvchilardan biri ayirilsa, ikkinchi qo‘shiluvchi hosil bo‘ladi.",
+    "Agar ayirmaga ayriluvchi qo‘shilsa, kamayuvchi hosil bo‘ladi: 46 - 12 = 34 -> 34 + 12 = 46.",
+    "Bu qoida hisoblash to‘g‘riligini tekshirishda katta yordam beradi."
+  ],
+  "miniExample": {
+    "emojis": "3️⃣4️⃣ + 1️⃣2️⃣ = 4️⃣6️⃣ 🔄 4️⃣6️⃣ - 1️⃣2️⃣ = 3️⃣4️⃣",
+    "text": "34 + 12 = 46 amalining to‘g‘riligini 46 - 12 = 34 bilan tekshiramiz."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Agar 25 + 14 = 39 bo‘lsa, 39 - 14 nechaga teng bo‘ladi?",
+      "options": [
+        "25",
+        "14",
+        "39",
+        "53"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yig‘indidan ikkinchi qo‘shiluvchi ayirilsa, birinchi qo‘shiluvchi (25) chiqadi."
+    },
+    {
+      "text": "58 - 23 = 35 amali qaysi qo‘shish orqali to‘g‘ri tekshiriladi?",
+      "options": [
+        "58 + 23 = 81",
+        "35 + 23 = 58",
+        "35 - 23 = 12",
+        "58 + 35 = 93"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ayirmaga ayriluvchi qo‘shilsa kamayuvchi chiqadi: 35 + 23 = 58."
+    },
+    {
+      "text": "Noma’lum qo‘shiluvchini toping: ? + 32 = 75",
+      "options": [
+        "42",
+        "44",
+        "43",
+        "33"
+      ],
+      "correctIndex": 2,
+      "explanation": "75 - 32 = 43."
+    }
+  ],
+  "test": [
+    {
+      "text": "Agar 20 + 30 = 50 bo‘lsa, 50 - 30 nechaga teng?",
+      "options": [
+        "20",
+        "30",
+        "50",
+        "80"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 - 30 = 20."
+    },
+    {
+      "text": "Agar 45 - 20 = 25 bo‘lsa, 25 + 20 nechaga teng?",
+      "options": [
+        "25",
+        "20",
+        "45",
+        "65"
+      ],
+      "correctIndex": 2,
+      "explanation": "25 + 20 = 45."
+    },
+    {
+      "text": "Qaysi amal 60 - 20 = 40 ning teskarisi hisoblanadi?",
+      "options": [
+        "60 + 20 = 80",
+        "40 + 20 = 60",
+        "40 - 20 = 20",
+        "60 - 40 = 20"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 + 20 = 60 ayirishga teskari qo‘shish amalidir."
+    },
+    {
+      "text": "Agar 15 + 42 = 57 bo‘lsa, 57 - 15 nechaga teng?",
+      "options": [
+        "15",
+        "57",
+        "72",
+        "42"
+      ],
+      "correctIndex": 3,
+      "explanation": "57 - 15 = 42."
+    },
+    {
+      "text": "Kamayuvchini toping: ? - 14 = 32",
+      "options": [
+        "45",
+        "46",
+        "18",
+        "48"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kamayuvchini topish uchun ayirmaga ayriluvchi qo‘shiladi: 32 + 14 = 46."
+    },
+    {
+      "text": "Ayriluvchini toping: 68 - ? = 45",
+      "options": [
+        "23",
+        "22",
+        "24",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ayriluvchini topish uchun kamayuvchidan ayirma ayiriladi: 68 - 45 = 23."
+    },
+    {
+      "text": "Agar 36 + 43 = 79 bo‘lsa, 79 - 43 nechaga teng?",
+      "options": [
+        "43",
+        "79",
+        "33",
+        "36"
+      ],
+      "correctIndex": 3,
+      "explanation": "79 - 43 = 36."
+    },
+    {
+      "text": "Agar 87 - 35 = 52 bo‘lsa, 52 + 35 nechaga teng?",
+      "options": [
+        "52",
+        "35",
+        "87",
+        "97"
+      ],
+      "correctIndex": 2,
+      "explanation": "52 + 35 = 87."
+    },
+    {
+      "text": "Noma’lum qo‘shiluvchini toping: 41 + ? = 95",
+      "options": [
+        "53",
+        "55",
+        "54",
+        "44"
+      ],
+      "correctIndex": 2,
+      "explanation": "95 - 41 = 54."
+    },
+    {
+      "text": "Noma’lum kamayuvchini toping: ? - 26 = 53",
+      "options": [
+        "78",
+        "80",
+        "27",
+        "79"
+      ],
+      "correctIndex": 3,
+      "explanation": "53 + 26 = 79."
+    },
+    {
+      "text": "Tenglik to‘g‘ri bo‘lishi uchun yulduzcha o‘rniga qaysi sonni qo‘yish kerak: * + 24 = 67",
+      "options": [
+        "43",
+        "42",
+        "44",
+        "33"
+      ],
+      "correctIndex": 0,
+      "explanation": "67 - 24 = 43."
+    },
+    {
+      "text": "Quyidagi tengliklardan qaysi biri 54 + 23 = 77 dan kelib chiqmaydi?",
+      "options": [
+        "77 - 23 = 54",
+        "77 + 23 = 100",
+        "77 - 54 = 23",
+        "23 + 54 = 77"
+      ],
+      "correctIndex": 1,
+      "explanation": "77 + 23 = 100 bu tenglikka teskari yoki bog‘langan emas."
+    },
+    {
+      "text": "Noma’lum ayriluvchini toping: 98 - ? = 36",
+      "options": [
+        "61",
+        "63",
+        "52",
+        "62"
+      ],
+      "correctIndex": 3,
+      "explanation": "98 - 36 = 62."
+    },
+    {
+      "text": "Agar birinchi qo‘shiluvchi 24, yig‘indi esa 58 bo‘lsa, ikkinchi qo‘shiluvchi nechaga teng?",
+      "options": [
+        "33",
+        "34",
+        "35",
+        "24"
+      ],
+      "correctIndex": 1,
+      "explanation": "58 - 24 = 34."
+    },
+    {
+      "text": "Ikki sonning yig‘indisi 86 ga teng. Qo‘shiluvchilardan biri 53 bo‘lsa, ikkinchisi qaysi?",
+      "options": [
+        "32",
+        "34",
+        "33",
+        "23"
+      ],
+      "correctIndex": 2,
+      "explanation": "86 - 53 = 33."
+    },
+    {
+      "text": "Kamayuvchi 97 ga, ayirma 45 ga teng. Ayriluvchini toping:",
+      "options": [
+        "52",
+        "51",
+        "53",
+        "42"
+      ],
+      "correctIndex": 0,
+      "explanation": "97 - 45 = 52."
+    },
+    {
+      "text": "Qaysi ifoda 44 + 35 = 79 amalini tekshirish uchun to‘g‘ri keladi?",
+      "options": [
+        "79 - 35 = 44",
+        "79 + 35 = 114",
+        "44 - 35 = 9",
+        "79 - 25 = 54"
+      ],
+      "correctIndex": 0,
+      "explanation": "79 - 35 = 44 to‘g‘ri tekshirish usulidir."
+    },
+    {
+      "text": "O‘ylangan songa 27 qo‘shilsa 69 bo‘ladi. O‘ylangan son qaysi?",
+      "options": [
+        "41",
+        "43",
+        "32",
+        "42"
+      ],
+      "correctIndex": 3,
+      "explanation": "69 - 27 = 42."
+    },
+    {
+      "text": "Daftarda bir nechta varaq bor edi. Nodir 15 varaq yozgach, 32 ta bo‘sh varaq qoldi. Daftarda dastlab nechta varaq bo‘lgan?",
+      "options": [
+        "46 ta",
+        "47 ta",
+        "48 ta",
+        "17 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "32 + 15 = 47 ta varaq bo‘lgan."
+    },
+    {
+      "text": "Savatchada 58 ta shaftoli bor edi. Bir nechtasi yeyilgach, 24 ta shaftoli qoldi. Nechta shaftoli yeyilgan?",
+      "options": [
+        "33 ta",
+        "35 ta",
+        "34 ta",
+        "24 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "58 - 24 = 34 ta shaftoli yeyilgan."
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "bookNumber": 63,
+  "title": "Ikki xonali sonlarni qo‘shish (1)",
+  "emoji": "➕",
+  "shortDesc": "Ikki xonali songa bir xonali sonni qo‘shish (xonadan o‘tmasdan).",
+  "intro": "Ikki xonali songa bir xonali son qo‘shilganda, birliklar birliklarga qo‘shiladi, o‘nliklar o‘zgarmaydi. Masalan: 42 + 5 = 47.",
+  "keyPoints": [
+    "Birliklarni qo‘shamiz: 2 + 5 = 7.",
+    "O‘nliklar o‘zgarmaydi: 4 ta o‘nlik (40) saqlanib qoladi.",
+    "Yig‘indi: 40 + 7 = 47."
+  ],
+  "miniExample": {
+    "emojis": "🟦🟦🟦🟦 ◽◽ + ◽◽◽◽◽ = 4️⃣7️⃣",
+    "text": "42 + 5 = 47 (birliklarni qo‘shdik: 2 + 5 = 7)."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Hisoblang: 32 + 4 = ?",
+      "options": [
+        "36",
+        "35",
+        "37",
+        "72"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 + 4 = 6, 30 + 6 = 36."
+    },
+    {
+      "text": "Hisoblang: 51 + 6 = ?",
+      "options": [
+        "56",
+        "57",
+        "58",
+        "67"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 + 6 = 7, 50 + 7 = 57."
+    },
+    {
+      "text": "Hisoblang: 73 + 5 = ?",
+      "options": [
+        "77",
+        "79",
+        "78",
+        "88"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 + 5 = 8, 70 + 8 = 78."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 21 + 3 = ?",
+      "options": [
+        "24",
+        "23",
+        "25",
+        "51"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 + 3 = 4, 20 + 4 = 24."
+    },
+    {
+      "text": "Hisoblang: 44 + 2 = ?",
+      "options": [
+        "45",
+        "47",
+        "46",
+        "64"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 2 = 6, 40 + 6 = 46."
+    },
+    {
+      "text": "Hisoblang: 63 + 4 = ?",
+      "options": [
+        "66",
+        "67",
+        "68",
+        "77"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 + 4 = 7, 60 + 7 = 67."
+    },
+    {
+      "text": "Hisoblang: 85 + 3 = ?",
+      "options": [
+        "87",
+        "89",
+        "853",
+        "88"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 3 = 8, 80 + 8 = 88."
+    },
+    {
+      "text": "Hisoblang: 30 + 7 = ?",
+      "options": [
+        "73",
+        "37",
+        "307",
+        "47"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 7 = 37."
+    },
+    {
+      "text": "Hisoblang: 92 + 6 = ?",
+      "options": [
+        "98",
+        "97",
+        "99",
+        "88"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 + 6 = 8, 90 + 8 = 98."
+    },
+    {
+      "text": "Hisoblang: 35 + 4 = ?",
+      "options": [
+        "38",
+        "40",
+        "49",
+        "39"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 4 = 9, 30 + 9 = 39."
+    },
+    {
+      "text": "Hisoblang: 52 + 7 = ?",
+      "options": [
+        "58",
+        "60",
+        "59",
+        "57"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 + 7 = 9, 50 + 9 = 59."
+    },
+    {
+      "text": "Noma’lum sonni toping: 43 + ? = 48",
+      "options": [
+        "4",
+        "6",
+        "5",
+        "3"
+      ],
+      "correctIndex": 2,
+      "explanation": "48 - 43 = 5."
+    },
+    {
+      "text": "Noma’lum sonni toping: ? + 4 = 67",
+      "options": [
+        "62",
+        "64",
+        "71",
+        "63"
+      ],
+      "correctIndex": 3,
+      "explanation": "67 - 4 = 63."
+    },
+    {
+      "text": "Hisoblang: 74 + 3 = ?",
+      "options": [
+        "77",
+        "76",
+        "78",
+        "75"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 3 = 7, 70 + 7 = 77."
+    },
+    {
+      "text": "Taqqoslang: 53 + 4 va 58",
+      "options": [
+        "53 + 4 > 58",
+        "53 + 4 < 58",
+        "53 + 4 = 58",
+        "53 + 4 + 58"
+      ],
+      "correctIndex": 1,
+      "explanation": "53 + 4 = 57 va 57 < 58."
+    },
+    {
+      "text": "Hisoblang: 81 + 8 = ?",
+      "options": [
+        "88",
+        "90",
+        "99",
+        "89"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 + 8 = 9, 80 + 9 = 89."
+    },
+    {
+      "text": "Hisoblang: 26 + 3 = ?",
+      "options": [
+        "28",
+        "29",
+        "30",
+        "39"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 3 = 9, 20 + 9 = 29."
+    },
+    {
+      "text": "Hisoblang: 41 + 3 + 4 = ?",
+      "options": [
+        "47",
+        "49",
+        "48",
+        "50"
+      ],
+      "correctIndex": 2,
+      "explanation": "41 + 3 = 44, 44 + 4 = 48."
+    },
+    {
+      "text": "Hisoblang: 62 + 5 + 2 = ?",
+      "options": [
+        "69",
+        "68",
+        "70",
+        "67"
+      ],
+      "correctIndex": 0,
+      "explanation": "62 + 5 = 67, 67 + 2 = 69."
+    },
+    {
+      "text": "Yulduzcha o‘rniga to‘g‘ri belgini qo‘ying: 34 + 5 * 32 + 7",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "34 + 5 = 39 va 32 + 7 = 39, demak teng (=)."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 78 ga teng?",
+      "options": [
+        "71 + 5",
+        "73 + 4",
+        "75 + 2",
+        "72 + 6"
+      ],
+      "correctIndex": 3,
+      "explanation": "72 + 6 = 78."
+    },
+    {
+      "text": "Sardor 43 bet kitob o‘qigan edi. U yana 5 bet o‘qidi. Sardor jami necha bet kitob o‘qidi?",
+      "options": [
+        "47 bet",
+        "48 bet",
+        "49 bet",
+        "50 bet"
+      ],
+      "correctIndex": 1,
+      "explanation": "43 + 5 = 48 bet o‘qidi."
+    },
+    {
+      "text": "Gulshanning 31 ta nishoni bor edi. Unga ukasi yana 6 ta nishon sovg‘a qildi. Gulshanda nechta nishon bo‘ldi?",
+      "options": [
+        "36 ta",
+        "38 ta",
+        "37 ta",
+        "47 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "31 + 6 = 37 ta nishon bo‘ldi."
+    }
+  ]
+}

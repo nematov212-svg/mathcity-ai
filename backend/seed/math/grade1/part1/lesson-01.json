@@ -1,0 +1,276 @@
+{
+  "bookNumber": 1,
+  "title": "Narsalarning xossalari",
+  "emoji": "🔷",
+  "shortDesc": "Shakl, rang va o‘lcham bo‘yicha taqqoslash va katak daftarga chizish.",
+  "intro": "Narsalar o‘z shakli, rangi va o‘lchami bilan bir-biridan farq qiladi.",
+  "keyPoints": [
+    "Narsalarni shakli, rangi va o‘lchamiga qarab guruhlaymiz.",
+    "Shakllarni taqqoslab, o‘xshash va farqli tomonlarini topamiz.",
+    "Katak daftarda shakllarni chizish qo‘lni mashq qildiradi."
+  ],
+  "miniExample": {
+    "emojis": "🔴 🟦",
+    "text": "Qizil doira va ko‘k kvadrat — shakli va rangi har xil!"
+  },
+  "xpReward": 80,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Quyidagilardan qaysi biri qizil rangda?",
+      "options": [
+        "Qulupnay 🍓",
+        "Bodring 🥒",
+        "Limon 🍋",
+        "Baqlaajon 🍆"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qulupnay qizil rangda bo‘ladi."
+    },
+    {
+      "text": "Shakl jihatidan doiraga o‘xshash narsani toping.",
+      "options": [
+        "Kitob 📚",
+        "Koptok ⚽",
+        "Chizg‘ich 📏",
+        "Qalam ✏️"
+      ],
+      "correctIndex": 1,
+      "explanation": "Koptok dumaloq doira shakliga ega."
+    },
+    {
+      "text": "Qaysi narsa eng katta o‘lchamga ega?",
+      "options": [
+        "Velosiped 🚲",
+        "Koptok ⚽",
+        "Avtobus 🚌",
+        "Qalam ✏️"
+      ],
+      "correctIndex": 2,
+      "explanation": "Avtobus berilgan narsalar ichida eng kattasidir."
+    }
+  ],
+  "test": [
+    {
+      "text": "Quyidagilardan qaysi biri rang xossasini bildiradi?",
+      "options": [
+        "Sariq",
+        "Katta",
+        "Dumaloq",
+        "Og‘ir"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sariq — bu rang xossasi, katta o‘lcham, dumaloq esa shakldir."
+    },
+    {
+      "text": "Quyidagi mevalardan qaysi biri yashil rangda bo‘ladi?",
+      "options": [
+        "Banan 🍌",
+        "Apelsin 🍊",
+        "Bodring 🥒",
+        "Qulupnay 🍓"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bodring yashil rangga ega sabzavotdir."
+    },
+    {
+      "text": "Shakli kvadratga o‘xshash buyumni toping.",
+      "options": [
+        "Tuxum 🥚",
+        "Shaxmat taxtasi ♟️",
+        "Koptok ⚽",
+        "Tarvuz 🍉"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shaxmat taxtasi to‘rt tomoni teng kvadrat shaklidadir."
+    },
+    {
+      "text": "Olma 🍎 va pomidor 🍅 qaysi xossasi bo‘yicha bir xil?",
+      "options": [
+        "Ta’mi bo‘yicha",
+        "Daraxtda o‘sishi bo‘yicha",
+        "Bargi bo‘yicha",
+        "Rangi bo‘yicha (ikkalasi ham qizil)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Olma va qizil pomidor ikkalasi ham qizil rangda bo‘ladi."
+    },
+    {
+      "text": "Qaysi narsa shakli jihatidan uchburchakka o‘xshaydi?",
+      "options": [
+        "Tanga 🪙",
+        "Pitsa bo‘lagi 🍕",
+        "Daftar 📓",
+        "G‘ildirak 🛞"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pitsaning kesilgan bo‘lagi 3 ta burchakka ega bo‘ladi."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri eng kichik o‘lchamda?",
+      "options": [
+        "Chumoli 🐜",
+        "Mushuk 🐱",
+        "Ot 🐎",
+        "Fil 🐘"
+      ],
+      "correctIndex": 0,
+      "explanation": "Chumoli berilgan jonzotlar orasida eng mittisidir."
+    },
+    {
+      "text": "Katak daftarga chizilgan shakllardan qaysi biri to‘g‘ri to‘rtburchak?",
+      "options": [
+        "Quyosh shakli ☀️",
+        "Yulduzcha ⭐",
+        "Oy shakli 🌙",
+        "Eshik shaklidagi to‘rtburchak 🚪"
+      ],
+      "correctIndex": 3,
+      "explanation": "Eshik va derazalar to‘g‘ri to‘rtburchak shaklida bo‘ladi."
+    },
+    {
+      "text": "Qaysi juftlikdagi narsalarning shakli bir xil?",
+      "options": [
+        "Qalam ✏️ va koptok ⚽",
+        "Kitob 📖 va olma 🍎",
+        "Tanga 🪙 va likopcha 🍽️",
+        "Chizg‘ich 📏 va tuxum 🥚"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tanga ham, likopcha ham doira (dumaloq) shaklidadir."
+    },
+    {
+      "text": "Limon 🍋 va banan 🍌 qaysi xossasi bilan o‘xshash?",
+      "options": [
+        "Ikkalasi ham dumaloq",
+        "Ikkalasi ham qizil",
+        "Ikkalasi ham sariq rangda",
+        "Ikkalasi ham achchiq"
+      ],
+      "correctIndex": 2,
+      "explanation": "Limon va banan ikkalasi ham sariq rangga ega."
+    },
+    {
+      "text": "Qaysi narsa yumshoq xossaga ega?",
+      "options": [
+        "Tosh 🪨",
+        "Temir qoshiq 🥄",
+        "G‘isht 🧱",
+        "Paxta ☁️"
+      ],
+      "correctIndex": 3,
+      "explanation": "Paxta juda yumshoq bo‘ladi."
+    },
+    {
+      "text": "Tuxum 🥚 qanday shaklga ega?",
+      "options": [
+        "Oval (cho‘ziq doira)",
+        "Kvadrat",
+        "Uchburchak",
+        "To‘rtburchak"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tuxum cho‘ziq doira, ya’ni oval shaklidadir."
+    },
+    {
+      "text": "Katak daftarda 4 ta katakdan iborat kvadrat chizish uchun nima kerak?",
+      "options": [
+        "Bo‘yoq cho‘tkasi 🖌️",
+        "Oddiy qalam va chizg‘ich 📏",
+        "Qaychi ✂️",
+        "Yelim 🧴"
+      ],
+      "correctIndex": 1,
+      "explanation": "Katak daftarga to‘g‘ri chiziq chizishda chizg‘ich va qalam ishlatiladi."
+    },
+    {
+      "text": "Baland bino 🏢 va pastki kulba 🛖 qaysi xossasi bilan farqlanadi?",
+      "options": [
+        "Nomi bilan faqat",
+        "Eshigi yo‘qligi bilan",
+        "Ranglari faqat sariqligi bilan",
+        "Balandligi va o‘lchami"
+      ],
+      "correctIndex": 3,
+      "explanation": "Bino baland va ulkan, kulba esa past va kichikdir."
+    },
+    {
+      "text": "Tarvuz 🍉 va no‘xat 🟢 shakli bo‘yicha qanday?",
+      "options": [
+        "Ikkalasi ham burchakli",
+        "Ikkalasi ham dumaloq",
+        "Tarvuz uchburchak",
+        "No‘xat kvadrat"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tarvuz ham, no‘xat ham dumaloq sharsimon shaklga ega."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri o‘lcham xossasini bildiradi?",
+      "options": [
+        "Ko‘k",
+        "Qizil",
+        "Uzun",
+        "Shirin"
+      ],
+      "correctIndex": 2,
+      "explanation": "Uzun — bu narsaning o‘lchamini bildiruvchi xossadir."
+    },
+    {
+      "text": "Qaysi narsa qattiq xossaga ega?",
+      "options": [
+        "Temir bolg‘a 🔨",
+        "Yostiq 🛋️",
+        "Qor ❄️",
+        "Xamir 🥟"
+      ],
+      "correctIndex": 0,
+      "explanation": "Temir bolg‘a juda qattiq jismdir."
+    },
+    {
+      "text": "Qaysi rang svetoforning eng yuqori chirog‘i hisoblanadi?",
+      "options": [
+        "Qizil 🔴",
+        "Yashil 🟢",
+        "Sariq 🟡",
+        "Ko‘k 🔵"
+      ],
+      "correctIndex": 0,
+      "explanation": "Svetoforning tepasida qizil chiroq turadi."
+    },
+    {
+      "text": "Bir xil shakl va rangdagi ikkita narsani toping:",
+      "options": [
+        "Qizil olma 🍎 va ko‘k koptok ⚽",
+        "Sariq banan 🍌 va yashil bodring 🥒",
+        "Kitob 📕 va qalam ✏️",
+        "Ikkita bir xil qizil olma 🍎🍎"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ikkita qizil olma ham shakli, ham rangi bilan bir xildir."
+    },
+    {
+      "text": "Anvar bog‘dan katta va qizil olma uzdi. Olmaning nechta xossasi aytildi?",
+      "options": [
+        "1 ta xossasi",
+        "2 ta xossasi (katta — o‘lchami, qizil — rangi)",
+        "3 ta xossasi",
+        "Xossasi aytilmadi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Katta — bu o‘lcham, qizil — bu rang xossasi, jami 2 ta."
+    },
+    {
+      "text": "Zahro stol ustiga dumaloq likopcha va to‘rtburchak salfetka qo‘ydi. Ular qaysi belgisi bilan farqlanadi?",
+      "options": [
+        "Yeyilishi bo‘yicha",
+        "Oyoqlari soni bo‘yicha",
+        "Shakli bo‘yicha",
+        "O‘zbekiston xaritasi bo‘yicha"
+      ],
+      "correctIndex": 2,
+      "explanation": "Likopcha dumaloq, salfetka esa to‘rtburchak — demak, shakli bilan farqlanadi."
+    }
+  ]
+}

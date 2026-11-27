@@ -1,0 +1,276 @@
+{
+  "bookNumber": 2,
+  "title": "O‘xshashlik va farq",
+  "emoji": "🗼",
+  "shortDesc": "Baland-past, keng-tor, uzun-qisqa va katta-kichik juftlari.",
+  "intro": "Atrofdagi narsalarni baland-past, keng-tor va katta-kichik deb taqqoslash mumkin.",
+  "keyPoints": [
+    "Baland–past va uzun–qisqa so‘zlari bo‘y va o‘lchamni bildiradi.",
+    "Keng–tor so‘zlari yo‘l yoki daryoning kengligini bildiradi.",
+    "Shakllar qatorini mantiqiy tartib bilan davom ettiramiz."
+  ],
+  "miniExample": {
+    "emojis": "🦒 🦔",
+    "text": "Jirafa baland, tipratikan esa past bo‘yli!"
+  },
+  "xpReward": 80,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Fil 🐘 va quyon 🐇 solishtirilsa, qaysi biri katta?",
+      "options": [
+        "Fil 🐘",
+        "Quyon 🐇",
+        "Ikkalasi teng",
+        "Bilmayman"
+      ],
+      "correctIndex": 0,
+      "explanation": "Fil ulkan hayvon, quyon esa unga nisbatan kichik."
+    },
+    {
+      "text": "Avtomobil yo‘li 🛣️ va piyodalar so‘qmog‘i solishtirilsa, qaysi biri keng?",
+      "options": [
+        "Piyodalar so‘qmog‘i 🚶",
+        "Avtomobil yo‘li 🛣️",
+        "Ikkalasi bir xil",
+        "So‘qmoq kengroq"
+      ],
+      "correctIndex": 1,
+      "explanation": "Katta yo‘l mashinalar uchun keng qilib quriladi."
+    },
+    {
+      "text": "Qatorni davom ettiring: 🔴 🔵 🔴 🔵 ... keyingi nima?",
+      "options": [
+        "🔵 Ko‘k doira",
+        "🟡 Sariq doira",
+        "🔴 Qizil doira",
+        "🟢 Yashil doira"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qizil va ko‘k ketma-ket almashib kelmoqda, ko‘kdan keyin qizil keladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Jirafa 🦒 va tulki 🦊 solishtirilsa, qaysi biri baland?",
+      "options": [
+        "Jirafa 🦒",
+        "Tulki 🦊",
+        "Ikkalasi teng",
+        "Tulki balandroq"
+      ],
+      "correctIndex": 0,
+      "explanation": "Jirafaning bo‘yni juda uzun va u hayvonlar ichida eng balandidir."
+    },
+    {
+      "text": "Qaysi juftlik 'uzun – qisqa' ma’nosini to‘g‘ri bildiradi?",
+      "options": [
+        "Fil 🐘 va chumoli 🐜",
+        "Tog‘ ⛰️ va daryo 🌊",
+        "Yangi qalam ✏️ va ishlatilgan kalta qalam",
+        "Quyosh ☀️ va oy 🌙"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qalamlarning uzunligi bir-biridan uzun va qisqa bo‘lishi mumkin."
+    },
+    {
+      "text": "Avtomobil yo‘li keng bo‘lsa, daraxtlar orasidagi tor yo‘lakcha nima deyiladi?",
+      "options": [
+        "Katta trassa",
+        "So‘qmoq (tor yo‘l)",
+        "Ko‘prik",
+        "Temir yo‘l"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kichik va tor yo‘lakka so‘qmoq deyiladi."
+    },
+    {
+      "text": "Quyidagi qatorda qaysi jonzot ortiqcha: 🦆, 🦅, 🦉, 🚗?",
+      "options": [
+        "O‘rdak 🦆",
+        "Burgut 🦅",
+        "Boyqush 🦉",
+        "Mashina 🚗 (u jonzot emas)"
+      ],
+      "correctIndex": 3,
+      "explanation": "O‘rdak, burgut va boyqush qushlar, mashina esa transportdir."
+    },
+    {
+      "text": "Qatorni davom ettiring: 🟩 🟨 🟩 🟨 ... keyingi shakl qaysi?",
+      "options": [
+        "🟨 Sariq kvadrat",
+        "🟩 Yashil kvadrat",
+        "🔴 Qizil doira",
+        "🔷 Ko‘k romb"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yashil va sariq navbat bilan takrorlanmoqda, sariqdan keyin yashil keladi."
+    },
+    {
+      "text": "Qalin kitob 📚 va yupqa daftar 📓 qaysi xossasi bilan farqlanadi?",
+      "options": [
+        "Qalinligi (qalin – yupqa)",
+        "Daftarning harflari yo‘qligi bilan",
+        "Ikkalasi ham yeyilishi bilan",
+        "Shakli doiraligi bilan"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kitobning varaqlari ko‘p bo‘lib qalin, daftar esa yupqa bo‘ladi."
+    },
+    {
+      "text": "Daryo 🌊 va ariqcha solishtirilsa, qaysi biri keng?",
+      "options": [
+        "Ariqcha",
+        "Ikkalasi teng",
+        "Ariqcha kengroq",
+        "Daryo 🌊"
+      ],
+      "correctIndex": 3,
+      "explanation": "Daryo ulkan suv havzasi bo‘lib, ariqdan ancha kengdir."
+    },
+    {
+      "text": "Terak daraxti 🌲 va rayhon guli 🌿 solishtirilsa, rayhon qanday?",
+      "options": [
+        "Baland",
+        "Uchburchak",
+        "Past",
+        "Og‘ir"
+      ],
+      "correctIndex": 2,
+      "explanation": "Terak juda baland o‘sadi, rayhon esa past bo‘yli o‘simlikdir."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri 'katta – kichik' juftiga misol bo‘ladi?",
+      "options": [
+        "Ikkita bir xil olma 🍎🍎",
+        "Ko‘k qalam va qizil qalam ✏️✏️",
+        "Tarvuz 🍉 va gilos 🍒",
+        "Baland daraxt va past devor"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tarvuz ulkan, gilos esa mitti mevadir."
+    },
+    {
+      "text": "Naqshni davom ettiring: 🔺 🔹 🔺 🔹 🔺 ... keyingi shakl nima?",
+      "options": [
+        "🔺 Uchburchak",
+        "🟡 Sariq doira",
+        "⬛ Qora kvadrat",
+        "🔹 Kichik romb"
+      ],
+      "correctIndex": 3,
+      "explanation": "Uchburchakdan keyin doim ko‘k romb kelmoqda."
+    },
+    {
+      "text": "Qaysi kiyim sovuq qish fasliga xos va issiq tutadi?",
+      "options": [
+        "Qalin palto 🧥",
+        "Yupqa futbolka 👕",
+        "Yozgi shortik 🩳",
+        "Cho‘milish kiyimi 🩱"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qishda qalin palto va etik kiyiladi."
+    },
+    {
+      "text": "Poyezd 🚆 va yengil mashina 🚗 solishtirilsa, poyezd qanday?",
+      "options": [
+        "Kalta",
+        "Uzun",
+        "Yengil",
+        "Tor"
+      ],
+      "correctIndex": 1,
+      "explanation": "Poyezd ko‘plab vagonlardan iborat bo‘lib, juda uzundir."
+    },
+    {
+      "text": "Quyidagi mevalar orasida qaysi biri ortiqcha: 🍏, 🍐, 🍇, 🥕?",
+      "options": [
+        "Olma 🍏",
+        "Nok 🍐",
+        "Uzum 🍇",
+        "Sabzi 🥕 (u meva emas, sabzavot)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Olma, nok va uzum mevalar, sabzi esa sabzavotdir."
+    },
+    {
+      "text": "Baland tog‘ 🏔️ tepasiga chiqish uchun qaysi narvon kerak?",
+      "options": [
+        "Past va kalta narvon",
+        "Baland va uzun narvon",
+        "Yupqa qog‘oz",
+        "Kichik qoshiq"
+      ],
+      "correctIndex": 1,
+      "explanation": "Baland joylarga chiqish uchun uzun narvon ishlatiladi."
+    },
+    {
+      "text": "Keng daryodan o‘tish uchun qanday ko‘prik quriladi?",
+      "options": [
+        "Kalta taxtacha",
+        "Kichik quti",
+        "Uzun va keng ko‘prik 🌉",
+        "Yupqa ip"
+      ],
+      "correctIndex": 2,
+      "explanation": "Keng daryoning ikki qirg‘og‘ini tutashtirish uchun uzun va mustahkam ko‘prik kerak."
+    },
+    {
+      "text": "Qatorni davom ettiring: ☀️ 🌙 ☀️ 🌙 ... keyingi belgi nima?",
+      "options": [
+        "☀️ Quyosh",
+        "🌙 Yarim oy",
+        "⭐ Yulduz",
+        "☁️ Bulut"
+      ],
+      "correctIndex": 0,
+      "explanation": "Oy belgisidan so‘ng quyosh belgisi keladi."
+    },
+    {
+      "text": "Qaysi hayvon eng tez yuguradi va tezlikda farqlanadi?",
+      "options": [
+        "Gepard 🐆",
+        "Toshbaqa 🐢",
+        "Shilliqqurt 🐌",
+        "Tipratikan 🦔"
+      ],
+      "correctIndex": 0,
+      "explanation": "Gepard quruqlikdagi eng tez yuguruvchi hayvondir."
+    },
+    {
+      "text": "O‘xshash shakllar juftini toping:",
+      "options": [
+        "Kvadrat rom 🪟 va uzun tayoq 🪄",
+        "Kitob 📖 va olma 🍎",
+        "Chizg‘ich 📏 va quticha 📦",
+        "Dumaloq soat ⏰ va dumaloq koptok ⚽"
+      ],
+      "correctIndex": 3,
+      "explanation": "Soat va koptok ikkalasi ham dumaloq shaklga ega."
+    },
+    {
+      "text": "Botir 1-sinfda o‘qiydi, uning akasi Sardor esa 9-sinfda. Ulardan qaysi biri baland bo‘yli?",
+      "options": [
+        "Botir (1-sinf)",
+        "Akasi Sardor (9-sinf o‘quvchisi)",
+        "Ikkalasi bir xil",
+        "Botir akasidan baland"
+      ],
+      "correctIndex": 1,
+      "explanation": "Katta yoshli aka ukasiga qaraganda baland bo‘ladi."
+    },
+    {
+      "text": "Toshkent teleminorasi 🗼 bilan shahar avtobusi 🚌 taqqoslansa, teleminora qanday?",
+      "options": [
+        "Past",
+        "Kalta",
+        "Juda baland",
+        "Yengil"
+      ],
+      "correctIndex": 2,
+      "explanation": "Toshkent teleminorasi O‘zbekistondagi eng baland inshootlardan biridir."
+    }
+  ]
+}

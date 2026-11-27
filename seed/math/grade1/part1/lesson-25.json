@@ -1,0 +1,276 @@
+{
+  "bookNumber": 25,
+  "title": "0 soni va raqami",
+  "emoji": "0️⃣",
+  "shortDesc": "0 raqami (hech narsa yo‘q), a + 0, a − 0, a − a va 0 ni taqqoslash.",
+  "intro": "0 soni (nol) — narsalar yo‘qligini, bo‘sh qolgan joyni bildiradi.",
+  "keyPoints": [
+    "0 raqami bitta ham narsa yo‘qligini ko‘rsatadi.",
+    "Har qanday songa 0 qo‘shilsa yoki ayirilsa, o‘sha son o‘zgarmaydi: a + 0 = a, a − 0 = a.",
+    "Songa o‘zini ayirsak, natija 0 bo‘ladi: a − a = 0."
+  ],
+  "miniExample": {
+    "emojis": "🍎 - 🍎 = 0️⃣",
+    "text": "Bitta olma yeyildi, likopcha bo‘sh qoldi: 1 − 1 = 0!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Misolni hisoblang: 5 + 0 = ?",
+      "options": [
+        "5",
+        "0",
+        "6",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 ga 0 qo‘shilsa 5 bo‘lib qoladi."
+    },
+    {
+      "text": "Misolni hisoblang: 4 − 0 = ?",
+      "options": [
+        "0",
+        "4",
+        "3",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 dan 0 ayirilsa 4 qoladi."
+    },
+    {
+      "text": "Misolni hisoblang: 3 − 3 = ?",
+      "options": [
+        "3",
+        "1",
+        "0",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sonning o‘zidan o‘zi ayirilsa 0 qoladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Quyidagilardan qaysi biri 0 sonining ma’nosini to‘g‘ri tushuntiradi?",
+      "options": [
+        "Bitta ham narsa yo‘q (bo‘sh tovoq)",
+        "Juda ko‘p narsa bor",
+        "Bitta narsa bor",
+        "Ikkita narsa bor"
+      ],
+      "correctIndex": 0,
+      "explanation": "0 — bu narsa yo‘qligini bildiruvchi son."
+    },
+    {
+      "text": "Misolni hisoblang: 0 + 0 = ?",
+      "options": [
+        "1",
+        "10",
+        "0",
+        "00"
+      ],
+      "correctIndex": 2,
+      "explanation": "0 + 0 = 0."
+    },
+    {
+      "text": "Misolni hisoblang: 1 + 0 = ?",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "10"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 + 0 = 1."
+    },
+    {
+      "text": "Misolni hisoblang: 7 + 0 = ?",
+      "options": [
+        "0",
+        "8",
+        "70",
+        "7"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 + 0 = 7."
+    },
+    {
+      "text": "Misolni hisoblang: 9 − 0 = ?",
+      "options": [
+        "0",
+        "9",
+        "8",
+        "10"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 − 0 = 9."
+    },
+    {
+      "text": "Misolni hisoblang: 6 − 0 = ?",
+      "options": [
+        "6",
+        "0",
+        "5",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 − 0 = 6."
+    },
+    {
+      "text": "Misolni hisoblang: 5 − 5 = ?",
+      "options": [
+        "5",
+        "1",
+        "10",
+        "0"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 − 5 = 0."
+    },
+    {
+      "text": "Misolni hisoblang: 8 − 8 = ?",
+      "options": [
+        "8",
+        "1",
+        "0",
+        "16"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 − 8 = 0."
+    },
+    {
+      "text": "Misolni hisoblang: 2 − 2 = ?",
+      "options": [
+        "2",
+        "1",
+        "0",
+        "4"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 − 2 = 0."
+    },
+    {
+      "text": "0 soni 1 sonidan kattami yoki kichik?",
+      "options": [
+        "Katta (0 > 1)",
+        "Teng",
+        "Bir xil",
+        "Kichik (0 < 1)"
+      ],
+      "correctIndex": 3,
+      "explanation": "0 soni 1 dan kichikdir."
+    },
+    {
+      "text": "0 natural son hisoblanadimi?",
+      "options": [
+        "Yo‘q, 0 natural son emas",
+        "Ha, natural son",
+        "Faqat maktabda natural",
+        "Barcha sonlar natural"
+      ],
+      "correctIndex": 0,
+      "explanation": "Natural sonlar sanoqda ishlatiladi (1 dan boshlanadi), 0 natural son emas."
+    },
+    {
+      "text": "Taqqoslang: 0 ... 5. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "0 soni 5 dan kichik (0 < 5)."
+    },
+    {
+      "text": "Taqqoslang: 4 ... 0. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        "=",
+        "−",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 soni 0 dan katta (4 > 0)."
+    },
+    {
+      "text": "Likopchada 3 ta nok bor edi. 3 tasini ham yeyishdi. Likopchada nechta nok qoldi?",
+      "options": [
+        "1 ta nok",
+        "0 ta nok (hech qancha qolmadi)",
+        "3 ta nok",
+        "2 ta nok"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 − 3 = 0 ta nok."
+    },
+    {
+      "text": "Shoxda 2 ta qush o‘tirgan edi, ikkalasi ham uchib ketdi. Shoxda nechta qush qoldi?",
+      "options": [
+        "1 ta",
+        "2 ta",
+        "0 ta qush",
+        "3 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 − 2 = 0 ta qush."
+    },
+    {
+      "text": "To‘g‘ri tenglikni toping:",
+      "options": [
+        "7 − 0 = 7",
+        "7 − 0 = 0",
+        "7 + 0 = 0",
+        "7 − 7 = 7"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 − 0 = 7 to‘g‘ri tenglikdir."
+    },
+    {
+      "text": "0 soni sonlar o‘qida 1 dan qaysi tomonda turadi?",
+      "options": [
+        "Chap tomonda",
+        "O‘ng tomonda",
+        "Tepasida",
+        "Orqasida"
+      ],
+      "correctIndex": 0,
+      "explanation": "0 soni 1 ning chap tomonida joylashadi."
+    },
+    {
+      "text": "Akmal cho‘ntagidagi 5 ta yong‘oqni o‘rtoqlariga tarqatdi, o‘zida hech narsa qolmadi. Unda nechta yong‘oq qoldi?",
+      "options": [
+        "5 ta",
+        "1 ta",
+        "2 ta",
+        "0 ta yong‘oq"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 − 5 = 0 ta yong‘oq."
+    },
+    {
+      "text": "Quyidagi ifodalardan qaysi birining qiymati 0 ga teng?",
+      "options": [
+        "4 + 0",
+        "4 − 4",
+        "4 − 0",
+        "4 − 1"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 − 4 = 0."
+    },
+    {
+      "text": "Savat bo‘sh bo‘lsa, unda nechta olma bor deymiz?",
+      "options": [
+        "1 ta olma",
+        "10 ta olma",
+        "0 ta olma",
+        "Ko‘p olma"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bo‘sh savatda 0 ta narsa bo‘ladi."
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "bookNumber": 13,
+  "title": "Sonlarni taqqoslash",
+  "emoji": "🔍",
+  "shortDesc": ">, <, = belgilari, katta va kichik son, tartiblash.",
+  "intro": "Sonlarni taqqoslashda 'katta' (>), 'kichik' (<) va 'teng' (=) belgilaridan foydalanamiz.",
+  "keyPoints": [
+    "Katta son tomon belgining ochiq tomoni qaraydi: 5 > 3.",
+    "Kichik son tomon belgining uchi (burchagi) qaraydi: 2 < 4.",
+    "Sonlar bir xil bo‘lsa, tenglik (=) belgisi qo‘yiladi: 6 = 6."
+  ],
+  "miniExample": {
+    "emojis": "5️⃣ > 3️⃣ va 2️⃣ < 4️⃣",
+    "text": "5 katta 3 dan, 2 kichik 4 dan!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Nuqtalar o‘rniga to‘g‘ri belgini qo‘ying: 6 ... 4",
+      "options": [
+        "> (katta)",
+        "< (kichik)",
+        "= (teng)",
+        "+ (qo‘shuv)"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 soni 4 dan katta, shuning uchun '>' belgisi qo‘yiladi."
+    },
+    {
+      "text": "Nuqtalar o‘rniga to‘g‘ri belgini qo‘ying: 3 ... 7",
+      "options": [
+        "> (katta)",
+        "< (kichik)",
+        "= (teng)",
+        "− (ayiruv)"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 soni 7 dan kichik, shuning uchun '<' belgisi qo‘yiladi."
+    },
+    {
+      "text": "Nuqtalar o‘rniga to‘g‘ri belgini qo‘ying: 5 ... 5",
+      "options": [
+        "> (katta)",
+        "< (kichik)",
+        "= (teng)",
+        "+ (qo‘shuv)"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ikkala son bir xil bo‘lgani uchun '=' belgisi qo‘yiladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Taqqoslang: 7 ... 5. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 soni 5 dan katta (7 > 5)."
+    },
+    {
+      "text": "Taqqoslang: 2 ... 8. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "−"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 soni 8 dan kichik (2 < 8)."
+    },
+    {
+      "text": "Taqqoslang: 9 ... 9. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ikkala son teng (9 = 9)."
+    },
+    {
+      "text": "Taqqoslang: 10 ... 8. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        "=",
+        "−",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 soni 8 dan katta (10 > 8)."
+    },
+    {
+      "text": "Taqqoslang: 4 ... 6. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 soni 6 dan kichik (4 < 6)."
+    },
+    {
+      "text": "Taqqoslang: 3 ... 1. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "−"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 soni 1 dan katta (3 > 1)."
+    },
+    {
+      "text": "Taqqoslang: 1 ... 10. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 soni 10 dan ancha kichik (1 < 10)."
+    },
+    {
+      "text": "Quyidagi kattalik (>) tengsizliklaridan qaysi biri to‘g‘ri?",
+      "options": [
+        "2 > 5",
+        "4 > 7",
+        "8 > 3",
+        "1 > 6"
+      ],
+      "correctIndex": 2,
+      "explanation": "Faqat 8 > 3 tengsizligi to‘g‘ri."
+    },
+    {
+      "text": "Quyidagi kichiklik (<) tengsizliklaridan qaysi biri to‘g‘ri?",
+      "options": [
+        "7 < 4",
+        "8 < 2",
+        "3 < 9",
+        "6 < 1"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 soni 9 dan kichik (3 < 9)."
+    },
+    {
+      "text": "To‘g‘ri tenglikni toping:",
+      "options": [
+        "7 = 6",
+        "7 = 8",
+        "7 = 5",
+        "7 = 7"
+      ],
+      "correctIndex": 3,
+      "explanation": "Faqat 7 = 7 tengligi to‘g‘ri."
+    },
+    {
+      "text": "Quyidagi sonlardan qaysi biri 5 dan katta?",
+      "options": [
+        "8",
+        "2",
+        "4",
+        "3"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 soni 5 dan katta."
+    },
+    {
+      "text": "Quyidagi sonlardan qaysi biri 6 dan kichik?",
+      "options": [
+        "7",
+        "4",
+        "8",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 soni 6 dan kichik."
+    },
+    {
+      "text": "1, 4, 7, 2 sonlari ichida eng kattasi qaysi?",
+      "options": [
+        "4",
+        "2",
+        "1",
+        "7"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ushbu sonlar ichida 7 eng kattasidir."
+    },
+    {
+      "text": "3, 8, 2, 9 sonlari ichida eng kichigi qaysi?",
+      "options": [
+        "3",
+        "2",
+        "8",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ushbu sonlar ichida 2 eng kichigidir."
+    },
+    {
+      "text": "Sonlarni o‘sish tartibida to‘g‘ri joylashtiring:",
+      "options": [
+        "8, 5, 2",
+        "5, 2, 8",
+        "2, 5, 8",
+        "2, 8, 5"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kichigidan kattasiga: 2, 5, 8."
+    },
+    {
+      "text": "Sonlarni kamayish tartibida to‘g‘ri joylashtiring:",
+      "options": [
+        "9, 6, 3",
+        "3, 6, 9",
+        "6, 9, 3",
+        "9, 3, 6"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kattasidan kichigiga: 9, 6, 3."
+    },
+    {
+      "text": "Anvarda 6 ta daftar, Sobirda 4 ta daftar bor. Kimning daftari ko‘p?",
+      "options": [
+        "Anvarda ko‘p (6 > 4)",
+        "Sobirda ko‘p",
+        "Ikkalasida teng",
+        "Anvarda kam"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 > 4 bo‘lgani uchun Anvarda ko‘p."
+    },
+    {
+      "text": "Guldastada 5 ta qizil va 8 ta oq gul bor. Qaysi gullar kam?",
+      "options": [
+        "Oq gullar kam",
+        "Gullar teng",
+        "Qizil gullar ko‘p",
+        "Qizil gullar kam (5 < 8)"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 < 8 bo‘lgani sababli qizil gullar kam."
+    },
+    {
+      "text": "Birinchi savatda 7 ta, ikkinchi savatda ham 7 ta olma bor. Savatlar haqida nima deymiz?",
+      "options": [
+        "1-savatda ko‘p",
+        "Savatlardagi olmalar soni teng (7 = 7)",
+        "2-savatda ko‘p",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 = 7, savatlardagi olmalar soni teng."
+    },
+    {
+      "text": "Toshkentda havo harorati 9 daraja, Samarqandda esa 7 daraja bo‘ldi. Qayerda havo iliqroq?",
+      "options": [
+        "Samarqandda",
+        "Ikkala shaharda bir xil",
+        "Toshkentda (9 > 7)",
+        "Toshkentda sovuqroq"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 daraja 7 darajadan yuqori (issiqroq)."
+    }
+  ]
+}

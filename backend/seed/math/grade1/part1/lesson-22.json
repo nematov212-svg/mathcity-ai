@@ -1,0 +1,276 @@
+{
+  "bookNumber": 22,
+  "title": "7 soni va raqami",
+  "emoji": "7️⃣",
+  "shortDesc": "7 raqami, sanash, tarkibi (1+6, 2+5, 3+4), hafta kunlari va qo‘shnilari.",
+  "intro": "7 soni — yettita narsani bildiradi, haftada 7 kun va kamalakda 7 rang bor.",
+  "keyPoints": [
+    "Kamalak 7 xil rangdan iborat.",
+    "7 sonining tarkibi: 1+6=7, 2+5=7, 3+4=7.",
+    "7 ning qo‘shnilari 6 va 8 sonlaridir."
+  ],
+  "miniExample": {
+    "emojis": "🌈 7️⃣",
+    "text": "Kamalakda 7 ta go‘zal rang bor: 3 + 4 = 7!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Hisoblang: 4 + 3 = ?",
+      "options": [
+        "7",
+        "6",
+        "8",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 3 = 7."
+    },
+    {
+      "text": "Haftada nechta kun bor?",
+      "options": [
+        "5 ta",
+        "7 ta kun 📅",
+        "6 ta",
+        "10 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bir hafta 7 kundan iborat."
+    },
+    {
+      "text": "7 sonining qo‘shnilarini toping:",
+      "options": [
+        "5 va 9",
+        "7 va 8",
+        "6 va 8",
+        "4 va 6"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 ning oldida 6, keyin 8 turadi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 6 + 1 = ?",
+      "options": [
+        "7",
+        "6",
+        "8",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 1 = 7."
+    },
+    {
+      "text": "Misolni hisoblang: 5 + 2 = ?",
+      "options": [
+        "6",
+        "8",
+        "7",
+        "9"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 2 = 7."
+    },
+    {
+      "text": "Misolni hisoblang: 4 + 3 = ?",
+      "options": [
+        "6",
+        "7",
+        "8",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 + 3 = 7."
+    },
+    {
+      "text": "Misolni hisoblang: 7 − 1 = ?",
+      "options": [
+        "5",
+        "7",
+        "8",
+        "6"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 − 1 = 6."
+    },
+    {
+      "text": "Misolni hisoblang: 7 − 2 = ?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "3"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 − 2 = 5."
+    },
+    {
+      "text": "Misolni hisoblang: 7 − 3 = ?",
+      "options": [
+        "4",
+        "3",
+        "5",
+        "2"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 − 3 = 4."
+    },
+    {
+      "text": "Misolni hisoblang: 7 − 4 = ?",
+      "options": [
+        "2",
+        "4",
+        "5",
+        "3"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 − 4 = 3."
+    },
+    {
+      "text": "Misolni hisoblang: 7 − 5 = ?",
+      "options": [
+        "1",
+        "3",
+        "2",
+        "4"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 − 5 = 2."
+    },
+    {
+      "text": "Misolni hisoblang: 7 − 6 = ?",
+      "options": [
+        "2",
+        "0",
+        "1",
+        "3"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 − 6 = 1."
+    },
+    {
+      "text": "Misolni hisoblang: 7 − 7 = ?",
+      "options": [
+        "1",
+        "7",
+        "14",
+        "0"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 − 7 = 0."
+    },
+    {
+      "text": "Kamalakda nechta rang jilolanadi?",
+      "options": [
+        "7 ta rang 🌈",
+        "5 ta",
+        "6 ta",
+        "10 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kamalakda 7 xil rang bo‘ladi."
+    },
+    {
+      "text": "7 soni toq sonmi yoki juft son?",
+      "options": [
+        "Juft son",
+        "Toq son",
+        "Ikkalasi ham",
+        "Nol son"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 soni toq sondir."
+    },
+    {
+      "text": "7 sonining tarkibi qanday?",
+      "options": [
+        "3 va 5",
+        "4 va 4",
+        "2 va 4",
+        "3 va 4 (yoki 2 va 5, 1 va 6)"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 + 4 = 7."
+    },
+    {
+      "text": "7 sonining oldingi qo‘shnisi kim?",
+      "options": [
+        "5",
+        "6",
+        "8",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 dan oldin 6 turadi."
+    },
+    {
+      "text": "7 sonining keyingi qo‘shnisi kim?",
+      "options": [
+        "6",
+        "9",
+        "8",
+        "10"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 dan keyin 8 keladi."
+    },
+    {
+      "text": "Taqqoslang: 7 ... 6. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "−"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 soni 6 dan katta (7 > 6)."
+    },
+    {
+      "text": "Taqqoslang: 7 ... 8. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 soni 8 dan kichik (7 < 8)."
+    },
+    {
+      "text": "Anvarda 5 ta daftar bor edi, u yana 2 ta oldi. Daftarlari nechta bo‘ldi?",
+      "options": [
+        "6 ta",
+        "8 ta",
+        "5 ta",
+        "7 ta daftar"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 2 = 7 ta daftar."
+    },
+    {
+      "text": "Bog‘dan 7 ta shaftoli uzildi. 3 tasi yeyildi. Nechta shaftoli qoldi?",
+      "options": [
+        "3 ta",
+        "4 ta shaftoli",
+        "5 ta",
+        "2 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 − 3 = 4 ta shaftoli."
+    },
+    {
+      "text": "Ertakda 'Yetti xazinaning biri' deyiladi. Xazinalar soni nechta?",
+      "options": [
+        "5 ta",
+        "10 ta",
+        "7 ta",
+        "3 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Xalq maqollarida 7 xazina aytiladi."
+    }
+  ]
+}

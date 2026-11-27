@@ -1,0 +1,276 @@
+{
+  "bookNumber": 8,
+  "title": "Guruhlarni taqqoslash",
+  "emoji": "⚖️",
+  "shortDesc": "Ko‘p, kam, teng, shuncha, juftlab taqqoslash va yetmayotgan narsa.",
+  "intro": "Guruhlardagi narsalarni birma-bir juftlab, qaysi biri ko‘p yoki kamligini bilamiz.",
+  "keyPoints": [
+    "Har bir narsaga juft topilsa va ortib qolmasa, guruhlar teng bo‘ladi.",
+    "Jufti yetmagan guruh kam, ortib qolgani esa ko‘p bo‘ladi.",
+    "Tenglikni bildirish uchun 'teng' (=) so‘zi ishlatiladi."
+  ],
+  "miniExample": {
+    "emojis": "☕ ☕ ☕ va 🍽️ 🍽️",
+    "text": "3 ta finjon va 2 ta likopcha: finjonlar ko‘p, likopcha kam!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "3 ta quyonchaga 🐰🐰🐰 3 ta sabzi 🥕🥕🥕 berildi. Har biriga yetadimi?",
+      "options": [
+        "Yetadi, sabzilar quyonchalar soniga teng",
+        "Yetmaydi",
+        "Sabzi ko‘p",
+        "Quyonlar ko‘p"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 ta quyonchaga 3 ta sabzi teng bo‘ladi (3 = 3)."
+    },
+    {
+      "text": "4 ta bola 👦👦👦👦 va 3 ta stul 🪑🪑🪑 bor. Stul yetadimi?",
+      "options": [
+        "Yetadi",
+        "Yetmaydi, 1 ta stul yetishmaydi",
+        "Stul ortib qoladi",
+        "2 ta stul yetmaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 ta bolaga 3 ta stul yetmaydi, 1 ta stul kam."
+    },
+    {
+      "text": "5 ta olma 🍎 va 5 ta nok 🍐 soni haqida nima deyish mumkin?",
+      "options": [
+        "Olma ko‘p",
+        "Nok ko‘p",
+        "Ular teng miqdorda (shuncha)",
+        "Ikkalasi ham nol"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 va 5 o‘zaro teng sonlardir."
+    }
+  ],
+  "test": [
+    {
+      "text": "1-guruhda: 🍎 🍎 🍎 🍎 (4 ta olma). 2-guruhda: 🍐 🍐 (2 ta nok). Qaysi biri ko‘p?",
+      "options": [
+        "Olma ko‘p",
+        "Nok ko‘p",
+        "Ikkalasi teng",
+        "Olma kam"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 ta olma 2 ta nokdan ko‘pdir (4 > 2)."
+    },
+    {
+      "text": "1-guruhda: ⚽ ⚽ (2 ta to‘p). 2-guruhda: ⚽ ⚽ ⚽ ⚽ ⚽ (5 ta to‘p). 1-guruh haqida nima deymiz?",
+      "options": [
+        "1-guruhda to‘plar ko‘p",
+        "Ikkalasi teng",
+        "1-guruhda to‘plar kam",
+        "1-guruhda to‘p yo‘q"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 ta to‘p 5 tadan kamdir."
+    },
+    {
+      "text": "3 ta bolaga 3 ta muzqaymoq 🍦 berildi. Muzqaymoq yetadimi?",
+      "options": [
+        "Yetmaydi, kam",
+        "Yetadi, bolalar soni bilan teng",
+        "Ortib qoladi",
+        "Muzqaymoq yo‘q"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 ta bolaga 3 ta muzqaymoq to‘liq yetadi."
+    },
+    {
+      "text": "Stolda 5 ta piyola 🥣 va 4 ta qoshiq 🥄 bor. Nechta qoshiq yetishmayapti?",
+      "options": [
+        "2 ta qoshiq",
+        "Yetarli",
+        "Qoshiq ortib qolgan",
+        "1 ta qoshiq yetishmayapti"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 ta piyolaga 5 ta qoshiq kerak, demak 1 ta qoshiq yetmaydi (5 − 4 = 1)."
+    },
+    {
+      "text": "Bog‘chada 6 ta stul va 6 ta bola bor. Bolalar stulga o‘tirsa stul qoladimi?",
+      "options": [
+        "1 ta stul ortib qoladi",
+        "Hamma bolaga stul yetadi va ortib qolmaydi",
+        "2 ta stul yetmaydi",
+        "Bolalar sig‘maydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 = 6 bo‘lgani uchun stullar va bolalar soni teng."
+    },
+    {
+      "text": "Savatda 7 ta qizil olma va 4 ta sariq olma bor. Qaysi rangdagi olma ko‘p?",
+      "options": [
+        "Qizil olma ko‘p",
+        "Sariq olma ko‘p",
+        "Ikkalasi teng",
+        "Qizil olma kam"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 soni 4 dan katta, shuning uchun qizil olmalar ko‘p."
+    },
+    {
+      "text": "Quyidagi taqqoslashlardan qaysi biri to‘g‘ri?",
+      "options": [
+        "2 ta koptok > 4 ta koptok",
+        "1 ta kitob > 3 ta kitob",
+        "3 ta gul = 5 ta gul",
+        "5 ta kapalak 🦋 > 3 ta kapalak 🦋"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 soni 3 dan katta (5 > 3)."
+    },
+    {
+      "text": "4 ta mashinaga 4 ta haydovchi kerak. 3 ta haydovchi kelsa, nechta yetmaydi?",
+      "options": [
+        "2 ta yetmaydi",
+        "Hamma mashina yuradi",
+        "1 ta haydovchi yetmaydi",
+        "Haydovchi ko‘p"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 − 3 = 1 ta haydovchi kam."
+    },
+    {
+      "text": "O‘rdakchalar 🦆🦆🦆 va jo‘jalar 🐣🐣🐣🐣🐣 sonini taqqoslang.",
+      "options": [
+        "O‘rdakchalar ko‘p",
+        "Ikkalasi teng",
+        "O‘rdakchalar kam (3 < 5)",
+        "Jo‘jalar kam"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 ta o‘rdakcha 5 ta jo‘jadan kamdir."
+    },
+    {
+      "text": "2 ta quyonchaga 🐰🐰 4 ta sabzi 🥕🥕🥕🥕 berildi. Sabzilar haqida nima deymiz?",
+      "options": [
+        "Sabzilar yetmaydi",
+        "Sabzilar teng",
+        "Sabzi kam",
+        "Sabzilar quyonchalardan ko‘p"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 ta sabzi 2 ta quyondan ko‘p, har biriga 2 tadan to‘g‘ri keladi."
+    },
+    {
+      "text": "Guldonada 3 ta atirgul va 3 ta chinnigul bor. Guldondagi gullar soni qanday?",
+      "options": [
+        "Atirgul va chinnigullar soni teng",
+        "Atirgul ko‘p",
+        "Chinnigul ko‘p",
+        "Gullar yo‘q"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 ta atirgul va 3 ta chinnigul soni teng (3 = 3)."
+    },
+    {
+      "text": "Daftar va qalam juftlandi. 5 ta daftar va 3 ta qalam bo‘lsa, nechta daftar juftsiz qoladi?",
+      "options": [
+        "1 ta daftar",
+        "2 ta daftar juftsiz qoladi",
+        "3 ta daftar",
+        "Hech biri"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 − 3 = 2 ta daftar ortib qoladi."
+    },
+    {
+      "text": "8 ta bola maydonda o‘ynamoqda. Ulardan 5 tasi o‘g‘il bola, 3 tasi qiz bola. Qaysi biri ko‘p?",
+      "options": [
+        "Qiz bolalar ko‘p",
+        "Ikkalasi teng",
+        "O‘g‘il bolalar kam",
+        "O‘g‘il bolalar ko‘p (5 > 3)"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 ta o‘g‘il bola 3 ta qiz boladan ko‘p."
+    },
+    {
+      "text": "1 ta mushukcha 🐱 va 3 ta sichqoncha 🐭. Qaysi biri kam?",
+      "options": [
+        "Sichqoncha kam",
+        "Mushukcha kam (1 < 3)",
+        "Ikkalasi teng",
+        "Mushukcha ko‘p"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 soni 3 dan kam, demak mushukcha bitta bo‘lib kam."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri 'shuncha' so‘zi ma’nosini bildiradi?",
+      "options": [
+        "Juda ko‘p",
+        "Juda kam",
+        "Teng miqdorda (bir xil sonda)",
+        "Bitta ham yo‘q"
+      ],
+      "correctIndex": 2,
+      "explanation": "'Shuncha' degani bir xil, teng miqdordagi sonni bildiradi."
+    },
+    {
+      "text": "Akmalda 4 ta yong‘oq bor, Salimda ham shuncha yong‘oq bor. Salimda nechta yong‘oq bor?",
+      "options": [
+        "4 ta yong‘oq",
+        "5 ta yong‘oq",
+        "3 ta yong‘oq",
+        "8 ta yong‘oq"
+      ],
+      "correctIndex": 0,
+      "explanation": "Shuncha degani 4 ta deganidir."
+    },
+    {
+      "text": "Dilnoza 6 ta gul terdi, singlisi esa 4 ta gul terdi. Dilnoza singlisidan nechta ko‘p gul terdi?",
+      "options": [
+        "2 ta ko‘p gul terdi",
+        "1 ta ko‘p",
+        "3 ta ko‘p",
+        "Teng terdi"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 − 4 = 2 ta gul ko‘p."
+    },
+    {
+      "text": "Tovoqda 5 ta somsa bor edi. 5 ta mehmon keldi. Har bir mehmonga bittadan bersa somsa yetadimi?",
+      "options": [
+        "Yo‘q, 1 ta kam",
+        "Somsa ortib qoladi",
+        "2 ta somsa yetmaydi",
+        "Ha, roppa-rosa yetadi"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 ta mehmonga 5 ta somsa aniq yetadi."
+    },
+    {
+      "text": "1-bob bo‘yicha xulosa: Narsalarni qaysi belgilari bo‘yicha taqqosladik?",
+      "options": [
+        "Faqat og‘irligi bo‘yicha",
+        "Shakli, rangi, o‘lchami va soni bo‘yicha",
+        "Faqat narxi bo‘yicha",
+        "Hech qanday belgisi bo‘yicha"
+      ],
+      "correctIndex": 1,
+      "explanation": "1-bobda narsalarning shakli, rangi, o‘lchami va sanog‘ini o‘rgandik."
+    },
+    {
+      "text": "To‘g‘ri tenglikni toping:",
+      "options": [
+        "4 = 5",
+        "3 = 2",
+        "4 = 4",
+        "1 = 0"
+      ],
+      "correctIndex": 2,
+      "explanation": "Faqat bir xil sonlar o‘rtasiga tenglik belgisi qo‘yiladi: 4 = 4."
+    }
+  ]
+}

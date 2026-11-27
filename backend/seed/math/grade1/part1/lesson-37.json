@@ -1,0 +1,276 @@
+{
+  "bookNumber": 37,
+  "title": "Qo‘shish va ayirish orasidagi o‘zaro bog‘liqlik",
+  "emoji": "🔄",
+  "shortDesc": "Teskari amallar, 3+4=7 dan 7-3=4 va 7-4=3 hosil qilish va tekshirish.",
+  "intro": "Qo‘shish va ayirish — bir-biriga teskari amallardir.",
+  "keyPoints": [
+    "Agar 3 + 4 = 7 bo‘lsa, u holda 7 − 3 = 4 va 7 − 4 = 3 bo‘ladi.",
+    "Yig‘indidan bir qo‘shiluvchi ayirilsa, ikkinchi qo‘shiluvchi chiqadi.",
+    "Qo‘shish natijasini ayirish bilan tekshirish mumkin."
+  ],
+  "miniExample": {
+    "emojis": "3️⃣ + 4️⃣ = 7️⃣ 🔄 7️⃣ − 4️⃣ = 3️⃣",
+    "text": "Qo‘shish va ayirish doim bir-birini tekshiradi!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Agar 2 + 5 = 7 bo‘lsa, 7 − 5 necha bo‘ladi?",
+      "options": [
+        "2",
+        "3",
+        "5",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shishdan ayirish hosil qilinadi: 7 − 5 = 2."
+    },
+    {
+      "text": "Agar 6 + 3 = 9 bo‘lsa, 9 − 6 necha bo‘ladi?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 − 6 = 3."
+    },
+    {
+      "text": "Qo‘shish amaliga qaysi amal teskari?",
+      "options": [
+        "Ko‘paytirish amali",
+        "Taqqoslash amali",
+        "Ayirish amali",
+        "Qo‘shishning o‘zi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ayirish qo‘shishning teskari amalidir."
+    }
+  ],
+  "test": [
+    {
+      "text": "3 + 4 = 7 tengligidan qaysi ayirish tengligi kelib chiqadi?",
+      "options": [
+        "7 − 3 = 4",
+        "7 + 3 = 10",
+        "4 − 3 = 1",
+        "7 − 1 = 6"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yig‘indidan 3 ayirilsa 4 qoladi."
+    },
+    {
+      "text": "4 + 5 = 9 tengligidan qaysi ayirish tengligi kelib chiqadi?",
+      "options": [
+        "9 + 4 = 13",
+        "5 − 4 = 1",
+        "9 − 5 = 4",
+        "9 − 1 = 8"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 − 5 = 4."
+    },
+    {
+      "text": "Agar 5 + 3 = 8 bo‘lsa, 8 − 3 nechaga teng?",
+      "options": [
+        "3",
+        "5",
+        "8",
+        "2"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 − 3 = 5."
+    },
+    {
+      "text": "Agar 6 + 2 = 8 bo‘lsa, 8 − 2 nechaga teng?",
+      "options": [
+        "4",
+        "2",
+        "8",
+        "6"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 − 2 = 6."
+    },
+    {
+      "text": "Agar 7 + 3 = 10 bo‘lsa, 10 − 7 nechaga teng?",
+      "options": [
+        "7",
+        "3",
+        "10",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 − 7 = 3."
+    },
+    {
+      "text": "Agar 1 + 8 = 9 bo‘lsa, 9 − 8 nechaga teng?",
+      "options": [
+        "1",
+        "2",
+        "8",
+        "0"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 − 8 = 1."
+    },
+    {
+      "text": "8 − 3 = 5 tengligini qaysi qo‘shish ifodasi bilan tekshirish mumkin?",
+      "options": [
+        "8 + 3 = 11",
+        "5 − 3 = 2",
+        "8 + 5 = 13",
+        "5 + 3 = 8"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ayirmaga ayriluvchini qo‘shsak kamayuvchi chiqadi: 5 + 3 = 8."
+    },
+    {
+      "text": "10 − 4 = 6 tengligini qaysi qo‘shish ifodasi bilan tekshirish mumkin?",
+      "options": [
+        "10 + 4 = 14",
+        "6 − 4 = 2",
+        "6 + 4 = 10",
+        "10 − 6 = 4"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 4 = 10."
+    },
+    {
+      "text": "7 − 2 = 5 tengligini qaysi qo‘shish bilan tekshiramiz?",
+      "options": [
+        "7 + 2 = 9",
+        "5 − 2 = 3",
+        "5 + 2 = 7",
+        "7 + 5 = 12"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 2 = 7."
+    },
+    {
+      "text": "Agar a + b = c bo‘lsa, c − a nimaga teng?",
+      "options": [
+        "a ga teng",
+        "c ga teng",
+        "0 ga teng",
+        "b ga teng"
+      ],
+      "correctIndex": 3,
+      "explanation": "Yig‘indidan birinchi qo‘shiluvchini ayirsak, ikkinchi qo‘shiluvchi b chiqadi."
+    },
+    {
+      "text": "Agar a + b = c bo‘lsa, c − b nimaga teng?",
+      "options": [
+        "a ga teng",
+        "b ga teng",
+        "c ga teng",
+        "1 ga teng"
+      ],
+      "correctIndex": 0,
+      "explanation": "c − b = a."
+    },
+    {
+      "text": "2 + 6 = 8 tengligiga mos bo‘lmagan ifodani toping:",
+      "options": [
+        "8 − 6 = 2",
+        "8 + 2 = 10 (chunki bu yangi ifoda)",
+        "8 − 2 = 6",
+        "6 + 2 = 8"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 2 = 10 ifodasi 2+6=8 dan bevosita kelib chiqmaydi."
+    },
+    {
+      "text": "1 + 7 = 8 tengligidan ikkita ayirish ifodasi tuzing:",
+      "options": [
+        "8 + 1 = 9 va 8 + 7 = 15",
+        "7 − 1 = 6 va 8 − 0 = 8",
+        "8 − 2 = 6 va 8 − 3 = 5",
+        "8 − 7 = 1 va 8 − 1 = 7"
+      ],
+      "correctIndex": 3,
+      "explanation": "Bitta qo‘shish tengligidan 2 ta ayirish hosil qilinadi."
+    },
+    {
+      "text": "Qaysi juftlik o‘zaro teskari bog‘langan tengliklar hisoblanadi?",
+      "options": [
+        "4 + 3 = 7 va 5 + 2 = 7",
+        "4 + 3 = 7 va 7 − 3 = 4",
+        "4 − 3 = 1 va 1 + 2 = 3",
+        "7 − 4 = 3 va 6 − 3 = 3"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 + 3 = 7 va 7 − 3 = 4 bir-biriga teskari tengliklardir."
+    },
+    {
+      "text": "Ali 5 ta qizil va 4 ta sariq olma terib, jami 9 ta qildi (5 + 4 = 9). Agar u 4 ta sariq olmani olib qo‘ysa, nechta olma qoladi?",
+      "options": [
+        "4 ta",
+        "9 ta",
+        "5 ta qizil olma (9 − 4 = 5)",
+        "1 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 − 4 = 5 ta qizil olma qoladi."
+    },
+    {
+      "text": "Sinfda 8 ta bola bor edi. 3 tasi sport to‘garagiga ketgach 5 tasi qoldi (8 − 3 = 5). Qaytganlarida yana nechta bo‘ladi?",
+      "options": [
+        "8 ta bola (5 + 3 = 8)",
+        "6 ta",
+        "7 ta",
+        "10 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 + 3 = 8 ta bola."
+    },
+    {
+      "text": "9 − 7 = 2 ifodasi to‘g‘ri yechilganini tekshirish uchun nima qilamiz?",
+      "options": [
+        "2 ga 7 ni qo‘shamiz: 2 + 7 = 9",
+        "9 dan 2 ni ayiramiz: 9 − 2 = 7",
+        "9 ga 7 ni qo‘shamiz",
+        "7 dan 2 ni ayiramiz"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ayirmaga ayriluvchini qo‘shib tekshiriladi: 2 + 7 = 9."
+    },
+    {
+      "text": "6 − 5 = 1 ifodasini tekshirish uchun to‘g‘ri qo‘shish ifodasi qaysi?",
+      "options": [
+        "6 + 1 = 7",
+        "5 − 1 = 4",
+        "6 + 5 = 11",
+        "1 + 5 = 6"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 + 5 = 6."
+    },
+    {
+      "text": "Agar bitta savatdagi 10 ta mevaning 6 tasi nok bo‘lsa, qolganlari olma. Olmalar nechta?",
+      "options": [
+        "5 ta",
+        "4 ta olma (10 − 6 = 4)",
+        "6 ta",
+        "16 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 4 = 10, demak 10 − 6 = 4."
+    },
+    {
+      "text": "3 + 6 = 9 bo‘lsa, 9 − 3 nimaga teng bo‘ladi?",
+      "options": [
+        "3",
+        "9",
+        "6",
+        "5"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 − 3 = 6."
+    }
+  ]
+}

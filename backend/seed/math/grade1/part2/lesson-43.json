@@ -1,0 +1,276 @@
+{
+  "bookNumber": 43,
+  "title": "11 dan 20 gacha bo‘lgan sonlarning o‘nlikda yozilishi",
+  "emoji": "🔢",
+  "shortDesc": "Ikki xonali son ikkita raqam bilan yoziladi: birinchi raqam o‘nlik, ikkinchisi birlik.",
+  "intro": "Ikki xonali sonda chapdagi raqam o‘nliklar sonini, o‘ngdagi raqam birliklar sonini bildiradi.",
+  "keyPoints": [
+    "Xonalar nomi: o‘nlar xonasi va birlar xonasi.",
+    "13 sonida: 1 ta o‘nlik va 3 ta birlik bor.",
+    "10 + 3 = 13 ko‘rinishida xona qo‘shiluvchilariga ajratiladi."
+  ],
+  "miniExample": {
+    "emojis": "1️⃣ o‘nl. 3️⃣ birl. = 1️⃣3️⃣",
+    "text": "1 o‘nlik + 3 birlik = 13 (10 + 3 = 13)!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "15 sonida o‘nliklar xonasida qaysi raqam turibdi?",
+      "options": [
+        "1",
+        "5",
+        "10",
+        "0"
+      ],
+      "correctIndex": 0,
+      "explanation": "Chapdagi 1 raqami o‘nlikni bildiradi."
+    },
+    {
+      "text": "15 sonida birliklar xonasida qaysi raqam turibdi?",
+      "options": [
+        "1",
+        "5",
+        "15",
+        "0"
+      ],
+      "correctIndex": 1,
+      "explanation": "O‘ngdagi 5 raqami birliklarni bildiradi."
+    },
+    {
+      "text": "18 sonini xona qo‘shiluvchilariga ajrating:",
+      "options": [
+        "10 + 7",
+        "10 + 9",
+        "10 + 8",
+        "18 + 0"
+      ],
+      "correctIndex": 2,
+      "explanation": "18 = 10 + 8."
+    }
+  ],
+  "test": [
+    {
+      "text": "17 sonida nechta o‘nlik bor?",
+      "options": [
+        "1 ta o‘nlik",
+        "7 ta o‘nlik",
+        "17 ta o‘nlik",
+        "0 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "17 sonida 1 ta o‘nlik bor."
+    },
+    {
+      "text": "17 sonida nechta birlik bor?",
+      "options": [
+        "1 ta birlik",
+        "17 ta birlik",
+        "7 ta birlik",
+        "10 ta birlik"
+      ],
+      "correctIndex": 2,
+      "explanation": "17 sonida 7 ta birlik bor."
+    },
+    {
+      "text": "12 sonini xona qo‘shiluvchilariga ajrating:",
+      "options": [
+        "10 + 1",
+        "10 + 2",
+        "10 + 3",
+        "20 + 2"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 = 10 + 2."
+    },
+    {
+      "text": "14 sonini xona qo‘shiluvchilariga ajrating:",
+      "options": [
+        "10 + 3",
+        "10 + 5",
+        "40 + 1",
+        "10 + 4"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 = 10 + 4."
+    },
+    {
+      "text": "16 sonini xona qo‘shiluvchilariga ajrating:",
+      "options": [
+        "10 + 5",
+        "10 + 6",
+        "10 + 7",
+        "60 + 1"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 = 10 + 6."
+    },
+    {
+      "text": "19 sonini xona qo‘shiluvchilariga ajrating:",
+      "options": [
+        "10 + 9",
+        "10 + 8",
+        "10 + 10",
+        "90 + 1"
+      ],
+      "correctIndex": 0,
+      "explanation": "19 = 10 + 9."
+    },
+    {
+      "text": "Ikki xonali sonda birinchi (chapdagi) raqam nimani bildiradi?",
+      "options": [
+        "Birliklar sonini",
+        "Yuzliklar sonini",
+        "Natijani",
+        "O‘nliklar sonini"
+      ],
+      "correctIndex": 3,
+      "explanation": "Chapdagi birinchi raqam o‘nliklar xonasidir."
+    },
+    {
+      "text": "Ikki xonali sonda ikkinchi (o‘ngdagi) raqam nimani bildiradi?",
+      "options": [
+        "O‘nliklar sonini",
+        "Yuzliklar sonini",
+        "Birliklar sonini",
+        "Bo‘linuvchini"
+      ],
+      "correctIndex": 2,
+      "explanation": "O‘ngdagi ikkinchi raqam birliklar xonasidir."
+    },
+    {
+      "text": "20 sonida nechta o‘nlik va nechta birlik bor?",
+      "options": [
+        "0 ta o‘nlik va 2 ta birlik",
+        "1 ta o‘nlik va 10 ta birlik",
+        "2 ta o‘nlik va 0 ta birlik",
+        "20 ta o‘nlik"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 da 2 ta o‘nlik va 0 ta birlik bor."
+    },
+    {
+      "text": "13 sonidan 10 ni ayirsak necha qoladi: 13 − 10 = ?",
+      "options": [
+        "2",
+        "4",
+        "1",
+        "3 (birliklar qoladi)"
+      ],
+      "correctIndex": 3,
+      "explanation": "13 − 10 = 3."
+    },
+    {
+      "text": "17 sonidan 10 ni ayirsak necha qoladi: 17 − 10 = ?",
+      "options": [
+        "7",
+        "6",
+        "8",
+        "1"
+      ],
+      "correctIndex": 0,
+      "explanation": "17 − 10 = 7."
+    },
+    {
+      "text": "15 sonidan 5 ni ayirsak necha qoladi: 15 − 5 = ?",
+      "options": [
+        "9",
+        "10 (to‘liq o‘nlik qoladi)",
+        "11",
+        "1"
+      ],
+      "correctIndex": 1,
+      "explanation": "15 − 5 = 10."
+    },
+    {
+      "text": "18 sonidan 8 ni ayirsak necha qoladi: 18 − 8 = ?",
+      "options": [
+        "9",
+        "11",
+        "8",
+        "10"
+      ],
+      "correctIndex": 3,
+      "explanation": "18 − 8 = 10."
+    },
+    {
+      "text": "11 sonidan 1 ni ayirsak necha qoladi: 11 − 1 = ?",
+      "options": [
+        "9",
+        "10",
+        "1",
+        "11"
+      ],
+      "correctIndex": 1,
+      "explanation": "11 − 1 = 10."
+    },
+    {
+      "text": "Katak daftarda 14 soni nechta katakka yoziladi?",
+      "options": [
+        "1 ta katakka",
+        "3 ta katakka",
+        "2 ta katakka (har bir raqam bitta katakka)",
+        "4 ta katakka"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 raqami bir katakka, 4 raqami yonidagi katakka yoziladi."
+    },
+    {
+      "text": "Qaysi sonda birliklar soni 6 ga teng?",
+      "options": [
+        "16",
+        "15",
+        "17",
+        "60"
+      ],
+      "correctIndex": 0,
+      "explanation": "16 sonida birliklar 6 ga teng."
+    },
+    {
+      "text": "Qaysi sonda birliklar soni 8 ga teng?",
+      "options": [
+        "18",
+        "17",
+        "19",
+        "80"
+      ],
+      "correctIndex": 0,
+      "explanation": "18 sonida birliklar 8 ga teng."
+    },
+    {
+      "text": "O‘qituvchi doskaga 1 ta o‘nlik va 9 ta birlik yozdi. Bu qaysi son?",
+      "options": [
+        "18",
+        "91",
+        "20",
+        "19"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 o‘nlik va 9 birlik — 19 soni."
+    },
+    {
+      "text": "Dilnoza 10 ta qizil va 4 ta ko‘k qalam oldi. Jami qalamlar nechta?",
+      "options": [
+        "13 ta",
+        "14 ta qalam (10 + 4 = 14)",
+        "15 ta",
+        "41 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 + 4 = 14 ta qalam."
+    },
+    {
+      "text": "To‘g‘ri tenglikni toping:",
+      "options": [
+        "10 + 7 = 16",
+        "10 + 7 = 71",
+        "10 + 7 = 17",
+        "10 + 7 = 18"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 7 = 17 to‘g‘ri tenglikdir."
+    }
+  ]
+}

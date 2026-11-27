@@ -1,0 +1,276 @@
+{
+  "bookNumber": 59,
+  "title": "21 dan 100 gacha bo‘lgan sonlar",
+  "emoji": "🔢",
+  "shortDesc": "Ikki xonali sonlarning o‘nlik va birliklar tarkibi.",
+  "intro": "21 dan 100 gacha bo‘lgan sonlar o‘nliklar va birliklardan tuziladi. Masalan, 25 sonida 2 ta o‘nlik va 5 ta birlik bor.",
+  "keyPoints": [
+    "Har qanday ikki xonali sonning chapdagi raqami o‘nlikni, o‘ngdagi raqami birlikni bildiradi.",
+    "Misol: 37 = 30 + 7 (3 ta o‘nlik va 7 ta birlik).",
+    "Misol: 84 = 80 + 4 (8 ta o‘nlik va 4 ta birlik)."
+  ],
+  "miniExample": {
+    "emojis": "📦 📦 📦 + 🍬 🍬 🍬 🍬",
+    "text": "3 ta quti (30 ta) va 4 ta konfet: 30 + 4 = 34 ta konfet."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "2 ta o‘nlik va 7 ta birlikdan qanday son hosil bo‘ladi?",
+      "options": [
+        "27",
+        "72",
+        "20",
+        "70"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 ta o‘nlik (20) va 7 ta birlik (7) birlashib 27 hosil qiladi."
+    },
+    {
+      "text": "45 sonida nechta o‘nlik bor?",
+      "options": [
+        "5 ta",
+        "4 ta",
+        "45 ta",
+        "9 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "45 sonida 4 ta o‘nlik va 5 ta birlik bor."
+    },
+    {
+      "text": "60 + 8 ifodaning qiymati nechaga teng?",
+      "options": [
+        "86",
+        "60",
+        "68",
+        "78"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 ga 8 qo‘shilsa 68 hosil bo‘ladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "3 ta o‘nlik va 2 ta birlik qaysi sonni bildiradi?",
+      "options": [
+        "32",
+        "23",
+        "30",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 ta o‘nlik (30) va 2 ta birlik (2) soni 32 dir."
+    },
+    {
+      "text": "56 sonining o‘nliklar xonasidagi raqami qaysi?",
+      "options": [
+        "6",
+        "50",
+        "5",
+        "56"
+      ],
+      "correctIndex": 2,
+      "explanation": "56 sonining chapdagi raqami 5 o‘nlikni bildiradi."
+    },
+    {
+      "text": "73 sonining birliklar xonasidagi raqami qaysi?",
+      "options": [
+        "7",
+        "3",
+        "70",
+        "10"
+      ],
+      "correctIndex": 1,
+      "explanation": "73 sonining o‘ngdagi raqami 3 birlikni bildiradi."
+    },
+    {
+      "text": "20 + 9 qaysi songa teng?",
+      "options": [
+        "92",
+        "30",
+        "19",
+        "29"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 + 9 = 29."
+    },
+    {
+      "text": "4 ta o‘nlik va 8 ta birlik qaysi son?",
+      "options": [
+        "84",
+        "48",
+        "40",
+        "12"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 o‘nlik va 8 birlik 48 sonidir."
+    },
+    {
+      "text": "91 sonida nechta birlik bor?",
+      "options": [
+        "1 ta",
+        "9 ta",
+        "90 ta",
+        "10 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "91 sonida 1 ta birlik bor."
+    },
+    {
+      "text": "54 sonini o‘nlik va birliklarga ajrating:",
+      "options": [
+        "5 + 4",
+        "50 + 40",
+        "40 + 5",
+        "50 + 4"
+      ],
+      "correctIndex": 3,
+      "explanation": "54 = 50 + 4 (5 ta o‘nlik va 4 ta birlik)."
+    },
+    {
+      "text": "6 ta o‘nlik va 0 ta birlik qaysi son?",
+      "options": [
+        "6",
+        "66",
+        "60",
+        "16"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 ta o‘nlik va 0 ta birlik 60 sonini bildiradi."
+    },
+    {
+      "text": "80 + 5 yig‘indisi nechaga teng?",
+      "options": [
+        "58",
+        "90",
+        "85",
+        "805"
+      ],
+      "correctIndex": 2,
+      "explanation": "80 + 5 = 85."
+    },
+    {
+      "text": "67 sonida jami nechta o‘nlik va birlik bor?",
+      "options": [
+        "7 ta o‘nlik va 6 ta birlik",
+        "60 ta birlik",
+        "13 ta birlik",
+        "6 ta o‘nlik va 7 ta birlik"
+      ],
+      "correctIndex": 3,
+      "explanation": "67 da 6 ta o‘nlik va 7 ta birlik mavjud."
+    },
+    {
+      "text": "Noma’lum sonni toping: 40 + ? = 47",
+      "options": [
+        "7",
+        "4",
+        "17",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "47 - 40 = 7."
+    },
+    {
+      "text": "Noma’lum sonni toping: ? + 3 = 83",
+      "options": [
+        "8",
+        "80",
+        "70",
+        "83"
+      ],
+      "correctIndex": 1,
+      "explanation": "83 - 3 = 80."
+    },
+    {
+      "text": "28 sonidan oldin qaysi son keladi?",
+      "options": [
+        "29",
+        "26",
+        "30",
+        "27"
+      ],
+      "correctIndex": 3,
+      "explanation": "28 dan oldingi son 27 dir."
+    },
+    {
+      "text": "39 sonidan keyin qaysi son keladi?",
+      "options": [
+        "38",
+        "40",
+        "41",
+        "50"
+      ],
+      "correctIndex": 1,
+      "explanation": "39 dan keyin 40 soni keladi."
+    },
+    {
+      "text": "9 o‘nlikdan 4 ta birlik ortiq son qaysi?",
+      "options": [
+        "49",
+        "90",
+        "94",
+        "86"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 o‘nlik (90) va 4 ta birlik: 90 + 4 = 94."
+    },
+    {
+      "text": "O‘nliklar raqami 7 ga, birliklar raqami esa o‘nliklaridan 2 taga kam bo‘lgan son qaysi?",
+      "options": [
+        "75",
+        "72",
+        "57",
+        "79"
+      ],
+      "correctIndex": 0,
+      "explanation": "Birliklar: 7 - 2 = 5. Demak son 75."
+    },
+    {
+      "text": "O‘nliklar va birliklar raqami bir xil bo‘lgan ikki xonali sonni toping:",
+      "options": [
+        "66",
+        "65",
+        "76",
+        "60"
+      ],
+      "correctIndex": 0,
+      "explanation": "66 sonida ikkala raqam ham 6 ga teng."
+    },
+    {
+      "text": "Raqamlari yig‘indisi 5 ga teng bo‘lgan eng katta ikki xonali son qaysi?",
+      "options": [
+        "41",
+        "32",
+        "23",
+        "50"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 sonida 5 + 0 = 5 va u boshqalaridan katta."
+    },
+    {
+      "text": "Kitob javonida 3 ta to‘liq quti kitob (har birida 10 tadan) va yana 6 ta alohida kitob bor. Javonda jami nechta kitob bor?",
+      "options": [
+        "63 ta",
+        "36 ta",
+        "30 ta",
+        "16 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 ta o‘nlik (30) va 6 birlik: 30 + 6 = 36 ta kitob."
+    },
+    {
+      "text": "Gulshanning yoshi 7 da, buvisining yoshi esa 7 ta o‘nlikka teng. Buvisining yoshi nechada?",
+      "options": [
+        "77 da",
+        "60 da",
+        "70 da",
+        "17 da"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 ta o‘nlik 70 sonini bildiradi."
+    }
+  ]
+}

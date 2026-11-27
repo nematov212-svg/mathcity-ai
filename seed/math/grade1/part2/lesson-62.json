@@ -1,0 +1,276 @@
+{
+  "bookNumber": 62,
+  "title": "Ikki xonali sonlarni taqqoslash",
+  "emoji": "⚖️",
+  "shortDesc": "Ikki xonali sonlarning o‘nlik va birliklarini solishtirish (>, <, =).",
+  "intro": "Ikki xonali sonlarni taqqoslashda avval ularning o‘nliklar xonasi solishtiriladi. O‘nligi katta bo‘lgan son katta bo‘ladi.",
+  "keyPoints": [
+    "Agar o‘nliklar teng bo‘lsa, birliklar solishtiriladi: masalan, 47 > 42, chunki 7 > 2.",
+    "Agar o‘nliklari har xil bo‘lsa, birliklarga qarash shart emas: masalan, 51 > 39, chunki 5 > 3.",
+    "Ikkala sonning o‘nliklari ham, birliklari ham teng bo‘lsa, sonlar teng bo‘ladi: 68 = 68."
+  ],
+  "miniExample": {
+    "emojis": "5️⃣3️⃣ > 4️⃣9️⃣",
+    "text": "53 sonining 5 ta o‘nligi bor, 49 da esa 4 ta. Shuning uchun 53 > 49."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Taqqoslang: 35 va 28",
+      "options": [
+        "35 > 28",
+        "35 < 28",
+        "35 = 28",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 ta o‘nlik 2 ta o‘nlikdan katta bo‘lgani uchun 35 > 28."
+    },
+    {
+      "text": "Taqqoslang: 62 va 67",
+      "options": [
+        "62 > 67",
+        "62 < 67",
+        "62 = 67",
+        "62 + 67"
+      ],
+      "correctIndex": 1,
+      "explanation": "O‘nliklari teng (6), birliklarda esa 2 < 7. Demak 62 < 67."
+    },
+    {
+      "text": "Quyidagi sonlardan eng kattasini toping: 45, 71, 39, 68",
+      "options": [
+        "68",
+        "45",
+        "71",
+        "39"
+      ],
+      "correctIndex": 2,
+      "explanation": "71 sonining o‘nligi (7) barchasidan katta."
+    }
+  ],
+  "test": [
+    {
+      "text": "Taqqoslang: 40 va 30",
+      "options": [
+        "40 > 30",
+        "40 < 30",
+        "40 = 30",
+        "40 + 30"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 o‘nlik 3 o‘nlikdan katta bo‘lgani uchun 40 > 30."
+    },
+    {
+      "text": "Taqqoslang: 25 va 52",
+      "options": [
+        "25 > 52",
+        "25 = 52",
+        "25 < 52",
+        "52 < 25"
+      ],
+      "correctIndex": 2,
+      "explanation": "25 da 2 ta o‘nlik, 52 da 5 ta o‘nlik bor. Demak 25 < 52."
+    },
+    {
+      "text": "Taqqoslang: 64 va 64",
+      "options": [
+        "64 > 64",
+        "64 = 64",
+        "64 < 64",
+        "64 + 64"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ikkala son bir xil bo‘lgani uchun ular teng (=)."
+    },
+    {
+      "text": "Qaysi son 50 dan katta?",
+      "options": [
+        "49",
+        "45",
+        "39",
+        "54"
+      ],
+      "correctIndex": 3,
+      "explanation": "54 soni 50 dan katta."
+    },
+    {
+      "text": "Qaysi son 80 dan kichik?",
+      "options": [
+        "81",
+        "79",
+        "85",
+        "90"
+      ],
+      "correctIndex": 1,
+      "explanation": "79 soni 80 dan kichik."
+    },
+    {
+      "text": "Taqqoslang: 73 va 78",
+      "options": [
+        "73 < 78",
+        "73 > 78",
+        "73 = 78",
+        "78 < 73"
+      ],
+      "correctIndex": 0,
+      "explanation": "O‘nliklari teng (7), birliklarda 3 < 8. Demak 73 < 78."
+    },
+    {
+      "text": "Quyidagi taqqoslashlardan qaysi biri to‘g‘ri?",
+      "options": [
+        "43 > 51",
+        "67 < 62",
+        "90 < 89",
+        "81 > 79"
+      ],
+      "correctIndex": 3,
+      "explanation": "81 > 79 to‘g‘ri, chunki 8 ta o‘nlik 7 ta o‘nlikdan katta."
+    },
+    {
+      "text": "Quyidagi sonlar ichida eng kichigi qaysi: 65, 48, 72, 53",
+      "options": [
+        "53",
+        "65",
+        "48",
+        "72"
+      ],
+      "correctIndex": 2,
+      "explanation": "48 sonining o‘nligi (4) eng kichik."
+    },
+    {
+      "text": "Yulduzcha o‘rniga to‘g‘ri belgini qo‘ying: 50 + 4 * 60",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 + 4 = 54 va 54 < 60."
+    },
+    {
+      "text": "Yulduzcha o‘rniga to‘g‘ri belgini qo‘ying: 30 + 8 * 38",
+      "options": [
+        ">",
+        "<",
+        "-",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "30 + 8 = 38 va 38 = 38."
+    },
+    {
+      "text": "Sonlarni o‘sish tartibida to‘g‘ri joylashtiring:",
+      "options": [
+        "24, 37, 51, 68",
+        "68, 51, 37, 24",
+        "37, 24, 68, 51",
+        "51, 68, 24, 37"
+      ],
+      "correctIndex": 0,
+      "explanation": "O‘sish tartibi kichigidan kattasiga qarab: 24 < 37 < 51 < 68."
+    },
+    {
+      "text": "Sonlarni kamayish tartibida to‘g‘ri joylashtiring:",
+      "options": [
+        "18, 45, 76, 93",
+        "93, 76, 45, 18",
+        "45, 76, 93, 18",
+        "76, 93, 18, 45"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kamayish tartibi kattasidan kichigiga qarab: 93 > 76 > 45 > 18."
+    },
+    {
+      "text": "Qaysi son 65 dan katta, lekin 70 dan kichik?",
+      "options": [
+        "64",
+        "72",
+        "60",
+        "68"
+      ],
+      "correctIndex": 3,
+      "explanation": "68 soni 65 va 70 oralig‘ida joylashgan."
+    },
+    {
+      "text": "Yulduzcha o‘rniga to‘g‘ri belgini qo‘ying: 70 + 5 * 80 - 10",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 + 5 = 75, 80 - 10 = 70. 75 > 70."
+    },
+    {
+      "text": "Tengsizlik to‘g‘ri bo‘lishi uchun nuqtalar o‘rniga qaysi raqamni qo‘yish mumkin: 4. < 43",
+      "options": [
+        "5",
+        "4",
+        "2",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "42 < 43 to‘g‘ri bo‘ladi."
+    },
+    {
+      "text": "Tengsizlik to‘g‘ri bo‘lishi uchun nuqtalar o‘rniga qaysi raqamni qo‘yish mumkin: .6 > 76",
+      "options": [
+        "8",
+        "7",
+        "6",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "86 > 76 to‘g‘ri bo‘ladi."
+    },
+    {
+      "text": "Ikki xonali eng kichik son bilan ikki xonali eng katta sonni taqqoslang:",
+      "options": [
+        "10 < 99",
+        "10 > 99",
+        "10 = 99",
+        "0 < 100"
+      ],
+      "correctIndex": 0,
+      "explanation": "Eng kichik ikki xonali son 10, eng kattasi 99 bo‘lib, 10 < 99."
+    },
+    {
+      "text": "Hisoblang va taqqoslang: 40 + 30 * 90 - 20",
+      "options": [
+        ">",
+        "<",
+        "-",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "40 + 30 = 70 va 90 - 20 = 70, demak ular teng (=)."
+    },
+    {
+      "text": "Ali 36 ta yong‘oq terdi, Vali esa 42 ta yong‘oq terdi. Kim ko‘proq yong‘oq tergan?",
+      "options": [
+        "Ali ko‘proq tergan",
+        "Vali ko‘proq tergan",
+        "Ikkalasi teng tergan",
+        "Aniqlab bo‘lmaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "42 > 36 bo‘lgani uchun Vali ko‘proq yong‘oq tergan."
+    },
+    {
+      "text": "1-savatchada 55 ta olma, 2-savatchada esa 58 ta olma bor. Qaysi savatchada olma kamroq?",
+      "options": [
+        "2-savatchada kamroq",
+        "Ikkalasida teng",
+        "1-savatchada kamroq",
+        "1-savatchada ko‘proq"
+      ],
+      "correctIndex": 2,
+      "explanation": "55 < 58 bo‘lgani uchun 1-savatchada kamroq olma bor."
+    }
+  ]
+}

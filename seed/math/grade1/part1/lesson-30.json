@@ -1,0 +1,276 @@
+{
+  "bookNumber": 30,
+  "title": "Nuqta. To‘g‘ri va egri chiziq",
+  "emoji": "✏️",
+  "shortDesc": "Nuqta, to‘g‘ri chiziq va egri chiziqni ajratish, chizg‘ich bilan chizish.",
+  "intro": "Qalam uchini qog‘ozga tekkizsak nuqta hosil bo‘ladi, chizg‘ich yordamida to‘g‘ri chiziq chiziladi.",
+  "keyPoints": [
+    "Nuqta — eng sodda geometrik shakl.",
+    "Chizg‘ich bo‘ylab tortilgan chiziq to‘g‘ri chiziq deyiladi.",
+    "To‘lqinsimon yoki aylanma chiziqlar egri chiziqlar deyiladi."
+  ],
+  "miniExample": {
+    "emojis": "📏 ✏️ 〰️",
+    "text": "Chizg‘ich bilan to‘g‘ri chiziq, erkin qo‘l bilan egri chiziq chizamiz!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "To‘g‘ri chiziq chizish uchun qaysi asbob kerak?",
+      "options": [
+        "Chizg‘ich 📏",
+        "O‘chirg‘ich 🧼",
+        "Qaychi ✂️",
+        "Yelim 🧴"
+      ],
+      "correctIndex": 0,
+      "explanation": "To‘g‘ri chiziq chizg‘ich yordamida chiziladi."
+    },
+    {
+      "text": "Daryoning oqishi qanday chiziqqa o‘xshaydi?",
+      "options": [
+        "To‘g‘ri chiziqqa",
+        "Egri chiziqqa 〰️",
+        "Nuqtaga",
+        "Aylanaga"
+      ],
+      "correctIndex": 1,
+      "explanation": "Daryolar burilib-burilib, egri chiziq hosil qilib oqadi."
+    },
+    {
+      "text": "Ikki nuqta orasidagi eng qisqa yo‘l qanday chiziq bo‘ladi?",
+      "options": [
+        "Egri chiziq",
+        "Siniq chiziq",
+        "To‘g‘ri chiziq",
+        "Aylanma yo‘l"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ikki nuqtani birlashtiruvchi eng qisqa yo‘l to‘g‘ri chiziqdir."
+    }
+  ],
+  "test": [
+    {
+      "text": "Qalam uchini qog‘ozga bir marta tekkizganda nima hosil bo‘ladi?",
+      "options": [
+        "Nuqta •",
+        "Kvadrat",
+        "Uchburchak",
+        "Aylana"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qalam uchi qog‘ozda nuqta qoldiradi."
+    },
+    {
+      "text": "Chizg‘ich yordamida qanday chiziq chiziladi?",
+      "options": [
+        "Egri chiziq",
+        "To‘lqinli chiziq",
+        "To‘g‘ri chiziq",
+        "Dumaloq chiziq"
+      ],
+      "correctIndex": 2,
+      "explanation": "Chizg‘ich to‘g‘ri chiziq chizish uchun xizmat qiladi."
+    },
+    {
+      "text": "Ilonning 🐍 yerda sudralib yurishi qanday chiziqqa o‘xshaydi?",
+      "options": [
+        "To‘g‘ri chiziqqa",
+        "Egri chiziqqa",
+        "Nuqtaga",
+        "Kvadratga"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ilon buralib, egri chiziq hosil qiladi."
+    },
+    {
+      "text": "Ikki nuqta orasidagi eng to‘g‘ri va qisqa yo‘l qaysi?",
+      "options": [
+        "Aylanma egri yo‘l",
+        "Siniq yo‘l",
+        "To‘lqinsimon yo‘l",
+        "To‘g‘ri chiziq bo‘ylab yo‘l"
+      ],
+      "correctIndex": 3,
+      "explanation": "To‘g‘ri chiziq eng qisqa masofani ifodalaydi."
+    },
+    {
+      "text": "Kamalak 🌈 qanday chiziq shaklida ko‘rinadi?",
+      "options": [
+        "To‘g‘ri chiziq",
+        "Egri chiziq (yoy)",
+        "Nuqta",
+        "Kvadrat"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kamalak osmonda egri yoy shaklida hosil bo‘ladi."
+    },
+    {
+      "text": "Temir yo‘l relslari tekis maydonda qanday chiziq bo‘ladi?",
+      "options": [
+        "To‘g‘ri chiziq",
+        "Egri chiziq",
+        "Aylanma",
+        "Nuqta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tekis yo‘ldagi relslar to‘g‘ri chiziq bo‘ylab yotqiziladi."
+    },
+    {
+      "text": "Nuqtaning o‘lchami (uzunligi yoki kengligi) bormi?",
+      "options": [
+        "Uzunligi 5 sm",
+        "Kengligi 2 sm",
+        "Og‘irligi bor",
+        "Nuqtaning o‘lchami yo‘q, u faqat o‘rinni bildiradi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Geometriyada nuqta o‘lchamsiz shakl hisoblanadi."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri to‘g‘ri chiziqqa misol bo‘ladi?",
+      "options": [
+        "Bo‘sh tashlangan egri ip",
+        "Daryo o‘zani",
+        "Tarang tortilgan ip",
+        "Daraxt shoxi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tarang tortilgan ip to‘g‘ri chiziq shaklini oladi."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri egri chiziqqa misol bo‘ladi?",
+      "options": [
+        "Chizg‘ich qirrasi 📏",
+        "Daftar cheti",
+        "To‘lqinlanayotgan dengiz suvi 🌊",
+        "Qalamning o‘zi ✏️"
+      ],
+      "correctIndex": 2,
+      "explanation": "Dengiz to‘lqinlari egri chiziq bo‘lib harakatlanadi."
+    },
+    {
+      "text": "Bitta nuqtadan nechta to‘g‘ri chiziq o‘tkazish mumkin?",
+      "options": [
+        "Faqat 1 ta",
+        "Faqat 2 ta",
+        "Faqat 10 ta",
+        "Cheksiz ko‘p to‘g‘ri chiziq"
+      ],
+      "correctIndex": 3,
+      "explanation": "Bitta nuqta orqali xohlagancha ko‘p to‘g‘ri chiziq o‘tkazsa bo‘ladi."
+    },
+    {
+      "text": "Ikkita turli nuqta orqali nechta to‘g‘ri chiziq o‘tkazish mumkin?",
+      "options": [
+        "Faqat 1 ta to‘g‘ri chiziq",
+        "2 ta",
+        "3 ta",
+        "Cheksiz ko‘p"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ikki nuqta orqali faqat bitta to‘g‘ri chiziq o‘tadi."
+    },
+    {
+      "text": "Quyosh nurlari ☀️ qanday chiziqlar bo‘lib tarqaladi?",
+      "options": [
+        "Egri aylanma chiziq",
+        "To‘g‘ri chiziq bo‘ylab (nurlar)",
+        "Siniq to‘lqin",
+        "Nuqtalar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yorug‘lik to‘g‘ri chiziq bo‘ylab tarqaladi."
+    },
+    {
+      "text": "Kapalakning havoda uchib yurgan izi qanday chiziq bo‘ladi?",
+      "options": [
+        "To‘g‘ri chiziq",
+        "Nuqta",
+        "Uchburchak",
+        "Egri chiziq 〰️"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kapalak guldan gulga egri chiziq bo‘ylab uchadi."
+    },
+    {
+      "text": "Koptok tepilganda uning havodagi uchish yo‘li qanday?",
+      "options": [
+        "Tik to‘g‘ri chiziq",
+        "Egri chiziq (yoy)",
+        "Kvadrat",
+        "Nuqta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Koptok havoda yoy shaklidagi egri chiziq chizib tushadi."
+    },
+    {
+      "text": "Chizg‘ichning tekis qirrasi qanday chiziqni eslatadi?",
+      "options": [
+        "Egri chiziqni",
+        "Nuqtani",
+        "To‘g‘ri chiziqni",
+        "Aylanani"
+      ],
+      "correctIndex": 2,
+      "explanation": "Chizg‘ich qirrasi to‘g‘ri chiziqdir."
+    },
+    {
+      "text": "Daftarga 3 ta nuqta qo‘yildi. Nechta nuqta belgilandi?",
+      "options": [
+        "3 ta nuqta",
+        "2 ta",
+        "4 ta",
+        "1 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Daftarda 3 ta nuqta bor."
+    },
+    {
+      "text": "Avtomobil to‘g‘ri shosse yo‘lida 🛣️ qanday chiziq bo‘ylab harakatlanadi?",
+      "options": [
+        "To‘g‘ri chiziq bo‘ylab",
+        "Egri chiziq bo‘ylab",
+        "Aylanib",
+        "Orqaga"
+      ],
+      "correctIndex": 0,
+      "explanation": "To‘g‘ri yo‘lda harakat to‘g‘ri chiziqdir."
+    },
+    {
+      "text": "Tog‘ so‘qmog‘i burilib-burilib ketgan bo‘lsa, u qanday yo‘l?",
+      "options": [
+        "To‘g‘ri chiziqli yo‘l",
+        "Nuqtali yo‘l",
+        "To‘rtburchak yo‘l",
+        "Egri chiziqli yo‘l"
+      ],
+      "correctIndex": 3,
+      "explanation": "Burilishli tog‘ yo‘llari egri chiziq hosil qiladi."
+    },
+    {
+      "text": "Doira chizig‘i qanday chiziq turiga kiradi?",
+      "options": [
+        "To‘g‘ri chiziq",
+        "Yopiq egri chiziq ⭕",
+        "Siniq chiziq",
+        "Nuqta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Doira silliq yopiq egri chiziqdan iborat."
+    },
+    {
+      "text": "Jasur chizg‘ichsiz qo‘li bilan chiziq tortdi. Chiziq biroz qiyshiq chiqdi. Bu qanday chiziq?",
+      "options": [
+        "To‘g‘ri chiziq",
+        "Nuqta",
+        "Egri chiziq",
+        "Kvadrat"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qo‘lda qiyshaygan chiziq egri chiziq hisoblanadi."
+    }
+  ]
+}

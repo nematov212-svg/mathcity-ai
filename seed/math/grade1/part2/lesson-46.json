@@ -1,0 +1,276 @@
+{
+  "bookNumber": 46,
+  "title": "15 va 16 sonlari",
+  "emoji": "🔢",
+  "shortDesc": "15 va 16 sonlari tarkibi (8+7, 9+6; 8+8), ifoda qiymati va tartiblash.",
+  "intro": "15 va 16 sonlarining tarkibi: 8 + 8 = 16, 8 + 7 = 15 va 9 + 7 = 16.",
+  "keyPoints": [
+    "15 sonining tarkibi: 10+5, 9+6, 8+7.",
+    "16 sonining tarkibi: 10+6, 9+7, 8+8.",
+    "15 va 16 sonlari 11–20 qatorining o‘rtasida joylashgan."
+  ],
+  "miniExample": {
+    "emojis": "8️⃣ + 8️⃣ = 1️⃣6️⃣",
+    "text": "Ikkita sakkiz yig‘indisi 16 bo‘ladi: 8 + 8 = 16!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Hisoblang: 8 + 8 = ?",
+      "options": [
+        "16",
+        "15",
+        "17",
+        "14"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 8 = 16."
+    },
+    {
+      "text": "Hisoblang: 8 + 7 = ?",
+      "options": [
+        "14",
+        "15",
+        "16",
+        "17"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 7 = 15."
+    },
+    {
+      "text": "Hisoblang: 16 − 8 = ?",
+      "options": [
+        "7",
+        "9",
+        "8",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "16 − 8 = 8."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 10 + 5 = ?",
+      "options": [
+        "15",
+        "14",
+        "16",
+        "17"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 5 = 15."
+    },
+    {
+      "text": "Misolni hisoblang: 9 + 6 = ?",
+      "options": [
+        "14",
+        "16",
+        "15",
+        "17"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 + 6 = 15."
+    },
+    {
+      "text": "Misolni hisoblang: 8 + 7 = ?",
+      "options": [
+        "14",
+        "15",
+        "16",
+        "13"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 7 = 15."
+    },
+    {
+      "text": "Misolni hisoblang: 10 + 6 = ?",
+      "options": [
+        "15",
+        "17",
+        "18",
+        "16"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 + 6 = 16."
+    },
+    {
+      "text": "Misolni hisoblang: 9 + 7 = ?",
+      "options": [
+        "15",
+        "16",
+        "17",
+        "18"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 + 7 = 16."
+    },
+    {
+      "text": "Misolni hisoblang: 8 + 8 = ?",
+      "options": [
+        "16",
+        "15",
+        "17",
+        "14"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 8 = 16."
+    },
+    {
+      "text": "Misolni hisoblang: 15 − 5 = ?",
+      "options": [
+        "9",
+        "11",
+        "5",
+        "10"
+      ],
+      "correctIndex": 3,
+      "explanation": "15 − 5 = 10."
+    },
+    {
+      "text": "Misolni hisoblang: 15 − 6 = ?",
+      "options": [
+        "8",
+        "10",
+        "9",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 − 6 = 9."
+    },
+    {
+      "text": "Misolni hisoblang: 15 − 7 = ?",
+      "options": [
+        "7",
+        "9",
+        "8",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 − 7 = 8."
+    },
+    {
+      "text": "Misolni hisoblang: 15 − 8 = ?",
+      "options": [
+        "6",
+        "8",
+        "9",
+        "7"
+      ],
+      "correctIndex": 3,
+      "explanation": "15 − 8 = 7."
+    },
+    {
+      "text": "Misolni hisoblang: 16 − 6 = ?",
+      "options": [
+        "10",
+        "9",
+        "11",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "16 − 6 = 10."
+    },
+    {
+      "text": "Misolni hisoblang: 16 − 7 = ?",
+      "options": [
+        "8",
+        "9",
+        "10",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 − 7 = 9."
+    },
+    {
+      "text": "Misolni hisoblang: 16 − 8 = ?",
+      "options": [
+        "7",
+        "9",
+        "6",
+        "8"
+      ],
+      "correctIndex": 3,
+      "explanation": "16 − 8 = 8."
+    },
+    {
+      "text": "Misolni hisoblang: 16 − 9 = ?",
+      "options": [
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 − 9 = 7."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 7 + □ = 15. Katakdagi son nima?",
+      "options": [
+        "7",
+        "9",
+        "8",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 − 7 = 8."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 9 + □ = 16. Katakdagi son nima?",
+      "options": [
+        "7",
+        "6",
+        "8",
+        "9"
+      ],
+      "correctIndex": 0,
+      "explanation": "16 − 9 = 7."
+    },
+    {
+      "text": "15 soni toq sonmi yoki juft son?",
+      "options": [
+        "Toq son (5 bilan tugaydi)",
+        "Juft son",
+        "Nol son",
+        "Bir xonali"
+      ],
+      "correctIndex": 0,
+      "explanation": "Oxiri 5 bilan tugagan sonlar toq sondir."
+    },
+    {
+      "text": "16 soni toq sonmi yoki juft son?",
+      "options": [
+        "Toq son",
+        "Nol son",
+        "Manfiy son",
+        "Juft son (6 bilan tugaydi)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Oxiri 6 bilan tugagan sonlar juft sondir."
+    },
+    {
+      "text": "Avtobusda 16 ta o‘rindiq bor. 9 tasiga yo‘lovchi o‘tirdi. Nechta bo‘sh o‘rindiq qoldi?",
+      "options": [
+        "6 ta",
+        "7 ta bo‘sh o‘rindiq",
+        "8 ta",
+        "5 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 − 9 = 7 ta o‘rindiq."
+    },
+    {
+      "text": "Daftar 15 varaq edi. Kamola 6 varaq yozdi. Nechta toza varaq qoldi?",
+      "options": [
+        "8 ta",
+        "10 ta",
+        "9 ta toza varaq",
+        "7 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 − 6 = 9 ta varaq."
+    }
+  ]
+}

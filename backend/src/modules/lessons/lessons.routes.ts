@@ -192,6 +192,65 @@ lessonsRouter.post('/:id/step', authMiddleware, (req: AuthenticatedRequest, res:
 });
 
 /**
+ * POST /api/lessons/:id/test/start
+ * Starts a 20-question test attempt for a lesson.
+ * Anti-cheat: Returns questions WITHOUT correctIndex and explanation.
+ */
+lessonsRouter.post('/:id/test/start', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const lessonId = String(req.params.id);
+
+  try {
+    const data = repository.startTestAttempt(user.id, lessonId);
+    return res.json({ success: true, data });
+  } catch (err: any) {
+    return res.status(400).json({ success: false, error: err.message || 'Testni boshlashda xatolik.' });
+  }
+});
+
+/**
+ * POST /api/lessons/:id/test/submit
+ * Submits answers for a test attempt, grades server-side, calculates percent,
+ * awards proportional XP and coins on first pass, unlocks next lesson.
+ */
+lessonsRouter.post('/:id/test/submit', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const lessonId = String(req.params.id);
+  const { attemptId, answers } = req.body;
+
+  if (!attemptId) {
+    return res.status(400).json({ success: false, error: 'attemptId maydoni talab qilinadi.' });
+  }
+
+  try {
+    const result = repository.submitTestAttempt(user.id, lessonId, attemptId, answers || {});
+
+    broadcastLessonEvent('test_completed', {
+      userId: user.id,
+      lessonId,
+      attemptId,
+      percent: result.percent,
+      isPassed: result.isPassed,
+      xpAwarded: result.xpAwarded,
+      coinsAwarded: result.coinsAwarded,
+    });
+
+    if (result.isPassed) {
+      broadcastLessonEvent('lesson_completed', {
+        userId: user.id,
+        lessonId,
+        totalXP: result.totalXP,
+        coinBalance: result.coinBalance,
+      });
+    }
+
+    return res.json({ success: true, data: result });
+  } catch (err: any) {
+    return res.status(400).json({ success: false, error: err.message || 'Testni tekshirishda xatolik.' });
+  }
+});
+
+/**
  * GET /api/lessons/:id
  */
 lessonsRouter.get('/:id', optionalAuthMiddleware, (req: AuthenticatedRequest, res: Response) => {
@@ -206,12 +265,16 @@ lessonsRouter.get('/:id', optionalAuthMiddleware, (req: AuthenticatedRequest, re
   const stepProg = user ? repository.getLessonStepProgress(user.id, lesson.id) : null;
   const isCompleted = (user?.completedLessons || []).includes(lesson.id) || (user?.completedLessons || []).includes(lessonId) || (stepProg?.isCompleted ?? false);
   const completedSteps = stepProg ? stepProg.completedSteps : (isCompleted ? 5 : 0);
+  const bestPercent = stepProg?.bestPercent ?? (isCompleted ? 100 : 0);
+  const lastPercent = stepProg?.lastPercent ?? 0;
+  const attempts = stepProg?.attempts ?? (isCompleted ? 1 : 0);
   const percent = isCompleted ? 100 : (stepProg ? stepProg.percent : Math.round((completedSteps / 5) * 100));
 
   return res.json({
     success: true,
     data: {
       ...lesson,
+      bookNumber: lesson.bookNumber,
       coverImage: lesson.coverImage || null,
       gallery: lesson.gallery || [],
       videoUrl: lesson.videoUrl || null,
@@ -224,10 +287,15 @@ lessonsRouter.get('/:id', optionalAuthMiddleware, (req: AuthenticatedRequest, re
       xpReward: lesson.xpReward || lesson.rewardXP || 100,
       coinReward: lesson.coinReward || lesson.rewardCoins || 12,
       estMinutes: lesson.estMinutes || 7,
-      questionCount: lesson.questionCount || (lesson.sections ? lesson.sections[0]?.questions.length : 5) || 5,
+      questionCount: lesson.questionCount || (lesson.test ? lesson.test.length : 20),
+      practice: lesson.practice || [],
+      test: lesson.test || [],
       questions: lesson.questions || [],
       completedSteps,
       percent,
+      bestPercent,
+      lastPercent,
+      attempts,
       isCompleted,
       sections: (lesson.sections || []).map((s) => ({
         id: s.id,

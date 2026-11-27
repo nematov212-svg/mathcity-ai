@@ -1,0 +1,276 @@
+{
+  "bookNumber": 5,
+  "title": "Yassi va hajmli shakllar",
+  "emoji": "🧊",
+  "shortDesc": "Doira, kvadrat, uchburchak, shar, kub, silindr va piramida.",
+  "intro": "Shakllar yassi (chiziladigan) va hajmli (ushlab ko‘riladigan) turlarga bo‘linadi.",
+  "keyPoints": [
+    "Doira, kvadrat va uchburchak — yassi geometrik shakllar.",
+    "Kub, shar, silindr va konus — fazoviy (hajmli) shakllar.",
+    "Kublardan minoralar qurishda ularning tekis tomonlari ustma-ust qo‘yiladi."
+  ],
+  "miniExample": {
+    "emojis": "🟡 ⚽ 🧊",
+    "text": "Qog‘ozdagi doira yassi, haqiqiy koptok esa hajmli shar!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Futbol to‘pi ⚽ qaysi shaklga misol bo‘ladi?",
+      "options": [
+        "Shar (hajmli shakl)",
+        "Kvadrat",
+        "Uchburchak",
+        "To‘g‘ri to‘rtburchak"
+      ],
+      "correctIndex": 0,
+      "explanation": "Futbol to‘pi dumaloq hajmli shar shaklidadir."
+    },
+    {
+      "text": "Qog‘ozga chizilgan kvadrat qanday shakl?",
+      "options": [
+        "Hajmli shakl",
+        "Yassi shakl",
+        "Shar",
+        "Piramida"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qog‘ozdagi chizma tekis yassi yuzada joylashgan."
+    },
+    {
+      "text": "Bolalar o‘ynaydigan kubik 🧊 qanday shakl?",
+      "options": [
+        "Doira",
+        "Uchburchak",
+        "Kub (hajmli shakl)",
+        "Kesma"
+      ],
+      "correctIndex": 2,
+      "explanation": "O‘yin kubigi 6 ta tomoni teng bo‘lgan hajmli jismdir."
+    }
+  ],
+  "test": [
+    {
+      "text": "Quyidagilardan qaysi biri yassi shakl hisoblanadi?",
+      "options": [
+        "Uchburchak 🔺",
+        "Kub 🧊",
+        "Shar ⚽",
+        "Silindr 🛢️"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uchburchak tekislikdagi yassi shakldir."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri hajmli (fazoviy) shakl?",
+      "options": [
+        "Kvadrat",
+        "Doira",
+        "Kub 🧊",
+        "To‘g‘ri to‘rtburchak"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kub fazoda joy egallaydigan hajmli shakldir."
+    },
+    {
+      "text": "Doira ⭕ va shar ⚽ o‘rtasidagi asosiy farq nima?",
+      "options": [
+        "Doira burchakli",
+        "Doira yassi, shar esa hajmli",
+        "Shar uchburchak",
+        "Farqi yo‘q"
+      ],
+      "correctIndex": 1,
+      "explanation": "Doira tekis qog‘ozda bo‘ladi, shar esa qo‘l bilan ushlanadigan dumaloq jismdir."
+    },
+    {
+      "text": "Konserva bankasi 🥫 qaysi geometrik shaklga o‘xshaydi?",
+      "options": [
+        "Kub",
+        "Konus",
+        "Shar",
+        "Silindr"
+      ],
+      "correctIndex": 3,
+      "explanation": "Konserva bankasi yuqori va pasti doira bo‘lgan silindr shaklidadir."
+    },
+    {
+      "text": "Muzqaymoq qolipi (rojok) 🍦 qaysi shaklga o‘xshaydi?",
+      "options": [
+        "Kub",
+        "Konus",
+        "Silindr",
+        "Shar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Muzqaymoq naychasi pastga qarab toraygan konus shaklidadir."
+    },
+    {
+      "text": "Misr ehromlari 🏜️ qaysi shaklga misol bo‘ladi?",
+      "options": [
+        "Piramida",
+        "Shar",
+        "Kub",
+        "Silindr"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qadimgi Misr ehromlari piramida shaklida qurilgan."
+    },
+    {
+      "text": "Kvadratning nechta burchagi bor?",
+      "options": [
+        "3 ta burchagi",
+        "5 ta burchagi",
+        "Burchagi yo‘q",
+        "4 ta burchagi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kvadratda 4 ta to‘g‘ri burchak va 4 ta teng tomon bor."
+    },
+    {
+      "text": "Uchburchakning nechta tomoni bor?",
+      "options": [
+        "4 ta tomoni",
+        "2 ta tomoni",
+        "3 ta tomoni",
+        "5 ta tomoni"
+      ],
+      "correctIndex": 2,
+      "explanation": "Uchburchak uchta tomonga va uchta burchakka ega."
+    },
+    {
+      "text": "Doiraning nechta burchagi bor?",
+      "options": [
+        "1 ta burchagi",
+        "2 ta burchagi",
+        "Burchagi yo‘q (0 ta)",
+        "4 ta burchagi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Doira silliq egri chiziqdan iborat, uning burchagi bo‘lmaydi."
+    },
+    {
+      "text": "3 ta kubikni 🧊🧊🧊 ustma-ust qo‘ysak nima hosil bo‘ladi?",
+      "options": [
+        "Shar",
+        "Doira",
+        "Uchburchak",
+        "Minora"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kubiklarni ustma-ust terib baland minora yasaladi."
+    },
+    {
+      "text": "Qaysi shaklni stol ustida oson dumalatish mumkin?",
+      "options": [
+        "Shar ⚽",
+        "Kub 🧊",
+        "Kvadrat taxtacha",
+        "Kitob 📖"
+      ],
+      "correctIndex": 0,
+      "explanation": "Shar dumaloq bo‘lgani uchun har qanday tomonga oson dumalaydi."
+    },
+    {
+      "text": "G‘isht 🧱 qaysi shaklga misol bo‘ladi?",
+      "options": [
+        "Shar",
+        "To‘g‘ri to‘rtburchakli parallelepiped (quti shakli)",
+        "Konus",
+        "Doira"
+      ],
+      "correctIndex": 1,
+      "explanation": "G‘isht va kitoblar quti kabi to‘rtburchakli hajmli shaklga ega."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri yassi shakllar guruhiga kiradi?",
+      "options": [
+        "Shar, kub, silindr",
+        "Konus, piramida, kub",
+        "Koptok, muzqaymoq, quti",
+        "Doira, kvadrat, uchburchak"
+      ],
+      "correctIndex": 3,
+      "explanation": "Doira, kvadrat va uchburchak yassi geometrik shakllardir."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri hajmli jismlar guruhiga kiradi?",
+      "options": [
+        "Kvadrat, uchburchak, doira",
+        "Kub, shar, silindr",
+        "Nuqta, kesma, nur",
+        "Chiziq, burchak, qalam"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kub, shar va silindr fazoviy hajmli shakllardir."
+    },
+    {
+      "text": "Kvadrat bilan to‘g‘ri to‘rtburchakning o‘xshashligi nimada?",
+      "options": [
+        "Ikkalasi ham dumaloq",
+        "Burchaklari yo‘q",
+        "Ikkalasida ham 4 ta burchak va 4 ta tomon bor",
+        "Faqat 3 ta tomoni bor"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kvadrat ham, to‘rtburchak ham to‘rtta tomon va burchakka ega."
+    },
+    {
+      "text": "Yo‘l belgisidagi 'Xavfli burilish' belgisi ⚠️ qanday shaklda?",
+      "options": [
+        "Uchburchak",
+        "Doira",
+        "Kvadrat",
+        "Shar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ogohlantiruvchi yo‘l belgilari uchburchak shaklida bo‘ladi."
+    },
+    {
+      "text": "Tanga 🪙 yuzasi qanday shaklda?",
+      "options": [
+        "Doira",
+        "Kvadrat",
+        "Uchburchak",
+        "Kub"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tanganing ustki yuzasi doira shaklidadir."
+    },
+    {
+      "text": "Akmal 4 ta kubikdan minora qurdi. Kubiklar soni nechta?",
+      "options": [
+        "3 ta",
+        "5 ta",
+        "6 ta",
+        "4 ta"
+      ],
+      "correctIndex": 3,
+      "explanation": "Minorada 4 ta kubik ishlatilgan."
+    },
+    {
+      "text": "Quyosh nuri yerga tushganda yerdagi soya qanday shakl?",
+      "options": [
+        "Hajmli kub",
+        "Yassi soya",
+        "Shar",
+        "Silindr"
+      ],
+      "correctIndex": 1,
+      "explanation": "Soya yer yuzasida yassi holda ko‘rinadi."
+    },
+    {
+      "text": "Sardor qog‘ozdan kub yasadi. Kubning barcha tomonlari qanday shaklda?",
+      "options": [
+        "Doira shaklida",
+        "Uchburchak shaklida",
+        "Kvadrat shaklida",
+        "Oval shaklida"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kubning 6 ta tomoni bir xil kvadratlardan iborat."
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "bookNumber": 16,
+  "title": "3 soni va raqami",
+  "emoji": "3️⃣",
+  "shortDesc": "3 raqami, sanash, tarkibi (1 + 2), svetofor va qo‘shnilari.",
+  "intro": "3 soni — uchta narsani bildiradi, uning tarkibi 1 va 2 dir.",
+  "keyPoints": [
+    "Svetoforda 3 ta rangli chiroq bor: qizil, sariq, yashil.",
+    "Uchburchakning 3 ta tomoni va 3 ta burchagi bo‘ladi.",
+    "3 ning qo‘shnilari 2 va 4 sonlaridir."
+  ],
+  "miniExample": {
+    "emojis": "🔺 3️⃣",
+    "text": "Uchburchakda 3 ta tomon bor: 1 + 2 = 3!"
+  },
+  "xpReward": 80,
+  "coinReward": 10,
+  "estMinutes": 5,
+  "practice": [
+    {
+      "text": "Misolni hisoblang: 2 + 1 = ?",
+      "options": [
+        "3",
+        "2",
+        "4",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 ga 1 qo‘shilsa 3 bo‘ladi."
+    },
+    {
+      "text": "Svetoforda nechta chiroq bor?",
+      "options": [
+        "2 ta",
+        "3 ta 🚦",
+        "4 ta",
+        "1 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Svetoforda 3 ta rang bor."
+    },
+    {
+      "text": "3 sonining qo‘shnilari qaysilar?",
+      "options": [
+        "1 va 5",
+        "3 va 4",
+        "2 va 4",
+        "0 va 3"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 ning oldida 2, keyin 4 keladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Quyidagilardan qaysi biri 3 raqamini bildiradi?",
+      "options": [
+        "3",
+        "2",
+        "8",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "'3' — uch raqamidir."
+    },
+    {
+      "text": "Misolni hisoblang: 1 + 2 = ?",
+      "options": [
+        "2",
+        "4",
+        "3",
+        "5"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 + 2 = 3."
+    },
+    {
+      "text": "Misolni hisoblang: 3 − 1 = ?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "0"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 − 1 = 2."
+    },
+    {
+      "text": "Misolni hisoblang: 3 − 2 = ?",
+      "options": [
+        "2",
+        "0",
+        "4",
+        "1"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 − 2 = 1."
+    },
+    {
+      "text": "Misolni hisoblang: 3 − 3 = ?",
+      "options": [
+        "1",
+        "0",
+        "2",
+        "3"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 − 3 = 0."
+    },
+    {
+      "text": "Uchburchakning nechta uchi bor?",
+      "options": [
+        "3 ta uchi 🔺",
+        "2 ta",
+        "4 ta",
+        "0 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uchburchak 3 ta uch va burchakka ega."
+    },
+    {
+      "text": "3 sonining tarkibi qanday bo‘lishi mumkin?",
+      "options": [
+        "2 va 2",
+        "3 va 1",
+        "0 va 2",
+        "1 va 2 (yoki 2 va 1)"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 + 2 = 3."
+    },
+    {
+      "text": "3 sonining oldingi qo‘shnisi qaysi?",
+      "options": [
+        "1",
+        "4",
+        "2",
+        "0"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 dan oldin 2 turadi."
+    },
+    {
+      "text": "3 sonining keyingi qo‘shnisi qaysi?",
+      "options": [
+        "2",
+        "5",
+        "4",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 dan keyin 4 keladi."
+    },
+    {
+      "text": "Taqqoslang: 3 ... 2. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        "=",
+        "+",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 soni 2 dan katta (3 > 2)."
+    },
+    {
+      "text": "Taqqoslang: 3 ... 4. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "−"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 soni 4 dan kichik (3 < 4)."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 3 ga teng?",
+      "options": [
+        "5 − 1",
+        "4 − 1",
+        "3 + 1",
+        "2 + 2"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 − 1 = 3."
+    },
+    {
+      "text": "Ertaklarda odatda nechta aka-uka yoki uchta tilak bo‘ladi?",
+      "options": [
+        "2 ta",
+        "5 ta",
+        "10 ta",
+        "3 ta 🧞"
+      ],
+      "correctIndex": 3,
+      "explanation": "O‘zbek xalq ertaklarida ko‘pincha 3 aka-uka qahramon bo‘ladi."
+    },
+    {
+      "text": "Uch g‘ildirakli bolalar velosipedida nechta g‘ildirak bor?",
+      "options": [
+        "2 ta",
+        "3 ta g‘ildirak",
+        "4 ta",
+        "1 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Uch g‘ildirakli velosiped 3 ta g‘ildirakka ega."
+    },
+    {
+      "text": "Stolda 1 ta olma bor edi, onasi yana 2 ta qo‘ydi. Olmalar nechta bo‘ldi?",
+      "options": [
+        "2 ta",
+        "4 ta",
+        "3 ta olma",
+        "5 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 + 2 = 3 ta olma."
+    },
+    {
+      "text": "Guldonada 3 ta atirgul bor edi. 1 tasini xolaga berishdi. Nechta atirgul qoldi?",
+      "options": [
+        "2 ta atirgul",
+        "1 ta",
+        "3 ta",
+        "0 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 − 1 = 2 ta atirgul."
+    },
+    {
+      "text": "3 soni toq sonmi yoki juft son?",
+      "options": [
+        "Toq son",
+        "Juft son",
+        "Ikkalasi ham",
+        "Nol son"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 soni toq sondir."
+    },
+    {
+      "text": "1, 2, 3 sonlari ichida eng kattasi qaysi?",
+      "options": [
+        "1",
+        "2",
+        "0",
+        "3"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ushbu uchtalikda 3 eng kattadir."
+    },
+    {
+      "text": "To‘g‘ri tenglikni toping:",
+      "options": [
+        "2 + 1 = 4",
+        "2 + 1 = 3",
+        "3 − 1 = 1",
+        "3 + 1 = 3"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 + 1 = 3 to‘g‘ri tenglik."
+    },
+    {
+      "text": "Botir darsdan keyin 3 ta kitob o‘qidi. U nechta kitob o‘qigan?",
+      "options": [
+        "2 ta",
+        "4 ta",
+        "3 ta kitob",
+        "1 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Botir 3 ta kitob mutolaa qilgan."
+    }
+  ]
+}

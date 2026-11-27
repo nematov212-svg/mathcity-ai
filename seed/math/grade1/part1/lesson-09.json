@@ -1,0 +1,276 @@
+{
+  "bookNumber": 9,
+  "title": "1 dan 10 gacha bo‘lgan sonlar",
+  "emoji": "🔢",
+  "shortDesc": "1 dan 10 gacha sonlar ketma-ketligi, sanash va tushirib qoldirilgan son.",
+  "intro": "1 dan 10 gacha bo‘lgan sonlar birin-ketin o‘sib boradi: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10.",
+  "keyPoints": [
+    "Har bir keyingi son oldingisidan 1 taga katta bo‘ladi.",
+    "Sonlar qatorida tushib qolgan sonni qatorga qarab topamiz.",
+    "1 eng kichik bir xonali natural son, 10 esa birinchi ikki xonali son."
+  ],
+  "miniExample": {
+    "emojis": "1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣",
+    "text": "Tartib bilan sanaymiz: bir, ikki, uch, to‘rt, besh!"
+  },
+  "xpReward": 80,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Qatorda tushib qolgan sonni toping: 1, 2, 3, ?, 5",
+      "options": [
+        "4",
+        "6",
+        "7",
+        "2"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 dan keyin va 5 dan oldin 4 soni keladi."
+    },
+    {
+      "text": "1 dan 10 gacha sonlar ichida eng kattasi qaysi?",
+      "options": [
+        "9",
+        "10",
+        "8",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 dan 10 gacha bo‘lgan qatorda 10 eng katta sondir."
+    },
+    {
+      "text": "5 dan keyin qaysi son keladi?",
+      "options": [
+        "4",
+        "7",
+        "6",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 dan keyingi son 6 dir."
+    }
+  ],
+  "test": [
+    {
+      "text": "Quyidagi qatorda qaysi son tushib qolgan: 1, 2, ?, 4, 5?",
+      "options": [
+        "3",
+        "6",
+        "7",
+        "0"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 dan keyin 3 soni keladi."
+    },
+    {
+      "text": "6 dan keyingi son qaysi?",
+      "options": [
+        "5",
+        "8",
+        "7",
+        "9"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 ga 1 qo‘shilsa 7 bo‘ladi."
+    },
+    {
+      "text": "8 dan oldingi son qaysi?",
+      "options": [
+        "9",
+        "7",
+        "6",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 dan oldin 7 soni turadi."
+    },
+    {
+      "text": "Qatorda tushib qolgan sonni toping: 6, 7, 8, ?, 10",
+      "options": [
+        "5",
+        "11",
+        "7",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 va 10 orasida 9 soni joylashgan."
+    },
+    {
+      "text": "1 dan 10 gacha sonlar to‘g‘ri o‘sish tartibida yozilgan qatorni toping:",
+      "options": [
+        "1, 3, 2, 4, 5, 6, 7, 8, 9, 10",
+        "1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+        "10, 9, 8, 7, 6, 5, 4, 3, 2, 1",
+        "2, 4, 6, 8, 1, 3, 5, 7, 9, 10"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sonlar 1 dan 10 gacha birma-bir o‘sib boradi."
+    },
+    {
+      "text": "4 sonidan 1 taga katta bo‘lgan son qaysi?",
+      "options": [
+        "5",
+        "3",
+        "6",
+        "2"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 1 = 5."
+    },
+    {
+      "text": "7 sonidan 1 taga kichik bo‘lgan son qaysi?",
+      "options": [
+        "8",
+        "5",
+        "9",
+        "6"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 − 1 = 6."
+    },
+    {
+      "text": "1 dan 10 gacha sonlar ichida eng kichik natural son qaysi?",
+      "options": [
+        "0",
+        "2",
+        "1",
+        "3"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 — eng kichik natural son hisoblanadi."
+    },
+    {
+      "text": "Sanoq paytida 9 dan keyin qaysi son aytiladi?",
+      "options": [
+        "8",
+        "11",
+        "10",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 dan keyin 10 soni keladi."
+    },
+    {
+      "text": "Qatorda tushib qolgan sonni toping: 3, 4, ?, 6, 7",
+      "options": [
+        "2",
+        "8",
+        "9",
+        "5"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 va 6 orasidagi son 5 dir."
+    },
+    {
+      "text": "Qaysi son 2 dan katta, lekin 4 dan kichik?",
+      "options": [
+        "3",
+        "1",
+        "5",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 va 4 orasida faqat 3 soni bor."
+    },
+    {
+      "text": "Qaysi son 7 dan katta, lekin 9 dan kichik?",
+      "options": [
+        "6",
+        "8",
+        "10",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 va 9 orasida 8 soni joylashgan."
+    },
+    {
+      "text": "10 soni nechta raqam bilan yoziladi?",
+      "options": [
+        "1 ta raqam",
+        "3 ta raqam",
+        "Raqam bilan yozilmaydi",
+        "2 ta raqam (1 va 0)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 soni 1 va 0 raqamlaridan tuzilgan ikki xonali sondir."
+    },
+    {
+      "text": "9 soni bir xonali sonmi yoki ikki xonali?",
+      "options": [
+        "Ikki xonali son",
+        "Bir xonali son (bitta raqamdan iborat)",
+        "Uch xonali son",
+        "Nol xonali"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 soni faqat bitta raqam bilan yoziladi."
+    },
+    {
+      "text": "Teskari tartibda sanalganda: 5, 4, 3, ?, 1. Qaysi son tushib qolgan?",
+      "options": [
+        "6",
+        "0",
+        "2",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "Teskari sanoqda 3 dan keyin 2 keladi."
+    },
+    {
+      "text": "Daftarga 8 ta doiracha chizish kerak edi. Sobir 7 ta chizdi. Yana nechta chizishi kerak?",
+      "options": [
+        "1 ta doiracha",
+        "2 ta",
+        "3 ta",
+        "Yetarli"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 bo‘lishi uchun 7 ga yana 1 ta yetmaydi (8 − 7 = 1)."
+    },
+    {
+      "text": "Qatorni to‘ldiring: 2, 4, 6, 8, ?",
+      "options": [
+        "10",
+        "9",
+        "7",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sonlar ikkitalab o‘sib bormoqda: 8 + 2 = 10."
+    },
+    {
+      "text": "Gulshanning 10 ta qalami bor edi, 1 tasini singlisiga berdi. Unda nechta qalam qoldi?",
+      "options": [
+        "8 ta",
+        "10 ta",
+        "7 ta",
+        "9 ta qalam"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 − 1 = 9 ta qalam qoladi."
+    },
+    {
+      "text": "Sinfda 10 ta parta bor. O‘qituvchi 1-partadan 5-partagacha bo‘lgan partalarni sanadi. Yana nechta parta qoldi?",
+      "options": [
+        "4 ta",
+        "5 ta parta",
+        "6 ta",
+        "3 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 − 5 = 5 ta parta qoladi."
+    },
+    {
+      "text": "Navbatda 10 kishi turibdi. Javohir eng oldinda, demak u nechanchi?",
+      "options": [
+        "O‘ninchi (10-o‘rinda)",
+        "Beshinchi (5-o‘rinda)",
+        "Birinchi (1-o‘rinda)",
+        "Ikkinchi (2-o‘rinda)"
+      ],
+      "correctIndex": 2,
+      "explanation": "Eng oldingi odam 1-o‘rinda turadi."
+    }
+  ]
+}

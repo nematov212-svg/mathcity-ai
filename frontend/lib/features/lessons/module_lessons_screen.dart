@@ -83,54 +83,60 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
   }
 
   ModuleModel _createFallbackModule() {
-    final completedCount = _lessons.filterCompleted().length;
-    final total = _lessons.isEmpty ? 41 : _lessons.length;
+    final isP2 = widget.moduleId.contains('p2');
+    final completedCount = _lessons.where((l) => l.isCompleted).length;
+    final total = _lessons.isEmpty ? (isP2 ? 33 : 41) : _lessons.length;
     final pct = (completedCount / total * 100).round();
     final earnedXp = _lessons.fold(0, (acc, l) => acc + (l.isCompleted ? l.rewardXP : 0));
+    final defaultTotalXp = isP2 ? 3160 : 3440;
     final totalXp = _lessons.fold(0, (acc, l) => acc + l.rewardXP);
 
     return ModuleModel(
       id: widget.moduleId,
       grade: 1,
       subject: 'Matematika',
-      part: 1,
-      title: 'Matematika · 1-qism',
-      orderIndex: 1,
+      part: isP2 ? 2 : 1,
+      title: isP2 ? 'Matematika · 2-qism' : 'Matematika · 1-qism',
+      orderIndex: isP2 ? 2 : 1,
       comingSoon: false,
       lessonCount: total,
-      questionCount: total * 5,
-      totalMinutes: total * 7,
+      questionCount: isP2 ? 660 : 820,
+      totalMinutes: isP2 ? 217 : 244,
       percent: pct,
       earnedXp: earnedXp,
-      totalXp: totalXp > 0 ? totalXp : 4120,
+      totalXp: totalXp > 0 ? totalXp : defaultTotalXp,
     );
   }
 
   void _loadFallbackData() {
-    // 41 fallback lessons for offline or tests
-    final list = List.generate(41, (index) {
+    final isP2 = widget.moduleId.contains('p2');
+    final count = isP2 ? 33 : 41;
+    final startBookNum = isP2 ? 42 : 1;
+
+    final list = List.generate(count, (index) {
       final order = index + 1;
+      final bookNum = startBookNum + index;
       return LessonModel(
-        id: 'lesson-g1-${order.toString().padLeft(2, '0')}',
-        courseId: 'course-g1',
+        id: 'lesson-g1-${bookNum.toString().padLeft(2, '0')}',
+        courseId: isP2 ? 'course-g1-p2' : 'course-g1-p1',
         moduleId: widget.moduleId,
         grade: 1,
         mode: 'KIDS',
-        title: _getFallbackTitle(order),
-        chapterTitle: order <= 8
-            ? 'Narsalar va ularning xossalari'
-            : (order <= 29 ? '1 dan 10 gacha sonlar' : 'Chiziqlar va amallar'),
-        topicKey: 'topic-g1-$order',
-        description: '1-sinf matematika fani bo‘yicha $order-mavzu.',
-        emoji: _getFallbackEmoji(order),
-        rewardXP: 100,
-        rewardCoins: 12,
+        title: _getFallbackTitle(bookNum),
+        chapterTitle: _getFallbackChapter(bookNum),
+        topicKey: 'topic-g1-$bookNum',
+        description: '1-sinf matematika fani bo‘yicha $bookNum-mavzu.',
+        emoji: _getFallbackEmoji(bookNum),
+        rewardXP: (bookNum == 50 || bookNum == 51 || bookNum >= 70) ? 100 : 90,
+        rewardCoins: (bookNum >= 70) ? 12 : 10,
         orderIndex: order,
-        sectionCount: 5,
-        isCompleted: order == 1,
-        isLocked: order > 2,
-        completedSteps: order == 1 ? 5 : 0,
-        percent: order == 1 ? 100 : 0,
+        bookNumber: bookNum,
+        sectionCount: 20,
+        isCompleted: !isP2 && order == 1,
+        isLocked: isP2 ? true : (order > 2),
+        completedSteps: (!isP2 && order == 1) ? 5 : 0,
+        percent: (!isP2 && order == 1) ? 100 : 0,
+        bestPercent: (!isP2 && order == 1) ? 100 : 0,
         estMinutes: 7,
       );
     });
@@ -140,6 +146,15 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
       _module = _createFallbackModule();
       _isLoading = false;
     });
+  }
+
+  String _getFallbackChapter(int bookNum) {
+    if (bookNum <= 8) return 'I bob. Narsalar va ularning xossalari';
+    if (bookNum <= 29) return 'II bob. 1 dan 10 gacha bo‘lgan sonlar';
+    if (bookNum <= 41) return 'III bob. Ifodalar, tengliklar va xossalar';
+    if (bookNum <= 57) return 'IV bob. 11 dan 20 gacha bo‘lgan sonlar va amallar';
+    if (bookNum <= 62) return 'V bob. 21 dan 100 gacha bo‘lgan sonlar';
+    return 'VI bob. Ikki xonali sonlar ustida amallar va ifodalar';
   }
 
   String _getFallbackEmoji(int order) {
@@ -157,6 +172,7 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
 
   String _getFallbackTitle(int order) {
     const titles = [
+      // 1-qism (1–41)
       'Narsalarning xossalari', 'Narsalarning o‘lchamlari', 'Fazoviy tasavvurlar',
       'Taqqoslash va tenglashtirish', 'Geometrik shakllar', 'Vaqt tushunchasi',
       'Narsalarni sanash', 'Narsalarni guruhlash',
@@ -170,7 +186,19 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
       'To‘g‘ri chiziq, nur, kesma', 'Kesma uzunligini o‘lchash', 'Siniq chiziq va ko‘pburchak',
       'Qo‘shishning hadlari va yig‘indi', 'Noma’lum qo‘shiluvchini topish', 'Ayirishning hadlari',
       'Noma’lum kamayuvchini topish', 'Noma’lum ayriluvchini topish', 'Qo‘shishning o‘rin almashtirish qonuni',
-      'Qavsli ifodalar', 'Jadval asosida hisoblash', 'Ifodalar'
+      'Qavsli ifodalar', 'Jadval asosida hisoblash', 'Ifodalar',
+      // 2-qism (42–74)
+      '11 dan 20 gacha bo‘lgan sonlar', '11 dan 20 gacha sonlarning o‘nlik tarkibi', '11 dan 20 gacha sonlarning tarkibi (2)',
+      'Sonlar qatori (1–20)', '11 dan 20 gacha sonlarni taqqoslash', 'O‘nlikdan o‘tmasdan qo‘shish',
+      'O‘nlikdan o‘tmasdan ayirish', 'Qo‘shish va ayirish amallari', 'Qavslar',
+      'Qavslar (amallar tartibi)', 'Bir xonali sonlarni o‘nlikdan o‘tib qo‘shish', 'Bir xonali sonlarni o‘nlikdan o‘tib qo‘shish (2)',
+      'Bir xonali sonlarni o‘nlikdan o‘tib qo‘shish (3)', 'Sonlarni ayirish', 'Sonlarni bo‘laklab ayirish',
+      'O‘nlikdan ayirish usuli', 'Yaxlit sonlar (10–100)', '21 dan 100 gacha bo‘lgan sonlar',
+      '21 dan 100 gacha sonlarning o‘qilishi va yozilishi', 'Cho‘t va o‘ylangan son', 'Ikki xonali sonlarni taqqoslash',
+      'Ikki xonali sonlarni qo‘shish (1)', 'Ikki xonali sonlarni qo‘shish (2)', 'Ikki xonali sonlarni qo‘shish (3)',
+      'Ikki xonali sonlarni ayirish (1)', 'Ikki xonali sonlarni ayirish (2)', 'Ikki xonali sonlarni ayirish (3)',
+      'Qo‘shish va ayirishning o‘zaro bog‘lanishi', 'Ko‘p komponentli qo‘shish', 'Guruhlash xossasi',
+      'Tarkibli ifodalar', 'Qavsli tarkibli ifodalar', 'Misol va masalalar yechish'
     ];
     if (order >= 1 && order <= titles.length) {
       return titles[order - 1];
@@ -511,11 +539,11 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
               ),
               _buildMiniChip(
                 icon: Icons.help_outline_rounded,
-                text: '${totalCount * 5} ta savol',
+                text: '${_module?.questionCount ?? (totalCount == 33 ? 660 : 820)} ta savol',
               ),
               _buildMiniChip(
                 icon: Icons.timer_outlined,
-                text: '~${totalCount * 7} daqiqa',
+                text: '~${_module?.totalMinutes ?? (totalCount == 33 ? 217 : 244)} daqiqa',
               ),
             ],
           ),
@@ -559,22 +587,41 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
     // Determine lock state: if isPro, never locked.
     final effectiveLocked = isPro ? false : lesson.isLocked;
 
-    // Status action details
+    // Status action details & ring colors
     String actionText = '▶ Boshlash';
     Color actionBg = const Color(0xFF6C3CE0);
     Color actionTextColor = Colors.white;
     IconData actionIcon = Icons.play_arrow_rounded;
 
-    if (lesson.isCompleted) {
-      actionText = '✓ Qayta ko‘rish';
-      actionBg = const Color(0xFFE8F8F0);
-      actionTextColor = const Color(0xFF2EB67D);
-      actionIcon = Icons.check_circle_rounded;
-    } else if (effectiveLocked) {
+    Color ringColor = colors.border;
+    if (lesson.percent >= 90) {
+      ringColor = const Color(0xFF2EB67D);
+    } else if (lesson.percent >= 60) {
+      ringColor = const Color(0xFF6C3CE0);
+    } else if (lesson.percent > 0) {
+      ringColor = const Color(0xFFFFC83D);
+    }
+
+    if (effectiveLocked) {
       actionText = '🔒 Qulflangan';
       actionBg = isDark ? const Color(0xFF221A3B) : const Color(0xFFF1F2F6);
       actionTextColor = const Color(0xFF9CA3AF);
       actionIcon = Icons.lock_rounded;
+    } else if (lesson.percent >= 90) {
+      actionText = '✓ Qayta ko‘rish';
+      actionBg = const Color(0xFFE8F8F0);
+      actionTextColor = const Color(0xFF2EB67D);
+      actionIcon = Icons.check_circle_rounded;
+    } else if (lesson.percent >= 60) {
+      actionText = '✓ Qayta ko‘rish';
+      actionBg = const Color(0xFF6C3CE0).withOpacity(0.12);
+      actionTextColor = const Color(0xFF6C3CE0);
+      actionIcon = Icons.check_circle_outline_rounded;
+    } else if (lesson.attempts > 0 || (lesson.percent > 0 && lesson.percent < 60)) {
+      actionText = '🔄 Qayta urinish';
+      actionBg = const Color(0xFFFFFBEB);
+      actionTextColor = const Color(0xFFD97706);
+      actionIcon = Icons.refresh_rounded;
     } else if (lesson.completedSteps > 0) {
       actionText = 'Davom etish (${lesson.completedSteps}/5)';
       actionBg = const Color(0xFF7C4DFF);
@@ -649,7 +696,7 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${lesson.orderIndex}. ${lesson.title}',
+                        '${lesson.bookNumber > 0 ? lesson.bookNumber : lesson.orderIndex}. ${lesson.title}',
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w800,
@@ -687,11 +734,7 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
                         CircularProgressIndicator(
                           value: (lesson.percent / 100).clamp(0.0, 1.0),
                           backgroundColor: colors.border,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            lesson.isCompleted
-                                ? const Color(0xFF2EB67D)
-                                : const Color(0xFF6C3CE0),
-                          ),
+                          valueColor: AlwaysStoppedAnimation<Color>(ringColor),
                           strokeWidth: 3.5,
                         ),
                         Text(
@@ -699,9 +742,7 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
-                            color: lesson.isCompleted
-                                ? const Color(0xFF2EB67D)
-                                : colors.ink,
+                            color: ringColor == colors.border ? colors.ink : ringColor,
                           ),
                         ),
                       ],
@@ -798,6 +839,3 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
   }
 }
 
-extension on List<LessonModel> {
-  Iterable<LessonModel> filterCompleted() => where((l) => l.isCompleted);
-}

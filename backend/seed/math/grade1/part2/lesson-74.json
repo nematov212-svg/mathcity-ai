@@ -1,0 +1,276 @@
+{
+  "bookNumber": 74,
+  "title": "Misol va masalalar yechish",
+  "emoji": "🎓",
+  "shortDesc": "1-sinf matematika kursining yakuniy takrorlash va mustahkamlash darsi.",
+  "intro": "Tabriklaymiz! Siz 1-sinf matematikasining barcha mavzularini muvaffaqiyatli o‘rganib chiqdingiz. Bu darsda olgan barcha bilimlaringizni sinab ko‘rasiz.",
+  "keyPoints": [
+    "1 dan 100 gacha sonlar, ularning o‘nlik va birliklar tarkibi.",
+    "Ikki xonali sonlarni qo‘shish, ayirish, taqqoslash va qavsli ifodalar.",
+    "Matnli masalalarni tahlil qilish, reja tuzish va to‘g‘ri yechish."
+  ],
+  "miniExample": {
+    "emojis": "🏆 1️⃣0️⃣0️⃣ 🎓 🌟 🥇",
+    "text": "1-sinf matematika fani yakuniy sinoviga xush kelibsiz!"
+  },
+  "xpReward": 120,
+  "coinReward": 12,
+  "estMinutes": 10,
+  "practice": [
+    {
+      "text": "Hisoblang: 34 + 25 = ?",
+      "options": [
+        "59",
+        "58",
+        "60",
+        "49"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 + 20 = 50, 4 + 5 = 9, 50 + 9 = 59."
+    },
+    {
+      "text": "Hisoblang: 78 - 34 = ?",
+      "options": [
+        "43",
+        "44",
+        "45",
+        "34"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 30 = 40, 8 - 4 = 4, 40 + 4 = 44."
+    },
+    {
+      "text": "Hisoblang: 80 - (25 + 15) = ?",
+      "options": [
+        "50",
+        "30",
+        "40",
+        "45"
+      ],
+      "correctIndex": 2,
+      "explanation": "25 + 15 = 40, 80 - 40 = 40."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 40 + 30 = ?",
+      "options": [
+        "70",
+        "60",
+        "80",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 + 30 = 70."
+    },
+    {
+      "text": "Hisoblang: 65 - 5 = ?",
+      "options": [
+        "55",
+        "65",
+        "60",
+        "50"
+      ],
+      "correctIndex": 2,
+      "explanation": "65 - 5 = 60."
+    },
+    {
+      "text": "3 ta o‘nlik va 5 ta birlik qaysi sonni tashkil qiladi?",
+      "options": [
+        "53",
+        "35",
+        "30",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 o‘nlik va 5 birlik 35 sonidir."
+    },
+    {
+      "text": "Taqqoslang: 48 va 52",
+      "options": [
+        "48 > 52",
+        "48 = 52",
+        "52 < 48",
+        "48 < 52"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 ta o‘nlik 5 ta o‘nlikdan kam, shuning uchun 48 < 52."
+    },
+    {
+      "text": "Hisoblang: 23 + 4 = ?",
+      "options": [
+        "26",
+        "27",
+        "28",
+        "37"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 + 4 = 7, 20 + 7 = 27."
+    },
+    {
+      "text": "Hisoblang: 59 - 7 = ?",
+      "options": [
+        "52",
+        "51",
+        "53",
+        "42"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 - 7 = 2, 50 + 2 = 52."
+    },
+    {
+      "text": "Hisoblang: 42 + 36 = ?",
+      "options": [
+        "77",
+        "79",
+        "88",
+        "78"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 + 30 = 70, 2 + 6 = 8, 70 + 8 = 78."
+    },
+    {
+      "text": "Hisoblang: 87 - 45 = ?",
+      "options": [
+        "41",
+        "43",
+        "42",
+        "32"
+      ],
+      "correctIndex": 2,
+      "explanation": "80 - 40 = 40, 7 - 5 = 2, 40 + 2 = 42."
+    },
+    {
+      "text": "Hisoblang: 30 + 45 - 20 = ?",
+      "options": [
+        "54",
+        "56",
+        "55",
+        "65"
+      ],
+      "correctIndex": 2,
+      "explanation": "30 + 45 = 75, 75 - 20 = 55."
+    },
+    {
+      "text": "Hisoblang: 70 - (18 + 12) = ?",
+      "options": [
+        "50",
+        "30",
+        "45",
+        "40"
+      ],
+      "correctIndex": 3,
+      "explanation": "18 + 12 = 30, 70 - 30 = 40."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 26 + 35 + 4 = ?",
+      "options": [
+        "65",
+        "64",
+        "66",
+        "55"
+      ],
+      "correctIndex": 0,
+      "explanation": "(26 + 4) + 35 = 30 + 35 = 65."
+    },
+    {
+      "text": "Noma’lum sonni toping: ? + 24 = 68",
+      "options": [
+        "43",
+        "44",
+        "45",
+        "34"
+      ],
+      "correctIndex": 1,
+      "explanation": "68 - 24 = 44."
+    },
+    {
+      "text": "Noma’lum sonni toping: 95 - ? = 42",
+      "options": [
+        "52",
+        "54",
+        "43",
+        "53"
+      ],
+      "correctIndex": 3,
+      "explanation": "95 - 42 = 53."
+    },
+    {
+      "text": "Taqqoslang: 35 + 24 va 70 - 11",
+      "options": [
+        "35 + 24 > 70 - 11",
+        "35 + 24 = 70 - 11",
+        "35 + 24 < 70 - 11",
+        "59 > 59"
+      ],
+      "correctIndex": 1,
+      "explanation": "35 + 24 = 59 va 70 - 11 = 59, ular teng (=)."
+    },
+    {
+      "text": "Hisoblang: 100 - (34 + 26) = ?",
+      "options": [
+        "50",
+        "30",
+        "40",
+        "45"
+      ],
+      "correctIndex": 2,
+      "explanation": "34 + 26 = 60, 100 - 60 = 40."
+    },
+    {
+      "text": "Hisoblang: (47 - 15) + (38 - 18) = ?",
+      "options": [
+        "52",
+        "51",
+        "53",
+        "42"
+      ],
+      "correctIndex": 0,
+      "explanation": "47 - 15 = 32, 38 - 18 = 20, 32 + 20 = 52."
+    },
+    {
+      "text": "Yulduzcha o‘rniga to‘g‘ri belgini qo‘ying: 85 - (20 + 15) * 42 + 8",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "85 - 35 = 50 va 42 + 8 = 50, demak teng (=)."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 67 ga teng?",
+      "options": [
+        "33 + 24",
+        "53 + 24",
+        "43 + 14",
+        "43 + 24"
+      ],
+      "correctIndex": 3,
+      "explanation": "43 + 24 = 67."
+    },
+    {
+      "text": "Kutubxonada 45 ta o‘zbek va 32 ta ingliz tilidagi ertak kitob bor edi. O‘quvchilar 24 ta kitobni o‘qishga olishdi. Kutubxonada nechta ertak kitob qoldi?",
+      "options": [
+        "52 ta",
+        "53 ta",
+        "54 ta",
+        "43 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "45 + 32 = 77, 77 - 24 = 53 ta kitob qoldi."
+    },
+    {
+      "text": "Maktab hovlisiga 26 tup terak, 34 tup archa va 15 tup chinor ekildi. Maktab hovlisiga jami nechta daraxt ekildi?",
+      "options": [
+        "74 tup",
+        "76 tup",
+        "75 tup",
+        "65 tup"
+      ],
+      "correctIndex": 2,
+      "explanation": "26 + 34 = 60, 60 + 15 = 75 tup daraxt ekildi."
+    }
+  ]
+}

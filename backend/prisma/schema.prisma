@@ -71,6 +71,7 @@ model User {
   exerciseAttempts   ExerciseAttempt[]
   rewardedQuestions  RewardedQuestion[]
   lessonProgress     LessonProgress[]
+  testAttempts       TestAttempt[]
   gameSessions       GameSession[]
   ownedBuildings     OwnedBuilding[]
   dailyTasks         StudentDailyTask[]
@@ -241,6 +242,7 @@ model Lesson {
   estMinutes    Int?     @default(7)
   questionCount Int?     @default(5)
   grade         Int      @default(1)
+  bookNumber    Int?
   chapterTitle  String?
   orderIndex    Int      @default(0)
   createdAt     DateTime @default(now())
@@ -249,6 +251,7 @@ model Lesson {
   sections     Section[]
   questions    Question[]
   progress     LessonProgress[]
+  testAttempts TestAttempt[]
 
   @@map("lessons")
 }
@@ -272,6 +275,8 @@ model Question {
   lesson        Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   sectionId     String?
   section       Section?     @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  kind          String       @default("test") // "practice" | "test"
+  order         Int          @default(1)
   step          Int          @default(5)
   text          String?
   prompt        String
@@ -290,6 +295,23 @@ model Question {
   rewardedQuestions RewardedQuestion[]
 
   @@map("questions")
+}
+
+model TestAttempt {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId      String
+  lesson        Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  questionOrder String    // JSON array of question IDs
+  optionOrder   String    // JSON map of questionId -> permutation array
+  correct       Int       @default(0)
+  total         Int       @default(20)
+  percent       Int       @default(0)
+  createdAt     DateTime  @default(now())
+  submittedAt   DateTime?
+
+  @@map("test_attempts")
 }
 
 model RewardedQuestion {
@@ -326,8 +348,12 @@ model LessonProgress {
   lessonId       String
   lesson         Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   completedSteps Int       @default(0)
+  bestPercent    Int       @default(0)
+  lastPercent    Int       @default(0)
   percent        Int       @default(0)
+  attempts       Int       @default(0)
   xpGiven        Int       @default(0)
+  coinGiven      Int       @default(0)
   isCompleted    Boolean   @default(false)
   score          Int       @default(0)
   completedAt    DateTime?

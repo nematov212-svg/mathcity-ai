@@ -1,0 +1,276 @@
+{
+  "bookNumber": 38,
+  "title": "Qo‘shishning o‘rin almashtirish xossasi",
+  "emoji": "🔁",
+  "shortDesc": "a + b = b + a qoidasi, yig‘indining o‘zgarmasligi va qulay hisoblash.",
+  "intro": "Qo‘shiluvchilarning o‘rni almashgani bilan yig‘indi o‘zgarmaydi: a + b = b + a.",
+  "keyPoints": [
+    "Qoida: Qo‘shiluvchilar o‘rni almashsa ham natija bir xil bo‘ladi.",
+    "Masalan: 4 + 2 = 6 va 2 + 4 = 6.",
+    "Katta songa kichik sonni qo‘shish osonroq va qulayroq."
+  ],
+  "miniExample": {
+    "emojis": "4️⃣ + 2️⃣ = 2️⃣ + 4️⃣ = 6️⃣",
+    "text": "4 + 2 bo‘ladimi yoki 2 + 4 bo‘ladimi — yig‘indi baribir 6!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Qo‘shiluvchilarning o‘rni almashsa yig‘indi qanday o‘zgaradi?",
+      "options": [
+        "Yig‘indi o‘zgarmaydi",
+        "Kattalashadi",
+        "Kamayadi",
+        "Nol bo‘ladi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shishning o‘rin almashtirish qonuniga ko‘ra yig‘indi o‘zgarmaydi."
+    },
+    {
+      "text": "3 + 5 = 8 bo‘lsa, 5 + 3 necha bo‘ladi?",
+      "options": [
+        "7",
+        "8",
+        "9",
+        "2"
+      ],
+      "correctIndex": 1,
+      "explanation": "O‘rni almashgani bilan yig‘indi 8 bo‘lib qoladi."
+    },
+    {
+      "text": "1 + 7 ni hisoblash uchun qaysi usul qulayroq?",
+      "options": [
+        "1 ga 7 marta 1 qo‘shish",
+        "8 dan 1 ayirish",
+        "7 ga 1 ni qo‘shish (7 + 1 = 8)",
+        "Faqat barmoqda sanash"
+      ],
+      "correctIndex": 2,
+      "explanation": "Katta songa kichik sonni qo‘shish tez va qulaydir."
+    }
+  ],
+  "test": [
+    {
+      "text": "Qo‘shishning o‘rin almashtirish qoidasi qaysi javobda to‘g‘ri ifodalangan?",
+      "options": [
+        "a + b = b + a",
+        "a − b = b − a",
+        "a + b = a − b",
+        "a + 0 = 0"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shiluvchilar o‘rni almashsa ham yig‘indi teng: a + b = b + a."
+    },
+    {
+      "text": "Agar 2 + 6 = 8 bo‘lsa, 6 + 2 nechaga teng?",
+      "options": [
+        "7",
+        "9",
+        "8",
+        "4"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 2 = 8."
+    },
+    {
+      "text": "Agar 3 + 7 = 10 bo‘lsa, 7 + 3 nechaga teng?",
+      "options": [
+        "9",
+        "10",
+        "11",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 3 = 10."
+    },
+    {
+      "text": "Agar 1 + 9 = 10 bo‘lsa, 9 + 1 nechaga teng?",
+      "options": [
+        "9",
+        "8",
+        "11",
+        "10"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 + 1 = 10."
+    },
+    {
+      "text": "Agar 4 + 5 = 9 bo‘lsa, 5 + 4 nechaga teng?",
+      "options": [
+        "8",
+        "9",
+        "10",
+        "1"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 4 = 9."
+    },
+    {
+      "text": "Qaysi tenglik qo‘shishning o‘rin almashtirish xossasini ko‘rsatadi?",
+      "options": [
+        "3 + 4 = 4 + 3",
+        "3 + 4 = 7",
+        "7 − 3 = 4",
+        "4 + 3 = 7"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 + 4 = 4 + 3 o‘rin almashtirishni bevosita ifodalaydi."
+    },
+    {
+      "text": "Qaysi tenglik to‘g‘ri?",
+      "options": [
+        "6 − 1 = 1 − 6",
+        "6 + 1 = 6 − 1",
+        "6 + 0 = 0 + 0",
+        "6 + 1 = 1 + 6"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 1 = 1 + 6 to‘g‘ri tenglikdir."
+    },
+    {
+      "text": "Ayirish amalida o‘rin almashtirish xossasi o‘rinlimi (masalan, 5 − 2 va 2 − 5 bir xilmi)?",
+      "options": [
+        "Ha, albatta bir xil",
+        "Faqat qishda bir xil",
+        "Yo‘q, ayirishda o‘rin almashtirib bo‘lmaydi!",
+        "Har doim bir xil"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ayirishda sonlar o‘rnini almashtirib bo‘lmaydi: 5 − 2 = 3, lekin 2 dan 5 ni ayirib bo‘lmaydi."
+    },
+    {
+      "text": "2 + 8 ni qulay hisoblash uchun qanday yozish yaxshi?",
+      "options": [
+        "8 − 2",
+        "2 + 2 + 2 + 2",
+        "8 + 2 (katta songa kichik son qo‘shiladi)",
+        "10 − 2"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 ga 2 ni qo‘shish hisoblashni osonlashtiradi."
+    },
+    {
+      "text": "1 + 6 ni qulay hisoblash uchun qanday yozamiz?",
+      "options": [
+        "6 − 1",
+        "1 + 1 + 6",
+        "7 − 1",
+        "6 + 1"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 1 = 7."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 5 + 3 = 3 + □. Katakdagi son nima?",
+      "options": [
+        "5",
+        "3",
+        "8",
+        "2"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 + 3 = 3 + 5."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 7 + 2 = □ + 7. Katakdagi son nima?",
+      "options": [
+        "7",
+        "2",
+        "9",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 2 = 2 + 7."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 4 + 6 = 6 + □. Katakdagi son nima?",
+      "options": [
+        "6",
+        "10",
+        "2",
+        "4"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 + 6 = 6 + 4."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: □ + 8 = 8 + 1. Katakdagi son nima?",
+      "options": [
+        "8",
+        "1",
+        "9",
+        "0"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 + 8 = 8 + 1."
+    },
+    {
+      "text": "Quyidagi ifodalardan qaysi biri 2 + 7 ifodasiga teng?",
+      "options": [
+        "7 − 2",
+        "2 + 8",
+        "7 + 2",
+        "9 − 2"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 + 7 = 7 + 2."
+    },
+    {
+      "text": "Akmal 2 ta olma, so‘ng 4 ta nok yedi. Singlisi esa avval 4 ta nok, so‘ng 2 ta olma yedi. Ular yegan mevalar soni tengmi?",
+      "options": [
+        "Teng (2 + 4 = 4 + 2 = 6)",
+        "Akmal ko‘p yedi",
+        "Singlisi ko‘p yedi",
+        "Taqqoslab bo‘lmaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shiluvchilar o‘rni almashgani bilan yig‘indi 6 bo‘lib qoladi."
+    },
+    {
+      "text": "1-savatchada 3 ta, 2-savatchada 5 ta gul bor. Savatlarning o‘rnini almashtirsak, jami gullar soni o‘zgaradimi?",
+      "options": [
+        "O‘zgarmaydi, jami 8 ta gul bo‘ladi",
+        "Ko‘payadi",
+        "Kamayadi",
+        "Nol bo‘ladi"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 + 5 = 5 + 3 = 8."
+    },
+    {
+      "text": "Sobir 8 ga 1 ni qo‘shdi, Karim esa 1 ga 8 ni qo‘shdi. Ularning natijalari qanday?",
+      "options": [
+        "Sobirda ko‘p",
+        "Karimda ko‘p",
+        "Ikkalasida xato",
+        "Ikkalasida ham bir xil (9)"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 + 1 = 9 va 1 + 8 = 9."
+    },
+    {
+      "text": "To‘g‘ri tenglikni toping:",
+      "options": [
+        "5 + 4 = 5 − 4",
+        "5 + 4 = 4 + 5",
+        "5 + 4 = 9 + 1",
+        "5 − 4 = 4 − 5"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 4 = 4 + 5 to‘g‘ri."
+    },
+    {
+      "text": "Qo‘shishning o‘rin almashtirish xossasidan foydalanib 3 + 6 ifodasini o‘zgartiring:",
+      "options": [
+        "6 − 3",
+        "3 − 6",
+        "6 + 3",
+        "9 + 3"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 + 6 ning o‘rni almashsa 6 + 3 bo‘ladi."
+    }
+  ]
+}

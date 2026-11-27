@@ -1,0 +1,276 @@
+{
+  "bookNumber": 23,
+  "title": "8 soni va raqami",
+  "emoji": "8️⃣",
+  "shortDesc": "8 raqami, sanash, tarkibi (1+7, 2+6, 3+5, 4+4), o‘rgimchak va qo‘shnilari.",
+  "intro": "8 soni — sakkizta narsani bildiradi, o‘rgimchakning 8 ta oyog‘i bor.",
+  "keyPoints": [
+    "O‘rgimchak va sakkizoyoqning (osminog) 8 ta oyog‘i bo‘ladi.",
+    "8 sonining tarkibi: 1+7, 2+6, 3+5, 4+4.",
+    "8 ning qo‘shnilari 7 va 9 sonlaridir."
+  ],
+  "miniExample": {
+    "emojis": "🕷️ 8️⃣",
+    "text": "O‘rgimchakning 8 ta oyog‘i bor: 4 + 4 = 8!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Hisoblang: 4 + 4 = ?",
+      "options": [
+        "8",
+        "7",
+        "9",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 4 = 8."
+    },
+    {
+      "text": "O‘rgimchakning nechta oyog‘i bo‘ladi?",
+      "options": [
+        "6 ta",
+        "8 ta oyoq 🕷️",
+        "4 ta",
+        "10 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "O‘rgimchaklar 8 ta oyoqqa ega."
+    },
+    {
+      "text": "8 sonining qo‘shnilarini toping:",
+      "options": [
+        "6 va 8",
+        "8 va 9",
+        "7 va 9",
+        "5 va 10"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 ning oldida 7, keyin 9 turadi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 7 + 1 = ?",
+      "options": [
+        "8",
+        "7",
+        "9",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 + 1 = 8."
+    },
+    {
+      "text": "Misolni hisoblang: 6 + 2 = ?",
+      "options": [
+        "7",
+        "9",
+        "8",
+        "10"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 2 = 8."
+    },
+    {
+      "text": "Misolni hisoblang: 5 + 3 = ?",
+      "options": [
+        "7",
+        "8",
+        "9",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 3 = 8."
+    },
+    {
+      "text": "Misolni hisoblang: 4 + 4 = ?",
+      "options": [
+        "6",
+        "7",
+        "9",
+        "8"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 + 4 = 8."
+    },
+    {
+      "text": "Misolni hisoblang: 8 − 1 = ?",
+      "options": [
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 − 1 = 7."
+    },
+    {
+      "text": "Misolni hisoblang: 8 − 2 = ?",
+      "options": [
+        "6",
+        "5",
+        "7",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 − 2 = 6."
+    },
+    {
+      "text": "Misolni hisoblang: 8 − 3 = ?",
+      "options": [
+        "4",
+        "6",
+        "7",
+        "5"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 − 3 = 5."
+    },
+    {
+      "text": "Misolni hisoblang: 8 − 4 = ?",
+      "options": [
+        "3",
+        "5",
+        "4",
+        "2"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 − 4 = 4."
+    },
+    {
+      "text": "Misolni hisoblang: 8 − 5 = ?",
+      "options": [
+        "2",
+        "4",
+        "3",
+        "1"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 − 5 = 3."
+    },
+    {
+      "text": "Misolni hisoblang: 8 − 6 = ?",
+      "options": [
+        "1",
+        "3",
+        "0",
+        "2"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 − 6 = 2."
+    },
+    {
+      "text": "Misolni hisoblang: 8 − 7 = ?",
+      "options": [
+        "1",
+        "2",
+        "0",
+        "3"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 − 7 = 1."
+    },
+    {
+      "text": "Misolni hisoblang: 8 − 8 = ?",
+      "options": [
+        "1",
+        "0",
+        "8",
+        "16"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 − 8 = 0."
+    },
+    {
+      "text": "Dengizdagi sakkizoyoqning (osminog) nechta paypasi bor?",
+      "options": [
+        "6 ta",
+        "10 ta",
+        "4 ta",
+        "8 ta 🐙"
+      ],
+      "correctIndex": 3,
+      "explanation": "Sakkizoyoq nomi bilan 8 ta paypasga ega."
+    },
+    {
+      "text": "8 soni juft sonmi yoki toq son?",
+      "options": [
+        "Toq son",
+        "Juft son",
+        "Nol son",
+        "Tub son"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 soni 2 ga bo‘linadigan juft sondir."
+    },
+    {
+      "text": "8 sonining tarkibi qaysi juftlikdan iborat?",
+      "options": [
+        "3 va 4",
+        "5 va 4",
+        "4 va 4 (yoki 3 va 5, 2 va 6)",
+        "2 va 5"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 4 = 8."
+    },
+    {
+      "text": "8 sonining oldingi qo‘shnisi kim?",
+      "options": [
+        "7",
+        "6",
+        "9",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 dan oldin 7 turadi."
+    },
+    {
+      "text": "8 sonining keyingi qo‘shnisi kim?",
+      "options": [
+        "9",
+        "7",
+        "10",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 dan keyin 9 keladi."
+    },
+    {
+      "text": "Taqqoslang: 8 ... 7. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        "=",
+        "+",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 soni 7 dan katta (8 > 7)."
+    },
+    {
+      "text": "Taqqoslang: 8 ... 9. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "−"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 soni 9 dan kichik (8 < 9)."
+    },
+    {
+      "text": "Sardor 5 ta oq va 3 ta qora shaxmat donasini terdi. Donalar jami nechta bo‘ldi?",
+      "options": [
+        "7 ta",
+        "9 ta",
+        "8 ta dona",
+        "6 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 3 = 8 ta dona."
+    }
+  ]
+}

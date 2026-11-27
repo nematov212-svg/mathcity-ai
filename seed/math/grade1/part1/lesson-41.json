@@ -1,0 +1,276 @@
+{
+  "bookNumber": 41,
+  "title": "Ifodalar",
+  "emoji": "🧠",
+  "shortDesc": "Sonli ifoda va uning qiymati, ifoda tuzish, o‘qish va qiymatini taqqoslash.",
+  "intro": "Sonlar va amallar belgilaridan tuzilgan yozuv sonli ifoda deyiladi.",
+  "keyPoints": [
+    "Masalan, '4 + 3' — bu sonli ifoda, '7' esa uning qiymatidir.",
+    "Ifodani 'to‘rt va uchning yig‘indisi' deb o‘qiymiz.",
+    "Ifodalarning qiymatlarini hisoblab, o‘zaro taqqoslash mumkin."
+  ],
+  "miniExample": {
+    "emojis": "4️⃣ + 3️⃣ = 7️⃣",
+    "text": "4 + 3 — bu ifoda, 7 — ifodaning qiymati!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "'5 + 2' ifodasining qiymati nechaga teng?",
+      "options": [
+        "7",
+        "6",
+        "8",
+        "3"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 + 2 = 7."
+    },
+    {
+      "text": "'8 − 3' ifodasi qanday o‘qiladi?",
+      "options": [
+        "Sakkiz va uchning yig‘indisi",
+        "Sakkiz va uchning ayirmasi",
+        "Sakkiz qo‘shuv uch",
+        "Sakkizta uch"
+      ],
+      "correctIndex": 1,
+      "explanation": "Minus belgili ifoda ayirma deb o‘qiladi."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri sonli ifoda?",
+      "options": [
+        "Faqat 9 soni",
+        "Rasm",
+        "6 + 3",
+        "Harf"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sonlar va amal belgisi qatnashgan yozuv sonli ifodadir."
+    }
+  ],
+  "test": [
+    {
+      "text": "'6 + 2' ifodasining qiymatini toping:",
+      "options": [
+        "8",
+        "7",
+        "9",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 2 = 8."
+    },
+    {
+      "text": "'7 − 4' ifodasining qiymatini toping:",
+      "options": [
+        "2",
+        "4",
+        "3",
+        "11"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 − 4 = 3."
+    },
+    {
+      "text": "'10 − 3' ifodasining qiymatini toping:",
+      "options": [
+        "6",
+        "7",
+        "8",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 − 3 = 7."
+    },
+    {
+      "text": "'4 + 5' ifodasining qiymatini toping:",
+      "options": [
+        "8",
+        "10",
+        "1",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 + 5 = 9."
+    },
+    {
+      "text": "'9 − 5' ifodasining qiymatini toping:",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "14"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 − 5 = 4."
+    },
+    {
+      "text": "'3 + 7' ifodasining qiymatini toping:",
+      "options": [
+        "10",
+        "9",
+        "8",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 + 7 = 10."
+    },
+    {
+      "text": "'Besh va uchning yig‘indisi' qanday yoziladi?",
+      "options": [
+        "5 − 3",
+        "5 = 3",
+        "5 > 3",
+        "5 + 3"
+      ],
+      "correctIndex": 3,
+      "explanation": "Yig‘indi so‘zi qo‘shuv belgisini bildiradi: 5 + 3."
+    },
+    {
+      "text": "'Yetti va ikkining ayirmasi' qanday yoziladi?",
+      "options": [
+        "7 + 2",
+        "7 = 2",
+        "7 − 2",
+        "2 − 7"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ayirma so‘zi ayiruv belgisini bildiradi: 7 − 2."
+    },
+    {
+      "text": "'To‘qqiz va to‘rtning ayirmasi' ifodasining qiymati nechaga teng?",
+      "options": [
+        "4",
+        "6",
+        "5 (chunki 9 − 4 = 5)",
+        "13"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 − 4 = 5."
+    },
+    {
+      "text": "'Olti va to‘rtning yig‘indisi' ifodasining qiymati nechaga teng?",
+      "options": [
+        "9",
+        "2",
+        "8",
+        "10 (chunki 6 + 4 = 10)"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 4 = 10."
+    },
+    {
+      "text": "Taqqoslang: 3 + 4 ... 2 + 5. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "= (chunki ikkalasi ham 7)",
+        ">",
+        "<",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 + 4 = 7 va 2 + 5 = 7, demak 7 = 7."
+    },
+    {
+      "text": "Taqqoslang: 6 + 2 ... 5 + 4. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "< (8 < 9)",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 2 = 8, 5 + 4 = 9, 8 < 9."
+    },
+    {
+      "text": "Taqqoslang: 10 − 4 ... 9 − 5. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        "=",
+        "−",
+        "> (6 > 4)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 − 4 = 6, 9 − 5 = 4, 6 > 4."
+    },
+    {
+      "text": "Taqqoslang: 8 − 3 ... 2 + 3. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "= (5 = 5)",
+        "<",
+        "−"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 − 3 = 5 va 2 + 3 = 5, demak 5 = 5."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati eng katta?",
+      "options": [
+        "3 + 6 (qiymati 9)",
+        "8 − 1 (qiymati 7)",
+        "5 + 5 (qiymati 10)",
+        "4 + 4 (qiymati 8)"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 berilgan qiymatlar ichida eng kattasidir."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati eng kichik?",
+      "options": [
+        "4 − 3 (qiymati 1)",
+        "2 + 1 (qiymati 3)",
+        "5 − 3 (qiymati 2)",
+        "1 + 3 (qiymati 4)"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 eng kichik qiymatdir."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 8 ga teng?",
+      "options": [
+        "10 − 2",
+        "9 − 2",
+        "7 + 2",
+        "6 + 3"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 − 2 = 8."
+    },
+    {
+      "text": "Akmal 4 ta qizil va 3 ta yashil olma terdi. Bu holatga mos ifoda qaysi?",
+      "options": [
+        "4 − 3",
+        "4 = 3",
+        "4 × 3",
+        "4 + 3"
+      ],
+      "correctIndex": 3,
+      "explanation": "Jami olmalarni topish uchun 4 + 3 ifodasi tuziladi."
+    },
+    {
+      "text": "Savatdagi 8 ta tuxumdan 3 tasi ishlatildi. Qolganini topish ifodasi qaysi?",
+      "options": [
+        "8 + 3",
+        "8 − 3",
+        "8 = 3",
+        "3 − 8"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qolganini topish uchun ayirish ifodasi 8 − 3 tuziladi."
+    },
+    {
+      "text": "1-qism yakuni: 41-darsni muvaffaqiyatli o‘tdingiz! 1-qismda nechta mavzu o‘rganildi?",
+      "options": [
+        "30 ta mavzu",
+        "20 ta mavzu",
+        "41 ta mavzu",
+        "10 ta mavzu"
+      ],
+      "correctIndex": 2,
+      "explanation": "1-sinf Matematika 1-qismida to‘liq 41 ta mavzu o‘rganildi."
+    }
+  ]
+}

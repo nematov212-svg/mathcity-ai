@@ -1,0 +1,276 @@
+{
+  "bookNumber": 51,
+  "title": "Qavslar (amallar tartibi)",
+  "emoji": "🧩",
+  "shortDesc": "1) qavs ichidagi, 2) chapdan o‘ngga; 18 - (3 + 2) va (18 - 3) + 2 farqi.",
+  "intro": "Qavsning o‘rni natijaga jiddiy ta’sir qiladi: 18 − (3 + 2) = 13, lekin (18 − 3) + 2 = 17!",
+  "keyPoints": [
+    "1-qoida: Birinchi navbatda qavs ichidagi amallar bajariladi.",
+    "2-qoida: Qavslar bir nechta bo‘lsa, har biri chapdan o‘ngga bajariladi.",
+    "3-qoida: Qolgan amallar chapdan o‘ngga tartibda bajariladi."
+  ],
+  "miniExample": {
+    "emojis": "1️⃣8️⃣ − (3️⃣ + 2️⃣) = 1️⃣3️⃣",
+    "text": "18 − (3 + 2) = 13 bo‘ladi, lekin (18 − 3) + 2 = 17!"
+  },
+  "xpReward": 100,
+  "coinReward": 11,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 18 − (3 + 2) = ?",
+      "options": [
+        "13",
+        "17",
+        "14",
+        "12"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 + 2 = 5, 18 − 5 = 13."
+    },
+    {
+      "text": "Hisoblang: (18 − 3) + 2 = ?",
+      "options": [
+        "13",
+        "17",
+        "16",
+        "18"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 − 3 = 15, 15 + 2 = 17."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati katta: 18 − (3 + 2) yoki (18 − 3) + 2?",
+      "options": [
+        "18 − (3 + 2) katta",
+        "Ikkalasi teng",
+        "(18 − 3) + 2 katta (17 > 13)",
+        "Bilmayman"
+      ],
+      "correctIndex": 2,
+      "explanation": "17 soni 13 dan katta."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 16 − (4 + 2) = ?",
+      "options": [
+        "10",
+        "14",
+        "9",
+        "12"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 + 2 = 6, 16 − 6 = 10."
+    },
+    {
+      "text": "Hisoblang: (16 − 4) + 2 = ?",
+      "options": [
+        "10",
+        "13",
+        "14",
+        "15"
+      ],
+      "correctIndex": 2,
+      "explanation": "16 − 4 = 12, 12 + 2 = 14."
+    },
+    {
+      "text": "Hisoblang: 15 − (6 + 3) = ?",
+      "options": [
+        "12",
+        "6",
+        "7",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 3 = 9, 15 − 9 = 6."
+    },
+    {
+      "text": "Hisoblang: (15 − 6) + 3 = ?",
+      "options": [
+        "6",
+        "11",
+        "13",
+        "12"
+      ],
+      "correctIndex": 3,
+      "explanation": "15 − 6 = 9, 9 + 3 = 12."
+    },
+    {
+      "text": "Hisoblang: 20 − (7 + 3) = ?",
+      "options": [
+        "16",
+        "10",
+        "9",
+        "11"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 3 = 10, 20 − 10 = 10."
+    },
+    {
+      "text": "Hisoblang: (20 − 7) + 3 = ?",
+      "options": [
+        "16",
+        "10",
+        "15",
+        "17"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 − 7 = 13, 13 + 3 = 16."
+    },
+    {
+      "text": "Hisoblang: (5 + 5) + (4 + 3) = ?",
+      "options": [
+        "16",
+        "18",
+        "15",
+        "17"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 + 7 = 17."
+    },
+    {
+      "text": "Hisoblang: (10 + 2) − (4 + 2) = ?",
+      "options": [
+        "5",
+        "7",
+        "6",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 − 6 = 6."
+    },
+    {
+      "text": "Hisoblang: (9 + 3) − (5 + 1) = ?",
+      "options": [
+        "5",
+        "7",
+        "6",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 − 6 = 6."
+    },
+    {
+      "text": "Hisoblang: 14 − (2 + 5) = ?",
+      "options": [
+        "6",
+        "8",
+        "11",
+        "7"
+      ],
+      "correctIndex": 3,
+      "explanation": "2 + 5 = 7, 14 − 7 = 7."
+    },
+    {
+      "text": "Hisoblang: (14 − 2) + 5 = ?",
+      "options": [
+        "17",
+        "7",
+        "16",
+        "18"
+      ],
+      "correctIndex": 0,
+      "explanation": "14 − 2 = 12, 12 + 5 = 17."
+    },
+    {
+      "text": "Amallar tartibida 1-raqam qaysi amal ustiga qo‘yiladi: 12 + (8 − 3)?",
+      "options": [
+        "Qo‘shish (12 + 8) ustiga",
+        "Qavs ichidagi (8 − 3) ayirish ustiga",
+        "12 soni ustiga",
+        "Tenglik ustiga"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qavs ichidagi amal doim 1-bo‘lib bajariladi."
+    },
+    {
+      "text": "Taqqoslang: 15 − (4 + 1) ... (15 − 4) + 1. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "< (10 < 12)"
+      ],
+      "correctIndex": 3,
+      "explanation": "15 − 5 = 10, 11 + 1 = 12. 10 < 12."
+    },
+    {
+      "text": "Taqqoslang: 16 − (5 + 2) ... 16 − 5 − 2. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "= (ikkalasi ham 9)",
+        "<",
+        "−"
+      ],
+      "correctIndex": 1,
+      "explanation": "16 − 7 = 9 va 11 − 2 = 9. Ular teng."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 15 ga teng?",
+      "options": [
+        "20 − (10 + 5)",
+        "(20 − 15) + 5",
+        "(20 − 10) + 5",
+        "20 − (5 + 5)"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 5 = 15."
+    },
+    {
+      "text": "Do‘konda 18 ta daftar bor edi. Ertalab 5 ta, tushdan keyin 3 ta daftar sotildi: 18 − (5 + 3). Nechta daftar qoldi?",
+      "options": [
+        "10 ta daftar",
+        "9 ta",
+        "11 ta",
+        "16 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 + 3 = 8 ta sotildi, 18 − 8 = 10 ta qoldi."
+    },
+    {
+      "text": "Avtobusda 17 kishi bor edi. Bekatda 4 kishi tushdi, keyin 2 kishi chiqdi: (17 − 4) + 2. Nechta yo‘lovchi bo‘ldi?",
+      "options": [
+        "15 ta yo‘lovchi",
+        "11 ta",
+        "14 ta",
+        "16 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "17 − 4 = 13, 13 + 2 = 15."
+    },
+    {
+      "text": "To‘g‘ri tenglikni toping:",
+      "options": [
+        "18 − (3 + 2) = 17",
+        "18 − (3 + 2) = 15",
+        "18 − (3 + 2) = 12",
+        "18 − (3 + 2) = 13"
+      ],
+      "correctIndex": 3,
+      "explanation": "18 − 5 = 13 to‘g‘ri."
+    },
+    {
+      "text": "Hisoblang: (8 + 2) + (6 + 4) = ?",
+      "options": [
+        "19",
+        "20",
+        "18",
+        "16"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 + 10 = 20."
+    },
+    {
+      "text": "Hisoblang: 17 − (5 + 5) = ?",
+      "options": [
+        "6",
+        "8",
+        "7",
+        "12"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 + 5 = 10, 17 − 10 = 7."
+    }
+  ]
+}

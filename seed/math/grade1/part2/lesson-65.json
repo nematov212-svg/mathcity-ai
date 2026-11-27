@@ -1,0 +1,276 @@
+{
+  "bookNumber": 65,
+  "title": "Ikki xonali sonlarni qo‘shish (3)",
+  "emoji": "➕",
+  "shortDesc": "Ikki xonali songa ikki xonali sonni qo‘shish: 23 + 14 = 37.",
+  "intro": "Ikki xonali sonlarni qo‘shishda o‘nliklar o‘nliklarga, birliklar birliklarga qo‘shiladi: 23 + 14 = (20 + 10) + (3 + 4) = 30 + 7 = 37.",
+  "keyPoints": [
+    "O‘nliklarni qo‘shamiz: 20 + 10 = 30.",
+    "Birliklarni qo‘shamiz: 3 + 4 = 7.",
+    "Natijalarni birlashtiramiz: 30 + 7 = 37."
+  ],
+  "miniExample": {
+    "emojis": "2️⃣3️⃣ + 1️⃣4️⃣ = 3️⃣7️⃣",
+    "text": "20 + 10 = 30; 3 + 4 = 7; 30 + 7 = 37."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 34 + 23 = ?",
+      "options": [
+        "57",
+        "56",
+        "58",
+        "67"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 + 20 = 50, 4 + 3 = 7, 50 + 7 = 57."
+    },
+    {
+      "text": "Hisoblang: 42 + 35 = ?",
+      "options": [
+        "76",
+        "77",
+        "78",
+        "87"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 + 30 = 70, 2 + 5 = 7, 70 + 7 = 77."
+    },
+    {
+      "text": "Hisoblang: 51 + 27 = ?",
+      "options": [
+        "77",
+        "79",
+        "78",
+        "68"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 + 20 = 70, 1 + 7 = 8, 70 + 8 = 78."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 12 + 23 = ?",
+      "options": [
+        "35",
+        "34",
+        "36",
+        "45"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 20 = 30, 2 + 3 = 5, 30 + 5 = 35."
+    },
+    {
+      "text": "Hisoblang: 24 + 31 = ?",
+      "options": [
+        "54",
+        "56",
+        "55",
+        "65"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 + 30 = 50, 4 + 1 = 5, 50 + 5 = 55."
+    },
+    {
+      "text": "Hisoblang: 43 + 15 = ?",
+      "options": [
+        "57",
+        "58",
+        "59",
+        "68"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 + 10 = 50, 3 + 5 = 8, 50 + 8 = 58."
+    },
+    {
+      "text": "Hisoblang: 52 + 24 = ?",
+      "options": [
+        "75",
+        "77",
+        "86",
+        "76"
+      ],
+      "correctIndex": 3,
+      "explanation": "50 + 20 = 70, 2 + 4 = 6, 70 + 6 = 76."
+    },
+    {
+      "text": "Hisoblang: 36 + 42 = ?",
+      "options": [
+        "77",
+        "78",
+        "79",
+        "88"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 40 = 70, 6 + 2 = 8, 70 + 8 = 78."
+    },
+    {
+      "text": "Hisoblang: 61 + 25 = ?",
+      "options": [
+        "86",
+        "85",
+        "87",
+        "76"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 + 20 = 80, 1 + 5 = 6, 80 + 6 = 86."
+    },
+    {
+      "text": "Hisoblang: 33 + 34 = ?",
+      "options": [
+        "66",
+        "68",
+        "77",
+        "67"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 + 30 = 60, 3 + 4 = 7, 60 + 7 = 67."
+    },
+    {
+      "text": "Hisoblang: 45 + 52 = ?",
+      "options": [
+        "96",
+        "98",
+        "97",
+        "87"
+      ],
+      "correctIndex": 2,
+      "explanation": "40 + 50 = 90, 5 + 2 = 7, 90 + 7 = 97."
+    },
+    {
+      "text": "Noma’lum sonni toping: 25 + ? = 48",
+      "options": [
+        "22",
+        "24",
+        "23",
+        "13"
+      ],
+      "correctIndex": 2,
+      "explanation": "48 - 25 = 23."
+    },
+    {
+      "text": "Noma’lum sonni toping: ? + 31 = 76",
+      "options": [
+        "44",
+        "46",
+        "35",
+        "45"
+      ],
+      "correctIndex": 3,
+      "explanation": "76 - 31 = 45."
+    },
+    {
+      "text": "Hisoblang: 54 + 33 = ?",
+      "options": [
+        "87",
+        "86",
+        "88",
+        "77"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 + 30 = 80, 4 + 3 = 7, 80 + 7 = 87."
+    },
+    {
+      "text": "Taqqoslang: 24 + 13 va 40",
+      "options": [
+        "24 + 13 > 40",
+        "24 + 13 < 40",
+        "24 + 13 = 40",
+        "24 + 13 + 40"
+      ],
+      "correctIndex": 1,
+      "explanation": "24 + 13 = 37 va 37 < 40."
+    },
+    {
+      "text": "Hisoblang: 62 + 27 = ?",
+      "options": [
+        "88",
+        "90",
+        "79",
+        "89"
+      ],
+      "correctIndex": 3,
+      "explanation": "60 + 20 = 80, 2 + 7 = 9, 80 + 9 = 89."
+    },
+    {
+      "text": "Hisoblang: 71 + 18 = ?",
+      "options": [
+        "88",
+        "89",
+        "90",
+        "99"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 + 10 = 80, 1 + 8 = 9, 80 + 9 = 89."
+    },
+    {
+      "text": "Hisoblang: 21 + 32 + 14 = ?",
+      "options": [
+        "66",
+        "68",
+        "67",
+        "57"
+      ],
+      "correctIndex": 2,
+      "explanation": "21 + 32 = 53, 53 + 14 = 67."
+    },
+    {
+      "text": "Hisoblang: 34 + 21 + 23 = ?",
+      "options": [
+        "78",
+        "77",
+        "79",
+        "68"
+      ],
+      "correctIndex": 0,
+      "explanation": "34 + 21 = 55, 55 + 23 = 78."
+    },
+    {
+      "text": "Yulduzcha o‘rniga to‘g‘ri belgini qo‘ying: 43 + 25 * 32 + 36",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "43 + 25 = 68 va 32 + 36 = 68, demak teng (=)."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 99 ga teng?",
+      "options": [
+        "54 + 35",
+        "64 + 25",
+        "74 + 15",
+        "64 + 35"
+      ],
+      "correctIndex": 3,
+      "explanation": "64 + 35 = 99."
+    },
+    {
+      "text": "Bog‘bon birinchi daraxtdan 32 kg, ikkinchi daraxtdan esa 25 kg olma terdi. Bog‘bon jami necha kg olma terdi?",
+      "options": [
+        "56 kg",
+        "57 kg",
+        "58 kg",
+        "67 kg"
+      ],
+      "correctIndex": 1,
+      "explanation": "32 + 25 = 57 kg olma terdi."
+    },
+    {
+      "text": "1-A sinfda 24 nafar, 1-B sinfda esa 23 nafar o‘quvchi bor. Ikkala sinfda jami necha nafar o‘quvchi bor?",
+      "options": [
+        "46 nafar",
+        "48 nafar",
+        "47 nafar",
+        "57 nafar"
+      ],
+      "correctIndex": 2,
+      "explanation": "24 + 23 = 47 nafar o‘quvchi bor."
+    }
+  ]
+}

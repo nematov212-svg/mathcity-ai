@@ -1,0 +1,276 @@
+{
+  "bookNumber": 44,
+  "title": "11 va 12 sonlari",
+  "emoji": "🔢",
+  "shortDesc": "11 va 12 sonlari tarkibi (10+1, 9+2, 8+3; 6+6), 11+5, 12-4 va masalalar.",
+  "intro": "11 va 12 sonlarining qo‘shish va ayirish tarkibini mukammal o‘rganamiz.",
+  "keyPoints": [
+    "11 sonining tarkibi: 10+1, 9+2, 8+3, 7+4, 6+5.",
+    "12 sonining tarkibi: 10+2, 9+3, 8+4, 7+5, 6+6.",
+    "12 dan ayirish: 12 − 4 = 8, 12 − 6 = 6."
+  ],
+  "miniExample": {
+    "emojis": "6️⃣ + 6️⃣ = 1️⃣2️⃣",
+    "text": "6 va 6 qo‘shilsa 12 bo‘ladi: bir do‘jina (12 ta)!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Hisoblang: 9 + 2 = ?",
+      "options": [
+        "11",
+        "10",
+        "12",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 + 2 = 11."
+    },
+    {
+      "text": "Hisoblang: 6 + 6 = ?",
+      "options": [
+        "11",
+        "12",
+        "13",
+        "10"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 + 6 = 12."
+    },
+    {
+      "text": "Hisoblang: 12 − 4 = ?",
+      "options": [
+        "7",
+        "9",
+        "8",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 − 4 = 8."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 10 + 1 = ?",
+      "options": [
+        "11",
+        "10",
+        "12",
+        "20"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 1 = 11."
+    },
+    {
+      "text": "Misolni hisoblang: 10 + 2 = ?",
+      "options": [
+        "11",
+        "13",
+        "12",
+        "20"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 2 = 12."
+    },
+    {
+      "text": "Misolni hisoblang: 9 + 2 = ?",
+      "options": [
+        "10",
+        "11",
+        "12",
+        "13"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 + 2 = 11."
+    },
+    {
+      "text": "Misolni hisoblang: 8 + 3 = ?",
+      "options": [
+        "10",
+        "12",
+        "14",
+        "11"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 + 3 = 11."
+    },
+    {
+      "text": "Misolni hisoblang: 7 + 4 = ?",
+      "options": [
+        "10",
+        "11",
+        "12",
+        "13"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 4 = 11."
+    },
+    {
+      "text": "Misolni hisoblang: 6 + 5 = ?",
+      "options": [
+        "11",
+        "10",
+        "12",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 5 = 11."
+    },
+    {
+      "text": "Misolni hisoblang: 9 + 3 = ?",
+      "options": [
+        "11",
+        "13",
+        "14",
+        "12"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 + 3 = 12."
+    },
+    {
+      "text": "Misolni hisoblang: 8 + 4 = ?",
+      "options": [
+        "11",
+        "13",
+        "12",
+        "10"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 4 = 12."
+    },
+    {
+      "text": "Misolni hisoblang: 7 + 5 = ?",
+      "options": [
+        "11",
+        "13",
+        "12",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 5 = 12."
+    },
+    {
+      "text": "Misolni hisoblang: 6 + 6 = ?",
+      "options": [
+        "11",
+        "13",
+        "14",
+        "12"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 + 6 = 12."
+    },
+    {
+      "text": "Misolni hisoblang: 11 − 1 = ?",
+      "options": [
+        "10",
+        "9",
+        "11",
+        "8"
+      ],
+      "correctIndex": 0,
+      "explanation": "11 − 1 = 10."
+    },
+    {
+      "text": "Misolni hisoblang: 11 − 2 = ?",
+      "options": [
+        "8",
+        "9",
+        "10",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "11 − 2 = 9."
+    },
+    {
+      "text": "Misolni hisoblang: 11 − 3 = ?",
+      "options": [
+        "7",
+        "9",
+        "6",
+        "8"
+      ],
+      "correctIndex": 3,
+      "explanation": "11 − 3 = 8."
+    },
+    {
+      "text": "Misolni hisoblang: 12 − 2 = ?",
+      "options": [
+        "9",
+        "10",
+        "11",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 − 2 = 10."
+    },
+    {
+      "text": "Misolni hisoblang: 12 − 3 = ?",
+      "options": [
+        "8",
+        "10",
+        "9",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 − 3 = 9."
+    },
+    {
+      "text": "Misolni hisoblang: 12 − 4 = ?",
+      "options": [
+        "8",
+        "7",
+        "9",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 − 4 = 8."
+    },
+    {
+      "text": "Misolni hisoblang: 12 − 6 = ?",
+      "options": [
+        "6",
+        "5",
+        "7",
+        "8"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 − 6 = 6."
+    },
+    {
+      "text": "Misolni hisoblang: 11 + 5 = ?",
+      "options": [
+        "15",
+        "17",
+        "14",
+        "16"
+      ],
+      "correctIndex": 3,
+      "explanation": "11 + 5 = 16."
+    },
+    {
+      "text": "Akmalda 11 ta qalam bor edi, 3 tasini ukasiga berdi. Unda nechta qalam qoldi?",
+      "options": [
+        "7 ta",
+        "8 ta qalam",
+        "9 ta",
+        "6 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "11 − 3 = 8 ta qalam."
+    },
+    {
+      "text": "Bir yilda nechta oy bor?",
+      "options": [
+        "10 ta oy",
+        "11 ta oy",
+        "12 ta oy 📅",
+        "24 ta oy"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bir yil 12 oydan iborat (yanvardan dekabrgacha)."
+    }
+  ]
+}

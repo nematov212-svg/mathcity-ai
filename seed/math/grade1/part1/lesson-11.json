@@ -1,0 +1,276 @@
+{
+  "bookNumber": 11,
+  "title": "Qo‘shish",
+  "emoji": "➕",
+  "shortDesc": "Qo‘shish ma’nosi (birlashtirish), yig‘indi, + belgisi va masalalar.",
+  "intro": "Qo‘shish — bu narsalarni bir joyga to‘plash, birlashtirish amali.",
+  "keyPoints": [
+    "Qo‘shishda '+' (plyus) belgisi ishlatiladi.",
+    "Natijada hosil bo‘lgan son yig‘indi deyiladi.",
+    "Narsalar birlashtirilganda ularning soni ko‘payadi."
+  ],
+  "miniExample": {
+    "emojis": "🍎🍎 + 🍎",
+    "text": "2 ta olmaga 1 ta olma qo‘shilsa, 3 ta olma bo‘ladi! (2 + 1 = 3)"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Misolni hisoblang: 3 + 2 = ?",
+      "options": [
+        "5",
+        "4",
+        "6",
+        "1"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 ga 2 qo‘shilsa 5 bo‘ladi."
+    },
+    {
+      "text": "Qo‘shish amali qaysi belgi bilan yoziladi?",
+      "options": [
+        "− (minus)",
+        "+ (plyus)",
+        "= (teng)",
+        "> (katta)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qo‘shish amali '+' belgisi bilan belgilanadi."
+    },
+    {
+      "text": "Bog‘da 4 ta lola va 2 ta chinnigul ochildi. Jami nechta gul ochilgan?",
+      "options": [
+        "5 ta",
+        "7 ta",
+        "6 ta gul",
+        "2 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 + 2 = 6 ta gul ochilgan."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 2 + 1 = ?",
+      "options": [
+        "3",
+        "2",
+        "4",
+        "1"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 ga 1 qo‘shilsa 3 bo‘ladi."
+    },
+    {
+      "text": "Misolni hisoblang: 3 + 3 = ?",
+      "options": [
+        "5",
+        "7",
+        "6",
+        "4"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 ga 3 qo‘shilsa 6 bo‘ladi."
+    },
+    {
+      "text": "Misolni hisoblang: 4 + 1 = ?",
+      "options": [
+        "3",
+        "5",
+        "6",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 ga 1 qo‘shilsa 5 bo‘ladi."
+    },
+    {
+      "text": "Misolni hisoblang: 5 + 2 = ?",
+      "options": [
+        "6",
+        "8",
+        "9",
+        "7"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 ga 2 qo‘shilsa 7 bo‘ladi."
+    },
+    {
+      "text": "Misolni hisoblang: 6 + 2 = ?",
+      "options": [
+        "7",
+        "8",
+        "9",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "6 ga 2 qo‘shilsa 8 bo‘ladi."
+    },
+    {
+      "text": "Misolni hisoblang: 7 + 1 = ?",
+      "options": [
+        "8",
+        "6",
+        "9",
+        "10"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 ga 1 qo‘shilsa 8 bo‘ladi."
+    },
+    {
+      "text": "Misolni hisoblang: 4 + 4 = ?",
+      "options": [
+        "7",
+        "9",
+        "6",
+        "8"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 ga 4 qo‘shilsa 8 bo‘ladi."
+    },
+    {
+      "text": "Misolni hisoblang: 5 + 4 = ?",
+      "options": [
+        "8",
+        "10",
+        "9",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 ga 4 qo‘shilsa 9 bo‘ladi."
+    },
+    {
+      "text": "Misolni hisoblang: 8 + 2 = ?",
+      "options": [
+        "9",
+        "7",
+        "10",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 ga 2 qo‘shilsa 10 bo‘ladi."
+    },
+    {
+      "text": "Misolni hisoblang: 6 + 3 = ?",
+      "options": [
+        "8",
+        "10",
+        "7",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 ga 3 qo‘shilsa 9 bo‘ladi."
+    },
+    {
+      "text": "Misolni hisoblang: 7 + 3 = ?",
+      "options": [
+        "10",
+        "9",
+        "8",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "7 ga 3 qo‘shilsa 10 bo‘ladi."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 6 ga teng?",
+      "options": [
+        "3 + 2",
+        "4 + 2",
+        "5 + 2",
+        "6 + 1"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 + 2 = 6."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 7 ga teng?",
+      "options": [
+        "4 + 2",
+        "6 + 2",
+        "3 + 3",
+        "5 + 2"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 + 2 = 7."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 10 ga teng?",
+      "options": [
+        "4 + 5",
+        "5 + 5",
+        "6 + 3",
+        "7 + 2"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 5 = 10."
+    },
+    {
+      "text": "Narsalar birlashtirilganda qaysi amal bajariladi?",
+      "options": [
+        "Ayirish amali (−)",
+        "Bo‘lish amali",
+        "Qo‘shish amali (+)",
+        "Taqqoslash amali faqat"
+      ],
+      "correctIndex": 2,
+      "explanation": "Birlashtirish va ko‘paytirish ma’nosida qo‘shish amali bajariladi."
+    },
+    {
+      "text": "Qo‘shish natijasi nima deb ataladi?",
+      "options": [
+        "Yig‘indi",
+        "Ayirma",
+        "Qo‘shiluvchi",
+        "Qoldiq"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qo‘shish amali natijasi yig‘indi deyiladi."
+    },
+    {
+      "text": "Akmalda 3 ta daftar bor edi. Dadasi yana 2 ta daftar olib berdi. Daftarlar nechta bo‘ldi?",
+      "options": [
+        "5 ta daftar",
+        "4 ta",
+        "6 ta",
+        "1 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "3 + 2 = 5 ta daftar."
+    },
+    {
+      "text": "Daraxtda 4 ta chumchuq o‘tirgan edi. Yana 3 ta chumchuq uchib keldi. Chumchuqlar nechta bo‘ldi?",
+      "options": [
+        "6 ta",
+        "8 ta",
+        "5 ta",
+        "7 ta chumchuq"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 + 3 = 7 ta chumchuq."
+    },
+    {
+      "text": "Nodirada 5 ta qizil va 3 ta yashil qalam bor. Unda jami nechta qalam bor?",
+      "options": [
+        "7 ta",
+        "8 ta qalam",
+        "9 ta",
+        "2 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 3 = 8 ta qalam."
+    },
+    {
+      "text": "Samir 6 ta misol yechdi, so‘ng yana 4 ta misol yechdi. U jami nechta misol yechdi?",
+      "options": [
+        "9 ta",
+        "8 ta",
+        "10 ta misol",
+        "2 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 + 4 = 10 ta misol."
+    }
+  ]
+}

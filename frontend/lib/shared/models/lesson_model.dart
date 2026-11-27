@@ -32,10 +32,16 @@ class LessonModel {
   final String? miniExample;
   final int completedSteps;
   final int percent;
+  final int bestPercent;
+  final int lastPercent;
+  final int attempts;
+  final int bookNumber;
   final int xpReward;
   final int coinReward;
   final int estMinutes;
   final List<QuestionModel> questions;
+  final List<QuestionModel> practice;
+  final List<QuestionModel> test;
 
   LessonModel({
     required this.id,
@@ -69,11 +75,19 @@ class LessonModel {
     this.miniExample,
     this.completedSteps = 0,
     this.percent = 0,
+    int? bestPercent,
+    this.lastPercent = 0,
+    this.attempts = 0,
+    int? bookNumber,
     int? xpReward,
     int? coinReward,
     this.estMinutes = 7,
     this.questions = const [],
-  })  : xpReward = xpReward ?? rewardXP,
+    this.practice = const [],
+    this.test = const [],
+  })  : bestPercent = bestPercent ?? percent,
+        bookNumber = bookNumber ?? orderIndex,
+        xpReward = xpReward ?? rewardXP,
         coinReward = coinReward ?? rewardCoins;
 
   factory LessonModel.fromJson(Map<String, dynamic> json) {
@@ -87,6 +101,31 @@ class LessonModel {
           .map((q) => QuestionModel.fromJson(q))
           .toList();
     }
+
+    List<QuestionModel> practiceList = [];
+    if (json['practice'] != null && json['practice'] is List) {
+      practiceList = (json['practice'] as List)
+          .map((q) => QuestionModel.fromJson(q))
+          .toList();
+    }
+
+    List<QuestionModel> testList = [];
+    if (json['test'] != null && json['test'] is List) {
+      testList = (json['test'] as List)
+          .map((q) => QuestionModel.fromJson(q))
+          .toList();
+    }
+
+    if (qList.isEmpty && testList.isNotEmpty) {
+      qList = testList;
+    }
+
+    final orderIdx = json['orderIndex'] ?? json['order'] ?? 0;
+    final bookNum = json['bookNumber'] ?? (orderIdx > 0 ? orderIdx : 1);
+    final isComp = json['isCompleted'] ?? false;
+    final bestPct = json['bestPercent'] ?? json['percent'] ?? (isComp ? 100 : 0);
+    final lastPct = json['lastPercent'] ?? 0;
+    final atts = json['attempts'] ?? (isComp ? 1 : 0);
 
     return LessonModel(
       id: json['id'] ?? '',
@@ -111,9 +150,10 @@ class LessonModel {
       status: json['status'] ?? 'PUBLISHED',
       rewardXP: rewardXP,
       rewardCoins: rewardCoins,
-      orderIndex: json['orderIndex'] ?? json['order'] ?? 0,
-      sectionCount: json['sectionCount'] ?? json['questionCount'] ?? (qList.isNotEmpty ? qList.length : 1),
-      isCompleted: json['isCompleted'] ?? false,
+      orderIndex: orderIdx,
+      bookNumber: bookNum,
+      sectionCount: json['sectionCount'] ?? json['questionCount'] ?? (qList.isNotEmpty ? qList.length : 20),
+      isCompleted: isComp,
       icon: json['icon'] ?? emojiVal,
       accentColor: json['accentColor'],
       isLocked: json['isLocked'] ?? false,
@@ -124,12 +164,17 @@ class LessonModel {
               .toList() ??
           const [],
       miniExample: json['miniExample'],
-      completedSteps: json['completedSteps'] ?? (json['isCompleted'] == true ? 5 : 0),
-      percent: json['percent'] ?? (json['isCompleted'] == true ? 100 : 0),
+      completedSteps: json['completedSteps'] ?? (isComp ? 5 : 0),
+      percent: bestPct,
+      bestPercent: bestPct,
+      lastPercent: lastPct,
+      attempts: atts,
       xpReward: rewardXP,
       coinReward: rewardCoins,
       estMinutes: json['estMinutes'] ?? 7,
       questions: qList,
+      practice: practiceList,
+      test: testList,
     );
   }
 }

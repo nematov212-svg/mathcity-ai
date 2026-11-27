@@ -1,0 +1,276 @@
+{
+  "bookNumber": 58,
+  "title": "Yaxlit sonlar (10–100)",
+  "emoji": "🔟",
+  "shortDesc": "Oxiri nol bilan tugaydigan o‘nliklar va ular ustida amallar.",
+  "intro": "Yaxlit sonlar deb oxiri nol (0) bilan tugaydigan to‘liq o‘nliklarga aytiladi: 10, 20, 30, 40, 50, 60, 70, 80, 90, 100.",
+  "keyPoints": [
+    "1 o‘nlik = 10, 2 o‘nlik = 20, 5 o‘nlik = 50, 10 o‘nlik = 100.",
+    "Yaxlit sonlarni qo‘shishda faqat o‘nliklar raqami qo‘shiladi va orqasiga 0 yoziladi: 20 + 30 = 50 (2 o‘nlik + 3 o‘nlik = 5 o‘nlik).",
+    "Yaxlit sonlarni ayirish: 70 - 30 = 40 (7 o‘nlik - 3 o‘nlik = 4 o‘nlik)."
+  ],
+  "miniExample": {
+    "emojis": "📦 📦 📦 + 📦 📦 = 📦 📦 📦 📦 📦",
+    "text": "3 ta quti (30 dona) va 2 ta quti (20 dona): 30 + 20 = 50."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "3 ta o‘nlik qanday songa teng?",
+      "options": [
+        "30",
+        "13",
+        "3",
+        "33"
+      ],
+      "correctIndex": 0,
+      "explanation": "Har bir o‘nlik 10 ga teng bo‘lib, 3 ta o‘nlik 30 bo‘ladi."
+    },
+    {
+      "text": "Hisoblang: 40 + 20 = ?",
+      "options": [
+        "50",
+        "60",
+        "70",
+        "42"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 o‘nlikka 2 o‘nlik qo‘shilsa 6 o‘nlik, ya’ni 60 bo‘ladi."
+    },
+    {
+      "text": "Hisoblang: 80 - 30 = ?",
+      "options": [
+        "60",
+        "40",
+        "50",
+        "55"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 o‘nlikdan 3 o‘nlik ayirilsa 5 o‘nlik, ya’ni 50 qoladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "1 ta o‘nlik nechaga teng?",
+      "options": [
+        "10",
+        "1",
+        "100",
+        "0"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 ta to‘liq o‘nlik 10 ga teng."
+    },
+    {
+      "text": "4 ta o‘nlik qaysi sonni bildiradi?",
+      "options": [
+        "14",
+        "4",
+        "40",
+        "44"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 ta o‘nlik 40 sonini bildiradi."
+    },
+    {
+      "text": "70 sonida nechta o‘nlik bor?",
+      "options": [
+        "70 ta",
+        "7 ta",
+        "17 ta",
+        "1 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 sonida 7 ta to‘liq o‘nlik bor."
+    },
+    {
+      "text": "Hisoblang: 10 + 20 = ?",
+      "options": [
+        "21",
+        "40",
+        "12",
+        "30"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 o‘nlik + 2 o‘nlik = 3 o‘nlik = 30."
+    },
+    {
+      "text": "Hisoblang: 50 - 10 = ?",
+      "options": [
+        "60",
+        "40",
+        "30",
+        "51"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 dan 10 ayirilsa 40 qoladi."
+    },
+    {
+      "text": "100 sonida nechta o‘nlik bor?",
+      "options": [
+        "10 ta",
+        "100 ta",
+        "1 ta",
+        "20 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "100 soni 10 ta o‘nlikdan iborat."
+    },
+    {
+      "text": "Hisoblang: 30 + 40 = ?",
+      "options": [
+        "60",
+        "80",
+        "34",
+        "70"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 + 40 = 70."
+    },
+    {
+      "text": "Hisoblang: 60 - 20 = ?",
+      "options": [
+        "50",
+        "30",
+        "40",
+        "42"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 - 20 = 40."
+    },
+    {
+      "text": "Hisoblang: 50 + 50 = ?",
+      "options": [
+        "90",
+        "80",
+        "100",
+        "55"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 + 50 = 100."
+    },
+    {
+      "text": "Hisoblang: 90 - 40 = ?",
+      "options": [
+        "60",
+        "40",
+        "49",
+        "50"
+      ],
+      "correctIndex": 3,
+      "explanation": "90 - 40 = 50."
+    },
+    {
+      "text": "Noma’lum sonni toping: ? + 30 = 70",
+      "options": [
+        "40",
+        "50",
+        "30",
+        "100"
+      ],
+      "correctIndex": 0,
+      "explanation": "70 - 30 = 40, demak noma’lum son 40."
+    },
+    {
+      "text": "Noma’lum sonni toping: 80 - ? = 20",
+      "options": [
+        "50",
+        "60",
+        "70",
+        "100"
+      ],
+      "correctIndex": 1,
+      "explanation": "80 - 20 = 60, demak ayriluvchi 60."
+    },
+    {
+      "text": "Hisoblang: 20 + 20 + 20 = ?",
+      "options": [
+        "40",
+        "80",
+        "50",
+        "60"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 + 20 = 40, 40 + 20 = 60."
+    },
+    {
+      "text": "Qaysi taqqoslash to‘g‘ri?",
+      "options": [
+        "30 + 10 < 40",
+        "40 + 20 > 50",
+        "70 - 20 = 40",
+        "80 < 50 + 20"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 + 20 = 60 va 60 > 50 to‘g‘ri."
+    },
+    {
+      "text": "Hisoblang: 100 - 60 = ?",
+      "options": [
+        "50",
+        "30",
+        "40",
+        "60"
+      ],
+      "correctIndex": 2,
+      "explanation": "100 dan 60 ayirilsa 40 qoladi."
+    },
+    {
+      "text": "Hisoblang: 30 + 50 - 20 = ?",
+      "options": [
+        "60",
+        "70",
+        "50",
+        "80"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 + 50 = 80, 80 - 20 = 60."
+    },
+    {
+      "text": "Hisoblang: 100 - 30 - 30 = ?",
+      "options": [
+        "40",
+        "50",
+        "60",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "100 - 30 = 70, 70 - 30 = 40."
+    },
+    {
+      "text": "Yulduzcha o‘rniga to‘g‘ri ishorani qo‘ying: 90 - 30 * 40 + 20",
+      "options": [
+        ">",
+        "<",
+        "+",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "90 - 30 = 60 va 40 + 20 = 60, ikkalasi teng (=)."
+    },
+    {
+      "text": "Do‘konda 40 ta qizil va 30 ta ko‘k shar bor edi. Do‘konda jami nechta shar bor?",
+      "options": [
+        "60 ta",
+        "70 ta",
+        "80 ta",
+        "10 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 + 30 = 70 ta shar bor."
+    },
+    {
+      "text": "Avtobusda 50 nafar yo‘lovchi bor edi. Bekatda 20 nafar yo‘lovchi tushdi. Avtobusda necha nafar yo‘lovchi qoldi?",
+      "options": [
+        "40 nafar",
+        "20 nafar",
+        "30 nafar",
+        "70 nafar"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 - 20 = 30 nafar yo‘lovchi qoldi."
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "bookNumber": 6,
+  "title": "Vaqt bo‘yicha ketma-ketlik",
+  "emoji": "⏰",
+  "shortDesc": "Oldin va keyin, birinchi va oxirgi, hafta kunlari va fasllar.",
+  "intro": "Voqealar vaqt bo‘yicha ketma-ket, birin-ketin sodir bo‘ladi.",
+  "keyPoints": [
+    "Kunda ertalab, tush va kechqurun vaqtlari almashadi.",
+    "Haftada 7 kun bor: Dushanbadan Yakshangabagacha.",
+    "Yilda 4 fasl bor: bahor, yoz, kuz va qish."
+  ],
+  "miniExample": {
+    "emojis": "🌱 🌿 🌸",
+    "text": "Urug‘ ekiladi, unib chiqadi, so‘ng gul ochadi!"
+  },
+  "xpReward": 80,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Kunning boshlanishi qaysi vaqt?",
+      "options": [
+        "Ertalab 🌅",
+        "Tush payti ☀️",
+        "Kechqurun 🌙",
+        "Yarim tun 🌌"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kun quyosh chiqishi bilan, ertalab boshlanadi."
+    },
+    {
+      "text": "Haftada nechta kun bor?",
+      "options": [
+        "5 ta kun",
+        "7 ta kun",
+        "6 ta kun",
+        "10 ta kun"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bir hafta roppa-rosa 7 kundan iborat."
+    },
+    {
+      "text": "Qor qaysi faslda yog‘adi?",
+      "options": [
+        "Yozda ☀️",
+        "Bahorda 🌸",
+        "Qishda ❄️",
+        "Kuzda 🍂"
+      ],
+      "correctIndex": 2,
+      "explanation": "Qor sovuq qish faslida yog‘adi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Uyg‘ongandan so‘ng birinchi navbatda nima qilinadi?",
+      "options": [
+        "Yuvinib, badantarbiya qilinadi 🪥",
+        "Dars qilib uxlab qolinadi",
+        "Kechki ovqat yeyiladi",
+        "Quyosh botishi kutiladi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ertalab turib yuz-qo‘lni yuvish va badantarbiya qilish salomatlik garovidir."
+    },
+    {
+      "text": "Maktabga borishdan oldin nima qilinadi?",
+      "options": [
+        "Uyquga yotiladi",
+        "Daftarlar yig‘ishtirib uxlab qolinadi",
+        "Ertalabki nonushta qilinadi 🥪",
+        "Kechki chiroq o‘chiriladi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ertalab nonushta qilib, so‘ng maktabga boriladi."
+    },
+    {
+      "text": "Ertalabdan keyin kunning qaysi qismi keladi?",
+      "options": [
+        "Kechqurun 🌙",
+        "Kunduzi (tush payti) ☀️",
+        "Tong saharlik",
+        "Tungi uyqu"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ertalabdan so‘ng kunduzi (tush vaqti) keladi."
+    },
+    {
+      "text": "Kechqurundan keyin qaysi vaqt keladi?",
+      "options": [
+        "Tush payti",
+        "Tong",
+        "Kunduzi",
+        "Tun (uyqu vaqti) 🌌"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kechqurundan so‘ng tun kiradi va dam olinadi."
+    },
+    {
+      "text": "Haftaning birinchi kuni qaysi?",
+      "options": [
+        "Seshanba",
+        "Dushanba",
+        "Juma",
+        "Yakshanba"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hafta Dushanba kunidan boshlanadi."
+    },
+    {
+      "text": "Dushanbadan keyin qaysi kun keladi?",
+      "options": [
+        "Seshanba",
+        "Chorshanba",
+        "Payshanba",
+        "Shanba"
+      ],
+      "correctIndex": 0,
+      "explanation": "Dushanbadan keyin Seshanba kuni keladi."
+    },
+    {
+      "text": "Jumadan keyin qaysi kun keladi?",
+      "options": [
+        "Payshanba",
+        "Yakshanba",
+        "Chorshanba",
+        "Shanba"
+      ],
+      "correctIndex": 3,
+      "explanation": "Juma kunidan so‘ng Shanba kuni keladi."
+    },
+    {
+      "text": "Haftaning oxirgi (dam olish) kuni qaysi?",
+      "options": [
+        "Dushanba",
+        "Juma",
+        "Yakshanba",
+        "Seshanba"
+      ],
+      "correctIndex": 2,
+      "explanation": "Yakshanba haftaning yettinchi, dam olish kunidir."
+    },
+    {
+      "text": "Bir yilda nechta fasl bor?",
+      "options": [
+        "3 ta fasl",
+        "5 ta fasl",
+        "4 ta fasl (bahor, yoz, kuz, qish)",
+        "12 ta fasl"
+      ],
+      "correctIndex": 2,
+      "explanation": "Yil 4 ta fasldan iborat."
+    },
+    {
+      "text": "Daraxtlar gullab, tabiat uyg‘onadigan fasl qaysi?",
+      "options": [
+        "Qish ❄️",
+        "Kuz 🍂",
+        "Yoz ☀️",
+        "Bahor 🌸"
+      ],
+      "correctIndex": 3,
+      "explanation": "Bahorda kunlar isib, gullar va daraxtlar ochiladi."
+    },
+    {
+      "text": "Meva va poliz ekinlari pishib, eng issiq bo‘ladigan fasl qaysi?",
+      "options": [
+        "Yoz ☀️",
+        "Qish ❄️",
+        "Bahor 🌸",
+        "Kuz 🍂"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yoz eng issiq fasl bo‘lib, mevalar g‘arq pishadi."
+    },
+    {
+      "text": "Daraxt barglari sarg‘ayib to‘kiladigan fasl qaysi?",
+      "options": [
+        "Bahor 🌸",
+        "Kuz 🍂",
+        "Yoz ☀️",
+        "Qish ❄️"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kuzda barglar sarg‘ayadi va hosil yig‘ishtirib olinadi."
+    },
+    {
+      "text": "Qishdan keyin qaysi fasl keladi?",
+      "options": [
+        "Kuz 🍂",
+        "Yoz ☀️",
+        "Yana qish ❄️",
+        "Bahor 🌸"
+      ],
+      "correctIndex": 3,
+      "explanation": "Qahraton qishdan so‘ng iliq bahor fasli boshlanadi."
+    },
+    {
+      "text": "Svetofor qizil chirog‘idan 🔴 so‘ng tayyorgarlik uchun qaysi rang yonadi?",
+      "options": [
+        "Yashil 🟢",
+        "Sariq 🟡",
+        "Ko‘k 🔵",
+        "Oq ⚪"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qizildan keyin sariq chiroq yonib, harakatga tayyorlanishni bildiradi."
+    },
+    {
+      "text": "Sariq chiroqdan so‘ng o‘tishga ruxsat beruvchi qaysi rang yonadi?",
+      "options": [
+        "Qizil 🔴",
+        "Ko‘k 🔵",
+        "Yashil 🟢",
+        "Binafsha 🟣"
+      ],
+      "correctIndex": 2,
+      "explanation": "Yashil chiroq yonganda yo‘ldan o‘tish mumkin."
+    },
+    {
+      "text": "Tuxumdan 🥚 jo‘ja 🐣 chiqishi uchun avval nima bo‘lishi kerak?",
+      "options": [
+        "Tovuq tuxumni bosib, isitishi kerak",
+        "Jo‘ja tuxumga kirishi kerak",
+        "Tuxum muzlatgichga qo‘yilishi kerak",
+        "Tuxum qovurilishi kerak"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tovuq mehr bilan tuxumni isitgach, undan mitti jo‘ja ochib chiqadi."
+    },
+    {
+      "text": "Kitob o‘qishdan oldin nima qilinadi?",
+      "options": [
+        "Kitob ochiladi 📖",
+        "Kitob yopiladi",
+        "Uxlab dam olinadi",
+        "Kitob javonga solinadi"
+      ],
+      "correctIndex": 0,
+      "explanation": "O‘qish uchun avval kitobning kerakli sahifasi ochiladi."
+    },
+    {
+      "text": "Bugun Dushanba bo‘lsa, ertaga qaysi kun bo‘ladi?",
+      "options": [
+        "Chorshanba",
+        "Yakshanba",
+        "Juma",
+        "Seshanba"
+      ],
+      "correctIndex": 3,
+      "explanation": "Dushanbadan keyingi kun — Seshanbadir."
+    },
+    {
+      "text": "Bugun Juma bo‘lsa, kecha qaysi kun edi?",
+      "options": [
+        "Shanba",
+        "Payshanba",
+        "Chorshanba",
+        "Seshanba"
+      ],
+      "correctIndex": 1,
+      "explanation": "Jumadan oldingi kun — Payshanba bo‘lgan."
+    },
+    {
+      "text": "Ali nonushta qildi, so‘ng maktabga bordi, darsdan keyin uyga qaytib dars tayyorladi. Eng oxirgi ish qaysi?",
+      "options": [
+        "Nonushta qilish",
+        "Maktabga borish",
+        "Uyda dars tayyorlash",
+        "Tongda uyg‘onish"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ketma-ketlikdagi oxirgi voqea dars tayyorlashdir."
+    }
+  ]
+}

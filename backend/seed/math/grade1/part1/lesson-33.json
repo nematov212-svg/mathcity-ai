@@ -1,0 +1,276 @@
+{
+  "bookNumber": 33,
+  "title": "Ayirish hadlari",
+  "emoji": "🧩",
+  "shortDesc": "Kamayuvchi, ayriluvchi, ayirma nomlari, jadval to‘ldirish va ayirma.",
+  "intro": "Ayirish amalida qatnashuvchi sonlar: kamayuvchi, ayriluvchi va ayirma deyiladi.",
+  "keyPoints": [
+    "Kamayuvchi — dastlabki eng katta son (kamayadigan son).",
+    "Ayriluvchi — olib tashlanadigan son.",
+    "Ayirma — ayirish amali natijasi. Masalan: 7 (kamayuvchi) − 2 (ayriluvchi) = 5 (ayirma)."
+  ],
+  "miniExample": {
+    "emojis": "7️⃣ − 2️⃣ = 5️⃣",
+    "text": "7 — kamayuvchi, 2 — ayriluvchi, 5 — ayirma!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "8 − 3 = 5 ifodasida 8 nima deyiladi?",
+      "options": [
+        "Kamayuvchi",
+        "Ayriluvchi",
+        "Ayirma",
+        "Qo‘shiluvchi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Dastlabki kamayadigan son kamayuvchi deyiladi."
+    },
+    {
+      "text": "8 − 3 = 5 ifodasida 3 nima deyiladi?",
+      "options": [
+        "Kamayuvchi",
+        "Ayriluvchi",
+        "Ayirma",
+        "Yig‘indi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ayirilayotgan son ayriluvchi deyiladi."
+    },
+    {
+      "text": "8 − 3 = 5 ifodasida 5 nima deyiladi?",
+      "options": [
+        "Kamayuvchi",
+        "Ayriluvchi",
+        "Ayirma (natija)",
+        "Qo‘shiluvchi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ayirish natijasi ayirma deyiladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "6 − 2 = 4 ifodasida 6 soni nima deb ataladi?",
+      "options": [
+        "Kamayuvchi",
+        "Ayriluvchi",
+        "Ayirma",
+        "Yig‘indi"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 — kamayuvchi son."
+    },
+    {
+      "text": "6 − 2 = 4 ifodasida 2 soni nima deb ataladi?",
+      "options": [
+        "Kamayuvchi",
+        "Ayirma",
+        "Ayriluvchi",
+        "Yig‘indi"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 — ayriluvchi son."
+    },
+    {
+      "text": "6 − 2 = 4 ifodasida 4 soni nima deb ataladi?",
+      "options": [
+        "Kamayuvchi",
+        "Ayirma",
+        "Ayriluvchi",
+        "Qo‘shiluvchi"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 — ayirma."
+    },
+    {
+      "text": "Kamayuvchi 9, ayriluvchi 3 bo‘lsa, ayirma nechaga teng?",
+      "options": [
+        "5",
+        "7",
+        "12",
+        "6 (chunki 9 − 3 = 6)"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 − 3 = 6."
+    },
+    {
+      "text": "Kamayuvchi 8, ayriluvchi 5 bo‘lsa, ayirma nechaga teng?",
+      "options": [
+        "2",
+        "3 (chunki 8 − 5 = 3)",
+        "4",
+        "13"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 − 5 = 3."
+    },
+    {
+      "text": "Kamayuvchi 10, ayriluvchi 4 bo‘lsa, ayirma nechaga teng?",
+      "options": [
+        "6 (chunki 10 − 4 = 6)",
+        "5",
+        "7",
+        "14"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 − 4 = 6."
+    },
+    {
+      "text": "Kamayuvchi 7, ayriluvchi 2 bo‘lsa, ayirmani toping.",
+      "options": [
+        "4",
+        "6",
+        "9",
+        "5"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 − 2 = 5."
+    },
+    {
+      "text": "Kamayuvchi 5, ayriluvchi 1 bo‘lsa, ayirmani toping.",
+      "options": [
+        "3",
+        "5",
+        "4",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "5 − 1 = 4."
+    },
+    {
+      "text": "Kamayuvchi 10, ayriluvchi 7 bo‘lsa, ayirmani toping.",
+      "options": [
+        "2",
+        "4",
+        "3",
+        "17"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 − 7 = 3."
+    },
+    {
+      "text": "Qaysi ifodada ayirma 2 ga teng?",
+      "options": [
+        "6 − 3",
+        "7 − 4",
+        "4 − 1",
+        "5 − 3"
+      ],
+      "correctIndex": 3,
+      "explanation": "5 − 3 = 2."
+    },
+    {
+      "text": "Qaysi ifodada ayirma 5 ga teng?",
+      "options": [
+        "9 − 4",
+        "8 − 4",
+        "7 − 3",
+        "10 − 4"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 − 4 = 5."
+    },
+    {
+      "text": "Ayirish amali qaysi belgi bilan yoziladi?",
+      "options": [
+        "+ (plyus)",
+        "− (minus belgisi)",
+        "= (tenglik)",
+        "× (ko‘paytirish)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ayirish amali '−' belgisi bilan yoziladi."
+    },
+    {
+      "text": "Kamayuvchi va ayriluvchi teng bo‘lsa (masalan, 6 − 6), ayirma nimaga teng?",
+      "options": [
+        "1 ga teng",
+        "6 ga teng",
+        "12 ga teng",
+        "0 ga teng bo‘ladi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Sonning o‘zidan o‘zi ayirilsa 0 qoladi."
+    },
+    {
+      "text": "Ayriluvchi 0 bo‘lsa (masalan, 8 − 0), ayirma nimaga teng?",
+      "options": [
+        "0 ga teng",
+        "Kamayuvchining o‘ziga (8 ga) teng",
+        "1 ga teng",
+        "Bilmayman"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 − 0 = 8."
+    },
+    {
+      "text": "Likopchada 10 ta o‘rik bor edi, 6 tasi yeyildi. Kamayuvchi qaysi son?",
+      "options": [
+        "6 (yeyilgan o‘riklar)",
+        "4 (qolgan o‘riklar)",
+        "10 (dastlabki barcha o‘riklar)",
+        "0"
+      ],
+      "correctIndex": 2,
+      "explanation": "Boshlang‘ich son — 10 kamayuvchidir."
+    },
+    {
+      "text": "Likopchada 10 ta o‘rikdan 6 tasi yeyildi. Ayriluvchi qaysi son?",
+      "options": [
+        "6 (olib tashlangan son)",
+        "10",
+        "4",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yeyilgan 6 ta o‘rik ayriluvchidir."
+    },
+    {
+      "text": "Likopchada 10 ta o‘rikdan 6 tasi yeyildi. Ayirma nechaga teng?",
+      "options": [
+        "4 ta o‘rik (10 − 6 = 4)",
+        "5 ta",
+        "3 ta",
+        "6 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qolgan 4 ta o‘rik ayirmadir."
+    },
+    {
+      "text": "Kamayuvchi 7, ayriluvchi 5 bo‘lgan ifodani toping:",
+      "options": [
+        "5 − 7",
+        "7 + 5",
+        "5 + 7",
+        "7 − 5"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kamayuvchi birinchi, ayriluvchi ikkinchi yoziladi: 7 − 5."
+    },
+    {
+      "text": "To‘g‘ri ayirmani toping:",
+      "options": [
+        "8 − 6 = 3",
+        "8 − 6 = 2",
+        "8 − 6 = 1",
+        "8 − 6 = 4"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 − 6 = 2 to‘g‘ri ayirmadir."
+    },
+    {
+      "text": "Shahzod 9 ta misoldan 7 tasini yechdi. Yechilmagan misollar ayirmasi qancha?",
+      "options": [
+        "3 ta",
+        "1 ta",
+        "2 ta misol",
+        "16 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 − 7 = 2 ta misol."
+    }
+  ]
+}

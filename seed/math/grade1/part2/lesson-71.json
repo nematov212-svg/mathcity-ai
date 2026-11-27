@@ -1,0 +1,276 @@
+{
+  "bookNumber": 71,
+  "title": "Guruhlash xossasi",
+  "emoji": "🤝",
+  "shortDesc": "Qo‘shishning guruhlash xossasi: (a + b) + c = a + (b + c) va qulay hisoblash.",
+  "intro": "Qo‘shishning guruhlash xossasiga ko‘ra, qo‘shiluvchilar qanday guruhlansa ham, yig‘indi o‘zgarmaydi. Qulay guruhlash orqali misollarni oson yechish mumkin.",
+  "keyPoints": [
+    "Xossa qoidasi: (a + b) + c = a + (b + c).",
+    "Qulay usul: qo‘shilganda to‘liq o‘nlik (10, 20, 30...) beradigan sonlar oldin guruhlanadi.",
+    "Misol: 17 + 25 + 3 = (17 + 3) + 25 = 20 + 25 = 45."
+  ],
+  "miniExample": {
+    "emojis": "(1️⃣7️⃣ + 3️⃣) + 2️⃣5️⃣ = 2️⃣0️⃣ + 2️⃣5️⃣ = 4️⃣5️⃣",
+    "text": "17 ga 3 ni qo‘shib 20 qildik, keyin 25 ni qo‘shdik: 45."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "16 + 28 + 4 ifodani qulay usulda hisoblash uchun qaysi sonlarni guruhlash kerak?",
+      "options": [
+        "16 va 4",
+        "28 va 4",
+        "16 va 28",
+        "Hammasini baravar"
+      ],
+      "correctIndex": 0,
+      "explanation": "16 + 4 = 20 to‘liq o‘nlik hosil qiladi, shuning uchun ularni guruhlash qulay."
+    },
+    {
+      "text": "Qulay usulda hisoblang: (34 + 6) + 15 = ?",
+      "options": [
+        "54",
+        "55",
+        "56",
+        "45"
+      ],
+      "correctIndex": 1,
+      "explanation": "34 + 6 = 40, 40 + 15 = 55."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 27 + 33 + 12 = ?",
+      "options": [
+        "71",
+        "73",
+        "72",
+        "62"
+      ],
+      "correctIndex": 2,
+      "explanation": "27 + 33 = 60, 60 + 12 = 72."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: (12 + 8) + 10 = ?",
+      "options": [
+        "30",
+        "28",
+        "32",
+        "20"
+      ],
+      "correctIndex": 0,
+      "explanation": "12 + 8 = 20, 20 + 10 = 30."
+    },
+    {
+      "text": "Hisoblang: (25 + 5) + 30 = ?",
+      "options": [
+        "50",
+        "70",
+        "60",
+        "55"
+      ],
+      "correctIndex": 2,
+      "explanation": "25 + 5 = 30, 30 + 30 = 60."
+    },
+    {
+      "text": "Hisoblang: (41 + 9) + 20 = ?",
+      "options": [
+        "60",
+        "70",
+        "80",
+        "69"
+      ],
+      "correctIndex": 1,
+      "explanation": "41 + 9 = 50, 50 + 20 = 70."
+    },
+    {
+      "text": "Hisoblang: 30 + (14 + 6) = ?",
+      "options": [
+        "40",
+        "60",
+        "45",
+        "50"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 + 6 = 20, 30 + 20 = 50."
+    },
+    {
+      "text": "Hisoblang: 50 + (18 + 2) = ?",
+      "options": [
+        "60",
+        "70",
+        "80",
+        "68"
+      ],
+      "correctIndex": 1,
+      "explanation": "18 + 2 = 20, 50 + 20 = 70."
+    },
+    {
+      "text": "Hisoblang: (36 + 4) + 40 = ?",
+      "options": [
+        "80",
+        "70",
+        "90",
+        "76"
+      ],
+      "correctIndex": 0,
+      "explanation": "36 + 4 = 40, 40 + 40 = 80."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 18 + 35 + 2 = ?",
+      "options": [
+        "54",
+        "56",
+        "45",
+        "55"
+      ],
+      "correctIndex": 3,
+      "explanation": "(18 + 2) + 35 = 20 + 35 = 55."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 23 + 44 + 7 = ?",
+      "options": [
+        "73",
+        "75",
+        "74",
+        "64"
+      ],
+      "correctIndex": 2,
+      "explanation": "(23 + 7) + 44 = 30 + 44 = 74."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 46 + 19 + 4 = ?",
+      "options": [
+        "68",
+        "70",
+        "69",
+        "59"
+      ],
+      "correctIndex": 2,
+      "explanation": "(46 + 4) + 19 = 50 + 19 = 69."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 31 + 27 + 9 = ?",
+      "options": [
+        "66",
+        "68",
+        "57",
+        "67"
+      ],
+      "correctIndex": 3,
+      "explanation": "(31 + 9) + 27 = 40 + 27 = 67."
+    },
+    {
+      "text": "Quyidagi ifodalardan qaysi biri 24 + 15 + 6 ifodaga teng?",
+      "options": [
+        "(24 + 6) + 15",
+        "(24 + 15) - 6",
+        "24 - (15 + 6)",
+        "(24 + 15) + 15"
+      ],
+      "correctIndex": 0,
+      "explanation": "Guruhlash xossasiga ko‘ra (24 + 6) + 15 unga teng."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 52 + 13 + 8 = ?",
+      "options": [
+        "72",
+        "73",
+        "74",
+        "63"
+      ],
+      "correctIndex": 1,
+      "explanation": "(52 + 8) + 13 = 60 + 13 = 73."
+    },
+    {
+      "text": "Taqqoslang: (27 + 3) + 14 va 45",
+      "options": [
+        "(27 + 3) + 14 > 45",
+        "(27 + 3) + 14 = 45",
+        "44 > 45",
+        "(27 + 3) + 14 < 45"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 + 14 = 44 va 44 < 45."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 37 + 29 + 3 = ?",
+      "options": [
+        "68",
+        "69",
+        "70",
+        "59"
+      ],
+      "correctIndex": 1,
+      "explanation": "(37 + 3) + 29 = 40 + 29 = 69."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 15 + 24 + 25 + 16 = ?",
+      "options": [
+        "70",
+        "90",
+        "80",
+        "75"
+      ],
+      "correctIndex": 2,
+      "explanation": "(15 + 25) + (24 + 16) = 40 + 40 = 80."
+    },
+    {
+      "text": "Qulay usulda hisoblang: 32 + 18 + 23 + 17 = ?",
+      "options": [
+        "90",
+        "80",
+        "100",
+        "85"
+      ],
+      "correctIndex": 0,
+      "explanation": "(32 + 18) + (23 + 17) = 50 + 40 = 90."
+    },
+    {
+      "text": "Yulduzcha o‘rniga to‘g‘ri belgini qo‘ying: (45 + 5) + 23 * 40 + (28 + 5)",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "50 + 23 = 73 va 40 + 33 = 73, demak teng (=)."
+    },
+    {
+      "text": "Qaysi guruhlash 18 + 43 + 12 ifodani eng oson yechishga yordam beradi?",
+      "options": [
+        "(43 + 12) + 18",
+        "(18 + 43) + 12",
+        "Hammasi bir xil qiyin",
+        "(18 + 12) + 43"
+      ],
+      "correctIndex": 3,
+      "explanation": "18 + 12 = 30 to‘liq o‘nlik bo‘lgani uchun (18 + 12) + 43 eng qulay."
+    },
+    {
+      "text": "Avtobusda 14 nafar bola bor edi. Birinchi bekatda 25 nafar, ikkinchi bekatda 6 nafar bola chiqdi. Avtobusda jami nechta bola bo‘ldi?",
+      "options": [
+        "44 nafar",
+        "45 nafar",
+        "46 nafar",
+        "35 nafar"
+      ],
+      "correctIndex": 1,
+      "explanation": "(14 + 6) + 25 = 20 + 25 = 45 nafar bola bo‘ldi."
+    },
+    {
+      "text": "Jasur dushanba kuni 17 ta, seshanba kuni 28 ta va chorshanba kuni 13 ta misol yechdi. Jasur uch kunda jami nechta misol yechdi?",
+      "options": [
+        "57 ta",
+        "59 ta",
+        "58 ta",
+        "48 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "(17 + 13) + 28 = 30 + 28 = 58 ta misol yechdi."
+    }
+  ]
+}

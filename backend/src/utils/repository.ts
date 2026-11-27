@@ -20,6 +20,8 @@ import { curriculum220Lessons } from './curriculum220.js';
 import {
   allCurriculumModules,
   grade1Part1Lessons,
+  grade1Part2Lessons,
+  allGrade1Lessons,
   CurriculumModule,
   CurriculumLesson,
   CurriculumQuestion,
@@ -33,6 +35,10 @@ export interface LessonStepProgress {
   xpGiven: number;
   isCompleted: boolean;
   completedAt?: string;
+  bestPercent?: number;
+  lastPercent?: number;
+  attempts?: number;
+  coinGiven?: boolean;
 }
 import { mathQuestionBank, archivedDemoQuestions, QuestionBankItem } from './questionBank.js';
 import { AgeMode } from './age.js';
@@ -271,11 +277,12 @@ class DataRepository {
   private users: Map<string, UserAccount> = new Map();
   private modules: CurriculumModule[] = [...allCurriculumModules];
   private lessonStepProgress: Map<string, LessonStepProgress> = new Map();
+  private testAttempts: Map<string, any> = new Map();
   private lessons: LessonModel[] = (() => {
-    // Map Grade 1 Part 1 curriculum lessons
-    const grade1Mapped: LessonModel[] = grade1Part1Lessons.map((cl) => ({
+    // Map Grade 1 curriculum lessons (74 total: 41 in Part 1, 33 in Part 2)
+    const grade1Mapped: LessonModel[] = allGrade1Lessons.map((cl) => ({
       id: cl.id,
-      courseId: 'course-g1',
+      courseId: cl.moduleId === 'module-g1-p2' ? 'course-g1-p2' : 'course-g1-p1',
       chapterId: `chapter-${cl.moduleId}-${cl.order}`,
       chapterTitle: cl.chapterTitle,
       grade: 1,
@@ -288,6 +295,7 @@ class DataRepository {
       rewardXP: cl.xpReward,
       rewardCoins: cl.coinReward,
       orderIndex: cl.order,
+      bookNumber: cl.bookNumber,
       sections: [
         {
           id: `${cl.id}-s1`,
@@ -318,6 +326,8 @@ class DataRepository {
       coinReward: cl.coinReward,
       estMinutes: cl.estMinutes,
       questionCount: cl.questionCount,
+      practice: cl.practice,
+      test: cl.test,
       questions: cl.questions,
     }));
 
@@ -858,7 +868,7 @@ class DataRepository {
     return mods.map((m) => {
       const lessons = this.getModuleLessons(m.id, userId);
       const lessonCount = lessons.length;
-      const questionCount = lessons.reduce((acc, l) => acc + (l.questionCount || 5), 0);
+      const questionCount = lessons.reduce((acc, l) => acc + (l.questionCount || 20), 0);
       const totalMinutes = lessons.reduce((acc, l) => acc + (l.estMinutes || 7), 0);
       const totalXp = lessons.reduce((acc, l) => acc + (l.rewardXP || 100), 0);
       const completedCount = lessons.filter((l) => l.isCompleted).length;
@@ -889,16 +899,22 @@ class DataRepository {
     const isPro = !!(user && (user.subscription?.status === 'PRO_ACTIVE' || (user as any).isPro));
     const completedLessonIds = user?.completedLessons || [];
 
-    // Filter lessons by moduleId or grade
+    // Filter lessons strictly by moduleId
     let moduleLessons = this.lessons.filter((l) => l.moduleId === moduleId);
-    if (moduleLessons.length === 0 && (moduleId === 'module-g1-p1' || moduleId.includes('g1'))) {
-      moduleLessons = this.lessons.filter((l) => l.grade === 1);
+    if (moduleLessons.length === 0 && (moduleId === 'module-g1-p1')) {
+      moduleLessons = this.lessons.filter((l) => l.moduleId === 'module-g1-p1' || (!l.moduleId && l.grade === 1));
     }
 
     // Sort by orderIndex asc
     moduleLessons.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
 
-    let prevLessonCompleted = true; // Lesson 1 is always unlocked
+    // For Part 2 (module-g1-p2), check if Part 1 Lesson 41 has been passed:
+    let prevLessonPassed = true;
+    if (moduleId === 'module-g1-p2') {
+      const l41Prog = userId ? this.lessonStepProgress.get(`${userId}:lesson-g1-41`) : null;
+      const l41Passed = completedLessonIds.includes('lesson-g1-41') || ((l41Prog?.bestPercent ?? 0) >= 60);
+      prevLessonPassed = l41Passed;
+    }
 
     return moduleLessons.map((l, index) => {
       const stepProgKey = userId ? `${userId}:${l.id}` : null;
@@ -906,29 +922,36 @@ class DataRepository {
 
       const isCompleted = completedLessonIds.includes(l.id) || (stepProg?.isCompleted ?? false);
       const completedSteps = stepProg ? stepProg.completedSteps : (isCompleted ? 5 : 0);
-      const percent = isCompleted ? 100 : Math.round((completedSteps / 5) * 100);
+      const bestPercent = stepProg?.bestPercent ?? (isCompleted ? 100 : 0);
+      const lastPercent = stepProg?.lastPercent ?? 0;
+      const attempts = stepProg?.attempts ?? (isCompleted ? 1 : 0);
+      const isPassed = bestPercent >= 60 || isCompleted;
+      const percent = bestPercent;
       const earnedXp = stepProg ? stepProg.xpGiven : (isCompleted ? (l.rewardXP || 100) : 0);
 
       // Sequential unlocking:
-      // Lesson 1 is always unlocked. Lesson k is unlocked if lesson k-1 is completed.
+      // Part 1: Lesson 1 is always unlocked. Lesson k unlocked if k-1 passed.
+      // Part 2: Lesson 1 (Lesson 42) unlocked only if Lesson 41 passed. Lesson k unlocked if k-1 passed.
       // Pro users have all lessons unlocked!
       let isLocked = false;
       if (!isPro) {
-        if (index === 0) {
+        if (moduleId === 'module-g1-p1' && index === 0) {
           isLocked = false;
         } else {
-          isLocked = !prevLessonCompleted;
+          isLocked = !prevLessonPassed;
         }
       }
 
       // Update for next lesson
-      prevLessonCompleted = isCompleted;
+      prevLessonPassed = isPassed;
 
       let status = 'NOT_STARTED';
-      if (isCompleted) {
-        status = 'COMPLETED';
-      } else if (isLocked) {
+      if (isLocked) {
         status = 'LOCKED';
+      } else if (isPassed) {
+        status = 'COMPLETED';
+      } else if (attempts > 0 && bestPercent < 60) {
+        status = 'RETRY';
       } else if (completedSteps > 0) {
         status = 'IN_PROGRESS';
       }
@@ -938,6 +961,7 @@ class DataRepository {
         moduleId: l.moduleId || moduleId,
         order: l.orderIndex,
         orderIndex: l.orderIndex,
+        bookNumber: l.bookNumber || (moduleId === 'module-g1-p2' ? (l.orderIndex + 41) : l.orderIndex),
         title: l.title,
         chapterTitle: l.chapterTitle,
         shortDesc: l.description,
@@ -951,16 +975,245 @@ class DataRepository {
         coinReward: l.rewardCoins || 12,
         rewardCoins: l.rewardCoins || 12,
         estMinutes: l.estMinutes || 7,
-        questionCount: l.questionCount || (l.sections ? l.sections[0]?.questions.length : 5) || 5,
+        questionCount: l.questionCount || (l.test ? l.test.length : 20),
         completedSteps,
         percent,
+        bestPercent,
+        lastPercent,
+        attempts,
         earnedXp,
-        isCompleted,
+        isCompleted: isPassed,
         isLocked,
         status,
+        practice: l.practice || [],
+        test: l.test || [],
         questions: l.questions || [],
       };
     });
+  }
+
+  startTestAttempt(userId: string, lessonId: string) {
+    const user = this.users.get(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi.');
+
+    const lesson = this.getLessonById(lessonId);
+    if (!lesson) throw new Error('Dars topilmadi.');
+
+    const attemptId = `att_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const questions = (lesson.test && lesson.test.length > 0)
+      ? lesson.test
+      : (lesson.questions || []);
+
+    const testAttempt = {
+      id: attemptId,
+      userId,
+      lessonId: lesson.id,
+      createdAt: new Date().toISOString(),
+    };
+    this.testAttempts.set(attemptId, testAttempt);
+
+    if (isDatabaseHealthy()) {
+      prisma.testAttempt.create({
+        data: {
+          id: attemptId,
+          userId,
+          lessonId: lesson.id,
+          questionOrder: JSON.stringify(questions.map((q) => q.id)),
+          optionOrder: '{}',
+        },
+      }).catch(() => {});
+    }
+
+    // Strip out correct answers and explanations for anti-cheat
+    const safeQuestions = questions.map((q, idx) => ({
+      id: q.id || `q-${lesson.id}-${idx + 1}`,
+      order: q.order || idx + 1,
+      text: q.text || (q as any).prompt,
+      options: q.options,
+    }));
+
+    return {
+      attemptId,
+      lessonId: lesson.id,
+      lessonTitle: lesson.title,
+      totalCount: safeQuestions.length,
+      questions: safeQuestions,
+    };
+  }
+
+  submitTestAttempt(
+    userId: string,
+    lessonId: string,
+    attemptId: string,
+    answers: { [key: string]: number } | number[]
+  ) {
+    const user = this.users.get(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi.');
+
+    const lesson = this.getLessonById(lessonId);
+    if (!lesson) throw new Error('Dars topilmadi.');
+
+    const questions = (lesson.test && lesson.test.length > 0)
+      ? lesson.test
+      : (lesson.questions || []);
+
+    const totalCount = questions.length || 20;
+    let correctCount = 0;
+
+    const reviews = questions.map((q, idx) => {
+      let selectedOption: number = -1;
+      if (Array.isArray(answers)) {
+        selectedOption = answers[idx] ?? -1;
+      } else if (typeof answers === 'object' && answers !== null) {
+        selectedOption = answers[q.id] ?? answers[String(idx)] ?? answers[String(idx + 1)] ?? -1;
+      }
+
+      const correctOption = q.correctIndex ?? 0;
+      const isCorrect = selectedOption === correctOption;
+      if (isCorrect) correctCount++;
+
+      return {
+        id: q.id || `q-${lesson.id}-${idx + 1}`,
+        order: q.order || idx + 1,
+        text: q.text || (q as any).prompt,
+        options: q.options,
+        selectedOption,
+        correctOption,
+        isCorrect,
+        explanation: q.explanation || '',
+      };
+    });
+
+    const percent = Math.round((correctCount / totalCount) * 100);
+    const isPassed = percent >= 60;
+
+    // Progress update
+    const key = `${userId}:${lesson.id}`;
+    let prog = this.lessonStepProgress.get(key);
+    if (!prog) {
+      prog = {
+        userId,
+        lessonId: lesson.id,
+        completedSteps: isPassed ? 5 : 4,
+        percent,
+        xpGiven: 0,
+        isCompleted: isPassed,
+        bestPercent: percent,
+        lastPercent: percent,
+        attempts: 1,
+        coinGiven: false,
+      };
+    } else {
+      prog.attempts = (prog.attempts || 0) + 1;
+      prog.lastPercent = percent;
+      const oldBest = prog.bestPercent || 0;
+      prog.bestPercent = Math.max(oldBest, percent);
+      if (isPassed) {
+        prog.isCompleted = true;
+        prog.completedSteps = 5;
+      }
+    }
+
+    // Proportional XP calculation:
+    // Steps 1-4 cover 40% of xpReward.
+    // Step 5 (Test) covers 60% of xpReward, scaled by bestPercent.
+    const totalXp = lesson.rewardXP || lesson.xpReward || 100;
+    const testMaxXp = Math.round(totalXp * 0.6);
+    const targetTestXp = Math.round(testMaxXp * (prog.bestPercent || 0) / 100);
+    const prevTestXp = (prog as any).testXpGiven || 0;
+    const incrementalXp = Math.max(0, targetTestXp - prevTestXp);
+
+    if (incrementalXp > 0) {
+      user.totalXP += incrementalXp;
+      prog.xpGiven = (prog.xpGiven || 0) + incrementalXp;
+      (prog as any).testXpGiven = targetTestXp;
+    }
+
+    // Coins: awarded once on first pass (>= 60%)
+    let coinsAwarded = 0;
+    if (isPassed && !prog.coinGiven) {
+      coinsAwarded = lesson.rewardCoins || lesson.coinReward || 12;
+      user.coinBalance += coinsAwarded;
+      prog.coinGiven = true;
+    }
+
+    if (isPassed) {
+      if (!user.completedLessons.includes(lesson.id)) {
+        user.completedLessons.push(lesson.id);
+      }
+      this.advanceMissionProgress(user.id, 'COMPLETE_LESSON', 1);
+      if (!user.unlockedAchievements.includes('ach_first_step')) {
+        user.unlockedAchievements.push('ach_first_step');
+      }
+      this.recordDailyLessonCompleted(user.id, lesson.id);
+    }
+
+    this.lessonStepProgress.set(key, prog);
+
+    const attempt = this.testAttempts.get(attemptId);
+    if (attempt) {
+      attempt.submittedAt = new Date().toISOString();
+      attempt.correctCount = correctCount;
+      attempt.totalCount = totalCount;
+      attempt.percent = percent;
+    }
+
+    if (isDatabaseHealthy()) {
+      prisma.testAttempt.update({
+        where: { id: attemptId },
+        data: {
+          submittedAt: new Date(),
+          correct: correctCount,
+          total: totalCount,
+          percent,
+        },
+      }).catch(() => {});
+
+      const coinGivenInt = prog.coinGiven ? 1 : 0;
+      prisma.lessonProgress.upsert({
+        where: { userId_lessonId: { userId, lessonId: lesson.id } },
+        update: {
+          bestPercent: prog.bestPercent,
+          lastPercent: prog.lastPercent,
+          attempts: prog.attempts,
+          coinGiven: coinGivenInt,
+          completedSteps: prog.completedSteps,
+          isCompleted: prog.isCompleted,
+          xpGiven: prog.xpGiven,
+        },
+        create: {
+          userId,
+          lessonId: lesson.id,
+          bestPercent: prog.bestPercent,
+          lastPercent: prog.lastPercent,
+          attempts: prog.attempts,
+          coinGiven: coinGivenInt,
+          completedSteps: prog.completedSteps,
+          isCompleted: prog.isCompleted,
+          xpGiven: prog.xpGiven,
+        },
+      }).catch(() => {});
+
+      this.persistUserToDatabase(user).catch(() => {});
+    }
+
+    return {
+      attemptId,
+      lessonId: lesson.id,
+      lessonTitle: lesson.title,
+      correctCount,
+      totalCount,
+      percent,
+      isPassed,
+      xpAwarded: incrementalXp,
+      coinsAwarded,
+      bestPercent: prog.bestPercent,
+      lastPercent: prog.lastPercent,
+      attempts: prog.attempts,
+      coinBalance: user.coinBalance,
+      totalXP: user.totalXP,
+      questions: reviews,
+    };
   }
 
   getLessonStepProgress(userId: string, lessonId: string): LessonStepProgress {

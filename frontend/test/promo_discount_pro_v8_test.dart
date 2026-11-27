@@ -5,8 +5,6 @@ import 'package:mathcity_ai/core/widgets/new_user_discount_dialog.dart';
 import 'package:mathcity_ai/core/widgets/promo_dialog_controller.dart';
 import 'package:mathcity_ai/features/games/house_building_screen.dart';
 import 'package:mathcity_ai/features/settings/mathcity_pro_screen.dart';
-import 'package:mathcity_ai/core/pricing/pricing_model.dart';
-import 'package:mathcity_ai/core/pricing/pricing_provider.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

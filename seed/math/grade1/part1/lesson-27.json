@@ -1,0 +1,276 @@
+{
+  "bookNumber": 27,
+  "title": "1 dan 10 gacha bo‘lgan sonlar. Sonlarni taqqoslash",
+  "emoji": "📊",
+  "shortDesc": "Sonlarni o‘sish va kamayish tartibida joylashtirish, eng katta va eng kichik son.",
+  "intro": "1 dan 10 gacha bo‘lgan barcha sonlarni o‘zaro taqqoslaymiz va tartiblaymiz.",
+  "keyPoints": [
+    "1 < 2 < 3 < 4 < 5 < 6 < 7 < 8 < 9 < 10.",
+    "10 dan boshlab kamayish tartibi: 10, 9, 8, 7, 6, 5, 4, 3, 2, 1.",
+    "Eng kichik bir xonali natural son 1, eng kattasi 9, 10 esa ikki xonali."
+  ],
+  "miniExample": {
+    "emojis": "1️⃣ < 🔟",
+    "text": "1 eng kichik natural son, 10 esa eng kattasi!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "1 dan 10 gacha sonlar ichida eng kattasi qaysi?",
+      "options": [
+        "10",
+        "9",
+        "8",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 ushbu qatorda eng kattadir."
+    },
+    {
+      "text": "Taqqoslang: 9 ... 10. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 soni 10 dan kichik (9 < 10)."
+    },
+    {
+      "text": "Sonlarni o‘sish tartibida joylashtiring: 7, 3, 5",
+      "options": [
+        "7, 5, 3",
+        "5, 3, 7",
+        "3, 5, 7",
+        "3, 7, 5"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kichigidan kattasiga: 3, 5, 7."
+    }
+  ],
+  "test": [
+    {
+      "text": "Taqqoslang: 10 ... 7. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 soni 7 dan katta (10 > 7)."
+    },
+    {
+      "text": "Taqqoslang: 6 ... 9. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "−"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 soni 9 dan kichik (6 < 9)."
+    },
+    {
+      "text": "Taqqoslang: 8 ... 8. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 va 8 teng (8 = 8)."
+    },
+    {
+      "text": "Taqqoslang: 10 ... 10. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "−",
+        "="
+      ],
+      "correctIndex": 3,
+      "explanation": "10 va 10 teng (10 = 10)."
+    },
+    {
+      "text": "Taqqoslang: 5 ... 8. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 soni 8 dan kichik (5 < 8)."
+    },
+    {
+      "text": "Taqqoslang: 9 ... 4. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "−"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 soni 4 dan katta (9 > 4)."
+    },
+    {
+      "text": "Taqqoslang: 3 ... 7. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 soni 7 dan kichik (3 < 7)."
+    },
+    {
+      "text": "Taqqoslang: 10 ... 1. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        "=",
+        ">",
+        "−"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 soni 1 dan katta (10 > 1)."
+    },
+    {
+      "text": "Sonlarni o‘sish tartibida joylashtiring: 4, 1, 9",
+      "options": [
+        "9, 4, 1",
+        "4, 1, 9",
+        "1, 4, 9",
+        "1, 9, 4"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kichigidan kattasiga: 1, 4, 9."
+    },
+    {
+      "text": "Sonlarni kamayish tartibida joylashtiring: 2, 8, 5",
+      "options": [
+        "2, 5, 8",
+        "5, 8, 2",
+        "8, 2, 5",
+        "8, 5, 2"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kattasidan kichigiga: 8, 5, 2."
+    },
+    {
+      "text": "Quyidagi sonlardan qaysi biri 6 dan katta, lekin 8 dan kichik?",
+      "options": [
+        "7",
+        "5",
+        "9",
+        "8"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 va 8 orasidagi son 7 dir."
+    },
+    {
+      "text": "Quyidagi sonlardan qaysi biri 8 dan katta, lekin 10 dan kichik?",
+      "options": [
+        "7",
+        "9",
+        "11",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 va 10 orasidagi son 9 dir."
+    },
+    {
+      "text": "2, 5, 7, 10 sonlari ichida eng kichigi qaysi?",
+      "options": [
+        "5",
+        "7",
+        "10",
+        "2"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ushbu to‘rttalikda 2 eng kichigidir."
+    },
+    {
+      "text": "3, 6, 9, 4 sonlari ichida eng kattasi qaysi?",
+      "options": [
+        "6",
+        "9",
+        "3",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ushbu to‘rttalikda 9 eng kattasidir."
+    },
+    {
+      "text": "Quyidagi taqqoslashlardan qaysi biri to‘g‘ri?",
+      "options": [
+        "3 > 7",
+        "2 > 5",
+        "6 > 4",
+        "1 > 8"
+      ],
+      "correctIndex": 2,
+      "explanation": "6 soni 4 dan katta."
+    },
+    {
+      "text": "Qaysi taqqoslash to‘g‘ri yozilgan?",
+      "options": [
+        "5 < 9",
+        "8 < 3",
+        "7 < 2",
+        "10 < 6"
+      ],
+      "correctIndex": 0,
+      "explanation": "5 soni 9 dan kichik."
+    },
+    {
+      "text": "Ali 8 yoshda, ukasi Vali 6 yoshda. Kim katta?",
+      "options": [
+        "Ali katta (8 > 6)",
+        "Vali katta",
+        "Ikkalasi teng",
+        "Vali Alidan katta"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 soni 6 dan katta bo‘lgani uchun Ali katta."
+    },
+    {
+      "text": "Birinchi sinfda 10 ta o‘g‘il va 9 ta qiz o‘qiydi. O‘g‘il bolalar ko‘pmi yoki qizlar?",
+      "options": [
+        "Qizlar ko‘p",
+        "Ikkalasi teng",
+        "O‘g‘il bolalar kam",
+        "O‘g‘il bolalar ko‘p (10 > 9)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 > 9 bo‘lgani uchun o‘g‘il bolalar ko‘p."
+    },
+    {
+      "text": "Toshkentdan Samarqandgacha poyezd 2 soatda, avtobus esa 5 soatda yetib boradi. Qaysi biri tezroq?",
+      "options": [
+        "Avtobus tezroq",
+        "Poyezd tezroq (2 soat < 5 soat)",
+        "Ikkalasi bir xil",
+        "Avtobus 2 soatda"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kamroq vaqt sarflagan transport tezroq hisoblanadi (2 < 5)."
+    },
+    {
+      "text": "Nodirada 7 ta, Zahrada 10 ta kitob bor. Zahrada nechta ko‘p kitob bor?",
+      "options": [
+        "2 ta",
+        "4 ta",
+        "3 ta ko‘p kitob (10 − 7 = 3)",
+        "1 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 − 7 = 3 ta ko‘p kitob."
+    }
+  ]
+}

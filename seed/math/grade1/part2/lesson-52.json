@@ -1,0 +1,276 @@
+{
+  "bookNumber": 52,
+  "title": "Bir xonali sonlarni o‘nlikdan o‘tib qo‘shish",
+  "emoji": "➕",
+  "shortDesc": "Qo‘shiluvchini 10 gacha to‘ldirish (8+5=(8+2)+3), to‘liq o‘nlikni ajratish, 9+4, 7+6.",
+  "intro": "O‘nlikdan o‘tib qo‘shishda ikkinchi son shunday bo‘laklanadiki, birinchi son 10 gacha to‘ldiriladi.",
+  "keyPoints": [
+    "Qoida: Birinchi qo‘shiluvchini 10 gacha to‘ldiramiz.",
+    "Misol: 8 + 5 = 8 + (2 + 3) = (8 + 2) + 3 = 10 + 3 = 13.",
+    "9 + 4 = (9 + 1) + 3 = 13, 7 + 6 = (7 + 3) + 3 = 13."
+  ],
+  "miniExample": {
+    "emojis": "8️⃣ + 5️⃣ ➡️ (8+2)+3 = 1️⃣3️⃣",
+    "text": "8 ga 2 ni qo‘shib 10 qilamiz, qolgan 3 ni qo‘shsak 13 bo‘ladi!"
+  },
+  "xpReward": 110,
+  "coinReward": 12,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 9 + 4 = ?",
+      "options": [
+        "13",
+        "12",
+        "14",
+        "15"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 + 1 = 10, 10 + 3 = 13."
+    },
+    {
+      "text": "8 sonini 10 gacha to‘ldirish uchun necha kerak?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 2 = 10."
+    },
+    {
+      "text": "Hisoblang: 7 + 6 = ?",
+      "options": [
+        "12",
+        "14",
+        "13",
+        "15"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 3 = 10, 10 + 3 = 13."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 9 + 2 = ?",
+      "options": [
+        "11",
+        "10",
+        "12",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 + 1 = 10, 10 + 1 = 11."
+    },
+    {
+      "text": "Misolni hisoblang: 9 + 3 = ?",
+      "options": [
+        "11",
+        "13",
+        "12",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 + 1 = 10, 10 + 2 = 12."
+    },
+    {
+      "text": "Misolni hisoblang: 9 + 4 = ?",
+      "options": [
+        "12",
+        "13",
+        "14",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 + 1 = 10, 10 + 3 = 13."
+    },
+    {
+      "text": "Misolni hisoblang: 9 + 5 = ?",
+      "options": [
+        "13",
+        "15",
+        "16",
+        "14"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 + 1 = 10, 10 + 4 = 14."
+    },
+    {
+      "text": "Misolni hisoblang: 8 + 3 = ?",
+      "options": [
+        "10",
+        "11",
+        "12",
+        "13"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 + 2 = 10, 10 + 1 = 11."
+    },
+    {
+      "text": "Misolni hisoblang: 8 + 4 = ?",
+      "options": [
+        "12",
+        "11",
+        "13",
+        "14"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 2 = 10, 10 + 2 = 12."
+    },
+    {
+      "text": "Misolni hisoblang: 8 + 5 = ?",
+      "options": [
+        "12",
+        "14",
+        "15",
+        "13"
+      ],
+      "correctIndex": 3,
+      "explanation": "8 + 2 = 10, 10 + 3 = 13."
+    },
+    {
+      "text": "Misolni hisoblang: 7 + 4 = ?",
+      "options": [
+        "10",
+        "12",
+        "11",
+        "13"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 3 = 10, 10 + 1 = 11."
+    },
+    {
+      "text": "Misolni hisoblang: 7 + 5 = ?",
+      "options": [
+        "11",
+        "13",
+        "12",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 + 3 = 10, 10 + 2 = 12."
+    },
+    {
+      "text": "Misolni hisoblang: 7 + 6 = ?",
+      "options": [
+        "12",
+        "14",
+        "15",
+        "13"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 + 3 = 10, 10 + 3 = 13."
+    },
+    {
+      "text": "Misolni hisoblang: 6 + 5 = ?",
+      "options": [
+        "11",
+        "10",
+        "12",
+        "13"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 + 4 = 10, 10 + 1 = 11."
+    },
+    {
+      "text": "8 + 5 ni hisoblashda 5 soni qaysi ikkita songa ajratiladi?",
+      "options": [
+        "1 va 4 ga",
+        "2 va 3 ga (chunki 8 + 2 = 10)",
+        "2 va 2 ga",
+        "3 va 3 ga"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 ni 10 ga to‘ldirish uchun 2 olinadi, qolgani 3."
+    },
+    {
+      "text": "7 + 6 ni hisoblashda 6 soni qaysi ikkita songa ajratiladi?",
+      "options": [
+        "2 va 4 ga",
+        "1 va 5 ga",
+        "4 va 2 ga",
+        "3 va 3 ga (chunki 7 + 3 = 10)"
+      ],
+      "correctIndex": 3,
+      "explanation": "7 ni 10 ga to‘ldirish uchun 3 kerak, 6 dan 3 qoladi."
+    },
+    {
+      "text": "9 + 7 ni hisoblashda 7 soni qaysi ikkita songa ajratiladi?",
+      "options": [
+        "2 va 5 ga",
+        "1 va 6 ga (chunki 9 + 1 = 10)",
+        "3 va 4 ga",
+        "1 va 5 ga"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 ni 10 qilish uchun 1 olinadi, qolgani 6."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 12 ga teng?",
+      "options": [
+        "8 + 3",
+        "7 + 4",
+        "8 + 4",
+        "9 + 2"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 4 = 12."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 13 ga teng?",
+      "options": [
+        "9 + 4",
+        "9 + 3",
+        "8 + 4",
+        "7 + 5"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 + 4 = 13."
+    },
+    {
+      "text": "Savatda 8 ta olma bor edi. Dilshod yana 5 ta solsa jami nechta bo‘ladi?",
+      "options": [
+        "13 ta olma",
+        "12 ta",
+        "14 ta",
+        "15 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 + 5 = 13 ta olma."
+    },
+    {
+      "text": "Gulshanning 9 ta oq va 4 ta sariq atirguli bor. Jami atirgullar nechta?",
+      "options": [
+        "12 ta",
+        "14 ta",
+        "15 ta",
+        "13 ta atirgul"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 + 4 = 13 ta atirgul."
+    },
+    {
+      "text": "Stol ustida 7 ta qalam bor edi, yana 6 ta qo‘yildi. Qalamlar nechta bo‘ldi?",
+      "options": [
+        "12 ta",
+        "13 ta qalam",
+        "14 ta",
+        "11 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "7 + 6 = 13 ta qalam."
+    },
+    {
+      "text": "To‘g‘ri tenglikni toping:",
+      "options": [
+        "8 + 5 = 12",
+        "8 + 5 = 14",
+        "8 + 5 = 13",
+        "8 + 5 = 15"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 + 5 = 13 to‘g‘ri tenglikdir."
+    }
+  ]
+}

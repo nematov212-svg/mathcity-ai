@@ -1,0 +1,276 @@
+{
+  "bookNumber": 47,
+  "title": "17 va 18 sonlari",
+  "emoji": "🔢",
+  "shortDesc": "17 va 18 sonlari tarkibi (9+8, 10+7; 9+9), ifodani qiymati bilan bog‘lash.",
+  "intro": "17 va 18 sonlarining tarkibi: 9 + 9 = 18 va 9 + 8 = 17.",
+  "keyPoints": [
+    "17 sonining tarkibi: 10+7, 9+8.",
+    "18 sonining tarkibi: 10+8, 9+9.",
+    "18 − 9 = 9, 17 − 8 = 9, 17 − 9 = 8."
+  ],
+  "miniExample": {
+    "emojis": "9️⃣ + 9️⃣ = 1️⃣8️⃣",
+    "text": "Ikkita to‘qqiz yig‘indisi 18 bo‘ladi: 9 + 9 = 18!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Hisoblang: 9 + 9 = ?",
+      "options": [
+        "18",
+        "17",
+        "19",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 + 9 = 18."
+    },
+    {
+      "text": "Hisoblang: 9 + 8 = ?",
+      "options": [
+        "16",
+        "17",
+        "18",
+        "19"
+      ],
+      "correctIndex": 1,
+      "explanation": "9 + 8 = 17."
+    },
+    {
+      "text": "Hisoblang: 18 − 9 = ?",
+      "options": [
+        "8",
+        "10",
+        "9",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "18 − 9 = 9."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 10 + 7 = ?",
+      "options": [
+        "17",
+        "16",
+        "18",
+        "19"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 7 = 17."
+    },
+    {
+      "text": "Misolni hisoblang: 9 + 8 = ?",
+      "options": [
+        "16",
+        "18",
+        "17",
+        "19"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 + 8 = 17."
+    },
+    {
+      "text": "Misolni hisoblang: 10 + 8 = ?",
+      "options": [
+        "17",
+        "18",
+        "19",
+        "20"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 + 8 = 18."
+    },
+    {
+      "text": "Misolni hisoblang: 9 + 9 = ?",
+      "options": [
+        "17",
+        "19",
+        "16",
+        "18"
+      ],
+      "correctIndex": 3,
+      "explanation": "9 + 9 = 18."
+    },
+    {
+      "text": "Misolni hisoblang: 17 − 7 = ?",
+      "options": [
+        "9",
+        "10",
+        "11",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "17 − 7 = 10."
+    },
+    {
+      "text": "Misolni hisoblang: 17 − 8 = ?",
+      "options": [
+        "9",
+        "8",
+        "10",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "17 − 8 = 9."
+    },
+    {
+      "text": "Misolni hisoblang: 17 − 9 = ?",
+      "options": [
+        "7",
+        "9",
+        "6",
+        "8"
+      ],
+      "correctIndex": 3,
+      "explanation": "17 − 9 = 8."
+    },
+    {
+      "text": "Misolni hisoblang: 18 − 8 = ?",
+      "options": [
+        "9",
+        "11",
+        "10",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "18 − 8 = 10."
+    },
+    {
+      "text": "Misolni hisoblang: 18 − 9 = ?",
+      "options": [
+        "8",
+        "10",
+        "9",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "18 − 9 = 9."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 9 + □ = 17. Katakdagi son nima?",
+      "options": [
+        "7",
+        "9",
+        "6",
+        "8"
+      ],
+      "correctIndex": 3,
+      "explanation": "17 − 9 = 8."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 9 + □ = 18. Katakdagi son nima?",
+      "options": [
+        "9",
+        "8",
+        "10",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "18 − 9 = 9."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 17 − □ = 9. Katakdagi son nima?",
+      "options": [
+        "7",
+        "8",
+        "9",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "17 − 9 = 8."
+    },
+    {
+      "text": "Tenglikni to‘ldiring: 18 − □ = 9. Katakdagi son nima?",
+      "options": [
+        "8",
+        "10",
+        "7",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "18 − 9 = 9."
+    },
+    {
+      "text": "17 soni toq sonmi yoki juft son?",
+      "options": [
+        "Juft son",
+        "Toq son (7 bilan tugaydi)",
+        "Nol son",
+        "Manfiy son"
+      ],
+      "correctIndex": 1,
+      "explanation": "Oxirgi raqami 7 bo‘lgani uchun 17 toq sondir."
+    },
+    {
+      "text": "18 soni toq sonmi yoki juft son?",
+      "options": [
+        "Toq son",
+        "Nol son",
+        "Juft son (8 bilan tugaydi)",
+        "Toq ham juft ham"
+      ],
+      "correctIndex": 2,
+      "explanation": "Oxirgi raqami 8 bo‘lgani uchun 18 juft sondir."
+    },
+    {
+      "text": "17 ning qo‘shnilari qaysilar?",
+      "options": [
+        "16 va 18",
+        "15 va 19",
+        "17 va 18",
+        "14 va 16"
+      ],
+      "correctIndex": 0,
+      "explanation": "17 ning oldida 16, keyin 18 keladi."
+    },
+    {
+      "text": "18 ning qo‘shnilari qaysilar?",
+      "options": [
+        "17 va 19",
+        "16 va 20",
+        "18 va 19",
+        "15 va 17"
+      ],
+      "correctIndex": 0,
+      "explanation": "18 ning oldida 17, keyin 19 keladi."
+    },
+    {
+      "text": "Sayyohlar avtobusida 18 ta yo‘lovchi bor edi. Bekatda 9 kishi tushdi. Avtobusda nechta yo‘lovchi qoldi?",
+      "options": [
+        "8 ta",
+        "10 ta",
+        "7 ta",
+        "9 ta yo‘lovchi"
+      ],
+      "correctIndex": 3,
+      "explanation": "18 − 9 = 9 ta yo‘lovchi."
+    },
+    {
+      "text": "Sardor 17 ta misoldan 8 tasini yechdi. Yana nechta misol qoldi?",
+      "options": [
+        "8 ta",
+        "9 ta misol",
+        "10 ta",
+        "7 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "17 − 8 = 9 ta misol."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 18 ga teng?",
+      "options": [
+        "8 + 8",
+        "9 + 8",
+        "9 + 9",
+        "10 + 7"
+      ],
+      "correctIndex": 2,
+      "explanation": "9 + 9 = 18."
+    }
+  ]
+}

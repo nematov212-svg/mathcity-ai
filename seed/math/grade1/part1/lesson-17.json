@@ -1,0 +1,276 @@
+{
+  "bookNumber": 17,
+  "title": "4 soni va raqami",
+  "emoji": "4️⃣",
+  "shortDesc": "4 raqami, sanash, tarkibi (1 + 3, 2 + 2) va qo‘shnilari.",
+  "intro": "4 soni — to‘rtta narsani bildiradi, uning tarkibi 1 va 3 yoki 2 va 2 dir.",
+  "keyPoints": [
+    "Stol va stulning 4 ta oyog‘i, avtomobilning 4 ta g‘ildiragi bor.",
+    "Kvadrat va to‘g‘ri to‘rtburchak 4 ta tomondan iborat.",
+    "4 ning qo‘shnilari 3 va 5 sonlaridir."
+  ],
+  "miniExample": {
+    "emojis": "🚗 = 4️⃣",
+    "text": "Mashinaning 4 ta g‘ildiragi bor: 2 + 2 = 4!"
+  },
+  "xpReward": 80,
+  "coinReward": 10,
+  "estMinutes": 5,
+  "practice": [
+    {
+      "text": "Misolni hisoblang: 2 + 2 = ?",
+      "options": [
+        "4",
+        "3",
+        "5",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 ga 2 qo‘shilsa 4 bo‘ladi."
+    },
+    {
+      "text": "Mashinada nechta g‘ildirak bo‘ladi?",
+      "options": [
+        "2 ta",
+        "4 ta 🚗",
+        "3 ta",
+        "6 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yengil mashinada 4 ta asosiy g‘ildirak bor."
+    },
+    {
+      "text": "4 sonining qo‘shnilarini toping:",
+      "options": [
+        "2 va 6",
+        "4 va 5",
+        "3 va 5",
+        "1 va 4"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 ning oldida 3, keyin 5 turadi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Quyidagilardan qaysi biri 4 raqamini bildiradi?",
+      "options": [
+        "4",
+        "1",
+        "7",
+        "3"
+      ],
+      "correctIndex": 0,
+      "explanation": "'4' — to‘rt raqami."
+    },
+    {
+      "text": "Misolni hisoblang: 3 + 1 = ?",
+      "options": [
+        "3",
+        "5",
+        "4",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 + 1 = 4."
+    },
+    {
+      "text": "Misolni hisoblang: 2 + 2 = ?",
+      "options": [
+        "5",
+        "4",
+        "3",
+        "2"
+      ],
+      "correctIndex": 1,
+      "explanation": "2 + 2 = 4."
+    },
+    {
+      "text": "Misolni hisoblang: 4 − 1 = ?",
+      "options": [
+        "2",
+        "4",
+        "5",
+        "3"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 − 1 = 3."
+    },
+    {
+      "text": "Misolni hisoblang: 4 − 2 = ?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 − 2 = 2."
+    },
+    {
+      "text": "Misolni hisoblang: 4 − 3 = ?",
+      "options": [
+        "1",
+        "2",
+        "0",
+        "3"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 − 3 = 1."
+    },
+    {
+      "text": "Misolni hisoblang: 4 − 4 = ?",
+      "options": [
+        "1",
+        "2",
+        "4",
+        "0"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 − 4 = 0."
+    },
+    {
+      "text": "Kvadratning nechta tomoni bor?",
+      "options": [
+        "3 ta",
+        "5 ta",
+        "4 ta tomoni",
+        "2 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kvadrat 4 ta teng tomonga ega."
+    },
+    {
+      "text": "Yilda nechta fasl bor?",
+      "options": [
+        "3 ta",
+        "5 ta",
+        "4 ta fasl 🌸☀️🍂❄️",
+        "12 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Yil 4 fasldan iborat: bahor, yoz, kuz, qish."
+    },
+    {
+      "text": "Mushukchaning 🐱 nechta oyog‘i bor?",
+      "options": [
+        "2 ta",
+        "3 ta",
+        "6 ta",
+        "4 ta oyog‘i"
+      ],
+      "correctIndex": 3,
+      "explanation": "To‘rt oyoqli hayvonlarda 4 ta oyoq bo‘ladi."
+    },
+    {
+      "text": "4 sonining tarkibi qanday bo‘lishi mumkin?",
+      "options": [
+        "2 va 2 (yoki 1 va 3)",
+        "2 va 3",
+        "3 va 3",
+        "1 va 2"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 + 2 = 4 hamda 1 + 3 = 4."
+    },
+    {
+      "text": "4 soni juft sonmi yoki toq son?",
+      "options": [
+        "Toq son",
+        "Juft son",
+        "Nol son",
+        "Manfiy son"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 soni 2 ga bo‘linadi, shuning uchun juft son."
+    },
+    {
+      "text": "4 sonining oldingi qo‘shnisi kim?",
+      "options": [
+        "2",
+        "5",
+        "1",
+        "3"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 dan oldin 3 keladi."
+    },
+    {
+      "text": "4 sonining keyingi qo‘shnisi kim?",
+      "options": [
+        "3",
+        "5",
+        "6",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 dan keyin 5 keladi."
+    },
+    {
+      "text": "Taqqoslang: 4 ... 3. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        "=",
+        ">",
+        "−"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 soni 3 dan katta (4 > 3)."
+    },
+    {
+      "text": "Taqqoslang: 4 ... 5. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        ">",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 soni 5 dan kichik (4 < 5)."
+    },
+    {
+      "text": "Hovlida 2 ta tovuq va 2 ta xo‘roz yuribdi. Jami nechta parranda bor?",
+      "options": [
+        "4 ta parranda",
+        "3 ta",
+        "5 ta",
+        "2 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 + 2 = 4 ta parranda."
+    },
+    {
+      "text": "Likopchada 4 ta somsa bor edi. Ali 1 tasini yedi. Nechta somsa qoldi?",
+      "options": [
+        "2 ta",
+        "4 ta",
+        "1 ta",
+        "3 ta somsa"
+      ],
+      "correctIndex": 3,
+      "explanation": "4 − 1 = 3 ta somsa."
+    },
+    {
+      "text": "Daftar varag‘ining nechta burchagi bor?",
+      "options": [
+        "3 ta",
+        "4 ta burchagi",
+        "2 ta",
+        "5 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "To‘g‘ri to‘rtburchak shaklidagi varaq 4 burchakka ega."
+    },
+    {
+      "text": "Jasur 4 ta shar sotib oldi. 2 tasi uchib ketdi. Unda nechta shar qoldi?",
+      "options": [
+        "3 ta",
+        "1 ta",
+        "2 ta shar 🎈🎈",
+        "0 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "4 − 2 = 2 ta shar."
+    }
+  ]
+}

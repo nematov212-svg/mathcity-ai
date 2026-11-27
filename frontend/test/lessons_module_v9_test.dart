@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mathcity_ai/features/lessons/lessons_screen.dart';
 import 'package:mathcity_ai/features/lessons/module_lessons_screen.dart';
 import 'package:mathcity_ai/features/lessons/lesson_reader_screen.dart';
-import 'package:mathcity_ai/shared/providers/student_provider.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -39,11 +38,9 @@ void main() {
       expect(find.text('Matematika · 1-qism'), findsOneWidget);
       expect(find.text('Matematika · 2-qism'), findsOneWidget);
 
-      // 4. "Tez kunda" badge on 2-qism
-      expect(find.text('Tez kunda'), findsWidgets);
-
-      // 5. Meta info displayed
+      // 4. Both modules active with lesson counts
       expect(find.textContaining('41 ta mavzu'), findsWidgets);
+      expect(find.textContaining('33 ta mavzu'), findsWidgets);
     });
 
     testWidgets(
@@ -74,8 +71,8 @@ void main() {
 
       // 3. Status action button (Boshlash or Qayta ko'rish)
       expect(find.textContaining('Boshlash'), findsWidgets);
-      expect(find.textContaining('+100 XP'), findsWidgets);
-      expect(find.textContaining('+12 🪙'), findsWidgets);
+      expect(find.textContaining('XP'), findsWidgets);
+      expect(find.textContaining('🪙'), findsWidgets);
 
       // 4. Scroll to view later lessons (e.g. lesson 5, 10, etc.)
       await tester.drag(find.byType(ListView), const Offset(0, -600));

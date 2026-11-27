@@ -1,0 +1,276 @@
+{
+  "bookNumber": 67,
+  "title": "Ikki xonali sonlarni ayirish (2)",
+  "emoji": "➖",
+  "shortDesc": "Ikki xonali sondan to‘liq o‘nliklarni ayirish: 56 - 20 = 36.",
+  "intro": "Ikki xonali sondan to‘liq o‘nlik ayirilganda, o‘nliklardan o‘nliklar ayiriladi, birliklar o‘zgarmaydi. Masalan: 56 - 20 = 36.",
+  "keyPoints": [
+    "O‘nliklardan ayiramiz: 50 - 20 = 30.",
+    "Birliklar o‘zgarmaydi: 6 qoladi.",
+    "Natija: 30 + 6 = 36."
+  ],
+  "miniExample": {
+    "emojis": "5️⃣6️⃣ - 2️⃣0️⃣ = 3️⃣6️⃣",
+    "text": "56 - 20 = 36 (o‘nliklardan ayirdik: 50 - 20 = 30, birlik 6)."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Hisoblang: 47 - 20 = ?",
+      "options": [
+        "27",
+        "26",
+        "28",
+        "37"
+      ],
+      "correctIndex": 0,
+      "explanation": "40 - 20 = 20, 20 + 7 = 27."
+    },
+    {
+      "text": "Hisoblang: 65 - 30 = ?",
+      "options": [
+        "34",
+        "35",
+        "36",
+        "45"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 30 = 30, 30 + 5 = 35."
+    },
+    {
+      "text": "Hisoblang: 82 - 50 = ?",
+      "options": [
+        "31",
+        "33",
+        "32",
+        "42"
+      ],
+      "correctIndex": 2,
+      "explanation": "80 - 50 = 30, 30 + 2 = 32."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 35 - 10 = ?",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "15"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 - 10 = 20, 20 + 5 = 25."
+    },
+    {
+      "text": "Hisoblang: 54 - 20 = ?",
+      "options": [
+        "33",
+        "35",
+        "34",
+        "24"
+      ],
+      "correctIndex": 2,
+      "explanation": "50 - 20 = 30, 30 + 4 = 34."
+    },
+    {
+      "text": "Hisoblang: 76 - 40 = ?",
+      "options": [
+        "35",
+        "36",
+        "37",
+        "46"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 40 = 30, 30 + 6 = 36."
+    },
+    {
+      "text": "Hisoblang: 88 - 30 = ?",
+      "options": [
+        "57",
+        "59",
+        "48",
+        "58"
+      ],
+      "correctIndex": 3,
+      "explanation": "80 - 30 = 50, 50 + 8 = 58."
+    },
+    {
+      "text": "Hisoblang: 63 - 50 = ?",
+      "options": [
+        "12",
+        "13",
+        "14",
+        "23"
+      ],
+      "correctIndex": 1,
+      "explanation": "60 - 50 = 10, 10 + 3 = 13."
+    },
+    {
+      "text": "Hisoblang: 91 - 60 = ?",
+      "options": [
+        "31",
+        "30",
+        "32",
+        "21"
+      ],
+      "correctIndex": 0,
+      "explanation": "90 - 60 = 30, 30 + 1 = 31."
+    },
+    {
+      "text": "Hisoblang: 49 - 30 = ?",
+      "options": [
+        "18",
+        "20",
+        "29",
+        "19"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 - 30 = 10, 10 + 9 = 19."
+    },
+    {
+      "text": "Noma’lum sonni toping: 74 - ? = 44",
+      "options": [
+        "20",
+        "40",
+        "30",
+        "50"
+      ],
+      "correctIndex": 2,
+      "explanation": "74 - 44 = 30."
+    },
+    {
+      "text": "Noma’lum sonni toping: ? - 40 = 25",
+      "options": [
+        "55",
+        "75",
+        "65",
+        "45"
+      ],
+      "correctIndex": 2,
+      "explanation": "25 + 40 = 65."
+    },
+    {
+      "text": "Taqqoslang: 58 - 30 va 30",
+      "options": [
+        "58 - 30 > 30",
+        "58 - 30 = 30",
+        "58 - 30 + 30",
+        "58 - 30 < 30"
+      ],
+      "correctIndex": 3,
+      "explanation": "58 - 30 = 28 va 28 < 30."
+    },
+    {
+      "text": "Hisoblang: 83 - 60 = ?",
+      "options": [
+        "23",
+        "22",
+        "24",
+        "33"
+      ],
+      "correctIndex": 0,
+      "explanation": "80 - 60 = 20, 20 + 3 = 23."
+    },
+    {
+      "text": "Hisoblang: 97 - 70 = ?",
+      "options": [
+        "26",
+        "27",
+        "28",
+        "17"
+      ],
+      "correctIndex": 1,
+      "explanation": "90 - 70 = 20, 20 + 7 = 27."
+    },
+    {
+      "text": "Hisoblang: 66 - 20 = ?",
+      "options": [
+        "45",
+        "47",
+        "36",
+        "46"
+      ],
+      "correctIndex": 3,
+      "explanation": "60 - 20 = 40, 40 + 6 = 46."
+    },
+    {
+      "text": "Hisoblang: 72 - 50 = ?",
+      "options": [
+        "21",
+        "22",
+        "23",
+        "32"
+      ],
+      "correctIndex": 1,
+      "explanation": "70 - 50 = 20, 20 + 2 = 22."
+    },
+    {
+      "text": "Hisoblang: 86 - 30 - 20 = ?",
+      "options": [
+        "35",
+        "37",
+        "36",
+        "26"
+      ],
+      "correctIndex": 2,
+      "explanation": "86 - 30 = 56, 56 - 20 = 36."
+    },
+    {
+      "text": "Hisoblang: 95 - 40 - 30 = ?",
+      "options": [
+        "25",
+        "24",
+        "26",
+        "35"
+      ],
+      "correctIndex": 0,
+      "explanation": "95 - 40 = 55, 55 - 30 = 25."
+    },
+    {
+      "text": "Yulduzcha o‘rniga to‘g‘ri belgini qo‘ying: 74 - 20 * 34 + 20",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "74 - 20 = 54 va 34 + 20 = 54, demak teng (=)."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 42 ga teng?",
+      "options": [
+        "62 - 30",
+        "82 - 30",
+        "52 - 20",
+        "72 - 30"
+      ],
+      "correctIndex": 3,
+      "explanation": "72 - 30 = 42."
+    },
+    {
+      "text": "Omborda 68 qop un bor edi. Nonvoyxonaga 40 qop un jo‘natildi. Omborda necha qop un qoldi?",
+      "options": [
+        "27 qop",
+        "28 qop",
+        "29 qop",
+        "18 qop"
+      ],
+      "correctIndex": 1,
+      "explanation": "68 - 40 = 28 qop un qoldi."
+    },
+    {
+      "text": "Samolyotda 85 nafar yo‘lovchi bor edi. Birinchi oraliq qo‘nishda 50 nafar yo‘lovchi tushdi. Samolyotda necha nafar yo‘lovchi qoldi?",
+      "options": [
+        "34 nafar",
+        "36 nafar",
+        "35 nafar",
+        "25 nafar"
+      ],
+      "correctIndex": 2,
+      "explanation": "85 - 50 = 35 nafar yo‘lovchi qoldi."
+    }
+  ]
+}

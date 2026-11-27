@@ -1,0 +1,276 @@
+{
+  "bookNumber": 70,
+  "title": "Ko‘p komponentli qo‘shish",
+  "emoji": "➕",
+  "shortDesc": "Uch yoki undan ortiq qo‘shiluvchini ketma-ket qo‘shish: 20 + 30 + 40 = 90.",
+  "intro": "Ko‘p komponentli qo‘shishda uchta yoki undan ortiq sonlar ketma-ket qo‘shiladi. Amallarni tartib bilan yoki qulay usulda bajarish mumkin.",
+  "keyPoints": [
+    "Ketma-ket qo‘shish: avval dastlabki ikkita son qo‘shiladi, keyin chiqqan natijaga uchinchi son qo‘shiladi.",
+    "Misol: 20 + 30 + 40 -> 20 + 30 = 50, so‘ng 50 + 40 = 90.",
+    "To‘liq o‘nlik hosil qiladigan sonlarni oldin qo‘shib olish hisoblashni osonlashtiradi."
+  ],
+  "miniExample": {
+    "emojis": "2️⃣0️⃣ + 3️⃣0️⃣ + 4️⃣0️⃣ = 9️⃣0️⃣",
+    "text": "20 + 30 = 50, 50 + 40 = 90."
+  },
+  "xpReward": 95,
+  "coinReward": 10,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 10 + 20 + 30 = ?",
+      "options": [
+        "60",
+        "50",
+        "70",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 20 = 30, 30 + 30 = 60."
+    },
+    {
+      "text": "Hisoblang: 30 + 20 + 40 = ?",
+      "options": [
+        "80",
+        "90",
+        "100",
+        "70"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 20 = 50, 50 + 40 = 90."
+    },
+    {
+      "text": "Hisoblang: 12 + 8 + 15 = ?",
+      "options": [
+        "34",
+        "36",
+        "35",
+        "25"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 + 8 = 20, 20 + 15 = 35."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 10 + 10 + 10 = ?",
+      "options": [
+        "30",
+        "20",
+        "40",
+        "100"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 10 = 20, 20 + 10 = 30."
+    },
+    {
+      "text": "Hisoblang: 20 + 20 + 30 = ?",
+      "options": [
+        "60",
+        "80",
+        "70",
+        "50"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 + 20 = 40, 40 + 30 = 70."
+    },
+    {
+      "text": "Hisoblang: 30 + 30 + 30 = ?",
+      "options": [
+        "80",
+        "90",
+        "100",
+        "60"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 30 = 60, 60 + 30 = 90."
+    },
+    {
+      "text": "Hisoblang: 40 + 10 + 20 = ?",
+      "options": [
+        "60",
+        "80",
+        "50",
+        "70"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 + 10 = 50, 50 + 20 = 70."
+    },
+    {
+      "text": "Hisoblang: 50 + 20 + 10 = ?",
+      "options": [
+        "70",
+        "80",
+        "90",
+        "60"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 + 20 = 70, 70 + 10 = 80."
+    },
+    {
+      "text": "Hisoblang: 15 + 5 + 20 = ?",
+      "options": [
+        "40",
+        "35",
+        "45",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "15 + 5 = 20, 20 + 20 = 40."
+    },
+    {
+      "text": "Hisoblang: 24 + 6 + 30 = ?",
+      "options": [
+        "50",
+        "70",
+        "54",
+        "60"
+      ],
+      "correctIndex": 3,
+      "explanation": "24 + 6 = 30, 30 + 30 = 60."
+    },
+    {
+      "text": "Hisoblang: 31 + 9 + 25 = ?",
+      "options": [
+        "55",
+        "75",
+        "65",
+        "60"
+      ],
+      "correctIndex": 2,
+      "explanation": "31 + 9 = 40, 40 + 25 = 65."
+    },
+    {
+      "text": "Hisoblang: 42 + 8 + 33 = ?",
+      "options": [
+        "82",
+        "84",
+        "83",
+        "73"
+      ],
+      "correctIndex": 2,
+      "explanation": "42 + 8 = 50, 50 + 33 = 83."
+    },
+    {
+      "text": "Hisoblang: 14 + 16 + 20 = ?",
+      "options": [
+        "40",
+        "60",
+        "45",
+        "50"
+      ],
+      "correctIndex": 3,
+      "explanation": "14 + 16 = 30, 30 + 20 = 50."
+    },
+    {
+      "text": "Hisoblang: 23 + 7 + 45 = ?",
+      "options": [
+        "75",
+        "65",
+        "85",
+        "70"
+      ],
+      "correctIndex": 0,
+      "explanation": "23 + 7 = 30, 30 + 45 = 75."
+    },
+    {
+      "text": "Noma’lum sonni toping: 20 + 30 + ? = 80",
+      "options": [
+        "20",
+        "30",
+        "40",
+        "10"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 30 = 50, 80 - 50 = 30."
+    },
+    {
+      "text": "Noma’lum sonni toping: 10 + ? + 40 = 70",
+      "options": [
+        "30",
+        "10",
+        "40",
+        "20"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 + 40 = 50, 70 - 50 = 20."
+    },
+    {
+      "text": "Taqqoslang: 20 + 30 + 10 va 70",
+      "options": [
+        "20 + 30 + 10 > 70",
+        "20 + 30 + 10 < 70",
+        "20 + 30 + 10 = 70",
+        "60 > 70"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 30 + 10 = 60 va 60 < 70."
+    },
+    {
+      "text": "Hisoblang: 17 + 13 + 24 + 6 = ?",
+      "options": [
+        "50",
+        "70",
+        "60",
+        "55"
+      ],
+      "correctIndex": 2,
+      "explanation": "(17 + 13) + (24 + 6) = 30 + 30 = 60."
+    },
+    {
+      "text": "Hisoblang: 25 + 15 + 32 + 8 = ?",
+      "options": [
+        "80",
+        "70",
+        "90",
+        "75"
+      ],
+      "correctIndex": 0,
+      "explanation": "(25 + 15) + (32 + 8) = 40 + 40 = 80."
+    },
+    {
+      "text": "Yulduzcha o‘rniga to‘g‘ri belgini qo‘ying: 30 + 20 + 40 * 50 + 40",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "30 + 20 + 40 = 90 va 50 + 40 = 90, demak teng (=)."
+    },
+    {
+      "text": "Qaysi uchta sonning yig‘indisi 100 ga teng?",
+      "options": [
+        "40 + 20 + 30",
+        "50 + 20 + 20",
+        "30 + 30 + 30",
+        "40 + 30 + 30"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 + 30 + 30 = 100."
+    },
+    {
+      "text": "Madina do‘kondan 20 so‘mga qalam, 30 so‘mga daftar va 40 so‘mga kitob sotib oldi. Madina jami qancha pul to‘ladi?",
+      "options": [
+        "80 so‘m",
+        "90 so‘m",
+        "100 so‘m",
+        "70 so‘m"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 30 + 40 = 90 so‘m to‘ladi."
+    },
+    {
+      "text": "Birinchi qutida 15 ta, ikkinchi qutida 5 ta va uchinchi qutida 25 ta qalam bor. Uchta qutida jami nechta qalam bor?",
+      "options": [
+        "40 ta",
+        "50 ta",
+        "45 ta",
+        "35 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "15 + 5 + 25 = 20 + 25 = 45 ta qalam bor."
+    }
+  ]
+}

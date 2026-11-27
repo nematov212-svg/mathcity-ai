@@ -1,0 +1,276 @@
+{
+  "bookNumber": 57,
+  "title": "O‘nlikdan ayirish usuli",
+  "emoji": "➖",
+  "shortDesc": "O‘nlikdan ayirish usuli (12-8 = 2 + (10-8) = 4), 14-8, 16-9, 17-8 va taqqoslash.",
+  "intro": "O‘nlikdan ayirish usulida son 10 va birliklarga ajratiladi: avval 10 dan ayirib, so‘ng birliklar qo‘shiladi.",
+  "keyPoints": [
+    "12 − 8: 12 ni 10 va 2 deb olamiz.",
+    "10 dan 8 ni ayiramiz: 10 − 8 = 2.",
+    "Natijaga birlikni qo‘shamiz: 2 + 2 = 4!"
+  ],
+  "miniExample": {
+    "emojis": "1️⃣2️⃣ − 8️⃣ ➡️ 2 + (10−8) = 4️⃣",
+    "text": "10 dan 8 ni ayirsak 2, unga 2 ni qo‘shsak 4 bo‘ladi!"
+  },
+  "xpReward": 110,
+  "coinReward": 12,
+  "estMinutes": 7,
+  "practice": [
+    {
+      "text": "Hisoblang: 14 − 8 = ?",
+      "options": [
+        "6",
+        "5",
+        "7",
+        "8"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 − 8 = 2, 2 + 4 = 6."
+    },
+    {
+      "text": "Hisoblang: 16 − 9 = ?",
+      "options": [
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 − 9 = 1, 1 + 6 = 7."
+    },
+    {
+      "text": "Hisoblang: 17 − 8 = ?",
+      "options": [
+        "8",
+        "10",
+        "9",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 − 8 = 2, 2 + 7 = 9."
+    }
+  ],
+  "test": [
+    {
+      "text": "Misolni hisoblang: 11 − 8 = ?",
+      "options": [
+        "3",
+        "2",
+        "4",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 − 8 = 2, 2 + 1 = 3."
+    },
+    {
+      "text": "Misolni hisoblang: 11 − 9 = ?",
+      "options": [
+        "1",
+        "3",
+        "2",
+        "4"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 − 9 = 1, 1 + 1 = 2."
+    },
+    {
+      "text": "Misolni hisoblang: 12 − 8 = ?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 − 8 = 2, 2 + 2 = 4."
+    },
+    {
+      "text": "Misolni hisoblang: 12 − 9 = ?",
+      "options": [
+        "2",
+        "4",
+        "5",
+        "3"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 − 9 = 1, 1 + 2 = 3."
+    },
+    {
+      "text": "Misolni hisoblang: 13 − 7 = ?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 − 7 = 3, 3 + 3 = 6."
+    },
+    {
+      "text": "Misolni hisoblang: 13 − 8 = ?",
+      "options": [
+        "5",
+        "4",
+        "6",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 − 8 = 2, 2 + 3 = 5."
+    },
+    {
+      "text": "Misolni hisoblang: 13 − 9 = ?",
+      "options": [
+        "3",
+        "5",
+        "6",
+        "4"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 − 9 = 1, 1 + 3 = 4."
+    },
+    {
+      "text": "Misolni hisoblang: 14 − 7 = ?",
+      "options": [
+        "6",
+        "8",
+        "7",
+        "9"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 − 7 = 3, 3 + 4 = 7."
+    },
+    {
+      "text": "Misolni hisoblang: 14 − 8 = ?",
+      "options": [
+        "5",
+        "7",
+        "6",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 − 8 = 2, 2 + 4 = 6."
+    },
+    {
+      "text": "Misolni hisoblang: 14 − 9 = ?",
+      "options": [
+        "4",
+        "6",
+        "7",
+        "5"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 − 9 = 1, 1 + 4 = 5."
+    },
+    {
+      "text": "Misolni hisoblang: 15 − 8 = ?",
+      "options": [
+        "7",
+        "6",
+        "8",
+        "9"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 − 8 = 2, 2 + 5 = 7."
+    },
+    {
+      "text": "Misolni hisoblang: 15 − 9 = ?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 − 9 = 1, 1 + 5 = 6."
+    },
+    {
+      "text": "Misolni hisoblang: 16 − 8 = ?",
+      "options": [
+        "7",
+        "9",
+        "6",
+        "8"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 − 8 = 2, 2 + 6 = 8."
+    },
+    {
+      "text": "Misolni hisoblang: 16 − 9 = ?",
+      "options": [
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "10 − 9 = 1, 1 + 6 = 7."
+    },
+    {
+      "text": "Misolni hisoblang: 17 − 8 = ?",
+      "options": [
+        "8",
+        "10",
+        "9",
+        "7"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 − 8 = 2, 2 + 7 = 9."
+    },
+    {
+      "text": "Misolni hisoblang: 17 − 9 = ?",
+      "options": [
+        "8",
+        "7",
+        "9",
+        "10"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 − 9 = 1, 1 + 7 = 8."
+    },
+    {
+      "text": "Misolni hisoblang: 18 − 9 = ?",
+      "options": [
+        "9",
+        "8",
+        "10",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 − 9 = 1, 1 + 8 = 9."
+    },
+    {
+      "text": "12 − 8 da o‘nlikdan ayirish qoidasi qanday yoziladi?",
+      "options": [
+        "(12 − 2) − 6",
+        "12 − 10 + 8",
+        "10 − 2 + 8",
+        "2 + (10 − 8) = 4"
+      ],
+      "correctIndex": 3,
+      "explanation": "2 + (10 − 8) = 2 + 2 = 4."
+    },
+    {
+      "text": "Kutubxonada 15 ta kitobdan 9 tasi berildi. Nechta kitob qoldi?",
+      "options": [
+        "5 ta",
+        "6 ta kitob",
+        "7 ta",
+        "8 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "15 − 9 = 6 ta kitob."
+    },
+    {
+      "text": "IV bob yakuni: 11 dan 20 gacha sonlar va amallarni a’lo o‘rgangansiz! 57-dars qaysi bobga tegishli?",
+      "options": [
+        "I bob",
+        "II bob",
+        "IV bob (11 dan 20 gacha sonlar)",
+        "V bob"
+      ],
+      "correctIndex": 2,
+      "explanation": "57-dars IV bobning yakuniy darsidir."
+    }
+  ]
+}

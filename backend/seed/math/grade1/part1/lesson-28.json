@@ -1,0 +1,276 @@
+{
+  "bookNumber": 28,
+  "title": "Natural sonlar",
+  "emoji": "🌱",
+  "shortDesc": "Natural son tushunchasi, 0 natural son emasligi, bir va ikki xonali sonlar.",
+  "intro": "Sanoqda ishlatiladigan 1, 2, 3, 4, ... sonlari natural sonlar deyiladi. 0 natural son emas!",
+  "keyPoints": [
+    "Natural sonlar narsalarni sanashda ishlatiladi: 1, 2, 3, 4, 5...",
+    "0 soni sanoqda aytilmaydi, shuning uchun 0 natural son emas.",
+    "1 dan 9 gacha bo‘lgan natural sonlar bir xonali, 10 esa ikki xonali son."
+  ],
+  "miniExample": {
+    "emojis": "1️⃣ 2️⃣ 3️⃣ ... 🔟",
+    "text": "Natural sonlar 1 dan boshlanadi, 0 natural son emas!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Quyidagilardan qaysi biri eng kichik natural son?",
+      "options": [
+        "1",
+        "0",
+        "2",
+        "3"
+      ],
+      "correctIndex": 0,
+      "explanation": "Eng kichik natural son 1 dir. 0 natural son emas."
+    },
+    {
+      "text": "0 soni natural sonmi?",
+      "options": [
+        "Ha, natural son",
+        "Yo‘q, 0 natural son emas",
+        "Faqat qishda natural",
+        "Barcha sonlar natural"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sanoqda 0 soni ishlatilmaydi, shuning uchun u natural son emas."
+    },
+    {
+      "text": "10 soni bir xonali sonmi yoki ikki xonali?",
+      "options": [
+        "Bir xonali son",
+        "Uch xonali son",
+        "Ikki xonali son",
+        "Natural emas"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 soni ikkita raqamdan iborat bo‘lib, ikki xonali sondir."
+    }
+  ],
+  "test": [
+    {
+      "text": "Natural sonlar qaysi maqsadda ishlatiladi?",
+      "options": [
+        "Narsalarni sanash uchun",
+        "Faqat chizish uchun",
+        "Ranglarni bo‘yash uchun",
+        "Hech narsa uchun emas"
+      ],
+      "correctIndex": 0,
+      "explanation": "Narsalarni sanashda ishlatiladigan sonlar natural sonlar deyiladi."
+    },
+    {
+      "text": "Quyidagilardan qaysi biri natural son emas?",
+      "options": [
+        "1",
+        "5",
+        "0 (nol)",
+        "10"
+      ],
+      "correctIndex": 2,
+      "explanation": "0 natural son emas."
+    },
+    {
+      "text": "Eng kichik natural son qaysi?",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "10"
+      ],
+      "correctIndex": 1,
+      "explanation": "Natural sonlar qatori 1 dan boshlanadi."
+    },
+    {
+      "text": "Natural sonlar qatorida 1 dan keyin qaysi son keladi?",
+      "options": [
+        "0",
+        "3",
+        "4",
+        "2"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 dan keyin 2 keladi."
+    },
+    {
+      "text": "1 dan 9 gacha bo‘lgan sonlar qanday sonlar deyiladi?",
+      "options": [
+        "Ikki xonali sonlar",
+        "Bir xonali natural sonlar",
+        "Uch xonali sonlar",
+        "Manfiy sonlar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ular bitta raqam bilan yozilgani uchun bir xonali sonlar deyiladi."
+    },
+    {
+      "text": "Eng katta bir xonali natural son qaysi?",
+      "options": [
+        "9",
+        "8",
+        "10",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "9 — eng katta bir xonali sondir."
+    },
+    {
+      "text": "Eng kichik ikki xonali natural son qaysi?",
+      "options": [
+        "9",
+        "11",
+        "20",
+        "10"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 — birinchi va eng kichik ikki xonali sondir."
+    },
+    {
+      "text": "Narsalarni sanashda qaysi sondan boshlaymiz?",
+      "options": [
+        "0 dan: nol, bir, ikki...",
+        "5 dan",
+        "1 dan: bir, ikki, uch...",
+        "10 dan"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sanoq 1 dan boshlanadi."
+    },
+    {
+      "text": "Quyidagi sonlardan qaysi biri natural sonlar guruhiga kiradi?",
+      "options": [
+        "0",
+        "Yarim",
+        "7",
+        "Chorak"
+      ],
+      "correctIndex": 2,
+      "explanation": "7 — butun natural sondir."
+    },
+    {
+      "text": "Bir xonali natural sonlar nechta?",
+      "options": [
+        "10 ta",
+        "8 ta",
+        "5 ta",
+        "9 ta (1, 2, 3, 4, 5, 6, 7, 8, 9)"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 dan 9 gacha jami 9 ta bir xonali son bor."
+    },
+    {
+      "text": "Natural sonlar qatorida oxirgi (eng katta) son bormi?",
+      "options": [
+        "Yo‘q, natural sonlar cheksiz davom etadi",
+        "Ha, 10 soni oxirgi",
+        "Ha, 100 soni oxirgi",
+        "Ha, 9 soni"
+      ],
+      "correctIndex": 0,
+      "explanation": "Har qanday songa yana 1 qo‘shib yangi son hosil qilish mumkin, ular cheksizdir."
+    },
+    {
+      "text": "4 sonidan keyingi natural son qaysi?",
+      "options": [
+        "3",
+        "5",
+        "6",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "4 dan keyin 5 keladi."
+    },
+    {
+      "text": "6 sonidan oldingi natural son qaysi?",
+      "options": [
+        "7",
+        "4",
+        "3",
+        "5"
+      ],
+      "correctIndex": 3,
+      "explanation": "6 dan oldin 5 turadi."
+    },
+    {
+      "text": "0 natural son emasligining asosiy sababi nima?",
+      "options": [
+        "U chiroyli emasligi uchun",
+        "Narsalarni sanashda 'nolta kitob' deb sanalmaydi",
+        "U doira shaklida bo‘lgani uchun",
+        "Sababi yo‘q"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sanoq paytida narsalar 1 dan boshlab sanaladi."
+    },
+    {
+      "text": "Qaysi qatorda faqat natural sonlar yozilgan?",
+      "options": [
+        "0, 1, 2, 3, 4",
+        "0, 2, 4, 6",
+        "1, 2, 3, 4, 5",
+        "−1, 0, 1, 2"
+      ],
+      "correctIndex": 2,
+      "explanation": "0 qatnashmagan 1, 2, 3, 4, 5 qatori toza natural sonlardir."
+    },
+    {
+      "text": "10 sonida nechta o‘nlik bor?",
+      "options": [
+        "1 ta o‘nlik",
+        "2 ta o‘nlik",
+        "0 ta o‘nlik",
+        "10 ta o‘nlik"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 soni 1 ta o‘nlikni bildiradi."
+    },
+    {
+      "text": "Natural sonlar qatorida 8 dan keyin qaysi son keladi?",
+      "options": [
+        "9",
+        "7",
+        "10",
+        "6"
+      ],
+      "correctIndex": 0,
+      "explanation": "8 dan keyingi son 9 dir."
+    },
+    {
+      "text": "Daftarga 3 ta yulduzcha chizildi. Chizilgan yulduzchalar soni natural sonmi?",
+      "options": [
+        "Yo‘q, natural emas",
+        "Faqat 10 natural",
+        "Yulduzcha son emas",
+        "Ha, 3 — natural son"
+      ],
+      "correctIndex": 3,
+      "explanation": "3 — natural son."
+    },
+    {
+      "text": "Agar xonada hech kim bo‘lmasa, odamlar soni 0 bo‘ladi. Bu son natural son hisoblanadimi?",
+      "options": [
+        "Ha, albatta",
+        "Yo‘q, 0 natural son emas",
+        "Faqat bo‘sh xonada natural",
+        "Bilmayman"
+      ],
+      "correctIndex": 1,
+      "explanation": "0 narsa yo‘qligini bildiradi va natural son emas."
+    },
+    {
+      "text": "Aziz 1 dan 10 gacha bo‘lgan barcha natural sonlarni daftarga yozdi. U nechta son yozdi?",
+      "options": [
+        "9 ta",
+        "11 ta",
+        "10 ta son",
+        "8 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 dan 10 gacha roppa-rosa 10 ta natural son bor."
+    }
+  ]
+}

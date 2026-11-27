@@ -1,0 +1,276 @@
+{
+  "bookNumber": 64,
+  "title": "Ikki xonali sonlarni qo‘shish (2)",
+  "emoji": "➕",
+  "shortDesc": "Ikki xonali songa to‘liq o‘nliklarni qo‘shish: 34 + 20 = 54.",
+  "intro": "Ikki xonali songa to‘liq o‘nlik qo‘shilganda, faqat o‘nliklar o‘zgaradi, birliklar esa o‘zgarishsiz qoladi. Masalan: 34 + 20 = 54.",
+  "keyPoints": [
+    "O‘nliklarni qo‘shamiz: 3 o‘nlik + 2 o‘nlik = 5 o‘nlik (50).",
+    "Birliklar o‘zgarmaydi: 4 birlik qoladi.",
+    "Yig‘indi: 50 + 4 = 54."
+  ],
+  "miniExample": {
+    "emojis": "📦📦📦 + 📦📦 + ◽◽◽◽ = 5️⃣4️⃣",
+    "text": "34 + 20 = 54 (o‘nliklarni qo‘shdik: 30 + 20 = 50, birlik 4)."
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Hisoblang: 25 + 30 = ?",
+      "options": [
+        "55",
+        "50",
+        "65",
+        "45"
+      ],
+      "correctIndex": 0,
+      "explanation": "20 + 30 = 50, 50 + 5 = 55."
+    },
+    {
+      "text": "Hisoblang: 43 + 20 = ?",
+      "options": [
+        "53",
+        "63",
+        "73",
+        "60"
+      ],
+      "correctIndex": 1,
+      "explanation": "40 + 20 = 60, 60 + 3 = 63."
+    },
+    {
+      "text": "Hisoblang: 61 + 30 = ?",
+      "options": [
+        "81",
+        "90",
+        "91",
+        "71"
+      ],
+      "correctIndex": 2,
+      "explanation": "60 + 30 = 90, 90 + 1 = 91."
+    }
+  ],
+  "test": [
+    {
+      "text": "Hisoblang: 14 + 20 = ?",
+      "options": [
+        "34",
+        "24",
+        "44",
+        "30"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 20 = 30, 30 + 4 = 34."
+    },
+    {
+      "text": "Hisoblang: 32 + 30 = ?",
+      "options": [
+        "52",
+        "72",
+        "62",
+        "60"
+      ],
+      "correctIndex": 2,
+      "explanation": "30 + 30 = 60, 60 + 2 = 62."
+    },
+    {
+      "text": "Hisoblang: 55 + 10 = ?",
+      "options": [
+        "56",
+        "65",
+        "75",
+        "60"
+      ],
+      "correctIndex": 1,
+      "explanation": "55 + 10 = 65."
+    },
+    {
+      "text": "Hisoblang: 47 + 40 = ?",
+      "options": [
+        "77",
+        "97",
+        "80",
+        "87"
+      ],
+      "correctIndex": 3,
+      "explanation": "40 + 40 = 80, 80 + 7 = 87."
+    },
+    {
+      "text": "Hisoblang: 28 + 50 = ?",
+      "options": [
+        "68",
+        "78",
+        "88",
+        "70"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 + 50 = 70, 70 + 8 = 78."
+    },
+    {
+      "text": "Hisoblang: 63 + 20 = ?",
+      "options": [
+        "83",
+        "73",
+        "93",
+        "80"
+      ],
+      "correctIndex": 0,
+      "explanation": "60 + 20 = 80, 80 + 3 = 83."
+    },
+    {
+      "text": "Hisoblang: 36 + 40 = ?",
+      "options": [
+        "66",
+        "86",
+        "70",
+        "76"
+      ],
+      "correctIndex": 3,
+      "explanation": "30 + 40 = 70, 70 + 6 = 76."
+    },
+    {
+      "text": "Noma’lum sonni toping: 24 + ? = 64",
+      "options": [
+        "30",
+        "50",
+        "40",
+        "20"
+      ],
+      "correctIndex": 2,
+      "explanation": "64 - 24 = 40."
+    },
+    {
+      "text": "Noma’lum sonni toping: ? + 30 = 85",
+      "options": [
+        "45",
+        "65",
+        "55",
+        "35"
+      ],
+      "correctIndex": 2,
+      "explanation": "85 - 30 = 55."
+    },
+    {
+      "text": "Taqqoslang: 42 + 30 va 70",
+      "options": [
+        "42 + 30 < 70",
+        "42 + 30 = 70",
+        "42 + 30 + 70",
+        "42 + 30 > 70"
+      ],
+      "correctIndex": 3,
+      "explanation": "42 + 30 = 72 va 72 > 70."
+    },
+    {
+      "text": "Hisoblang: 19 + 60 = ?",
+      "options": [
+        "79",
+        "69",
+        "89",
+        "70"
+      ],
+      "correctIndex": 0,
+      "explanation": "10 + 60 = 70, 70 + 9 = 79."
+    },
+    {
+      "text": "Hisoblang: 51 + 40 = ?",
+      "options": [
+        "81",
+        "91",
+        "90",
+        "95"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 + 40 = 90, 90 + 1 = 91."
+    },
+    {
+      "text": "Hisoblang: 70 + 23 = ?",
+      "options": [
+        "83",
+        "90",
+        "73",
+        "93"
+      ],
+      "correctIndex": 3,
+      "explanation": "70 + 20 = 90, 90 + 3 = 93."
+    },
+    {
+      "text": "Hisoblang: 30 + 45 = ?",
+      "options": [
+        "65",
+        "75",
+        "85",
+        "70"
+      ],
+      "correctIndex": 1,
+      "explanation": "30 + 40 = 70, 70 + 5 = 75."
+    },
+    {
+      "text": "Hisoblang: 23 + 30 + 20 = ?",
+      "options": [
+        "63",
+        "83",
+        "73",
+        "70"
+      ],
+      "correctIndex": 2,
+      "explanation": "23 + 30 = 53, 53 + 20 = 73."
+    },
+    {
+      "text": "Hisoblang: 15 + 40 + 30 = ?",
+      "options": [
+        "85",
+        "75",
+        "95",
+        "80"
+      ],
+      "correctIndex": 0,
+      "explanation": "15 + 40 = 55, 55 + 30 = 85."
+    },
+    {
+      "text": "Yulduzcha o‘rniga to‘g‘ri belgini qo‘ying: 36 + 30 * 26 + 40",
+      "options": [
+        "=",
+        ">",
+        "<",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "36 + 30 = 66 va 26 + 40 = 66, ikkalasi teng (=)."
+    },
+    {
+      "text": "Qaysi ifodaning qiymati 87 ga teng?",
+      "options": [
+        "37 + 40",
+        "57 + 20",
+        "27 + 50",
+        "47 + 40"
+      ],
+      "correctIndex": 3,
+      "explanation": "47 + 40 = 87."
+    },
+    {
+      "text": "Kutubxonada 45 ta ertak kitob bor edi. Yana 30 ta yangi ertak kitob keltirildi. Kutubxonada jami nechta ertak kitob bo‘ldi?",
+      "options": [
+        "65 ta",
+        "75 ta",
+        "85 ta",
+        "70 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "45 + 30 = 75 ta kitob bo‘ldi."
+    },
+    {
+      "text": "Avtoparkda 24 ta yengil mashina va 50 ta avtobus bor. Avtoparkda jami nechta transport vositasi bor?",
+      "options": [
+        "64 ta",
+        "84 ta",
+        "74 ta",
+        "70 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "24 + 50 = 74 ta transport bor."
+    }
+  ]
+}

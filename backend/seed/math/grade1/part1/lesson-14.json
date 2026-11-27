@@ -1,0 +1,276 @@
+{
+  "bookNumber": 14,
+  "title": "1 soni va raqami",
+  "emoji": "1️⃣",
+  "shortDesc": "1 raqamini tanish, sanash, 1 ning tarkibi va qo‘shnilari.",
+  "intro": "1 soni — bitta narsani bildiradi va natural sanoq boshidir.",
+  "keyPoints": [
+    "Bitta quyosh ☀️, bitta oy 🌙 — 1 soniga misol.",
+    "1 raqami katakning o‘rtasidan boshlab chiziladi.",
+    "1 ning o‘ng qo‘shnisi 2 sonidir."
+  ],
+  "miniExample": {
+    "emojis": "☀️ 1️⃣",
+    "text": "Osmonda bitta quyosh bor — bu 1 soni!"
+  },
+  "xpReward": 80,
+  "coinReward": 10,
+  "estMinutes": 5,
+  "practice": [
+    {
+      "text": "Quyidagilardan qaysi biri 1 dona narsani bildiradi?",
+      "options": [
+        "Bitta qalam ✏️",
+        "Ikkita olma 🍎🍎",
+        "Uchta koptok ⚽⚽⚽",
+        "To‘rtta gul 🌸🌸🌸🌸"
+      ],
+      "correctIndex": 0,
+      "explanation": "Bitta qalam 1 soniga mos keladi."
+    },
+    {
+      "text": "1 raqamidan keyin qaysi raqam keladi?",
+      "options": [
+        "0",
+        "2",
+        "3",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 dan keyin 2 keladi."
+    },
+    {
+      "text": "Inson tanasida bitta bo‘lgan a’zoni toping:",
+      "options": [
+        "Ko‘z 👀",
+        "Quloq 👂",
+        "Burun 👃",
+        "Qo‘l ✋"
+      ],
+      "correctIndex": 2,
+      "explanation": "Insonning burni bitta bo‘ladi, ko‘z va quloqlar esa ikkitadan."
+    }
+  ],
+  "test": [
+    {
+      "text": "1 soni nechta narsani bildiradi?",
+      "options": [
+        "Bitta narsani",
+        "Ikkita narsani",
+        "Uchta narsani",
+        "Hech narsani emas"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 soni bitta dona narsani bildiradi."
+    },
+    {
+      "text": "Osmonda nechta quyosh bor?",
+      "options": [
+        "2 ta",
+        "3 ta",
+        "1 ta ☀️",
+        "Ko‘p"
+      ],
+      "correctIndex": 2,
+      "explanation": "Yerimiz uchun bitta quyosh porlaydi."
+    },
+    {
+      "text": "Qaysi belgi 1 raqamini bildiradi?",
+      "options": [
+        "2",
+        "1",
+        "7",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "'1' — bir raqamining yozilish shaklidir."
+    },
+    {
+      "text": "1 soniga 0 qo‘shilsa necha bo‘ladi: 1 + 0 = ?",
+      "options": [
+        "0",
+        "2",
+        "10",
+        "1"
+      ],
+      "correctIndex": 3,
+      "explanation": "Har qanday songa 0 qo‘shilsa, sonning o‘zi chiqadi."
+    },
+    {
+      "text": "1 sonidan 1 ayirilsa necha qoladi: 1 − 1 = ?",
+      "options": [
+        "1",
+        "0",
+        "2",
+        "yo‘q"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 dan 1 ayirilsa 0 qoladi."
+    },
+    {
+      "text": "1 ning o‘ng qo‘shnisi (keyingi son) qaysi?",
+      "options": [
+        "2",
+        "0",
+        "3",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 dan keyingi son 2 dir."
+    },
+    {
+      "text": "O‘zbekiston Respublikasining poytaxti nechta?",
+      "options": [
+        "2 ta",
+        "3 ta",
+        "12 ta",
+        "1 ta (Toshkent shahri) 🏙️"
+      ],
+      "correctIndex": 3,
+      "explanation": "Har bir davlatning bitta poytaxti bo‘ladi, bizda bu — Toshkent."
+    },
+    {
+      "text": "Insonning nechta yuragi bo‘ladi?",
+      "options": [
+        "2 ta",
+        "3 ta",
+        "1 ta ❤️",
+        "4 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Inson tanasida 1 ta yurak urib turadi."
+    },
+    {
+      "text": "Quyidagi ifodalardan qaysi birining qiymati 1 ga teng?",
+      "options": [
+        "1 + 1",
+        "3 − 1",
+        "2 − 1",
+        "0 + 0"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 − 1 = 1."
+    },
+    {
+      "text": "1 soni natural sonlar qatorida nechanchi o‘rinda turadi?",
+      "options": [
+        "Ikkinchi o‘rinda",
+        "Oxirgi o‘rinda",
+        "O‘rtada",
+        "Birinchi o‘rinda"
+      ],
+      "correctIndex": 3,
+      "explanation": "Natural sonlar 1 dan boshlanadi."
+    },
+    {
+      "text": "1 soni 2 sonidan kattami yoki kichik?",
+      "options": [
+        "Kichik (1 < 2)",
+        "Katta (1 > 2)",
+        "Teng",
+        "Bir xil"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 soni 2 dan 1 taga kichikdir."
+    },
+    {
+      "text": "Bir haftada nechta dushanba kuni bor?",
+      "options": [
+        "2 ta",
+        "1 ta",
+        "7 ta",
+        "5 ta"
+      ],
+      "correctIndex": 1,
+      "explanation": "Har bir haftada bitta dushanba kuni bo‘ladi."
+    },
+    {
+      "text": "Qaysi qush faqat bitta shoxda o‘tiribdi: 🦜?",
+      "options": [
+        "2 ta to‘tiqush",
+        "3 ta to‘tiqush",
+        "0 ta",
+        "1 ta to‘tiqush"
+      ],
+      "correctIndex": 3,
+      "explanation": "Bu yerda bitta to‘tiqush ko‘rsatilgan."
+    },
+    {
+      "text": "Bir xonali eng kichik natural son qaysi?",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "0 natural son emas, eng kichik natural son 1 dir."
+    },
+    {
+      "text": "Sinf xonasida o‘qituvchi stoli odatda nechta bo‘ladi?",
+      "options": [
+        "5 ta",
+        "10 ta",
+        "1 ta",
+        "20 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sinfda o‘qituvchi uchun bitta asosiy stol bo‘ladi."
+    },
+    {
+      "text": "1 soni toq sonmi yoki juft son?",
+      "options": [
+        "Toq son",
+        "Juft son",
+        "Ikkalasi ham",
+        "Nol son"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 soni toq sonlar qatoriga kiradi."
+    },
+    {
+      "text": "Alisher 1 ta daftar sotib oldi. U nechta daftar oldi?",
+      "options": [
+        "1 ta",
+        "2 ta",
+        "3 ta",
+        "0 ta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Masala shartida 1 ta daftar aytilgan."
+    },
+    {
+      "text": "To‘g‘ri taqqoslashni toping:",
+      "options": [
+        "1 > 3",
+        "1 = 3",
+        "1 > 5",
+        "1 < 3"
+      ],
+      "correctIndex": 3,
+      "explanation": "1 soni 3 dan kichik (1 < 3)."
+    },
+    {
+      "text": "Katak daftarda 1 raqami nechanchi katakchaga sig‘adi?",
+      "options": [
+        "To‘rtta katakka",
+        "Bitta katak ichiga",
+        "O‘nta katakka",
+        "Daftarning yarmiga"
+      ],
+      "correctIndex": 1,
+      "explanation": "Har bir raqam chiroyli qilib bitta katak ichiga yoziladi."
+    },
+    {
+      "text": "Dilshod 1 ta savolga to‘g‘ri javob berdi. U nechta to‘g‘ri javob topdi?",
+      "options": [
+        "2 ta",
+        "0 ta",
+        "1 ta to‘g‘ri javob",
+        "5 ta"
+      ],
+      "correctIndex": 2,
+      "explanation": "U 1 ta savolni to‘g‘ri yechgan."
+    }
+  ]
+}

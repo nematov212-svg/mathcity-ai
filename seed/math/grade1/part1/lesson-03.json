@@ -1,0 +1,276 @@
+{
+  "bookNumber": 3,
+  "title": "Narsalarning joylashishi",
+  "emoji": "🧭",
+  "shortDesc": "Tepada, pastda, chapda, o‘ngda va katak tomonlari.",
+  "intro": "Narsalarning qayerda turganini tepada, pastda, chapda yoki o‘ngda deb aytamiz.",
+  "keyPoints": [
+    "Tepada va pastda yo‘nalishlari balandlikni ko‘rsatadi.",
+    "Chap va o‘ng tomonlar qo‘llarimizga qarab aniqlanadi.",
+    "O‘zbekiston bayrog‘ida ko‘k chiziq tepada, yashil chiziq pastda joylashgan."
+  ],
+  "miniExample": {
+    "emojis": "☀️ 🌻",
+    "text": "Quyosh tepada, kungaboqar esa pastda!"
+  },
+  "xpReward": 85,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Osmonda quyosh ☀️ qayerda turadi?",
+      "options": [
+        "Tepada",
+        "Pastda",
+        "Yer tagida",
+        "Yon tomonda"
+      ],
+      "correctIndex": 0,
+      "explanation": "Quyosh osmonda, ya’ni tepada porlaydi."
+    },
+    {
+      "text": "Qalamni o‘ng qo‘lingizga olsangiz, u qaysi tomonda bo‘ladi?",
+      "options": [
+        "Chap tomonda",
+        "O‘ng tomonda",
+        "Tepada",
+        "Orqada"
+      ],
+      "correctIndex": 1,
+      "explanation": "O‘ng qo‘ldagi narsa o‘ng tomonda bo‘ladi."
+    },
+    {
+      "text": "Katakning yuqori tomoni qayerga qaraydi?",
+      "options": [
+        "Pastga",
+        "Chapga",
+        "Tepaga",
+        "O‘ngga"
+      ],
+      "correctIndex": 2,
+      "explanation": "Yuqori tomon doimo tepaga yo‘nalgan bo‘ladi."
+    }
+  ],
+  "test": [
+    {
+      "text": "Qushlar osmonda uchmoqda. Ular qayerda?",
+      "options": [
+        "Tepada",
+        "Pastda",
+        "Yer tagida",
+        "Orqada faqat"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qushlar balandda, osmonda, ya’ni tepada uchadi."
+    },
+    {
+      "text": "Baliqlar suv tagida suzmoqda. Ular qayerda joylashgan?",
+      "options": [
+        "Tepada bulutda",
+        "Daraxt shoxida",
+        "Pastda (suv tubida)",
+        "Osmonda"
+      ],
+      "correctIndex": 2,
+      "explanation": "Baliqlar pastda, suv havzalarida suzadi."
+    },
+    {
+      "text": "Ko‘prik ustidan mashina 🚗, ostidan esa qayiq ⛵ o‘tmoqda. Qayiq qayerda?",
+      "options": [
+        "Tepada",
+        "Pastda (ko‘prik ostida)",
+        "Ko‘prik ustida",
+        "Osmonda"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qayiq ko‘prikning pastki qismida, suvda harakatlanadi."
+    },
+    {
+      "text": "O‘zbekiston bayrog‘ida ko‘k tasma qayerda joylashgan?",
+      "options": [
+        "O‘rtada",
+        "Eng pastda",
+        "Yonboshda",
+        "Eng tepada"
+      ],
+      "correctIndex": 3,
+      "explanation": "Davlatimiz bayrog‘ining yuqori qismi havorang (ko‘k) tasmadir."
+    },
+    {
+      "text": "O‘zbekiston bayrog‘ida yashil tasma qayerda joylashgan?",
+      "options": [
+        "Eng tepada",
+        "Eng pastda",
+        "O‘rtada",
+        "Bayroq orqasida"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bayroqdagi yashil tasma pastki chiziqda joylashgan."
+    },
+    {
+      "text": "Qatorda: 🍎 🍐 🍊. Olma 🍎 qaysi tomonda turibdi?",
+      "options": [
+        "Chap tomonda",
+        "O‘ng tomonda",
+        "O‘rtada",
+        "Pastda"
+      ],
+      "correctIndex": 0,
+      "explanation": "Olma birinchi bo‘lib chap tomonda turibdi."
+    },
+    {
+      "text": "Qatorda: 🍎 🍐 🍊. Apelsin 🍊 qaysi tomonda turibdi?",
+      "options": [
+        "Chap tomonda",
+        "O‘rtada",
+        "Tepada",
+        "O‘ng tomonda"
+      ],
+      "correctIndex": 3,
+      "explanation": "Apelsin eng oxirgi bo‘lib o‘ng tomonda turibdi."
+    },
+    {
+      "text": "Qatorda: 🍎 🍐 🍊. Nok 🍐 qayerda turibdi?",
+      "options": [
+        "Eng chapda",
+        "Eng o‘ngda",
+        "O‘rtada (olma va apelsin orasida)",
+        "Tepada"
+      ],
+      "correctIndex": 2,
+      "explanation": "Nok olma va apelsinning o‘rtasida joylashgan."
+    },
+    {
+      "text": "Daftarning bitta katagida nechta tomon bor?",
+      "options": [
+        "3 ta tomon",
+        "2 ta tomon",
+        "4 ta tomon (tepa, past, chap, o‘ng)",
+        "5 ta tomon"
+      ],
+      "correctIndex": 2,
+      "explanation": "Katak to‘rtburchak bo‘lib, 4 ta tomonga ega."
+    },
+    {
+      "text": "Sinf doskasi 🗂️ oldida turgan o‘qituvchining chap qo‘li qaysi tomonda bo‘ladi?",
+      "options": [
+        "O‘ng tomonda",
+        "Tepada",
+        "Pastda",
+        "Chap tomonda"
+      ],
+      "correctIndex": 3,
+      "explanation": "Chap qo‘l doimo chap tarafda bo‘ladi."
+    },
+    {
+      "text": "Katak daftarda qalamni bir katak o‘ngga yurgizish qaysi tomonga harakat?",
+      "options": [
+        "O‘ng tomonga",
+        "Chap tomonga",
+        "Tepaga",
+        "Pastga"
+      ],
+      "correctIndex": 0,
+      "explanation": "O‘ngga yurish o‘ng qo‘l tomonga yo‘nalishdir."
+    },
+    {
+      "text": "Daraxt tagida qo‘ziqorin 🍄 o‘smoqda. Qo‘ziqorin qayerda?",
+      "options": [
+        "Tepada",
+        "Pastda (yerda)",
+        "Osmonda",
+        "Bulutda"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qo‘ziqorin yerda, daraxtning tagida o‘sadi."
+    },
+    {
+      "text": "Samolyot ✈️ uchayotganda uyning qayerida bo‘ladi?",
+      "options": [
+        "Ostida",
+        "Ichida",
+        "Zaminida",
+        "Tepasida (osmonda)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Samolyot uylardan balandda, tepada uchadi."
+    },
+    {
+      "text": "Stol ustida kitob 📖, stol tagida koptok ⚽ bor. Koptok qayerda?",
+      "options": [
+        "Tepada (stol ustida)",
+        "Pastda (stol tagida)",
+        "Shiftda",
+        "Stol yonida"
+      ],
+      "correctIndex": 1,
+      "explanation": "Koptok pastda, stol ostida turibdi."
+    },
+    {
+      "text": "Chiziq chizganda tepadan pastga qarab chizilsa, bu qanday chiziq?",
+      "options": [
+        "Yotiq chiziq",
+        "Aylanma chiziq",
+        "Tik (vertikal) chiziq",
+        "Nuqta"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tepadan pastga tortilgan chiziq tik chiziq deyiladi."
+    },
+    {
+      "text": "Chapdan o‘ngga tortilgan chiziq qanday chiziq deyiladi?",
+      "options": [
+        "Yotiq (gorizontal) chiziq",
+        "Tik chiziq",
+        "Siniq chiziq",
+        "Doira"
+      ],
+      "correctIndex": 0,
+      "explanation": "Chapdan o‘ngga qarab yotgan chiziq yotiq chiziqdir."
+    },
+    {
+      "text": "Qatorda 5 ta o‘quvchi turibdi. Chapdan 2-o‘rindagi kim bo‘ladi?",
+      "options": [
+        "Chap tomondan hisoblaganda ikkinchi bola",
+        "O‘ng tomondan birinchi bola",
+        "O‘rtadagi bola",
+        "Eng oxirgi bola"
+      ],
+      "correctIndex": 0,
+      "explanation": "Chap tomondan sanalganda 1, 2-o‘rindagi o‘quvchi bo‘ladi."
+    },
+    {
+      "text": "Ko‘chada piyoda yurayotganda yo‘lning qaysi tomonidan yurish qoidasi bor?",
+      "options": [
+        "Yo‘lning qoq o‘rtasidan",
+        "Mashinalar orasidan",
+        "Faqat chap chekkadan",
+        "O‘ng tomonidan (yoki piyodalar yo‘lkasidan)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Piyodalar yo‘lkasining o‘ng tomonidan yurish odob va qoidadir."
+    },
+    {
+      "text": "Malika daftariga quyosh rasmini chizdi. Quyosh odatda sahifaning qayeriga chiziladi?",
+      "options": [
+        "Eng pastki qismiga",
+        "Yuqori qismiga (tepaga)",
+        "Daftar orqasiga",
+        "Stol tagiga"
+      ],
+      "correctIndex": 1,
+      "explanation": "Quyosh osmonda bo‘lgani uchun rasmning yuqori qismiga chiziladi."
+    },
+    {
+      "text": "Sinf xonasida soat 🕒 devorning qayeriga osiladi?",
+      "options": [
+        "Polga (pastga)",
+        "Parta tagiga",
+        "Yuqoriga (tepaga, hamma ko‘rishi uchun)",
+        "Eshik orqasidagi polga"
+      ],
+      "correctIndex": 2,
+      "explanation": "Soat barchaga ko‘rinishi uchun devorning yuqori qismiga ilinadi."
+    }
+  ]
+}

@@ -20,6 +20,7 @@
     "db:backup": "tsx src/db/backupPostgres.ts",
     "render:build": "npm install --include=dev && npx prisma generate && npm run build && mkdir -p dist/public && cp -R public/* dist/public/ 2>/dev/null || true",
     "render:start": "node scripts/render-start.js",
+    "validate:math": "tsx scripts/validateMath.ts",
     "test": "jest --runInBand --forceExit"
   },
   "dependencies": {

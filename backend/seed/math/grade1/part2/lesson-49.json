@@ -1,0 +1,276 @@
+{
+  "bookNumber": 49,
+  "title": "Sonlarni taqqoslash (11–20)",
+  "emoji": "🔍",
+  "shortDesc": "11–20 sonlarini tarkibi va sonlar qatori bo‘yicha taqqoslash (16 > 13).",
+  "intro": "11 dan 20 gacha bo‘lgan sonlarni o‘nlik va birliklariga qarab taqqoslaymiz: 16 > 13.",
+  "keyPoints": [
+    "O‘nliklari teng bo‘lsa, birliklari kattasi katta bo‘ladi: 16 > 13 (chunki 6 > 3).",
+    "20 soni barcha 11–19 sonlaridan katta (chunki 2 ta o‘nligi bor).",
+    "Sonlar qatorida o‘ngda turgan son doimo chapdagi sondan katta bo‘ladi."
+  ],
+  "miniExample": {
+    "emojis": "1️⃣6️⃣ > 1️⃣3️⃣",
+    "text": "16 katta 13 dan, chunki 6 ta birlik 3 ta birlikdan ko‘p!"
+  },
+  "xpReward": 90,
+  "coinReward": 10,
+  "estMinutes": 6,
+  "practice": [
+    {
+      "text": "Taqqoslang: 16 ... 13. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "16 soni 13 dan katta (16 > 13)."
+    },
+    {
+      "text": "Taqqoslang: 12 ... 18. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "−"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 soni 18 dan kichik (12 < 18)."
+    },
+    {
+      "text": "11 dan 20 gacha sonlar ichida eng kattasi qaysi?",
+      "options": [
+        "19",
+        "18",
+        "20",
+        "11"
+      ],
+      "correctIndex": 2,
+      "explanation": "20 soni bu oraliqda eng kattadir."
+    }
+  ],
+  "test": [
+    {
+      "text": "Taqqoslang: 14 ... 11. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 0,
+      "explanation": "14 soni 11 dan katta (14 > 11)."
+    },
+    {
+      "text": "Taqqoslang: 13 ... 17. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "−"
+      ],
+      "correctIndex": 2,
+      "explanation": "13 soni 17 dan kichik (13 < 17)."
+    },
+    {
+      "text": "Taqqoslang: 15 ... 15. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "<",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ikkala son teng (15 = 15)."
+    },
+    {
+      "text": "Taqqoslang: 20 ... 19. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        "=",
+        "−",
+        ">"
+      ],
+      "correctIndex": 3,
+      "explanation": "20 soni 19 dan katta (20 > 19)."
+    },
+    {
+      "text": "Taqqoslang: 12 ... 20. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 soni 20 dan kichik (12 < 20)."
+    },
+    {
+      "text": "Taqqoslang: 18 ... 16. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "=",
+        "−"
+      ],
+      "correctIndex": 0,
+      "explanation": "18 soni 16 dan katta (18 > 16)."
+    },
+    {
+      "text": "Taqqoslang: 11 ... 19. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "+",
+        "<"
+      ],
+      "correctIndex": 3,
+      "explanation": "11 soni 19 dan kichik (11 < 19)."
+    },
+    {
+      "text": "Taqqoslang: 10 + 4 ... 15. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "=",
+        "< (chunki 14 < 15)",
+        "+"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 4 = 14, 14 < 15."
+    },
+    {
+      "text": "Taqqoslang: 10 + 8 ... 17. Qaysi belgi to‘g‘ri?",
+      "options": [
+        "<",
+        "=",
+        "> (chunki 18 > 17)",
+        "−"
+      ],
+      "correctIndex": 2,
+      "explanation": "10 + 8 = 18, 18 > 17."
+    },
+    {
+      "text": "Taqqoslang: 10 + 6 ... 16. Qaysi belgi to‘g‘ri?",
+      "options": [
+        ">",
+        "<",
+        "+",
+        "= (chunki 16 = 16)"
+      ],
+      "correctIndex": 3,
+      "explanation": "10 + 6 = 16, ikkalasi teng."
+    },
+    {
+      "text": "11, 15, 19, 13 sonlari ichida eng kattasi qaysi?",
+      "options": [
+        "19",
+        "15",
+        "13",
+        "11"
+      ],
+      "correctIndex": 0,
+      "explanation": "19 eng katta sondir."
+    },
+    {
+      "text": "14, 12, 18, 16 sonlari ichida eng kichigi qaysi?",
+      "options": [
+        "14",
+        "12",
+        "16",
+        "18"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 eng kichik sondir."
+    },
+    {
+      "text": "Sonlarni o‘sish tartibida to‘g‘ri joylashtiring:",
+      "options": [
+        "20, 17, 14, 11",
+        "14, 11, 17, 20",
+        "11, 17, 14, 20",
+        "11, 14, 17, 20"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kichigidan kattasiga: 11, 14, 17, 20."
+    },
+    {
+      "text": "Sonlarni kamayish tartibida to‘g‘ri joylashtiring:",
+      "options": [
+        "10, 13, 16, 19",
+        "19, 16, 13, 10",
+        "16, 19, 13, 10",
+        "19, 13, 16, 10"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kattasidan kichigiga: 19, 16, 13, 10."
+    },
+    {
+      "text": "Quyidagi sonlardan qaysi biri 14 dan katta, lekin 16 dan kichik?",
+      "options": [
+        "13",
+        "17",
+        "15",
+        "16"
+      ],
+      "correctIndex": 2,
+      "explanation": "14 va 16 orasida 15 soni bor."
+    },
+    {
+      "text": "Quyidagi sonlardan qaysi biri 17 dan katta, lekin 19 dan kichik?",
+      "options": [
+        "18",
+        "16",
+        "20",
+        "19"
+      ],
+      "correctIndex": 0,
+      "explanation": "17 va 19 orasida 18 soni bor."
+    },
+    {
+      "text": "Akmal 15 ta misol yechdi, Sobir 18 ta misol yechdi. Kim ko‘p misol yechdi?",
+      "options": [
+        "Sobir ko‘p yechdi (18 > 15)",
+        "Akmal ko‘p yechdi",
+        "Ikkalasi teng",
+        "Akmal 18 ta yechdi"
+      ],
+      "correctIndex": 0,
+      "explanation": "18 soni 15 dan katta."
+    },
+    {
+      "text": "Madinada 14 ta rangli qalam, singlisida 11 ta qalam bor. Qalamlar kimda kam?",
+      "options": [
+        "Madinada kam",
+        "Ikkalasida teng",
+        "Singlisida ko‘p",
+        "Singlisida kam (11 < 14)"
+      ],
+      "correctIndex": 3,
+      "explanation": "11 soni 14 dan kichik."
+    },
+    {
+      "text": "1-sinfda 19 ta o‘quvchi, 2-sinfda 20 ta o‘quvchi bor. Qaysi sinfda ko‘p?",
+      "options": [
+        "1-sinfda ko‘p",
+        "2-sinfda ko‘p (20 > 19)",
+        "Ikkalasida teng",
+        "2-sinfda kam"
+      ],
+      "correctIndex": 1,
+      "explanation": "20 soni 19 dan katta."
+    },
+    {
+      "text": "To‘g‘ri taqqoslashni toping:",
+      "options": [
+        "12 > 17",
+        "17 = 12",
+        "17 > 12",
+        "12 > 20"
+      ],
+      "correctIndex": 2,
+      "explanation": "17 soni 12 dan katta."
+    }
+  ]
+}
