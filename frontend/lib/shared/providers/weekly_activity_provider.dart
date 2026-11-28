@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/network/api_client.dart';
+import '../../core/storage/storage_service.dart';
 import '../models/weekly_activity_model.dart';
 
 const String _kWeeklyActivityCacheKey = 'mathcity_cached_weekly_activity';
@@ -59,7 +60,9 @@ class WeeklyActivityNotifier extends StateNotifier<WeeklyActivityState> {
       if (cachedJsonStr != null) {
         final decoded = jsonDecode(cachedJsonStr) as Map<String, dynamic>;
         final cachedData = WeeklyActivityData.fromJson(decoded);
-        state = state.copyWith(data: cachedData, isLoading: false);
+        if (mounted) {
+          state = state.copyWith(data: cachedData, isLoading: false);
+        }
       }
     } catch (e) {
       if (kDebugMode) {
@@ -67,12 +70,23 @@ class WeeklyActivityNotifier extends StateNotifier<WeeklyActivityState> {
       }
     }
 
+    if (!mounted) return;
     // 2. Fetch fresh data from server
     await refresh();
   }
 
   Future<void> refresh() async {
     try {
+      final token = await StorageService.getAuthToken();
+      if (!mounted) return;
+      if (token == null || token.isEmpty) {
+        // Unauthenticated or guest mode: skip remote activity fetch to prevent 401/404 errors
+        if (mounted) {
+          state = state.copyWith(isLoading: false);
+        }
+        return;
+      }
+
       final res = await ApiClient().dio.get(
             '/activity/week',
             options: Options(
@@ -82,13 +96,17 @@ class WeeklyActivityNotifier extends StateNotifier<WeeklyActivityState> {
             ),
           );
 
+      if (!mounted) return;
+
       if (res.statusCode == 200 &&
           res.data != null &&
           res.data['success'] == true) {
         final rawData = res.data['data'] as Map<String, dynamic>;
         final freshData = WeeklyActivityData.fromJson(rawData);
 
-        state = state.copyWith(data: freshData, isLoading: false, error: null);
+        if (mounted) {
+          state = state.copyWith(data: freshData, isLoading: false, error: null);
+        }
 
         // Cache locally
         try {
@@ -100,11 +118,15 @@ class WeeklyActivityNotifier extends StateNotifier<WeeklyActivityState> {
         // Schedule midnight refresh
         _scheduleMidnightRefresh(freshData.secondsUntilMidnight);
       } else {
-        state = state.copyWith(isLoading: false);
+        if (mounted) {
+          state = state.copyWith(isLoading: false);
+        }
       }
     } catch (e) {
       // Non-blocking: keep showing cached or empty data
-      state = state.copyWith(isLoading: false);
+      if (mounted) {
+        state = state.copyWith(isLoading: false);
+      }
     }
   }
 

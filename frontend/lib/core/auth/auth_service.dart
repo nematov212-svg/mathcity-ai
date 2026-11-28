@@ -857,6 +857,24 @@ class AuthService {
         }
       }
     } catch (_) {}
+
+    // Dynamic smart fallback if server is offline or endpoint not yet deployed remotely
+    final cleanSeed = seed.trim().replaceAll(RegExp(r'[^a-zA-Z0-9_]'), '');
+    final base = cleanSeed.isEmpty ? 'MathHero' : cleanSeed;
+    final lowerExcluded = excluded.map((e) => e.toLowerCase()).toSet();
+    final candidatePool = <String>[
+      '${base}2026',
+      '${base}777',
+      'Super$base',
+      'Zehnli$base',
+      '${base}_pro',
+      '${base}123',
+    ];
+    final available = candidatePool
+        .where((c) => !lowerExcluded.contains(c.toLowerCase()))
+        .take(count)
+        .toList();
+    if (available.isNotEmpty) return available;
     return ['MathHero2026', 'SuperMath123', 'ZehnliBola88'];
   }
 

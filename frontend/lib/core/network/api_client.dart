@@ -260,8 +260,8 @@ class ApiClient {
           try {
             final probeDio = Dio(
               BaseOptions(
-                connectTimeout: const Duration(milliseconds: 700),
-                receiveTimeout: const Duration(milliseconds: 700),
+                connectTimeout: const Duration(milliseconds: 1500),
+                receiveTimeout: const Duration(milliseconds: 1500),
                 validateStatus: (status) => true,
               ),
             );
@@ -277,9 +277,16 @@ class ApiClient {
               return;
             }
           } catch (_) {
-            // Local server offline, fallback to Render production
-            AppConfig.setBaseUrl(AppConfig.productionApiUrl);
-            dio.options.baseUrl = AppConfig.baseUrl;
+            // Local server offline or still starting up:
+            // Keep local URL so requests route to localhost:4000 once started.
+            // Do NOT fall back to Render unless explicitly requested (?api=render).
+            AppConfig.setBaseUrl('http://localhost:4000/api');
+            dio.options.baseUrl = 'http://localhost:4000/api';
+            if (kDebugMode) {
+              debugPrint(
+                  'ℹ️ [API Client] Mahalliy server (http://localhost:4000) hali ulanmadi. Serverni ishga tushiring ("npm start" yoki "node backend/dist/server.js").');
+            }
+            return;
           }
         }
       }
