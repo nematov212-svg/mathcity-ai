@@ -1511,9 +1511,15 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
   Widget _buildDiscountHeaderRibbon(PricingData pricing) {
     final remaining = pricing.remainingDiscountDuration;
     final days = remaining.inDays;
+    final remHours = remaining.inHours % 24;
     final hours = (remaining.inHours % 24).toString().padLeft(2, '0');
     final mins = (remaining.inMinutes % 60).toString().padLeft(2, '0');
     final secs = (remaining.inSeconds % 60).toString().padLeft(2, '0');
+    final countdownStr = remaining.inHours >= 24
+        ? (remHours > 0
+            ? '$days kun $remHours soat qoldi'
+            : '$days kun qoldi')
+        : 'Chegirma tugashiga: $hours:$mins:$secs';
 
     return Container(
       width: double.infinity,
@@ -1586,9 +1592,7 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
                       color: Color(0xFFFFD700), size: 13),
                   const SizedBox(width: 6),
                   Text(
-                    days > 0
-                        ? 'Tugashiga: $days kun $hours:$mins:$secs'
-                        : 'Tugashiga: $hours:$mins:$secs',
+                    countdownStr,
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,

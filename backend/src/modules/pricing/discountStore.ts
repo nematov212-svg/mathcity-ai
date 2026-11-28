@@ -14,7 +14,7 @@ class DiscountStore {
   private settings: DiscountSettings = {
     enabled: true,
     discountPercent: 30,
-    durationDays: 1, // Strictly 24 hours (1 day) for new users
+    durationDays: 7, // Strictly 7 days for new users
     applicablePlans: ['monthly', 'yearly'],
     updatedAt: new Date().toISOString(),
     updatedBy: 'system',

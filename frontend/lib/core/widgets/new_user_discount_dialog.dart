@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Professional Apple Style Animated New User 30% Discount Dialog
 /// - 24px border radius, glassmorphism backdrop blur
@@ -199,6 +200,12 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
     _isClosing = true;
     _autoCloseController?.stop();
 
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final todayStr = DateTime.now().toIso8601String().split('T').first;
+      await prefs.setString('special_offer_dismissed_date', todayStr);
+    } catch (_) {}
+
     widget.onDismiss?.call();
 
     if (mounted) {
@@ -239,10 +246,20 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
     final mediaQuery = MediaQuery.of(context);
     final reduceMotion = mediaQuery.disableAnimations;
 
-    final hours = _remainingTime.inHours.toString().padLeft(2, '0');
-    final minutes = (_remainingTime.inMinutes % 60).toString().padLeft(2, '0');
-    final seconds = (_remainingTime.inSeconds % 60).toString().padLeft(2, '0');
-    final countdownString = '$hours:$minutes:$seconds';
+    final String countdownString;
+    if (_remainingTime.inHours >= 24) {
+      final days = _remainingTime.inDays;
+      final remHours = _remainingTime.inHours % 24;
+      countdownString =
+          remHours > 0 ? '$days kun $remHours soat qoldi' : '$days kun qoldi';
+    } else {
+      final hours = _remainingTime.inHours.toString().padLeft(2, '0');
+      final minutes =
+          (_remainingTime.inMinutes % 60).toString().padLeft(2, '0');
+      final seconds =
+          (_remainingTime.inSeconds % 60).toString().padLeft(2, '0');
+      countdownString = '$hours:$minutes:$seconds';
+    }
 
     final selectedPrice = _selectedPlan == 'yearly'
         ? widget.yearlyDiscountedPrice

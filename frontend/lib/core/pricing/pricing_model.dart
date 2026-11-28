@@ -112,26 +112,45 @@ class PricingData {
 
   factory PricingData.fromJson(
       Map<String, dynamic> json, DateTime localReceivedAt) {
-    final serverNowStr = json['serverNow'] as String?;
+    final dataMap = (json['data'] is Map<String, dynamic>)
+        ? json['data'] as Map<String, dynamic>
+        : json;
+
+    final serverNowStr =
+        (dataMap['serverNow'] ?? json['serverNow']) as String?;
     final serverNow = serverNowStr != null
         ? DateTime.tryParse(serverNowStr) ?? localReceivedAt
         : localReceivedAt;
     final serverOffset = serverNow.difference(localReceivedAt);
 
-    final endsAtStr = json['discountEndsAt'] as String?;
+    final endsAtStr = (dataMap['expiresAt'] ??
+        dataMap['discountEndsAt'] ??
+        json['expiresAt'] ??
+        json['discountEndsAt']) as String?;
     final discountEndsAt =
         endsAtStr != null ? DateTime.tryParse(endsAtStr) : null;
 
-    final elig = json['eligibility'] as Map<String, dynamic>? ?? {};
-    final isEligible = elig['eligible'] == true || json['hasDiscount'] == true;
-    final reason = (elig['reason'] ?? '').toString();
+    final elig =
+        (dataMap['eligibility'] ?? json['eligibility']) as Map<String, dynamic>? ??
+            {};
+    final isEligible = dataMap['eligible'] == true ||
+        json['eligible'] == true ||
+        elig['eligible'] == true ||
+        dataMap['hasDiscount'] == true ||
+        json['hasDiscount'] == true;
+    final reason = (elig['reason'] ??
+            dataMap['reason'] ??
+            json['reason'] ??
+            '')
+        .toString();
+
+    final plansSource = dataMap['plans'] ?? json['plans'];
 
     PricingPlan monthly = PricingPlan.monthlyDefault;
     PricingPlan yearly = PricingPlan.yearlyDefault;
 
-    if (json['plans'] is List) {
-      final list = json['plans'] as List;
-      for (final p in list) {
+    if (plansSource is List) {
+      for (final p in plansSource) {
         if (p is Map<String, dynamic>) {
           final id = (p['planId'] ?? p['id'] ?? '').toString().toLowerCase();
           if (id == 'monthly') {
@@ -141,8 +160,8 @@ class PricingData {
           }
         }
       }
-    } else if (json['plans'] is Map) {
-      final plans = json['plans'] as Map<String, dynamic>;
+    } else if (plansSource is Map) {
+      final plans = plansSource as Map<String, dynamic>;
       if (plans['monthly'] != null) {
         monthly =
             PricingPlan.fromJson(plans['monthly'] as Map<String, dynamic>);
@@ -150,12 +169,64 @@ class PricingData {
       if (plans['yearly'] != null) {
         yearly = PricingPlan.fromJson(plans['yearly'] as Map<String, dynamic>);
       }
+    } else {
+      final mBase = (dataMap['baseMonthlyPrice'] as num?)?.toInt() ?? 29000;
+      final mFinal = (dataMap['monthlyPrice'] as num?)?.toInt() ??
+          (isEligible ? 20300 : mBase);
+      final yBase = (dataMap['baseYearlyPrice'] as num?)?.toInt() ?? 250000;
+      final yFinal = (dataMap['yearlyPrice'] as num?)?.toInt() ??
+          (isEligible ? 175000 : yBase);
+
+      monthly = PricingPlan(
+        id: 'monthly',
+        name: '1 oylik',
+        basePrice: mBase,
+        finalPrice: isEligible ? mFinal : mBase,
+        discountPercent: isEligible ? 30 : 0,
+        isDiscounted: isEligible && mFinal < mBase,
+        savings: isEligible && mFinal < mBase ? (mBase - mFinal) : 0,
+        billingCycle: 'month',
+      );
+      yearly = PricingPlan(
+        id: 'yearly',
+        name: '1 yillik',
+        basePrice: yBase,
+        finalPrice: isEligible ? yFinal : yBase,
+        discountPercent: isEligible ? 30 : 0,
+        isDiscounted: isEligible && yFinal < yBase,
+        savings: isEligible && yFinal < yBase ? (yBase - yFinal) : 0,
+        billingCycle: 'year',
+      );
+    }
+
+    // Force non-discounted if not eligible
+    if (!isEligible) {
+      monthly = PricingPlan(
+        id: monthly.id,
+        name: monthly.name,
+        basePrice: monthly.basePrice,
+        finalPrice: monthly.basePrice,
+        discountPercent: 0,
+        isDiscounted: false,
+        savings: 0,
+        billingCycle: monthly.billingCycle,
+      );
+      yearly = PricingPlan(
+        id: yearly.id,
+        name: yearly.name,
+        basePrice: yearly.basePrice,
+        finalPrice: yearly.basePrice,
+        discountPercent: 0,
+        isDiscounted: false,
+        savings: 0,
+        billingCycle: yearly.billingCycle,
+      );
     }
 
     return PricingData(
       serverNow: serverNow,
       serverOffset: serverOffset,
-      discountEndsAt: discountEndsAt,
+      discountEndsAt: isEligible ? discountEndsAt : null,
       isEligible: isEligible,
       eligibilityReason: reason,
       monthlyPlan: monthly,

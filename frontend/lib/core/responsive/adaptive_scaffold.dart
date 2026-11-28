@@ -20,7 +20,7 @@ class AdaptiveScaffold extends ConsumerWidget {
   final List<Widget>? topBarActions;
   final bool hideNavOnWide;
   final double? maxContentWidth;
-
+  
   const AdaptiveScaffold({
     super.key,
     required this.body,

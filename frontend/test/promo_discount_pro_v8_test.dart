@@ -71,7 +71,7 @@ void main() {
       expect(claimedPlan, equals('monthly'));
     });
 
-    testWidgets('Live server countdown timer renders hours:minutes:seconds',
+    testWidgets('Live server countdown timer renders hours:minutes:seconds in final 24h',
         (tester) async {
       final expiresAt = DateTime.now()
           .add(const Duration(hours: 5, minutes: 30, seconds: 15));
@@ -94,6 +94,31 @@ void main() {
 
       expect(find.textContaining('Chegirma tugashiga:'), findsOneWidget);
       expect(find.textContaining('05:30:'), findsOneWidget);
+    });
+
+    testWidgets('Live server countdown timer renders X kun Y soat qoldi before final 24h',
+        (tester) async {
+      final expiresAt = DateTime.now()
+          .add(const Duration(days: 5, hours: 12, minutes: 10));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: NewUserDiscountDialog(
+                expiresAt: expiresAt,
+                autoCloseDuration: null,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.textContaining('Chegirma tugashiga:'), findsOneWidget);
+      expect(find.textContaining('5 kun 12 soat qoldi'), findsOneWidget);
     });
   });
 

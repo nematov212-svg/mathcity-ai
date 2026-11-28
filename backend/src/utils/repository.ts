@@ -2067,7 +2067,7 @@ class DataRepository {
             if (!elig.eligible) return false;
           } else if (effectiveCreatedAt) {
             const regTime = new Date(effectiveCreatedAt).getTime();
-            if (isNaN(regTime) || now - regTime > 24 * 3600 * 1000) {
+            if (isNaN(regTime) || now - regTime > 7 * 24 * 3600 * 1000) {
               return false;
             }
           }
@@ -2153,9 +2153,9 @@ class DataRepository {
       return { eligible: false, expiresAt: null, discountPercent, reason: 'Foydalanuvchi yaratilgan sana noto‘g‘ri.' };
     }
 
-    const expiryMs = createdAtMs + 24 * 3600 * 1000;
+    const expiryMs = createdAtMs + 7 * 24 * 3600 * 1000;
     if (nowMs >= expiryMs) {
-      return { eligible: false, expiresAt: null, discountPercent, reason: '24 soatlik muddat tugagan.' };
+      return { eligible: false, expiresAt: null, discountPercent, reason: '7 kunlik muddat tugagan.' };
     }
 
     return {

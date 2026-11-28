@@ -130,22 +130,41 @@ class PricingNotifier extends StateNotifier<PricingState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      final res = await ApiClient().dio.get(
-            '/pricing',
-            options: Options(
-              validateStatus: (status) => true,
-              sendTimeout: const Duration(seconds: 5),
-              receiveTimeout: const Duration(seconds: 5),
-            ),
-          );
+      Response? res;
+      try {
+        res = await ApiClient().dio.get(
+              '/user/offer',
+              options: Options(
+                validateStatus: (status) => true,
+                sendTimeout: const Duration(seconds: 5),
+                receiveTimeout: const Duration(seconds: 5),
+              ),
+            );
+      } catch (_) {
+        res = null;
+      }
+
+      if (res == null || res.statusCode != 200) {
+        res = await ApiClient().dio.get(
+              '/pricing',
+              options: Options(
+                validateStatus: (status) => true,
+                sendTimeout: const Duration(seconds: 5),
+                receiveTimeout: const Duration(seconds: 5),
+              ),
+            );
+      }
 
       final receivedAt = DateTime.now();
 
       if (res.statusCode == 200 &&
           res.data != null &&
-          res.data['success'] == true) {
+          (res.data['success'] == true || res.data['eligible'] != null)) {
+        final rawMap = (res.data is Map<String, dynamic>)
+            ? res.data as Map<String, dynamic>
+            : (res.data['data'] as Map<String, dynamic>);
         final parsed = PricingData.fromJson(
-          res.data['data'] as Map<String, dynamic>,
+          rawMap,
           receivedAt,
         );
         state = state.copyWith(data: parsed, isLoading: false, error: null);

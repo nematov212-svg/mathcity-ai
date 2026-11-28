@@ -77,7 +77,7 @@ class PopupManager {
     // PRIORITY 1: New User 30% Discount Popup (Controlled by PromoDialogController)
     // =========================================================================
     if (!isPro &&
-        PromoDialogController.instance.sessionShowCount < 2 &&
+        PromoDialogController.instance.sessionShowCount < 1 &&
         !PromoDialogController.instance.isCancelled) {
       _isPopupShowing = true;
       await PromoDialogController.instance.onHomeEntered(context, ref);

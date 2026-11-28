@@ -351,6 +351,22 @@ paymentsRouter.post('/confirm-order', authMiddleware, (req: AuthenticatedRequest
     return res.status(404).json({ success: false, error: 'To‘lov buyurtmasi topilmadi.' });
   }
 
+  // Strict check on confirmation: re-verify eligibility if discounted amount was used
+  const basePrice = (order.planType === 'YEARLY') ? 250000 : 29000;
+  if (order.isDiscountApplied || order.amountUzs < basePrice) {
+    const createdAtMs = new Date(user.createdAt).getTime();
+    const orderCreatedAtMs = new Date(order.createdAt).getTime();
+    const isOrderWithin7Days = (orderCreatedAtMs - createdAtMs) <= 7 * 24 * 3600 * 1000;
+    const isNowWithin7Days = (Date.now() - createdAtMs) <= (7 * 24 * 3600 * 1000 + 3600 * 1000); // 1h grace for active checkout
+
+    if (!isOrderWithin7Days || !isNowWithin7Days || user.newUserDiscountUsedAt || (user.subscription && user.subscription.status === 'PRO_ACTIVE')) {
+      return res.status(400).json({
+        success: false,
+        error: 'Chegirma muddati tugagan yoki ushbu hisob uchun amal qilmaydi. Chegirmali narx bilan tasdiqlab bo‘lmaydi.',
+      });
+    }
+  }
+
   // Update order status to PAID
   paymentDataStore.updateOrderStatus(order.id, 'PAID');
 

@@ -1,24 +1,25 @@
 import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../network/api_client.dart';
 import '../../shared/providers/student_provider.dart';
 import '../pricing/pricing_provider.dart';
 import 'new_user_discount_dialog.dart';
 
-/// PromoDialogController orchestrates new user promotional popups:
-/// - Shown 1st time on entering home/dashboard.
-/// - Automatically closes after 5 seconds.
-/// - After 1st close, waits 10 seconds (cooldown).
-/// - Shows 2nd time after 10s cooldown.
-/// - Automatically closes 2nd popup after 5 seconds.
-/// - Never shows again during the session (max 2 per session).
-/// - Does not re-trigger on navigating back and forth in same session.
-/// - App restart resets session counter to 0.
-/// - Cancelled if user clicks "Chegirmani olish", buys Pro, or discount expires.
-/// - Never shown during lessons/exercises.
-/// - All timers and state cleanly managed without leaks.
+/// PromoDialogController orchestrates "Maxsus taklif • 30% chegirma" popups:
+/// Rules:
+/// 1. Discount strictly for new users within 7 days of registration (user.createdAt).
+/// 2. If > 7 days or already Pro, popup never shows.
+/// 3. App entry delay: shows 5 minutes after opening the app.
+/// 4. Max 1 show per day.
+/// 5. If user clicks "Keyinroq" (dismisses), will not show again for the rest of that day.
+/// 6. Pricing & eligibility fetched authoritatively from server (/user/offer).
+/// 7. Automatically suppressed during active lessons/exercises.
 class PromoDialogController {
   PromoDialogController._();
   static final PromoDialogController instance = PromoDialogController._();
@@ -26,23 +27,23 @@ class PromoDialogController {
   int _sessionShowCount = 0;
   bool _isDialogVisible = false;
   bool _isCancelled = false;
-  bool _isInCooldown = false;
   bool _isLessonActive = false;
 
-  Timer? _cooldownTimer;
+  DateTime? _appLaunchTime;
+  Timer? _launchDelayTimer;
+
+  static Duration launchDelayDuration = const Duration(minutes: 5);
 
   int get sessionShowCount => _sessionShowCount;
   bool get isDialogVisible => _isDialogVisible;
   bool get isCancelled => _isCancelled;
-  bool get isInCooldown => _isInCooldown;
   bool get isLessonActive => _isLessonActive;
 
   /// Called when student starts a lesson or exercise to ensure NO interruption
   void onLessonStarted() {
     _isLessonActive = true;
-    _cooldownTimer?.cancel();
-    _cooldownTimer = null;
-    _isInCooldown = false;
+    _launchDelayTimer?.cancel();
+    _launchDelayTimer = null;
   }
 
   /// Called when student finishes or exits lesson
@@ -53,9 +54,8 @@ class PromoDialogController {
   /// Called when user clicks "Chegirmani olish" or buys Pro
   void cancelPromoFlow() {
     _isCancelled = true;
-    _cooldownTimer?.cancel();
-    _cooldownTimer = null;
-    _isInCooldown = false;
+    _launchDelayTimer?.cancel();
+    _launchDelayTimer = null;
   }
 
   /// Reset session (for testing or fresh app session)
@@ -63,18 +63,17 @@ class PromoDialogController {
     _sessionShowCount = 0;
     _isDialogVisible = false;
     _isCancelled = false;
-    _isInCooldown = false;
     _isLessonActive = false;
-    _cooldownTimer?.cancel();
-    _cooldownTimer = null;
+    _appLaunchTime = null;
+    _launchDelayTimer?.cancel();
+    _launchDelayTimer = null;
   }
 
   /// Main trigger on home/dashboard entry
   Future<void> onHomeEntered(BuildContext context, WidgetRef ref) async {
     if (_isCancelled) return;
-    if (_sessionShowCount >= 2) return;
+    if (_sessionShowCount >= 1) return;
     if (_isDialogVisible) return;
-    if (_isInCooldown) return;
     if (_isLessonActive) return;
 
     final student = ref.read(studentProvider).student;
@@ -83,37 +82,74 @@ class PromoDialogController {
       return;
     }
 
-    // Check discount validity
-    final pricing = ref.read(pricingProvider).data;
-    if (!pricing.hasActiveDiscount) {
-      // Check API /promotions/new-user
-      try {
-        final res = await ApiClient().dio.get('/promotions/new-user');
-        if (res.statusCode != 200 || res.data?['eligible'] != true) {
-          _isCancelled = true;
-          return;
-        }
-      } catch (_) {
+    // Check SharedPreferences for daily frequency and "Keyinroq" dismiss
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final todayStr = DateTime.now().toIso8601String().split('T').first;
+
+      // Rule 6: Max 1 show per day
+      final lastShown = prefs.getString('special_offer_last_shown_date');
+      if (lastShown == todayStr) {
         return;
       }
-    }
 
-    // Show 1st or 2nd time
-    if (_sessionShowCount < 2) {
-      await _showPromoDialog(context, ref);
-    }
-  }
+      // Rule 6: If user clicked "Keyinroq", do not show again for the rest of today
+      final dismissedToday = prefs.getString('special_offer_dismissed_date');
+      if (dismissedToday == todayStr) {
+        return;
+      }
+    } catch (_) {}
 
-  Future<void> _showPromoDialog(BuildContext context, WidgetRef ref) async {
-    if (!context.mounted || _isDialogVisible || _isCancelled || _isLessonActive) {
+    // Check 5-minute launch delay
+    final isTestEnv =
+        !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    final requiredDelay = isTestEnv ? Duration.zero : launchDelayDuration;
+
+    _appLaunchTime ??= DateTime.now();
+    final elapsed = DateTime.now().difference(_appLaunchTime!);
+
+    if (elapsed < requiredDelay) {
+      final remaining = requiredDelay - elapsed;
+      _launchDelayTimer?.cancel();
+      _launchDelayTimer = Timer(remaining, () {
+        if (context.mounted &&
+            !_isCancelled &&
+            !_isLessonActive &&
+            _sessionShowCount < 1) {
+          _showPromoDialog(context, ref);
+        }
+      });
       return;
     }
 
-    _sessionShowCount++;
-    _isDialogVisible = true;
+    await _showPromoDialog(context, ref);
+  }
 
-    // Fetch freshest discount info
-    DateTime expiresAt = DateTime.now().add(const Duration(hours: 24));
+  Future<void> _showPromoDialog(BuildContext context, WidgetRef ref) async {
+    if (!context.mounted ||
+        _isDialogVisible ||
+        _isCancelled ||
+        _isLessonActive ||
+        _sessionShowCount >= 1) {
+      return;
+    }
+
+    final student = ref.read(studentProvider).student;
+    if (student?.subscription.isProActive == true || student?.isPro == true) {
+      _isCancelled = true;
+      return;
+    }
+
+    // Check SharedPreferences again before rendering
+    final todayStr = DateTime.now().toIso8601String().split('T').first;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getString('special_offer_last_shown_date') == todayStr) return;
+      if (prefs.getString('special_offer_dismissed_date') == todayStr) return;
+    } catch (_) {}
+
+    // Fetch freshest authoritative offer data from server
+    DateTime expiresAt = DateTime.now().add(const Duration(days: 7));
     int discountPercent = 30;
     int monthlyOriginal = 29000;
     int monthlyDiscounted = 20300;
@@ -121,30 +157,57 @@ class PromoDialogController {
     int yearlyDiscounted = 175000;
 
     try {
-      final res = await ApiClient().dio.get('/promotions/new-user');
+      final res = await ApiClient().dio.get(
+            '/user/offer',
+            options: Options(
+              validateStatus: (status) => true,
+              sendTimeout: const Duration(seconds: 4),
+              receiveTimeout: const Duration(seconds: 4),
+            ),
+          );
+
       if (res.statusCode == 200 && res.data != null) {
-        final pData = res.data;
+        final pData = (res.data is Map<String, dynamic>)
+            ? res.data as Map<String, dynamic>
+            : (res.data['data'] as Map<String, dynamic>? ?? {});
+
         if (pData['eligible'] != true) {
           _isDialogVisible = false;
           _isCancelled = true;
           return;
         }
-        final expStr = pData['expiresAt'] as String?;
+
+        final expStr = (pData['expiresAt'] ?? pData['discountEndsAt']) as String?;
         if (expStr != null) {
           final exp = DateTime.tryParse(expStr);
           if (exp != null) expiresAt = exp;
         }
+
         discountPercent = (pData['discountPercent'] as num?)?.toInt() ?? 30;
-        final prices = pData['prices'] as Map<String, dynamic>? ?? {};
-        final m = prices['monthly'] as Map<String, dynamic>? ?? {};
-        final y = prices['yearly'] as Map<String, dynamic>? ?? {};
-        monthlyOriginal = (m['original'] as num?)?.toInt() ?? 29000;
-        monthlyDiscounted = (m['discounted'] as num?)?.toInt() ?? 20300;
-        yearlyOriginal = (y['original'] as num?)?.toInt() ?? 250000;
-        yearlyDiscounted = (y['discounted'] as num?)?.toInt() ?? 175000;
+        monthlyOriginal =
+            (pData['baseMonthlyPrice'] as num?)?.toInt() ?? 29000;
+        monthlyDiscounted =
+            (pData['monthlyPrice'] as num?)?.toInt() ?? 20300;
+        yearlyOriginal =
+            (pData['baseYearlyPrice'] as num?)?.toInt() ?? 250000;
+        yearlyDiscounted =
+            (pData['yearlyPrice'] as num?)?.toInt() ?? 175000;
+      } else {
+        // Fallback to pricing provider
+        final pricing = ref.read(pricingProvider).data;
+        if (!pricing.hasActiveDiscount) {
+          _isCancelled = true;
+          return;
+        }
+        if (pricing.discountEndsAt != null) {
+          expiresAt = pricing.discountEndsAt!;
+        }
       }
     } catch (_) {
       final pricing = ref.read(pricingProvider).data;
+      if (!pricing.hasActiveDiscount) {
+        return;
+      }
       if (pricing.discountEndsAt != null) {
         expiresAt = pricing.discountEndsAt!;
       }
@@ -154,6 +217,15 @@ class PromoDialogController {
       _isDialogVisible = false;
       return;
     }
+
+    _sessionShowCount++;
+    _isDialogVisible = true;
+
+    // Mark as shown today in SharedPreferences
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('special_offer_last_shown_date', todayStr);
+    } catch (_) {}
 
     await showDialog<void>(
       context: context,
@@ -180,25 +252,10 @@ class PromoDialogController {
     );
 
     _isDialogVisible = false;
-
-    // After 1st dialog closes, if sessionShowCount == 1 and not cancelled -> start 10s cooldown
-    if (_sessionShowCount == 1 && !_isCancelled && !_isLessonActive) {
-      _isInCooldown = true;
-      _cooldownTimer?.cancel();
-      _cooldownTimer = Timer(const Duration(seconds: 10), () {
-        _isInCooldown = false;
-        if (context.mounted &&
-            !_isCancelled &&
-            !_isLessonActive &&
-            _sessionShowCount == 1) {
-          _showPromoDialog(context, ref);
-        }
-      });
-    }
   }
 
   void dispose() {
-    _cooldownTimer?.cancel();
-    _cooldownTimer = null;
+    _launchDelayTimer?.cancel();
+    _launchDelayTimer = null;
   }
 }
