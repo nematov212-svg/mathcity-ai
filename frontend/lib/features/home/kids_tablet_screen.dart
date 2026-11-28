@@ -68,6 +68,15 @@ class KidsTabletScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 6),
                         const Text(
+                          'Misollar ishlash',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
                           'Bugungi matematik mashg‘ulotlarni davom ettiring va yangi binolarni oching!',
                           style: TextStyle(
                             color: Color(0xFFE2DCFF),
@@ -88,7 +97,7 @@ class KidsTabletScreen extends ConsumerWidget {
                           onPressed: () => context.push('/kids/lessons'),
                           icon: const Icon(Icons.play_arrow_rounded, size: 20),
                           label: const Text(
-                            'Darsni boshlash',
+                            'Boshlash',
                             style: TextStyle(
                                 fontWeight: FontWeight.w800, fontSize: 14),
                           ),
@@ -114,112 +123,66 @@ class KidsTabletScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
 
-            // 2-Column Grid: Left (Streak & Tasks), Right (City & AI Tutor & Games)
+            // 1) Reyting va Uy qurish yonma-yon
+            Row(
+              children: [
+                Expanded(
+                  child: _buildInteractiveActionCard(
+                    icon: Icons.leaderboard_rounded,
+                    color: const Color(0xFFFFB800),
+                    title: 'Reyting',
+                    description: 'Do‘stlaringiz bilan kuch sinashing',
+                    buttonText: 'Reytingni ko‘rish',
+                    onTap: () => context.push('/kids/leaderboard'),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _buildInteractiveActionCard(
+                    icon: Icons.home_work_rounded,
+                    color: AppColors.kidsGreen,
+                    title: 'Uy qurish',
+                    description: 'Misollar yechib yangi uylar quring',
+                    buttonText: 'Uy qurish',
+                    onTap: () => context.push('/kids/games/house-building'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 18),
+
+            // 2) AI Ustoz va Bugungi vazifalar ikki ustunda
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Column 1: Streak + Tasks
+                // AI Ustoz
                 Expanded(
                   flex: 5,
-                  child: Column(
-                    children: [
-                      _buildTabletCard(
-                        title: 'Haftalik ketma-ketlik 🔥',
-                        subtitle: 'Har kuni shug‘ullanib, olovni saqlang!',
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children:
-                                ['D', 'S', 'Ch', 'P', 'J', 'Sh', 'Ya'].map((d) {
-                              final isToday = d == 'S';
-                              return Column(
-                                children: [
-                                  Text(d,
-                                      style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w700,
-                                          color: AppColors.kidsSecondaryText)),
-                                  const SizedBox(height: 6),
-                                  Container(
-                                    width: 34,
-                                    height: 34,
-                                    decoration: BoxDecoration(
-                                      color: isToday
-                                          ? AppColors.kidsOrange
-                                          : const Color(0xFFF3F0FF),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.local_fire_department_rounded,
-                                        size: 18,
-                                        color: isToday
-                                            ? Colors.white
-                                            : AppColors.kidsPrimary
-                                                .withValues(alpha: 0.4),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildTabletCard(
-                        title: 'Kunlik vazifalar 🎯',
-                        subtitle: 'Bugun 3 ta topshiriqdan 2 tasi bajarildi',
-                        child: Column(
-                          children: [
-                            _buildTaskRow('10 ta misol yechish', true),
-                            const SizedBox(height: 10),
-                            _buildTaskRow('1 ta video dars ko‘rish', true),
-                            const SizedBox(height: 10),
-                            _buildTaskRow('AI Ustozdan savol so‘rash', false),
-                          ],
-                        ),
-                      ),
-                    ],
+                  child: _buildInteractiveActionCard(
+                    icon: Icons.smart_toy_rounded,
+                    color: AppColors.kidsPrimary,
+                    title: 'AI Ustoz',
+                    description: 'Tushunmagan misollaringizni so‘rang (Ziyo)',
+                    buttonText: 'Savol berish',
+                    onTap: () => context.push('/kids/ai-tutor'),
                   ),
                 ),
-                const SizedBox(width: 18),
-
-                // Column 2: City & AI Tutor & Games
+                const SizedBox(width: 16),
+                // Bugungi vazifalar
                 Expanded(
                   flex: 5,
-                  child: Column(
-                    children: [
-                      _buildInteractiveActionCard(
-                        icon: Icons.location_city_rounded,
-                        color: AppColors.kidsGreen,
-                        title: 'Mening shahrim',
-                        description:
-                            'Topshiriqlarni bajarib yangi binolar quring',
-                        buttonText: 'Shaharga kirish',
-                        onTap: () => context.push('/kids/city'),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildInteractiveActionCard(
-                        icon: Icons.smart_toy_rounded,
-                        color: AppColors.kidsPrimary,
-                        title: 'Ziyo — AI Ustoz',
-                        description: 'Tushunmagan misollaringizni so‘rang',
-                        buttonText: 'Savol berish',
-                        onTap: () => context.push('/kids/ai-tutor'),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildInteractiveActionCard(
-                        icon: Icons.sports_esports_rounded,
-                        color: const Color(0xFFFF8A00),
-                        title: 'Matematik o‘yinlar',
-                        description: 'Koinot jangi va tezkor hisoblash',
-                        buttonText: 'O‘ynash',
-                        onTap: () => context.push('/kids/games'),
-                      ),
-                    ],
+                  child: _buildTabletCard(
+                    title: 'Bugungi vazifalar 🎯',
+                    subtitle: '3 ta topshiriqdan 2 tasi bajarildi',
+                    child: Column(
+                      children: [
+                        _buildTaskRow('10 ta misol yechish', true),
+                        const SizedBox(height: 10),
+                        _buildTaskRow('1 ta video dars ko‘rish', true),
+                        const SizedBox(height: 10),
+                        _buildTaskRow('AI Ustozdan savol so‘rash', false),
+                      ],
+                    ),
                   ),
                 ),
               ],

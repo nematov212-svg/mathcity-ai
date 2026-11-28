@@ -59,7 +59,7 @@ class KidsDesktopScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 14),
                             const Text(
-                              'Oddiy kasrlar va Ulushlar',
+                              'Misollar ishlash',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 28,
@@ -91,7 +91,7 @@ class KidsDesktopScreen extends ConsumerWidget {
                                 icon: const Icon(Icons.play_circle_fill_rounded,
                                     size: 22),
                                 label: const Text(
-                                  'Darsni boshlash',
+                                  'Boshlash',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w800,
                                       fontSize: 15),
@@ -209,13 +209,13 @@ class KidsDesktopScreen extends ConsumerWidget {
                       child: Column(
                         children: [
                           _buildInteractiveBanner(
-                            icon: Icons.location_city_rounded,
+                            icon: Icons.home_work_rounded,
                             color: AppColors.kidsGreen,
-                            title: 'Mening shahrim 🏙️',
+                            title: 'Uy qurish',
                             description:
-                                'Kengaytirilgan reja asosida shahar binolarini quring va tangalarni investitsiya qiling.',
-                            buttonText: 'Shaharni boshqarish',
-                            onTap: () => context.push('/kids/city'),
+                                'Kengaytirilgan reja asosida shahar binolarini va uylarni quring.',
+                            buttonText: 'Uy qurish',
+                            onTap: () => context.push('/kids/games/house-building'),
                           ),
                           const SizedBox(height: 20),
                           _buildInteractiveBanner(

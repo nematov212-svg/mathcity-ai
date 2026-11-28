@@ -347,7 +347,6 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final screenWidth = MediaQuery.of(context).size.width;
 
     if (context.isCompact) {
       return Scaffold(

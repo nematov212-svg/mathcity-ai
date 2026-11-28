@@ -651,7 +651,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
-                    mainAxisExtent: 110,
+                    mainAxisExtent: 130,
                   ),
                   itemCount: _modules.length,
                   itemBuilder: (context, index) => _buildModuleCard(
@@ -659,6 +659,7 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
                     colors,
                     isDark,
                     _modules[index],
+                    isGrid: true,
                   ),
                 ),
             ],
@@ -672,12 +673,13 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
     BuildContext context,
     AppThemeColors colors,
     bool isDark,
-    ModuleModel module,
-  ) {
+    ModuleModel module, {
+    bool isGrid = false,
+  }) {
     final isComingSoon = module.comingSoon;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
+      padding: EdgeInsets.only(bottom: isGrid ? 0 : 14),
       child: GestureDetector(
         onTap: () {
           if (isComingSoon) {
