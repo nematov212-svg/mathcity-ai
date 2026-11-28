@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mathcity_ai/features/games/house_building_screen.dart';
-import 'package:mathcity_ai/features/games/widgets/house_build_colors.dart';
 import 'package:mathcity_ai/features/games/widgets/house_build_top_bar.dart';
 import 'package:mathcity_ai/features/games/widgets/house_progress_card.dart';
 import 'package:mathcity_ai/features/games/widgets/house_mode_chips.dart';
 import 'package:mathcity_ai/features/games/widgets/house_stage_tile.dart';
-import 'package:mathcity_ai/features/games/widgets/house_scene.dart';
 import 'package:mathcity_ai/features/games/widgets/store_button.dart';
 
 void main() {

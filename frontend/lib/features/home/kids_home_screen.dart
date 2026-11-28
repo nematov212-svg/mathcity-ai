@@ -18,6 +18,7 @@ import '../../core/widgets/user_avatar.dart';
 import '../../core/widgets/xp_coin.dart';
 import '../../shared/providers/student_provider.dart';
 import '../../shared/providers/weekly_activity_provider.dart';
+import '../games/screens/games_section.dart';
 import 'widgets/weekly_streak_card.dart';
 
 class KidsHomeScreen extends ConsumerStatefulWidget {
@@ -946,6 +947,11 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
                       ),
                     ),
                   ),
+
+                  const SizedBox(height: 20),
+
+                  // Games Section ("O‘yinlar" & "Arqon tortish")
+                  const GamesSection(),
 
                   const SizedBox(height: 20),
                 ],

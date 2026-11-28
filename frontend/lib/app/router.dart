@@ -25,6 +25,8 @@ import '../features/games/house_building_screen.dart';
 import '../features/games/fraction_battle_game_screen.dart';
 import '../features/games/drift_car_game_screen.dart';
 import '../features/games/game_result_screen.dart';
+import '../features/games/screens/tug_of_war_screen.dart';
+import '../features/games/models/game_config.dart';
 import '../features/ai_teacher/ziyo_tutor_screen.dart';
 import '../features/ai_teacher/teen_ziyo_tutor_screen.dart';
 import '../features/city/teen_city_screen.dart';
@@ -160,6 +162,22 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/kids/games/drift-car',
       builder: (context, state) => const DriftCarGameScreen(),
+    ),
+    GoRoute(
+      path: '/games/tug-of-war',
+      builder: (context, state) => TugOfWarScreen(
+        config: state.extra is GameConfig
+            ? state.extra as GameConfig
+            : const GameConfig(),
+      ),
+    ),
+    GoRoute(
+      path: '/kids/games/tug-of-war',
+      builder: (context, state) => TugOfWarScreen(
+        config: state.extra is GameConfig
+            ? state.extra as GameConfig
+            : const GameConfig(),
+      ),
     ),
     GoRoute(
       path: '/kids/games/result',

@@ -192,44 +192,7 @@ class _HouseSceneState extends State<HouseScene> {
     );
   }
 
-  Widget _buildViewTab({
-    required String title,
-    required IconData icon,
-    required bool isActive,
-    required HouseBuildColors colors,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        decoration: BoxDecoration(
-          color: isActive ? colors.primary : Colors.transparent,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 14,
-              color: isActive ? Colors.white : colors.textSecondary,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: isActive ? FontWeight.w700 : FontWeight.w600,
-                color: isActive ? Colors.white : colors.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildStagesRoadmapView(
     BuildContext context,
