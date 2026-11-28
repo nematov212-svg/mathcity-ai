@@ -271,7 +271,7 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
 
   Widget _buildTopBar(GameColors colors) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: colors.cardBackground,
         borderRadius: BorderRadius.circular(18),
@@ -282,7 +282,7 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Left: Team 1 (Blue)
-          Flexible(
+          Expanded(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -294,7 +294,7 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
                     shape: BoxShape.circle,
                   ),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: 5),
                 Flexible(
                   child: Text(
                     _controller.team1.name.toUpperCase(),
@@ -307,10 +307,10 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
                     ),
                   ),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: 5),
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: _controller.team1
                         .getPrimaryColor(colors.isDark)
@@ -332,45 +332,48 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
 
           // Center: MathCity Logo
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: colors.primaryBlue.withValues(alpha: 0.15),
-                    shape: BoxShape.circle,
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: colors.primaryBlue.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.school_rounded,
+                      size: 16,
+                      color: colors.primaryBlue,
+                    ),
                   ),
-                  child: Icon(
-                    Icons.school_rounded,
-                    size: 16,
-                    color: colors.primaryBlue,
+                  const SizedBox(width: 4),
+                  Text(
+                    'MathCity',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w900,
+                      color: colors.textPrimary,
+                      letterSpacing: -0.3,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  'MathCity',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w900,
-                    color: colors.textPrimary,
-                    letterSpacing: -0.3,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
 
           // Right: Team 2 (Red)
-          Flexible(
+          Expanded(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: _controller.team2
                         .getPrimaryColor(colors.isDark)
@@ -386,7 +389,7 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
                     ),
                   ),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: 5),
                 Flexible(
                   child: Text(
                     _controller.team2.name.toUpperCase(),
@@ -399,7 +402,7 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
                     ),
                   ),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: 5),
                 Container(
                   width: 10,
                   height: 10,
@@ -417,70 +420,79 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
   }
 
   Widget _buildBottomUtilityBar(GameColors colors) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Exit to Home
-        IconButton(
-          onPressed: () async {
-            final shouldPop = await _confirmExit();
-            if (shouldPop && mounted) {
-              context.pop();
-            }
-          },
-          icon: Icon(Icons.home_outlined, color: colors.textMuted, size: 22),
-          tooltip: 'Bosh sahifa',
-        ),
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.center,
+      child: SizedBox(
+        width: 320,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Exit to Home
+            IconButton(
+              visualDensity: VisualDensity.compact,
+              constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+              onPressed: () async {
+                final shouldPop = await _confirmExit();
+                if (shouldPop && mounted) {
+                  context.pop();
+                }
+              },
+              icon: Icon(Icons.home_outlined, color: colors.textMuted, size: 22),
+              tooltip: 'Bosh sahifa',
+            ),
 
-        // Quick Rules / Info Pill
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          decoration: BoxDecoration(
-            color: colors.cardSecondary,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.sports_kabaddi_rounded,
-                  size: 14, color: colors.primaryBlue),
-              const SizedBox(width: 4),
-              Text(
-                'Arqon tortish',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: colors.textSecondary,
-                ),
+            // Quick Rules / Info Pill
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: colors.cardSecondary,
+                borderRadius: BorderRadius.circular(12),
               ),
-            ],
-          ),
-        ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.sports_kabaddi_rounded,
+                      size: 14, color: colors.primaryBlue),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Arqon tortish',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
-        // Language Indicator Pill
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          decoration: BoxDecoration(
-            color: colors.cardSecondary,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('🇺🇿', style: TextStyle(fontSize: 12)),
-              const SizedBox(width: 4),
-              Text(
-                'UZ',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                  color: colors.textPrimary,
-                ),
+            // Language Indicator Pill
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: colors.cardSecondary,
+                borderRadius: BorderRadius.circular(12),
               ),
-            ],
-          ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('🇺🇿', style: TextStyle(fontSize: 12)),
+                  const SizedBox(width: 4),
+                  Text(
+                    'UZ',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

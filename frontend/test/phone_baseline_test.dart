@@ -12,6 +12,16 @@ import 'package:mathcity_ai/features/practice/exercise_screen.dart';
 import 'package:mathcity_ai/features/auth/login_screen.dart';
 import 'package:mathcity_ai/features/auth/register_screen.dart';
 import 'package:mathcity_ai/features/auth/complete_profile_screen.dart';
+import 'package:mathcity_ai/features/games/house_building_screen.dart';
+import 'package:mathcity_ai/features/games/logic/tug_of_war_controller.dart';
+import 'package:mathcity_ai/features/games/models/game_config.dart';
+import 'package:mathcity_ai/features/games/models/team.dart';
+import 'package:mathcity_ai/features/games/screens/game_result_dialog.dart';
+import 'package:mathcity_ai/features/games/screens/game_setup_sheet.dart';
+import 'package:mathcity_ai/features/games/screens/games_section.dart';
+import 'package:mathcity_ai/features/games/screens/store_sheet.dart';
+import 'package:mathcity_ai/features/games/screens/tug_of_war_screen.dart';
+import 'package:mathcity_ai/core/widgets/new_user_discount_dialog.dart';
 import 'package:mathcity_ai/core/widgets/announcement_popup.dart';
 import 'package:mathcity_ai/shared/providers/student_provider.dart';
 
@@ -264,7 +274,192 @@ void main() {
           await tester.pump(const Duration(milliseconds: 300));
           expect(tester.takeException(), isNull);
         });
+
+        testWidgets('12. HouseBuildingScreen renders without overflow',
+            (tester) async {
+          tester.view.physicalSize = Size(width, 800);
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(tester.view.resetPhysicalSize);
+
+          await tester.pumpWidget(
+            const ProviderScope(
+              child: MaterialApp(home: HouseBuildingScreen()),
+            ),
+          );
+          await tester.pump(const Duration(milliseconds: 300));
+          expect(tester.takeException(), isNull);
+        });
+
+        testWidgets('13. StoreSheet renders without overflow', (tester) async {
+          tester.view.physicalSize = Size(width, 800);
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(tester.view.resetPhysicalSize);
+
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Scaffold(
+                body: StoreSheet(
+                  userCoins: 150,
+                  currentStage: 2,
+                  ownedItemIds: const {},
+                  placedItemIds: const {},
+                  onPurchaseItem: (_) {},
+                  onTogglePlacement: (_) {},
+                ),
+              ),
+            ),
+          );
+          await tester.pump(const Duration(milliseconds: 300));
+          expect(tester.takeException(), isNull);
+        });
+
+        testWidgets('14. GamesSection renders without overflow',
+            (tester) async {
+          tester.view.physicalSize = Size(width, 800);
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(tester.view.resetPhysicalSize);
+
+          await tester.pumpWidget(
+            const MaterialApp(
+              home: Scaffold(
+                body: SingleChildScrollView(
+                  child: GamesSection(),
+                ),
+              ),
+            ),
+          );
+          await tester.pump(const Duration(milliseconds: 300));
+          expect(tester.takeException(), isNull);
+        });
+
+        testWidgets('15. GameSetupSheet wizard renders without overflow',
+            (tester) async {
+          tester.view.physicalSize = Size(width, 800);
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(tester.view.resetPhysicalSize);
+
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Scaffold(
+                body: GameSetupSheet(onStartGame: (_) {}),
+              ),
+            ),
+          );
+          await tester.pump(const Duration(milliseconds: 300));
+          expect(tester.takeException(), isNull);
+        });
+
+        testWidgets('16. TugOfWarScreen renders without overflow',
+            (tester) async {
+          tester.view.physicalSize = Size(width, 800);
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(tester.view.resetPhysicalSize);
+
+          await tester.pumpWidget(
+            const MaterialApp(
+              home: TugOfWarScreen(
+                config: GameConfig(durationMinutes: null),
+              ),
+            ),
+          );
+          await tester.pump(const Duration(milliseconds: 300));
+          expect(tester.takeException(), isNull);
+        });
+
+        testWidgets('17. GameResultDialog renders without overflow',
+            (tester) async {
+          tester.view.physicalSize = Size(width, 800);
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(tester.view.resetPhysicalSize);
+
+          final t1 = Team(
+            id: 1,
+            name: 'Ko‘k jamoa',
+            primaryColor: Colors.blue,
+            darkPrimaryColor: Colors.blueAccent,
+            lightBgColor: Colors.blue.shade50,
+            darkBgColor: Colors.blue.shade900,
+            score: 10,
+            correctAnswers: 10,
+          );
+          final t2 = Team(
+            id: 2,
+            name: 'Qizil jamoa',
+            primaryColor: Colors.red,
+            darkPrimaryColor: Colors.redAccent,
+            lightBgColor: Colors.red.shade50,
+            darkBgColor: Colors.red.shade900,
+            score: 8,
+            correctAnswers: 8,
+          );
+
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Scaffold(
+                body: GameResultDialog(
+                  result: GameResult(
+                    winner: t1,
+                    isDraw: false,
+                    team1: t1,
+                    team2: t2,
+                    durationSeconds: 60,
+                  ),
+                  onPlayAgain: () {},
+                  onChangeSettings: () {},
+                  onGoHome: () {},
+                ),
+              ),
+            ),
+          );
+          await tester.pump(const Duration(milliseconds: 300));
+          expect(tester.takeException(), isNull);
+        });
+
+        testWidgets('18. NewUserDiscountDialog renders without overflow',
+            (tester) async {
+          tester.view.physicalSize = Size(width, 800);
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(tester.view.resetPhysicalSize);
+
+          await tester.pumpWidget(
+            ProviderScope(
+              child: MaterialApp(
+                home: Scaffold(
+                  body: NewUserDiscountDialog(
+                    expiresAt:
+                        DateTime.now().add(const Duration(hours: 24)),
+                    discountPercent: 30,
+                    monthlyOriginalPrice: 29000,
+                    monthlyDiscountedPrice: 20300,
+                    yearlyOriginalPrice: 250000,
+                    yearlyDiscountedPrice: 175000,
+                    autoCloseDuration: null,
+                    onClaimWithPlan: (_) {},
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.pump(const Duration(milliseconds: 300));
+          expect(tester.takeException(), isNull);
+        });
       });
     }
+
+    // Phone Landscape Mode: 844x390 (shortestSide: 390 < 500)
+    testWidgets('Phone Landscape Mode (844x390) renders cleanly without crash',
+        (tester) async {
+      tester.view.physicalSize = const Size(844, 390);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(home: KidsHomeScreen()),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(tester.takeException(), isNull);
+    });
   });
 }

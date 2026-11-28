@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../responsive/adaptive_scaffold.dart';
+import '../responsive/screen_size.dart';
 import '../theme/app_theme.dart';
 import 'mathcity_bottom_nav.dart';
 
@@ -63,15 +65,27 @@ class KidsShellLayout extends StatelessWidget {
     final currentIndex = _calculateIndex(location);
     final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
 
-    return Scaffold(
-      backgroundColor: colors.bg,
-      extendBody: true,
+    // 0.5 & 0.4 Qoidalari: Telefonda (compact) karkas va pastki navigatsiya 100% bit-ma-bit o'zgarmaydi
+    if (context.isCompact) {
+      return Scaffold(
+        backgroundColor: colors.bg,
+        extendBody: true,
+        body: KidsNavShellScope(
+          hasShell: true,
+          child: child,
+        ),
+        bottomNavigationBar:
+            isKeyboardOpen ? null : MathCityBottomNav(currentIndex: currentIndex),
+      );
+    }
+
+    // Medium (planshet) va Expanded (kompyuter) uchun moslashuvchan karkas
+    return AdaptiveScaffold(
+      currentNavIndex: currentIndex,
       body: KidsNavShellScope(
         hasShell: true,
         child: child,
       ),
-      bottomNavigationBar:
-          isKeyboardOpen ? null : MathCityBottomNav(currentIndex: currentIndex),
     );
   }
 }

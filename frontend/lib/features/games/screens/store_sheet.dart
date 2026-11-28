@@ -314,21 +314,26 @@ class _StoreSheetState extends State<StoreSheet> {
                       ),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      context.push('/kids/exercise');
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: colors.primary,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                    ),
-                    child: const Text(
-                      'Misol yechib coin top →',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          context.push('/kids/exercise');
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: colors.primary,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 6),
+                        ),
+                        child: const Text(
+                          'Misol yechib coin top →',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ),
                     ),
                   ),

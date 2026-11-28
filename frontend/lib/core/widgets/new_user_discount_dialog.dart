@@ -341,27 +341,30 @@ class _NewUserDiscountDialogState extends ConsumerState<NewUserDiscountDialog>
                                   width: 1,
                                 ),
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.auto_awesome_rounded,
-                                    color: Color(0xFF818CF8),
-                                    size: 14,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    'MAXSUS TAKLIF • 30% CHEGIRMA',
-                                    style: TextStyle(
-                                      color: isDark
-                                          ? const Color(0xFFA5B4FC)
-                                          : const Color(0xFF4F46E5),
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: 0.6,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.auto_awesome_rounded,
+                                      color: Color(0xFF818CF8),
+                                      size: 14,
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'MAXSUS TAKLIF • 30% CHEGIRMA',
+                                      style: TextStyle(
+                                        color: isDark
+                                            ? const Color(0xFFA5B4FC)
+                                            : const Color(0xFF4F46E5),
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 0.6,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             const SizedBox(height: 14),

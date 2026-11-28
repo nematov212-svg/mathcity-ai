@@ -167,12 +167,17 @@ class _GameSetupSheetState extends State<GameSetupSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const SizedBox(width: 40),
-                    Text(
-                      'Jamoalarni tayyorlash',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: colors.primaryBlue,
+                    Expanded(
+                      child: Text(
+                        'Jamoalarni tayyorlash',
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: colors.primaryBlue,
+                        ),
                       ),
                     ),
                     IconButton(
