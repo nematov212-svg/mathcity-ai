@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../core/network/api_client.dart';
 import '../../core/pricing/pricing_provider.dart';
 import '../../core/pricing/pricing_model.dart';
+import '../../core/responsive/screen_size.dart';
 import '../../core/widgets/promo_dialog_controller.dart';
 import '../../shared/providers/student_provider.dart';
 
@@ -655,9 +656,7 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     final disableAnim = MediaQuery.of(context).disableAnimations;
     final pricing = ref.watch(pricingProvider).data;
     final hasActiveDiscount = !isPro && pricing.hasActiveDiscount;
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    if (screenWidth >= 600) {
+    if (!context.isCompact) {
       return _buildWideProScreen(
         context,
         student: student,
