@@ -13,8 +13,15 @@ import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/xp_coin.dart';
 import '../../shared/providers/student_provider.dart';
 import 'house_game_view.dart';
+import 'widgets/house_build_colors.dart';
+import 'widgets/house_build_top_bar.dart';
+import 'widgets/house_progress_card.dart';
+import 'widgets/house_mode_chips.dart';
+import 'widgets/house_scene.dart';
+import 'widgets/store_button.dart';
 
 /// Data class representing a catalog item in the 3D House Store
+
 class HouseCatalogItem {
   final String id;
   final String name;
@@ -1198,7 +1205,7 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     );
   }
 
-  void _openStoreBottomSheet() {
+  void _openStoreBottomSheet({String? initialCategory}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1208,6 +1215,7 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
         placedItems: _placedItems,
         inventory: _inventory,
         activeRoofColor: _activePlacingColor,
+        initialCategory: initialCategory,
         onSelectRoofColor: (hex) {
           setState(() {
             _activePlacingColor = hex;
@@ -1224,619 +1232,116 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final student = ref.read(studentProvider).student;
+    final colors = HouseBuildColors.of(context);
+    final student = ref.watch(studentProvider).student;
     final coinBalance = student?.coinBalance ?? 0;
     final xpBalance = student?.totalXP ?? 0;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
-      body: Stack(
-        children: [
-          // 1. Embedded 3D House Scene Viewport
-          Positioned.fill(
-            child: buildHouseGameView(
-              context: context,
-              onMessageFromGame: _onMessageFromGame,
-            ),
-          ),
-
-          if (_isLoading)
-            const Positioned.fill(
-              child: Center(
-                child: CircularProgressIndicator(color: Color(0xFF8B5CF6)),
-              ),
-            ),
-
-          // 2. Confetti Particle Layer for Stage 6 Complete
-          if (_confettiAnimController.isAnimating)
-            Positioned.fill(
-              child: IgnorePointer(
-                child: CustomPaint(
-                  painter: _ConfettiPainter(
-                    particles: _confetti,
-                    progress: _confettiAnimController.value,
-                  ),
-                ),
-              ),
-            ),
-
-          // 3. Top HUD: Back Button, Progress Pill, Coin/XP Badges, Tool Buttons
-          SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width < 360 ? 8 : 14,
-                vertical: 8,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      // Back Button
-                      _buildCircleButton(
-                        icon: Icons.arrow_back_ios_new_rounded,
-                        onTap: () => context.pop(),
-                        tooltip: 'Orqaga',
-                        isDark: isDark,
-                      ),
-                      const SizedBox(width: 8),
-
-                      // Stage Pill
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: MediaQuery.of(context).size.width < 360
-                                ? 8
-                                : 12,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: (isDark
-                                    ? const Color(0xFF1E1B4B)
-                                    : Colors.white)
-                                .withValues(alpha: 0.9),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: const Color(0xFF8B5CF6)
-                                  .withValues(alpha: 0.4),
-                              width: 1.5,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.15),
-                                blurRadius: 8,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF8B5CF6)
-                                      .withValues(alpha: 0.2),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.home_work_rounded,
-                                  color: Color(0xFF8B5CF6),
-                                  size: 18,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      alignment: Alignment.centerLeft,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            'Uy qurish',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.bold,
-                                              color: isDark
-                                                  ? Colors.white
-                                                  : const Color(0xFF0F172A),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5, vertical: 1.5),
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFF8B5CF6)
-                                                  .withValues(alpha: 0.15),
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
-                                            ),
-                                            child: Text(
-                                              '$_currentStage/6 bosqich',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                fontSize: 9,
-                                                color: Color(0xFF8B5CF6),
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      kHouseStageTitles[
-                                          (_currentStage).clamp(0, 5)],
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                        color: Color(0xFF10B981),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(4),
-                                      child: LinearProgressIndicator(
-                                        value: (_currentStage / 6.0)
-                                            .clamp(0.0, 1.0),
-                                        backgroundColor: (isDark
-                                                ? Colors.white
-                                                : Colors.black)
-                                            .withValues(alpha: 0.08),
-                                        valueColor:
-                                            const AlwaysStoppedAnimation<Color>(
-                                                Color(0xFF8B5CF6)),
-                                        minHeight: 5,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-
-                      // Coin & XP Pill
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(
-                          color:
-                              (isDark ? const Color(0xFF1E1B4B) : Colors.white)
-                                  .withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: Colors.amber.withValues(alpha: 0.4),
-                            width: 1.5,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.15),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const CoinIcon(size: 16),
-                              const SizedBox(width: 4),
-                              Text(
-                                '$coinBalance',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  color: Colors.amber,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              const XpCoin(size: 16),
-                              const SizedBox(width: 4),
-                              Text(
-                                '$xpBalance',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  color: Color(0xFF8B5CF6),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Tool Buttons Row (Theme, Reset Camera, Interior, Audio)
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    reverse: true,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _buildQuickActionChip(
-                          icon: _isNightMode
-                              ? Icons.nightlight_round
-                              : Icons.wb_sunny_rounded,
-                          label: _isNightMode ? 'Tun' : 'Kun',
-                          onTap: _toggleTheme,
-                          isActive: _isNightMode,
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 6),
-                        _buildQuickActionChip(
-                          icon: Icons.videocam_rounded,
-                          label: 'Markaz',
-                          onTap: _resetCamera,
-                          isActive: false,
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 6),
-                        _buildQuickActionChip(
-                          icon: Icons.meeting_room_rounded,
-                          label: _isInteriorMode ? 'Tashqi' : 'Ichki',
-                          onTap: _toggleInterior,
-                          isActive: _isInteriorMode,
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 6),
-                        _buildQuickActionChip(
-                          icon: _isMuted
-                              ? Icons.volume_off_rounded
-                              : Icons.volume_up_rounded,
-                          label: _isMuted ? 'Ovozsiz' : 'Ovozli',
-                          onTap: _toggleMute,
-                          isActive: !_isMuted,
-                          isDark: isDark,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // 4. Active Placement Overlay (When user is placing a ghost item)
-          if (_activePlacingItem != null)
-            Positioned(
-              bottom: 24,
-              left: 16,
-              right: 16,
-              child: SafeArea(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E1B4B).withValues(alpha: 0.94),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: const Color(0xFF8B5CF6).withValues(alpha: 0.6),
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.35),
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        _activePlacingItem!.iconEmoji,
-                        style: const TextStyle(fontSize: 26),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              _activePlacingItem!.name,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                            const Text(
-                              'Joylashtirish uchun katakni bosing',
-                              style: TextStyle(
-                                color: Color(0xFFCBD5E1),
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // 90 Deg Rotate Button
-                      ElevatedButton.icon(
-                        onPressed: _rotateGhost,
-                        icon: const Icon(Icons.rotate_right_rounded, size: 18),
-                        label: const Text('90°'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF3B82F6),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 10),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      // Cancel Button
-                      IconButton(
-                        onPressed: _cancelPlacement,
-                        icon: const Icon(Icons.close_rounded,
-                            color: Colors.white70),
-                        tooltip: 'Bekor qilish',
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-          // 5. Selected Placed Item Overlay (Inspect, Rotate, Sell)
-          if (_selectedPlacedItem != null && _activePlacingItem == null)
-            Positioned(
-              bottom: 24,
-              left: 16,
-              right: 16,
-              child: SafeArea(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF0F172A).withValues(alpha: 0.94),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: const Color(0xFF10B981).withValues(alpha: 0.6),
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.35),
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF10B981).withValues(alpha: 0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.check_circle_rounded,
-                            color: Color(0xFF10B981), size: 22),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              _selectedPlacedItem!['name']?.toString() ??
-                                  'Tanlangan buyum',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                            Text(
-                              'Katak: (${_selectedPlacedItem!['cellX']}, ${_selectedPlacedItem!['cellY']}) • Burish: ${_selectedPlacedItem!['rotation'] ?? 0}°',
-                              style: const TextStyle(
-                                color: Color(0xFF94A3B8),
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Rotate
-                      IconButton(
-                        onPressed: () {
-                          final instanceId =
-                              _selectedPlacedItem!['instanceId']?.toString();
-                          if (instanceId != null) _rotatePlacedItem(instanceId);
-                        },
-                        icon: const Icon(Icons.rotate_right_rounded,
-                            color: Color(0xFF60A5FA)),
-                        tooltip: '90° burish',
-                      ),
-                      // Sell for 50%
-                      IconButton(
-                        onPressed: () {
-                          final instanceId =
-                              _selectedPlacedItem!['instanceId']?.toString();
-                          if (instanceId != null) _sellPlacedItem(instanceId);
-                        },
-                        icon: const Icon(Icons.delete_outline_rounded,
-                            color: Color(0xFFF87171)),
-                        tooltip: 'Sotish (50% coin qaytariladi)',
-                      ),
-                      // Close selection
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _selectedPlacedItem = null;
-                          });
-                        },
-                        icon: const Icon(Icons.close_rounded,
-                            color: Colors.white70),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-          // 6. Floating Bottom Store Button (When not placing)
-          if (_activePlacingItem == null && _selectedPlacedItem == null)
-            Positioned(
-              bottom: 24,
-              left: 20,
-              right: 20,
-              child: SafeArea(
-                child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color:
-                              const Color(0xFF8B5CF6).withValues(alpha: 0.45),
-                          blurRadius: 18,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: _openStoreBottomSheet,
-                        borderRadius: BorderRadius.circular(24),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 12),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Icon(Icons.storefront_rounded,
-                                    color: Colors.white, size: 22),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Qurilish do‘koni',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    letterSpacing: 0.3,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCircleButton({
-    required IconData icon,
-    required VoidCallback onTap,
-    required String tooltip,
-    required bool isDark,
-  }) {
-    return Tooltip(
-      message: tooltip,
-      child: Material(
-        color: (isDark ? const Color(0xFF1E1B4B) : Colors.white)
-            .withValues(alpha: 0.9),
-        shape: const CircleBorder(),
-        elevation: 3,
-        shadowColor: Colors.black26,
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Icon(
-              icon,
-              size: 20,
-              color: isDark ? Colors.white : const Color(0xFF1E293B),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuickActionChip({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-    required bool isActive,
-    required bool isDark,
-  }) {
-    return Material(
-      color: isActive
-          ? const Color(0xFF8B5CF6)
-          : (isDark ? const Color(0xFF1E1B4B) : Colors.white)
-              .withValues(alpha: 0.88),
-      borderRadius: BorderRadius.circular(14),
-      elevation: 2,
-      shadowColor: Colors.black26,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+      backgroundColor: colors.background,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: Stack(
             children: [
-              Icon(
-                icon,
-                size: 15,
-                color: isActive
-                    ? Colors.white
-                    : (isDark
-                        ? const Color(0xFFCBD5E1)
-                        : const Color(0xFF334155)),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: isActive
-                      ? Colors.white
-                      : (isDark
-                          ? const Color(0xFFCBD5E1)
-                          : const Color(0xFF334155)),
+              // Main Structured Layout (SafeArea + Column + Row + Expanded)
+              SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal:
+                        MediaQuery.of(context).size.width < 360 ? 10 : 16,
+                    vertical: 8,
+                  ),
+                  child: Column(
+                    children: [
+                      // 1. Top Bar (Circular Back 44x44, Title "Uy qurish", Coin & XP Capsule)
+                      HouseBuildTopBar(
+                        onBack: () => context.pop(),
+                        coins: coinBalance,
+                        xp: xpBalance,
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      // 2. Progress Card (House icon, Title, 0/6 badge, stage name, animated gradient progress)
+                      HouseProgressCard(
+                        currentStage: _currentStage,
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      // 3. Mode Chips (Kun/Tun, Markaz, Ichki/Tashqi, Ovozli)
+                      HouseModeChips(
+                        isNightMode: _isNightMode,
+                        isInteriorMode: _isInteriorMode,
+                        isMuted: _isMuted,
+                        onToggleNightMode: _toggleTheme,
+                        onResetCamera: _resetCamera,
+                        onToggleInteriorMode: _toggleInterior,
+                        onToggleMute: _toggleMute,
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      // 4. Main House Scene (6-stage construction path, unbuilt silhouettes, 90° rotate, 3D viewport toggle)
+                      Expanded(
+                        child: HouseScene(
+                          currentStage: _currentStage,
+                          game3DView: buildHouseGameView(
+                            context: context,
+                            onMessageFromGame: _onMessageFromGame,
+                          ),
+                          onRotate: _rotateGhost,
+                          onOpenStoreCategory: (catKey) =>
+                              _openStoreBottomSheet(initialCategory: catKey),
+                          activePlacingItem: _activePlacingItem,
+                          onRotateGhost: _rotateGhost,
+                          onCancelPlacement: _cancelPlacement,
+                          selectedPlacedItem: _selectedPlacedItem,
+                          onRotatePlacedItem: _rotatePlacedItem,
+                          onSellPlacedItem: _sellPlacedItem,
+                          onCloseSelection: () {
+                            setState(() {
+                              _selectedPlacedItem = null;
+                            });
+                          },
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // 5. Store Button (SafeArea, full width, 54px, purple gradient, 0.97 scale animation, haptic)
+                      StoreButton(
+                        onTap: () => _openStoreBottomSheet(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+
+              // Loading overlay when fetching game state
+              if (_isLoading)
+                Positioned.fill(
+                  child: Container(
+                    color: colors.background.withValues(alpha: 0.6),
+                    child: Center(
+                      child: CircularProgressIndicator(color: colors.primary),
+                    ),
+                  ),
+                ),
+
+              // Confetti Particle Layer for Stage 6 Complete
+              if (_confettiAnimController.isAnimating)
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: CustomPaint(
+                      painter: _ConfettiPainter(
+                        particles: _confetti,
+                        progress: _confettiAnimController.value,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -1851,6 +1356,7 @@ class _HouseStoreBottomSheet extends StatefulWidget {
   final List<Map<String, dynamic>> placedItems;
   final List<String> inventory;
   final String activeRoofColor;
+  final String? initialCategory;
   final ValueChanged<String> onSelectRoofColor;
   final Function(HouseCatalogItem item) onBuyItem;
   final Function(HouseCatalogItem item) onPlaceItem;
@@ -1860,6 +1366,7 @@ class _HouseStoreBottomSheet extends StatefulWidget {
     required this.placedItems,
     required this.inventory,
     required this.activeRoofColor,
+    this.initialCategory,
     required this.onSelectRoofColor,
     required this.onBuyItem,
     required this.onPlaceItem,
@@ -1876,8 +1383,17 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
   @override
   void initState() {
     super.initState();
-    _tabController =
-        TabController(length: kStoreCategories.length, vsync: this);
+    int initialIndex = 0;
+    if (widget.initialCategory != null) {
+      final idx = kStoreCategories
+          .indexWhere((c) => c.key == widget.initialCategory);
+      if (idx != -1) initialIndex = idx;
+    }
+    _tabController = TabController(
+      length: kStoreCategories.length,
+      vsync: this,
+      initialIndex: initialIndex,
+    );
   }
 
   @override
@@ -1888,28 +1404,20 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final appColors = Theme.of(context).extension<AppThemeColors>();
+    final colors = HouseBuildColors.of(context);
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.72,
       decoration: BoxDecoration(
-        color: appColors?.card ??
-            (isDark ? const Color(0xFF0F172A) : Colors.white),
+        color: colors.cardBackground,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         border: Border(
           top: BorderSide(
-            color: const Color(0xFF8B5CF6).withValues(alpha: 0.35),
+            color: colors.primary.withValues(alpha: 0.35),
             width: 2,
           ),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.35),
-            blurRadius: 24,
-            offset: const Offset(0, -6),
-          ),
-        ],
+        boxShadow: colors.cardShadow,
       ),
       child: Column(
         children: [
@@ -1919,39 +1427,43 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
             width: 44,
             height: 5,
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF334155) : const Color(0xFFCBD5E1),
+              color: colors.border,
               borderRadius: BorderRadius.circular(10),
             ),
           ),
 
           // Header: Title and Close
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.storefront_rounded,
-                        color: Color(0xFF8B5CF6), size: 24),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Qurilish katalogi',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: appColors?.ink ??
-                            (isDark ? Colors.white : const Color(0xFF0F172A)),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(Icons.storefront_rounded,
+                          color: colors.primary, size: 24),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Qurilish katalogi',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: colors.textPrimary,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: Icon(
                     Icons.close_rounded,
-                    color: appColors?.muted ??
-                        (isDark ? Colors.white70 : const Color(0xFF64748B)),
+                    color: colors.textMuted,
                   ),
                 ),
               ],
@@ -1962,11 +1474,10 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
           TabBar(
             controller: _tabController,
             isScrollable: true,
-            indicatorColor: const Color(0xFF8B5CF6),
+            indicatorColor: colors.primary,
             indicatorWeight: 3,
-            labelColor: const Color(0xFF8B5CF6),
-            unselectedLabelColor: appColors?.muted ??
-                (isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B)),
+            labelColor: colors.primary,
+            unselectedLabelColor: colors.textMuted,
             labelStyle:
                 const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
             tabs: kStoreCategories
@@ -1977,7 +1488,7 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                 .toList(),
           ),
 
-          const Divider(height: 1, thickness: 1),
+          Divider(height: 1, thickness: 1, color: colors.border),
 
           // Category Content TabBarView
           Expanded(
@@ -1986,7 +1497,7 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
               children: kStoreCategories.map((cat) {
                 final items =
                     widget.catalog.where((c) => c.category == cat.key).toList();
-                return _buildCategoryGrid(cat.key, items, isDark, appColors);
+                return _buildCategoryGrid(cat.key, items, colors);
               }).toList(),
             ),
           ),
@@ -1998,8 +1509,7 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
   Widget _buildCategoryGrid(
     String categoryKey,
     List<HouseCatalogItem> items,
-    bool isDark,
-    AppThemeColors? appColors,
+    HouseBuildColors colors,
   ) {
     return Column(
       children: [
@@ -2008,12 +1518,10 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF8FAFC),
+              color: colors.cardBackgroundSecondary,
               border: Border(
                 bottom: BorderSide(
-                  color: isDark
-                      ? const Color(0xFF334155)
-                      : const Color(0xFFE2E8F0),
+                  color: colors.border,
                 ),
               ),
             ),
@@ -2024,8 +1532,7 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: appColors?.ink ??
-                        (isDark ? Colors.white : const Color(0xFF1E293B)),
+                    color: colors.textPrimary,
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -2051,7 +1558,7 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: isSelected
-                                    ? const Color(0xFF8B5CF6)
+                                    ? colors.primary
                                     : color,
                                 width: isSelected ? 2.5 : 1,
                               ),
@@ -2074,10 +1581,8 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                                         ? FontWeight.bold
                                         : FontWeight.normal,
                                     color: isSelected
-                                        ? const Color(0xFF8B5CF6)
-                                        : (isDark
-                                            ? Colors.white70
-                                            : const Color(0xFF334155)),
+                                        ? colors.primary
+                                        : colors.textSecondary,
                                   ),
                                 ),
                               ],
@@ -2099,8 +1604,7 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                   child: Text(
                     'Ushbu bo‘limda buyumlar yo‘q',
                     style: TextStyle(
-                      color: appColors?.muted ??
-                          (isDark ? Colors.white60 : const Color(0xFF64748B)),
+                      color: colors.textMuted,
                     ),
                   ),
                 )
@@ -2145,7 +1649,7 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                     }
 
                     return _buildItemCard(item, isPlaced, isOwned, isLocked,
-                        lockReason, isDark, appColors);
+                        lockReason, colors);
                   },
                 ),
         ),
@@ -2159,26 +1663,19 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
     bool isOwned,
     bool isLocked,
     String lockReason,
-    bool isDark,
-    AppThemeColors? appColors,
+    HouseBuildColors colors,
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF8FAFC),
+        color: colors.cardBackgroundSecondary,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: isPlaced
-              ? const Color(0xFF10B981).withValues(alpha: 0.5)
-              : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
+              ? colors.success.withValues(alpha: 0.5)
+              : colors.border,
           width: isPlaced ? 1.5 : 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        boxShadow: colors.cardShadow,
       ),
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -2193,15 +1690,15 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981).withValues(alpha: 0.2),
+                    color: colors.success.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Text(
+                  child: Text(
                     'O‘rnatilgan',
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF10B981),
+                      color: colors.success,
                     ),
                   ),
                 )
@@ -2213,10 +1710,10 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
                     const SizedBox(width: 4),
                     Text(
                       '${item.coinPrice}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
-                        color: Colors.amber,
+                        color: colors.gold,
                       ),
                     ),
                   ],
@@ -2231,8 +1728,7 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
-              color: appColors?.ink ??
-                  (isDark ? Colors.white : const Color(0xFF0F172A)),
+              color: colors.textPrimary,
             ),
           ),
           const Spacer(),
@@ -2260,8 +1756,8 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
               child: OutlinedButton(
                 onPressed: () => widget.onPlaceItem(item),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color(0xFF10B981),
-                  side: const BorderSide(color: Color(0xFF10B981)),
+                  foregroundColor: colors.success,
+                  side: BorderSide(color: colors.success),
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
@@ -2277,7 +1773,7 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
               child: ElevatedButton(
                 onPressed: () => widget.onPlaceItem(item),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF10B981),
+                  backgroundColor: colors.success,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   shape: RoundedRectangleBorder(
@@ -2294,7 +1790,7 @@ class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
               child: ElevatedButton(
                 onPressed: () => widget.onBuyItem(item),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF8B5CF6),
+                  backgroundColor: colors.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   shape: RoundedRectangleBorder(
