@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
 import '../../shared/providers/student_provider.dart';
+import '../games/screens/games_section.dart';
 
 class KidsTabletScreen extends ConsumerWidget {
   const KidsTabletScreen({super.key});
@@ -223,6 +224,8 @@ class KidsTabletScreen extends ConsumerWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 28),
+            const GamesSection(),
             const SizedBox(height: 40),
           ],
         ),

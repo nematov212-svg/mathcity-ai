@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/network/api_client.dart';
+import '../../core/responsive/screen_size.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/announcement_popup.dart';
 import '../../core/widgets/popup_manager.dart';
@@ -19,6 +20,8 @@ import '../../core/widgets/xp_coin.dart';
 import '../../shared/providers/student_provider.dart';
 import '../../shared/providers/weekly_activity_provider.dart';
 import '../games/screens/games_section.dart';
+import 'kids_desktop_screen.dart';
+import 'kids_tablet_screen.dart';
 import 'widgets/weekly_streak_card.dart';
 
 class KidsHomeScreen extends ConsumerStatefulWidget {
@@ -149,6 +152,14 @@ class _KidsHomeScreenState extends ConsumerState<KidsHomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    // 0.4 & 0.5 Qoidasi: Katta ekranlarda (planshet/desktop) moslashuvchan ko'rinish
+    if (context.isMedium) {
+      return const KidsTabletScreen();
+    }
+    if (context.isExpanded) {
+      return const KidsDesktopScreen();
+    }
+
     final colors = AppThemeColors.of(context);
     final disableAnim = MediaQuery.of(context).disableAnimations;
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
+import '../games/screens/games_section.dart';
 
 class KidsDesktopScreen extends ConsumerWidget {
   const KidsDesktopScreen({super.key});
@@ -296,6 +297,8 @@ class KidsDesktopScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: 32),
+                const GamesSection(),
                 const SizedBox(height: 40),
               ],
             ),
