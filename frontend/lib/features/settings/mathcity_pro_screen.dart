@@ -656,6 +656,7 @@ class _MathCityProScreenState extends ConsumerState<MathCityProScreen>
     final disableAnim = MediaQuery.of(context).disableAnimations;
     final pricing = ref.watch(pricingProvider).data;
     final hasActiveDiscount = !isPro && pricing.hasActiveDiscount;
+    final screenWidth = MediaQuery.of(context).size.width;
     if (!context.isCompact) {
       return _buildWideProScreen(
         context,
