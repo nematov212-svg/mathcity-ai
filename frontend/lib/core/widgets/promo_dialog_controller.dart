@@ -20,6 +20,7 @@ import 'new_user_discount_dialog.dart';
 /// 5. If user clicks "Keyinroq" (dismisses), will not show again for the rest of that day.
 /// 6. Pricing & eligibility fetched authoritatively from server (/user/offer).
 /// 7. Automatically suppressed during active lessons/exercises.
+
 class PromoDialogController {
   PromoDialogController._();
   static final PromoDialogController instance = PromoDialogController._();
