@@ -7,6 +7,7 @@ class GameCardModel {
   final String? imageAsset;
   final String route;
   final bool isAvailable;
+  final bool isLocked;
 
   const GameCardModel({
     required this.id,
@@ -16,5 +17,6 @@ class GameCardModel {
     this.imageAsset,
     required this.route,
     this.isAvailable = true,
+    this.isLocked = false,
   });
 }

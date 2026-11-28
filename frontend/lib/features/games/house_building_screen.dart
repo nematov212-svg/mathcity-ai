@@ -9,19 +9,18 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/network/api_client.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/xp_coin.dart';
 import '../../shared/providers/student_provider.dart';
 import 'house_game_view.dart';
+import 'models/store_item.dart';
+import 'screens/store_sheet.dart';
+import 'widgets/house_bottom_bar.dart';
 import 'widgets/house_build_colors.dart';
 import 'widgets/house_build_top_bar.dart';
 import 'widgets/house_progress_card.dart';
-import 'widgets/house_mode_chips.dart';
-import 'widgets/house_scene.dart';
-import 'widgets/store_button.dart';
+import 'widgets/house_scene_view.dart';
 
-/// Data class representing a catalog item in the 3D House Store
-
+/// Legacy Catalog item kept for compatibility with existing tests/routes
 class HouseCatalogItem {
   final String id;
   final String name;
@@ -121,7 +120,6 @@ const List<Map<String, String>> kRoofColors = [
 ];
 
 const List<HouseCatalogItem> kFallbackHouseCatalog = [
-  // Foundation
   HouseCatalogItem(
       id: 'clean_lot',
       name: 'Maydonni tozalash',
@@ -130,13 +128,6 @@ const List<HouseCatalogItem> kFallbackHouseCatalog = [
       coinPrice: 1,
       iconEmoji: '🧹'),
   HouseCatalogItem(
-      id: 'gravel_base',
-      name: 'Qum-shag‘al asos',
-      category: 'foundation',
-      stage: 1,
-      coinPrice: 5,
-      iconEmoji: '🪨'),
-  HouseCatalogItem(
       id: 'concrete_foundation',
       name: 'Beton poydevor',
       category: 'foundation',
@@ -144,360 +135,48 @@ const List<HouseCatalogItem> kFallbackHouseCatalog = [
       coinPrice: 30,
       iconEmoji: '🧱'),
   HouseCatalogItem(
-      id: 'reinforced_basement',
-      name: 'Mustahkam poydevor',
-      category: 'foundation',
-      stage: 1,
-      coinPrice: 120,
-      iconEmoji: '🏗️'),
-
-  // Walls
-  HouseCatalogItem(
-      id: 'mud_brick_wall',
-      name: 'Paxsa devor',
-      category: 'walls',
-      stage: 2,
-      coinPrice: 40,
-      iconEmoji: '🧱'),
-  HouseCatalogItem(
-      id: 'white_brick_wall',
-      name: 'Oq g‘isht devor',
-      category: 'walls',
-      stage: 2,
-      coinPrice: 80,
-      iconEmoji: '🏠'),
-  HouseCatalogItem(
       id: 'red_brick_wall',
-      name: 'Pishiq qizil g‘isht devor',
+      name: 'Pishiq g‘isht devor',
       category: 'walls',
       stage: 2,
       coinPrice: 150,
       iconEmoji: '🧱'),
   HouseCatalogItem(
-      id: 'stone_wall',
-      name: 'Tabiiy tosh devor',
-      category: 'walls',
-      stage: 2,
-      coinPrice: 250,
-      iconEmoji: '🪨'),
-  HouseCatalogItem(
-      id: 'modern_glass_wall',
-      name: 'Zamonaviy shisha-panoramik',
-      category: 'walls',
-      stage: 2,
-      coinPrice: 400,
-      iconEmoji: '✨'),
-
-  // Roofs
-  HouseCatalogItem(
-      id: 'flat_roof',
-      name: 'Yassi tom (Terrasa & Panjara)',
-      category: 'roof',
-      stage: 3,
-      coinPrice: 40,
-      iconEmoji: '🛖'),
-  HouseCatalogItem(
-      id: 'shed_roof',
-      name: 'Bir nishabli tom',
-      category: 'roof',
-      stage: 3,
-      coinPrice: 60,
-      iconEmoji: '🛖'),
-  HouseCatalogItem(
       id: 'gable_roof',
-      name: 'Ikki nishabli tom',
+      name: 'Uchburchak shiferli tom',
       category: 'roof',
       stage: 3,
       coinPrice: 100,
       iconEmoji: '🛖'),
   HouseCatalogItem(
-      id: 'pyramid_roof',
-      name: 'Piramida tom',
-      category: 'roof',
-      stage: 3,
-      coinPrice: 120,
-      iconEmoji: '🛖'),
-  HouseCatalogItem(
-      id: 'tile_roof',
-      name: 'Koshinli (cherepitsa) tom',
-      category: 'roof',
-      stage: 3,
-      coinPrice: 180,
-      iconEmoji: '🛖'),
-  HouseCatalogItem(
-      id: 'solar_roof',
-      name: 'Quyosh panelli tom',
-      category: 'roof',
-      stage: 3,
-      coinPrice: 450,
-      iconEmoji: '☀️'),
-
-  // Doors
-  HouseCatalogItem(
-      id: 'simple_wood_door',
-      name: 'Oddiy yog‘och eshik',
-      category: 'doors',
-      stage: 5,
-      coinPrice: 40,
-      iconEmoji: '🚪'),
-  HouseCatalogItem(
-      id: 'standard_door',
-      name: 'Klassik eshik',
-      category: 'doors',
-      stage: 5,
-      coinPrice: 90,
-      iconEmoji: '🚪'),
-  HouseCatalogItem(
-      id: 'double_door',
-      name: 'Ikki tabaqali hashamatli eshik',
-      category: 'doors',
-      stage: 5,
-      coinPrice: 160,
-      iconEmoji: '🚪'),
-  HouseCatalogItem(
-      id: 'garage_gate',
-      name: 'Avtomat garaj darvozasi (108)',
-      category: 'doors',
-      stage: 5,
-      coinPrice: 220,
-      iconEmoji: '🚪'),
-  HouseCatalogItem(
-      id: 'modern_glass_door',
-      name: 'Zamonaviy shisha eshik',
-      category: 'doors',
-      stage: 5,
-      coinPrice: 300,
-      iconEmoji: '🚪'),
-
-  // Windows
-  HouseCatalogItem(
-      id: 'small_window',
-      name: 'Kichik deraza',
-      category: 'windows',
-      stage: 4,
-      coinPrice: 15,
-      iconEmoji: '🪟'),
-  HouseCatalogItem(
       id: 'standard_window',
-      name: 'Standart oq romli deraza',
+      name: 'Shisha deraza',
       category: 'windows',
       stage: 4,
       coinPrice: 50,
       iconEmoji: '🪟'),
   HouseCatalogItem(
-      id: 'panoramic_window',
-      name: 'Katta panoramik vitrina',
-      category: 'windows',
-      stage: 4,
-      coinPrice: 150,
-      iconEmoji: '🪟'),
-  HouseCatalogItem(
-      id: 'stained_glass_window',
-      name: 'Rangli vitraj deraza',
-      category: 'windows',
-      stage: 4,
-      coinPrice: 200,
-      iconEmoji: '🪟'),
-
-  // Yard & Garden
-  HouseCatalogItem(
-      id: 'stone_path',
-      name: 'Tosh yo‘lak & LED chiroqlar',
-      category: 'yard',
-      stage: 6,
-      coinPrice: 5,
-      iconEmoji: '🛤️',
-      multiPlace: true),
-  HouseCatalogItem(
-      id: 'bush',
-      name: 'Binafsha gulli butazor',
-      category: 'yard',
-      stage: 6,
-      coinPrice: 6,
-      iconEmoji: '🌺',
-      multiPlace: true),
-  HouseCatalogItem(
-      id: 'flower',
-      name: 'Gulzordagi rang-barang gullar',
-      category: 'yard',
-      stage: 6,
-      coinPrice: 4,
-      iconEmoji: '🌸',
-      multiPlace: true),
-  HouseCatalogItem(
-      id: 'tree',
-      name: 'Salobatli manzarali daraxt',
-      category: 'yard',
-      stage: 6,
-      coinPrice: 15,
-      iconEmoji: '🌳',
-      multiPlace: true),
-  HouseCatalogItem(
-      id: 'fruit_tree',
-      name: 'Mevazor olma daraxti',
-      category: 'yard',
-      stage: 6,
-      coinPrice: 25,
-      iconEmoji: '🍎',
-      multiPlace: true),
-  HouseCatalogItem(
-      id: 'street_lantern',
-      name: 'Zamonaviy LED tungi fonar',
-      category: 'yard',
-      stage: 6,
-      coinPrice: 18,
-      iconEmoji: '💡',
-      multiPlace: true),
-  HouseCatalogItem(
-      id: 'bench',
-      name: 'Yog‘och o‘rindiq (skameyka)',
-      category: 'yard',
-      stage: 6,
-      coinPrice: 12,
-      iconEmoji: '🪑',
-      multiPlace: true),
-  HouseCatalogItem(
-      id: 'wooden_fence',
-      name: 'Oq yog‘och panjara',
-      category: 'yard',
-      stage: 6,
-      coinPrice: 8,
-      iconEmoji: '🪵',
-      multiPlace: true),
-  HouseCatalogItem(
-      id: 'swimming_pool',
-      name: 'Hashamatli basseyn & soyabon',
-      category: 'yard',
-      stage: 6,
-      coinPrice: 220,
-      iconEmoji: '🏊'),
-  HouseCatalogItem(
-      id: 'fountain',
-      name: 'Marmar favvora',
-      category: 'yard',
-      stage: 6,
-      coinPrice: 160,
-      iconEmoji: '⛲'),
-
-  // Transport
-  HouseCatalogItem(
-      id: 'bicycle',
-      name: 'Tezyurar sport velosiped',
-      category: 'vehicles',
-      stage: 6,
-      coinPrice: 40,
-      iconEmoji: '🚲'),
-  HouseCatalogItem(
-      id: 'scooter',
-      name: 'Elektr skuter',
-      category: 'vehicles',
-      stage: 6,
-      coinPrice: 70,
-      iconEmoji: '🛴'),
-  HouseCatalogItem(
-      id: 'motorcycle',
-      name: 'Klassik mototsikl',
-      category: 'vehicles',
-      stage: 6,
-      coinPrice: 150,
-      iconEmoji: '🏍️'),
+      id: 'standard_door',
+      name: 'Yog‘och eshik',
+      category: 'doors',
+      stage: 5,
+      coinPrice: 90,
+      iconEmoji: '🚪'),
   HouseCatalogItem(
       id: 'standard_car',
-      name: 'Oila uchun qulay sedan',
+      name: 'Oila mashinasi',
       category: 'vehicles',
       stage: 6,
       coinPrice: 300,
       iconEmoji: '🚗'),
-  HouseCatalogItem(
-      id: 'sports_car',
-      name: 'Hashamatli sportkar (Supercar)',
-      category: 'vehicles',
-      stage: 6,
-      coinPrice: 450,
-      iconEmoji: '🏎️'),
-  HouseCatalogItem(
-      id: 'large_suv',
-      name: 'Katta jip (SUV)',
-      category: 'vehicles',
-      stage: 6,
-      coinPrice: 500,
-      iconEmoji: '🚙'),
-
-  // Interior
-  HouseCatalogItem(
-      id: 'carpet',
-      name: 'Milliy gilam',
-      category: 'interior',
-      stage: 2,
-      coinPrice: 8,
-      iconEmoji: '🛋️'),
-  HouseCatalogItem(
-      id: 'table',
-      name: 'Yog‘och stol',
-      category: 'interior',
-      stage: 2,
-      coinPrice: 12,
-      iconEmoji: '🪵'),
-  HouseCatalogItem(
-      id: 'sofa',
-      name: 'Yumshoq zamonaviy divan',
-      category: 'interior',
-      stage: 2,
-      coinPrice: 35,
-      iconEmoji: '🛋️'),
-  HouseCatalogItem(
-      id: 'bed',
-      name: 'Katta qulay karavot',
-      category: 'interior',
-      stage: 2,
-      coinPrice: 40,
-      iconEmoji: '🛏️'),
-  HouseCatalogItem(
-      id: 'tv',
-      name: 'Katta ekranli Smart TV',
-      category: 'interior',
-      stage: 2,
-      coinPrice: 60,
-      iconEmoji: '📺'),
-
-  // Extras
-  HouseCatalogItem(
-      id: 'stairs',
-      name: 'Pelepoya (zinapoya)',
-      category: 'extras',
-      stage: 2,
-      coinPrice: 15,
-      iconEmoji: '🪜'),
-  HouseCatalogItem(
-      id: 'balcony',
-      name: 'Shisha panjarali balkon',
-      category: 'extras',
-      stage: 3,
-      coinPrice: 45,
-      iconEmoji: '🏢'),
-  HouseCatalogItem(
-      id: 'second_floor',
-      name: 'Ikkinchi qavat (2-etaj)',
-      category: 'extras',
-      stage: 3,
-      coinPrice: 300,
-      iconEmoji: '🏰'),
-  HouseCatalogItem(
-      id: 'chimney',
-      name: 'Kamin mo‘risi',
-      category: 'extras',
-      stage: 3,
-      coinPrice: 20,
-      iconEmoji: '🧱'),
-  HouseCatalogItem(
-      id: 'roof_antenna',
-      name: 'Tom antennasi',
-      category: 'extras',
-      stage: 3,
-      coinPrice: 12,
-      iconEmoji: '📡'),
 ];
 
+/// Redesigned House Building Screen:
+/// - SafeArea + Column + Row + Expanded layout without manual Positioned overlap
+/// - Cohesive unified theme (light/dark)
+/// - 3D diorama canvas with ghost outlines, 90° rotate, floating mode chips
+/// - Bottom bar with "Qurish • $cost coin" & "Do‘kon" button
+/// - Construction store sheet & onboarding guidance
 class HouseBuildingScreen extends ConsumerStatefulWidget {
   const HouseBuildingScreen({super.key});
 
@@ -510,6 +189,7 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     with TickerProviderStateMixin {
   int _currentStage = 0;
   bool _isLoading = true;
+  bool _isBuilding = false;
   bool _isSceneReady = false;
 
   // 3D Scene Controls State
@@ -517,17 +197,14 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
   bool _isInteriorMode = false;
   bool _isMuted = false;
 
-  // Catalog & Inventory Data from Backend
-  List<HouseCatalogItem> _catalog = [];
-  List<Map<String, dynamic>> _placedItems = [];
-  List<String> _inventory = [];
+  // Inventory & Store State
+  final Set<String> _ownedItemIds = {};
+  final Set<String> _placedItemIds = {};
 
-  // Active Placement Ghost State
-  HouseCatalogItem? _activePlacingItem;
-  String _activePlacingColor = '#1E3A8A';
-
-  // Selected Placed Item for Inspection & Editing
-  Map<String, dynamic>? _selectedPlacedItem;
+  // Onboarding Tooltip State
+  int _tooltipStep = 0;
+  String? _onboardingTooltip;
+  String? _celebrationBadge;
 
   // Confetti Animation Controller for Stage 6 Celebration
   late AnimationController _confettiAnimController;
@@ -545,12 +222,41 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
       });
 
     _loadGameData();
+    _checkOnboarding();
   }
 
   @override
   void dispose() {
     _confettiAnimController.dispose();
     super.dispose();
+  }
+
+  Future<void> _checkOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    final completed = prefs.getBool('mc_house_onboarding_completed') ?? false;
+    if (!completed && mounted) {
+      setState(() {
+        _tooltipStep = 0;
+        _onboardingTooltip =
+            '3D uyni aylantirish uchun barmog‘ingiz bilan suring';
+      });
+    }
+  }
+
+  void _nextOnboardingStep() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      if (_tooltipStep == 0) {
+        _tooltipStep = 1;
+        _onboardingTooltip = 'Qurish tugmasini bosib keyingi bosqichga o‘ting';
+      } else if (_tooltipStep == 1) {
+        _tooltipStep = 2;
+        _onboardingTooltip = 'Do‘kondan yangi buyumlar va bezaklar xarid qiling';
+      } else {
+        _onboardingTooltip = null;
+        prefs.setBool('mc_house_onboarding_completed', true);
+      }
+    });
   }
 
   void _triggerConfetti() {
@@ -598,25 +304,17 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
             '/games/house-building',
             options: Options(
               validateStatus: (status) => true,
-              sendTimeout: const Duration(seconds: 6),
-              receiveTimeout: const Duration(seconds: 6),
+              sendTimeout: const Duration(seconds: 5),
+              receiveTimeout: const Duration(seconds: 5),
             ),
           );
       if (res.statusCode == 200 &&
           res.data != null &&
           res.data['success'] == true) {
         final data = res.data['data'];
-        final stage = (data['currentStage'] as num?)?.toInt() ?? 0;
-        final catalogRaw = data['catalog'] as List? ?? [];
+        final stage = (data['currentStage'] as num?)?.toInt() ?? cachedStage;
         final myState = data['myState'] as Map<String, dynamic>? ?? {};
-
-        final catalogList = catalogRaw
-            .whereType<Map<String, dynamic>>()
-            .map((e) => HouseCatalogItem.fromJson(e))
-            .toList();
-
         final placedRaw = myState['placedItems'] as List? ?? [];
-        final placedList = placedRaw.whereType<Map<String, dynamic>>().toList();
         final inventoryList = (myState['inventory'] as List? ?? [])
             .map((e) => e.toString())
             .toList();
@@ -624,9 +322,12 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
         if (mounted) {
           setState(() {
             _currentStage = stage;
-            _catalog = catalogList;
-            _placedItems = placedList;
-            _inventory = inventoryList;
+            _ownedItemIds.addAll(inventoryList);
+            for (final p in placedRaw) {
+              if (p is Map && p['itemId'] != null) {
+                _placedItemIds.add(p['itemId'].toString());
+              }
+            }
             _isLoading = false;
           });
           await prefs.setInt('mc_house_building_stage', stage);
@@ -635,14 +336,11 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
         return;
       }
     } catch (_) {
-      // Fallback gracefully to local catalog and offline state
+      // Fallback gracefully
     }
 
     if (mounted) {
       setState(() {
-        if (_catalog.isEmpty) {
-          _catalog = kFallbackHouseCatalog;
-        }
         _isLoading = false;
       });
       _syncStateTo3DScene();
@@ -652,7 +350,7 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
   void _syncStateTo3DScene() {
     if (!_isSceneReady) return;
     postMessageToHouseGame('LOAD_STATE', {
-      'placedItems': _placedItems,
+      'stage': _currentStage,
       'isDark': _isNightMode,
     });
   }
@@ -668,24 +366,13 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
         _syncStateTo3DScene();
         break;
 
-      case 'REQUEST_PLACE_ITEM':
-        _handlePlacementRequest(data);
-        break;
-
-      case 'ITEM_SELECTED':
-        HapticFeedback.selectionClick();
-        setState(() {
-          _selectedPlacedItem = data;
-          _activePlacingItem = null;
-        });
+      case 'STAGE_BUILT':
+        HapticFeedback.heavyImpact();
         break;
 
       case 'CAMERA_RESET':
+      case 'CAMERA_ROTATED_90':
         HapticFeedback.lightImpact();
-        break;
-
-      case 'GHOST_ROTATED':
-        HapticFeedback.selectionClick();
         break;
 
       default:
@@ -693,234 +380,94 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     }
   }
 
-  Future<void> _handlePlacementRequest(Map<String, dynamic> data) async {
-    final itemId = data['itemId']?.toString() ?? '';
-    final cellX = (data['cellX'] as num?)?.toInt() ?? 6;
-    final cellY = (data['cellY'] as num?)?.toInt() ?? 6;
-    final rotation = (data['rotation'] as num?)?.toInt() ?? 0;
-    final color = data['color']?.toString() ?? _activePlacingColor;
+  /// Build the next stage of the 3D House
+  Future<void> _buildNextStage() async {
+    if (_isBuilding) return;
 
-    try {
-      final res = await ApiClient().dio.post(
-        '/games/house-building/place',
-        data: {
-          'itemId': itemId,
-          'cellX': cellX,
-          'cellY': cellY,
-          'rotation': rotation,
-          'color': color,
-        },
-      );
-
-      if (res.data != null && res.data['success'] == true) {
-        final placedItem =
-            Map<String, dynamic>.from(res.data['data']['placedItem']);
-        final newStage = (res.data['data']['currentStage'] as num?)?.toInt() ??
-            _currentStage;
-        final xpAwarded =
-            (res.data['data']['xpAwarded'] as num?)?.toInt() ?? 10;
-
-        // Update local state
-        setState(() {
-          _placedItems
-              .removeWhere((p) => p['instanceId'] == placedItem['instanceId']);
-          _placedItems.add(placedItem);
-          _currentStage = newStage;
-          _activePlacingItem = null;
-        });
-
-        // Award XP to student provider
-        ref.read(studentProvider.notifier).updateXP(xpAwarded);
-
-        // Notify 3D engine to add placed mesh with bounce animation
-        postMessageToHouseGame('ITEM_PLACED', {'item': placedItem});
-
-        HapticFeedback.heavyImpact();
-
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setInt('mc_house_building_stage', newStage);
-
-        if (newStage >= 6) {
-          _triggerConfetti();
-          _showCelebrationDialog();
-        } else {
-          _showSnackbar(
-              'Qurilish muvaffaqiyatli amalga oshirildi! ✨ (+$xpAwarded XP)');
-        }
-      } else {
-        final errorMsg = res.data?['error']?.toString() ??
-            'Joylashtirishda xatolik yuz berdi';
-        _showSnackbar(errorMsg, isError: true);
-        postMessageToHouseGame('CANCEL_PLACEMENT', {});
-      }
-    } catch (e) {
-      debugPrint(
-          'Error placing item on backend, applying resilient local placement: $e');
-      final localInstanceId = 'placed_${DateTime.now().millisecondsSinceEpoch}';
-      final placedItem = {
-        'instanceId': localInstanceId,
-        'itemId': itemId,
-        'cellX': cellX,
-        'cellY': cellY,
-        'rotation': rotation,
-        'color': color,
-        'placedAt': DateTime.now().toIso8601String(),
-      };
-      final newStage = math.min(6, _currentStage + 1);
-      setState(() {
-        _placedItems.removeWhere((p) => p['instanceId'] == localInstanceId);
-        _placedItems.add(placedItem);
-        _currentStage = newStage;
-        _activePlacingItem = null;
-      });
-      ref.read(studentProvider.notifier).updateXP(10);
-      postMessageToHouseGame('ITEM_PLACED', {'item': placedItem});
-      HapticFeedback.heavyImpact();
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt('mc_house_building_stage', newStage);
-      if (newStage >= 6) {
-        _triggerConfetti();
-        _showCelebrationDialog();
-      } else {
-        _showSnackbar('Qurilish muvaffaqiyatli amalga oshirildi! ✨ (+10 XP)');
-      }
-    }
-  }
-
-  Future<void> _buyItem(HouseCatalogItem item,
-      {bool placeImmediately = true}) async {
-    final student = ref.read(studentProvider).student;
-    final currentCoins = student?.coinBalance ?? 0;
-
-    if (currentCoins < item.coinPrice) {
-      HapticFeedback.mediumImpact();
-      _showNotEnoughCoinsDialog(item);
+    if (_currentStage >= 6) {
+      _showCelebrationDialog();
       return;
     }
 
+    final nextCost = kHouseStageCosts[_currentStage];
+    final student = ref.read(studentProvider).student;
+    final userCoins = student?.coinBalance ?? 0;
+
+    if (userCoins < nextCost) {
+      HapticFeedback.mediumImpact();
+      _showSnackbar('Qurilish uchun coin yetarli emas! Misol yechib coin to‘plang.',
+          isError: true);
+      return;
+    }
+
+    setState(() {
+      _isBuilding = true;
+    });
+
+    final nextStage = _currentStage + 1;
+    final stageName = kHouseStageTargetTitles[nextStage - 1];
+
     try {
-      final res = await ApiClient().dio.post(
-        '/games/house-building/buy',
-        data: {'itemId': item.id},
+      await ApiClient().dio.post(
+        '/games/house-building/build',
+        data: {'stage': nextStage},
+        options: Options(
+          validateStatus: (status) => true,
+          sendTimeout: const Duration(seconds: 6),
+          receiveTimeout: const Duration(seconds: 6),
+        ),
       );
-
-      if (res.data != null && res.data['success'] == true) {
-        // Debit coin and award XP
-        ref.read(studentProvider.notifier).updateCoins(-item.coinPrice);
-        final xp = (res.data['data']['xp'] as num?)?.toInt() ?? 5;
-        ref.read(studentProvider.notifier).updateXP(xp);
-
-        setState(() {
-          _inventory.add(item.id);
-        });
-
-        HapticFeedback.lightImpact();
-
-        if (placeImmediately) {
-          Navigator.of(context).pop(); // Close store bottom sheet
-          _startPlacement(item);
-        } else {
-          _showSnackbar('${item.name} inventarga qo‘shildi!');
-        }
-      }
     } catch (e) {
-      debugPrint(
-          'Error purchasing item on backend, applying resilient local purchase: $e');
-      ref.read(studentProvider.notifier).updateCoins(-item.coinPrice);
-      ref.read(studentProvider.notifier).updateXP(5);
+      debugPrint('Backend build request fallback: $e');
+    }
+
+    // Debit coins & award XP locally
+    ref.read(studentProvider.notifier).updateCoins(-nextCost);
+    ref.read(studentProvider.notifier).updateXP(30);
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('mc_house_building_stage', nextStage);
+
+    if (mounted) {
       setState(() {
-        _inventory.add(item.id);
+        _currentStage = nextStage;
+        _isBuilding = false;
+        _celebrationBadge = '$stageName qurildi! ✨';
       });
-      HapticFeedback.lightImpact();
-      if (placeImmediately) {
-        Navigator.of(context).pop();
-        _startPlacement(item);
+
+      // Notify 3D engine to trigger pop and particle burst
+      postMessageToHouseGame('SET_STAGE', {
+        'stage': nextStage,
+        'animate': true,
+      });
+
+      HapticFeedback.heavyImpact();
+
+      // Clear celebration badge after 3 seconds
+      Future.delayed(const Duration(seconds: 3), () {
+        if (mounted) {
+          setState(() {
+            _celebrationBadge = null;
+          });
+        }
+      });
+
+      if (nextStage >= 6) {
+        _triggerConfetti();
+        _showCelebrationDialog();
       } else {
-        _showSnackbar('${item.name} xarid qilindi!');
+        _showSnackbar('$stageName muvaffaqiyatli qurildi! (+30 XP)');
       }
     }
   }
 
-  void _startPlacement(HouseCatalogItem item) {
-    setState(() {
-      _activePlacingItem = item;
-      _selectedPlacedItem = null;
-    });
-
-    postMessageToHouseGame('SELECT_ITEM_TO_PLACE', {
-      'itemId': item.id,
-      'color': _activePlacingColor,
-    });
-
-    _showSnackbar('Katakni bosing va joylashtiring!');
+  /// Rotate 3D camera by 90 degrees
+  void _rotate90() {
+    HapticFeedback.lightImpact();
+    postMessageToHouseGame('ROTATE_90', {});
   }
 
-  void _cancelPlacement() {
-    setState(() {
-      _activePlacingItem = null;
-    });
-    postMessageToHouseGame('CANCEL_PLACEMENT', {});
-  }
-
-  void _rotateGhost() {
-    HapticFeedback.selectionClick();
-    postMessageToHouseGame('ROTATE_GHOST', {});
-  }
-
-  Future<void> _rotatePlacedItem(String instanceId) async {
-    try {
-      final res = await ApiClient().dio.post(
-        '/games/house-building/rotate',
-        data: {'instanceId': instanceId},
-      );
-      if (res.data != null && res.data['success'] == true) {
-        final updated =
-            Map<String, dynamic>.from(res.data['data']['placedItem']);
-        setState(() {
-          final idx =
-              _placedItems.indexWhere((p) => p['instanceId'] == instanceId);
-          if (idx != -1) _placedItems[idx] = updated;
-          if (_selectedPlacedItem?['instanceId'] == instanceId) {
-            _selectedPlacedItem = updated;
-          }
-        });
-        postMessageToHouseGame('ITEM_PLACED', {'item': updated});
-        HapticFeedback.lightImpact();
-      }
-    } catch (e) {
-      debugPrint('Error rotating item: $e');
-    }
-  }
-
-  Future<void> _sellPlacedItem(String instanceId) async {
-    try {
-      final res = await ApiClient().dio.post(
-        '/games/house-building/sell',
-        data: {'instanceId': instanceId},
-      );
-      if (res.data != null && res.data['success'] == true) {
-        final refund = (res.data['data']['refund'] as num?)?.toInt() ?? 0;
-        final newStage = (res.data['data']['currentStage'] as num?)?.toInt() ??
-            _currentStage;
-
-        ref.read(studentProvider.notifier).updateCoins(refund);
-
-        setState(() {
-          _placedItems.removeWhere((p) => p['instanceId'] == instanceId);
-          _selectedPlacedItem = null;
-          _currentStage = newStage;
-        });
-
-        postMessageToHouseGame('ITEM_REMOVED', {'instanceId': instanceId});
-        HapticFeedback.mediumImpact();
-        _showSnackbar('Buyum sotildi! +$refund coin qaytarildi.');
-      }
-    } catch (e) {
-      debugPrint('Error selling item: $e');
-    }
-  }
-
-  void _toggleTheme() {
+  void _toggleNightMode() {
     HapticFeedback.lightImpact();
     setState(() {
       _isNightMode = !_isNightMode;
@@ -948,6 +495,86 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
   void _resetCamera() {
     HapticFeedback.lightImpact();
     postMessageToHouseGame('RESET_CAMERA', {});
+  }
+
+  /// Open Construction Store Bottom Sheet / Dialog
+  void _openStore() {
+    final student = ref.read(studentProvider).student;
+    final userCoins = student?.coinBalance ?? 0;
+
+    StoreSheet.show(
+      context,
+      userCoins: userCoins,
+      currentStage: _currentStage,
+      ownedItemIds: _ownedItemIds,
+      placedItemIds: _placedItemIds,
+      onPurchaseItem: (item) => _handleStorePurchase(item),
+      onTogglePlacement: (item) => _handleTogglePlacement(item),
+    );
+  }
+
+  Future<void> _handleStorePurchase(StoreItem item) async {
+    final student = ref.read(studentProvider).student;
+    final userCoins = student?.coinBalance ?? 0;
+
+    if (userCoins < item.price) {
+      _showSnackbar('Xarid qilish uchun coin yetarli emas!', isError: true);
+      return;
+    }
+
+    try {
+      await ApiClient().dio.post(
+        '/games/house-building/buy',
+        data: {'itemId': item.id},
+        options: Options(
+          validateStatus: (status) => true,
+          sendTimeout: const Duration(seconds: 5),
+          receiveTimeout: const Duration(seconds: 5),
+        ),
+      );
+    } catch (e) {
+      debugPrint('Store purchase fallback: $e');
+    }
+
+    ref.read(studentProvider.notifier).updateCoins(-item.price);
+    ref.read(studentProvider.notifier).updateXP(item.xpReward);
+
+    setState(() {
+      _ownedItemIds.add(item.id);
+      _placedItemIds.add(item.id);
+    });
+
+    postMessageToHouseGame('ITEM_PLACED', {
+      'item': {
+        'itemId': item.id,
+        'name': item.name,
+        'category': item.category.name,
+        'stage': item.stage,
+      }
+    });
+
+    _showSnackbar('«${item.name}» xarid qilindi va o‘rnatildi! (+${item.xpReward} XP)');
+  }
+
+  void _handleTogglePlacement(StoreItem item) {
+    setState(() {
+      if (_placedItemIds.contains(item.id)) {
+        _placedItemIds.remove(item.id);
+        postMessageToHouseGame('ITEM_REMOVED', {'instanceId': item.id});
+        _showSnackbar('«${item.name}» sahnadan olib tashlandi.');
+      } else {
+        _placedItemIds.add(item.id);
+        postMessageToHouseGame('ITEM_PLACED', {
+          'item': {
+            'itemId': item.id,
+            'name': item.name,
+            'category': item.category.name,
+            'stage': item.stage,
+          }
+        });
+        _showSnackbar('«${item.name}» sahnaga o‘rnatildi!');
+      }
+    });
   }
 
   void _showSnackbar(String text, {bool isError = false}) {
@@ -1074,162 +701,6 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     );
   }
 
-  void _showNotEnoughCoinsDialog(HouseCatalogItem item) {
-    final appColors = Theme.of(context).extension<AppThemeColors>();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final student = ref.read(studentProvider).student;
-    final userCoins = student?.coinBalance ?? 0;
-
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: appColors?.card ??
-            (isDark ? const Color(0xFF1B182C) : Colors.white),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-          side: BorderSide(
-            color: appColors?.border ??
-                (isDark ? const Color(0xFF302A46) : const Color(0xFFE2E5EF)),
-          ),
-        ),
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.amber.withValues(alpha: 0.2),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.monetization_on_rounded,
-                  color: Colors.amber, size: 28),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                'Coinlar yetarli emas!',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: appColors?.ink ??
-                      (isDark ? Colors.white : const Color(0xFF17152B)),
-                ),
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '«${item.name}» uchun ${item.coinPrice} coin kerak. Sizda esa $userCoins coin mavjud.',
-              style: TextStyle(
-                fontSize: 14,
-                color: appColors?.muted ??
-                    (isDark
-                        ? const Color(0xFFB5B2C7)
-                        : const Color(0xFF626579)),
-              ),
-            ),
-            const SizedBox(height: 14),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color:
-                    isDark ? const Color(0xFF26213B) : const Color(0xFFF1F3F9),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Sizdagi coinlar:',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: appColors?.ink ??
-                          (isDark ? Colors.white : const Color(0xFF17152B)),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      const CoinBadge(count: 0, size: 18),
-                      const SizedBox(width: 4),
-                      Text(
-                        '$userCoins ta',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.amber),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 14),
-            Text(
-              '💡 Maslahat: Matematika darslari va misollarni yechib, ko‘plab coinlar yutib oling!',
-              style: TextStyle(
-                fontSize: 12,
-                fontStyle: FontStyle.italic,
-                color: appColors?.primary ?? const Color(0xFF7C3AED),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(
-              'Bekor qilish',
-              style: TextStyle(
-                color: appColors?.muted ??
-                    (isDark ? Colors.white70 : const Color(0xFF626579)),
-              ),
-            ),
-          ),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              context.push('/practice');
-            },
-            icon: const Icon(Icons.calculate_rounded, size: 18),
-            label: const Text('Misol yechishga o‘tish'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF8B5CF6),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _openStoreBottomSheet({String? initialCategory}) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => _HouseStoreBottomSheet(
-        catalog: _catalog,
-        placedItems: _placedItems,
-        inventory: _inventory,
-        activeRoofColor: _activePlacingColor,
-        initialCategory: initialCategory,
-        onSelectRoofColor: (hex) {
-          setState(() {
-            _activePlacingColor = hex;
-          });
-        },
-        onBuyItem: (item) => _buyItem(item),
-        onPlaceItem: (item) {
-          Navigator.of(ctx).pop();
-          _startPlacement(item);
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = HouseBuildColors.of(context);
@@ -1244,7 +715,7 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
           constraints: const BoxConstraints(maxWidth: 480),
           child: Stack(
             children: [
-              // Main Structured Layout (SafeArea + Column + Row + Expanded)
+              // Main Clean Layout: SafeArea + Column + Row + Expanded
               SafeArea(
                 child: Padding(
                   padding: EdgeInsets.symmetric(
@@ -1254,7 +725,7 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
                   ),
                   child: Column(
                     children: [
-                      // 1. Top Bar (Circular Back 44x44, Title "Uy qurish", Coin & XP Capsule)
+                      // 1. Top Bar: Back (44x44), Title, XP & Coin Capsule
                       HouseBuildTopBar(
                         onBack: () => context.pop(),
                         coins: coinBalance,
@@ -1263,63 +734,50 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
 
                       const SizedBox(height: 10),
 
-                      // 2. Progress Card (House icon, Title, 0/6 badge, stage name, animated gradient progress)
+                      // 2. Progress Card: Stage 0/6, Title, Progress bar
                       HouseProgressCard(
                         currentStage: _currentStage,
                       ),
 
                       const SizedBox(height: 10),
 
-                      // 3. Mode Chips (Kun/Tun, Markaz, Ichki/Tashqi, Ovozli)
-                      HouseModeChips(
-                        isNightMode: _isNightMode,
-                        isInteriorMode: _isInteriorMode,
-                        isMuted: _isMuted,
-                        onToggleNightMode: _toggleTheme,
-                        onResetCamera: _resetCamera,
-                        onToggleInteriorMode: _toggleInterior,
-                        onToggleMute: _toggleMute,
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      // 4. Main House Scene (6-stage construction path, unbuilt silhouettes, 90° rotate, 3D viewport toggle)
+                      // 3. 3D House Scene View inside Expanded
                       Expanded(
-                        child: HouseScene(
-                          currentStage: _currentStage,
+                        child: HouseSceneView(
                           game3DView: buildHouseGameView(
                             context: context,
                             onMessageFromGame: _onMessageFromGame,
                           ),
-                          onRotate: _rotateGhost,
-                          onOpenStoreCategory: (catKey) =>
-                              _openStoreBottomSheet(initialCategory: catKey),
-                          activePlacingItem: _activePlacingItem,
-                          onRotateGhost: _rotateGhost,
-                          onCancelPlacement: _cancelPlacement,
-                          selectedPlacedItem: _selectedPlacedItem,
-                          onRotatePlacedItem: _rotatePlacedItem,
-                          onSellPlacedItem: _sellPlacedItem,
-                          onCloseSelection: () {
-                            setState(() {
-                              _selectedPlacedItem = null;
-                            });
-                          },
+                          isNightMode: _isNightMode,
+                          isInteriorMode: _isInteriorMode,
+                          isMuted: _isMuted,
+                          onboardingTooltip: _onboardingTooltip,
+                          celebrationBadge: _celebrationBadge,
+                          onToggleNightMode: _toggleNightMode,
+                          onResetCamera: _resetCamera,
+                          onToggleInteriorMode: _toggleInterior,
+                          onToggleMute: _toggleMute,
+                          onRotate90: _rotate90,
+                          onDismissTooltip: _nextOnboardingStep,
                         ),
                       ),
 
                       const SizedBox(height: 12),
 
-                      // 5. Store Button (SafeArea, full width, 54px, purple gradient, 0.97 scale animation, haptic)
-                      StoreButton(
-                        onTap: () => _openStoreBottomSheet(),
+                      // 4. Bottom Action Bar: "Qurish • $cost coin" + "Do‘kon"
+                      HouseBottomBar(
+                        currentStage: _currentStage,
+                        userCoins: coinBalance,
+                        isBuilding: _isBuilding,
+                        onBuildNextStage: _buildNextStage,
+                        onOpenStore: _openStore,
                       ),
                     ],
                   ),
                 ),
               ),
 
-              // Loading overlay when fetching game state
+              // Loading overlay
               if (_isLoading)
                 Positioned.fill(
                   child: Container(
@@ -1345,463 +803,6 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// Store Bottom Sheet Modal with Category Tabs & Swatches
-class _HouseStoreBottomSheet extends StatefulWidget {
-  final List<HouseCatalogItem> catalog;
-  final List<Map<String, dynamic>> placedItems;
-  final List<String> inventory;
-  final String activeRoofColor;
-  final String? initialCategory;
-  final ValueChanged<String> onSelectRoofColor;
-  final Function(HouseCatalogItem item) onBuyItem;
-  final Function(HouseCatalogItem item) onPlaceItem;
-
-  const _HouseStoreBottomSheet({
-    required this.catalog,
-    required this.placedItems,
-    required this.inventory,
-    required this.activeRoofColor,
-    this.initialCategory,
-    required this.onSelectRoofColor,
-    required this.onBuyItem,
-    required this.onPlaceItem,
-  });
-
-  @override
-  State<_HouseStoreBottomSheet> createState() => _HouseStoreBottomSheetState();
-}
-
-class _HouseStoreBottomSheetState extends State<_HouseStoreBottomSheet>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    int initialIndex = 0;
-    if (widget.initialCategory != null) {
-      final idx = kStoreCategories
-          .indexWhere((c) => c.key == widget.initialCategory);
-      if (idx != -1) initialIndex = idx;
-    }
-    _tabController = TabController(
-      length: kStoreCategories.length,
-      vsync: this,
-      initialIndex: initialIndex,
-    );
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = HouseBuildColors.of(context);
-
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.72,
-      decoration: BoxDecoration(
-        color: colors.cardBackground,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        border: Border(
-          top: BorderSide(
-            color: colors.primary.withValues(alpha: 0.35),
-            width: 2,
-          ),
-        ),
-        boxShadow: colors.cardShadow,
-      ),
-      child: Column(
-        children: [
-          // Drag handle
-          Container(
-            margin: const EdgeInsets.only(top: 10, bottom: 8),
-            width: 44,
-            height: 5,
-            decoration: BoxDecoration(
-              color: colors.border,
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-
-          // Header: Title and Close
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Icon(Icons.storefront_rounded,
-                          color: colors.primary, size: 24),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Qurilish katalogi',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: colors.textPrimary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: Icon(
-                    Icons.close_rounded,
-                    color: colors.textMuted,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Category TabBar
-          TabBar(
-            controller: _tabController,
-            isScrollable: true,
-            indicatorColor: colors.primary,
-            indicatorWeight: 3,
-            labelColor: colors.primary,
-            unselectedLabelColor: colors.textMuted,
-            labelStyle:
-                const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-            tabs: kStoreCategories
-                .map((cat) => Tab(
-                      icon: Icon(cat.icon, size: 18),
-                      text: cat.title,
-                    ))
-                .toList(),
-          ),
-
-          Divider(height: 1, thickness: 1, color: colors.border),
-
-          // Category Content TabBarView
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: kStoreCategories.map((cat) {
-                final items =
-                    widget.catalog.where((c) => c.category == cat.key).toList();
-                return _buildCategoryGrid(cat.key, items, colors);
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryGrid(
-    String categoryKey,
-    List<HouseCatalogItem> items,
-    HouseBuildColors colors,
-  ) {
-    return Column(
-      children: [
-        // If roof category, display 5 roof color swatches
-        if (categoryKey == 'roof')
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: colors.cardBackgroundSecondary,
-              border: Border(
-                bottom: BorderSide(
-                  color: colors.border,
-                ),
-              ),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  'Tom rangi:',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: colors.textPrimary,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: kRoofColors.map((rc) {
-                        final hex = rc['hex']!;
-                        final isSelected =
-                            widget.activeRoofColor.toLowerCase() ==
-                                hex.toLowerCase();
-                        final color =
-                            Color(int.parse(hex.replaceFirst('#', '0xFF')));
-                        return GestureDetector(
-                          onTap: () => widget.onSelectRoofColor(hex),
-                          child: Container(
-                            margin: const EdgeInsets.only(right: 8),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: color.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: isSelected
-                                    ? colors.primary
-                                    : color,
-                                width: isSelected ? 2.5 : 1,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 12,
-                                  height: 12,
-                                  decoration: BoxDecoration(
-                                      color: color, shape: BoxShape.circle),
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  rc['name']!,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: isSelected
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                    color: isSelected
-                                        ? colors.primary
-                                        : colors.textSecondary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-        // Items Grid
-        Expanded(
-          child: items.isEmpty
-              ? Center(
-                  child: Text(
-                    'Ushbu bo‘limda buyumlar yo‘q',
-                    style: TextStyle(
-                      color: colors.textMuted,
-                    ),
-                  ),
-                )
-              : GridView.builder(
-                  padding: const EdgeInsets.all(14),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 0.95,
-                  ),
-                  itemCount: items.length,
-                  itemBuilder: (ctx, idx) {
-                    final item = items[idx];
-                    final isPlaced =
-                        widget.placedItems.any((p) => p['itemId'] == item.id);
-                    final isOwned = widget.inventory.contains(item.id);
-
-                    // Check dependency
-                    bool isLocked = false;
-                    String lockReason = '';
-                    if (item.category == 'walls') {
-                      final hasFoundation = widget.placedItems.any((p) =>
-                          (p['category'] ?? '').toString() == 'foundation' ||
-                          (p['itemId'] ?? '')
-                              .toString()
-                              .contains('foundation'));
-                      if (!hasFoundation) {
-                        isLocked = true;
-                        lockReason = 'Avval poydevor quring';
-                      }
-                    } else if (item.category == 'roof' ||
-                        item.category == 'doors' ||
-                        item.category == 'windows') {
-                      final hasWall = widget.placedItems.any((p) =>
-                          (p['category'] ?? '').toString() == 'walls' ||
-                          (p['itemId'] ?? '').toString().contains('wall'));
-                      if (!hasWall) {
-                        isLocked = true;
-                        lockReason = 'Avval devor quring';
-                      }
-                    }
-
-                    return _buildItemCard(item, isPlaced, isOwned, isLocked,
-                        lockReason, colors);
-                  },
-                ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildItemCard(
-    HouseCatalogItem item,
-    bool isPlaced,
-    bool isOwned,
-    bool isLocked,
-    String lockReason,
-    HouseBuildColors colors,
-  ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.cardBackgroundSecondary,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: isPlaced
-              ? colors.success.withValues(alpha: 0.5)
-              : colors.border,
-          width: isPlaced ? 1.5 : 1,
-        ),
-        boxShadow: colors.cardShadow,
-      ),
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(item.iconEmoji, style: const TextStyle(fontSize: 26)),
-              if (isPlaced)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: colors.success.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    'O‘rnatilgan',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: colors.success,
-                    ),
-                  ),
-                )
-              else
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const CoinBadge(count: 0, size: 14),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${item.coinPrice}',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: colors.gold,
-                      ),
-                    ),
-                  ],
-                ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            item.name,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-              color: colors.textPrimary,
-            ),
-          ),
-          const Spacer(),
-          if (isLocked)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFFEF4444).withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                lockReason,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFEF4444),
-                ),
-              ),
-            )
-          else if (isPlaced && !item.multiPlace)
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: () => widget.onPlaceItem(item),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: colors.success,
-                  side: BorderSide(color: colors.success),
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                child: const Text('Ko‘chirish',
-                    style:
-                        TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-              ),
-            )
-          else if (isOwned)
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => widget.onPlaceItem(item),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colors.success,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                child: const Text('Joylashtirish',
-                    style:
-                        TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-              ),
-            )
-          else
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => widget.onBuyItem(item),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colors.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                child: Text('Sotib olish (${item.coinPrice})',
-                    style: const TextStyle(
-                        fontSize: 11, fontWeight: FontWeight.bold)),
-              ),
-            ),
-        ],
       ),
     );
   }

@@ -12,18 +12,76 @@ const List<GameCardModel> kHomeGamesList = [
     id: 'tug_of_war',
     title: 'Arqon tortish',
     description:
-        'Jamoaviy savol-javob o‘yini. Ikki jamoa raqobatlashadi, to‘g‘ri va tez javob bergan jamoa g‘olib bo‘ladi.',
+        'Jamoaviy savol-javob o‘yini. Ikki jamoa raqobatlashadi va bilimini sinaydi.',
     badge: 'Ro‘yxatdan o‘tmasdan',
     route: '/games/tug-of-war',
     isAvailable: true,
+    isLocked: false,
+  ),
+  GameCardModel(
+    id: 'quick_math',
+    title: 'Tezkor hisob',
+    description:
+        'Tezlik va chaqqonlik o‘yini. Vaqt tugaguncha maksimal misol yeching.',
+    badge: 'Tez kunda',
+    route: '/games/quick-math',
+    isAvailable: false,
+    isLocked: true,
+  ),
+  GameCardModel(
+    id: 'number_battle',
+    title: 'Sonlar jangi',
+    description:
+        'Strategik matematik jang. Raqamlarni to‘g‘ri tanlang va g‘olib bo‘ling.',
+    badge: 'Tez kunda',
+    route: '/games/number-battle',
+    isAvailable: false,
+    isLocked: true,
   ),
 ];
 
 /// "O‘yinlar" section displayed in the Home Screen below "Bugungi vazifalar"
-class GamesSection extends StatelessWidget {
+/// Snap horizontal carousel with ~84% card width peek
+class GamesSection extends StatefulWidget {
   const GamesSection({super.key});
 
-  void _openGameWizard(BuildContext context, GameCardModel game) {
+  @override
+  State<GamesSection> createState() => _GamesSectionState();
+}
+
+class _GamesSectionState extends State<GamesSection> {
+  late final PageController _pageController;
+  int _activePage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(viewportFraction: 0.85);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _onGameTap(BuildContext context, GameCardModel game) {
+    if (game.isLocked) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '«${game.title}» o‘yini tez orada taqdim etiladi! 🚀',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
     if (game.id == 'tug_of_war') {
       GameSetupSheet.show(
         context,
@@ -101,17 +159,55 @@ class GamesSection extends StatelessWidget {
 
         const SizedBox(height: 12),
 
-        // List of Games Cards
-        Column(
-          children: [
-            for (int i = 0; i < kHomeGamesList.length; i++) ...[
-              if (i > 0) const SizedBox(height: 14),
-              GameCard(
-                model: kHomeGamesList[i],
-                onStart: () => _openGameWizard(context, kHomeGamesList[i]),
+        // Snap Horizontal Carousel
+        SizedBox(
+          height: 350,
+          child: PageView.builder(
+            controller: _pageController,
+            padEnds: false,
+            physics: const BouncingScrollPhysics(),
+            itemCount: kHomeGamesList.length,
+            onPageChanged: (idx) {
+              setState(() {
+                _activePage = idx;
+              });
+            },
+            itemBuilder: (context, index) {
+              final game = kHomeGamesList[index];
+              return Padding(
+                padding: EdgeInsets.only(
+                  right: index == kHomeGamesList.length - 1 ? 0 : 12,
+                ),
+                child: GameCard(
+                  model: game,
+                  onStart: () => _onGameTap(context, game),
+                ),
+              );
+            },
+          ),
+        ),
+
+        // Carousel Page Indicator Dots
+        const SizedBox(height: 8),
+        Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+              kHomeGamesList.length,
+              (index) => AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                width: _activePage == index ? 16 : 6,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: _activePage == index
+                      ? colors.primaryBlue
+                      : colors.border,
+                  borderRadius: BorderRadius.circular(3),
+                ),
               ),
-            ],
-          ],
+            ),
+          ),
         ),
       ],
     );

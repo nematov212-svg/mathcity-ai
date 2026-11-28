@@ -10,18 +10,6 @@
   <!-- 3D WebGL Canvas Container -->
   <div id="canvas-container"></div>
 
-  <!-- HUD In-Canvas Controls -->
-  <div class="hud-overlay">
-    <button id="btn-reset-cam" class="hud-btn" type="button">
-      <span>🎥</span>
-      <span>Markaz</span>
-    </button>
-    <button id="btn-rotate" class="hud-btn" type="button">
-      <span>🔄</span>
-      <span>90°</span>
-    </button>
-  </div>
-
   <!-- Dynamic Feedback & Constraint Hint Box -->
   <div id="hint-box"></div>
 
@@ -35,9 +23,9 @@
   <!-- Local Offline Three.js Engine & Game Modules (Zero CDN) -->
   <script src="libs/three.min.js"></script>
   <script src="libs/OrbitControls.js"></script>
-  <script src="js/audio.js"></script>
-  <script src="js/itemBuilder.js"></script>
-  <script src="js/scene.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/audio.js" defer></script>
+  <script src="js/itemBuilder.js" defer></script>
+  <script src="js/scene.js" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>

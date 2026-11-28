@@ -48,7 +48,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Uy qurish'), findsWidgets);
-    expect(find.text('Qurilish do‘koni'), findsOneWidget);
+    expect(find.byIcon(Icons.storefront_rounded), findsOneWidget);
     expect(find.textContaining('Poydevor'), findsWidgets);
   });
 

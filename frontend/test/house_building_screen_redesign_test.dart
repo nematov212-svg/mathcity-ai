@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mathcity_ai/features/games/house_building_screen.dart';
+import 'package:mathcity_ai/features/games/screens/store_sheet.dart';
+import 'package:mathcity_ai/features/games/widgets/house_bottom_bar.dart';
 import 'package:mathcity_ai/features/games/widgets/house_build_top_bar.dart';
 import 'package:mathcity_ai/features/games/widgets/house_progress_card.dart';
 import 'package:mathcity_ai/features/games/widgets/house_mode_chips.dart';
@@ -167,9 +169,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Uy qurish'), findsWidgets);
-      expect(find.text('Qurilish do‘koni'), findsOneWidget);
-      expect(find.text('Poydevor qo‘yishdan boshlang!'), findsOneWidget);
+      expect(find.byType(HouseProgressCard), findsOneWidget);
       expect(find.text('90°'), findsOneWidget);
+      expect(find.byType(HouseBottomBar), findsOneWidget);
     });
 
     testWidgets('Renders properly on 430x932 screen (large mobile)',
@@ -188,7 +190,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Uy qurish'), findsWidgets);
-      expect(find.text('Qurilish do‘koni'), findsOneWidget);
+      expect(find.byType(HouseBottomBar), findsOneWidget);
     });
 
     testWidgets('Supports Dark Mode and Light Mode cleanly', (tester) async {
@@ -236,15 +238,14 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final storeButton = find.text('Qurilish do‘koni');
+      final storeButton = find.byIcon(Icons.storefront_rounded);
       expect(storeButton, findsOneWidget);
 
       await tester.tap(storeButton);
       await tester.pumpAndSettle();
 
-      expect(find.text('Qurilish katalogi'), findsOneWidget);
-      expect(find.text('Poydevor'), findsWidgets);
-      expect(find.text('Devorlar'), findsWidgets);
+      expect(find.text('Qurilish do‘koni'), findsWidgets);
+      expect(find.byType(StoreSheet), findsOneWidget);
     });
   });
 }
