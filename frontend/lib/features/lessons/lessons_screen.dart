@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/network/api_client.dart';
 import '../../core/responsive/app_responsive_scaffold.dart';
+import '../../core/responsive/screen_size.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/animated_math_background.dart';
@@ -527,56 +528,143 @@ class _LessonsScreenState extends ConsumerState<LessonsScreen> {
   }
 
   Widget _buildModulesList(AppThemeColors colors, bool isDark) {
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-      children: [
-        // Section Header
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Modullar',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: colors.ink,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF6C3CE0).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  '$_selectedGrade-sinf',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF6C3CE0),
+    if (context.isCompact) {
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+        children: [
+          // Section Header
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Modullar',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: colors.ink,
                   ),
                 ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF6C3CE0).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    '$_selectedGrade-sinf',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF6C3CE0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Module Cards
+          if (_modules.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              child: Center(
+                child: Text(
+                  'Bu sinf uchun modullar tayyorlanmoqda',
+                  style: TextStyle(fontSize: 14, color: colors.muted),
+                ),
               ),
+            )
+          else
+            ..._modules
+                .map((module) => _buildModuleCard(context, colors, isDark, module)),
+        ],
+      );
+    }
+
+    // Tablet (2-3 columns) & Desktop (3-4 columns)
+    final isExpanded = context.isExpanded;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final int crossAxisCount = isExpanded
+        ? (screenWidth > 1300 ? 4 : 3)
+        : (screenWidth > 800 ? 3 : 2);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Section Header
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Modullar',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        color: colors.ink,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF6C3CE0).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '$_selectedGrade-sinf',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF6C3CE0),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              if (_modules.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 60),
+                  child: Center(
+                    child: Text(
+                      'Bu sinf uchun modullar tayyorlanmoqda',
+                      style: TextStyle(fontSize: 15, color: colors.muted),
+                    ),
+                  ),
+                )
+              else
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    mainAxisExtent: 110,
+                  ),
+                  itemCount: _modules.length,
+                  itemBuilder: (context, index) => _buildModuleCard(
+                    context,
+                    colors,
+                    isDark,
+                    _modules[index],
+                  ),
+                ),
             ],
           ),
         ),
-
-        // Module Cards
-        if (_modules.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40),
-            child: Center(
-              child: Text(
-                'Bu sinf uchun modullar tayyorlanmoqda',
-                style: TextStyle(fontSize: 14, color: colors.muted),
-              ),
-            ),
-          )
-        else
-          ..._modules.map((module) => _buildModuleCard(context, colors, isDark, module)),
-      ],
+      ),
     );
   }
 

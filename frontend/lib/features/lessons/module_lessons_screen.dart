@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/network/api_client.dart';
 import '../../core/responsive/app_responsive_scaffold.dart';
+import '../../core/responsive/screen_size.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/animated_math_background.dart';
@@ -771,7 +772,7 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
                                     ),
                                   ),
                                 )
-                              else
+                              else if (context.isCompact)
                                 ...filteredLessons.map((lesson) {
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: 12),
@@ -783,7 +784,26 @@ class _ModuleLessonsScreenState extends ConsumerState<ModuleLessonsScreen> {
                                       isPro,
                                     ),
                                   );
-                                }),
+                                })
+                              else
+                                GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: context.isExpanded ? 3 : 2,
+                                    crossAxisSpacing: 14,
+                                    mainAxisSpacing: 14,
+                                    mainAxisExtent: 110,
+                                  ),
+                                  itemCount: filteredLessons.length,
+                                  itemBuilder: (context, idx) => _buildLessonCard(
+                                    context,
+                                    colors,
+                                    isDark,
+                                    filteredLessons[idx],
+                                    isPro,
+                                  ),
+                                ),
                             ],
                           ),
                         ),

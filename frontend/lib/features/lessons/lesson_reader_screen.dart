@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/responsive/screen_size.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
 import '../../core/widgets/xp_coin.dart';
@@ -681,16 +682,120 @@ class _LessonReaderScreenState extends ConsumerState<LessonReaderScreen>
 
             // Step Content Area
             Expanded(
-              child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                child: _buildCurrentStepContent(colors, lesson),
-              ),
+              child: context.isCompact
+                  ? SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 16),
+                      child: _buildCurrentStepContent(colors, lesson),
+                    )
+                  : (context.isExpanded
+                      ? _buildExpandedTwoPanel(colors, lesson)
+                      : Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 760),
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 16),
+                              child: _buildCurrentStepContent(colors, lesson),
+                            ),
+                          ),
+                        )),
             ),
 
             // Bottom Navigation Bar (Orqaga / Keyingi)
             _buildBottomNav(colors),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExpandedTwoPanel(AppThemeColors colors, LessonModel lesson) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Left Panel: Theory & Explanations
+              Expanded(
+                flex: 5,
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: colors.card,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: colors.border),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Text('📖', style: TextStyle(fontSize: 20)),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Nazariya va Tushuntirish',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: colors.ink,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 24),
+                        _currentStep <= 2
+                            ? _buildCurrentStepContent(colors, lesson)
+                            : _buildStepTushuntirish(colors, lesson),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 20),
+              // Right Panel: Practice & Exercises
+              Expanded(
+                flex: 5,
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: colors.card,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: colors.border),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Text('🎯', style: TextStyle(fontSize: 20)),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Mashq va Test',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: colors.ink,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 24),
+                        _currentStep >= 3
+                            ? _buildCurrentStepContent(colors, lesson)
+                            : _buildStepMashq(colors, lesson),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
