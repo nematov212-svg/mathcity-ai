@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/responsive/screen_size.dart';
 import '../logic/tug_of_war_controller.dart';
 import '../models/game_config.dart';
 import '../widgets/game_colors.dart';
@@ -29,6 +30,8 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
 
   final GlobalKey<TeamPanelState> _team1PanelKey = GlobalKey<TeamPanelState>();
   final GlobalKey<TeamPanelState> _team2PanelKey = GlobalKey<TeamPanelState>();
+  final FocusNode _keyboardFocusNode = FocusNode();
+  bool _showKeyboardHint = true;
 
   @override
   void initState() {
@@ -36,6 +39,11 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
     WidgetsBinding.instance.addObserver(this);
     _currentConfig = widget.config;
     _initGame();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _keyboardFocusNode.requestFocus();
+      }
+    });
   }
 
   void _initGame() {
@@ -43,6 +51,104 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
       config: _currentConfig,
       onGameFinished: _handleGameFinished,
     );
+  }
+
+  void _submitTeam(int teamId) {
+    final res = _controller.submitAnswer(teamId);
+    final panelKey = teamId == 1 ? _team1PanelKey : _team2PanelKey;
+    if (res == AnswerResult.correct) {
+      panelKey.currentState?.triggerCorrect();
+      HapticFeedback.mediumImpact();
+    } else if (res == AnswerResult.wrong) {
+      panelKey.currentState?.triggerWrong();
+      HapticFeedback.heavyImpact();
+    }
+  }
+
+  void _handleKeyEvent(KeyEvent event) {
+    if (event is! KeyDownEvent) return;
+    final key = event.logicalKey;
+
+    // Escape -> Exit dialog
+    if (key == LogicalKeyboardKey.escape) {
+      _confirmExit().then((shouldPop) {
+        if (shouldPop && mounted) {
+          context.pop();
+        }
+      });
+      return;
+    }
+
+    // Comparison shortcut keys
+    if (key == LogicalKeyboardKey.less || event.character == '<') {
+      _controller.inputChar(1, '<');
+      _submitTeam(1);
+      return;
+    } else if (key == LogicalKeyboardKey.equal || event.character == '=') {
+      _controller.inputChar(1, '=');
+      _submitTeam(1);
+      return;
+    } else if (key == LogicalKeyboardKey.greater || event.character == '>') {
+      _controller.inputChar(1, '>');
+      _submitTeam(1);
+      return;
+    }
+
+    // Team 1: Number row keys (1..9, 0, Backspace, Enter)
+    if (key == LogicalKeyboardKey.digit1) {
+      _controller.inputChar(1, '1');
+    } else if (key == LogicalKeyboardKey.digit2) {
+      _controller.inputChar(1, '2');
+    } else if (key == LogicalKeyboardKey.digit3) {
+      _controller.inputChar(1, '3');
+    } else if (key == LogicalKeyboardKey.digit4) {
+      _controller.inputChar(1, '4');
+    } else if (key == LogicalKeyboardKey.digit5) {
+      _controller.inputChar(1, '5');
+    } else if (key == LogicalKeyboardKey.digit6) {
+      _controller.inputChar(1, '6');
+    } else if (key == LogicalKeyboardKey.digit7) {
+      _controller.inputChar(1, '7');
+    } else if (key == LogicalKeyboardKey.digit8) {
+      _controller.inputChar(1, '8');
+    } else if (key == LogicalKeyboardKey.digit9) {
+      _controller.inputChar(1, '9');
+    } else if (key == LogicalKeyboardKey.digit0) {
+      _controller.inputChar(1, '0');
+    } else if (key == LogicalKeyboardKey.backspace) {
+      _controller.clearInput(1);
+    } else if (key == LogicalKeyboardKey.enter) {
+      _submitTeam(1);
+    }
+
+    // Team 2: Numpad keys (Numpad 1..9, 0, Subtract/Delete, NumpadEnter)
+    if (key == LogicalKeyboardKey.numpad1) {
+      _controller.inputChar(2, '1');
+    } else if (key == LogicalKeyboardKey.numpad2) {
+      _controller.inputChar(2, '2');
+    } else if (key == LogicalKeyboardKey.numpad3) {
+      _controller.inputChar(2, '3');
+    } else if (key == LogicalKeyboardKey.numpad4) {
+      _controller.inputChar(2, '4');
+    } else if (key == LogicalKeyboardKey.numpad5) {
+      _controller.inputChar(2, '5');
+    } else if (key == LogicalKeyboardKey.numpad6) {
+      _controller.inputChar(2, '6');
+    } else if (key == LogicalKeyboardKey.numpad7) {
+      _controller.inputChar(2, '7');
+    } else if (key == LogicalKeyboardKey.numpad8) {
+      _controller.inputChar(2, '8');
+    } else if (key == LogicalKeyboardKey.numpad9) {
+      _controller.inputChar(2, '9');
+    } else if (key == LogicalKeyboardKey.numpad0) {
+      _controller.inputChar(2, '0');
+    } else if (key == LogicalKeyboardKey.numpadSubtract ||
+        key == LogicalKeyboardKey.delete ||
+        key == LogicalKeyboardKey.numpadDecimal) {
+      _controller.clearInput(2);
+    } else if (key == LogicalKeyboardKey.numpadEnter) {
+      _submitTeam(2);
+    }
   }
 
   void _handleGameFinished(GameResult result) {
@@ -89,6 +195,7 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
 
   @override
   void dispose() {
+    _keyboardFocusNode.dispose();
     WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     super.dispose();
@@ -153,6 +260,8 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
   @override
   Widget build(BuildContext context) {
     final colors = GameColors.of(context);
+    final isCompact = context.isCompact;
+    final isExpanded = context.isExpanded;
 
     return PopScope(
       canPop: false,
@@ -163,27 +272,200 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
           context.pop();
         }
       },
-      child: Scaffold(
-        backgroundColor: colors.background,
-        body: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 480),
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: ListenableBuilder(
-                  listenable: _controller,
-                  builder: (context, _) {
-                    return Column(
+      child: KeyboardListener(
+        focusNode: _keyboardFocusNode,
+        autofocus: true,
+        onKeyEvent: _handleKeyEvent,
+        child: Scaffold(
+          backgroundColor: colors.background,
+          body: Center(
+            child: isCompact
+                ? _buildCompactLayout(colors)
+                : (isExpanded
+                    ? _buildExpandedLayout(colors)
+                    : _buildMediumLayout(colors)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 1. Phone / Compact layout (Exact original code, 0 regressions)
+  Widget _buildCompactLayout(GameColors colors) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 480),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: ListenableBuilder(
+            listenable: _controller,
+            builder: (context, _) {
+              return Column(
+                children: [
+                  _buildTopBar(colors),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: 120,
+                    child: TugScene(
+                      ropeMarker: _controller.ropeMarker,
+                      remainingSeconds: _controller.remainingSeconds,
+                      elapsedSeconds: _controller.elapsedSeconds,
+                      team1: _controller.team1,
+                      team2: _controller.team2,
+                      isDark: colors.isDark,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: Row(
                       children: [
-                        // A) Top Header Bar: Team 1 | MathCity Logo | Team 2
+                        Expanded(
+                          child: TeamPanel(
+                            key: _team1PanelKey,
+                            team: _controller.team1,
+                            question: _controller.team1Question,
+                            currentInput: _controller.team1Input,
+                            onInputChar: (char) =>
+                                _controller.inputChar(1, char),
+                            onClear: () => _controller.clearInput(1),
+                            onSubmit: () => _submitTeam(1),
+                            isDark: colors.isDark,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TeamPanel(
+                            key: _team2PanelKey,
+                            team: _controller.team2,
+                            question: _controller.team2Question,
+                            currentInput: _controller.team2Input,
+                            onInputChar: (char) =>
+                                _controller.inputChar(2, char),
+                            onClear: () => _controller.clearInput(2),
+                            onSubmit: () => _submitTeam(2),
+                            isDark: colors.isDark,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  _buildBottomUtilityBar(colors),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 2. Tablet / Medium layout
+  Widget _buildMediumLayout(GameColors colors) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 820),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: ListenableBuilder(
+            listenable: _controller,
+            builder: (context, _) {
+              return Column(
+                children: [
+                  _buildTopBar(colors),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    height: 150,
+                    child: TugScene(
+                      ropeMarker: _controller.ropeMarker,
+                      remainingSeconds: _controller.remainingSeconds,
+                      elapsedSeconds: _controller.elapsedSeconds,
+                      team1: _controller.team1,
+                      team2: _controller.team2,
+                      isDark: colors.isDark,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TeamPanel(
+                            key: _team1PanelKey,
+                            team: _controller.team1,
+                            question: _controller.team1Question,
+                            currentInput: _controller.team1Input,
+                            onInputChar: (char) =>
+                                _controller.inputChar(1, char),
+                            onClear: () => _controller.clearInput(1),
+                            onSubmit: () => _submitTeam(1),
+                            isDark: colors.isDark,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: TeamPanel(
+                            key: _team2PanelKey,
+                            team: _controller.team2,
+                            question: _controller.team2Question,
+                            currentInput: _controller.team2Input,
+                            onInputChar: (char) =>
+                                _controller.inputChar(2, char),
+                            onClear: () => _controller.clearInput(2),
+                            onSubmit: () => _submitTeam(2),
+                            isDark: colors.isDark,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  _buildBottomUtilityBar(colors),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 3. Desktop / Expanded 3-column layout
+  Widget _buildExpandedLayout(GameColors colors) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 1240),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: ListenableBuilder(
+            listenable: _controller,
+            builder: (context, _) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Left: Team 1 Panel
+                  SizedBox(
+                    width: 320,
+                    child: TeamPanel(
+                      key: _team1PanelKey,
+                      team: _controller.team1,
+                      question: _controller.team1Question,
+                      currentInput: _controller.team1Input,
+                      onInputChar: (char) => _controller.inputChar(1, char),
+                      onClear: () => _controller.clearInput(1),
+                      onSubmit: () => _submitTeam(1),
+                      isDark: colors.isDark,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+
+                  // Center Arena
+                  Expanded(
+                    child: Column(
+                      children: [
                         _buildTopBar(colors),
-
-                        const SizedBox(height: 8),
-
-                        // B) Tug Scene Card (Rope, Players, Center Line, Timer)
-                        SizedBox(
-                          height: 120,
+                        const SizedBox(height: 12),
+                        Expanded(
                           child: TugScene(
                             ropeMarker: _controller.ropeMarker,
                             remainingSeconds: _controller.remainingSeconds,
@@ -193,78 +475,78 @@ class _TugOfWarScreenState extends State<TugOfWarScreen>
                             isDark: colors.isDark,
                           ),
                         ),
-
-                        const SizedBox(height: 8),
-
-                        // C) Split-Screen Team Interactive Panels
-                        Expanded(
-                          child: Row(
-                            children: [
-                              // Team 1 Panel (Blue)
-                              Expanded(
-                                child: TeamPanel(
-                                  key: _team1PanelKey,
-                                  team: _controller.team1,
-                                  question: _controller.team1Question,
-                                  currentInput: _controller.team1Input,
-                                  onInputChar: (char) =>
-                                      _controller.inputChar(1, char),
-                                  onClear: () => _controller.clearInput(1),
-                                  onSubmit: () {
-                                    final res = _controller.submitAnswer(1);
-                                    if (res == AnswerResult.correct) {
-                                      _team1PanelKey.currentState?.triggerCorrect();
-                                      HapticFeedback.mediumImpact();
-                                    } else if (res == AnswerResult.wrong) {
-                                      _team1PanelKey.currentState?.triggerWrong();
-                                      HapticFeedback.heavyImpact();
-                                    }
-                                  },
-                                  isDark: colors.isDark,
-                                ),
-                              ),
-
-                              const SizedBox(width: 8),
-
-                              // Team 2 Panel (Red)
-                              Expanded(
-                                child: TeamPanel(
-                                  key: _team2PanelKey,
-                                  team: _controller.team2,
-                                  question: _controller.team2Question,
-                                  currentInput: _controller.team2Input,
-                                  onInputChar: (char) =>
-                                      _controller.inputChar(2, char),
-                                  onClear: () => _controller.clearInput(2),
-                                  onSubmit: () {
-                                    final res = _controller.submitAnswer(2);
-                                    if (res == AnswerResult.correct) {
-                                      _team2PanelKey.currentState?.triggerCorrect();
-                                      HapticFeedback.mediumImpact();
-                                    } else if (res == AnswerResult.wrong) {
-                                      _team2PanelKey.currentState?.triggerWrong();
-                                      HapticFeedback.heavyImpact();
-                                    }
-                                  },
-                                  isDark: colors.isDark,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 6),
-
-                        // D) Bottom Utility Controls
+                        const SizedBox(height: 10),
+                        if (_showKeyboardHint) _buildKeyboardHintBar(colors),
                         _buildBottomUtilityBar(colors),
                       ],
-                    );
-                  },
-                ),
-              ),
-            ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+
+                  // Right: Team 2 Panel
+                  SizedBox(
+                    width: 320,
+                    child: TeamPanel(
+                      key: _team2PanelKey,
+                      team: _controller.team2,
+                      question: _controller.team2Question,
+                      currentInput: _controller.team2Input,
+                      onInputChar: (char) => _controller.inputChar(2, char),
+                      onClear: () => _controller.clearInput(2),
+                      onSubmit: () => _submitTeam(2),
+                      isDark: colors.isDark,
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildKeyboardHintBar(GameColors colors) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      decoration: BoxDecoration(
+        color: colors.primaryBlue.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colors.primaryBlue.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                Icon(Icons.keyboard_outlined,
+                    size: 16, color: colors.primaryBlue),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    '1-jamoa: [0-9], Enter, Backspace | 2-jamoa: Numpad [0-9], NumpadEnter | Esc: Chiqish',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: colors.textPrimary,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () => setState(() => _showKeyboardHint = false),
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Icon(Icons.close, size: 14, color: colors.textSecondary),
+            ),
+          ),
+        ],
       ),
     );
   }

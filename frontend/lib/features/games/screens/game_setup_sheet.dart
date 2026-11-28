@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/responsive/breakpoints.dart';
+import '../../../core/responsive/screen_size.dart';
 import '../models/game_config.dart';
 import '../widgets/game_colors.dart';
 import '../widgets/option_card.dart';
@@ -20,16 +22,18 @@ class GameSetupSheet extends StatefulWidget {
     GameConfig initialConfig = const GameConfig(),
     required ValueChanged<GameConfig> onStartGame,
   }) {
-    final isDesktop = MediaQuery.of(context).size.width >= 600;
-
-    if (isDesktop) {
+    // 0.4 & 0.5 Qoidasi: Katta ekranda markazlashgan dialog (maks. 640px)
+    if (!context.isCompact) {
       return showDialog(
         context: context,
         builder: (ctx) => Dialog(
           backgroundColor: Colors.transparent,
           insetPadding: const EdgeInsets.all(24),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560, maxHeight: 720),
+            constraints: const BoxConstraints(
+              maxWidth: Breakpoints.maxWizardDialogWidth,
+              maxHeight: 740,
+            ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(28),
               child: GameSetupSheet(
@@ -247,6 +251,8 @@ class _GameSetupSheetState extends State<GameSetupSheet> {
 
   // STEP 1: TIME
   Widget _buildStepTime(GameColors colors) {
+    final isCompact = context.isCompact;
+
     return Column(
       key: const ValueKey('step_0_time'),
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,33 +272,55 @@ class _GameSetupSheetState extends State<GameSetupSheet> {
         ),
         const SizedBox(height: 14),
 
-        // Grid of 4 minute options
-        GridView.count(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 2,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 2.2,
-          children: [
-            _buildTimeOption(1, '1 daqiqa', colors),
-            _buildTimeOption(3, '3 daqiqa', colors),
-            _buildTimeOption(5, '5 daqiqa', colors),
-            _buildTimeOption(10, '10 daqiqa', colors),
-          ],
-        ),
-
-        const SizedBox(height: 10),
-
-        // Cheksiz (Infinite) option - full width
-        OptionCard(
-          title: 'Cheksiz (∞)',
-          subtitle: 'G‘olib aniqlanguncha davom etadi',
-          icon: Icons.all_inclusive_rounded,
-          isSelected: _durationMinutes == null,
-          onTap: () => setState(() => _durationMinutes = null),
-          isFullWidth: true,
-        ),
+        if (isCompact) ...[
+          // Grid of 4 minute options
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 2.2,
+            children: [
+              _buildTimeOption(1, '1 daqiqa', colors),
+              _buildTimeOption(3, '3 daqiqa', colors),
+              _buildTimeOption(5, '5 daqiqa', colors),
+              _buildTimeOption(10, '10 daqiqa', colors),
+            ],
+          ),
+          const SizedBox(height: 10),
+          OptionCard(
+            title: 'Cheksiz (∞)',
+            subtitle: 'G‘olib aniqlanguncha davom etadi',
+            icon: Icons.all_inclusive_rounded,
+            isSelected: _durationMinutes == null,
+            onTap: () => setState(() => _durationMinutes = null),
+            isFullWidth: true,
+          ),
+        ] else ...[
+          // 4.1 Qoidasi: Katta ekranda 3 ustunli grid
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 3,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 2.1,
+            children: [
+              _buildTimeOption(1, '1 daqiqa', colors),
+              _buildTimeOption(3, '3 daqiqa', colors),
+              _buildTimeOption(5, '5 daqiqa', colors),
+              _buildTimeOption(10, '10 daqiqa', colors),
+              OptionCard(
+                title: 'Cheksiz (∞)',
+                subtitle: 'Cheklovsiz',
+                icon: Icons.all_inclusive_rounded,
+                isSelected: _durationMinutes == null,
+                onTap: () => setState(() => _durationMinutes = null),
+              ),
+            ],
+          ),
+        ],
       ],
     );
   }
@@ -310,6 +338,7 @@ class _GameSetupSheetState extends State<GameSetupSheet> {
   // STEP 2: OPERATIONS
   Widget _buildStepOperations(GameColors colors) {
     final hasNoSelection = _selectedOperations.isEmpty;
+    final isCompact = context.isCompact;
 
     return Column(
       key: const ValueKey('step_1_ops'),
@@ -330,26 +359,55 @@ class _GameSetupSheetState extends State<GameSetupSheet> {
         ),
         const SizedBox(height: 14),
 
-        ...MathOperation.values.map((op) {
-          final isSelected = _selectedOperations.contains(op);
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: OptionCard(
-              title: '${op.label} (${op.symbol})',
-              icon: op.icon,
-              isSelected: isSelected,
-              onTap: () {
-                setState(() {
-                  if (isSelected) {
-                    _selectedOperations.remove(op);
-                  } else {
-                    _selectedOperations.add(op);
-                  }
-                });
-              },
-            ),
-          );
-        }),
+        if (isCompact) ...[
+          ...MathOperation.values.map((op) {
+            final isSelected = _selectedOperations.contains(op);
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: OptionCard(
+                title: '${op.label} (${op.symbol})',
+                icon: op.icon,
+                isSelected: isSelected,
+                onTap: () {
+                  setState(() {
+                    if (isSelected) {
+                      _selectedOperations.remove(op);
+                    } else {
+                      _selectedOperations.add(op);
+                    }
+                  });
+                },
+              ),
+            );
+          }),
+        ] else ...[
+          // 4.1 Qoidasi: Katta ekranda 2 ustunli grid
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 2.3,
+            children: MathOperation.values.map((op) {
+              final isSelected = _selectedOperations.contains(op);
+              return OptionCard(
+                title: '${op.label} (${op.symbol})',
+                icon: op.icon,
+                isSelected: isSelected,
+                onTap: () {
+                  setState(() {
+                    if (isSelected) {
+                      _selectedOperations.remove(op);
+                    } else {
+                      _selectedOperations.add(op);
+                    }
+                  });
+                },
+              );
+            }).toList(),
+          ),
+        ],
 
         if (hasNoSelection) ...[
           const SizedBox(height: 6),
@@ -375,6 +433,8 @@ class _GameSetupSheetState extends State<GameSetupSheet> {
 
   // STEP 3: NUMBER RANGE
   Widget _buildStepNumberRange(GameColors colors) {
+    final isCompact = context.isCompact;
+
     return Column(
       key: const ValueKey('step_2_range'),
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -394,25 +454,72 @@ class _GameSetupSheetState extends State<GameSetupSheet> {
         ),
         const SizedBox(height: 14),
 
-        ...NumberRange.values.map((range) {
-          final isSelected = _selectedRange == range;
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: OptionCard(
-              title: range.rangeText,
-              subtitle: range.label,
-              icon: Icons.pin_outlined,
-              isSelected: isSelected,
-              onTap: () => setState(() => _selectedRange = range),
-            ),
-          );
-        }),
+        if (isCompact) ...[
+          ...NumberRange.values.map((range) {
+            final isSelected = _selectedRange == range;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: OptionCard(
+                title: range.rangeText,
+                subtitle: range.label,
+                icon: Icons.pin_outlined,
+                isSelected: isSelected,
+                onTap: () => setState(() => _selectedRange = range),
+              ),
+            );
+          }),
+        ] else ...[
+          // 4.1 Qoidasi: Katta ekranda 3 ustunli grid
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 3,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 2.1,
+            children: NumberRange.values.map((range) {
+              final isSelected = _selectedRange == range;
+              return OptionCard(
+                title: range.rangeText,
+                subtitle: range.label,
+                icon: Icons.pin_outlined,
+                isSelected: isSelected,
+                onTap: () => setState(() => _selectedRange = range),
+              );
+            }).toList(),
+          ),
+        ],
       ],
     );
   }
 
   // STEP 4: TEAMS
   Widget _buildStepTeams(GameColors colors) {
+    final isCompact = context.isCompact;
+
+    final vsBadge = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.amber,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: const Text(
+        'VS',
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w900,
+          color: Colors.black87,
+        ),
+      ),
+    );
+
     return Column(
       key: const ValueKey('step_3_teams'),
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -432,54 +539,64 @@ class _GameSetupSheetState extends State<GameSetupSheet> {
         ),
         const SizedBox(height: 16),
 
-        // Team 1 Card (Blue)
-        _buildTeamNameCard(
-          teamNumber: 1,
-          label: '1-jamoa',
-          controller: _team1Ctrl,
-          color: colors.blueTeam,
-          bgColor: colors.blueTeamBg,
-          isDark: colors.isDark,
-        ),
+        if (isCompact) ...[
+          // Team 1 Card (Blue)
+          _buildTeamNameCard(
+            teamNumber: 1,
+            label: '1-jamoa',
+            controller: _team1Ctrl,
+            color: colors.blueTeam,
+            bgColor: colors.blueTeamBg,
+            isDark: colors.isDark,
+          ),
 
-        // Center VS Badge
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.amber,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 6,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: const Text(
-                'VS',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.black87,
+          // Center VS Badge
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Center(child: vsBadge),
+          ),
+
+          // Team 2 Card (Red)
+          _buildTeamNameCard(
+            teamNumber: 2,
+            label: '2-jamoa',
+            controller: _team2Ctrl,
+            color: colors.redTeam,
+            bgColor: colors.redTeamBg,
+            isDark: colors.isDark,
+          ),
+        ] else ...[
+          // Tablet / Desktop side-by-side layout
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: _buildTeamNameCard(
+                  teamNumber: 1,
+                  label: '1-jamoa',
+                  controller: _team1Ctrl,
+                  color: colors.blueTeam,
+                  bgColor: colors.blueTeamBg,
+                  isDark: colors.isDark,
                 ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: vsBadge,
+              ),
+              Expanded(
+                child: _buildTeamNameCard(
+                  teamNumber: 2,
+                  label: '2-jamoa',
+                  controller: _team2Ctrl,
+                  color: colors.redTeam,
+                  bgColor: colors.redTeamBg,
+                  isDark: colors.isDark,
+                ),
+              ),
+            ],
           ),
-        ),
-
-        // Team 2 Card (Red)
-        _buildTeamNameCard(
-          teamNumber: 2,
-          label: '2-jamoa',
-          controller: _team2Ctrl,
-          color: colors.redTeam,
-          bgColor: colors.redTeamBg,
-          isDark: colors.isDark,
-        ),
+        ],
 
         if (_teamError != null) ...[
           const SizedBox(height: 10),
