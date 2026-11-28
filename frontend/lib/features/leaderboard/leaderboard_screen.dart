@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/responsive/app_responsive_scaffold.dart';
+import '../../core/responsive/screen_size.dart';
 import '../../core/widgets/animated_math_background.dart';
 import '../../core/widgets/coin_icon.dart';
 import '../../core/widgets/xp_coin.dart';
@@ -348,7 +349,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    if (screenWidth < 600) {
+    if (context.isCompact) {
       return Scaffold(
         backgroundColor: colors.bg,
         extendBody: true,

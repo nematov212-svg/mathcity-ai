@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/responsive/app_responsive_scaffold.dart';
 import '../../core/responsive/responsive.dart';
+import '../../core/responsive/screen_size.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/animated_math_background.dart';
 import '../../core/widgets/kids_shell_layout.dart';
@@ -666,8 +667,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
 
     final joinedText = _formatJoinDate(student?.createdAt);
 
-    final screenWidth = MediaQuery.of(context).size.width;
-    if (screenWidth >= 600) {
+    if (!context.isCompact) {
       return _buildWideProfile(
         colors: colors,
         isDark: isDark,
