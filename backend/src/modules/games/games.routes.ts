@@ -7,12 +7,43 @@ import { MathEngine } from '../../utils/mathEngine.js';
 export const gamesRouter = Router();
 
 /**
+ * GET /api/games/status
+ * Returns daily game limit status (Tashkent UTC+5 midnight reset).
+ */
+gamesRouter.get('/status', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const data = repository.getDailyGameStatus(user.id);
+  return res.json({ success: true, data });
+});
+
+/**
+ * POST /api/games/:id/start & POST /api/games/start
+ * Checks daily limit and generates a verified game session.
+ */
+gamesRouter.post(['/start', '/:id/start'], authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const user = req.user!;
+  const gameId = String(req.params.id || req.body.gameId || req.body.gameKey || 'tezkor_hisob');
+  try {
+    const data = repository.startGameSession(user.id, gameId);
+    return res.json({ success: true, data });
+  } catch (err: any) {
+    const status = err.statusCode || 400;
+    return res.status(status).json({
+      success: false,
+      error: err.message || 'Xatolik yuz berdi',
+      isLimitReached: err.isLimitReached || false,
+    });
+  }
+});
+
+/**
  * GET /api/games
- * Returns list of games with real user stats (highScore, timesPlayed).
+ * Returns list of games with real user stats (highScore, timesPlayed, daily limit).
  */
 gamesRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
   const userGames = user.gameResults || [];
+  const status = repository.getDailyGameStatus(user.id);
 
   const getHighScore = (key: string) =>
     userGames.filter((g) => g.gameKey === key).reduce((max, g) => Math.max(max, g.score), 0);
@@ -20,6 +51,81 @@ gamesRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response) 
     userGames.filter((g) => g.gameKey === key).length;
 
   const games = [
+    {
+      key: 'tug_of_war',
+      title: 'Arqon tortish',
+      description: '2 jamoa bitta telefonda: misollarni tezroq yeching va arqonni torting!',
+      category: 'multiplayer_duel',
+      iconName: 'sports_kabaddi',
+      difficulty: 'Oson - Qiziqarli',
+      rewardCoins: 20,
+      rewardXP: 35,
+      highScore: getHighScore('tug_of_war'),
+      timesPlayed: getTimesPlayed('tug_of_war'),
+      isLocked: false,
+      route: '/kids/games/tug-of-war',
+      dailyLimit: status.games['tug_of_war'] || { used: 0, limit: status.isPro ? 999 : 1, remaining: 1, unlimited: status.isPro },
+    },
+    {
+      key: 'tezkor_hisob',
+      title: 'Tezkor hisob',
+      description: '60 soniya ichida imkon qadar ko‘p misol yeching va combo to‘plang!',
+      category: 'speed_math',
+      iconName: 'timer',
+      difficulty: 'Tezkor',
+      rewardCoins: 20,
+      rewardXP: 35,
+      highScore: getHighScore('tezkor_hisob'),
+      timesPlayed: getTimesPlayed('tezkor_hisob'),
+      isLocked: false,
+      route: '/kids/games/speed-math',
+      dailyLimit: status.games['tezkor_hisob'] || { used: 0, limit: status.isPro ? 999 : 1, remaining: 1, unlimited: status.isPro },
+    },
+    {
+      key: 'xotira_kartalari',
+      title: 'Xotira kartalari',
+      description: 'Misol va javob kartalarini juftlang, xotirangizni charxlang!',
+      category: 'memory_match',
+      iconName: 'style',
+      difficulty: 'Oson - Fikrlovchi',
+      rewardCoins: 20,
+      rewardXP: 35,
+      highScore: getHighScore('xotira_kartalari'),
+      timesPlayed: getTimesPlayed('xotira_kartalari'),
+      isLocked: false,
+      route: '/kids/games/memory-cards',
+      dailyLimit: status.games['xotira_kartalari'] || { used: 0, limit: status.isPro ? 999 : 1, remaining: 1, unlimited: status.isPro },
+    },
+    {
+      key: 'raqamlar_labirinti',
+      title: 'Raqamlar labirinti',
+      description: 'To‘g‘ri javobli yo‘lni tanlab labirintdan chiqing! 3 ta jon.',
+      category: 'maze_puzzle',
+      iconName: 'explore',
+      difficulty: 'Mantiqiy',
+      rewardCoins: 20,
+      rewardXP: 35,
+      highScore: getHighScore('raqamlar_labirinti'),
+      timesPlayed: getTimesPlayed('raqamlar_labirinti'),
+      isLocked: false,
+      route: '/kids/games/number-maze',
+      dailyLimit: status.games['raqamlar_labirinti'] || { used: 0, limit: status.isPro ? 999 : 1, remaining: 1, unlimited: status.isPro },
+    },
+    {
+      key: 'matematik_duel',
+      title: 'Matematik duel',
+      description: '1v1 bitta telefonda yoki botga qarshi 10 raundlik shiddatli jang!',
+      category: 'battle_1v1',
+      iconName: 'flash_on',
+      difficulty: 'Bellashuv',
+      rewardCoins: 20,
+      rewardXP: 35,
+      highScore: getHighScore('matematik_duel'),
+      timesPlayed: getTimesPlayed('matematik_duel'),
+      isLocked: false,
+      route: '/kids/games/math-duel',
+      dailyLimit: status.games['matematik_duel'] || { used: 0, limit: status.isPro ? 999 : 1, remaining: 1, unlimited: status.isPro },
+    },
     {
       key: 'uy_qurish',
       title: 'Uy qurish',
@@ -32,32 +138,8 @@ gamesRouter.get('/', authMiddleware, (req: AuthenticatedRequest, res: Response) 
       highScore: user.houseBuildingProgress?.currentStage || 0,
       timesPlayed: user.houseBuildingProgress?.completedStages?.length || 0,
       isLocked: false,
-    },
-    {
-      key: 'kasrlar_jangi',
-      title: 'Kasrlar jangi',
-      description: 'Kasrlarni vizual shakllar bilan taqqoslang va fazoni zabt eting.',
-      category: 'fractions',
-      iconName: 'pie_chart',
-      difficulty: 'O‘rta',
-      rewardCoins: 15,
-      rewardXP: 50,
-      highScore: getHighScore('kasrlar_jangi'),
-      timesPlayed: getTimesPlayed('kasrlar_jangi'),
-      isLocked: false,
-    },
-    {
-      key: 'mathcity_drift',
-      title: 'MathCity Drift: 3D Poyga & Garaj',
-      description: '10 ta sport mashinasi, 3D shahar, drift fizikasi, real to‘qnashuv deformatsiyasi va ovozlar!',
-      category: '3d_driving',
-      iconName: 'directions_car',
-      difficulty: 'Poyga / Simulyator',
-      rewardCoins: 25,
-      rewardXP: 80,
-      highScore: getHighScore('mathcity_drift'),
-      timesPlayed: getTimesPlayed('mathcity_drift'),
-      isLocked: false,
+      route: '/kids/house-building',
+      dailyLimit: { used: 0, limit: 999, remaining: 999, unlimited: true },
     },
   ];
 
@@ -230,9 +312,15 @@ gamesRouter.post('/house-building/build', authMiddleware, (req: AuthenticatedReq
 });
 
 const finishGameSchema = z.object({
+  gameId: z.string().optional(),
   gameKey: z.string().optional(),
-  score: z.number().int().min(0),
+  sessionId: z.string().optional(),
+  result: z.enum(['win', 'draw', 'loss', 'participated']).optional(),
+  score: z.number().int().min(0).default(0),
   durationSeconds: z.number().int().min(0).default(30),
+  moves: z.number().int().optional(),
+  correctAnswers: z.number().int().optional(),
+  totalQuestions: z.number().int().optional(),
 });
 
 /**
@@ -247,11 +335,28 @@ gamesRouter.post(['/finish', '/:key/finish', '/:key/result'], authMiddleware, (r
     return res.status(400).json({ success: false, error: 'O‘yin natijasi ma’lumotlari noto‘g‘ri.' });
   }
 
-  const gameKey = String(req.params.key || parse.data.gameKey || 'kosmik_hisob');
-  const { score, durationSeconds } = parse.data;
+  const gameKey = String(req.params.key || parse.data.gameId || parse.data.gameKey || 'tezkor_hisob');
+  const { score, durationSeconds, sessionId, result, moves, correctAnswers, totalQuestions } = parse.data;
 
-  const result = repository.finishGame(user.id, gameKey, score, durationSeconds);
-  return res.json({ success: true, data: result });
+  try {
+    const data = repository.finishGameSession(user.id, gameKey, {
+      sessionId,
+      result,
+      score,
+      durationSeconds,
+      moves,
+      correctAnswers,
+      totalQuestions,
+    });
+    return res.json({ success: true, data });
+  } catch (err: any) {
+    const status = err.statusCode || 400;
+    return res.status(status).json({
+      success: false,
+      error: err.message || 'Xatolik yuz berdi',
+      isLimitReached: err.isLimitReached || false,
+    });
+  }
 });
 
 gamesRouter.get('/kosmik-hisob/question', authMiddleware, (req: AuthenticatedRequest, res: Response) => {

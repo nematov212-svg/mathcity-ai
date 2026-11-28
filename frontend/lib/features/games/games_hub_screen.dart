@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,9 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../core/network/api_client.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/coin_badge.dart';
-import '../../core/widgets/kids_shell_layout.dart';
-import '../../core/widgets/mathcity_bottom_nav.dart';
 import '../../shared/providers/student_provider.dart';
+import 'models/game_config.dart';
+import 'screens/game_setup_sheet.dart';
 
 class GamesHubScreen extends ConsumerStatefulWidget {
   const GamesHubScreen({super.key});
@@ -19,121 +18,241 @@ class GamesHubScreen extends ConsumerStatefulWidget {
 
 class _GamesHubScreenState extends ConsumerState<GamesHubScreen>
     with SingleTickerProviderStateMixin {
-  String _selectedFilter = 'Barchasi'; // 'Barchasi', 'Oson', 'O‘rta', 'Qiyin'
-  List<Map<String, dynamic>> _games = [];
-  List<Map<String, dynamic>> _recentResults = [];
-  bool _isLoading = false;
+  bool _isLoading = true;
+  bool _isPro = false;
+  Map<String, dynamic> _gameLimits = {};
 
-  late AnimationController _floatController;
+  late final AnimationController _staggerController;
+
+  final List<Map<String, dynamic>> _catalog = [
+    {
+      'id': 'tug_of_war',
+      'title': 'Arqon tortish',
+      'description': '2 jamoa bitta telefonda',
+      'rewardBadge': '+20 coin',
+      'icon': Icons.sports_kabaddi_rounded,
+      'gradient': [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+      'route': '/kids/games/tug-of-war',
+    },
+    {
+      'id': 'tezkor_hisob',
+      'title': 'Tezkor hisob',
+      'description': '60s • Combo ko‘paytiruvchi',
+      'rewardBadge': '+20 coin',
+      'icon': Icons.timer_rounded,
+      'gradient': [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+      'route': '/kids/games/speed-math',
+    },
+    {
+      'id': 'xotira_kartalari',
+      'title': 'Xotira kartalari',
+      'description': 'Misol va javob juftligi',
+      'rewardBadge': '+20 coin',
+      'icon': Icons.style_rounded,
+      'gradient': [Color(0xFF10B981), Color(0xFF059669)],
+      'route': '/kids/games/memory-cards',
+    },
+    {
+      'id': 'raqamlar_labirinti',
+      'title': 'Raqamlar labirinti',
+      'description': '5 darvoza • 3 ta jon',
+      'rewardBadge': '+20 coin',
+      'icon': Icons.explore_rounded,
+      'gradient': [Color(0xFFF59E0B), Color(0xFFD97706)],
+      'route': '/kids/games/number-maze',
+    },
+    {
+      'id': 'matematik_duel',
+      'title': 'Matematik duel',
+      'description': '1v1 duel yoki Botga qarshi',
+      'rewardBadge': '+20 coin',
+      'icon': Icons.flash_on_rounded,
+      'gradient': [Color(0xFFEF4444), Color(0xFFDC2626)],
+      'route': '/kids/games/math-duel',
+    },
+    {
+      'id': 'uy_qurish',
+      'title': 'Uy qurish',
+      'description': '6 bosqichli 3D orzu uyi',
+      'rewardBadge': '+680 XP',
+      'icon': Icons.home_work_rounded,
+      'gradient': [Color(0xFF0D9488), Color(0xFF0F766E)],
+      'route': '/kids/house-building',
+      'unlimitedAlways': true,
+    },
+  ];
 
   @override
   void initState() {
     super.initState();
-    _floatController = AnimationController(
+    _staggerController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2500),
-    )..repeat(reverse: true);
+      duration: const Duration(milliseconds: 700),
+    );
 
-    _loadGamesData();
+    _loadStatus();
   }
 
   @override
   void dispose() {
-    _floatController.dispose();
+    _staggerController.dispose();
     super.dispose();
   }
 
-  Future<void> _loadGamesData() async {
+  Future<void> _loadStatus() async {
     if (WidgetsBinding.instance.runtimeType.toString().contains('Test')) {
+      setState(() {
+        _isLoading = false;
+        _isPro = false;
+      });
+      _staggerController.forward();
       return;
     }
-    try {
-      final gamesRes = await ApiClient().dio.get('/games');
-      final recentRes = await ApiClient().dio.get('/games/results/recent');
 
-      if (!mounted) return;
-      setState(() {
-        if (gamesRes.data['success'] == true) {
-          _games = List<Map<String, dynamic>>.from(gamesRes.data['data']);
+    try {
+      final res = await ApiClient().dio.get('/games/status');
+      if (res.data['success'] == true) {
+        final d = res.data['data'];
+        if (mounted) {
+          setState(() {
+            _isPro = d['isPro'] == true;
+            _gameLimits = Map<String, dynamic>.from(d['games'] ?? {});
+            _isLoading = false;
+          });
+          _staggerController.forward(from: 0.0);
         }
-        if (recentRes.data['success'] == true) {
-          _recentResults =
-              List<Map<String, dynamic>>.from(recentRes.data['data']);
-        }
-        _isLoading = false;
-      });
-    } catch (_) {
-      if (mounted) setState(() => _isLoading = false);
+        return;
+      }
+    } catch (_) {}
+
+    if (mounted) {
+      setState(() => _isLoading = false);
+      _staggerController.forward();
     }
   }
 
-  List<Map<String, dynamic>> get _filteredGames {
-    if (_games.isEmpty) {
-      return [
-        {
-          'key': 'uy_qurish',
-          'title': 'Uy qurish',
-          'description':
-              'Misollar yechib tanga to‘plang va orzuingizdagi uyni 6 bosqichda quring!',
-          'difficulty': 'Oson - Maroqli',
-          'duration': 'Cheksiz',
-          'rewardBadge': '+680 XP',
-          'rewardCoins': 0,
-          'rewardXP': 680,
-          'highScore': 0,
-          'timesPlayed': 0,
-          'route': '/kids/house-building',
-          'icon': Icons.home_work_rounded,
-          'gradient': const [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
-        },
-        {
-          'key': 'kasrlar_jangi',
-          'title': 'Kasrlar jangi',
-          'description':
-              'Kasrlarni vizual shakllar bilan taqqoslang va fazoni zabt eting.',
-          'difficulty': 'O‘rta',
-          'duration': '4 daqiqa',
-          'rewardBadge': '+40 oltin tanga',
-          'rewardCoins': 15,
-          'rewardXP': 50,
-          'highScore': 0,
-          'timesPlayed': 0,
-          'route': '/kids/games/fraction-battle',
-          'icon': Icons.pie_chart_rounded,
-          'gradient': const [Color(0xFF10B981), Color(0xFF059669)],
-        },
-        {
-          'key': 'mathcity_drift',
-          'title': 'MathCity Drift: 3D Poyga & Garaj',
-          'description':
-              '10+ mashina, real deformatsiya, kuchli dvigatel ovozi va drift reytingi!',
-          'difficulty': 'O‘rta - Qiyin',
-          'duration': 'Cheksiz',
-          'rewardBadge': '+50 oltin tanga',
-          'rewardCoins': 40,
-          'rewardXP': 80,
-          'highScore': 0,
-          'timesPlayed': 0,
-          'route': '/kids/games/drift-car',
-          'icon': Icons.sports_motorsports_rounded,
-          'gradient': const [Color(0xFFF43F5E), Color(0xFFEA580C)],
-        },
-      ];
+  void _onGameTap(Map<String, dynamic> game) {
+    HapticFeedback.lightImpact();
+
+    final gameId = game['id'] as String;
+    final isAlwaysUnlimited = game['unlimitedAlways'] == true;
+
+    final limitInfo = _gameLimits[gameId] as Map<String, dynamic>?;
+    final remaining = isAlwaysUnlimited || _isPro
+        ? 999
+        : (limitInfo?['remaining'] as int? ?? 1);
+
+    if (remaining <= 0 && !_isPro && !isAlwaysUnlimited) {
+      // Limit exhausted -> Prompt Pro
+      _showLimitExhaustedSheet(game);
+      return;
     }
 
-    return _games.where((g) {
-      if (_selectedFilter == 'Barchasi') return true;
-      if (_selectedFilter == 'Oson') {
-        return (g['difficulty'] as String? ?? '').contains('Oson');
-      }
-      if (_selectedFilter == 'O‘rta') {
-        return (g['difficulty'] as String? ?? '').contains('O‘rta');
-      }
-      if (_selectedFilter == 'Qiyin') {
-        return (g['difficulty'] as String? ?? '').contains('Qiyin');
-      }
-      return true;
-    }).toList();
+    if (gameId == 'tug_of_war') {
+      GameSetupSheet.show(
+        context,
+        initialConfig: const GameConfig(),
+        onStartGame: (config) {
+          context.push('/kids/games/tug-of-war', extra: config).then((_) {
+            _loadStatus();
+          });
+        },
+      );
+    } else {
+      context.push(game['route'] as String).then((_) {
+        _loadStatus();
+      });
+    }
+  }
+
+  void _showLimitExhaustedSheet(Map<String, dynamic> game) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        final colors = AppThemeColors.of(ctx);
+        return Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: colors.card,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(26)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.lock_rounded,
+                  color: Color(0xFFD97706),
+                  size: 32,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                'Bugungi bepul limit tugadi (0/1)',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: colors.ink,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                '«${game['title']}» o‘yinini ertaga yana bepul o‘ynashingiz mumkin. Yoki MathCity Pro obunasi bilan hoziroq cheksiz o‘ynang!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: colors.muted,
+                  height: 1.35,
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  context.push('/kids/pro');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8B5CF6),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  minimumSize: const Size(double.infinity, 48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.stars_rounded, color: Color(0xFFFFD700), size: 20),
+                    SizedBox(width: 8),
+                    Text(
+                      'MathCity Pro ga ulanish',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text('Ertaga qaytaman', style: TextStyle(color: colors.muted)),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -144,543 +263,302 @@ class _GamesHubScreenState extends ConsumerState<GamesHubScreen>
 
     return Scaffold(
       backgroundColor: colors.bg,
-      body: SafeArea(
-        child: Stack(
+      appBar: AppBar(
+        backgroundColor: colors.card,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_rounded, color: colors.ink),
+          onPressed: () => context.pop(),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              children: [
-                // Top App Bar
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 38,
-                            height: 38,
-                            decoration: BoxDecoration(
-                              color: colors.primary.withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(Icons.sports_esports_rounded,
-                                color: colors.primary, size: 22),
-                          ),
-                          const SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'O‘yinlar',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w900,
-                                  color: colors.ink,
-                                  letterSpacing: -0.3,
-                                ),
-                              ),
-                              Text(
-                                'O‘yna, o‘rgan va tangalar yut!',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: colors.muted,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      CoinBadge(count: coinBalance, size: 22),
-                    ],
-                  ),
-                ),
-
-                // Scrollable Content
-                Expanded(
-                  child: _isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : RefreshIndicator(
-                          onRefresh: _loadGamesData,
-                          child: ListView(
-                            padding: const EdgeInsets.fromLTRB(
-                                20, 8, 20, 110), // Padding for glass bottom bar
-                            children: [
-                              // Hero Banner
-                              _buildHeroBanner(colors),
-
-                              const SizedBox(height: 24),
-
-                              // Filter Chips Row
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'O‘yinni tanlang',
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w800,
-                                      color: colors.ink,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${_filteredGames.length} ta o‘yin',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: colors.muted,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(height: 12),
-
-                              _buildFilterPills(colors),
-
-                              const SizedBox(height: 16),
-
-                              // Game Cards
-                              AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 300),
-                                child: Column(
-                                  key: ValueKey(_selectedFilter),
-                                  children: _filteredGames.map((game) {
-                                    return _buildGameCard(game, colors);
-                                  }).toList(),
-                                ),
-                              ),
-
-                              // Recent Results Section
-                              if (_recentResults.isNotEmpty) ...[
-                                const SizedBox(height: 28),
-                                Text(
-                                  'So‘nggi natijalar',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w800,
-                                    color: colors.ink,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                ..._recentResults.map(
-                                    (r) => _buildRecentResultTile(r, colors)),
-                              ],
-
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                ),
-              ],
-            ),
-
-            // Glass Bottom Navigation Bar (Fallback for standalone render)
-            if (!KidsNavShellScope.of(context))
-              const Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: MathCityBottomNav(currentIndex: 3),
+            Text(
+              'Math Games',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                color: colors.ink,
+                letterSpacing: -0.3,
               ),
+            ),
+            Text(
+              'O‘yna • Coin yig‘',
+              style: TextStyle(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+                color: colors.muted,
+              ),
+            ),
           ],
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: CoinBadge(count: coinBalance, size: 22),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : RefreshIndicator(
+                onRefresh: _loadStatus,
+                child: GridView.builder(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.72,
+                  ),
+                  itemCount: _catalog.length,
+                  itemBuilder: (context, index) {
+                    final game = _catalog[index];
+                    return _buildStaggeredCard(game, index, colors);
+                  },
+                ),
+              ),
       ),
     );
   }
 
-  Widget _buildHeroBanner(AppThemeColors colors) {
-    return Container(
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF6C47FF), Color(0xFF8B6BFF), Color(0xFF5E39EE)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF6C47FF).withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Text(
-                  'O‘YNA • O‘RGAN • YUT',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'Matematika\no‘yinlari',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
-                  height: 1.15,
-                  letterSpacing: -0.4,
-                ),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                'Bilimingizni sinang,\ntangalar va XP yuting!',
-                style: TextStyle(
-                  color: Color(0xFFE2DCFF),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  height: 1.3,
-                ),
-              ),
-            ],
-          ),
+  Widget _buildStaggeredCard(
+    Map<String, dynamic> game,
+    int index,
+    AppThemeColors colors,
+  ) {
+    final start = (index * 0.1).clamp(0.0, 0.7);
+    final end = (start + 0.4).clamp(0.0, 1.0);
 
-          // Floating Rocket Artwork with soft glow (Zero ugly borders!)
-          Positioned(
-            right: 0,
-            top: -10,
-            bottom: -10,
-            child: AnimatedBuilder(
-              animation: _floatController,
-              builder: (context, child) {
-                final offset =
-                    math.sin(_floatController.value * math.pi * 2) * 6.0;
-                return Transform.translate(
-                  offset: Offset(0, offset),
-                  child: child,
-                );
-              },
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.12),
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.rocket_launch_rounded,
-                    size: 58,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+    final animation = CurvedAnimation(
+      parent: _staggerController,
+      curve: Interval(start, end, curve: Curves.easeOutCubic),
     );
-  }
 
-  Widget _buildFilterPills(AppThemeColors colors) {
-    const filters = ['Barchasi', 'Oson', 'O‘rta', 'Qiyin'];
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: filters.map((f) {
-          final isSelected = _selectedFilter == f;
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: InkWell(
-              onTap: () {
-                HapticFeedback.selectionClick();
-                setState(() => _selectedFilter = f);
-              },
-              borderRadius: BorderRadius.circular(16),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: isSelected ? colors.primary : colors.card,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: isSelected ? colors.primary : colors.border,
-                    width: 1.2,
-                  ),
-                ),
-                child: Text(
-                  f,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                    color: isSelected ? Colors.white : colors.muted,
-                  ),
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, (1.0 - animation.value) * 36),
+          child: Opacity(
+            opacity: animation.value.clamp(0.0, 1.0),
+            child: child,
+          ),
+        );
+      },
+      child: _buildGameCard(game, colors),
     );
   }
 
   Widget _buildGameCard(Map<String, dynamic> game, AppThemeColors colors) {
-    final title = game['title'] ?? 'O‘yin';
-    final desc = game['description'] ?? '';
-    final diff = game['difficulty'] ?? 'O‘rta';
-    final rewardBadge = game['rewardBadge'] as String? ??
-        (game['key'] == 'kasrlar_jangi'
-            ? '+40 oltin tanga'
-            : '+30 oltin tanga');
-    final highScore = game['highScore'] ?? 0;
-    final timesPlayed = game['timesPlayed'] ?? 0;
-    final key = game['key'] ?? '';
-    final route = key == 'kasrlar_jangi'
-        ? '/kids/games/fraction-battle'
-        : (key == 'mathcity_drift'
-            ? '/kids/games/drift-car'
-            : '/kids/house-building');
-    final isLocked = game['isLocked'] == true;
+    final gameId = game['id'] as String;
+    final isAlwaysUnlimited = game['unlimitedAlways'] == true;
+    final List<Color> gradient = game['gradient'] as List<Color>;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: colors.card,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: colors.border, width: 1.2),
-        boxShadow: [
-          BoxShadow(
-            color: colors.ink.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+    final limitInfo = _gameLimits[gameId] as Map<String, dynamic>?;
+    final remaining = isAlwaysUnlimited || _isPro
+        ? 999
+        : (limitInfo?['remaining'] as int? ?? 1);
+
+    final isLimitReached = remaining <= 0 && !_isPro && !isAlwaysUnlimited;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => _onGameTap(game),
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            color: colors.card,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isLimitReached
+                  ? const Color(0xFFEF4444).withValues(alpha: 0.3)
+                  : colors.border,
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: colors.isDark ? 0.30 : 0.08),
+                blurRadius: 14,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Top Icon & Badge Header
               Container(
-                width: 52,
-                height: 52,
+                height: 82,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: key == 'kasrlar_jangi'
-                        ? const [Color(0xFF10B981), Color(0xFF059669)]
-                        : (key == 'mathcity_drift'
-                            ? const [Color(0xFFF43F5E), Color(0xFFEA580C)]
-                            : const [Color(0xFF6C47FF), Color(0xFF8B6BFF)]),
+                    colors: gradient,
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
                 ),
-                child: Icon(
-                  key == 'kasrlar_jangi'
-                      ? Icons.pie_chart_rounded
-                      : (key == 'mathcity_drift'
-                          ? Icons.sports_motorsports_rounded
-                          : Icons.rocket_launch_rounded),
-                  color: Colors.white,
-                  size: 28,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Icon(
+                        game['icon'] as IconData,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                    ),
+                    // Reward chip
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          game['rewardBadge'] as String,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Pro / Lock badge if limit reached
+                    if (isLimitReached)
+                      Positioned(
+                        top: 8,
+                        left: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEF4444),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.lock_rounded, color: Colors.white, size: 10),
+                              SizedBox(width: 3),
+                              Text(
+                                'PRO',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 9.5,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 14),
-              Expanded(
+
+              // Title and Description
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      game['title'] as String,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
                         color: colors.ink,
                       ),
                     ),
                     const SizedBox(height: 2),
+                    Text(
+                      game['description'] as String,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w500,
+                        color: colors.muted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Spacer(),
+
+              // Bottom Limit & Start Button
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                child: Column(
+                  children: [
+                    // Limit text
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '$diff  •  ',
+                          'Kunlik limit:',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 10,
                             fontWeight: FontWeight.w600,
                             color: colors.muted,
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFEF3C7),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            rewardBadge,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFFD97706),
-                            ),
+                        Text(
+                          _isPro || isAlwaysUnlimited
+                              ? 'Cheksiz ∞'
+                              : '$remaining/1',
+                          style: TextStyle(
+                            fontSize: 10.5,
+                            fontWeight: FontWeight.w900,
+                            color: isLimitReached
+                                ? const Color(0xFFEF4444)
+                                : const Color(0xFF10B981),
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            desc,
-            style: TextStyle(fontSize: 13, color: colors.muted, height: 1.3),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Eng yaxshi: $highScore ball',
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: colors.ink),
-                  ),
-                  Text(
-                    'O‘ynalgan: $timesPlayed marta',
-                    style: TextStyle(fontSize: 11, color: colors.muted),
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isLocked ? colors.field : colors.primary,
-                  foregroundColor: isLocked ? colors.muted : Colors.white,
-                  elevation: isLocked ? 0 : 2,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                ),
-                onPressed: isLocked
-                    ? null
-                    : () {
-                        HapticFeedback.lightImpact();
-                        context.push(route);
-                      },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                        isLocked
-                            ? Icons.lock_rounded
-                            : Icons.play_arrow_rounded,
-                        size: 18),
-                    const SizedBox(width: 6),
-                    Text(
-                      isLocked ? '5-bosqichda' : 'O‘ynash',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w800, fontSize: 13),
+                    const SizedBox(height: 6),
+
+                    // Action Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 32,
+                      child: ElevatedButton(
+                        onPressed: () => _onGameTap(game),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isLimitReached
+                              ? (colors.border)
+                              : gradient.first,
+                          elevation: 0,
+                          padding: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          isLimitReached ? 'Pro bilan cheksiz' : 'Boshlash',
+                          style: TextStyle(
+                            color: isLimitReached ? colors.muted : Colors.white,
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
             ],
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecentResultTile(Map<String, dynamic> r, AppThemeColors colors) {
-    final title = r['title'] ?? 'O‘yin';
-    final score = r['score'] ?? 0;
-    final coinsEarned = r['coinsEarned'] ?? 0;
-    final playedAt = r['playedAt'] as String?;
-    String dateStr = 'Bugun';
-    if (playedAt != null) {
-      try {
-        final dt = DateTime.parse(playedAt);
-        dateStr =
-            '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
-      } catch (_) {}
-    }
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: colors.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colors.border),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFF7ED),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.emoji_events_rounded,
-                    color: Color(0xFFF59E0B), size: 18),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: colors.ink),
-                  ),
-                  Text(
-                    '$dateStr · $score ball',
-                    style: TextStyle(fontSize: 12, color: colors.muted),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFFE1F6EC),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              '+$coinsEarned tanga',
-              style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFF10B981)),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

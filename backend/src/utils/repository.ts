@@ -178,6 +178,11 @@ export interface UserAccount {
     xpEarned: number;
     playedAt: string;
   }>;
+  dailyGamePlays?: {
+    date: string; // YYYY-MM-DD
+    plays: { [gameKey: string]: number };
+    dailyCoinsEarned: number;
+  };
   createdAt: string;
   newUserDiscountUsedAt?: string | null;
   dismissedAnnouncements?: { [announcementId: string]: string };
@@ -471,6 +476,7 @@ class DataRepository {
   ];
 
   private houseCatalog: HouseCatalogItem[] = [...INITIAL_HOUSE_CATALOG];
+  public activeGameSessions = new Map<string, { sessionId: string; userId: string; gameId: string; startedAt: number; completed: boolean }>();
 
   constructor() { }
 
@@ -3411,8 +3417,227 @@ class DataRepository {
     if (!user) return [];
     return (user.gameResults || []).slice(0, 3).map((g) => ({
       ...g,
-      title: g.gameKey === 'uy_qurish' ? 'Uy qurish' : g.gameKey === 'kosmik_hisob' ? 'Kosmik hisob' : 'Kasrlar jangi',
+      title: this.getGameTitle(g.gameKey),
     }));
+  }
+
+  // --- MathCity 5 Games: Status, Limits, Sessions & Rewards ---
+
+  getTashkentDateString(date: Date = new Date()): string {
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Tashkent',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    return formatter.format(date); // "YYYY-MM-DD"
+  }
+
+  getGameTitle(gameId: string): string {
+    const titles: Record<string, string> = {
+      tug_of_war: 'Arqon tortish',
+      tezkor_hisob: 'Tezkor hisob',
+      xotira_kartalari: 'Xotira kartalari',
+      raqamlar_labirinti: 'Raqamlar labirinti',
+      matematik_duel: 'Matematik duel',
+      uy_qurish: 'Uy qurish',
+      kasrlar_jangi: 'Kasrlar jangi',
+      mathcity_drift: 'MathCity Drift',
+    };
+    return titles[gameId] || gameId;
+  }
+
+  getDailyGameStatus(userId: string) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    const isPro = !!(user && (user.subscription?.status === 'PRO_ACTIVE' || (user as any).isPro));
+    const today = this.getTashkentDateString();
+
+    if (!user.dailyGamePlays || user.dailyGamePlays.date !== today) {
+      user.dailyGamePlays = {
+        date: today,
+        plays: {},
+        dailyCoinsEarned: 0,
+      };
+      this.updateUser(user.id, { dailyGamePlays: user.dailyGamePlays });
+    }
+
+    const standardGames = [
+      'tug_of_war',
+      'tezkor_hisob',
+      'xotira_kartalari',
+      'raqamlar_labirinti',
+      'matematik_duel',
+    ];
+
+    const gamesStatus: Record<string, { used: number; limit: number; remaining: number; unlimited: boolean }> = {};
+
+    for (const key of standardGames) {
+      const used = user.dailyGamePlays.plays[key] || 0;
+      const limit = isPro ? 999 : 1;
+      const remaining = isPro ? 999 : Math.max(0, 1 - used);
+      gamesStatus[key] = {
+        used,
+        limit,
+        remaining,
+        unlimited: isPro,
+      };
+    }
+
+    return {
+      isPro,
+      date: today,
+      timezone: 'Asia/Tashkent (UTC+5)',
+      dailyCoinsEarned: user.dailyGamePlays.dailyCoinsEarned || 0,
+      dailyCoinsCap: 100,
+      games: gamesStatus,
+    };
+  }
+
+  startGameSession(userId: string, gameId: string) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    const status = this.getDailyGameStatus(userId);
+    const gameStatus = status.games[gameId] || { used: 0, limit: 1, remaining: 1, unlimited: status.isPro };
+
+    if (!status.isPro && gameStatus.used >= gameStatus.limit) {
+      const err: any = new Error('Bugungi bepul urinishingiz tugadi. Pro tarifida cheksiz o‘ynang!');
+      err.statusCode = 403;
+      err.isLimitReached = true;
+      throw err;
+    }
+
+    const sessionId = `gs_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+    this.activeGameSessions.set(sessionId, {
+      sessionId,
+      userId,
+      gameId,
+      startedAt: Date.now(),
+      completed: false,
+    });
+
+    return {
+      sessionId,
+      gameId,
+      startedAt: Date.now(),
+      remaining: gameStatus.remaining,
+      unlimited: status.isPro,
+    };
+  }
+
+  finishGameSession(
+    userId: string,
+    gameId: string,
+    params: {
+      sessionId?: string;
+      result?: 'win' | 'draw' | 'loss' | 'participated';
+      score: number;
+      durationSeconds?: number;
+      moves?: number;
+      correctAnswers?: number;
+      totalQuestions?: number;
+    }
+  ) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('Foydalanuvchi topilmadi');
+
+    const status = this.getDailyGameStatus(userId);
+    const isPro = status.isPro;
+    const gameStatus = status.games[gameId] || { used: 0, limit: 1, remaining: 1, unlimited: isPro };
+
+    // Anti-cheat verification
+    if (params.sessionId) {
+      const session = this.activeGameSessions.get(params.sessionId);
+      if (session) {
+        if (session.completed) {
+          const err: any = new Error('Ushbu o‘yin sessiyasi allaqachon yakunlangan!');
+          err.statusCode = 400;
+          throw err;
+        }
+        if (session.userId !== userId || session.gameId !== gameId) {
+          const err: any = new Error('O‘yin sessiyasi ma’lumotlari mos kelmadi!');
+          err.statusCode = 403;
+          throw err;
+        }
+        session.completed = true;
+      }
+    }
+
+    // Free limit check if playing without a pre-validated session
+    if (!isPro && gameStatus.used >= gameStatus.limit && !params.sessionId) {
+      const err: any = new Error('Bugungi bepul urinishingiz tugadi. Pro tarifida cheksiz o‘ynang!');
+      err.statusCode = 403;
+      err.isLimitReached = true;
+      throw err;
+    }
+
+    // Coin award: win: +20, draw: +10, loss/participated: +5
+    const resType = params.result || (params.score >= 10 ? 'win' : params.score >= 5 ? 'draw' : 'participated');
+    let baseCoins = 5;
+    let baseXP = 15;
+    if (resType === 'win') {
+      baseCoins = 20;
+      baseXP = 35;
+    } else if (resType === 'draw') {
+      baseCoins = 10;
+      baseXP = 25;
+    }
+
+    // Daily coin cap check (max 100 coins per day from games to prevent bot farming)
+    const currentDailyCoins = user.dailyGamePlays!.dailyCoinsEarned || 0;
+    const coinsEarned = Math.max(0, Math.min(baseCoins, 100 - currentDailyCoins));
+
+    if (coinsEarned > 0) {
+      this.creditCoins(
+        userId,
+        coinsEarned,
+        `«${this.getGameTitle(gameId)}» o‘yini (${resType === 'win' ? 'G‘alaba' : resType === 'draw' ? 'Durang' : 'Ishtirok'})`
+      );
+    }
+    if (baseXP > 0) {
+      this.addXP(userId, baseXP);
+    }
+
+    // Increment play count & coins earned
+    user.dailyGamePlays!.plays[gameId] = (user.dailyGamePlays!.plays[gameId] || 0) + 1;
+    user.dailyGamePlays!.dailyCoinsEarned = currentDailyCoins + coinsEarned;
+
+    // Record game result in user history
+    user.gameResults = user.gameResults || [];
+    user.gameResults.unshift({
+      id: `gr_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      gameKey: gameId,
+      score: params.score,
+      coinsEarned,
+      xpEarned: baseXP,
+      playedAt: new Date().toISOString(),
+    });
+    if (user.gameResults.length > 20) {
+      user.gameResults = user.gameResults.slice(0, 20);
+    }
+
+    this.advanceMissionProgress(userId, 'PLAY_GAME', 1);
+    this.updateUser(user.id, {
+      dailyGamePlays: user.dailyGamePlays,
+      gameResults: user.gameResults,
+    });
+
+    const remaining = isPro ? 999 : Math.max(0, 1 - user.dailyGamePlays!.plays[gameId]);
+
+    return {
+      success: true,
+      gameId,
+      result: resType,
+      score: params.score,
+      coinsAwarded: coinsEarned,
+      xpAwarded: baseXP,
+      newCoinBalance: user.coinBalance,
+      newTotalXP: user.totalXP,
+      remaining,
+      unlimited: isPro,
+    };
   }
 
   // --- House Building Game ---

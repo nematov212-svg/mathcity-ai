@@ -26,6 +26,10 @@ import '../features/games/fraction_battle_game_screen.dart';
 import '../features/games/drift_car_game_screen.dart';
 import '../features/games/game_result_screen.dart';
 import '../features/games/screens/tug_of_war_screen.dart';
+import '../features/games/speed_math/speed_math_screen.dart';
+import '../features/games/memory_cards/memory_cards_screen.dart';
+import '../features/games/number_maze/number_maze_screen.dart';
+import '../features/games/math_duel/math_duel_screen.dart';
 import '../features/games/models/game_config.dart';
 import '../features/ai_teacher/ziyo_tutor_screen.dart';
 import '../features/ai_teacher/teen_ziyo_tutor_screen.dart';
@@ -178,6 +182,22 @@ final GoRouter appRouter = GoRouter(
             ? state.extra as GameConfig
             : const GameConfig(),
       ),
+    ),
+    GoRoute(
+      path: '/kids/games/speed-math',
+      builder: (context, state) => const SpeedMathScreen(),
+    ),
+    GoRoute(
+      path: '/kids/games/memory-cards',
+      builder: (context, state) => const MemoryCardsScreen(),
+    ),
+    GoRoute(
+      path: '/kids/games/number-maze',
+      builder: (context, state) => const NumberMazeScreen(),
+    ),
+    GoRoute(
+      path: '/kids/games/math-duel',
+      builder: (context, state) => const MathDuelScreen(),
     ),
     GoRoute(
       path: '/kids/games/result',
