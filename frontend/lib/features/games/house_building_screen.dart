@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/network/api_client.dart';
+import '../../core/responsive/breakpoints.dart';
+import '../../core/responsive/screen_size.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/xp_coin.dart';
 import '../../shared/providers/student_provider.dart';
@@ -708,101 +710,260 @@ class _HouseBuildingScreenState extends ConsumerState<HouseBuildingScreen>
     final coinBalance = student?.coinBalance ?? 0;
     final xpBalance = student?.totalXP ?? 0;
 
+    final sceneView = HouseSceneView(
+      game3DView: buildHouseGameView(
+        context: context,
+        onMessageFromGame: _onMessageFromGame,
+      ),
+      isNightMode: _isNightMode,
+      isInteriorMode: _isInteriorMode,
+      isMuted: _isMuted,
+      onboardingTooltip: _onboardingTooltip,
+      celebrationBadge: _celebrationBadge,
+      onToggleNightMode: _toggleNightMode,
+      onResetCamera: _resetCamera,
+      onToggleInteriorMode: _toggleInterior,
+      onToggleMute: _toggleMute,
+      onRotate90: _rotate90,
+      onDismissTooltip: _nextOnboardingStep,
+    );
+
+    // 0.4 & 0.5 Qoidasi: Telefonda (compact) karkas va joylashuv 100% bit-ma-bit o'zgarmaydi
+    if (context.isCompact) {
+      return Scaffold(
+        backgroundColor: colors.background,
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: Stack(
+              children: [
+                // Main Clean Layout: SafeArea + Column + Row + Expanded
+                SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal:
+                          MediaQuery.of(context).size.width < 360 ? 10 : 16,
+                      vertical: 8,
+                    ),
+                    child: Column(
+                      children: [
+                        // 1. Top Bar: Back (44x44), Title, XP & Coin Capsule
+                        HouseBuildTopBar(
+                          onBack: () => context.pop(),
+                          coins: coinBalance,
+                          xp: xpBalance,
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        // 2. Progress Card: Stage 0/6, Title, Progress bar
+                        HouseProgressCard(
+                          currentStage: _currentStage,
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        // 3. 3D House Scene View inside Expanded
+                        Expanded(child: sceneView),
+
+                        const SizedBox(height: 12),
+
+                        // 4. Bottom Action Bar: "Qurish • $cost coin" + "Do‘kon"
+                        HouseBottomBar(
+                          currentStage: _currentStage,
+                          userCoins: coinBalance,
+                          isBuilding: _isBuilding,
+                          onBuildNextStage: _buildNextStage,
+                          onOpenStore: _openStore,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Loading overlay
+                if (_isLoading)
+                  Positioned.fill(
+                    child: Container(
+                      color: colors.background.withValues(alpha: 0.6),
+                      child: Center(
+                        child: CircularProgressIndicator(color: colors.primary),
+                      ),
+                    ),
+                  ),
+
+                // Confetti Particle Layer for Stage 6 Complete
+                if (_confettiAnimController.isAnimating)
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: CustomPaint(
+                        painter: _ConfettiPainter(
+                          particles: _confetti,
+                          progress: _confettiAnimController.value,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Medium layout (Planshet): Sahna tepada katta, pastda yonma-yon boshqaruv panellari
+    if (context.isMedium) {
+      return Scaffold(
+        backgroundColor: colors.background,
+        body: Stack(
+          children: [
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                child: Column(
+                  children: [
+                    HouseBuildTopBar(
+                      onBack: () => context.pop(),
+                      coins: coinBalance,
+                      xp: xpBalance,
+                    ),
+                    const SizedBox(height: 12),
+                    Expanded(
+                      flex: 6,
+                      child: sceneView,
+                    ),
+                    const SizedBox(height: 14),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: HouseProgressCard(
+                            currentStage: _currentStage,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          flex: 5,
+                          child: HouseBottomBar(
+                            currentStage: _currentStage,
+                            userCoins: coinBalance,
+                            isBuilding: _isBuilding,
+                            onBuildNextStage: _buildNextStage,
+                            onOpenStore: _openStore,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            if (_isLoading)
+              Positioned.fill(
+                child: Container(
+                  color: colors.background.withValues(alpha: 0.6),
+                  child: Center(
+                    child: CircularProgressIndicator(color: colors.primary),
+                  ),
+                ),
+              ),
+            if (_confettiAnimController.isAnimating)
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: CustomPaint(
+                    painter: _ConfettiPainter(
+                      particles: _confetti,
+                      progress: _confettiAnimController.value,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+    }
+
+    // Expanded layout (Kompyuter / Desktop): 3D sahna chapda katta, o'ngda doimiy boshqaruv paneli
     return Scaffold(
       backgroundColor: colors.background,
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 480),
-          child: Stack(
-            children: [
-              // Main Clean Layout: SafeArea + Column + Row + Expanded
-              SafeArea(
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Center(
+              child: ConstrainedBox(
+                constraints:
+                    const BoxConstraints(maxWidth: Breakpoints.maxContentWidth),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal:
-                        MediaQuery.of(context).size.width < 360 ? 10 : 16,
-                    vertical: 8,
-                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                   child: Column(
                     children: [
-                      // 1. Top Bar: Back (44x44), Title, XP & Coin Capsule
                       HouseBuildTopBar(
                         onBack: () => context.pop(),
                         coins: coinBalance,
                         xp: xpBalance,
                       ),
-
-                      const SizedBox(height: 10),
-
-                      // 2. Progress Card: Stage 0/6, Title, Progress bar
-                      HouseProgressCard(
-                        currentStage: _currentStage,
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      // 3. 3D House Scene View inside Expanded
+                      const SizedBox(height: 16),
                       Expanded(
-                        child: HouseSceneView(
-                          game3DView: buildHouseGameView(
-                            context: context,
-                            onMessageFromGame: _onMessageFromGame,
-                          ),
-                          isNightMode: _isNightMode,
-                          isInteriorMode: _isInteriorMode,
-                          isMuted: _isMuted,
-                          onboardingTooltip: _onboardingTooltip,
-                          celebrationBadge: _celebrationBadge,
-                          onToggleNightMode: _toggleNightMode,
-                          onResetCamera: _resetCamera,
-                          onToggleInteriorMode: _toggleInterior,
-                          onToggleMute: _toggleMute,
-                          onRotate90: _rotate90,
-                          onDismissTooltip: _nextOnboardingStep,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 3D Scene View
+                            Expanded(
+                              flex: 7,
+                              child: sceneView,
+                            ),
+                            const SizedBox(width: 24),
+                            // Right Side Panel
+                            SizedBox(
+                              width: 360,
+                              child: Column(
+                                children: [
+                                  HouseProgressCard(
+                                    currentStage: _currentStage,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  HouseBottomBar(
+                                    currentStage: _currentStage,
+                                    userCoins: coinBalance,
+                                    isBuilding: _isBuilding,
+                                    onBuildNextStage: _buildNextStage,
+                                    onOpenStore: _openStore,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      // 4. Bottom Action Bar: "Qurish • $cost coin" + "Do‘kon"
-                      HouseBottomBar(
-                        currentStage: _currentStage,
-                        userCoins: coinBalance,
-                        isBuilding: _isBuilding,
-                        onBuildNextStage: _buildNextStage,
-                        onOpenStore: _openStore,
                       ),
                     ],
                   ),
                 ),
               ),
-
-              // Loading overlay
-              if (_isLoading)
-                Positioned.fill(
-                  child: Container(
-                    color: colors.background.withValues(alpha: 0.6),
-                    child: Center(
-                      child: CircularProgressIndicator(color: colors.primary),
-                    ),
-                  ),
-                ),
-
-              // Confetti Particle Layer for Stage 6 Complete
-              if (_confettiAnimController.isAnimating)
-                Positioned.fill(
-                  child: IgnorePointer(
-                    child: CustomPaint(
-                      painter: _ConfettiPainter(
-                        particles: _confetti,
-                        progress: _confettiAnimController.value,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
+            ),
           ),
-        ),
+          if (_isLoading)
+            Positioned.fill(
+              child: Container(
+                color: colors.background.withValues(alpha: 0.6),
+                child: Center(
+                  child: CircularProgressIndicator(color: colors.primary),
+                ),
+              ),
+            ),
+          if (_confettiAnimController.isAnimating)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(
+                  painter: _ConfettiPainter(
+                    particles: _confetti,
+                    progress: _confettiAnimController.value,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/responsive/breakpoints.dart';
+import '../../../core/responsive/screen_size.dart';
 import '../../../core/widgets/coin_badge.dart';
 import '../models/store_item.dart';
 import '../widgets/house_build_colors.dart';
@@ -38,9 +40,8 @@ class StoreSheet extends StatefulWidget {
     required Function(StoreItem item) onPurchaseItem,
     required Function(StoreItem item) onTogglePlacement,
   }) {
-    final isDesktop = MediaQuery.of(context).size.width >= 600;
-
-    if (isDesktop) {
+    // 0.4 & 0.5 Qoidasi: Telefonda (compact) pastdan ochiluvchi bottom sheet (o'zgarmaydi)
+    if (!context.isCompact) {
       return showDialog(
         context: context,
         barrierColor: Colors.black54,
@@ -48,7 +49,10 @@ class StoreSheet extends StatefulWidget {
           backgroundColor: Colors.transparent,
           insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 560, maxHeight: 720),
+            constraints: const BoxConstraints(
+              maxWidth: Breakpoints.maxStoreDialogWidth,
+              maxHeight: 740,
+            ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(28),
             ),
